@@ -1,0 +1,789 @@
+.hidden { display: none !important; }
+
+/* =============================
+   2. Global Font Usage
+   ============================= */
+#game-title {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Zen Dots', sans-serif;
+  font-size: 2.8rem;
+  letter-spacing: 0.08em;
+
+  /* no fill */
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  /* bottom stroke = black (thicker) → creates inner crisp edge */
+  -webkit-text-stroke: 4px #000;
+
+  /* optional subtle glow */
+  text-shadow:
+    0 0 8px #00e5ff,
+    0 0 16px #6a00ff,
+    2px 4px 6px rgba(0,0,0,0.6);
+
+  user-select: none;
+  pointer-events: none;
+  z-index: 1100;
+}
+
+/* top stroke = cyan (slightly thinner) */
+#game-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 2px #00e5ff; /* tweak to taste: 1.5–2px */
+  pointer-events: none;
+}
+
+
+
+/* =============================
+   4. Responsive Title Adjustment
+   ============================= */
+@media (max-width: 768px) {
+  #game-title {
+    font-size: 1.8rem;
+    top: 12px;
+  }
+}
+
+/* ===========================
+   ROOT VARIABLES & BASE STYLES
+   =========================== */
+:root {
+  --tile-fill-gradient: url(#tileGradient);
+  --panel-bg: #222;
+  --panel-text: #fff;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+background:
+  radial-gradient(
+    circle at center,
+    rgba(0, 255, 0, 0.15) 0%,
+    rgba(0, 255, 0, 0) 70%
+  ),
+  radial-gradient(
+    circle at center,
+    hsl(210, 25%, 42%) 0%,
+    hsl(210, 25%, 26%) 50%,
+    hsl(210, 25%, 18%) 100%
+  );
+
+
+
+
+/* ===========================
+   MAIN GAME CONTAINER
+   =========================== */
+#game-container {
+  flex: 1;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* =========================== 
+   SIDE PANELS
+   =========================== */
+#left-panel,
+#right-panel {
+  width: 300px;
+  background: #1e1e1e;
+  color: #fff;
+  padding: 20px;
+  transition: transform 0.3s ease;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Start off-screen */
+#left-panel {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+#right-panel {
+  right: 0;
+  transform: translateX(100%);
+}
+
+/* Slide in when open */
+#left-panel.open {
+  transform: translateX(0);
+}
+
+#right-panel.open {
+  transform: translateX(0);
+}
+
+
+/* ===== SUBMIT AREA ===== */
+
+#submit-area {
+  z-index: 1000;
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 1rem;
+  background: none; border: 0; padding: 0; border-radius: 0;
+  font-family: "Orbitron", system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* CURRENT WORD + SCORE */
+#submit-area > div,
+#score-display {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #a9e7ff;
+  text-shadow: 0 0 6px #00e5ff, 0 0 14px #6a00ff;
+}
+
+/* BUTTONS - shared */
+#submit-word,
+#clear-word {
+  padding: 0.65em 1.1em;
+  border-radius: 10px;
+  border: 2px solid #28f0ff;
+  background: transparent;
+  color: #a9e7ff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: inset 0 0 10px #28f0ff, 0 0 10px #28f0ff33;
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+
+/* Hover/Active effects */
+#submit-word:hover,
+#clear-word:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+#submit-word:active,
+#clear-word:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+}
+
+
+
+
+/* ===========================
+   GAME BOARD
+   =========================== */
+#game-board {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+/* PHRASE PANEL - Ultra Neon Cyberpunk */
+#right-panel .panel-content {
+  position: relative;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(255, 0, 60, 0.25), transparent 70%),
+    radial-gradient(circle at 80% 70%, rgba(255, 150, 0, 0.25), transparent 70%),
+    radial-gradient(circle at center, rgba(255, 50, 0, 0.15), transparent 80%);
+  border: 2px solid rgba(255, 80, 0, 0.5);
+  border-radius: 14px;
+  padding: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 0 12px rgba(255, 0, 60, 0.6),
+    0 0 32px rgba(255, 150, 0, 0.4),
+    inset 0 0 20px rgba(255, 60, 0, 0.3);
+}
+
+/* Moving glow overlay */
+#right-panel .panel-content::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, rgba(255,0,60,0.15), rgba(255,150,0,0.15), rgba(255,0,60,0.15));
+  animation: swirl 12s linear infinite;
+  pointer-events: none;
+}
+@keyframes swirl {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Heading - hyper vibrant gradient */
+#right-panel .panel-content h2 {
+  font-size: 1.6em;
+  text-align: center;
+  margin-bottom: 14px;
+  background: linear-gradient(90deg, #ff2b2b, #ff6a00, #ffd700, #ff2b2b);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 8px rgba(255, 60, 0, 0.9);
+  animation: gradientShift 4s ease infinite;
+}
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
+/* HR lines - pulsing color waves */
+#right-panel .panel-content hr {
+  height: 2px;
+  border: none;
+  background: linear-gradient(90deg, transparent, #ff2b2b, #ff6a00, transparent);
+  background-size: 200% auto;
+  animation: hrWave 3s linear infinite;
+}
+@keyframes hrWave {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Buttons - fiery neon */
+#right-panel button {
+  background: transparent;
+  border: 2px solid #ff6a00;
+  border-radius: 8px;
+  color: #ffe9e9;
+  font-weight: bold;
+  text-shadow: 0 0 6px #ff6a00;
+  box-shadow: inset 0 0 8px #ff6a00, 0 0 12px rgba(255, 106, 0, 0.5);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+#right-panel button:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 14px #ff2b2b, 0 0 16px rgba(255, 43, 43, 0.7);
+}
+
+/* Word count hint - glowing pill */
+#wordcount-hint {
+  background: linear-gradient(90deg, #ff6a00, #ff2b2b);
+  color: #fff;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-shadow: 0 0 6px rgba(0,0,0,0.6);
+  box-shadow: 0 0 12px rgba(255,106,0,0.6);
+}
+
+
+/* WORD PANEL — Electric Cyan Theme */
+#left-panel .panel-content {
+  position: relative;
+  padding: 18px;
+  border-radius: 14px;
+  border: 2px solid rgba(0, 238, 255, 0.5);
+  background:
+    radial-gradient(circle at 15% 25%, rgba(0, 238, 255, 0.18), transparent 60%),
+    radial-gradient(circle at 85% 75%, rgba(90, 0, 255, 0.18), transparent 65%),
+    linear-gradient(180deg, rgba(10, 20, 30, 0.85), rgba(10, 16, 26, 0.9));
+  box-shadow:
+    0 0 14px rgba(0, 238, 255, 0.55),
+    0 0 34px rgba(106, 0, 255, 0.35),
+    inset 0 0 20px rgba(0, 180, 255, 0.25);
+  overflow: hidden;
+}
+
+/* slow shimmer overlay */
+#left-panel .panel-content::before {
+  content: "";
+  position: absolute; inset: -40%;
+  background: conic-gradient(from 0deg,
+    rgba(0, 238, 255, 0.10),
+    rgba(106, 0, 255, 0.10),
+    rgba(0, 238, 255, 0.10));
+  animation: wordPanelSwirl 14s linear infinite;
+  pointer-events: none;
+}
+@keyframes wordPanelSwirl { to { transform: rotate(360deg); } }
+
+/* Heading */
+#left-panel .panel-content h2 {
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 1.6em;
+  background: linear-gradient(90deg, #00e5ff, #6a00ff, #00e5ff);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+  animation: wordTitleShift 5s ease-in-out infinite;
+}
+@keyframes wordTitleShift {
+  0%,100% { background-position: 0% center; }
+  50%     { background-position: 100% center; }
+}
+
+/* The dynamic list of words */
+#word-list {
+  list-style: none;
+  margin: 10px 0 14px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+#word-list li {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 2px solid rgba(0, 238, 255, 0.35);
+  background: rgba(8, 20, 30, 0.6);
+  color: #c9f7ff;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 6px rgba(0, 238, 255, 0.6);
+  box-shadow: inset 0 0 8px rgba(0, 238, 255, 0.25), 0 0 8px rgba(0, 238, 255, 0.25);
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+#word-list li:hover {
+  transform: translateY(-2px);
+  border-color: rgba(106, 0, 255, 0.6);
+  box-shadow: inset 0 0 12px rgba(106, 0, 255, 0.35), 0 0 14px rgba(106, 0, 255, 0.4);
+}
+
+/* Base remove button styling (same as before) */
+#word-list button {
+  margin-left: 6px;
+  padding: 2px 6px;
+  border: 2px solid #28f0ff;
+  background: transparent;
+  color: #a9e7ff;
+  font-weight: bold;
+  font-size: 0.85em;
+  border-radius: 6px;
+  cursor: pointer;
+  text-shadow: 0 0 4px #00e5ff;
+  box-shadow:
+    inset 0 0 6px #28f0ff,
+    0 0 8px rgba(40, 240, 255, 0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+
+/* Hover = more intense cyan + scale up */
+#word-list button:hover {
+  transform: scale(1.08);
+  box-shadow:
+    inset 0 0 10px #6a00ff,
+    0 0 12px rgba(106, 0, 255, 0.45);
+}
+
+/* Active = press down */
+#word-list button:active {
+  transform: scale(0.96);
+  filter: brightness(0.9);
+}
+
+/* 🔥 Danger flash animation */
+@keyframes dangerFlash {
+  0%   { border-color: #ff2b2b; box-shadow: inset 0 0 8px #ff2b2b, 0 0 12px rgba(255, 43, 43, 0.6); color: #ffd6d6; }
+  50%  { border-color: #ff6a00; box-shadow: inset 0 0 10px #ff6a00, 0 0 14px rgba(255, 106, 0, 0.7); color: #fff0e6; }
+  100% { border-color: #28f0ff; box-shadow: inset 0 0 6px #28f0ff, 0 0 8px rgba(40, 240, 255, 0.35); color: #a9e7ff; }
+}
+
+/* Class to trigger the animation */
+#word-list button.flash-danger {
+  animation: dangerFlash 0.45s ease;
+}
+
+
+/* Submit List button */
+#submit-list {
+  display: block;
+  margin: 6px auto 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid #28f0ff;
+  background: transparent;
+  color: #a9e7ff;
+  font-weight: 800;
+  letter-spacing: .06em;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px #00e5ff;
+  box-shadow: inset 0 0 10px #28f0ff, 0 0 12px rgba(40, 240, 255, 0.35);
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+}
+#submit-list:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 14px #6a00ff, 0 0 16px rgba(106, 0, 255, 0.45);
+}
+#submit-list:active { transform: translateY(0); }
+
+/* Optional: small, subtle flicker like the toggles */
+#submit-list { animation: neonFlicker 7.1s linear infinite; }
+
+
+
+/* ===========================
+   SIDE PANEL TOGGLE BUTTONS (Neon)
+   =========================== */
+
+/* Base: shares neon styling rules; each side sets its own colors via CSS vars */
+.side-toggle {
+  /* per-button theme variables */
+  --neon: #00e5ff;       /* fallback, overwritten below */
+  --neon-2: #6a00ff;     /* fallback secondary hue */
+  --text: #e9fcff;
+
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 12px 8px;
+  border-radius: 10px;
+  border: 2px solid var(--neon);
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  z-index: 1200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  user-select: none;
+  white-space: nowrap;
+  gap: 6px;
+
+  /* Neon look */
+  text-shadow:
+    0 0 6px var(--neon),
+    0 0 14px var(--neon-2);
+  box-shadow:
+    inset 0 0 12px var(--neon),
+    0 0 14px color-mix(in oklab, var(--neon) 40%, transparent),
+    0 0 28px color-mix(in oklab, var(--neon-2) 30%, transparent);
+  transition: transform 120ms ease, filter 120ms ease, box-shadow 120ms ease, border-color 120ms ease, opacity 120ms ease;
+  backdrop-filter: blur(4px);
+}
+
+/* subtle neon edge strip */
+.side-toggle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;                     /* creates a thin inner glow rim */
+  background: linear-gradient(180deg, var(--neon), var(--neon-2));
+  -webkit-mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Hover/active */
+.side-toggle:hover {
+  transform: translateY(calc(-50% + 0px)) scale(1.03);
+  filter: brightness(1.08);
+  box-shadow:
+    inset 0 0 16px var(--neon),
+    0 0 18px color-mix(in oklab, var(--neon) 55%, transparent),
+    0 0 36px color-mix(in oklab, var(--neon-2) 45%, transparent);
+}
+.side-toggle:active {
+  transform: translateY(calc(-50% + 0px)) scale(0.98);
+  filter: brightness(0.96);
+}
+
+/* Left button = MAGENTA theme (Word Panel) */
+.left-toggle {
+  --neon: #ff2bd6;
+  --neon-2: #7a00ff;
+  --text: #ffe9fb;
+
+  left: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Right button = RED theme (Phrase Panel) */
+.right-toggle {
+  --neon: #ff2b2b;   /* bright red glow */
+  --neon-2: #ff6a00; /* warm orange secondary for depth */
+  --text: #ffeaea;   /* soft pinkish-white for readability */
+
+  right: 0;
+  writing-mode: vertical-lr; /* read top-to-bottom on the right side */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+@keyframes neonPulse {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px var(--neon)); }
+  50% { opacity: 0.9; filter: drop-shadow(0 0 16px var(--neon-2)); }
+}
+
+/* ===========================
+   Neon flicker for toggle buttons (no JS)
+   =========================== */
+
+/* Base: add flicker to both the button and its inner rim */
+.side-toggle,
+.side-toggle::before {
+  animation-name: neonFlicker;
+  animation-duration: 6.8s;            /* default; each side overrides for desync */
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+/* Desync the two sides a bit so they don't flicker together */
+.left-toggle,
+.left-toggle::before {
+  animation-duration: 7.3s;
+  animation-delay: -1.8s;
+}
+.right-toggle,
+.right-toggle::before {
+  animation-duration: 6.2s;
+  animation-delay: -0.9s;
+}
+
+/* Irregular keyframes to mimic real neon flicker */
+@keyframes neonFlicker {
+  0%   { opacity: 1;   filter: brightness(1) saturate(1.05) drop-shadow(0 0 6px var(--neon)); }
+  2%   { opacity: .85; filter: brightness(.9)  saturate(1); }
+  3%   { opacity: .6;  filter: brightness(.75) saturate(.95); }
+  4%   { opacity: 1;   filter: brightness(1.05) saturate(1.1); }
+  8%   { opacity: .9;  filter: brightness(.95); }
+  10%  { opacity: .7;  filter: brightness(.8); }
+  11%  { opacity: 1;   filter: brightness(1.1) saturate(1.15); }
+  18%  { opacity: .92; filter: brightness(.98); }
+  24%  { opacity: .5;  filter: brightness(.7); }
+  26%  { opacity: 1;   filter: brightness(1.08) saturate(1.1); }
+  38%  { opacity: .95; filter: brightness(.98); }
+  56%  { opacity: .88; filter: brightness(.9); }
+  61%  { opacity: .98; filter: brightness(1.02); }
+  72%  { opacity: .76; filter: brightness(.82); }
+  73%  { opacity: 1;   filter: brightness(1.06) saturate(1.08); }
+  90%  { opacity: .97; filter: brightness(.99); }
+  100% { opacity: 1;   filter: brightness(1.05) saturate(1.05); }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .side-toggle, .side-toggle::before { animation: none !important; }
+}
+
+
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+@media (max-width: 768px) {
+  #left-panel, #right-panel {
+    width: 200px;
+  }
+  #submit-area {
+    flex-direction: column;
+    gap: 0.5em;
+    bottom: 10px;
+  }
+  #submit-area div {
+    font-size: 1.2em;
+  }
+  #right-panel button {
+    font-size: 0.8em;
+    margin-top: 4px;
+    display: block;
+    width: 100%;
+  }
+  #wordcount-hint {
+    width: 100%;
+    margin-top: 8px;
+  }
+} /* <-- closes the @media block */
+
+/* nothing extra after this */
+
+
+/* Selected tile = deep emerald core + thin bright yellow edge */
+polygon.selected,
+.tile.selected {
+  /* For SVG polygons */
+  fill: #0a5f3b;                 /* deep emerald */
+  stroke: #ffff3b;               /* bright yellow edge */
+  stroke-width: 2px;             /* thin outline */
+  stroke-linejoin: round;
+
+  /* For non-SVG tiles */
+  background: #0a5f3b;
+  border: 2px solid #ffff3b;
+
+  outline: none;
+  filter: none;
+  box-shadow: none;
+  transition:
+    fill 120ms ease,
+    stroke 120ms ease,
+    background 120ms ease,
+    border-color 120ms ease;
+}
+
+/* --- Tiles: solved state & celebration (PLACE AFTER your selected-tile block) --- */
+.tile--solved-phrase {
+  background: var(--tile-solved-bg, #e7f7e9);
+  border-color: var(--tile-solved-border, #37a169);
+  color: var(--tile-solved-fg, #2a4a2f);
+}
+
+.tile--solved-phrase:hover {
+  background: var(--tile-solved-bg, #e7f7e9);
+}
+
+.tile--celebrate {
+  animation: tile-celebrate 0.45s ease-out;
+}
+
+#toast-root {
+  position: fixed;
+  top: 12px; right: 12px;
+  display: grid;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+#toast-root .toast {
+  pointer-events: auto;
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transform: translateY(-8px);
+  opacity: 0;
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+#toast-root .toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
+/* You can keep keyframes here, or move to your “neon flicker” section if that’s your animations area */
+@keyframes tile-celebrate {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+}
+
+/* ===== SVG tiles: solved look & celebration ===== */
+
+/* If the CLASS is on the <g> wrapper, color its polygon child */
+#hex-grid g.tile--solved-phrase > polygon {
+  fill: #e7f7e9;
+  stroke: #37a169;
+  stroke-width: 2px;
+}
+
+/* If the CLASS is directly on the <polygon> */
+#hex-grid polygon.tile--solved-phrase {
+  fill: #e7f7e9;
+  stroke: #37a169;
+  stroke-width: 2px;
+}
+
+/* Celebration pulse — works whether class is on <g> or <polygon> */
+#hex-grid g.tile--celebrate,
+#hex-grid polygon.tile--celebrate {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: tile-celebrate 0.45s ease-out;
+}
+
+/* Keep them clickable */
+#hex-grid g.tile--solved-phrase,
+#hex-grid polygon.tile--solved-phrase,
+#hex-grid g.tile--celebrate,
+#hex-grid polygon.tile--celebrate {
+  pointer-events: auto;
+}
+
+/* ===== Make both letter and point value readable on solved tiles ===== */
+
+/* When the class is on the <g> wrapper */
+#hex-grid g.tile--solved-phrase text {
+  fill: #1a1a1a;          /* dark text */
+  font-weight: bold;
+  paint-order: stroke;
+  stroke: white;          /* outline for contrast */
+  stroke-width: 0.5px;
+}
+
+/* When the class is directly on the <polygon> */
+#hex-grid polygon.tile--solved-phrase ~ text {
+  fill: #1a1a1a;
+  font-weight: bold;
+  paint-order: stroke;
+  stroke: white;
+  stroke-width: 0.5px;
+}
+
+/* ===== Celebration: brighten letter + point value during the pulse ===== */
+
+/* If the celebrate class is on the <g> wrapper */
+#hex-grid g.tile--celebrate text {
+  animation: text-celebrate 0.45s ease-out;
+}
+
+/* If the celebrate class is on the <polygon>, style its sibling <text> */
+#hex-grid polygon.tile--celebrate ~ text {
+  animation: text-celebrate 0.45s ease-out;
+}
+
+/* Keyframes for readable, punchy text during the pulse */
+@keyframes text-celebrate {
+  0% {
+    fill: #1a1a1a;        /* your normal solved text color */
+    stroke: #fff;
+    stroke-width: 0.5px;
+    filter: none;
+  }
+  30% {
+    fill: #000;           /* extra contrast at the peak */
+    stroke: #fff;
+    stroke-width: 1px;    /* thicker outline for a moment */
+    filter: brightness(1.1); /* subtle pop without blur */
+  }
+  100% {
+    fill: #1a1a1a;
+    stroke: #fff;
+    stroke-width: 0.5px;
+    filter: none;
+  }
+}
