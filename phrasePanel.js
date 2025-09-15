@@ -152,52 +152,6 @@ function showToast(message, type = 'success') {
   }, 2500);
 }
 
-
-// ==============================
-// 4b. TILE HIGHLIGHT / CELEBRATE  (Option A: mark done first, then pop)
-// ==============================
-function highlightPhraseTiles(phraseKey, { animate = true } = {}) {
-  const pathKey = phraseKey === 'phrase1' ? 'phraseA' : 'phraseB';
-  const path = gameState.seedPaths?.[pathKey] || [];
-  if (!path.length) return;
-
-  const CLASS_SOLVED = 'tile--solved-phrase';
-  const CLASS_CELEB  = 'tile--celebrate';
-
-  // 1) MARK ALL TILES SOLVED RIGHT NOW (no delays)
-  path.forEach(p => {
-    const tile = document.getElementById(String(p.key));
-    if (tile) tile.classList.add(CLASS_SOLVED);
-  });
-
-  // 2) OPTIONAL: RUN THE STAGGERED POP JUST FOR LOOKS
-  if (animate) {
-    path.forEach((p, i) => {
-      const tile = document.getElementById(String(p.key));
-      if (!tile) return;
-
-      setTimeout(() => {
-        // restart the keyframes cleanly
-        tile.classList.remove(CLASS_CELEB);
-        void tile.offsetWidth; // force reflow to restart animation
-        tile.classList.add(CLASS_CELEB);
-
-        // remove the pop class after it finishes
-        setTimeout(() => tile.classList.remove(CLASS_CELEB), 450);
-      }, i * 120);
-    });
-  }
-}
-
-  function areTilesSolved(path = []) {
-  if (!path.length) return false;
-  return path.every(p => {
-    const el = document.getElementById(String(p.key));
-    return el && el.classList.contains('tile--solved-phrase');
-  });
-}
-
-
 // ==============================
 // 4c. BASE BONUS + ANAGRAM BONUS
 // ==============================
@@ -211,8 +165,6 @@ function awardAnagramBonusIfReady() {
   const idsA = gameState.seedPaths?.phraseA || [];
   const idsB = gameState.seedPaths?.phraseB || [];
 
-  const phrase1Built = areTilesSolved(idsA);
-  const phrase2Built = areTilesSolved(idsB);
 
   if (!(phrase1Built && phrase2Built) || gameState.anagramBonusPaid) return;
 
@@ -248,8 +200,7 @@ export function revealPhrase(phraseKey) {
 disableButtonById(`${phraseKey}-hint1-btn`, 'Disabled');
 disableButtonById(`${phraseKey}-hint2-btn`, 'Disabled');
 
-  highlightPhraseTiles(phraseKey, { animate: true });
-  awardAnagramBonusIfReady();
+
 }
 
 // ==============================

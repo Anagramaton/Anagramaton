@@ -5,40 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ANAGRAMATON</title>
   
-  <!-- Fonts and CSS -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
- <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+<!-- Fonts and CSS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+
+<style>
+  .rom { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+  .rom--hidden { display: none; }
+  .rom__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
+  .rom__dialog { position: relative; background: #111; color: #fff; padding: 20px; border-radius: 12px; width: min(600px, 92vw); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .rom__sub { opacity: 0.8; margin-top: -6px; }
+  .rom__list { max-height: 200px; overflow: auto; margin: 8px 0 16px; padding-left: 20px; }
+  .rom__actions { display: flex; gap: 10px; justify-content: flex-end; }
+  body.rom-open { overflow: hidden; }
+</style>
 </head>
 
 <body>
 
   <h1 id="game-title">ANAGRAMATON</h1>
 
-  <!-- Submit Area -->
-  <div id="submit-area" style="text-align: center; margin-top: 20px;">
-    <div style="margin-bottom: 10px; font-size: 1.5em; color: white;">
-      CURRENT WORD: <span id="current-word"></span>
-    </div>
-    <button id="submit-word" style="margin-right: 10px;">SUBMIT</button>
-    <button id="clear-word">CLEAR WORD</button>
-    <p id="score-display" style="margin-top: 10px;">SCORE: </p>
+<!-- Submit Area -->
+<div id="submit-area">
+  <div id="current-word-display">
+    CURRENT WORD: <span id="current-word"></span>
   </div>
+
+  <div id="controls">
+    <button id="submit-word">SUBMIT</button>
+    <span id="score-display">SCORE: 0</span>
+    <button id="clear-word">CLEAR WORD</button>
+    
+  </div>
+</div>
+
+
+
 
   <!-- Side Toggle Buttons -->
   <button id="toggle-left" class="side-toggle left-toggle" aria-label="Toggle word panel">WORD PANEL</button>
   <button id="toggle-right" class="side-toggle right-toggle" aria-label="Toggle phrase panel">PHRASE PANEL</button>
 
-  <!-- Left Panel -->
+  <!-- LEFT PANEL (Word/Merged panel) -->
   <aside id="left-panel">
     <div class="panel-content">
       <h2>YOUR WORDS</h2>
+
+      <!-- Word list shown during word-entry -->
       <ul id="word-list"></ul>
-      <button id="submit-list">SUBMIT LIST</button>
+
+      <!-- Buttons row (CSS targets .panel-actions) -->
+      <div class="panel-actions">
+        <button id="submit-list" type="button">SUBMIT LIST</button>
+        <button id="new-game"   type="button">NEW GAME</button>
+      </div>
+
+      <!-- Optional placeholder: merged list gets injected by JS -->
+      <!-- <div id="merged-words-wrap"></div> -->
     </div>
   </aside>
+
 
   <!-- Right Panel -->
   <aside id="right-panel">
@@ -93,12 +123,33 @@
     </div>
   </aside>
 
-  <!-- Game Board -->
-  <main id="game-container">
-    <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000"></svg>
-  </main>
+<!-- Round Over Modal -->
+<div id="round-over-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="rom-title">
+  <div class="rom__backdrop"></div>
+  <div class="rom__dialog">
+    <h2 id="rom-title">YOU MADE IT!</h2>
 
-  <!-- JavaScript (at the end so it can find everything on the page) -->
-  <script type="module" src="./main.js"></script>
+    <p><strong>FINAL SCORE:</strong> <span id="rom-total">0</span></p>
+    <p class="rom__sub">BASE <span id="rom-base">0</span> + BONUS <span id="rom-bonus">0</span></p>
+
+    <p><strong>WORDS (<span id="rom-count">0</span>):</strong></p>
+    <ul id="rom-words" class="rom__list"></ul>
+
+    <div class="rom__actions">
+      
+      <button id="rom-close-btn">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- Game Board -->
+<main id="game-container">
+  <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000"></svg>
+</main>
+
+</script>
+<script type="module" src="./main.js"></script>
+<script type="module" src="./roundOverModal.js"></script>
+
 </body>
 </html>

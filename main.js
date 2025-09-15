@@ -1,152 +1,352 @@
-import { initializeGrid, clearCurrentSelection } from './initGrid.js';
-import { submitCurrentWord, resetSelectionState } from './scoreLogic.js';
+// main.js
+import { initializeGrid } from './initGrid.js';
+import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';
 import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
 import { gameState } from './gameState.js';
-import { placedWords } from './gridLogic.js';
 import { initPhrasePanelEvents, revealPhrase } from './phrasePanel.js';
+import { placedWords } from './gridLogic.js';
+import { initMergedListPanel } from './mergedListPanel.js';
+import { reuseMultipliers } from './constants.js';
 
 
-let totalScore = 0;
-const submittedWords = new Set();
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Reset score and submitted words
-  totalScore = 0;
-  submittedWords.clear();
+// ------------------------------------------------------------
+// Score state
+// ------------------------------------------------------------
+let baseTotal = 0;     // Sum of all word scores from recomputeAll()
+let bonusTotal = 0;    // Sum of bonuses coming from score:delta events
+let totalScore = 0;    // Rendered total = baseTotal + bonusTotal
 
-  // Show 0 on the scoreboard at start
+const submittedWords = new Set(); // Prevent duplicate word strings
+gameState.words = gameState.words || []; // [{ word, tiles, li, removeBtn, score }]
+
+
+
+
+// ----------------------------------------------
+// Submit List button enablement
+// ----------------------------------------------
+function syncSubmitListButton() {
+  const btn = document.getElementById('submit-list');
+  if (!btn) return;
+
+  const count = (gameState.words || []).length;
+  const locked = !!gameState.listLocked;
+  const shouldEnable = !locked && count === 10;
+
+  btn.toggleAttribute('disabled', !shouldEnable);
+  btn.textContent = shouldEnable ? 'Submit List' : `Submit List (${count}/10)`;
+}
+
+// ----------------------------------------------
+// Recompute scores for the current list
+// ----------------------------------------------
+function recomputeAll() {
+  const entries = (gameState.words || []).map(w => ({ word: w.word, tiles: w.tiles }));
+  const scores = recomputeAllWordScores(entries);
+
+  baseTotal = 0;
+  (gameState.words || []).forEach((w, i) => {
+    const s = scores[i] || 0;
+    w.score = s;
+    baseTotal += s;
+
+    const btn = w.removeBtn;
+    w.li.textContent = `${w.word.toUpperCase()} (+${s})`;
+    w.li.appendChild(btn);
+  });
+
+  totalScore = baseTotal + bonusTotal;
   updateScoreDisplay(totalScore);
-
-  // Catch ALL score changes (word points + anagram bonus)
-  window.addEventListener('score:delta', (e) => {
-    const pts = e?.detail?.delta || 0;
-    totalScore += pts;
-    updateScoreDisplay(totalScore);
-  });
-
-
-
-
-
-
-
-  // Initialize grid & phrase panel
-  console.log("Calling initializeGrid() from main.js");
-  initializeGrid();
-  console.log("Calling initPhrasePanelEvents() from main.js");
-  initPhrasePanelEvents();
-
-  // --- LEFT PANEL SETUP ---
-  const leftPanel = document.querySelector('#left-panel .panel-content');
-  if (leftPanel) {
-    console.log("Left panel found, setting innerHTML and attaching Submit List");
-    leftPanel.innerHTML = `
-      <h2>Your Words</h2>
-      <ul id="word-list"></ul>
-      <button id="submit-list">Submit List</button>
-    `;
-    document.getElementById('submit-list')?.addEventListener('click', handleSubmitList);
-  } else {
-    console.warn("⚠ Left panel not found");
-  }
-
-const submitWordBtn = document.getElementById('submit-word');
-if (submitWordBtn) {
-  submitWordBtn.addEventListener('click', () => {
-    console.log("🖱 Submit Word button clicked");
-    console.log("Selected Tiles at click:", gameState.selectedTiles);
-
-    const selectedTiles = gameState.selectedTiles || [];
-    const word = selectedTiles.map(t => t.letter).join('').toUpperCase();
-    console.log("Built word:", word);
-
-// === PHRASE DETECTION (spelled correctly in order) ===
-const normalize = s => String(s).toUpperCase().replace(/[^A-Z]/g, '');
-const [raw1 = '', raw2 = ''] = (gameState.seedPhrase || '').split('/');
-const target1 = normalize(raw1);
-const target2 = normalize(raw2);
-const selectionLetters = normalize((gameState.selectedTiles || []).map(t => t.letter).join(''));
-
-if (!gameState.phraseRevealed.phrase1 && selectionLetters === target1) {
-  revealPhrase('phrase1');
-  setTimeout(() => resetSelectionState(), 520); // let the 0.45s pulse finish
-  return;
-}
-if (!gameState.phraseRevealed.phrase2 && selectionLetters === target2) {
-  revealPhrase('phrase2');
-  setTimeout(() => resetSelectionState(), 520);
-  return;
 }
 
 
 
-    // === original submit flow continues ===
-    if (submittedWords.size >= 10) {
-      alert('❌ You can only keep 10 words in your list at a time.');
-      resetSelectionState();
-      return;
-    }
-    
-    if (submittedWords.has(word)) {
-      alert(`❌ You've already submitted "${word}".`);
-      resetSelectionState();
-      return;
-    }
-
-    const wordScore = submitCurrentWord(selectedTiles);
-    if (wordScore === null) {
-      alert(`❌ "${word}" is not a valid word.`);
-      resetSelectionState();
-      return;
-    }
-
-    totalScore += wordScore;
-    updateScoreDisplay(totalScore);
-
-    const { li, removeBtn } = addWordToList(word, wordScore);
-    submittedWords.add(word);
-
-    removeBtn.addEventListener('click', () => {
-      console.log(`🗑 Removing word "${word}"`);
-      li.remove();
-      submittedWords.delete(word);
-      totalScore -= wordScore;
-      updateScoreDisplay(totalScore);
-      for (const tile of selectedTiles) {
-        tile.usageCount = Math.max(0, (tile.usageCount || 1) - 1);
-      }
-    });
-
-    resetSelectionState();
-  });
-} else {
-  console.error("❌ Submit Word button NOT found in DOM");
-}
-
-
-  // ✅ Clear Word listener is already in initGrid.js
-
-  // --- PANEL TOGGLES ---
-  document.getElementById('toggle-left')?.addEventListener('click', () => {
-    
-    document.getElementById('left-panel').classList.toggle('open');
-  });
-  document.getElementById('toggle-right')?.addEventListener('click', () => {
-    
-    document.getElementById('right-panel').classList.toggle('open');
-  });
+// ----------------------------------------------
+// Global bonus deltas
+// ----------------------------------------------
+window.addEventListener('score:delta', (e) => {
+  const pts = e?.detail?.delta || 0;
+  bonusTotal += pts;
+  updateScoreDisplay(baseTotal + bonusTotal);
 });
 
-function handleSubmitList() {
-  console.log("🖱 Submit List button clicked");
-  const wordPreview = document.getElementById('current-word');
-  if (wordPreview) {
-    
-    wordPreview.textContent = '';
+// ----------------------------------------------
+// CURRENT WORD preview
+// ----------------------------------------------
+function updateCurrentWordDisplay() {
+  const el = document.getElementById('current-word');
+  if (!el) return;
+  const letters = (gameState.selectedTiles || [])
+    .map(t => String(t.letter || ''))
+    .join('')
+    .toUpperCase();
+  el.textContent = letters;
+}
+
+
+
+// ----------------------------------------------
+// Phrase helpers
+// ----------------------------------------------
+const normalize = s => String(s).toUpperCase().replace(/[^A-Z]/g, '');
+
+function tryRevealPhrasesFromSelection() {
+  const [raw1 = '', raw2 = ''] = (gameState.seedPhrase || '').split('/');
+  const target1 = normalize(raw1);
+  const target2 = normalize(raw2);
+  const selectionLetters = normalize((gameState.selectedTiles || []).map(t => t.letter).join(''));
+
+  if (!gameState.phraseRevealed?.phrase1 && selectionLetters === target1) {
+    revealPhrase('phrase1');
+    setTimeout(() => resetSelectionState(), 520);
+    return true;
+  }
+  if (!gameState.phraseRevealed?.phrase2 && selectionLetters === target2) {
+    revealPhrase('phrase2');
+    setTimeout(() => resetSelectionState(), 520);
+    return true;
+  }
+  return false;
+}
+
+// ----------------------------------------------
+// Submit current selection as a word
+// ----------------------------------------------
+function handleSubmitWordClick() {
+  const selectedTiles = gameState.selectedTiles || [];
+  const word = selectedTiles.map(t => t.letter).join('').toUpperCase();
+
+  // Phrase detection first
+  if (tryRevealPhrasesFromSelection()) return;
+
+  // Capacity + duplicate guards
+  if (submittedWords.size >= 10) {
+    alert('❌ You can only keep 10 words in your list at a time.');
+    resetSelectionState();
+    return;
+  }
+  if (submittedWords.has(word)) {
+    alert(`❌ You've already submitted "${word}".`);
+    resetSelectionState();
+    return;
   }
 
-  const wordSet = new Set(
-    Array.from(submittedWords).map(w => w.toUpperCase())
-  );
+  // Validate & score once
+  const wordScore = submitCurrentWord(selectedTiles);
+  if (wordScore === null) {
+    resetSelectionState();
+    return;
+  }
+
+  // Add to UI list
+  const result = addWordToList(word, wordScore);
+  if (!result) {
+    console.error('❌ Could not add word to list; missing #word-list in DOM');
+    resetSelectionState();
+    return;
+  }
+  const { li, removeBtn } = result;
+
+  // Track with same tile objects
+  gameState.words.push({ word, tiles: [...selectedTiles], li, removeBtn, score: wordScore });
+  submittedWords.add(word);
+
+
+
+// removal
+removeBtn.addEventListener('click', () => {
+  li.remove();                          // remove the word's list item from the page
+  submittedWords.delete(word);          // delete it from the submitted set
+  const idx = gameState.words.findIndex(w => w.li === li);
+  if (idx !== -1) {
+    gameState.words.splice(idx, 1);     // remove it from the game state list
+  }
+  recomputeAll();                       // update score and totals
+  syncSubmitListButton();                // refresh submit button state
+});
+
+recomputeAll();
+syncSubmitListButton();
+resetSelectionState();
+
 }
+
+// ----------------------------------------------
+// Submit the entire list (exactly 10 words)
+// ----------------------------------------------
+function handleSubmitList() {
+  if (gameState.listLocked) return;
+
+  const count = (gameState.words || []).length;
+  if (count !== 10) return;
+
+  const words = (gameState.words || []).map(w => String(w.word || '').toUpperCase());
+  gameState.listLocked = true;
+
+  document.getElementById('submit-list')?.setAttribute('disabled', 'disabled');
+  document.getElementById('submit-word')?.setAttribute('disabled', 'disabled');
+  (gameState.words || []).forEach(w => w?.removeBtn?.setAttribute?.('disabled', 'disabled'));
+  syncSubmitListButton();
+
+  // fresh recompute
+  recomputeAll();
+
+  const scoreEl = document.getElementById('score-display');
+  const finalScoreText = scoreEl ? (scoreEl.textContent || 'SCORE: 0') : 'SCORE: 0';
+  const finalScore = (typeof totalScore === 'number') ? totalScore : 0;
+
+  // clear selection + current word
+  resetSelectionState();
+  const cw = document.getElementById('current-word');
+  if (cw) cw.textContent = '';
+
+  // board words (from gridLogic.js)
+  const placedWordList = (placedWords || [])
+    .map(p => (typeof p === 'string' ? p : p?.word))
+    .filter(Boolean)
+    .map(w => String(w).toUpperCase());
+
+  const wordsWithScores = (gameState.words || []).map(w => ({
+    word: String(w.word || '').toUpperCase(),
+    score: Number(w.score) || 0
+  }));
+
+  // defer so merged panel computes Top 10 first
+  requestAnimationFrame(() => {
+    const boardTop10      = Array.isArray(gameState.boardTop10) ? gameState.boardTop10 : [];
+    const boardTop10Total = Number(gameState.boardTop10Total) || 0;
+
+    window.dispatchEvent(new CustomEvent('round:over', {
+      detail: {
+        words,
+        wordsWithScores,
+        placedWords: placedWordList,
+        baseTotal,
+        bonusTotal,
+        totalScore: finalScore,
+        finalScoreText,
+        boardTop10,
+        boardTop10Total
+      }
+    }));
+  });
+}
+
+// ----------------------------------------------
+// DOMContentLoaded bootstrap
+// ----------------------------------------------
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  // reset state
+  baseTotal = 0;
+  bonusTotal = 0;
+  totalScore = 0;
+  submittedWords.clear();
+  gameState.words = [];
+  gameState.listLocked = false;
+  updateScoreDisplay(0);
+
+  // grid + phrase panel
+  initializeGrid();
+  initPhrasePanelEvents();
+
+const leftPanel = document.querySelector('#left-panel .panel-content');
+if (leftPanel) {
+  leftPanel.innerHTML = `
+    <h2>YOUR WORDS</h2>
+    <ul id="word-list"></ul>
+    <button id="submit-list">Submit List</button>
+    <button id="new-game">New Game</button>
+  `;
+
+  // re-attach event listeners
+  document.getElementById('submit-list')
+    ?.addEventListener('click', handleSubmitList);
+  syncSubmitListButton();
+
+  document.getElementById('new-game')
+    ?.addEventListener('click', () => {
+      window.dispatchEvent(new Event('game:new'));
+    });
+}
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('#submit-word');
+    if (btn) handleSubmitWordClick(e);
+  });
+
+  document.getElementById('clear-word')
+    ?.addEventListener('click', () => {
+      resetSelectionState();
+      const cw = document.getElementById('current-word');
+      if (cw) cw.textContent = '';
+    });
+
+  // preview + panel toggles
+  window.addEventListener('selection:changed', updateCurrentWordDisplay);
+
+  document.getElementById('toggle-left')
+    ?.addEventListener('click', () =>
+      document.getElementById('left-panel')?.classList.toggle('open')
+    );
+
+  document.getElementById('toggle-right')
+    ?.addEventListener('click', () =>
+      document.getElementById('right-panel')?.classList.toggle('open')
+    );
+
+  // merged list panel last
+  initMergedListPanel();
+
+  // When merged list is shown, mark left panel as merged
+  window.addEventListener('round:merged:show', () => {
+    document.getElementById('left-panel')?.classList.add('is-merged');
+  });
+
+// NEW GAME wiring
+document.getElementById('new-game')
+  ?.addEventListener('click', () => {
+    // --- Reset game state ---
+    baseTotal = 0;
+    bonusTotal = 0;
+    totalScore = 0;
+    submittedWords.clear();
+    gameState.words = [];
+    gameState.listLocked = false;
+    updateScoreDisplay(0);
+
+    // --- Restore left panel header + classes ---
+    const leftPanel = document.getElementById('left-panel');
+    leftPanel?.classList.remove('is-merged');
+    const h2 = document.querySelector('#left-panel .panel-content h2');
+    if (h2) h2.textContent = 'YOUR WORDS';
+
+        // ✅ Re-enable top-level buttons
+    document.getElementById('submit-list')?.removeAttribute('disabled');
+    document.getElementById('submit-word')?.removeAttribute('disabled');
+        document.querySelectorAll('#word-list button, #word-list [data-role="remove"]')
+      .forEach(btn => btn.removeAttribute('disabled'));
+
+    // --- Clear out word list UI completely ---
+    const wordList = document.getElementById('word-list');
+    if (wordList) {
+      wordList.classList.remove('is-hidden');
+      wordList.innerHTML = ''; // remove any old words
+    }
+    syncSubmitListButton();
+
+    // --- Generate a new grid ---
+    initializeGrid();
+
+    // --- Tell other modules (like mergedlistpanel.js) to clean up ---
+    window.dispatchEvent(new Event('game:new'));
+  });
+
+
+});
+
+
+
+
 
