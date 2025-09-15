@@ -1,3 +1,4 @@
+console.log = () => {};
 // main.js
 import { initializeGrid } from './initGrid.js';
 import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';

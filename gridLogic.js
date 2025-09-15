@@ -1,3 +1,12 @@
+const DEBUG = false;   // <— one flag at the top
+
+// Silence plain console logs
+console.log = () => {};
+console.info = () => {};
+console.group = () => {};
+console.groupCollapsed = () => {};
+console.groupEnd = () => {};
+
 import { letterFrequencies } from './constants.js';
 import wordList from './wordList.js';
 import suffixList from './suffixList.js'; 
@@ -8,7 +17,7 @@ import { computeBoardWordScores, recomputeAllWordScores } from './scoreLogic.js'
 
 
 
-const DEBUG = true; // set to false to silence detailed logs
+
 
 export const placedWords = [];
 
@@ -524,10 +533,7 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
   }
 
   if (DEBUG) {
-    console.group('Suffix branching summary');
-    console.table(
-      [...branchSummary.entries()].map(([suffix, s]) => ({ suffix, ...s }))
-    );
+
     console.groupEnd();
   }
 
