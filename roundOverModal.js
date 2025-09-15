@@ -169,10 +169,10 @@ import { gameState } from './gameState.js';
     }
 
     cmp.innerHTML = `
-      <p><strong>How you did:</strong></p>
+      <p><strong>WELL...HOW'D YOU DO?!:</strong></p>
       <ul class="rom__list" style="max-height: none;">
-        <li>Matched ${overlap} of the board’s Top 10 words</li>
-        <li>Your total vs Top 10 total: ${Math.round(playerTotal)} / ${Math.round(boardTop10Total)} (${optimalPct}%)</li>
+        <li>MATCHED ${overlap} OF THE BOARD’S TOP 10 WORDS</li>
+        <li>YOU vs THEM: ${Math.round(playerTotal)} / ${Math.round(boardTop10Total)} (${optimalPct}%)</li>
       </ul>
     `;
   });

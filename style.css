@@ -726,22 +726,65 @@ background:
    ========================================================= */
 
 @media (max-width: 768px) {
-  #left-panel, #right-panel { width: 200px; }
+  /* Side Panels: shrink & stack */
+  #left-panel,
+  #right-panel {
+    width: 200px;
+    position: relative;
+    margin: 0.5em auto;
+  }
+
+  /* Title centered */
+  #game-title {
+    text-align: center;
+    margin: 0.5em auto;
+  }
+
+  /* Grid centered */
+  #game-board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em auto;
+    text-align: center;
+  }
+
+  /* 🔥 Scale up entire tile group (more subtle) */
+  .tile {
+    transform: scale(1.1);     /* ~10% bigger */
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* Submit area stacked & centered */
   #submit-area {
+    display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 0.5em;
     bottom: 10px;
+    margin: 1em auto;
+    text-align: center;
   }
-  #submit-area div { font-size: 1.2em; }
+
+  #submit-area div {
+    font-size: 1.2em;
+  }
+
+  /* Buttons easy to tap */
   #right-panel button {
     font-size: 0.8em;
     margin-top: 4px;
     display: block;
     width: 100%;
   }
+
+  /* Word count hint centered */
   #wordcount-hint {
     width: 100%;
     margin-top: 8px;
+    text-align: center;
   }
 }
 
