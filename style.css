@@ -726,88 +726,24 @@ background:
    ========================================================= */
 
 @media (max-width: 768px) {
-  /* ===== Layout: stack panels, keep everything centered ===== */
-  #left-panel,
-  #right-panel {
-    width: 180px;
-    max-width: 42vw;
-    position: relative;
-    margin: 0.5em auto;
-  }
-
-  #game-title {
-    text-align: center;
-    margin: 0.5em auto;
-  }
-
-  /* ===== Board container ===== */
-  #game-board {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 1em auto;
-    text-align: center;
-    /* ensure svg isn’t clipped by the container */
-    overflow: visible;
-  }
-
-  /* Your board svg element (use the id you assign to it; these cover both) */
-  #game-board svg,
-  #board-svg {
-    display: block;
-    width: min(94vw, 560px);
-    height: auto;              /* keep aspect ratio */
-    overflow: visible;         /* <-- important: tiles can extend outside viewBox */
-    /* if your svg has preserveAspectRatio changed in markup, keep xMidYMid meet */
-  }
-
-  /* ===== Tiles ===== */
-  /* remove the mobile scale that broke the layout math */
-  .tile {
-    transform: none !important;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  /* slightly tighter type so letters/points don’t crowd on small screens */
-  .tile-letter { font-size: 22px !important; }
-  .tile-point  { font-size: 14px !important; }
-
-  /* optional: make tapping easier */
-  .hex-tile { touch-action: manipulation; }
-
-  /* ===== Submit / score area ===== */
+  #left-panel, #right-panel { width: 200px; }
   #submit-area {
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6em;
-    margin: 1em auto;
-    text-align: center;
+    gap: 0.5em;
+    bottom: 10px;
   }
-
-  #submit-area div {
-    font-size: 1.1em;
-  }
-
-  /* Buttons easy to tap */
-  #right-panel button,
-  #left-panel button {
-    font-size: 0.9em;
-    margin-top: 6px;
+  #submit-area div { font-size: 1.2em; }
+  #right-panel button {
+    font-size: 0.8em;
+    margin-top: 4px;
     display: block;
     width: 100%;
   }
-
-  /* Word count hint centered */
   #wordcount-hint {
     width: 100%;
     margin-top: 8px;
-    text-align: center;
   }
 }
-
 
 
 
