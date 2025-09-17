@@ -743,7 +743,15 @@ background:
     width: 100%;
     margin-top: 8px;
   }
+  
+  /* New styles to move the vertical toggles up on mobile */
+  .left-toggle, .right-toggle {
+    top: 50px; /* Adjust this value as needed */
+    transform: translateY(0); /* Remove the vertical centering */
+  }
 }
+
+
 
 
 
