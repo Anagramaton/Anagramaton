@@ -19,6 +19,9 @@ export function renderGrid(grid, svg, tileElements, handleTileClick, gridRadius)
   svg.innerHTML = '';
   tileElements.length = 0;
 
+    // 👇 make SVG scale the board nicely when we change the viewBox
+svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
   /* 1a. Inject gradient definitions */
   const defs = document.createElementNS(SVG_NS, 'defs');
 
@@ -100,6 +103,9 @@ defs.appendChild(glow);
   );
 
   const fragment = document.createDocumentFragment();
+// 👇 parent group that will contain the whole board
+const board = document.createElementNS(SVG_NS, 'g');
+board.setAttribute('id', 'board');
 
   /* 3. iterate axial coords */
   for (let q = -gridRadius; q <= gridRadius; q++) {
@@ -271,14 +277,41 @@ g.addEventListener('click', () => {
 
       // Track and append
       tileElements.push(tile);
-      fragment.appendChild(g);
+      board.appendChild(g);   // 👈 append each tile group to the board group
     }
   }
 
-
-
-  
-  // ✅ Append once, after loops
+  // ✅ Append once, after loops: put the whole board group into the fragment, then into the SVG
+  fragment.appendChild(board);
   svg.appendChild(fragment);
+
+  // ⚠️ Important: fit the SVG viewBox to the board on mobile only (≤768px)
+  requestAnimationFrame(() => fitBoardToView(svg, board));
 }
+
+// Zoom the SVG view to the actual board bounds on small screens
+function fitBoardToView(svg, board) {
+  const PAD = 12;                          // small visual breathing room
+  const DEFAULT_VB = '0 0 1000 1000';      // your current desktop viewBox
+
+  if (window.innerWidth <= 768) {
+    const b = board.getBBox();             // measure real board size
+    const x = b.x - PAD;
+    const y = b.y - PAD;
+    const w = b.width  + PAD * 2;
+    const h = b.height + PAD * 2;
+    svg.setAttribute('viewBox', `${x} ${y} ${w} ${h}`);
+  } else {
+    svg.setAttribute('viewBox', DEFAULT_VB);
+  }
+
+  // add a resize/orientation listener once
+  if (!svg.__fitListenerAdded) {
+    const onResize = () => fitBoardToView(svg, board);
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', onResize);
+    svg.__fitListenerAdded = true;
+  }
+}
+
 
