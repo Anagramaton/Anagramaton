@@ -87,29 +87,7 @@ function updateCurrentWordDisplay() {
 
 
 
-// ----------------------------------------------
-// Phrase helpers
-// ----------------------------------------------
-const normalize = s => String(s).toUpperCase().replace(/[^A-Z]/g, '');
 
-function tryRevealPhrasesFromSelection() {
-  const [raw1 = '', raw2 = ''] = (gameState.seedPhrase || '').split('/');
-  const target1 = normalize(raw1);
-  const target2 = normalize(raw2);
-  const selectionLetters = normalize((gameState.selectedTiles || []).map(t => t.letter).join(''));
-
-  if (!gameState.phraseRevealed?.phrase1 && selectionLetters === target1) {
-    revealPhrase('phrase1');
-    setTimeout(() => resetSelectionState(), 520);
-    return true;
-  }
-  if (!gameState.phraseRevealed?.phrase2 && selectionLetters === target2) {
-    revealPhrase('phrase2');
-    setTimeout(() => resetSelectionState(), 520);
-    return true;
-  }
-  return false;
-}
 
 // ----------------------------------------------
 // Submit current selection as a word
@@ -118,8 +96,6 @@ function handleSubmitWordClick() {
   const selectedTiles = gameState.selectedTiles || [];
   const word = selectedTiles.map(t => t.letter).join('').toUpperCase();
 
-  // Phrase detection first
-  if (tryRevealPhrasesFromSelection()) return;
 
   // Capacity + duplicate guards
   if (submittedWords.size >= 10) {
