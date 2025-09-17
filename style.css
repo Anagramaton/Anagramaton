@@ -725,23 +725,37 @@ background:
    7) RESPONSIVENESS
    ========================================================= */
 
+/* hidden by default */
+#top-toggle-row {
+  display: none;
+}
+
+/* Mobile layout: show toggles as a horizontal row under the title */
 @media (max-width: 768px) {
-  #left-panel, #right-panel { width: 200px; }
-  #submit-area {
-    flex-direction: column;
-    gap: 0.5em;
-    bottom: 10px;
+  #top-toggle-row {
+    position: absolute;
+    top: calc(18px + 48px); /* just below the game title */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    z-index: 1200;
   }
-  #submit-area div { font-size: 1.2em; }
-  #right-panel button {
-    font-size: 0.8em;
-    margin-top: 4px;
-    display: block;
-    width: 100%;
+
+  /* reset their old vertical placement */
+  .side-toggle {
+    position: static !important;
+    transform: none !important;
+    writing-mode: horizontal-tb;
+    height: auto;
+    width: auto;
   }
-  #wordcount-hint {
-    width: 100%;
-    margin-top: 8px;
+
+  /* clean up any side-specific positioning */
+  .left-toggle, .right-toggle {
+    left: auto;
+    right: auto;
   }
 }
 
