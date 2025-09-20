@@ -9,6 +9,11 @@ import { placedWords } from './gridLogic.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers } from './constants.js';
 
+const clickSound = document.getElementById('click-sound');
+const backgroundMusic = document.getElementById('background-music');
+
+
+
 
 
 // ------------------------------------------------------------

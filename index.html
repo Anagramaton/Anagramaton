@@ -46,9 +46,6 @@
 </div>
 
 
-
-
-<!-- Top toggle row (mobile only) -->
 <div id="top-toggle-row">
   <button id="toggle-left" class="side-toggle left-toggle" aria-label="Toggle word panel">WORD PANEL</button>
   <button id="toggle-right" class="side-toggle right-toggle" aria-label="Toggle phrase panel">PHRASE PANEL</button>
@@ -146,6 +143,82 @@
   </div>
 </div>
 
+
+<!-- HOW TO button (place wherever you like) -->
+<button id="howto-open" aria-haspopup="dialog" aria-controls="howto-modal" style="margin-left:8px;">
+  
+</button>
+
+<!-- How To Modal -->
+<div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
+  <div class="rom__backdrop"></div>
+  <div class="rom__dialog" style="max-width: 640px;">
+    <h2 id="howto-title">How to Play</h2>
+
+    <!-- Pages -->
+    <div id="howto-pagewrap" style="min-height:220px; margin:10px 0 16px;">
+
+      <!-- PAGE 1 — Objective -->
+      <section class="howto-page" data-page="0">
+        <h3 style="margin:0 0 8px;">PAGE 1 — Objective</h3>
+        <p>
+          Your objective is to build and submit a list of the 10 highest scoring words you can find on the board.
+          This score will be the sum of each of the 10 words from your submitted list.
+          The score of each word is based off a standard scrabble base point value system for each tile with a very
+          important tile bonus multiplier ...
+        </p>
+      </section>
+
+      <!-- PAGE 2 — Building -->
+      <section class="howto-page" data-page="1" hidden>
+        <h3 style="margin:0 0 8px;">PAGE 2 — Building</h3>
+        <p>
+          Word must be at least 4 tiles (letters) in length. Each tile included in a valid word must be an adjacent
+          neighbor of the tile that came before it. Each tile can only be used once per word.
+        </p>
+      </section>
+
+      <!-- PAGE 3 — Bonus Multipliers (your exact wording) -->
+      <section class="howto-page" data-page="2" hidden>
+        <h3 style="margin:0 0 8px;">PAGE 3 — Bonus Multipliers</h3>
+        <p>
+          The reuse multiplier: The point value of each tile that has been reused once, will double.
+          That point value will double again if the tile is reused a 2nd time where its point value will then be capped.
+        </p>
+        <p>
+          Palindrome Bonus: Each tile in a palindrome word gets a x5 increase to their point value.
+        </p>
+        <p>
+          Length Bonus: Each tile (starting at the fifth tile in every word) receives a x3 to the point value.
+          For every additional tile after the fifth, an additional increment is added the multiplier up through tile 10.
+          Tile 10+ receives x10.
+        </p>
+      </section>
+
+      <!-- PAGE 4 — Word List (blank for you) -->
+      <section class="howto-page" data-page="3" hidden>
+        <h3 style="margin:0 0 8px;">PAGE 4 — Word List</h3>
+        <p>(This page is left blank so you can fill it in later.)</p>
+      </section>
+    </div>
+
+    <!-- Pager controls -->
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+      <div id="howto-dots" aria-label="Pages" style="display:flex; gap:6px;">
+        <button class="howto-dot" data-dot="0" aria-label="Page 1"></button>
+        <button class="howto-dot" data-dot="1" aria-label="Page 2"></button>
+        <button class="howto-dot" data-dot="2" aria-label="Page 3"></button>
+        <button class="howto-dot" data-dot="3" aria-label="Page 4"></button>
+      </div>
+      <div class="rom__actions" style="margin-left:auto;">
+        <button id="howto-prev" aria-label="Previous">Back</button>
+        <button id="howto-next" aria-label="Next">Next</button>
+        <button id="howto-close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Game Board -->
 <main id="game-container">
   <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000"></svg>
@@ -154,6 +227,8 @@
 </script>
 <script type="module" src="./main.js"></script>
 <script type="module" src="./roundOverModal.js"></script>
+<script type="module" src="./howToModal.js"></script>
+
 
 </body>
 </html>

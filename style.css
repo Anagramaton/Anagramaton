@@ -20,7 +20,7 @@
   transform: translateX(-50%);
   user-select: none;
   pointer-events: none;
-  z-index: 1100;
+  z-index: 900;
 }
 
 /* Root Variables & Base Styles */
@@ -721,40 +721,75 @@ background:
   display: none;
 }
 
-/* =========================================================
-   7) RESPONSIVENESS
-   ========================================================= */
 
+/* ================================
+   Mobile Layout Overrides
+   ================================ */
 @media (max-width: 768px) {
-  #left-panel, #right-panel { width: 200px; }
+  /* Title: slightly smaller, leaves room for toggles */
+  #game-title {
+    top: 12px;
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+  }
+
+  /* Panel toggles: horizontal buttons, same size as Submit/Clear */
+  .side-toggle {
+    writing-mode: horizontal-tb;
+    text-orientation: initial;
+    width: 140px;
+    height: auto;
+    padding: 0.65em 1.1em;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 2px solid #28f0ff;
+    background: transparent;
+    color: #a9e7ff;
+    font-weight: 700;
+    box-shadow: inset 0 0 10px #28f0ff,
+                0 0 10px #28f0ff33;
+    text-shadow: 0 0 6px #00e5ff,
+                 0 0 14px #6a00ff;
+    transition: transform 120ms ease,
+                box-shadow 120ms ease,
+                filter 120ms ease;
+  }
+
+  /* Hover/active effects */
+  .side-toggle:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+  }
+  .side-toggle:active {
+    transform: translateY(0);
+    filter: brightness(0.95);
+  }
+
+  /* Positioning: both toggles sit just under the title */
+  .left-toggle {
+    top: 80px;
+    left: 0;
+    transform: none;
+  }
+  .right-toggle {
+    top: 80px;
+    right: 0;
+    transform: none;
+  }
+
+  /* Submit area tweaks (optional tighter spacing on small screens) */
   #submit-area {
     flex-direction: column;
     gap: 0.5em;
     bottom: 10px;
   }
-  #submit-area div { font-size: 1.2em; }
-  #right-panel button {
-    font-size: 0.8em;
-    margin-top: 4px;
-    display: block;
-    width: 100%;
+  #submit-area div {
+    font-size: 1.2em;
   }
-  #wordcount-hint {
-    width: 100%;
-    margin-top: 8px;
-  }
-  
-  /* New styles to move the vertical toggles up on mobile */
-  .left-toggle, .right-toggle {
-    top: 50px; /* Adjust this value as needed */
-    transform: translateY(0); /* Remove the vertical centering */
+  #submit-word,
+  #clear-word {
+    font-size: 0.9rem;
   }
 }
-
-
-
-
-
 
 
 

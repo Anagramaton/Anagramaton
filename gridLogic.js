@@ -1,11 +1,6 @@
-const DEBUG = false;   // <— one flag at the top
+const DEBUG = true;  
 
-// Silence plain console logs
-console.log = () => {};
-console.info = () => {};
-console.group = () => {};
-console.groupCollapsed = () => {};
-console.groupEnd = () => {};
+
 
 import { letterFrequencies } from './constants.js';
 import wordList from './wordList.js';
@@ -360,7 +355,7 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
   };
   const placementScore = (word, overlaps, pathLen) => {
     const newLetters = pathLen - overlaps;
-    const W_OVERLAP = 8;
+    const W_OVERLAP = 5;
     const W_LENGTH = 3.5; // strong length bias
     const W_NEW_PEN = 1.2;
     return W_OVERLAP * overlaps + W_LENGTH * word.length - W_NEW_PEN * newLetters;
@@ -472,6 +467,7 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
         usedWords.add(word);
         neededLong--;
       }
+
     }
   }
 
@@ -557,10 +553,10 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
 
     const placementScore2 = (word, overlaps, anchorTouches, pathLen) => {
       const newLetters = pathLen - overlaps;
-      const W_ANCHOR = 40;
-      const W_OVERLAP = 6;
-      const W_LENGTH = 2.2; // mild length preference
-      const W_NEW_PEN = 1.5;
+      const W_ANCHOR = 30;
+      const W_OVERLAP = 5;
+      const W_LENGTH = 2.8; 
+      const W_NEW_PEN = 1.4;
       return (
         W_ANCHOR * anchorTouches +
         W_OVERLAP * overlaps +
@@ -615,7 +611,7 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
       const newLetters = pathLen - overlaps;
       const W_ANCHOR = 30;
       const W_OVERLAP = 5;
-      const W_LENGTH = 1.8;
+      const W_LENGTH = 2.5;
       const W_NEW_PEN = 1.0;
       return (
         W_ANCHOR * anchorTouches +
