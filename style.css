@@ -837,6 +837,18 @@ background:
   }
 }
 
+@media (max-width: 768px) {
+  /* Hide right toggle if left panel is open */
+  body:has(#left-panel.open) .right-toggle {
+    display: none;
+  }
+
+  /* Hide left toggle if right panel is open */
+  body:has(#right-panel.open) .left-toggle {
+    display: none;
+  }
+}
+
 
 
 
