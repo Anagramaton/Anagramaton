@@ -57,11 +57,7 @@ background:
     hsl(210, 25%, 18%) 100%
   );
 
-  :root {
-  --stage1: #fdfdfd;
-  --stage2: #0a07cc;
-  --stage3: #1892e9;
-}
+
 
 
 } 
@@ -930,6 +926,12 @@ background:
   transition: fill 160ms, stroke 160ms;
 }
 
+
+  :root {
+  --stage1: #fdfdfd;
+  --stage2: #0a07cc;
+  --stage3: #1892e9;
+}
 /* =========================================
    Stage 1
    ========================================= */

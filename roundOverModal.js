@@ -1,6 +1,6 @@
-import { gameState } from './gameState.js';
-
 // roundOverModal.js
+// import { gameState } from './gameState.js';
+
 (function () {
   const $ = (id) => document.getElementById(id);
 
@@ -11,33 +11,16 @@ import { gameState } from './gameState.js';
   const totalEl  = $('rom-total');
   const baseEl   = $('rom-base');
   const bonusEl  = $('rom-bonus');
-  const countEl  = $('rom-count');
-  const wordsEl  = $('rom-words');
   const closeBtn = $('rom-close-btn');
-  
 
   let lastFocused = null;
 
-  function clearWords() {
-    while (wordsEl.firstChild) wordsEl.removeChild(wordsEl.firstChild);
-  }
-
-  function fillWords(words) {
-    clearWords();
-    for (const w of words) {
-      const li = document.createElement('li');
-      li.textContent = String(w).toUpperCase();
-      wordsEl.appendChild(li);
-    }
-  }
-
+  // ---------- Open/Close modal
   function openModal({ words = [], baseTotal = 0, bonusTotal = 0, totalScore = 0 } = {}) {
     // Fill fields
     totalEl.textContent = totalScore;
     baseEl.textContent  = baseTotal;
     bonusEl.textContent = bonusTotal;
-    countEl.textContent = words.length;
-    fillWords(words);
 
     // Show
     lastFocused = document.activeElement;
@@ -58,6 +41,7 @@ import { gameState } from './gameState.js';
     }
   }
 
+  // ---------- Focus management
   function isInDialog(el) {
     return dialog.contains(el);
   }
@@ -66,9 +50,8 @@ import { gameState } from './gameState.js';
   let focusHandler = null;
   function trapFocus(enable) {
     if (enable && !focusHandler) {
-      focusHandler = (e) => {
+      focusHandler = () => {
         if (!isInDialog(document.activeElement)) {
-          // move focus back into dialog
           (closeBtn || dialog).focus();
         }
       };
@@ -79,7 +62,7 @@ import { gameState } from './gameState.js';
     }
   }
 
-  // Wire close interactions
+  // ---------- Wire close interactions
   closeBtn?.addEventListener('click', closeModal);
   backdrop?.addEventListener('click', closeModal);
   document.addEventListener('keydown', (e) => {
@@ -88,95 +71,183 @@ import { gameState } from './gameState.js';
     }
   });
 
-  // Listen for your game's event from main.js
+  // ---------- Listen for your game's event from main.js to open modal
   window.addEventListener('round:over', (e) => openModal(e.detail || {}));
 
-// === Add-only enhancement: Board Top 10 + Comparison =========================
-(() => {
-  const modal = document.getElementById('round-over-modal');
-  if (!modal) return;
-
-  // tiny helpers (scoped to this IIFE to avoid collisions)
-  function romEnsureSection(id, headingText) {
-    let section = document.getElementById(id);
-    if (section) return section;
-
-    section = document.createElement('section');
-    section.id = id;
-    section.style.marginTop = '14px';
-
-    const h3 = document.createElement('h3');
-    h3.textContent = headingText;
-    h3.style.margin = '10px 0 6px';
-
-    const list = document.createElement('ol');
-    list.className = 'rom__list';
-    list.style.maxHeight = '200px';
-    list.style.overflow = 'auto';
-    list.style.paddingLeft = '20px';
-    list.id = id + '-list';
-
-    section.appendChild(h3);
-    section.appendChild(list);
+  // === Add-only enhancement: Side-by-side "You vs Them" + Fancy Meter ==========
+  (() => {
+    const modal = document.getElementById('round-over-modal');
+    if (!modal) return;
 
     const dialog = modal.querySelector('.rom__dialog');
-    const actions = modal.querySelector('.rom__actions');
-    dialog.insertBefore(section, actions);
-    return section;
-  }
 
-  function romFillList(ol, items) {
-    ol.innerHTML = '';
-    items.forEach((it) => {
-      const li = document.createElement('li');
-      li.textContent = `${String(it.word).toUpperCase()} (+${Number(it.score) || 0})`;
-      ol.appendChild(li);
-    });
-  }
+    // ---------- UI builders
+    function ensureVSSection() {
+      let wrap = document.getElementById('rom-vs-wrap');
+      if (wrap) return wrap;
 
-  window.addEventListener('round:over', (e) => {
-    const detail = e?.detail || {};
+      wrap = document.createElement('section');
+      wrap.id = 'rom-vs-wrap';
 
-    // these new fields come from main.js (see note below)
-    const boardTop10 = Array.isArray(detail.boardTop10) ? detail.boardTop10 : [];
-    const boardTop10Total = Number(detail.boardTop10Total) || 0;
+      const h3 = document.createElement('h3');
+      h3.className = 'rom__section-title';
+      h3.textContent = 'Words vs Board';
 
-    // create & fill "Board's Top 10" section
-    const top10Section = romEnsureSection('rom-top10', "Board's Top 10");
-    const top10List = document.getElementById('rom-top10-list');
-    romFillList(top10List, boardTop10);
+      const grid = document.createElement('div');
+      grid.className = 'rom__grid';
 
-    // compute overlap + optimal percentage
-    const playerItems = Array.isArray(detail.wordsWithScores) ? detail.wordsWithScores : [];
-    const top10WordSet = new Set(boardTop10.map(x => String(x.word).toUpperCase()));
-    const overlap = playerItems.filter(p => top10WordSet.has(String(p.word).toUpperCase())).length;
+      // YOU
+      const colYou = document.createElement('div');
+      colYou.className = 'rom__col rom__col--you';
+      colYou.innerHTML = `
+        <h4 class="rom__col-title">Your Words <span id="rom-you-count"></span></h4>
+        <ol id="rom-you-ol" class="rom__ol"></ol>
+      `;
 
-    const playerTotal = Number(detail.totalScore) || 0;
-    const optimalPct = boardTop10Total > 0
-      ? Math.round((playerTotal / boardTop10Total) * 100)
-      : 0;
+      // THEM
+      const colThem = document.createElement('div');
+      colThem.className = 'rom__col rom__col--them';
+      colThem.innerHTML = `
+        <h4 class="rom__col-title">Board's Top 10 <span id="rom-them-count"></span></h4>
+        <ol id="rom-them-ol" class="rom__ol"></ol>
+      `;
 
-    // ensure comparison block
-    let cmp = document.getElementById('rom-compare');
-    if (!cmp) {
-      cmp = document.createElement('div');
-      cmp.id = 'rom-compare';
-      cmp.style.marginTop = '10px';
-      cmp.style.opacity = '0.9';
-      const dialog = modal.querySelector('.rom__dialog');
+      grid.appendChild(colYou);
+      grid.appendChild(colThem);
+
+      // insert before the actions
       const actions = modal.querySelector('.rom__actions');
-      dialog.insertBefore(cmp, actions);
+      wrap.appendChild(h3);
+      wrap.appendChild(grid);
+      dialog.insertBefore(wrap, actions);
+
+      return wrap;
     }
 
-    cmp.innerHTML = `
-      <p><strong>WELL...HOW'D YOU DO?!:</strong></p>
-      <ul class="rom__list" style="max-height: none;">
-        <li>MATCHED ${overlap} OF THE BOARD’S TOP 10 WORDS</li>
-        <li>YOU vs THEM: ${Math.round(playerTotal)} / ${Math.round(boardTop10Total)} (${optimalPct}%)</li>
-      </ul>
-    `;
-  });
-})();
+    function ensureMeter() {
+      let meter = document.getElementById('rom-meter');
+      if (meter) return meter;
 
+      meter = document.createElement('section');
+      meter.id = 'rom-meter';
+      meter.className = 'rom__meter';
+      meter.innerHTML = `
+        <div class="rom__meter-top">
+          <span class="rom__meter-label">YOU vs THEM</span>
+          <span id="rom-meter-numbers" class="rom__meter-label"></span>
+        </div>
+        <div class="rom__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Round score comparison">
+          <div id="rom-meter-fill" class="rom__fill"></div>
+        </div>
+        <div id="rom-meter-pct" class="rom__pct"></div>
+      `;
+      const actions = modal.querySelector('.rom__actions');
+      dialog.insertBefore(meter, actions);
+      return meter;
+    }
+
+function renderList(ol, items, matchSet = new Set(), highlightThem = false) {
+  ol.innerHTML = '';
+  items.forEach((it, idx) => {
+    const li = document.createElement('li');
+    li.className = 'rom__li';
+
+    const wordUpper = String(it.word).toUpperCase();
+
+    const word = document.createElement('span');
+    word.className = 'rom__word';
+    word.textContent = `${idx + 1}. ${wordUpper}`;
+
+    const chip = document.createElement('span');
+    chip.className = 'rom__score-chip';
+    chip.textContent = `+${Number(it.score) || 0}`;
+
+    li.appendChild(word);
+    li.appendChild(chip);
+
+    // highlight if in matchSet
+    if (matchSet.has(wordUpper)) {
+      li.classList.add(highlightThem ? 'rom__li--match-them' : 'rom__li--match');
+    }
+
+    ol.appendChild(li);
+  });
+}
+
+
+    function animateFill(el, toPct) {
+      const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+      const target = clamp(toPct, 0, 100);
+      const start = parseFloat(el.style.width || '0') || 0;
+      const duration = 700; // ms
+      const t0 = performance.now();
+
+      function step(t) {
+        const k = Math.min(1, (t - t0) / duration);
+        const val = start + (target - start) * k;
+        el.style.width = val + '%';
+        if (k < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // ---------- Fill on round end
+    window.addEventListener('round:over', (e) => {
+      const d = e?.detail || {};
+
+      // Ensure sections exist
+      ensureVSSection();
+      ensureMeter();
+
+      // Data prep
+      const boardTop10 = Array.isArray(d.boardTop10) ? d.boardTop10 : [];
+      const youItems =
+        Array.isArray(d.wordsWithScores) ? d.wordsWithScores :
+        Array.isArray(d.words) ? d.words.map(w => ({ word: w, score: 0 })) : [];
+
+      // Sort both by score desc for satisfying comparison
+      const byScoreDesc = (a, b) => (Number(b.score) || 0) - (Number(a.score) || 0);
+      const youSorted   = [...youItems].sort(byScoreDesc).slice(0, 10);
+      const themSorted  = [...boardTop10].sort(byScoreDesc).slice(0, 10);
+
+      // Render side-by-side lists + counts
+      const youOl   = document.getElementById('rom-you-ol');
+      const themOl  = document.getElementById('rom-them-ol');
+      const youCnt  = document.getElementById('rom-you-count');
+      const themCnt = document.getElementById('rom-them-count');
+
+      renderList(youOl, youSorted);
+      renderList(themOl, themSorted);
+      youCnt.textContent  = `(${youItems.length})`;
+      themCnt.textContent = `(${themSorted.length})`;
+
+      // Overlap set
+      const top10WordSet = new Set(themSorted.map(x => String(x.word).toUpperCase()));
+      const overlap = youItems.filter(p => top10WordSet.has(String(p.word).toUpperCase())).length;
+
+      // Render with highlighting
+      renderList(youOl, youSorted, top10WordSet, false);
+      renderList(themOl, themSorted, new Set(youSorted.map(x => String(x.word).toUpperCase())), true);
+
+
+      const playerTotal = Number(d.totalScore) || 0;
+      const boardTop10Total =
+        Number(d.boardTop10Total) ||
+        themSorted.reduce((acc, x) => acc + (Number(x.score) || 0), 0);
+
+      const pct = boardTop10Total > 0 ? Math.round((playerTotal / boardTop10Total) * 100) : 0;
+
+      // Fill meter
+      const fill    = document.getElementById('rom-meter-fill');
+      const numbers = document.getElementById('rom-meter-numbers');
+      const pctEl   = document.getElementById('rom-meter-pct');
+      const track   = dialog.querySelector('.rom__track');
+
+      numbers.innerHTML = `<b>${Math.round(playerTotal)}</b> / ${Math.round(boardTop10Total)}`;
+      pctEl.textContent = `${pct}% of Top 10 total • Matched ${overlap} word${overlap === 1 ? '' : 's'}`;
+      track.setAttribute('aria-valuenow', String(pct));
+      animateFill(fill, pct);
+    });
+  })();
 
 })();
