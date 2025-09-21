@@ -259,6 +259,11 @@
 
   <h1 id="game-title">ANAGRAMATON</h1>
 
+  <button id="howto-open" aria-haspopup="dialog" aria-controls="howto-modal">
+  ?
+</button>
+
+
 <!-- Submit Area -->
 <div id="submit-area">
   <div id="current-word-display">
@@ -369,17 +374,10 @@
   </div>
 </div>
 
-<!-- keep your merged <style> block as we set earlier -->
+
 <script type="module" src="./roundOverModal.js"></script>
 
 
-
-<!-- HOW TO button (place wherever you like) -->
-<button id="howto-open" aria-haspopup="dialog" aria-controls="howto-modal" style="margin-left:8px;">
-  
-</button>
-
-<!-- How To Modal -->
 <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
   <div class="rom__backdrop"></div>
   <div class="rom__dialog" style="max-width: 640px;">

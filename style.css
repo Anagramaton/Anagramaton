@@ -811,12 +811,34 @@ background:
 
 @media (max-width: 768px) {
   #howto-open {
-    min-width: 40px;
-    min-height: 40px;
-    font-size: 1.2rem;    /* smaller gear icon */
-    top: max(6px, env(safe-area-inset-top));
+    display: flex;                 /* visible only on mobile */
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: max(8px, env(safe-area-inset-top));
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: 2px solid #28f0ff;
+    background: transparent;
+    color: #a9e7ff;
+    box-shadow: inset 0 0 6px #28f0ff,
+                0 0 8px #28f0ff55;
+    cursor: pointer;
+    z-index: 900; /* stays above panels */
+  }
+
+  #howto-open:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
   }
 }
+
+
+
 
 
 
