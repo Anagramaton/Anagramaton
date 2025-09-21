@@ -732,63 +732,95 @@ background:
 /* ================================
    Mobile Layout Overrides
    ================================ */
-/* REPLACE your current @media (max-width: 768px) block with THIS */
 @media (max-width: 768px) {
-  :root{--panel-w:300px;--panel-header-h:44px;}
-
-  /* gear (How To) */
-  #howto-open{
-    position:absolute;top:max(6px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);
-    min-width:40px;min-height:40px;font-size:1.2rem;line-height:1;border-radius:10px;
-    border:2px solid #28f0ff;background:transparent;color:#a9e7ff;z-index:1300;
-    box-shadow:inset 0 0 10px #28f0ff,0 0 10px #28f0ff33;
+  /* Title: slightly smaller, leaves room for toggles */
+  #game-title {
+    top: 12px;
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
   }
 
-  /* toggle row under title */
-  #top-toggle-row{
-    position:relative;z-index:1200;display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;width:100%;
+  /* Panel toggles: horizontal buttons, same size as Submit/Clear */
+  .side-toggle {
+    writing-mode: horizontal-tb;
+    text-orientation: initial;
+    width: 140px;
+    height: auto;
+    padding: 0.65em 1.1em;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 2px solid #28f0ff;
+    background: transparent;
+    color: #a9e7ff;
+    font-weight: 700;
+    box-shadow: inset 0 0 10px #28f0ff,
+                0 0 10px #28f0ff33;
+    text-shadow: 0 0 6px #00e5ff,
+                 0 0 14px #6a00ff;
+    transition: transform 120ms ease,
+                box-shadow 120ms ease,
+                filter 120ms ease;
   }
 
-  /* toggles: force off the side-rail rules on mobile */
-  .side-toggle{
-    position:static !important; top:auto !important; left:auto !important; right:auto !important; transform:none !important;
-    display:inline-flex;align-items:center;justify-content:center;
-    min-width:140px;height:auto;padding:.65em 1.1em;border-radius:10px;border:2px solid #28f0ff;
-    background:transparent;color:#a9e7ff;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-    writing-mode:horizontal-tb;text-orientation:initial;font-size:1rem;user-select:none;cursor:pointer;
-    box-shadow:inset 0 0 10px #28f0ff,0 0 10px #28f0ff33;
+  /* Hover/active effects */
+  .side-toggle:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
   }
-  .left-toggle,.right-toggle{position:static !important; top:auto !important; left:auto !important; right:auto !important; transform:none !important;}
-
-  /* dock toggle as header when open */
-  body:has(#left-panel.open) #toggle-left{
-    position:fixed !important; top:calc(max(6px,env(safe-area-inset-top))); left:0; width:var(--panel-w); height:var(--panel-header-h);
-    border-radius:0; background:rgba(10,16,26,.95); transform:none !important; z-index:1400;
-  }
-  body:has(#right-panel.open) #toggle-right{
-    position:fixed !important; top:calc(max(6px,env(safe-area-inset-top))); right:0; width:var(--panel-w); height:var(--panel-header-h);
-    border-radius:0; background:rgba(10,16,26,.95); transform:none !important; z-index:1400;
+  .side-toggle:active {
+    transform: translateY(0);
+    filter: brightness(0.95);
   }
 
-  /* panels: truly off-canvas when closed, interactive only when open */
-  #left-panel{left:0; transform:translateX(-100%) !important; pointer-events:none !important;}
-  #right-panel{right:0; transform:translateX(100%)  !important; pointer-events:none !important;}
-  #left-panel.open{transform:translateX(0) !important; pointer-events:auto !important;}
-  #right-panel.open{transform:translateX(0) !important; pointer-events:auto !important;}
+  /* Positioning: both toggles sit just under the title */
+  .left-toggle {
+    top: 80px;
+    left: 0;
+    transform: none;
+  }
+  .right-toggle {
+    top: 80px;
+    right: 0;
+    transform: none;
+  }
 
-  /* space for docked header */
-  #left-panel.open .panel-content,#right-panel.open .panel-content{padding-top:calc(18px + var(--panel-header-h));}
-
-  /* hide opposite toggle; collapse row while open */
-  body:has(#left-panel.open) #toggle-right, body:has(#right-panel.open) #toggle-left{display:none !important;}
-  body:has(#left-panel.open) #top-toggle-row, body:has(#right-panel.open) #top-toggle-row{margin:0; padding:0; height:0; overflow:hidden;}
-
-  /* submit area tighten */
-  #submit-area{position:absolute;left:50%;transform:translateX(-50%);flex-direction:column;gap:.5em;bottom:10px;}
-  #submit-area div{font-size:1.2em;}
-  #submit-word,#clear-word{font-size:.9rem;}
+  /* Submit area tweaks (optional tighter spacing on small screens) */
+  #submit-area {
+    flex-direction: column;
+    gap: 0.5em;
+    bottom: 10px;
+  }
+  #submit-area div {
+    font-size: 1.2em;
+  }
+  #submit-word,
+  #clear-word {
+    font-size: 0.9rem;
+  }
 }
 
+@media (max-width: 768px) {
+  /* Normal position */
+  .side-toggle { top: 80px; }
+  .left-toggle  { left: 0; }
+  .right-toggle { right: 0; }
+
+  /* When panel is open, move its toggle up */
+  body:has(#left-panel.open)  .left-toggle  { 
+    top: max(8px, env(safe-area-inset-top));
+  }
+  body:has(#right-panel.open) .right-toggle { 
+    top: max(8px, env(safe-area-inset-top));
+  }
+}
+
+@media (max-width: 768px) {
+  #howto-open {
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 1.2rem;    /* smaller gear icon */
+    top: max(6px, env(safe-area-inset-top));
+  }
+}
 
 
 
