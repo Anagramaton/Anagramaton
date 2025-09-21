@@ -29,6 +29,8 @@
 
 <body>
 
+  <button id="howto-open" aria-haspopup="dialog" aria-controls="howto-modal">⚙️</button>
+
   <h1 id="game-title">ANAGRAMATON</h1>
 
 <!-- Submit Area -->
@@ -46,40 +48,43 @@
 </div>
 
 
+<!-- Toggle row under the game title -->
 <div id="top-toggle-row">
-  <button id="toggle-left" class="side-toggle left-toggle" aria-label="Toggle word panel">WORD PANEL</button>
-  <button id="toggle-right" class="side-toggle right-toggle" aria-label="Toggle phrase panel">PHRASE PANEL</button>
+  <button id="toggle-left" class="side-toggle left-toggle">WORD PANEL</button>
+  <button id="toggle-right" class="side-toggle right-toggle">PHRASE PANEL</button>
 </div>
 
+<!-- LEFT PANEL -->
+<aside id="left-panel">
+  <div class="panel-content">
+    <ul id="word-list"></ul>
 
-  <!-- LEFT PANEL (Word/Merged panel) -->
-  <aside id="left-panel">
-    <div class="panel-content">
-      <h2>YOUR WORDS</h2>
-
-      <!-- Word list shown during word-entry -->
-      <ul id="word-list"></ul>
-
-      <!-- Buttons row (CSS targets .panel-actions) -->
-      <div class="panel-actions">
-        <button id="submit-list" type="button">SUBMIT LIST</button>
-        <button id="new-game"   type="button">NEW GAME</button>
-      </div>
-
-
+    <div class="panel-actions">
+      <button id="submit-list" type="button">SUBMIT LIST</button>
+      <button id="new-game" type="button">NEW GAME</button>
     </div>
-  </aside>
+  </div>
+</aside>
 
+<!-- RIGHT PANEL -->
+<aside id="right-panel">
+  <div class="panel-content">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+      <span id="hints-used">HINTS: 0/5</span>
+      <span id="bonus-multi">BONUS MULTI: x10</span>
+    </div>
+    
+    <button id="howto-open" aria-haspopup="dialog" aria-controls="howto-modal">⚙️</button>
 
-  <!-- Right Panel -->
-  <aside id="right-panel">
-    <div class="panel-content">
-      <h2>PHRASE FINDER PANEL</h2>
-
-      <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-        <span id="hints-used">HINTS: 0/5</span>
-        <span id="bonus-multi">BONUS MULTI: x10</span>
+    <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
+      <div class="rom__backdrop"></div>
+      <div class="rom__dialog" style="max-width: 640px;">
+        <h2 id="howto-title">How to Play</h2>
       </div>
+    </div>
+  </div>
+</aside>
+
 
       <hr />
 
@@ -142,12 +147,6 @@
     </div>
   </div>
 </div>
-
-
-<!-- HOW TO button (place wherever you like) -->
-<button id="howto-open" aria-haspopup="dialog" aria-controls="howto-modal" style="margin-left:8px;">
-  
-</button>
 
 <!-- How To Modal -->
 <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
