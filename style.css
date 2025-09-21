@@ -732,142 +732,61 @@ background:
 /* ================================
    Mobile Layout Overrides
    ================================ */
+/* REPLACE your current @media (max-width: 768px) block with THIS */
 @media (max-width: 768px) {
-  /* --- Config for docking --- */
-  :root { 
-    --panel-w: 300px;        /* match your #left-panel/#right-panel width */
-    --panel-header-h: 44px;  /* height of docked toggle/header */
+  :root{--panel-w:300px;--panel-header-h:44px;}
+
+  /* gear (How To) */
+  #howto-open{
+    position:absolute;top:max(6px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+    min-width:40px;min-height:40px;font-size:1.2rem;line-height:1;border-radius:10px;
+    border:2px solid #28f0ff;background:transparent;color:#a9e7ff;z-index:1300;
+    box-shadow:inset 0 0 10px #28f0ff,0 0 10px #28f0ff33;
   }
 
-  /* --- HOW TO (gear) button: centered ABOVE the title --- */
-  #howto-open {
-    position: absolute;
-    top: max(6px, env(safe-area-inset-top));
-    left: 50%;
-    transform: translateX(-50%);
-    min-width: 40px;
-    min-height: 40px;
-    font-size: 1.2rem;        /* small, so it doesn’t crowd the title */
-    line-height: 1;
-    border-radius: 10px;
-    border: 2px solid #28f0ff;
-    background: transparent;
-    color: #a9e7ff;
-    cursor: pointer;
-    z-index: 1300;
-    box-shadow: inset 0 0 10px #28f0ff, 0 0 10px #28f0ff33;
-    transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
-  }
-  #howto-open:hover { transform: translateX(-50%) translateY(-2px); filter: brightness(1.1); }
-  #howto-open:active { transform: translateX(-50%); filter: brightness(0.95); }
-  #howto-open:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 3px rgba(0,229,255,0.5),
-      0 0 18px rgba(106, 0, 255, 0.5),
-      inset 0 0 10px #28f0ff, 0 0 10px #28f0ff33;
+  /* toggle row under title */
+  #top-toggle-row{
+    position:relative;z-index:1200;display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;width:100%;
   }
 
-  /* --- Toggle row under the title (normal state) --- */
-  #top-toggle-row {
-    position: relative;
-    z-index: 1200;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    margin-top: 8px; /* sits beneath the title */
+  /* toggles: force off the side-rail rules on mobile */
+  .side-toggle{
+    position:static !important; top:auto !important; left:auto !important; right:auto !important; transform:none !important;
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:140px;height:auto;padding:.65em 1.1em;border-radius:10px;border:2px solid #28f0ff;
+    background:transparent;color:#a9e7ff;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    writing-mode:horizontal-tb;text-orientation:initial;font-size:1rem;user-select:none;cursor:pointer;
+    box-shadow:inset 0 0 10px #28f0ff,0 0 10px #28f0ff33;
+  }
+  .left-toggle,.right-toggle{position:static !important; top:auto !important; left:auto !important; right:auto !important; transform:none !important;}
+
+  /* dock toggle as header when open */
+  body:has(#left-panel.open) #toggle-left{
+    position:fixed !important; top:calc(max(6px,env(safe-area-inset-top))); left:0; width:var(--panel-w); height:var(--panel-header-h);
+    border-radius:0; background:rgba(10,16,26,.95); transform:none !important; z-index:1400;
+  }
+  body:has(#right-panel.open) #toggle-right{
+    position:fixed !important; top:calc(max(6px,env(safe-area-inset-top))); right:0; width:var(--panel-w); height:var(--panel-header-h);
+    border-radius:0; background:rgba(10,16,26,.95); transform:none !important; z-index:1400;
   }
 
-  /* --- Toggles styled like SUBMIT/CLEAR (CTA look) --- */
-  .side-toggle {
-    min-width: 140px;
-    text-align: center;
-    padding: 0.65em 1.1em;
-    border-radius: 10px;
-    border: 2px solid #28f0ff;
-    background: transparent;
-    color: #a9e7ff;
-    font-weight: 700;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: inset 0 0 10px #28f0ff, 0 0 10px #28f0ff33;
-    transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
-    position: static;              /* no fixed rails on mobile */
-    height: auto; 
-    width: auto;
-    writing-mode: horizontal-tb; 
-    text-orientation: initial;
-    font-size: 1rem;
-  }
-  .side-toggle:hover { transform: translateY(-2px); filter: brightness(1.1); }
-  .side-toggle:active { transform: translateY(0); filter: brightness(0.95); }
-  .side-toggle:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 3px rgba(0,229,255,0.5),
-      0 0 18px rgba(106, 0, 255, 0.5),
-      inset 0 0 10px #28f0ff, 0 0 10px #28f0ff33;
-  }
+  /* panels: truly off-canvas when closed, interactive only when open */
+  #left-panel{left:0; transform:translateX(-100%) !important; pointer-events:none !important;}
+  #right-panel{right:0; transform:translateX(100%)  !important; pointer-events:none !important;}
+  #left-panel.open{transform:translateX(0) !important; pointer-events:auto !important;}
+  #right-panel.open{transform:translateX(0) !important; pointer-events:auto !important;}
 
-  /* --- Toggle docks as the panel header when open --- */
-  body:has(#left-panel.open) #toggle-left {
-    position: fixed;
-    top: calc(max(6px, env(safe-area-inset-top)));
-    left: 0;
-    width: var(--panel-w);
-    height: var(--panel-header-h);
-    border-radius: 0;
-    background: rgba(10,16,26,0.95);
-    transform: none;             /* disable hover lift while docked */
-    z-index: 1400;
-  }
-  body:has(#right-panel.open) #toggle-right {
-    position: fixed;
-    top: calc(max(6px, env(safe-area-inset-top)));
-    right: 0;
-    width: var(--panel-w);
-    height: var(--panel-header-h);
-    border-radius: 0;
-    background: rgba(10,16,26,0.95);
-    transform: none;
-    z-index: 1400;
-  }
+  /* space for docked header */
+  #left-panel.open .panel-content,#right-panel.open .panel-content{padding-top:calc(18px + var(--panel-header-h));}
 
-  /* Give panel content room below the docked header */
-  #left-panel.open .panel-content,
-  #right-panel.open .panel-content {
-    padding-top: calc(18px + var(--panel-header-h));
-  }
+  /* hide opposite toggle; collapse row while open */
+  body:has(#left-panel.open) #toggle-right, body:has(#right-panel.open) #toggle-left{display:none !important;}
+  body:has(#left-panel.open) #top-toggle-row, body:has(#right-panel.open) #top-toggle-row{margin:0; padding:0; height:0; overflow:hidden;}
 
-  /* Only one way to close: hide the opposite toggle while open */
-  body:has(#left-panel.open)  #toggle-right,
-  body:has(#right-panel.open) #toggle-left {
-    display: none;
-  }
-
-  /* Collapse the toggle row while a panel is open */
-  body:has(#left-panel.open)  #top-toggle-row,
-  body:has(#right-panel.open) #top-toggle-row {
-    margin: 0; 
-    padding: 0; 
-    height: 0; 
-    overflow: hidden;
-  }
-
-  /* --- Submit area: small tightening for mobile --- */
-  #submit-area { 
-    position: absolute; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    flex-direction: column; 
-    gap: 0.5em; 
-    bottom: 10px; 
-  }
-  #submit-area div { font-size: 1.2em; }
-  #submit-word, #clear-word { font-size: 0.9rem; }
+  /* submit area tighten */
+  #submit-area{position:absolute;left:50%;transform:translateX(-50%);flex-direction:column;gap:.5em;bottom:10px;}
+  #submit-area div{font-size:1.2em;}
+  #submit-word,#clear-word{font-size:.9rem;}
 }
 
 
