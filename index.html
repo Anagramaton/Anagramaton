@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="style.css" />
 
 <style>
@@ -259,6 +260,9 @@
 
   <h1 id="game-title">ANAGRAMATON</h1>
 
+<button id="login">Sign in</button>
+<button id="logout" style="display:none;">Log out</button>
+
   <button id="howto-open" aria-haspopup="dialog" aria-controls="howto-modal">
   ?
 </button>
@@ -310,8 +314,8 @@
       <h2>PHRASE FINDER PANEL</h2>
 
       <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-        <span id="hints-used">HINTS: 0/5</span>
-        <span id="bonus-multi">BONUS MULTI: x10</span>
+        <span id="hints-used">HINTS: 3/3</span>
+        <span id="bonus-multi">MULTIPLIER: x3</span>
       </div>
 
       <hr />
@@ -321,10 +325,6 @@
         <div>
           HINT 1: <span id="phrase1-hint1">???</span>
           <button id="phrase1-hint1-btn">HINT 1</button>
-        </div>
-        <div>
-          HINT 2: <span id="phrase1-hint2">???</span>
-          <button id="phrase1-hint2-btn">HINT 2</button>
         </div>
         <hr />
         <div>
@@ -349,10 +349,6 @@
           HINT 1: <span id="phrase2-hint1">???</span>
           <button id="phrase2-hint1-btn">HINT 1</button>
         </div>
-        <div>
-          HINT 2: <span id="phrase2-hint2">???</span>
-          <button id="phrase2-hint2-btn">HINT 2</button>
-        </div>
       </div>
     </div>
   </aside>
@@ -375,7 +371,6 @@
 </div>
 
 
-<script type="module" src="./roundOverModal.js"></script>
 
 
 <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
@@ -388,45 +383,46 @@
 
       <!-- PAGE 1 — Objective -->
       <section class="howto-page" data-page="0">
-        <h3 style="margin:0 0 8px;">PAGE 1 — Objective</h3>
-        <p>
-          - BUILD A LIST OF THE 10 HIGHEST SCORING WORDS YOU CAN FIND AND SUBMIT YOUR LIST WHEN READY - 
-            - BUILD VALID WORDS BY CLICKING ADJACENT TILES & SUBMITTING THEM TO YOUR LIST OF WORDS -
-              - ADD WORDS TO SEE HOW THEY SCORE AND REMOVE THEM IF YOU THINK YOU CAN FIND BETTER - 
-                 - 
-        </p>
+        <h3 style="margin:0 0 8px;">PAGE 1 — OBJECTIVE</h3>
+      </p>
+          - BUILD AND SUBMIT A LIST OF THE 10 HIGHEST SCORING WORDS YOU CAN FIND.  
+      </p>
+      </p>
+          - BUILD VALID WORDS BY CLICKING ADJACENT TILES & SUBMITTING THEM TO YOUR LIST.
+      </p>
+      </p>
+          - NO TIMER, NO RUSH. ADD/REMOVE WORDS TO YOUR LIKING.  
+      </p>
       </section>
 
       <!-- PAGE 2 — Building -->
       <section class="howto-page" data-page="1" hidden>
-        <h3 style="margin:0 0 8px;">PAGE 2 — Building</h3>
-        <p>
-          Word must be at least 4 tiles (letters) in length. Each tile included in a valid word must be an adjacent
-          neighbor of the tile that came before it. Each tile can only be used once per word.
-        </p>
+        <h3 style="margin:0 0 8px;">PAGE 2 — BUILDING</h3>
+      </p>
+          - EACH WORD MUST AT LEAST 4 LETTERS. EACH TILE IN A VALID WORD MUST BE AN ADJACENT
+          - TILE OF THE ONE THAT CAME BEFORE. EACH TILE CAN ONLY BE USED ONCE PER WORD.
+      </p>
       </section>
 
       <!-- PAGE 3 — Bonus Multipliers (your exact wording) -->
       <section class="howto-page" data-page="2" hidden>
-        <h3 style="margin:0 0 8px;">PAGE 3 — Bonus Multipliers</h3>
+        <h3 style="margin:0 0 8px;">PAGE 3 — BONUS MULTIPLIERS</h3>
         <p>
-          The reuse multiplier: The point value of each tile that has been reused once, will double.
-          That point value will double again if the tile is reused a 2nd time where its point value will then be capped.
+        - THE REUSE MULTIPLIER: 1st REUSE = BASE POINT VALUE DOUBLES.  2nd REUSE = POINT VALUE DOUBLES AGAIN (MAXED OUT)
+        - POINT VALUE REMAINS MAXED OUT AT TILES 2nd REUSE POINT VALUE. 
         </p>
         <p>
-          Palindrome Bonus: Each tile in a palindrome word gets a x5 increase to their point value.
+          LENGTH BONUS MULTIPLIER: EACH TILE (STARTING AT THE 5th TILE IN EACH WORD) RECEIVES A x3 TO THE POINT VALUE.
+          6th = x4 7th = x5 8th x6 9th = x7 10th+ = x10
         </p>
-        <p>
-          Length Bonus: Each tile (starting at the fifth tile in every word) receives a x3 to the point value.
-          For every additional tile after the fifth, an additional increment is added the multiplier up through tile 10.
-          Tile 10+ receives x10.
+        <p>  
         </p>
       </section>
 
       <!-- PAGE 4 — Word List (blank for you) -->
       <section class="howto-page" data-page="3" hidden>
-        <h3 style="margin:0 0 8px;">PAGE 4 — Word List</h3>
-        <p>(This page is left blank so you can fill it in later.)</p>
+        <h3 style="margin:0 0 8px;">PAGE 4 — PHRASE PANEL / ANAGRAM BONUS </h3>
+        <p>ANAGRAM / PHRASE PAIR BONUS: EACH TILE IN A WORD GETS A x5 INCREASE TO THEIR POINT VALUE.</p>
       </section>
     </div>
 
@@ -447,15 +443,27 @@
   </div>
 </div>
 
+
+
+
 <!-- Game Board -->
 <main id="game-container">
   <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000"></svg>
 </main>
 
-</script>
+
+<!-- scripts: load at the very end, after the DOM -->
 <script type="module" src="./main.js"></script>
 <script type="module" src="./roundOverModal.js"></script>
-<script type="module" src="./howToModal.js"></script>
+<script type="module" src="./howToModal.js"></script> 
+ 
+
+
+</script>
+
+
+
+</script>
 
 
 </body>

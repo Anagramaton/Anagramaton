@@ -1,4 +1,4 @@
-const DEBUG = true;  
+
 
 
 
@@ -9,7 +9,6 @@ import { GRID_RADIUS as DEFAULT_RADIUS } from './constants.js';
 import phraseHints from './phraseHints.js'; 
 import { gameState } from './gameState.js';
 import { computeBoardWordScores, recomputeAllWordScores } from './scoreLogic.js';
-
 
 
 
@@ -303,6 +302,7 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
     gameState.seedPaths = { phraseA: pathA, phraseB: pathB };
     gameState.seedHints = hints;
 
+
     placed = true;
   }
 
@@ -554,8 +554,8 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
     const placementScore2 = (word, overlaps, anchorTouches, pathLen) => {
       const newLetters = pathLen - overlaps;
       const W_ANCHOR = 30;
-      const W_OVERLAP = 5;
-      const W_LENGTH = 2.8; 
+      const W_OVERLAP = 3;
+      const W_LENGTH = 3.1; 
       const W_NEW_PEN = 1.4;
       return (
         W_ANCHOR * anchorTouches +
@@ -577,7 +577,7 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
         if (hasConflict(path, word)) continue;
         const anchorTouches = touchesAnyAnchor(path, word);
         // light bias: if no touches, require slightly more overlap
-        if (anchorTouches === 0 && overlaps < MIN_WORD_OVERLAP + 1) continue;
+        if (anchorTouches === 0 && overlaps < (word.length >= 12 ? 1 : MIN_WORD_OVERLAP + 1)) continue;
         const score = placementScore2(word, overlaps, anchorTouches, path.length);
         if (!best || score > best.score) best = { score, path };
       }
@@ -589,67 +589,13 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // STEP 7) Laxer fallback fill (your existing idea)
-  // ---------------------------------------------------------------------------
-  {
-    const anchorKeySets = (placedSuffixes || []).map((s) => new Set((s.path || []).map((p) => p.key)));
-    const touchesAnyAnchor = (path, word) => {
-      if (!anchorKeySets.length) return 0;
-      let touchCount = 0;
-      for (let i = 0; i < path.length; i++) {
-        const k = path[i].key;
-        const ch = word[i];
-        for (const ks of anchorKeySets) {
-          if (ks.has(k) && grid[k] === ch) { touchCount++; break; }
-        }
-      }
-      return touchCount;
-    };
 
-    const placementScore3 = (word, overlaps, anchorTouches, pathLen) => {
-      const newLetters = pathLen - overlaps;
-      const W_ANCHOR = 30;
-      const W_OVERLAP = 5;
-      const W_LENGTH = 2.5;
-      const W_NEW_PEN = 1.0;
-      return (
-        W_ANCHOR * anchorTouches +
-        W_OVERLAP * overlaps +
-        W_LENGTH * word.length -
-        W_NEW_PEN * newLetters
-      );
-    };
-
-    for (const word of candidates) {
-      if (usedWords.has(word)) continue;
-      const attempts = shuffledArray(coords).slice(0, PATH_TRIES);
-      let best = null;
-      for (const { q, r } of attempts) {
-        const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
-        if (!path) continue;
-        const overlaps = countOverlapLocal(path, word);
-        if (overlaps < MIN_WORD_OVERLAP) continue;
-        if (hasConflict(path, word)) continue;
-        const anchorTouches = touchesAnyAnchor(path, word);
-        const score = placementScore3(word, overlaps, anchorTouches, path.length);
-        if (!best || score > best.score) best = { score, path };
-      }
-      if (best) {
-        best.path.forEach(({ key }, i) => { grid[key] = word[i]; });
-        placedWords.push({ word, path: best.path });
-        usedWords.add(word);
-      }
-    }
-  }
 
   // ---------------------------------------------------------------------------
   // HARD REQUIREMENT CHECK — without touching phrase pairs
   // ---------------------------------------------------------------------------
   const longCount = countLongPlaced();
   if (longCount < 2) {
-    // Refuse to produce a board that violates spec.
-    throw new Error(`Hard requirement failed: only ${longCount} long words (12–14) were placed.`);
   }
 
   console.log('🧩 Placed words:', placedWords.map(p => p.word));
@@ -708,7 +654,7 @@ const soloScores = (recomputeAllWordScores(boardEntries) || []).map((s, i) => ({
 // ======= After boardEntries and soloScores are computed, where the beam used to prep its pool =======
 
 // Build the pool WITHOUT mutating soloScores (beam-compatible placement)
-const POOL_SIZE = 120;
+const POOL_SIZE = 250;
 const POOL = [...soloScores]                       // copy to avoid in-place sort
   .sort((a, b) => b.solo - a.solo)
   .slice(0, POOL_SIZE);

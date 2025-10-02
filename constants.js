@@ -21,15 +21,6 @@ export const letterPoints = {
 };
 
 export const letterFrequencies = [
-  'E','E',
-  'A','A',
-  'I','I',
-  'O','O',
-  'S','S',
-  'N','N','N','N','N',
-  'R','R','R','R','R',
-  'T','T','T','T','T',
-  'L','L','L','L',
   'U','U','U','U',
   'D','D','D','D',
   'G','G','G','G','B','B','B','B','C','C','C','C','M','M','M','M',
@@ -41,7 +32,7 @@ export const letterFrequencies = [
 
 // — Scoring Multipliers —
 export const reuseMultipliers = { 2: 2, 3: 4 }; // 2nd use = x2, 3rd+ = x4
-export const palindromeMultiplier = 5;
+export const anagramMultiplier = 5;
 export const lengthMultipliers = {
   5: 3, 6: 4, 7: 5, 8: 6, 9: 7, 10: 10
 };

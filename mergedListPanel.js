@@ -22,7 +22,7 @@ wrap.innerHTML = `
       All Words (<span id="merged-total">0</span>) • Yours: <span id="merged-yours">0</span>
     </summary>
 
-    <div id="merged-scroll" class="merged__scroll panel-content">
+    <div id="merged-scroll" class="merged__scroll">
       <ul id="merged-list" class="merged__list"></ul>
     </div>
 

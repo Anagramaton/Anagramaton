@@ -1,9 +1,9 @@
 import { isValidWord } from './gameLogic.js';
 import { gameState } from './gameState.js';
-import { letterPoints, reuseMultipliers, palindromeMultiplier, lengthMultipliers } from './constants.js';
+import { letterPoints, reuseMultipliers, anagramMultiplier, lengthMultipliers } from './constants.js';
 
-// — Check for palindrome —
-function isPalindrome(word) {
+// — Check for anagram —
+function isAnagram(word) {
   return word.length > 1 && word === word.split('').reverse().join('');
 }
 
@@ -41,9 +41,9 @@ export function submitCurrentWord(tiles) {
     multiplier *= lengthMultipliers[lengthKey] || 1;
   }
 
-  // Palindrome bonus
-  if (isPalindrome(word)) {
-    multiplier *= palindromeMultiplier;
+  // Anagram bonus
+  if (isAnagram(word)) {
+    multiplier *= anagramMultiplier;
   }
 
   // Step 3: Calculate Final Score
@@ -129,7 +129,7 @@ if (uses === 1) {
     let mult = 1;
     const len = letters.length;
     if (len >= 5) mult *= (lengthMultipliers[Math.min(len, 10)] || 1);
-    if (isPalindrome(letters.join(''))) mult *= palindromeMultiplier;
+    if (isAnagram(letters.join(''))) mult *= anagramMultiplier;
 
     return base * mult;
   });

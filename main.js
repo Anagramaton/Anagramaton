@@ -1,4 +1,4 @@
-console.log = () => {};
+
 // main.js
 import { initializeGrid } from './initGrid.js';
 import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';
@@ -8,6 +8,11 @@ import { initPhrasePanelEvents, revealPhrase } from './phrasePanel.js';
 import { placedWords } from './gridLogic.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers } from './constants.js';
+import { submitScore } from "./scores.js";
+
+
+
+
 
 const clickSound = document.getElementById('click-sound');
 const backgroundMusic = document.getElementById('background-music');
@@ -146,6 +151,7 @@ removeBtn.addEventListener('click', () => {
   }
   recomputeAll();                       // update score and totals
   syncSubmitListButton();                // refresh submit button state
+  endGame(); 
 });
 
 recomputeAll();
@@ -238,8 +244,8 @@ const leftPanel = document.querySelector('#left-panel .panel-content');
 if (leftPanel) {
   leftPanel.innerHTML = `
     <h2>YOUR WORDS</h2>
-    <ul id="word-list"></ul>
     <button id="submit-list">Submit List</button>
+    <ul id="word-list"></ul>
     <button id="new-game">New Game</button>
   `;
 

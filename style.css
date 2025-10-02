@@ -2,7 +2,6 @@
    1) BASE & GLOBAL STYLES
    ========================================================= */
 
-.hidden { display: none !important; }
 
 /* Global Font Usage */
 #game-title {
@@ -30,6 +29,14 @@
   --panel-text: #fff;
 }
 
+:root {
+  --neon: #00e5ff;
+  --neon-2: #6a00ff;
+  --accent: #00ffa6;
+  --text: #e9fcff;
+  --hud-font: 'Rajdhani', system-ui, sans-serif;
+  --hud-head: 'Orbitron', system-ui, sans-serif;
+}
 html, body {
   margin: 0;
   padding: 0;
@@ -56,10 +63,6 @@ background:
     hsl(210, 25%, 26%) 50%,
     hsl(210, 25%, 18%) 100%
   );
-
-
-
-
 } 
 
 
@@ -79,9 +82,9 @@ background:
 #left-panel,
 #right-panel {
   width: 300px;
-  background: #1e1e1e;
+  background: transparent;
   color: #fff;
-  padding: 20px;
+  padding: 0px;
   transition: transform 0.3s ease;
   position: fixed;
   top: 0;
@@ -122,42 +125,30 @@ background:
    3) INTERACTIVE PANELS
    ========================================================= */
 
-/* ---------- Right Panel (Phrase Panel — Aqua Neon Cyberpunk) ---------- */
 #right-panel .panel-content {
-  position: relative;
+  position: absolute;  
+  inset: 0;            
+  overflow-y: auto;    
   background:
     radial-gradient(circle at 20% 30%, rgba(0, 255, 166, 0.2), transparent 70%),
     radial-gradient(circle at 80% 70%, rgba(0, 229, 255, 0.2), transparent 70%),
     radial-gradient(circle at center, rgba(0, 255, 230, 0.15), transparent 80%);
   border: 2px solid rgba(0, 229, 255, 0.5);
   border-radius: 14px;
-  padding: 18px;
-  overflow: hidden;
   box-shadow:
     0 0 12px rgba(0, 255, 166, 0.6),
     inset 0 0 20px rgba(0, 229, 255, 0.3);
+  padding: 18px;       /* move padding here */
 }
 
-/* Static overlay (no animation) */
-#right-panel .panel-content::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(from 0deg,
-    rgba(0, 255, 166, 0.12),
-    rgba(0, 229, 255, 0.12),
-    rgba(0, 255, 166, 0.12));
-  pointer-events: none;
-}
+
+
 
 /* Heading */
 #right-panel .panel-content h2 {
-  font-size: 1.6em;
+  font-size: 1.8em;
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 98px;
 
   /* Keep gradient text */
   background: linear-gradient(90deg, var(--neon), var(--neon-2), #e9fff7, var(--neon));
@@ -212,19 +203,19 @@ background:
 
 /* ---------- Left Panel (Word Panel — Electric Cyan Theme) ---------- */
 #left-panel .panel-content {
-  position: relative;
-  padding: 18px;
-  border-radius: 14px;
-  border: 2px solid rgba(0, 238, 255, 0.5);
+  position: absolute;  
+  inset: 0;            
+  overflow-y: auto; 
   background:
     radial-gradient(circle at 15% 25%, rgba(0, 238, 255, 0.18), transparent 60%),
     radial-gradient(circle at 85% 75%, rgba(90, 0, 255, 0.18), transparent 65%),
     linear-gradient(180deg, rgba(10, 20, 30, 0.85), rgba(10, 16, 26, 0.9));
+  border: 2px solid rgba(0, 238, 255, 0.5);
+  border-radius: 14px;
   box-shadow:
-   
     0 0 34px rgba(106, 0, 255, 0.35),
     inset 0 0 20px rgba(0, 180, 255, 0.25);
-  overflow: hidden;
+  padding: 18px;
 }
 
 /* Static shimmer (no animation) */
@@ -551,6 +542,51 @@ background:
 /* =========================================================
    6) SPECIAL FEATURES: MERGED WORDS WRAP
    ========================================================= */
+/* Container for merged words section */
+#merged-words-wrap {
+  margin-top: 12px;
+}
+
+/* The scroll box inside merged wrap */
+#merged-scroll {
+  overflow-y: auto;
+  padding: 8px 0;
+  /* If you want it to flexibly take space inside the panel: */
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Reset list styling */
+#merged-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Merged list items (matches your submitted word styling) */
+#merged-list li {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 2px solid rgba(0, 238, 255, 0.35);
+  background: rgba(8, 20, 30, 0.6);
+  color: #c9f7ff;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 6px rgba(0, 238, 255, 0.6);
+  box-shadow: inset 0 0 8px rgba(0, 238, 255, 0.25);
+}
+#merged-list li:hover {
+  transform: translateY(-2px);
+  border-color: rgba(106, 0, 255, 0.6);
+  box-shadow: inset 0 0 12px rgba(106, 0, 255, 0.35);
+}
+
+/* Hide the original list cleanly when game ends */
+.is-hidden {
+  display: none !important;
+}
+
+
 
 
 #merged-words-wrap {
@@ -723,6 +759,31 @@ background:
 #left-panel:not(.is-merged) #new-game {
   display: none;
 }
+
+/* Neon styled scrollbar for the left panel */
+#left-panel .panel-content {
+  scrollbar-width: thin;               /* Firefox */
+  scrollbar-color: #28f0ff20 transparent;
+}
+
+#left-panel .panel-content::-webkit-scrollbar {
+  width: 8px;
+}
+#left-panel .panel-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+#left-panel .panel-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00e5ff, #6a00ff);
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
+}
+#left-panel .panel-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #6a00ff, #00e5ff);
+  box-shadow: 0 0 10px rgba(106, 0, 255, 0.8);
+}
+
+
+
 
 
 /* ================================
