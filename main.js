@@ -8,7 +8,6 @@ import { initPhrasePanelEvents, revealPhrase } from './phrasePanel.js';
 import { placedWords } from './gridLogic.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers } from './constants.js';
-import { submitScore } from "./scores.js";
 
 
 
