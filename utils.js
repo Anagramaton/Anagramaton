@@ -1,4 +1,4 @@
-// 📐 Create a hexagon's corner points as a polygon string for SVG
+// ▸ Create a hexagon's corner points as a polygon string for SVG
 export function createHexPoints(cx, cy, r) {
   if (typeof cx !== 'number' || typeof cy !== 'number' || typeof r !== 'number') {
     throw new Error('Invalid arguments passed to createHexPoints');
@@ -14,10 +14,20 @@ export function createHexPoints(cx, cy, r) {
   return points.join(' ');
 }
 
-// 🔗 Check if two hex tiles are neighbors using axial coordinates
+// ▸ Check if two hex tiles are neighbors using axial coordinates
 export function areAxialNeighbors(a, b) {
   const deltaQ = Math.abs(a.q - b.q);
   const deltaR = Math.abs(a.r - b.r);
   const deltaS = Math.abs(a.s - b.s);
   return deltaQ + deltaR + deltaS === 2;
+}
+
+// ▸ Shuffle array (Fisher–Yates, non-mutating)
+export function shuffledArray(arr = []) {
+  const copy = Array.isArray(arr) ? arr.slice() : Array.from(arr);
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
 }
