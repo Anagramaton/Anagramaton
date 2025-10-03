@@ -8,7 +8,7 @@ import { gameState } from './gameState.js';
 
 // ===== new imports from the split files =====
 import { ADJ_DIRS, hexKey, getAllCoords, isValidCoord } from './gridCoords.js';
-import { findPhrasePath, placePhrase } from './seedPhrases.js';
+import { seedPhrasePair } from './seedPhrases.js';
 import { findPath } from './pathfinding.js';
 import { countOverlap, indexByKey } from './overlapUtils.js';
 import { placeOverlappingSuffixes } from './suffixSeeder.js';
@@ -45,33 +45,16 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
   // ---------------------------------------------------------------------------
   // STEP 1) Seed phrase pair — UNCHANGED CORE BEHAVIOR
   // ---------------------------------------------------------------------------
-  let placed = false;
-  for (let i = 0; i < 100 && !placed; i++) {
-    const selected = phraseHints[Math.floor(Math.random() * phraseHints.length)];
-    const [rawA, rawB] = selected.phrases;
-    const { hints } = selected;
+ 
+const placed = seedPhrasePair(grid, gridRadius, 100);
+if (!placed) {
+  // fallback if no pair could be placed
+} else {
+  gameState.seedPhrase = `${placed.phraseA} / ${placed.phraseB}`;
+  gameState.seedPaths = { phraseA: placed.pathA, phraseB: placed.pathB };
+  gameState.seedHints = placed.hints;
+}
 
-    const A = rawA.toUpperCase().replace(/[^A-Z]/g, "");
-    const B = rawB.toUpperCase().replace(/[^A-Z]/g, "");
-
-    if (A.length === 0 || B.length === 0) continue;
-    if (A.length !== B.length) continue;
-    if (A.length > maxTiles) continue;
-
-    const pathA = findPhrasePath(grid, A, gridRadius);
-    if (!pathA) continue;
-    placePhrase(grid, pathA, A);
-
-    const pathB = findPhrasePath(grid, B, gridRadius);
-    if (!pathB) continue;
-    placePhrase(grid, pathB, B);
-
-    gameState.seedPhrase = `${rawA} / ${rawB}`;
-    gameState.seedPaths = { phraseA: pathA, phraseB: pathB };
-    gameState.seedHints = hints;
-
-    placed = true;
-  }
 
   DEBUG && console.info(`🌟 Seed phrase pair: ${gameState.seedPhrase}`);
   DEBUG && console.info(`✅ Loaded hints:`, gameState.seedHints);

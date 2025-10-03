@@ -50,7 +50,7 @@ export default [
         "An armchair roots itself to the carpet beside film reel rewinding last summmer."
       ],
       phrase2: [
-        "A cluster of HOAs chained to a crate of crossed out life entries and runestone engraved Merlin and Morgan le Fay."
+        "A cluster of HOAs chained to a crate of crossed out life entries and a runestone engraved Merlin and Morgan le Fay."
       ]
     }
   },
@@ -58,7 +58,7 @@ export default [
     phrases: ["SLOT MACHINES",   "CHINAS MOTELS"],
     hints: {
       phrase1: [
-        "A daily mailbox mouth hole routine regurgitating letters into the lap of a T1000.",
+        "A daily mailbox mouth hole routine regurgitating mimetic polyalloy into the lap of a T1000.",
       ],
       phrase2: [
        "A red dragon market huffs smoke down back roads rest rooms with numbered nightboxes."
@@ -127,7 +127,7 @@ export default [
         "A hall of polished chairs erupts in debate while powdered wigs trade insults and pigeons vote from the rafters.",
       ],
       phrase2: [
-        "A one way tunnel of judgment rewarding a wax sealed approval upon successful inspection."
+        "A one-way-out tunnel of judgment rewarding a wax sealed approval upon a successful inspection."
       ]
     }
   },
@@ -146,10 +146,10 @@ export default [
     phrases: ["STATUE OF LIBERTY",   "BUILT TO STAY FREE"],
     hints: {
       phrase1: [
-        "A verdigris lighthouse of enlightment and a watermark."
+        "A gallery of Medusas admirers stuffed into a birdcage with its door ripped off."
       ],
       phrase2: [
-        "A fortress of Lego bricks and an iron post welded into the pavement that promising eternal."
+        "An above ground mausoleum for the living to pay respect for the short lived platform of Napster."
       ]
     }
   },
@@ -160,7 +160,7 @@ export default [
         "He's responsible for turning gangsters into philosophers and New York streets into confessionals.",
       ],
       phrase2: [
-        "A folding privacy panel plastered with redacted movie posters beside a mason jar of loose lightning."
+        "A mirror that eats faces whole while drowning in a black tide swallowing rooftops ."
       ]
     }
   },
@@ -182,7 +182,7 @@ export default [
         "Fighting for revenge wearing Leather or Fighting for his rights wearing makeup and a dress."
       ],
       phrase2: [
-        "A coat tree of sleeve stumps shades a receipt  and its misplaced totals.",
+        "A villanous apendage with a hard on for Ernst Blofield and trying to solve the mystery of Wheres Waldo.",
       ]
     }
   },
@@ -193,7 +193,7 @@ export default [
         "A thumb sized confession button disguised as a horned pocket square with daddy issues.",
       ],
       phrase2: [
-        "A vibrating calendar square petting a scowling sock puppet huffing into the glove and a line of porch sitters in rocking chairs counting teeth. ",
+        "Marty Mcfly setting the clock in the Delorean expecting a baby throwing a tantrum but getting Dylans protest of blowing wind. ",
       ]
     }
   },
@@ -234,10 +234,10 @@ export default [
     phrases: ["DOUBLE ENTENDRE",   "NEUTERED BLONDE"],
     hints: {
       phrase1: [
-        "Two mirrors argue over which reflection is real as a single word steps on stage wearing a disguise to deliver its hidden line."
+        "Two mirrors argue over which reflection  as a single word steps on stage wearing a disguise to deliver its hidden line."
       ],
       phrase2: [
-        ".",
+        "A Tom Cat from post Saturday morning reruns chasing yarn that resembles a toe and a head.",
       ]
     }
   },
@@ -245,10 +245,10 @@ export default [
     phrases: ["BLOW A FUSE",   "WOEFUL ABS"],
     hints: {
       phrase1: [
-        "A volcano in a power strip coughs sparks until the room goes blind."
+        "An exhausted birthday candle attached to a timer disguised as a string with an expiration date."
       ],
       phrase2: [
-        "A six-pack sobs into its protein shake while despair deadlifts in the corner.",
+        "The braying sobs of a pessimistic ass protected by a brick wall of stomach crunches ."
       ]
     }
   },
@@ -256,10 +256,10 @@ export default [
     phrases: ["CAUSE AND EFFECT",   "NUDEST FACE CAFE"],
     hints: {
       phrase1: [
-        ".",
+        "A spark struck from flint and the constant sign flicker of a town with power lost.",
       ],
       phrase2: [
-        ".",
+        "A sunbathed skeleteon wears a painted mask waiting for a $5 milk shake in a car shaped booth.",
       ]
     }
   },
@@ -267,7 +267,7 @@ export default [
     phrases: ["BEAT AROUND THE BUSH",   "BATHTUB SUNDAE HERO"],
     hints: {
       phrase1: [
-        "A drumskin fist thumps in BPMs and orbits in circles while a tangled hedge waits untouched at the center of the path.",
+        "A fist pump in BPMs orbits in circles while a tangled hedge waits untouched at the center of the path.",
       ],
       phrase2: [
         "A basin collecting still water in porcelain slides down a mountain of syrup and cream while a cape figure of courage stands ready at the rim."
@@ -278,11 +278,11 @@ export default [
     phrases: ["OLDER AND WISER",   "WORDS I LEARNED"],
     hints: {
       phrase1: [
-        "A wrinkled grandfather clock sips tea next to an owl with insight.",
+        "A wrinkled grandfather clocks wrinkles sips tea with the insight of an owls insight.",
         
       ],
       phrase2: [
-        "A ransom note designed in Hollywood sits under a lantern of memory that glows brighter with every capture."
+        "A concocted collection of 'How To' letters for Mankind delivered by Prometheus."
       ]
     }
   },
@@ -290,10 +290,10 @@ export default [
     phrases: ["RATS AND MICE",   "IN CATS DREAMS"],
     hints: {
       phrase1: [
-        "A grease-stained bandit stamps breadcrumbs into IOUs beside thimble-sized cartographers sketching escape routes.",
+        "A mob of mischief pickpockets leaves a paper trail of pebbles with nervous heartbeats.",
       ],
       phrase2: [
-        "A hidden pocket sewn in a fur coat wearing jellybeans counting mooncrumbs as a shoebox projector screens unsent lullabies."
+        "A reincarnating fur coat walking on jellybeans watching Kreuger tapping at its bedroom window."
       ]
     }
   },
@@ -301,10 +301,10 @@ export default [
     phrases: ["BREAD WINNER",   "NEW BRA DINER"],
     hints: {
       phrase1: [
-        "A flour-dusted boule reclines beside a blue-ribbon scorecard..",
+        "A flour-dusted boule reclines beside a blue-ribbon scorecard.",
       ],
       phrase2: [
-        "Breaking in a pair of unworn clogs a strap chart of cups folded Flo asking if you made room for dessert",
+        "Breaking in unworn clogs wearing two hammocks for restless gravity and Guy Fieri.. pulling up in a red camaro.",
       ]
     }
   },
@@ -337,7 +337,7 @@ export default [
         "A throne of envelopes crowns a ruler who commands paper armies with ink-stained decrees.",
       ],
       phrase2: [
-        "A gallery of sticky portraits sells tiny passports to envelopes dreaming of escape..",
+        "A forever flattened Washington in need of a clean up in Aisle 7.",
       ]
     }
   },
@@ -359,7 +359,7 @@ export default [
         "A raccoons midnight banquet served by a pair of work boots.",
       ],
       phrase2: [
-        "A drawstring pillowcase talking to a headset on a swivel chair schedule dispenser.",
+        "A stomach within a stomach pretending to yell at Michael Scott through a headset in a meeting. ",
       ]
     }
   },
@@ -381,8 +381,7 @@ export default [
         "An echoed drum of sound travels from flash to rumble underneath a house of cards with builders but no architect .",
       ],
       phrase2: [
-        "A grid of glass towers beyond a horizon  of particles of gray and neglect.",
-        "A silent judge erases glass monarchs into sugar haze as a stopwatch grins in mid-breath."
+        "An anthill that thinks its Rome beneath the ashes of forgotten footsteps.",
       ]
     }
   },
@@ -390,12 +389,10 @@ export default [
     phrases: ["NATURALIST",   "A TRAILS NUT"],
     hints: {
       phrase1: [
-        "A velvet-coated scholar kneels in a pile of leaves, decoding sermons whispered by rivers.",
-        "A notebook-wielding phantom stitched from bark trails butterflies like paparazzi chasing runaway stars."
+        "A walking pair of binoculars zeroes in on dusty prints and a leafs life cycle.",
       ],
       phrase2: [
-        "A silver serpent zigzags through emerald carpets while a locked vault hides a golden kernel that hums with secret energy.",
-        "A dusty ribbon curls through pine giants as a tiny armored jewel tightens its grip on a hidden feast of oil and sweetness."
+        "The teeth of a zippers path to the the teeth of a squirrels strife.",
       ]
     }
   },
@@ -403,12 +400,10 @@ export default [
     phrases: ["ASTEROID PEN",   "A ROPE ENDS IT"],
     hints: {
       phrase1: [
-        ".",
-        "."
+        "A wandering orphan of the cosmos published by Stephen Kings typewriter in pocket size.",
       ],
       phrase2: [
-        ".",
-        "."
+        "A stretched violin string mimics the tone of a Soprano in all black.",
       ]
     }
   },
@@ -416,10 +411,10 @@ export default [
     phrases: ["A TELEPHONE GIRL",   "REPEATING HELLO"],
     hints: {
       phrase1: [
-        "A repurposed pound sign ."
+        "A repurposed pound sign making death threats to a Marionette."
       ],
       phrase2: [
-        "A wheel of mirrored voices spins a factory where every breath forges a newborn salutation.",
+        "A scratched record echoing down an endless hallway full of doors shaking hands  .",
       ]
     }
   },
@@ -427,12 +422,10 @@ export default [
     phrases: ["CHRISTMAS TREE",   "RICH TEAMSTERS"],
     hints: {
       phrase1: [
-        "A beaming snowman in a sequin jumpsuit throws glitter-wrapped coupons at a pine wearing headphones..",
-        "A calendar dressed as a fruitcake hugs a fir thats duct-taped in lights and stuck in a bucke."
+        "Mariah Carey getting thawed out in November to celebrate a noose sprouting from its own branch.",
       ],
       phrase2: [
-        "A gold bar wearing diamond encrusted sunglasses pets a convoy of unionized forklifts.",
-        "A mansion with a money tree sips martinis while a squad of horses drag gilded chariots across the highway."
+        "King Midas' corpse at his own dinner table explains Jimmy Hoffa whispering from the trunk.."
       ]
     }
   },
@@ -444,8 +437,7 @@ export default [
         "A fiery megaphone argues with a crystal fortune teller inside a glass dome of predictions."
       ],
       phrase2: [
-        "A puppet with crossed fingers bargains with the tired clerk who reads the tally sheet results for the third time.",
-        "A con man paints the fake reviews of an auditor stacking the same ballots on repeat."
+        "A puppet with crossed fingers bargains with a stripper double checking their tips at shifts end.",
       ]
     }
   },
@@ -470,8 +462,7 @@ export default [
         "A diploma-wrapped torch races a calendar with arms of glowing suns."
       ],
       phrase2: [
-        "A rainbow-feathered peacock rides a sunbeam into the arms of a sparkling twin star.",
-        "A prism-tongued jester serenades a chandelier bursting with fireworks as a pair of mirrored acrobats spin nearby."
+        "A rainbow-feathered peacock being serenaded on a sunbeam by Castor and Pollux.",
       ]
     }
   },
@@ -700,12 +691,10 @@ export default [
     phrases: ["NAPOLEON DYNAMITE",   "EMOTIONAL PENNY AD"],
     hints: {
       phrase1: [
-        "A steptool with delusons of empire throws a VHS tape ready to explode.",
-        "A tiny teacup in military boots lectures a popcorn kernel with a lit fuse."
+        "A steptool with empire delusions dropkicks a VHS tape with a lit fuse.",
       ],
       phrase2: [
-        "A blender of sad kleenex interviews a blinking gumball machine for a 3am informercial.",
-        "A radiatior hugs a sponge while abe lincoln sits in in a circle with an awareness raising speech."
+        "A blender of sad kleenex interviews Abe Lincoln for a 3am informercial."
       ]
     }
   },
@@ -713,12 +702,10 @@ export default [
     phrases: ["BACK AND FORTH",   "HARD KNOB FACT"],
     hints: {
       phrase1: [
-        "A .",
-        "A turtle shell from the past following a wound up toy duck headed for the future."
+        "A turtle shell from the past races a wind up toy robot to the future.",
       ],
       phrase2: [
-        "A steel rod getting hammered into the door handle of a chalkboard shouting randomm truths.",
-        "A frozen cannonball spins the dials of a briefcase around the documentation of sharks being older than trees."
+        "A frozen cannonball hammering the door handle into a chalkboard of written randomm truths."
       ]
     }
   }
