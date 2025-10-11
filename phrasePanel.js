@@ -121,6 +121,7 @@ function generateWordCountLayout(path, phraseText) {
 // ==============================
 export function revealPhrase(phraseKey) {
   if (!phraseKey) return;
+  if (gameState.mode !== 'daily' || !gameState.seedPhrase) return;
 
   gameState.phraseRevealed[phraseKey] = true;
 
@@ -130,20 +131,36 @@ export function revealPhrase(phraseKey) {
     const raw = (gameState.seedPhrase || '').split('/')[phraseIndex] || '';
     phraseEl.textContent = raw.trim();
   }
+} // <-- ✅ added this closing brace
 
-disableButtonById(`${phraseKey}-hint1-btn`, 'Disabled');
-
-
-}
-
-// ==============================
-//  INITIALIZE EVENT BINDINGS
-// ==============================
 export function initPhrasePanelEvents() {
-  document.getElementById('phrase1-hint1-btn')?.addEventListener('click', () => useHint('phrase1', 'hint1'));
-  document.getElementById('phrase2-hint1-btn')?.addEventListener('click', () => useHint('phrase2', 'hint1'));
-  document.getElementById('wordcount-hint')?.addEventListener('click', () => useHint('wordCount'));
+  // Hide / disable in Unlimited (or if daily failed to place a phrase)
+  if (gameState.mode !== 'daily' || !gameState.seedPhrase) {
+    const rightPanel = document.getElementById('right-panel');
+    if (rightPanel) rightPanel.style.display = 'none';
+
+    const toggleRight = document.getElementById('toggle-right');
+    if (toggleRight) toggleRight.style.display = 'none';
+
+    // defensively disable the hint buttons if they exist
+    ['phrase1-hint1-btn', 'phrase2-hint1-btn', 'wordcount-hint'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.disabled = true;
+        el.setAttribute('aria-disabled', 'true');
+      }
+    });
+
+    return; // stop wiring events in Unlimited
+  }
+
+  // DAILY mode: wire up events normally
+  document.getElementById('phrase1-hint1-btn')
+    ?.addEventListener('click', () => useHint('phrase1', 'hint1'));
+  document.getElementById('phrase2-hint1-btn')
+    ?.addEventListener('click', () => useHint('phrase2', 'hint1'));
+  document.getElementById('wordcount-hint')
+    ?.addEventListener('click', () => useHint('wordCount'));
 
   updateHintAndMultiPanel();
 }
-

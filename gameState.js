@@ -1,4 +1,12 @@
 export const gameState = {
+  mode: 'unlimited',      // "daily" | "unlimited" (default)
+  seedPhrase: null,       // daily-only
+  seedPaths: null,        // daily-only
+  seedHints: null,        // daily-only
+  dailyId: null,          // daily-only
+  
+  
+  
   hintUsage: {
     wordcount: false,
     phraseRevealed: {

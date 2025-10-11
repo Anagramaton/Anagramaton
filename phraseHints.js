@@ -342,7 +342,7 @@ export default [
     }
   },
   {
-    phrases: ["FATHER INLAW",   "NEAR HALWFIT"],
+    phrases: ["FATHER INLAW",   "NEAR HALFWIT"],
     hints: {
       phrase1: [
         "A barbecue emperor sharpens his tongs while enforcing treaty terms between potato salad and the guest list."
@@ -425,7 +425,7 @@ export default [
         "Mariah Carey getting thawed out in November to celebrate a noose sprouting from its own branch.",
       ],
       phrase2: [
-        "King Midas' corpse at his own dinner table explains Jimmy Hoffa whispering from the trunk.."
+        "King Midas' corpse sitting at his own dinner table explains Jimmy Hoffa whispering from the trunk.."
       ]
     }
   },
@@ -450,7 +450,7 @@ export default [
       ],
       phrase2: [
         "A rainbow fox kisses a quill that scribbles frantic love letters on a drum.",
-        "A violet panther waltzes with a brass trumpet as sheet music flutters like startled birds.."
+        "A violet panther waltzes with a brass trumpet as sheet music flutters like startled birds."
       ]
     }
   },
@@ -458,11 +458,10 @@ export default [
     phrases: ["GRADUATION DAY",   "GAY RADIANT DUO"],
     hints: {
       phrase1: [
-        "A mortar-clad owl salutes a sunrise made of golden alarm clocks.",
-        "A diploma-wrapped torch races a calendar with arms of glowing suns."
+        "Air floating hats burnt by a sun not setting in fear of tomrrow .",
       ],
       phrase2: [
-        "A rainbow-feathered peacock being serenaded on a sunbeam by Castor and Pollux.",
+        "A rainbow-feathered peacock being serenaded on a very bright sunbeam by Castor and Pollux.",
       ]
     }
   },
@@ -548,12 +547,10 @@ export default [
     phrases: ["GOLDEN OPPORTUNITY",   "ENDURING POOL POTTY"],
     hints: {
       phrase1: [
-        "A radiant crown shakes hands with an open doorway carved from starlight.",
-        "A shimmering chalice races toward a gate guarded by clocks with grinning faces."
+        "A shimmering sunlight of dripping jewelry over Willy Wonka waving his last ticket.",
       ],
       phrase2: [
-        "An iron statue meditates beside a lake of glass while a porcelain throne hums lullabies.",
-        "A granite titan lounges by a shimmering basin as a jeweled commode giggles in the corner."
+        "The wick of a trick candle as Deadmau5 begings DJing in vegas next to an inflatable flamingo."
       ]
     }
   },
@@ -561,12 +558,10 @@ export default [
     phrases: ["BALLPARK FIGURE",   "GRILL A PUB FREAK"],
     hints: {
       phrase1: [
-        "A stadium made of peanuts waves at a mannequin stitched from receipts.",
-        "A pretzel vendor signals to secondbaseman silhouette to strike a pose."
+        "A pretzel vendor stretching signals to the third base silhouette to strike a pose.",
       ],
       phrase2: [
-        "A flaming metal mouth whispers to a beer-soaked jukebox while a circus pescreams in Latin.",
-        "A smoking cage hums beside a sticky dartboard as a lopsided puppet juggles lightning."
+        "A confessional puffing cigarrette smoke over a table and a sticky dartboard with a Phantom Telephone Hacker.",
       ]
     }
   },
@@ -574,12 +569,11 @@ export default [
     phrases: ["AMERICAN PIE", "MANIA RECIPE"],
     hints: {
       phrase1: [
-        "A polyester jukebox wrapped in stripes playing sun baked records from a window sill.",
+        
         "A starry-eyed eagle in denim playing guitar begging for apples from a Pastry Chef. "
       ],
       phrase2: [
-        "A twitching metronome screams into a cookbook that flips its own pages with oily fingers.",
-        "A schizophrenic punching bag debates on using blue or yellow postit notes for ingredients ."
+        "A twitching clock chewing on its own hands taking notes from a cookbook that flips its own pages."
       ]
     }
   },
@@ -587,12 +581,10 @@ export default [
     phrases: ["HEAD AND SHOULDERS",   "HANDLES DEAD HOURS"],
     hints: {
       phrase1: [
-        "A chess king balanaces on a pair of blades holding up a towel.",
-        "A pumpkin projectile hurled from horseback at a mannequin carrying a burden."
+        "A pumpkin projectile from American Paint cuddling a mannequin on the perched cliffs of burden ."
       ],
       phrase2: [
-        "A joystick trains a scarecrow made of expired coupons how to slow dance with a frozen clock.",
-        "A steering wheel spins around a taxidermists wristwatch floating in cold soup.."
+        "A joystick in the grips of a taxidermist on a call from noon thru midnight",
       ]
     }
   },
@@ -600,12 +592,10 @@ export default [
     phrases: ["CHASING RAINBOWS",   "GROW HIS CANNABIS"],
     hints: {
       phrase1: [
-        "A Bronco on the hunt for a sky full of melting crayons.",
-        "A pair of sneakers in action crossing a bridge of bricks stitched in Skittles."
+        "A Bronco running across a bridge of bricks stitched in skittless.",
       ],
       phrase2: [
-        "A watering can sings lullabies to laughing leaves lounging under a blacklight.",
-        "A green thumb in brown overalls with red eyes."
+        "A green thumb in brown garden gold with a red eye."
       ]
     }
   },
@@ -614,11 +604,9 @@ export default [
     hints: {
       phrase1: [
         "A sweaty matchstick sunbathes under a sky chart being worshipped by thermometers.",
-        "A chili pepper lounges on a lawn chair watching a paper forecast get framed in stained glass."
       ],
       phrase2: [
-        "A barefoot preacher scolds a polka-dotted tank in a parking lot full of shopping carts slamming into each other.",
-        "A smirking idol feeds hay to a glass calf behind a marching band of pitch forks and tiki torches."
+        "A barefoot preacher scolds a glass calf behind a band of marching pitch forks and tiki torches."
       ]
     }
   },
@@ -626,12 +614,10 @@ export default [
     phrases: ["A LEAGUE OF THEIR OWN",   "WIENER HAUL FOOTAGE"],
     hints: {
       phrase1: [
-        "A row of bowling shoes signing autographs behind a lunchbox that built a moat around its reflection.",
-        "A trophy cabinet forms a conga line next to a sock drawer installing a velvet rope around itself."
+        "A row of left footed bowling shoes asking for signed autographs from the right shoe.",
       ],
       phrase2: [
-        "A sausage with legs towing a sack of potatoes into the woods in the style of the blair witch project.",
-        "An exhausted dachshund dragging a picnic basket through mud recorded on a flip phone."
+        "An exhausted dachshund reviews all purchased items to a picnic basket in the woods where filmed the Blair Witch."
       ]
     }
   },
@@ -639,12 +625,10 @@ export default [
     phrases: ["NAPOLEON DYNAMITE",   "NEON PINATA MELODY"],
     hints: {
       phrase1: [
-        "A pocket sized commander gets launched from a baguette into a cake full of sparklers.",
-        "A tiny general in a velvet cape carrying a disco ball made from TNT thats about to expire ."
+        "A pocket sized commander gets launched out of a baguette into a cake full of sparklers.",
       ],
       phrase2: [
-        "A fluorescent zebra-shaped candy shell shatters into tiny birds whistling showtunes.",
-        "A flamingo at a rave staring down the paper mache donkey smuggled in by frogs singings christmas carols."
+        "A candy-kid flamingo at a rave giving a light show to a shooting star shatters listening to tiny birds whistling showtunes.",
       ]
     }
   },
@@ -652,12 +636,10 @@ export default [
     phrases: ["DEVILS ADVOCATE",   "SLAVED TO ADVICE"],
     hints: {
       phrase1: [
-        "A red suited lizard playing checkers with Nelson Mandelas biggest fan.",
-        "A pitchfork stirs coffee in a flaming helmet while a filing cabinet wearing tap shoes defends a cactus in a bow tie.."
+        "A pitchfork tail of a red suited lizard argues the legalities with the beliefs of Nelson Mandela.",
       ],
       phrase2: [
-        "A mop handcuffed to the roomba awaiting guidance from the dishwasher.",
-        "A toucan chained to the steering wheel listening to instructions being whispered over the radio ."
+        "A roomba handcuffed to a mop awaiting guidance on what to do about the missinng bucket.",
       ]
     }
   },
@@ -666,11 +648,9 @@ export default [
     hints: {
       phrase1: [
         "A glove balloon grabs a handful of breadsticks from a register offering good news.",
-        "A pentagon shaped starfish in love with a hand model clutching her purse full of coupons."
       ],
       phrase2: [
-        "A blanket city known for pumping hot soup through a giant straw from the inside of an open Radioshack.",
-        "A couch cushion community drowning tea leaves that cant remember their wifi password."
+        "A couch cushion community waterboarding tea leaves in front of a Tamagotchi with an empty stomach."
       ]
     }
   },
@@ -678,12 +658,10 @@ export default [
     phrases: ["A BLESSING IN DISGUISE",   "ASSESSED BIG LINGUINI "],
     hints: {
       phrase1: [
-        "Hand gestures accompanied with prayers from a watermelon wearing a fake a moustache.",
-        "A pizza box stuffed with winning lottery tickets delivered by a boy in a monkey suit."
+        "The motion of the Contra cartridge code for free lives.",
       ],
       phrase2: [
-        "A laser eyed scanning clipboard discovered a firehose made of cooked shoelaces.",
-        "A calculator with binoculars interrogates a chalk outline while a sweaty jump rope curls up in a pot of basil fog.."
+        "A laser eyed clipboard scans Fezziks 8th wonder of the world size undercooked shoelaces on the stove in a pot of boiling water .",
       ]
     }
   },

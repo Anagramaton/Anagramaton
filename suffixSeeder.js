@@ -19,10 +19,21 @@ function placeOverlappingSuffixes(grid, chunks, gridRadius) {
     const starts = shuffledArray(coords);
 
     for (const { q, r } of starts) {
-      if (totalPlaced >= PLACE_SUFFIX_MAX) break;
-      attempts++;
-      const path = findPath(grid, chunk, q, r, 0, new Set(), gridRadius);
-      if (!path) continue;
+  if (totalPlaced >= PLACE_SUFFIX_MAX) break;
+  attempts++;
+
+  // 🧱 Skip if this starting coordinate is on the edge of the grid
+  if (
+    Math.abs(q) === gridRadius ||
+    Math.abs(r) === gridRadius ||
+    Math.abs(q + r) === gridRadius
+  ) {
+    continue; // edge tile — don’t start here
+  }
+
+  const path = findPath(grid, chunk, q, r, 0, new Set(), gridRadius);
+  if (!path) continue;
+
 
       // must not conflict anywhere
       let conflict = false;

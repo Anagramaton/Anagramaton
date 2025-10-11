@@ -8,7 +8,12 @@ import { initPhrasePanelEvents, revealPhrase } from './phrasePanel.js';
 import { placedWords } from './gridLogic.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers } from './constants.js';
+import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 
+// ===== GAME MODE (daily | unlimited) via URL param =====
+const _params = new URLSearchParams(typeof location !== 'undefined' ? location.search : "");
+gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
+// (no new imports needed; you already import gameState above)
 
 
 
@@ -162,7 +167,7 @@ resetSelectionState();
 // ----------------------------------------------
 // Submit the entire list (exactly 10 words)
 // ----------------------------------------------
-function handleSubmitList() {
+async function handleSubmitList() {
   if (gameState.listLocked) return;
 
   const count = (gameState.words || []).length;
@@ -188,16 +193,35 @@ function handleSubmitList() {
   const cw = document.getElementById('current-word');
   if (cw) cw.textContent = '';
 
-  // board words (from gridLogic.js)
-  const placedWordList = (placedWords || [])
-    .map(p => (typeof p === 'string' ? p : p?.word))
-    .filter(Boolean)
-    .map(w => String(w).toUpperCase());
+// board words (from gridLogic.js) — keep PATHS intact
+const placedWordList = Array.isArray(placedWords)
+  ? placedWords
+      .filter(Boolean)
+      .map(p => (
+        typeof p === 'string'
+          ? { word: String(p).toUpperCase(), path: [] }         // strings get empty path
+          : { word: String(p.word || '').toUpperCase(), path: p.path || [] } // preserve path
+      ))
+  : [];
+const placedWordStrings = placedWordList.map(p => p.word);
 
   const wordsWithScores = (gameState.words || []).map(w => ({
     word: String(w.word || '').toUpperCase(),
     score: Number(w.score) || 0
   }));
+
+const boardEntries = buildBoardEntries(placedWordList);
+const { POOL } = buildPool(boardEntries, 250);
+
+const { best10, finalTotal } = await solveExactNonBlocking({
+  POOL,
+  boardEntries,
+  TARGET: 10,
+  timeBudgetMs: 800,
+});
+
+gameState.boardTop10 = best10;
+gameState.boardTop10Total = finalTotal;
 
   // defer so merged panel computes Top 10 first
   requestAnimationFrame(() => {
@@ -208,7 +232,8 @@ function handleSubmitList() {
       detail: {
         words,
         wordsWithScores,
-        placedWords: placedWordList,
+        placedWords: placedWordStrings, // ✅ sends plain text to panel
+        placedWordsWithPaths: placedWordList, // ✅ keep full data for replay/solver
         baseTotal,
         bonusTotal,
         totalScore: finalScore,
@@ -235,9 +260,25 @@ document.addEventListener('DOMContentLoaded', () => {
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
-  // grid + phrase panel
-  initializeGrid();
+
+
+console.log('[main] before initializeGrid()');
+initializeGrid();
+console.log('[main] after initializeGrid()');
+
+
+if (gameState.mode === 'daily') {
   initPhrasePanelEvents();
+} else {
+  const rightPanel = document.getElementById('right-panel');
+  if (rightPanel) rightPanel.style.display = 'none';
+
+  const toggleRight = document.getElementById('toggle-right');
+  if (toggleRight) toggleRight.style.display = 'none';
+}
+
+
+
 
 const leftPanel = document.querySelector('#left-panel .panel-content');
 if (leftPanel) {

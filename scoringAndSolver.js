@@ -1,9 +1,20 @@
+// ============================================================================
 // scoringAndSolver.js
+// ============================================================================
+
 import { recomputeAllWordScores } from './scoreLogic.js';
+
+// ============================================================================
+// SECTION 1: Board Entry Construction
+// ----------------------------------------------------------------------------
+// - buildBoardEntries: converts placed words (with cell paths) into
+//   scorer-friendly entries while ensuring SHARED tile objects for overlaps.
+// ============================================================================
 
 /**
  * Build scorer-friendly entries with SHARED tile objects.
  * Ensures overlapping letters share the same tile object.
+ *
  * @param {Array<{word:string, path:Array<{key:string,q:number,r:number}>}>} placedWords
  * @returns {Array<{word:string, tiles:Array<{key:string,q:number,r:number,letter:string}>>}
  */
@@ -17,24 +28,32 @@ export function buildBoardEntries(placedWords = []) {
       t = { key: k, q: cell.q, r: cell.r, letter };
       tileRegistry.set(k, t);
     } else {
-      // keep consistent if multiple words share the letter
+      // Keep consistent if multiple words share the letter
       t.letter = letter;
     }
     return t;
   }
 
-  return placedWords.map(p => {
+  return placedWords.map((p) => {
     const upper = String(p.word || '').toUpperCase();
     return {
       word: upper,
-      tiles: (p.path || []).map((cell, i) => getSharedTile(cell, upper.charAt(i)))
+      tiles: (p.path || []).map((cell, i) => getSharedTile(cell, upper.charAt(i))),
     };
   });
 }
 
+// ============================================================================
+// SECTION 2: Candidate Pool Building
+// ----------------------------------------------------------------------------
+// - buildPool: ranks entries by solo score and prepares POOL/CANDIDATES/OPT.
+//   Does NOT mutate inputs.
+// ============================================================================
+
 /**
  * Rank candidates by solo score and build the POOL.
  * Does NOT mutate inputs.
+ *
  * @param {Array<{word:string, tiles:Array}>} boardEntries
  * @param {number} poolSize
  * @returns {{ POOL:Array, CANDIDATES:Array, soloScores:Array, OPT:Array }}
@@ -45,18 +64,16 @@ export function buildPool(boardEntries, poolSize = 250) {
     idx: i,
     word: boardEntries[i].word,
     tiles: boardEntries[i].tiles,
-    solo: Number(s || 0)
+    solo: Number(s || 0),
   }));
 
-  const POOL = [...soloScores]
-    .sort((a, b) => b.solo - a.solo)
-    .slice(0, poolSize);
+  const POOL = [...soloScores].sort((a, b) => b.solo - a.solo).slice(0, poolSize);
 
   // Optional back-compat: if other code still reads CANDIDATES
   const CANDIDATES = POOL;
 
   // Precompute an optimistic (admissible) upper bound for pruning
-  const OPT = POOL.map(x => ({
+  const OPT = POOL.map((x) => ({
     idx: x.idx,
     word: x.word,
     tiles: x.tiles,
@@ -67,7 +84,11 @@ export function buildPool(boardEntries, poolSize = 250) {
   return { POOL, CANDIDATES, soloScores, OPT };
 }
 
-/* ------------------------- Private helpers ------------------------- */
+// ============================================================================
+// SECTION 3: Private Helpers (Exact Scoring)
+// ----------------------------------------------------------------------------
+// - scoreSetExact: recomputes full interaction scores for a set of indices.
+// ============================================================================
 
 /**
  * Exact score for a set of indices, recomputing with full interaction.
@@ -76,14 +97,19 @@ export function buildPool(boardEntries, poolSize = 250) {
  * @returns {{total:number, perWord:number[]}}
  */
 function scoreSetExact(boardEntries, idxList) {
-  const picks = idxList.map(i => boardEntries[i]);
+  const picks = idxList.map((i) => boardEntries[i]);
   const perWord = recomputeAllWordScores(picks) || [];
   let total = 0;
   for (let i = 0; i < perWord.length; i++) total += Number(perWord[i] || 0);
   return { total, perWord };
 }
 
-/* ------------------------- Exact solver (non-blocking) ------------------------- */
+// ============================================================================
+// SECTION 4: Exact Solver (Cooperative / Non-Blocking)
+// ----------------------------------------------------------------------------
+// - solveExactNonBlocking: DFS + branch-and-bound with periodic yields to keep
+//   the UI responsive. Uses optimistic bounds from solo scores.
+// ============================================================================
 
 /**
  * Cooperative DFS/branch-and-bound exact solver.
@@ -104,10 +130,10 @@ export async function solveExactNonBlocking({
   TARGET = 10,
   timeBudgetMs = 800,
   sliceMs = 12,
-  hardNodeCap = 200_000
+  hardNodeCap = 200_000,
 }) {
   // Build OPT locally from POOL (keeps function pure)
-  const OPT = POOL.map(x => ({
+  const OPT = POOL.map((x) => ({
     idx: x.idx,
     word: x.word,
     tiles: x.tiles,
@@ -132,10 +158,12 @@ export async function solveExactNonBlocking({
   // Fast top-k optimistic fill (no full sort each time)
   function optimisticFillBound(startPos, chosenSet, remainingSlots) {
     if (remainingSlots <= 0) return 0;
+
     const top = [];
     for (let p = startPos; p < OPT.length; p++) {
       const candIdx = OPT[p].idx;
       if (chosenSet.has(candIdx)) continue;
+
       const v = OPT[p].optimistic;
       if (top.length < remainingSlots) {
         top.push(v);
@@ -145,6 +173,7 @@ export async function solveExactNonBlocking({
         top.sort((a, b) => a - b);
       }
     }
+
     let s = 0;
     for (let i = 0; i < top.length; i++) s += top[i];
     return s;
@@ -158,6 +187,7 @@ export async function solveExactNonBlocking({
 
   while (stack.length) {
     const now = performance.now();
+
     if (now - lastSlice >= sliceMs) {
       // Yield control
       await Promise.resolve();
@@ -199,20 +229,28 @@ export async function solveExactNonBlocking({
       const optimisticRest = optimisticFillBound(p + 1, nextSet, left - 1);
       if (partialTotal + optimisticRest <= bestTotal) continue;
 
-      stack.push({ pos: p + 1, chosenIdxs: nextIdxs, chosenSet: nextSet, curTotal: partialTotal });
+      stack.push({
+        pos: p + 1,
+        chosenIdxs: nextIdxs,
+        chosenSet: nextSet,
+        curTotal: partialTotal,
+      });
     }
   }
 
   const { total: finalTotal, perWord: finalPerWord } = scoreSetExact(boardEntries, bestSet);
-  const best10 = bestSet.map((idx, j) => ({
-    word: boardEntries[idx].word,
-    score: Number(finalPerWord?.[j] || 0)
-  })).sort((a, b) => b.score - a.score);
+
+  const best10 = bestSet
+    .map((idx, j) => ({
+      word: boardEntries[idx].word,
+      score: Number(finalPerWord?.[j] || 0),
+    }))
+    .sort((a, b) => b.score - a.score);
 
   return {
     best10,
     finalTotal,
     explored,
-    timedOut: (performance.now() - start) > timeBudgetMs
+    timedOut: performance.now() - start > timeBudgetMs,
   };
 }

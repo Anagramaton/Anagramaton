@@ -36,5 +36,4 @@ function isValidCoord(q, r, radius) {
   );
 }
 
-
-export { ADJ_DIRS, hexKey, getAllCoords, isValidCoord };
+export { ADJ_DIRS, hexKey, getAllCoords, isValidCoord, };

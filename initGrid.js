@@ -89,21 +89,34 @@ export function handleTileClick(tile) {
 // ============================================================================
 
 
+let __initCount = 0;
+
 export function initializeGrid() {
+  __initCount++;
+  console.log(`[initializeGrid] call #${__initCount} — starting`);
+
   gameState.totalScore = 0;
   tileElements.length = 0;
 
+  console.log('[initializeGrid] before generateSeededBoard');
   grid = generateSeededBoard(GRID_RADIUS, gameState);
+  console.log('[initializeGrid] after generateSeededBoard');
+
   gameState.grid = grid;
 
+  console.log('[initializeGrid] before renderGrid');
   renderGrid(grid, DOM.svg, tileElements, handleTileClick, GRID_RADIUS);
+  console.log('[initializeGrid] after renderGrid');
+  console.log('[initializeGrid] tiles=', tileElements.length, 'svg size=', DOM.svg?.clientWidth, 'x', DOM.svg?.clientHeight);
+
+
   gameState.allTiles = tileElements;
 
   const clearButton = document.getElementById('clear-word');
   if (clearButton && !clearButton.dataset.listener) {
     clearButton.addEventListener('click', clearCurrentSelection);
     clearButton.dataset.listener = 'true';
-  } else {
-
   }
+
+  console.log(`[initializeGrid] call #${__initCount} — finished`);
 }

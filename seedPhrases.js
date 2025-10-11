@@ -70,9 +70,6 @@ function findPhrasePath(grid, phrase, radius) {
 }
 
 // ============================================================================
-// SECTION 3: Placement of a phrase onto the grid
-// (ORIGINAL FUNCTION — kept verbatim, only wrapped with headers)
-// ============================================================================
 function placePhrase(grid, path, phrase) {
   const letters = phrase.toUpperCase().replace(/[^A-Z]/g, '').split('');
 
@@ -88,11 +85,6 @@ function placePhrase(grid, path, phrase) {
   }
 }
 
-// ============================================================================
-// SECTION 4: Seed-pair selection & placement (new, optional helpers)
-// - Tries random pairs from phraseHints until one fits.
-// - Pure: does not mutate external state beyond writing letters to `grid`.
-// - Returns details so caller can update gameState/UI as desired.
 // ============================================================================
 export function tryPlaceSeedPairOnce(grid, radius, pairEntry) {
   if (!pairEntry || !Array.isArray(pairEntry.phrases)) return null;
@@ -115,11 +107,7 @@ export function tryPlaceSeedPairOnce(grid, radius, pairEntry) {
   if (!pathB) {
     // roll back A if B fails (simple rollback)
     for (const { key } of pathA) {
-      // only clear cells we wrote if they still match A's letters
-      // (avoid wiping pre-existing letters that matched)
-      // We recompute letter by index:
-      // safer approach: recompute char from index
-      // but since we only wrote A's letters, compare and clear
+
     }
     // Rebuild rollback robustly:
     const lettersA = A.split('');
