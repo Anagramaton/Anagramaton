@@ -862,11 +862,12 @@ background:
   .right-toggle { right: 0; }
 
   /* When panel is open, move its toggle up */
-  body:has(#left-panel.open)  .left-toggle  { 
-    top: max(8px, env(safe-area-inset-top));
+  body:has(#left-panel.open) .left-toggle {
+    display: none;
   }
-  body:has(#right-panel.open) .right-toggle { 
-    top: max(8px, env(safe-area-inset-top));
+
+body:has(#right-panel.open) .right-toggle {
+    display: none;
   }
 }
 
@@ -898,6 +899,29 @@ background:
   }
 }
 
+/* Backdrop that shows whenever a panel is open */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+
+/* Show the backdrop when either panel is open */
+body:has(#left-panel.open) .backdrop,
+body:has(#right-panel.open) .backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* (optional) improve tap responsiveness on mobile */
+#toggle-left, #toggle-right {
+  touch-action: manipulation;
+}
+
+
 @media (max-width: 768px) {
   /* Hide right toggle if left panel is open */
   body:has(#left-panel.open) .right-toggle {
@@ -908,6 +932,42 @@ background:
   body:has(#right-panel.open) .left-toggle {
     display: none;
   }
+}
+
+/* ===============================
+   Panel Backdrop + Mobile Toggles Fix
+   =============================== */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+  z-index: 400; /* below panels, above game UI */
+}
+
+/* Show backdrop when a panel is open */
+body:has(#left-panel.open) .backdrop,
+body:has(#right-panel.open) .backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* JS fallback if :has() is unsupported */
+body.panel-open .backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Hide toggles when their panel is open (mobile) */
+@media (max-width: 768px) {
+  body:has(#left-panel.open) .left-toggle { display: none; }
+  body:has(#right-panel.open) .right-toggle { display: none; }
+
+  /* Fallback (JS will set these classes) */
+  body.left-open  .left-toggle  { display: none; }
+  body.right-open .right-toggle { display: none; }
 }
 
 

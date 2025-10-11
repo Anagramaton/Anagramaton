@@ -324,6 +324,8 @@ if (leftPanel) {
       document.getElementById('right-panel')?.classList.toggle('open')
     );
 
+
+    
   // merged list panel last
   initMergedListPanel();
 
@@ -343,6 +345,42 @@ document.getElementById('new-game')
     gameState.words = [];
     gameState.listLocked = false;
     updateScoreDisplay(0);
+
+const leftPanelEl  = document.getElementById('left-panel');
+const rightPanelEl = document.getElementById('right-panel');
+const backdrop     = document.getElementById('backdrop');
+
+
+const syncOpenState = () => {
+  const leftOpen  = leftPanelEl?.classList.contains('open');
+  const rightOpen = rightPanelEl?.classList.contains('open');
+  document.body.classList.toggle('left-open',  !!leftOpen);
+  document.body.classList.toggle('right-open', !!rightOpen);
+  document.body.classList.toggle('panel-open', !!(leftOpen || rightOpen));
+};
+
+document.getElementById('toggle-left')?.addEventListener('click', () => {
+  leftPanelEl?.classList.toggle('open');
+  rightPanelEl?.classList.remove('open');
+  syncOpenState();
+});
+
+document.getElementById('toggle-right')?.addEventListener('click', () => {
+  rightPanelEl?.classList.toggle('open');
+  leftPanelEl?.classList.remove('open');
+  syncOpenState();
+});
+
+backdrop?.addEventListener('click', () => {
+  leftPanelEl?.classList.remove('open');
+  rightPanelEl?.classList.remove('open');
+  syncOpenState();
+});
+
+
+// Initialize body classes
+syncOpenState();
+
 
     // --- Restore left panel header + classes ---
     const leftPanel = document.getElementById('left-panel');
