@@ -1,0 +1,154 @@
+/* ================================
+   HOW TO MODAL — COMPLETE CSS
+   ================================ */
+
+/* --- 1. Modal base layout and visibility --- */
+.rom {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.rom--hidden {
+  display: none; /* Hidden until JS removes this class */
+}
+
+.rom__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 10;
+}
+
+.rom__dialog {
+  position: relative;
+  z-index: 20;
+  max-width: 640px;
+  max-height: 80vh;
+  overflow: auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  overflow: hidden;
+  background: #fff;
+  color: #111; /* ensures visible text */
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* --- 2. Modal title --- */
+#howto-title {
+  font-family: 'Coiny', cursive;
+  font-size: 28px;
+  margin: 0;
+  padding: 16px 18px;
+  background: linear-gradient(
+    90deg,
+    rgba(255,226,130,0.55),
+    rgba(255,167,167,0.55) 40%,
+    rgba(167,208,255,0.55)
+  );
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* --- 3. Page visibility + content --- */
+.howto-page {
+  display: block; /* visible by default */
+}
+
+.howto-page[hidden] {
+  display: none !important; /* hidden pages truly hidden */
+}
+
+.howto-page h3 {
+  font-family: 'Coiny', cursive;
+}
+
+.howto-page ul {
+  margin: 0 0 8px 0;
+  padding-left: 1.2rem;
+  list-style: none;
+}
+
+.howto-page li {
+  position: relative;
+  padding-left: 1rem;
+  margin: 6px 0;
+}
+
+.howto-page li::before {
+  content: "●";
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* --- 4. Footer controls --- */
+.howto-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px dashed rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.85);
+}
+
+.howto-controls button {
+  border: none;
+  background: #ffd64d;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-family: 'Coiny', cursive;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.howto-controls button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.howto-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#howto-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 10px;
+}
+
+/* --- 5. Open button (floating trigger) --- */
+#howto-open {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #a9e7ff;
+  border: 2px solid #28f0ff;
+  background: transparent;
+  box-shadow: inset 0 0 6px #28f0ff,
+              0 0 8px #28f0ff55;
+  cursor: pointer;
+  z-index: 900; /* stays above panels */
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+#howto-open:hover {
+  transform: scale(1.1);
+  box-shadow: inset 0 0 8px #28f0ff,
+              0 0 12px #28f0ff99;
+}

@@ -72,14 +72,6 @@
   .side-toggle { top: 80px; }
   .left-toggle  { left: 0; }
   .right-toggle { right: 0; }
-
-  /* When panel is open, move its toggle up */
-  body:has(#left-panel.open)  .left-toggle  { 
-    top: max(8px, env(safe-area-inset-top));
-  }
-  body:has(#right-panel.open) .right-toggle { 
-    top: max(8px, env(safe-area-inset-top));
-  }
 }
 
 @media (max-width: 768px) {

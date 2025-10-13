@@ -6,13 +6,16 @@
   <title>ANAGRAMATON</title>
 
   <!-- Fonts and CSS -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Coiny&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
+
+  
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="modal.css" />
   <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)" />
+  <link rel="stylesheet" href="howtoModal.css">
 </head>
 
 <body>
@@ -22,7 +25,11 @@
     <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000" aria-label="Letter hex grid"></svg>
   </main>
 
-  <button id="howto-open" type="button" aria-haspopup="dialog" aria-controls="howto-modal" aria-label="Open how to play">?</button>
+   <button id="howto-open"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="howto-modal"
+            aria-label="Open how to play">?</button>
 
   <!-- Submit Area -->
   <div id="submit-area" aria-live="polite">
@@ -120,79 +127,108 @@
     </div>
   </div>
 
-  <!-- How To Modal -->
-  <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
-    <div class="rom__backdrop"></div>
-    <div class="rom__dialog" style="max-width: 640px;">
-      <h2 id="howto-title">How to Play</h2>
+<!-- THE MODAL -->
+<div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
+  <div class="rom__backdrop"></div>
 
-      <!-- Pages -->
-      <div id="howto-pagewrap" style="min-height:220px; margin:10px 0 16px;">
+  <div class="rom__dialog" style="max-width: 640px;">
+    <h2 id="howto-title">How to Play</h2>
 
-        <!-- PAGE 1 — Objective -->
-        <section class="howto-page" data-page="0">
-          <h3 style="margin:0 0 8px;">PAGE 1 — OBJECTIVE</h3>
-          <ul>
-            <li>Build and submit a list of the highest scoring words you can find.</li>
-            <li>Build valid words by clicking adjacent tiles and submitting them to your list.</li>
-            <li>No timer, no rush. Add or remove words as you like.</li>
-          </ul>
-        </section>
+    <!-- Pages -->
+    <div id="howto-pagewrap" style="min-height:220px; margin:10px 0 16px;">
+      <!-- PAGE 1 — OBJECTIVE -->
+      <section class="howto-page" data-page="0">
+        <h3>PAGE 1 — OBJECTIVE</h3>
+        <p><strong>Objective:</strong> Players must find and submit a list of 10 words with the highest combined score.</p>
+      </section>
 
-        <!-- PAGE 2 — Building -->
-        <section class="howto-page" data-page="1" hidden>
-          <h3 style="margin:0 0 8px;">PAGE 2 — BUILDING</h3>
-          <ul>
-            <li>Each word must be at least 4 letters.</li>
-            <li>Each tile in a valid word must be adjacent to the one that came before.</li>
-            <li>Each tile can only be used once per word.</li>
-          </ul>
-        </section>
+      <!-- PAGE 2 — TILE VALUES -->
+      <section class="howto-page" data-page="1" hidden>
+        <h3>PAGE 2 — TILE VALUES</h3>
+        <p>Each tile starts with its standard Scrabble point value.</p>
+        <ul>
+          <li><strong>1 point:</strong> A, E, I, O, U, L, N, R, S, T</li>
+          <li><strong>2 points:</strong> D, G</li>
+          <li><strong>3 points:</strong> B, C, M, P</li>
+          <li><strong>4 points:</strong> F, H, V, W, Y</li>
+          <li><strong>5 points:</strong> K</li>
+          <li><strong>8 points:</strong> J, X</li>
+          <li><strong>10 points:</strong> Q, Z</li>
+        </ul>
+      </section>
 
-        <!-- PAGE 3 — Bonus Multipliers -->
-        <section class="howto-page" data-page="2" hidden>
-          <h3 style="margin:0 0 8px;">PAGE 3 — BONUS MULTIPLIERS</h3>
-          <p><strong>The Reuse Multiplier:</strong></p>
-          <ul>
-            <li>1st reuse = base point value doubles.</li>
-            <li>2nd reuse = point value doubles again (max).</li>
-            <li>Point value remains maxed at the 2nd reuse value.</li>
-          </ul>
+      <!-- PAGE 3 — TILE REUSE MULTIPLIER -->
+      <section class="howto-page" data-page="2" hidden>
+        <h3>PAGE 3 — TILE REUSE MULTIPLIER</h3>
+        <p>This bonus applies to a tile's base value each time it is reused.</p>
+        <ul>
+          <li><strong>First reuse:</strong> The tile's value is doubled (×2).</li>
+          <li><strong>Second reuse:</strong> The tile's value is doubled again (×4).</li>
+          <li><strong>Maximum value:</strong> After the second reuse, the tile's value remains maximized at four times its base value for all subsequent uses.</li>
+        </ul>
+      </section>
 
-          <p><strong>Length Multiplier (starting at the 5th tile in a word):</strong></p>
-          <ul>
-            <li>5th = ×3</li>
-            <li>6th = ×4</li>
-            <li>7th = ×5</li>
-            <li>8th = ×6</li>
-            <li>9th = ×7</li>
-            <li>10th+ = ×10</li>
-          </ul>
-        </section>
+      <!-- PAGE 4 — WORD LENGTH MULTIPLIER -->
+      <section class="howto-page" data-page="3" hidden>
+        <h3>PAGE 4 — WORD LENGTH MULTIPLIER</h3>
+        <p>After a word's tile values are summed (including any reuse bonuses), the total is multiplied based on the word's length.</p>
+        <ul>
+          <li>5 letters: ×3</li>
+          <li>6 letters: ×4</li>
+          <li>7 letters: ×5</li>
+          <li>8 letters: ×6</li>
+          <li>9 letters: ×7</li>
+          <li>10 or more letters: ×10</li>
+        </ul>
+      </section>
 
-        <!-- PAGE 4 — Phrase Panel / Anagram Bonus -->
-        <section class="howto-page" data-page="3" hidden>
-          <h3 style="margin:0 0 8px;">PAGE 4 — PHRASE PANEL / ANAGRAM BONUS</h3>
-          <p>ANAGRAM / PHRASE PAIR BONUS: .</p>
-        </section>
-      </div>
+      <!-- PAGE 5 — PHRASE PANEL / ANAGRAM BONUS -->
+      <section class="howto-page" data-page="4" hidden>
+        <h3>PAGE 5 — PHRASE PANEL / ANAGRAM BONUS</h3>
+        <p>ANAGRAM / PHRASE PAIR BONUS: .</p>
+      </section>
 
-      <!-- Pager controls -->
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-        <div id="howto-dots" aria-label="Pages" style="display:flex; gap:6px;">
-          <button class="howto-dot" data-dot="0" aria-label="Page 1" type="button"></button>
-          <button class="howto-dot" data-dot="1" aria-label="Page 2" type="button"></button>
-          <button class="howto-dot" data-dot="2" aria-label="Page 3" type="button"></button>
-          <button class="howto-dot" data-dot="3" aria-label="Page 4" type="button"></button>
-        </div>
-        <div class="rom__actions" style="margin-left:auto;">
-          <button id="howto-prev" aria-label="Previous" type="button">Back</button>
-          <button id="howto-next" aria-label="Next" type="button">Next</button>
-          <button id="howto-close" type="button">Close</button>
-        </div>
-      </div>
+      <!-- PAGE 6 — STRATEGY TIPS -->
+      <section class="howto-page" data-page="5" hidden>
+        <h3>PAGE 6 — STRATEGY TIPS</h3>
+        <ul>
+          <li><strong>Prioritize long words:</strong> The length multiplier gives a huge boost to words of five letters or more.</li>
+          <li><strong>Look for opportunities to reuse tiles:</strong> Because of the reuse bonus, it’s always worth trying to spell words that use tiles you have already found.</li>
+          <li><strong>Pool of potential words:</strong> Use the in-game word scoring calculator to experiment and refine before you submit.</li>
+        </ul>
+      </section>
+
+      <!-- PAGE 7 — EXAMPLE CALCULATION -->
+      <section class="howto-page" data-page="6" hidden>
+        <h3>PAGE 7 — EXAMPLE CALCULATION</h3>
+        <p><strong>Example calculation</strong></p>
+        <p>Here is an example using the word QUIZ:</p>
+        <ul>
+          <li><strong>Base value:</strong> (Q=10) + (U=1) + (I=1) + (Z=10) = 22 points</li>
+          <li><strong>Reuse bonus:</strong> Assume this is the first time these tiles have been used, so no bonus is applied.</li>
+          <li><strong>Length multiplier:</strong> The word has 4 letters, so it does not qualify for a length multiplier.</li>
+          <li><strong>Final word score:</strong> 22 points</li>
+        </ul>
+        <p>Now, consider the word QUIZZED and assume the Z has already been used twice.</p>
+        <ul>
+          <li><strong>Base value:</strong> Q=10, U=1, I=1, Z=10, Z=10, E=1, D=2</li>
+          <li><strong>Reuse bonus for Z:</strong> Each Z’s 10 points are multiplied by 4.</li>
+          <li><strong>Subtotal:</strong> 10 + 1 + 1 + (10×4) + (10×4) + 1 + 2 = 95</li>
+          <li><strong>Length multiplier:</strong> 7 letters ×5 = 475 points total</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- 👇 Controls live here (this is the “footer”) -->
+    <div class="howto-controls">
+      <button id="howto-prev" type="button" aria-label="Previous page">Back</button>
+      <div id="howto-dots" class="howto-dots" aria-label="How to page navigation"></div>
+      <button id="howto-next" type="button" aria-label="Next page">Next</button>
+      <button id="howto-close" type="button" aria-label="Close how to">Close</button>
     </div>
   </div>
+</div>
+
 
   <!-- Scripts (at end for better performance) -->
   <script type="module" src="./main.js"></script>
