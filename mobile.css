@@ -79,8 +79,8 @@
     display: flex;                 /* visible only on mobile */
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: max(8px, env(safe-area-inset-top));
+    position: fixed;
+    top: calc(8px + env(safe-area-inset-top, 0px));
     right: 10px;
     width: 36px;
     height: 36px;
@@ -117,4 +117,39 @@
 /* Mobile: make backdrop clickable over the toggles */
 @media (max-width: 768px) {
   .side-toggle { z-index: 900; }   /* below backdrop */
+}
+
+/* Make the dialog a column so the middle can scroll */
+#howto-modal .rom__dialog {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;      /* room on small screens */
+  overflow: hidden;      /* let the inner area handle scrolling */
+}
+
+/* The page wrapper becomes the scroll container */
+#howto-pagewrap {
+  flex: 1;                         /* fill available height */
+  overflow-y: auto;                /* <-- vertical scroll here */
+  -webkit-overflow-scrolling: touch; /* smooth iOS scrolling */
+  overscroll-behavior: contain;    /* keep scroll from bouncing the body */
+  padding: 10px 18px;              /* spacing since footer is separate */
+}
+
+/* Optional: add a little extra bottom padding so text
+   isn't hidden behind the footer on very small screens */
+#howto-pagewrap .howto-page:last-child {
+  padding-bottom: 16px;
+}
+
+/* Keep the footer fixed to the bottom of the dialog area */
+.howto-controls {
+  flex: 0 0 auto;
+  position: sticky;   /* stays at the bottom of the dialog as you scroll */
+  bottom: 0;
+}
+
+/* Mobile-specific nudge (optional) */
+@media (max-width: 768px) {
+  #howto-modal .rom__dialog { max-height: 92vh; }
 }
