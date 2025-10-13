@@ -1,322 +1,69 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ANAGRAMATON</title>
-  
-<!-- Fonts and CSS -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="style.css" />
+  <!-- Fonts and CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet">
 
-<style>
-  /* ===== Base Modal Styles (your original) ===== */
-  .rom { 
-    position: fixed; 
-    inset: 0; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    z-index: 9999; 
-  }
-  .rom--hidden { display: none; }
-  .rom__backdrop { 
-    position: absolute; 
-    inset: 0; 
-    background: rgba(0,0,0,0.6); 
-  }
-  .rom__dialog { 
-    position: relative; 
-    background: #111; 
-    color: #fff; 
-    padding: 20px; 
-    border-radius: 12px; 
-    width: min(600px, 92vw); 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-  }
-  .rom__sub { 
-    opacity: 0.8; 
-    margin-top: -6px; 
-  }
-  .rom__list { 
-    max-height: 200px; 
-    overflow: auto; 
-    margin: 8px 0 16px; 
-    padding-left: 20px; 
-  }
-  .rom__actions { 
-    display: flex; 
-    gap: 10px; 
-    justify-content: flex-end; 
-  }
-  body.rom-open { overflow: hidden; }
-
-  /* ===== Round Over — Visual Upgrades ===== */
-  :root {
-    --rom-bg: #111;
-    --rom-panel: #171717;
-    --rom-muted: #b5b5b5;
-    --rom-ink: #ffffff;
-    --rom-accent: #7c5cff;      /* headers / accents */
-    --rom-good: #1ecb7b;        /* player color */
-    --rom-bad: #ff6a6a;         /* board color */
-    --rom-chip-bg: #212121;     /* word score pill bg */
-  }
-
-  .rom__dialog {
-    background: linear-gradient(180deg, var(--rom-panel), #101010);
-    border: 1px solid #2a2a2a;
-  }
-
-  .rom h2#rom-title {
-    letter-spacing: .5px;
-    margin-bottom: 8px;
-  }
-
-  .rom__sub { color: var(--rom-muted); }
-
-  .rom__section-title {
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: .4px;
-    color: var(--rom-accent);
-    text-transform: uppercase;
-    margin: 18px 0 8px;
-  }
-
-  /* Side-by-side “YOU vs THEM” grid */
-  .rom__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  @media (max-width: 560px) {
-    .rom__grid { grid-template-columns: 1fr; }
-  }
-
-  .rom__col {
-    background: rgba(255,255,255,.03);
-    border: 1px solid #2a2a2a;
-    border-radius: 12px;
-    padding: 12px;
-    min-height: 120px;
-  }
-  .rom__col--you  .rom__col-title { color: var(--rom-good); }
-  .rom__col--them .rom__col-title { color: var(--rom-bad); }
-
-  .rom__col-title {
-    margin: 0 0 8px;
-    font-weight: 800;
-  }
-
-  /* Numbered lists with word + score “chip” */
-  .rom__ol {
-    margin: 0;
-    padding: 0 0 0 22px;
-    max-height: 220px;
-    overflow: auto;
-  }
-  .rom__li {
-    margin: 4px 0;
-    line-height: 1.3;
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .rom__word {
-    font-weight: 700;
-    letter-spacing: .3px;
-  }
-  .rom__score-chip {
-    flex: 0 0 auto;
-    font-size: 12px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: var(--rom-chip-bg);
-    border: 1px solid #2a2a2a;
-    color: #eaeaea;
-  }
-
-  /* Fancy progress bar */
-  .rom__meter {
-    margin-top: 14px;
-    background: #0b0b0b;
-    border: 1px solid #272727;
-    border-radius: 12px;
-    padding: 10px;
-  }
-  .rom__meter-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 13px;
-    color: var(--rom-muted);
-  }
-  .rom__meter-label b { color: var(--rom-ink); }
-
-  .rom__track {
-    position: relative;
-    width: 100%;
-    height: 16px;
-    background: linear-gradient(180deg, #0d0d0d, #050505);
-    border: 1px solid #202020;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .rom__fill {
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 0%;
-    border-right: 1px solid rgba(255,255,255,.25);
-    background-image:
-      linear-gradient(90deg, rgba(255,255,255,.12) 0, rgba(255,255,255,0) 40%),
-      linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.05)),
-      linear-gradient(90deg, #31d38b, #7c5cff); /* green -> purple */
-    animation: romStripe 1.2s linear infinite;
-  }
-  @keyframes romStripe {
-    0% { background-position: 0 0, 0 0, 0 0; }
-    100% { background-position: 40px 0, 0 0, 0 0; }
-  }
-  .rom__fill::after {
-    content: "";
-    position: absolute;
-    right: -6px;
-    top: -6px;
-    bottom: -6px;
-    width: 12px;
-    filter: blur(6px);
-    background: radial-gradient(closest-side, rgba(255,255,255,.35), transparent);
-    pointer-events: none;
-  }
-
-  .rom__pct {
-    margin-top: 6px;
-    font-size: 13px;
-    text-align: right;
-    color: var(--rom-muted);
-  }
-
-  /* highlight matching words */
-  .rom__li--match .rom__word {
-    color: var(--rom-good);
-    text-shadow: 0 0 6px rgba(30,203,123,0.8);
-  }
-  .rom__li--match .rom__score-chip {
-    border-color: var(--rom-good);
-    color: var(--rom-good);
-  }
-  .rom__li--match-them .rom__word {
-    border-bottom: 2px solid var(--rom-good);
-    padding-bottom: 1px;
-  }
-
-  /* ===== Mobile fit & safety additions ===== */
-
-  /* Constrain modal height to viewport, allow scroll inside */
-  .rom__dialog {
-    max-height: calc(100vh - 24px);
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
-  }
-  @supports (height: 100dvh) {
-    .rom__dialog { max-height: calc(100dvh - 24px); }
-  }
-
-  /* Sticky actions row so close button is always reachable */
-  .rom__actions {
-    position: sticky;
-    bottom: 0;
-    padding-top: 10px;
-    margin-top: 10px;
-    background: linear-gradient(to top, rgba(17,17,17,0.95), rgba(17,17,17,0.4), transparent);
-    border-top: 1px solid #242424;
-  }
-
-  /* Contain overscroll (prevents iOS "rubber band" issue) */
-  .rom { overscroll-behavior: contain; }
-
-  /* Tighten spacing on very small screens */
-  @media (max-width: 420px) {
-    .rom__dialog { padding: 14px; }
-    .rom__section-title { margin: 12px 0 6px; }
-    .rom__ol { max-height: 180px; }
-    .rom__track { height: 12px; }
-  }
-</style>
-
-
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modal.css" />
+  <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)" />
 </head>
 
 <body>
-
   <h1 id="game-title">ANAGRAMATON</h1>
-<main id="game-container">
-  <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000"></svg>
-</main>
 
+  <main id="game-container">
+    <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000" aria-label="Letter hex grid"></svg>
+  </main>
 
+  <button id="howto-open" type="button" aria-haspopup="dialog" aria-controls="howto-modal" aria-label="Open how to play">?</button>
 
-  <button id="howto-open" aria-haspopup="dialog" aria-controls="howto-modal">
-  ?
-</button>
+  <!-- Submit Area -->
+  <div id="submit-area" aria-live="polite">
+    <div id="current-word-display">
+      CURRENT WORD: <span id="current-word"></span>
+    </div>
 
-
-<!-- Submit Area -->
-<div id="submit-area">
-  <div id="current-word-display">
-    CURRENT WORD: <span id="current-word"></span>
+    <div id="controls">
+      <button id="submit-word" type="button">SUBMIT</button>
+      <span id="score-display">SCORE: 0</span>
+      <button id="clear-word" type="button">CLEAR WORD</button>
+    </div>
   </div>
 
-  <div id="controls">
-    <button id="submit-word">SUBMIT</button>
-    <span id="score-display">SCORE: 0</span>
-    <button id="clear-word">CLEAR WORD</button>
-    
+  <div id="top-toggle-row">
+    <button id="toggle-left" class="side-toggle left-toggle" type="button" aria-controls="left-panel" aria-expanded="false" aria-label="Toggle word panel">WORD PANEL</button>
+    <button id="toggle-right" class="side-toggle right-toggle" type="button" aria-controls="right-panel" aria-expanded="false" aria-label="Toggle phrase panel">PHRASE PANEL</button>
   </div>
-</div>
 
+  <div id="backdrop" class="backdrop"></div>
 
-<div id="top-toggle-row">
-  <button id="toggle-left" class="side-toggle left-toggle" aria-label="Toggle word panel">WORD PANEL</button>
-  <button id="toggle-right" class="side-toggle right-toggle" aria-label="Toggle phrase panel">PHRASE PANEL</button>
-</div>
-<div id="backdrop" class="backdrop"></div>
-
-
-  
-  <aside id="left-panel">
+  <!-- Left Panel -->
+  <aside id="left-panel" aria-labelledby="left-panel-title">
     <div class="panel-content">
-      <h2></h2>
+      <h2 id="left-panel-title">WORD PANEL</h2>
 
-      
-      <ul id="word-list"></ul>
+      <ul id="word-list" aria-live="polite"></ul>
 
-      
       <div class="panel-actions">
         <button id="submit-list" type="button">SUBMIT LIST</button>
-        <button id="new-game"   type="button">NEW GAME</button>
+        <button id="new-game" type="button">NEW GAME</button>
       </div>
-
-
     </div>
   </aside>
 
-
-  
-  <aside id="right-panel">
+  <!-- Right Panel -->
+  <aside id="right-panel" aria-labelledby="right-panel-title">
     <div class="panel-content">
-      <h2>PHRASE FINDER PANEL</h2>
+      <h2 id="right-panel-title">PHRASE FINDER PANEL</h2>
 
-      <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
         <span id="hints-used">HINTS: 3/3</span>
         <span id="bonus-multi">MULTIPLIER: x3</span>
       </div>
@@ -324,148 +71,132 @@
       <hr />
 
       <!-- Phrase 1 -->
-      <div style="margin-bottom: 15px;">
+      <section style="margin-bottom: 15px;">
         <div>
           HINT 1: <span id="phrase1-hint1">???</span>
-          <button id="phrase1-hint1-btn">HINT 1</button>
+          <button id="phrase1-hint1-btn" type="button">HINT 1</button>
         </div>
         <hr />
         <div>
           PHRASE 1: <span id="phrase1-text">???</span>
         </div>
-        <div id="phrase1-layout" style="margin-top: 5px; font-weight: bold;"></div>
-      </div>
+        <div id="phrase1-layout" style="margin-top:5px; font-weight:bold;"></div>
+      </section>
 
       <!-- Word Count -->
       <div style="margin-bottom: 15px; text-align: center;">
-        <button id="wordcount-hint">WORD COUNT</button>
+        <button id="wordcount-hint" type="button">WORD COUNT</button>
       </div>
 
       <!-- Phrase 2 -->
-      <div style="margin-bottom: 15px;">
+      <section style="margin-bottom: 15px;">
         <div>
           PHRASE 2: <span id="phrase2-text">???</span>
         </div>
-        <div id="phrase2-layout" style="margin-top: 5px; font-weight: bold;"></div>
+        <div id="phrase2-layout" style="margin-top:5px; font-weight:bold;"></div>
         <hr />
         <div>
           HINT 1: <span id="phrase2-hint1">???</span>
-          <button id="phrase2-hint1-btn">HINT 1</button>
+          <button id="phrase2-hint1-btn" type="button">HINT 1</button>
         </div>
-      </div>
+      </section>
     </div>
   </aside>
 
-<!-- Round Over Modal -->
-<div id="round-over-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="rom-title">
-  <div class="rom__backdrop"></div>
-  <div class="rom__dialog">
-    <h2 id="rom-title">YOU MADE IT!</h2>
+  <!-- Round Over Modal -->
+  <div id="round-over-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="rom-title">
+    <div class="rom__backdrop"></div>
+    <div class="rom__dialog">
+      <h2 id="rom-title">YOU MADE IT!</h2>
 
-    <p><strong>FINAL SCORE:</strong> <span id="rom-total">0</span></p>
-    <p class="rom__sub">BASE <span id="rom-base">0</span> + BONUS <span id="rom-bonus">0</span></p>
+      <p><strong>FINAL SCORE:</strong> <span id="rom-total">0</span></p>
+      <p class="rom__sub">BASE <span id="rom-base">0</span> + BONUS <span id="rom-bonus">0</span></p>
 
-    <!-- Words vs Board + Progress Bar are injected by JS just above the actions -->
+      <!-- Words vs Board + Progress Bar are injected by JS just above the actions -->
 
-    <div class="rom__actions">
-      <button id="rom-close-btn">CLOSE</button>
-    </div>
-  </div>
-</div>
-
-
-
-
-<div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
-  <div class="rom__backdrop"></div>
-  <div class="rom__dialog" style="max-width: 640px;">
-    <h2 id="howto-title">How to Play</h2>
-
-    <!-- Pages -->
-    <div id="howto-pagewrap" style="min-height:220px; margin:10px 0 16px;">
-
-      <!-- PAGE 1 — Objective -->
-      <section class="howto-page" data-page="0">
-        <h3 style="margin:0 0 8px;">PAGE 1 — OBJECTIVE</h3>
-      </p>
-          - BUILD AND SUBMIT A LIST OF THE  HIGHEST SCORING WORDS YOU CAN FIND.  
-      </p>
-      </p>
-          - BUILD VALID WORDS BY CLICKING ADJACENT TILES & SUBMITTING THEM TO YOUR LIST.
-      </p>
-      </p>
-          - NO TIMER, NO RUSH. ADD/REMOVE WORDS TO YOUR LIKING.  
-      </p>
-      </section>
-
-      <!-- PAGE 2 — Building -->
-      <section class="howto-page" data-page="1" hidden>
-        <h3 style="margin:0 0 8px;">PAGE 2 — BUILDING</h3>
-      </p>
-          EACH WORD MUST AT LEAST 4 LETTERS. 
-      </p>
-          EACH TILE IN A VALID WORD MUST BE AN ADJACENT TILE OF THE ONE THAT CAME BEFORE. 
-      </p>
-          EACH TILE CAN ONLY BE USED ONCE PER WORD.
-      </p>
-      </section>
-
-      <!-- PAGE 3 — Bonus Multipliers (your exact wording) -->
-      <section class="howto-page" data-page="2" hidden>
-        <h3 style="margin:0 0 8px;">PAGE 3 — BONUS MULTIPLIERS</h3>
-      </p>
-          THE REUSE MULTIPLIER: 
-      </p>
-          1st REUSE = BASE POINT VALUE DOUBLES.  2nd REUSE = POINT VALUE DOUBLES AGAIN (MAXED OUT)
-      </p>
-          POINT VALUE REMAINS MAXED OUT AT TILES 2nd REUSE POINT VALUE. 
-      </p>
-      </p>
-          LENGTH MULTIPLIER: STARTING AT THE 5th TILE IN EACH WORD
-      </p>
-          5th= x3  6th= x4  7th= x5  8th= x6  9th= x7  10th+= x10
-      </p>
-      </section>
-
-      <!-- PAGE 4 — Word List (blank for you) -->
-      <section class="howto-page" data-page="3" hidden>
-        <h3 style="margin:0 0 8px;">PAGE 4 — PHRASE PANEL / ANAGRAM BONUS </h3>
-        <p>ANAGRAM / PHRASE PAIR BONUS: .</p>
-      </section>
-    </div>
-
-    <!-- Pager controls -->
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-      <div id="howto-dots" aria-label="Pages" style="display:flex; gap:6px;">
-        <button class="howto-dot" data-dot="0" aria-label="Page 1"></button>
-        <button class="howto-dot" data-dot="1" aria-label="Page 2"></button>
-        <button class="howto-dot" data-dot="2" aria-label="Page 3"></button>
-        <button class="howto-dot" data-dot="3" aria-label="Page 4"></button>
-      </div>
-      <div class="rom__actions" style="margin-left:auto;">
-        <button id="howto-prev" aria-label="Previous">Back</button>
-        <button id="howto-next" aria-label="Next">Next</button>
-        <button id="howto-close">Close</button>
+      <div class="rom__actions">
+        <button id="rom-close-btn" type="button">CLOSE</button>
       </div>
     </div>
   </div>
-</div>
 
+  <!-- How To Modal -->
+  <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
+    <div class="rom__backdrop"></div>
+    <div class="rom__dialog" style="max-width: 640px;">
+      <h2 id="howto-title">How to Play</h2>
 
+      <!-- Pages -->
+      <div id="howto-pagewrap" style="min-height:220px; margin:10px 0 16px;">
 
+        <!-- PAGE 1 — Objective -->
+        <section class="howto-page" data-page="0">
+          <h3 style="margin:0 0 8px;">PAGE 1 — OBJECTIVE</h3>
+          <ul>
+            <li>Build and submit a list of the highest scoring words you can find.</li>
+            <li>Build valid words by clicking adjacent tiles and submitting them to your list.</li>
+            <li>No timer, no rush. Add or remove words as you like.</li>
+          </ul>
+        </section>
 
+        <!-- PAGE 2 — Building -->
+        <section class="howto-page" data-page="1" hidden>
+          <h3 style="margin:0 0 8px;">PAGE 2 — BUILDING</h3>
+          <ul>
+            <li>Each word must be at least 4 letters.</li>
+            <li>Each tile in a valid word must be adjacent to the one that came before.</li>
+            <li>Each tile can only be used once per word.</li>
+          </ul>
+        </section>
 
+        <!-- PAGE 3 — Bonus Multipliers -->
+        <section class="howto-page" data-page="2" hidden>
+          <h3 style="margin:0 0 8px;">PAGE 3 — BONUS MULTIPLIERS</h3>
+          <p><strong>The Reuse Multiplier:</strong></p>
+          <ul>
+            <li>1st reuse = base point value doubles.</li>
+            <li>2nd reuse = point value doubles again (max).</li>
+            <li>Point value remains maxed at the 2nd reuse value.</li>
+          </ul>
 
+          <p><strong>Length Multiplier (starting at the 5th tile in a word):</strong></p>
+          <ul>
+            <li>5th = ×3</li>
+            <li>6th = ×4</li>
+            <li>7th = ×5</li>
+            <li>8th = ×6</li>
+            <li>9th = ×7</li>
+            <li>10th+ = ×10</li>
+          </ul>
+        </section>
 
+        <!-- PAGE 4 — Phrase Panel / Anagram Bonus -->
+        <section class="howto-page" data-page="3" hidden>
+          <h3 style="margin:0 0 8px;">PAGE 4 — PHRASE PANEL / ANAGRAM BONUS</h3>
+          <p>ANAGRAM / PHRASE PAIR BONUS: .</p>
+        </section>
+      </div>
 
-<!-- scripts: load at the very end, after the DOM -->
-<script type="module" src="./main.js"></script>
-<script type="module" src="./roundOverModal.js"></script>
-<script type="module" src="./howToModal.js"></script> 
- 
+      <!-- Pager controls -->
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+        <div id="howto-dots" aria-label="Pages" style="display:flex; gap:6px;">
+          <button class="howto-dot" data-dot="0" aria-label="Page 1" type="button"></button>
+          <button class="howto-dot" data-dot="1" aria-label="Page 2" type="button"></button>
+          <button class="howto-dot" data-dot="2" aria-label="Page 3" type="button"></button>
+          <button class="howto-dot" data-dot="3" aria-label="Page 4" type="button"></button>
+        </div>
+        <div class="rom__actions" style="margin-left:auto;">
+          <button id="howto-prev" aria-label="Previous" type="button">Back</button>
+          <button id="howto-next" aria-label="Next" type="button">Next</button>
+          <button id="howto-close" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-
-</script>
-</script>
+  <!-- Scripts (at end for better performance) -->
+  <script type="module" src="./main.js"></script>
+  <script type="module" src="./roundOverModal.js"></script>
+  <script type="module" src="./howToModal.js"></script>
 </body>
 </html>

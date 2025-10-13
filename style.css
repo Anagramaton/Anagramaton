@@ -65,6 +65,67 @@ background:
   );
 } 
 
+  :root {
+  --stage1: #fdfdfd;
+  --stage2: #0a07cc;
+  --stage3: #1892e9;
+}
+/* =========================================
+   Stage 1
+   ========================================= */
+.hex-tile.reuse-1 {
+  filter: url(#hoverGlow);
+  stroke: rgba(255, 255, 255, 0.98);
+  stroke-width: 5;
+  transform: scale(1.035);
+  transition: filter 180ms ease, transform 180ms ease;
+}
+
+.tile-letter.reuse-1,
+.tile-point.reuse-1 {
+  fill: var(--stage2);
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 2;
+  paint-order: stroke;
+}
+
+/* =========================================
+   Stage 2
+   ========================================= */
+.hex-tile.reuse-2 {
+  filter: url(#hoverGlow);
+  stroke: var(--stage2);
+  stroke-width: 4;
+  transform: scale(1.04);
+  transition: filter 180ms ease, transform 180ms ease;
+}
+
+.tile-letter.reuse-2,
+.tile-point.reuse-2 {
+  fill: var(--stage2);
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 2;
+  paint-order: stroke;
+}
+
+/* =========================================
+   Stage 3
+   ========================================= */
+.hex-tile.reuse-3 {
+  fill: var(--stage3);     
+  stroke: var(--stage2);   
+  stroke-width: 4;
+  filter: url(#hoverGlow); 
+  transform: scale(1.04);
+}
+
+.tile-letter.reuse-3,
+.tile-point.reuse-3 {
+  fill: #0806aa; 
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 2;
+  paint-order: stroke;
+}
 
 /* =========================================================
    2) LAYOUT CONTAINERS
@@ -786,198 +847,6 @@ background:
 
 
 
-/* ================================
-   Mobile Layout Overrides
-   ================================ */
-@media (max-width: 768px) {
-  /* Title: slightly smaller, leaves room for toggles */
-  #game-title {
-    top: 12px;
-    font-size: clamp(1.8rem, 6vw, 2.4rem);
-  }
-
-  /* Panel toggles: horizontal buttons, same size as Submit/Clear */
-  .side-toggle {
-    writing-mode: initial;
-    text-orientation: initial;
-    width: auto;
-    min-width: 140px;
-    height: auto;
-    padding: 0.65em 1.1em;
-    font-size: 0.9rem;
-    border-radius: 10px;
-    border: 2px solid #28f0ff;
-    background: transparent;
-    color: #a9e7ff;
-    font-weight: 700;
-    box-shadow: inset 0 0 10px #28f0ff,
-                0 0 10px #28f0ff33;
-    text-shadow: none;
-    transition: transform 120ms ease,
-                box-shadow 120ms ease,
-                filter 120ms ease;
-  }
-
-  /* Hover/active effects */
-  .side-toggle:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-  }
-  .side-toggle:active {
-    transform: translateY(0);
-    filter: brightness(0.95);
-  }
-
-  /* Positioning: both toggles sit just under the title */
-  .left-toggle {
-    top: 80px;
-    left: 0;
-    transform: none;
-  }
-  .right-toggle {
-    top: 80px;
-    right: 0;
-    transform: none;
-  }
-
-  /* Submit area tweaks (optional tighter spacing on small screens) */
-  #submit-area {
-    flex-direction: column;
-    gap: 0.5em;
-    bottom: 10px;
-  }
-  #submit-area div {
-    font-size: 1.2em;
-  }
-  #submit-word,
-  #clear-word {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Normal position */
-  .side-toggle { top: 80px; }
-  .left-toggle  { left: 0; }
-  .right-toggle { right: 0; }
-
-  /* When panel is open, move its toggle up */
-  body:has(#left-panel.open) .left-toggle {
-    display: none;
-  }
-
-body:has(#right-panel.open) .right-toggle {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  #howto-open {
-    display: flex;                 /* visible only on mobile */
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: max(8px, env(safe-area-inset-top));
-    right: 10px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    font-size: 1.3rem;
-    font-weight: bold;
-    border: 2px solid #28f0ff;
-    background: transparent;
-    color: #a9e7ff;
-    box-shadow: inset 0 0 6px #28f0ff,
-                0 0 8px #28f0ff55;
-    cursor: pointer;
-    z-index: 900; /* stays above panels */
-  }
-
-  #howto-open:hover {
-    filter: brightness(1.2);
-    transform: scale(1.05);
-  }
-}
-
-/* Backdrop that shows whenever a panel is open */
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.15);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .18s ease;
-}
-
-/* Show the backdrop when either panel is open */
-body:has(#left-panel.open) .backdrop,
-body:has(#right-panel.open) .backdrop {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* (optional) improve tap responsiveness on mobile */
-#toggle-left, #toggle-right {
-  touch-action: manipulation;
-}
-
-
-@media (max-width: 768px) {
-  /* Hide right toggle if left panel is open */
-  body:has(#left-panel.open) .right-toggle {
-    display: none;
-  }
-
-  /* Hide left toggle if right panel is open */
-  body:has(#right-panel.open) .left-toggle {
-    display: none;
-  }
-}
-
-/* ===============================
-   Panel Backdrop + Mobile Toggles Fix
-   =============================== */
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.15);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .18s ease;
-  z-index: 400; /* below panels, above game UI */
-}
-
-/* Show backdrop when a panel is open */
-body:has(#left-panel.open) .backdrop,
-body:has(#right-panel.open) .backdrop {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* JS fallback if :has() is unsupported */
-body.panel-open .backdrop {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Hide toggles when their panel is open (mobile) */
-@media (max-width: 768px) {
-  body:has(#left-panel.open) .left-toggle { display: none; }
-  body:has(#right-panel.open) .right-toggle { display: none; }
-
-  /* Fallback (JS will set these classes) */
-  body.left-open  .left-toggle  { display: none; }
-  body.right-open .right-toggle { display: none; }
-}
-
-
-
-
-
-
-
-
-
 @keyframes glow-hue {
   to { filter: url(#hoverGlow) hue-rotate(360deg) saturate(1.25); }
 }
@@ -1082,67 +951,7 @@ body.panel-open .backdrop {
 }
 
 
-  :root {
-  --stage1: #fdfdfd;
-  --stage2: #0a07cc;
-  --stage3: #1892e9;
-}
-/* =========================================
-   Stage 1
-   ========================================= */
-.hex-tile.reuse-1 {
-  filter: url(#hoverGlow);
-  stroke: rgba(255, 255, 255, 0.98);
-  stroke-width: 5;
-  transform: scale(1.035);
-  transition: filter 180ms ease, transform 180ms ease;
-}
 
-.tile-letter.reuse-1,
-.tile-point.reuse-1 {
-  fill: var(--stage2);
-  stroke: rgba(0, 0, 0, 0.35);
-  stroke-width: 2;
-  paint-order: stroke;
-}
-
-/* =========================================
-   Stage 2
-   ========================================= */
-.hex-tile.reuse-2 {
-  filter: url(#hoverGlow);
-  stroke: var(--stage2);
-  stroke-width: 4;
-  transform: scale(1.04);
-  transition: filter 180ms ease, transform 180ms ease;
-}
-
-.tile-letter.reuse-2,
-.tile-point.reuse-2 {
-  fill: var(--stage2);
-  stroke: rgba(0, 0, 0, 0.35);
-  stroke-width: 2;
-  paint-order: stroke;
-}
-
-/* =========================================
-   Stage 3
-   ========================================= */
-.hex-tile.reuse-3 {
-  fill: var(--stage3);     
-  stroke: var(--stage2);   
-  stroke-width: 4;
-  filter: url(#hoverGlow); 
-  transform: scale(1.04);
-}
-
-.tile-letter.reuse-3,
-.tile-point.reuse-3 {
-  fill: #0806aa; 
-  stroke: rgba(0, 0, 0, 0.35);
-  stroke-width: 2;
-  paint-order: stroke;
-}
 
 
 

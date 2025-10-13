@@ -1,0 +1,129 @@
+/* ================================
+   Mobile Layout Overrides
+   ================================ */
+@media (max-width: 768px) {
+  /* Title: slightly smaller, leaves room for toggles */
+  #game-title {
+    top: 12px;
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+  }
+
+  /* Panel toggles: horizontal buttons, same size as Submit/Clear */
+  .side-toggle {
+    writing-mode: initial;
+    text-orientation: initial;
+    width: auto;
+    min-width: 140px;
+    height: auto;
+    padding: 0.65em 1.1em;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: 2px solid #28f0ff;
+    background: transparent;
+    color: #a9e7ff;
+    font-weight: 700;
+    box-shadow: inset 0 0 10px #28f0ff,
+                0 0 10px #28f0ff33;
+    text-shadow: none;
+    transition: transform 120ms ease,
+                box-shadow 120ms ease,
+                filter 120ms ease;
+  }
+
+  /* Hover/active effects */
+  .side-toggle:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+  }
+  .side-toggle:active {
+    transform: translateY(0);
+    filter: brightness(0.95);
+  }
+
+  /* Positioning: both toggles sit just under the title */
+  .left-toggle {
+    top: 80px;
+    left: 0;
+    transform: none;
+  }
+  .right-toggle {
+    top: 80px;
+    right: 0;
+    transform: none;
+  }
+
+  /* Submit area tweaks (optional tighter spacing on small screens) */
+  #submit-area {
+    flex-direction: column;
+    gap: 0.5em;
+    bottom: 10px;
+  }
+  #submit-area div {
+    font-size: 1.2em;
+  }
+  #submit-word,
+  #clear-word {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Normal position */
+  .side-toggle { top: 80px; }
+  .left-toggle  { left: 0; }
+  .right-toggle { right: 0; }
+
+  /* When panel is open, move its toggle up */
+  body:has(#left-panel.open)  .left-toggle  { 
+    top: max(8px, env(safe-area-inset-top));
+  }
+  body:has(#right-panel.open) .right-toggle { 
+    top: max(8px, env(safe-area-inset-top));
+  }
+}
+
+@media (max-width: 768px) {
+  #howto-open {
+    display: flex;                 /* visible only on mobile */
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: max(8px, env(safe-area-inset-top));
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: 2px solid #28f0ff;
+    background: transparent;
+    color: #a9e7ff;
+    box-shadow: inset 0 0 6px #28f0ff,
+                0 0 8px #28f0ff55;
+    cursor: pointer;
+    z-index: 900; /* stays above panels */
+  }
+
+  #howto-open:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hide right toggle if left panel is open */
+  body:has(#left-panel.open) .right-toggle {
+    display: none;
+  }
+
+  /* Hide left toggle if right panel is open */
+  body:has(#right-panel.open) .left-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hide only the toggle belonging to the open panel */
+  body:has(#left-panel.open)  .left-toggle  { display: none; }
+  body:has(#right-panel.open) .right-toggle { display: none; }
+}

@@ -245,13 +245,11 @@ gameState.boardTop10Total = finalTotal;
   });
 }
 
-// ----------------------------------------------
-// DOMContentLoaded bootstrap
-// ----------------------------------------------
-
-
+// =============================
+// DOMContentLoaded Bootstrap
+// =============================
 document.addEventListener('DOMContentLoaded', () => {
-  // reset state
+  // --- Reset initial state ---
   baseTotal = 0;
   bonusTotal = 0;
   totalScore = 0;
@@ -260,45 +258,42 @@ document.addEventListener('DOMContentLoaded', () => {
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
+  console.log('[main] before initializeGrid()');
+  initializeGrid();
+  console.log('[main] after initializeGrid()');
 
+  // --- Right panel visibility based on mode ---
+  if (gameState.mode === 'daily') {
+    initPhrasePanelEvents();
+  } else {
+    const rightPanel = document.getElementById('right-panel');
+    if (rightPanel) rightPanel.style.display = 'none';
+    const toggleRight = document.getElementById('toggle-right');
+    if (toggleRight) toggleRight.style.display = 'none';
+  }
 
-console.log('[main] before initializeGrid()');
-initializeGrid();
-console.log('[main] after initializeGrid()');
+  // --- Build Left Panel Content ---
+  const leftPanel = document.querySelector('#left-panel .panel-content');
+  if (leftPanel) {
+    leftPanel.innerHTML = `
+      <h2>YOUR WORDS</h2>
+      <button id="submit-list">Submit List</button>
+      <ul id="word-list"></ul>
+      <button id="new-game">New Game</button>
+    `;
 
+    // reattach event listeners
+    document.getElementById('submit-list')
+      ?.addEventListener('click', handleSubmitList);
+    syncSubmitListButton();
 
-if (gameState.mode === 'daily') {
-  initPhrasePanelEvents();
-} else {
-  const rightPanel = document.getElementById('right-panel');
-  if (rightPanel) rightPanel.style.display = 'none';
+    document.getElementById('new-game')
+      ?.addEventListener('click', () => {
+        window.dispatchEvent(new Event('game:new'));
+      });
+  }
 
-  const toggleRight = document.getElementById('toggle-right');
-  if (toggleRight) toggleRight.style.display = 'none';
-}
-
-
-
-
-const leftPanel = document.querySelector('#left-panel .panel-content');
-if (leftPanel) {
-  leftPanel.innerHTML = `
-    <h2>YOUR WORDS</h2>
-    <button id="submit-list">Submit List</button>
-    <ul id="word-list"></ul>
-    <button id="new-game">New Game</button>
-  `;
-
-  // re-attach event listeners
-  document.getElementById('submit-list')
-    ?.addEventListener('click', handleSubmitList);
-  syncSubmitListButton();
-
-  document.getElementById('new-game')
-    ?.addEventListener('click', () => {
-      window.dispatchEvent(new Event('game:new'));
-    });
-}
+  // --- General button + word actions ---
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('#submit-word');
     if (btn) handleSubmitWordClick(e);
@@ -311,105 +306,112 @@ if (leftPanel) {
       if (cw) cw.textContent = '';
     });
 
-  // preview + panel toggles
+  // --- Selection preview updates ---
   window.addEventListener('selection:changed', updateCurrentWordDisplay);
 
-  document.getElementById('toggle-left')
-    ?.addEventListener('click', () =>
-      document.getElementById('left-panel')?.classList.toggle('open')
-    );
+  // ====================================================
+  // PANEL + BACKDROP HANDLING (runs once at startup)
+  // ====================================================
+  const leftPanelEl  = document.getElementById('left-panel');
+  const rightPanelEl = document.getElementById('right-panel');
+  const backdrop     = document.getElementById('backdrop');
 
-  document.getElementById('toggle-right')
-    ?.addEventListener('click', () =>
-      document.getElementById('right-panel')?.classList.toggle('open')
-    );
+  const syncOpenState = () => {
+    const leftOpen  = leftPanelEl?.classList.contains('open');
+    const rightOpen = rightPanelEl?.classList.contains('open');
+    document.body.classList.toggle('left-open',  !!leftOpen);
+    document.body.classList.toggle('right-open', !!rightOpen);
+    document.body.classList.toggle('panel-open', !!(leftOpen || rightOpen));
+  };
 
+  document.getElementById('toggle-left')?.addEventListener('click', () => {
+    leftPanelEl?.classList.toggle('open');
+    rightPanelEl?.classList.remove('open');
+    syncOpenState();
+  });
 
-    
-  // merged list panel last
+  document.getElementById('toggle-right')?.addEventListener('click', () => {
+    rightPanelEl?.classList.toggle('open');
+    leftPanelEl?.classList.remove('open');
+    syncOpenState();
+  });
+
+  backdrop?.addEventListener('click', () => {
+    leftPanelEl?.classList.remove('open');
+    rightPanelEl?.classList.remove('open');
+    syncOpenState();
+  });
+
+  // Initialize body classes for fallback if :has() unsupported
+  syncOpenState();
+
+  // ====================================================
+  // OTHER INITIAL MODULES
+  // ====================================================
   initMergedListPanel();
 
   // When merged list is shown, mark left panel as merged
   window.addEventListener('round:merged:show', () => {
     document.getElementById('left-panel')?.classList.add('is-merged');
   });
+});
+
 
 // NEW GAME wiring
-document.getElementById('new-game')
-  ?.addEventListener('click', () => {
-    // --- Reset game state ---
-    baseTotal = 0;
-    bonusTotal = 0;
-    totalScore = 0;
-    submittedWords.clear();
-    gameState.words = [];
-    gameState.listLocked = false;
-    updateScoreDisplay(0);
+document.getElementById('new-game')?.addEventListener('click', () => {
+  // --- Reset game state ---
+  baseTotal = 0;
+  bonusTotal = 0;
+  totalScore = 0;
+  submittedWords.clear();
+  gameState.words = [];
+  gameState.listLocked = false;
+  updateScoreDisplay(0);
 
-const leftPanelEl  = document.getElementById('left-panel');
-const rightPanelEl = document.getElementById('right-panel');
-const backdrop     = document.getElementById('backdrop');
+  // --- Close any open panels + sync <body> classes (no new listeners here) ---
+  const leftPanelEl  = document.getElementById('left-panel');
+  const rightPanelEl = document.getElementById('right-panel');
 
+  // local, lightweight sync (doesn't rely on :has())
+  const syncOpenState = () => {
+    const leftOpen  = leftPanelEl?.classList.contains('open');
+    const rightOpen = rightPanelEl?.classList.contains('open');
+    document.body.classList.toggle('left-open',  !!leftOpen);
+    document.body.classList.toggle('right-open', !!rightOpen);
+    document.body.classList.toggle('panel-open', !!(leftOpen || rightOpen));
+  };
 
-const syncOpenState = () => {
-  const leftOpen  = leftPanelEl?.classList.contains('open');
-  const rightOpen = rightPanelEl?.classList.contains('open');
-  document.body.classList.toggle('left-open',  !!leftOpen);
-  document.body.classList.toggle('right-open', !!rightOpen);
-  document.body.classList.toggle('panel-open', !!(leftOpen || rightOpen));
-};
-
-document.getElementById('toggle-left')?.addEventListener('click', () => {
-  leftPanelEl?.classList.toggle('open');
-  rightPanelEl?.classList.remove('open');
-  syncOpenState();
-});
-
-document.getElementById('toggle-right')?.addEventListener('click', () => {
-  rightPanelEl?.classList.toggle('open');
-  leftPanelEl?.classList.remove('open');
-  syncOpenState();
-});
-
-backdrop?.addEventListener('click', () => {
   leftPanelEl?.classList.remove('open');
   rightPanelEl?.classList.remove('open');
   syncOpenState();
-});
 
+  // --- Restore left panel header + classes ---
+  const leftPanel = document.getElementById('left-panel');
+  leftPanel?.classList.remove('is-merged');
 
-// Initialize body classes
-syncOpenState();
+  const h2 = document.querySelector('#left-panel .panel-content h2');
+  if (h2) h2.textContent = 'YOUR WORDS';
 
+  // ✅ Re-enable top-level buttons
+  document.getElementById('submit-list')?.removeAttribute('disabled');
+  document.getElementById('submit-word')?.removeAttribute('disabled');
+  document
+    .querySelectorAll('#word-list button, #word-list [data-role="remove"]')
+    .forEach(btn => btn.removeAttribute('disabled'));
 
-    // --- Restore left panel header + classes ---
-    const leftPanel = document.getElementById('left-panel');
-    leftPanel?.classList.remove('is-merged');
-    const h2 = document.querySelector('#left-panel .panel-content h2');
-    if (h2) h2.textContent = 'YOUR WORDS';
+  // --- Clear out word list UI completely ---
+  const wordList = document.getElementById('word-list');
+  if (wordList) {
+    wordList.classList.remove('is-hidden');
+    wordList.innerHTML = ''; // remove any old words
+  }
+  syncSubmitListButton();
 
-        // ✅ Re-enable top-level buttons
-    document.getElementById('submit-list')?.removeAttribute('disabled');
-    document.getElementById('submit-word')?.removeAttribute('disabled');
-        document.querySelectorAll('#word-list button, #word-list [data-role="remove"]')
-      .forEach(btn => btn.removeAttribute('disabled'));
+  // --- Generate a new grid ---
+  initializeGrid();
 
-    // --- Clear out word list UI completely ---
-    const wordList = document.getElementById('word-list');
-    if (wordList) {
-      wordList.classList.remove('is-hidden');
-      wordList.innerHTML = ''; // remove any old words
-    }
-    syncSubmitListButton();
-
-    // --- Generate a new grid ---
-    initializeGrid();
-
-    // --- Tell other modules (like mergedlistpanel.js) to clean up ---
-    window.dispatchEvent(new Event('game:new'));
-  });
-
-
+  // --- Tell other modules (like mergedlistpanel.js) to clean up ---
+  window.dispatchEvent(new Event('game:new'));
 });
 
 
