@@ -139,6 +139,10 @@ background:
   position: relative;
 }
 
+#backdrop { position: fixed; inset: 0; z-index: 950; }   /* backdrop above toggles */
+#left-panel, #right-panel { z-index: 1000; }             /* panels above backdrop */
+
+
 /* Side Panels (layout & slide behavior) */
 #left-panel,
 #right-panel {

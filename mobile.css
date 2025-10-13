@@ -122,8 +122,7 @@
   }
 }
 
+/* Mobile: make backdrop clickable over the toggles */
 @media (max-width: 768px) {
-  /* Hide only the toggle belonging to the open panel */
-  body:has(#left-panel.open)  .left-toggle  { display: none; }
-  body:has(#right-panel.open) .right-toggle { display: none; }
+  .side-toggle { z-index: 900; }   /* below backdrop */
 }
