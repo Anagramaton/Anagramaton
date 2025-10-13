@@ -139,8 +139,22 @@ background:
   position: relative;
 }
 
-#backdrop { position: fixed; inset: 0; z-index: 950; }   /* backdrop above toggles */
-#left-panel, #right-panel { z-index: 1000; }             /* panels above backdrop */
+/* Backdrop is invisible and doesn't catch taps by default */
+#backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 950;         /* between toggles (900 mobile) and panels (1000) */
+  opacity: 0;
+  pointer-events: none; /* <— key line */
+  transition: opacity 160ms ease;
+}
+
+/* When any panel is open, fade in and become clickable */
+body.panel-open #backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 
 
 /* Side Panels (layout & slide behavior) */
