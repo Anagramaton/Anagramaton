@@ -161,7 +161,7 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
     wordList.map((w) => w.toUpperCase()).filter(isFriendlyWord)
   ).sort((a, b) => b.length - a.length);
 
-  const LONG_MIN = 12;
+  const LONG_MIN = 9;
   const LONG_MAX = 14;
   const isLong = (w) => w.length >= LONG_MIN && w.length <= LONG_MAX;
   const longCandidates = candidates.filter(isLong);
@@ -189,9 +189,9 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
   };
   const placementScore = (word, overlaps, pathLen) => {
     const newLetters = pathLen - overlaps;
-    const W_OVERLAP = 5;
-    const W_LENGTH = 3.5; // strong length bias
-    const W_NEW_PEN = 1.2;
+    const W_OVERLAP = 2;
+    const W_LENGTH = 30.5; // strong length bias
+    const W_NEW_PEN = 10;
     return W_OVERLAP * overlaps + W_LENGTH * word.length - W_NEW_PEN * newLetters;
   };
 
@@ -258,8 +258,7 @@ function getCenterishStart(coords) {
 }
 
 function buildCenterSnakePath(coords, gridRadius, targetLen, avoidKeys = new Set()) {
-  // Deterministic greedy snake that starts near center and walks to unvisited neighbors.
-  // Guarantees a simple path of length targetLen if the board radius supports it.
+ 
   const coordMap = new Map(coords.map(c => [coordKey(c.q, c.r), c]));
   const visited = new Set([...avoidKeys]);
   const path = [];
@@ -269,7 +268,7 @@ function buildCenterSnakePath(coords, gridRadius, targetLen, avoidKeys = new Set
 
   for (let i = 0; i < targetLen; i++) {
     const key = coordKey(cur.q, cur.r);
-    if (visited.has(key)) return null; // failure; let caller try again with different avoidKeys/len
+    if (visited.has(key)) return null; 
     visited.add(key);
     path.push({ q: cur.q, r: cur.r, key });
 
@@ -281,13 +280,12 @@ function buildCenterSnakePath(coords, gridRadius, targetLen, avoidKeys = new Set
     for (const d of HEX_DIRS) {
       const nq = cur.q + d.dq, nr = cur.r + d.dr;
       const nKey = coordKey(nq, nr);
-      if (!coordMap.has(nKey)) continue;     // outside board
-      if (visited.has(nKey)) continue;       // already used
+      if (!coordMap.has(nKey)) continue;     
+      if (visited.has(nKey)) continue;       
       next = { q: nq, r: nr };
       break;
     }
     if (!next) {
-      // if stuck early, abort; caller may try with different avoid set
       return null;
     }
     cur = next;
@@ -319,18 +317,18 @@ function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys =
 if (postLetters === 0 && gameState.mode !== 'daily') {
   DEBUG && console.info('🚀 Unlimited bootstrap: placing long-word anchors');
 
-  const anchorsNeeded = 2;         // minimum guaranteed rails
-  const anchorsMax     = 3;         // optional 3rd cross if it fits
+  const anchorsNeeded = 5;        
+  const anchorsMax     = 6;         
   let anchorsPlaced    = 0;
 
-  const occupied = new Set();       // to keep rail templates disjoint if we use them
+  const occupied = new Set();       
   const chosen = [];
 
   // preselect a small pool of diverse longs
   for (const w of longCandidates) {
     if (usedWords.has(w)) continue;
     chosen.push(w);
-    if (chosen.length >= 12) break;
+    if (chosen.length >= 100) break;
   }
 
   for (const word of chosen) {
@@ -355,10 +353,7 @@ if (postLetters === 0 && gameState.mode !== 'daily') {
     usedWords.add(word);
     anchorsPlaced++;
 
-    if (anchorsPlaced >= anchorsNeeded && postLetters > 0) {
-      // We’ve created a core; a third rail is optional for density
-      // Leave loop running to possibly place the 3rd, but don’t force it.
-    }
+
   }
 
   DEBUG && console.info(`✅ Bootstrap anchors placed: ${anchorsPlaced}`);
