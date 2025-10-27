@@ -115,8 +115,10 @@ function findPath(
     if (nextExisting && nextExisting !== nextLetter) continue;
 
     
-    if (nextEdgeRunBase >= maxEdgeRun && nb.staysNearWall && !nb.goesDeeper) {
+        if (nextEdgeRunBase >= maxEdgeRun && nb.staysNearWall && !nb.goesDeeper) {
+      continue; // hard-stop more edge crawling; try a deeper step
     }
+
 
     const path = findPath(
       grid,

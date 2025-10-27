@@ -74,14 +74,18 @@ function buildMergedList(playerWords = [], boardWords = [], scoreMap = {}) {
   wrap.querySelector('#merged-yours').textContent = String(yours.length);
 
   if (scoreMap) {
-  // scoreMap is a Map of word -> score (already prepared upstream!)
-  const topEntries = Array.from(scoreMap.entries())
-    .map(([word, score]) => ({ word, score }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 10);
+// Build "player top 10" from the player's scoreMap for display,
+// but leave the solver's boardTop10 untouched
+gameState.playerTop10 = Array.from(scoreMap.entries())
+  .map(([word, score]) => ({ word, score }))
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 10);
 
-  gameState.boardTop10 = topEntries;
-  gameState.boardTop10Total = topEntries.reduce((sum, x) => sum + x.score, 0);
+gameState.playerTop10Total =
+  (gameState.playerTop10 || []).reduce((sum, x) => sum + x.score, 0);
+
+
+
 
   console.log("Top 10 (board):", gameState.boardTop10, "Total:", gameState.boardTop10Total);
 }

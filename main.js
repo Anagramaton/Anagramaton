@@ -154,8 +154,7 @@ removeBtn.addEventListener('click', () => {
     gameState.words.splice(idx, 1);     // remove it from the game state list
   }
   recomputeAll();                       // update score and totals
-  syncSubmitListButton();                // refresh submit button state
-  endGame(); 
+  syncSubmitListButton();                // refresh submit button state 
 });
 
 recomputeAll();

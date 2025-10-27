@@ -135,32 +135,31 @@ if (uses === 1) {
   });
 }
 
-// ------------------------------------------------------------
-// Board scoring helper
-// ------------------------------------------------------------
-
-// Compute scores for words placed on the board.
-// Accepts either ["WORD", ...] or [{ word, tiles, ...}, ...]
 export function computeBoardWordScores(wordsLike) {
-  // Normalize to entries with word + tiles
+  // Normalize to consistent entry objects with word + tiles
   const entries = (wordsLike || []).map(w =>
     typeof w === 'string'
-      ? { word: w, tiles: [] }
-      : { word: w.word, tiles: w.tiles || [] }
+      ? { word: String(w).toUpperCase(), tiles: [] }
+      : { word: String(w?.word || '').toUpperCase(), tiles: w?.tiles || [] }
   );
 
-  // Reuse the existing logic so scoring rules are identical
-  const scored = recomputeAllWordScores(entries) || [];
+  // Reuse the existing recomputeAllWordScores logic for identical scoring rules
+  const scores = recomputeAllWordScores(entries) || [];
 
-  // Normalize to a simple shape and sort high-to-low
-  return scored
-    .map(s => ({
-      word: s.word || (s?.entry?.word) || '',
-      score: Number(s.score) || Number(s) || 0
+  // Normalize to simple {word, score} pairs and sort high-to-low
+  return entries
+    .map((entry, i) => ({
+      word: entry.word,
+      score: Number(
+        scores[i]?.score ??
+        scores[i] ??
+        0
+      ),
     }))
-    .filter(x => x.word) // drop any empties
+    .filter(x => x.word) // drop any blanks
     .sort((a, b) => b.score - a.score);
 }
+
 
 
 export function resetSelectionState() {

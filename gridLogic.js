@@ -300,7 +300,17 @@ function placeWordOnPath(grid, word, path) {
 function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys = new Set()) {
   // A) Try your normal pathfinder broadly
   for (const { q, r } of shuffledArray(coords).slice(0, PATH_TRIES)) {
-    const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
+    const path = findPath(
+  grid, word, q, r, 0, new Set(), gridRadius,
+  {
+    allowZigZag: true,
+    preferOverlap: true,
+    wallBuffer: 2,  // 1 ring from border counts as “near wall”
+    maxEdgeRun: 0,  // don’t allow consecutive near-wall steps
+    maxStraight: 1  // avoid long straight grazes
+  }
+);
+
     if (!path) continue;
     if (hasConflict(path, word)) continue;
     return { path, viaTemplate: false };
