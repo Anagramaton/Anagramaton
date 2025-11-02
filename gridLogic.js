@@ -162,7 +162,7 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
   ).sort((a, b) => b.length - a.length);
 
   const LONG_MIN = 9;
-  const LONG_MAX = 14;
+  const LONG_MAX = 12;
   const isLong = (w) => w.length >= LONG_MIN && w.length <= LONG_MAX;
   const longCandidates = candidates.filter(isLong);
   const usedWords = new Set();
