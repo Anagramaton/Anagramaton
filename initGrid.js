@@ -27,49 +27,36 @@ function updateWordPreview() {
   const upper = word.toUpperCase();
   const wordPreviewElement = document.getElementById('current-word');
 
-  if (wordPreviewElement) {
-    wordPreviewElement.textContent = upper;
-  }
+  if (wordPreviewElement) wordPreviewElement.textContent = upper;
 
-  // nothing selected → kill effects
+  // Clear shimmer from ALL tiles before applying new ones
+  document.querySelectorAll('.valid-shimmer').forEach(el => {
+    el.classList.remove('valid-shimmer');
+    el.style.removeProperty('--shimmer-delay');
+  });
+
+  // nothing selected → no effects
   if (!word) {
-    if (wordPreviewElement) {
-      wordPreviewElement.classList.remove('valid-word');
-    }
-    document.querySelectorAll('.valid-shimmer').forEach(el => {
-      el.classList.remove('valid-shimmer');
-      el.style.removeProperty('--shimmer-delay');
-    });
+    if (wordPreviewElement) wordPreviewElement.classList.remove('valid-word');
     return;
   }
 
-  // same rule as submit: only shimmer on actually valid words
   const isValid = upper.length >= 4 && isValidWord(upper);
 
   if (isValid) {
-    if (wordPreviewElement) {
-      wordPreviewElement.classList.add('valid-word');
-    }
-    // give each selected tile its own delay
+    if (wordPreviewElement) wordPreviewElement.classList.add('valid-word');
+    // add shimmer to each selected tile
     selectedTiles.forEach((tile, idx) => {
       if (tile?.element) {
         tile.element.classList.add('valid-shimmer');
-        // 0.18s gap between tiles
         tile.element.style.setProperty('--shimmer-delay', `${idx * 0.18}s`);
       }
     });
   } else {
-    if (wordPreviewElement) {
-      wordPreviewElement.classList.remove('valid-word');
-    }
-    selectedTiles.forEach(tile => {
-      if (tile?.element) {
-        tile.element.classList.remove('valid-shimmer');
-        tile.element.style.removeProperty('--shimmer-delay');
-      }
-    });
+    if (wordPreviewElement) wordPreviewElement.classList.remove('valid-word');
   }
 }
+
 
 
 
