@@ -10,6 +10,7 @@
 
   /* Panel toggles: horizontal buttons, same size as Submit/Clear */
   .side-toggle {
+    position: fixed;
     writing-mode: initial;
     text-orientation: initial;
     width: 140px;
@@ -23,7 +24,7 @@
     cursor: pointer;
     background: #2749b0;
     box-shadow: 0 4px 0 #1c337c;
-    top: 80px;
+    top: 120px;
     transition: all 0.15s ease;
    
   }
