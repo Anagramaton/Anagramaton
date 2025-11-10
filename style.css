@@ -1,6 +1,4 @@
-/* =========================================================
-   1) BASE & GLOBAL STYLES
-   ========================================================= */
+
 
 
 /* Global Font Usage */
@@ -51,81 +49,9 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-background:
-  radial-gradient(
-    circle at center,
-    rgba(0, 255, 0, 0.15) 0%,
-    rgba(0, 255, 0, 0) 70%
-  ),
-  radial-gradient(
-    circle at center,
-    hsl(210, 25%, 42%) 0%,
-    hsl(210, 25%, 26%) 50%,
-    hsl(210, 25%, 18%) 100%
-  );
+  background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+  color: var(--text);
 } 
-
-  :root {
-  --stage1: #fdfdfd;
-  --stage2: #0a07cc;
-  --stage3: #1892e9;
-}
-/* =========================================
-   Stage 1
-   ========================================= */
-.hex-tile.reuse-1 {
-  filter: url(#hoverGlow);
-  stroke: rgba(255, 255, 255, 0.98);
-  stroke-width: 5;
-  transform: scale(1.035);
-  transition: filter 180ms ease, transform 180ms ease;
-}
-
-.tile-letter.reuse-1,
-.tile-point.reuse-1 {
-  fill: var(--stage2);
-  stroke: rgba(0, 0, 0, 0.35);
-  stroke-width: 2;
-  paint-order: stroke;
-}
-
-/* =========================================
-   Stage 2
-   ========================================= */
-.hex-tile.reuse-2 {
-  filter: url(#hoverGlow);
-  stroke: var(--stage2);
-  stroke-width: 4;
-  transform: scale(1.04);
-  transition: filter 180ms ease, transform 180ms ease;
-}
-
-.tile-letter.reuse-2,
-.tile-point.reuse-2 {
-  fill: var(--stage2);
-  stroke: rgba(0, 0, 0, 0.35);
-  stroke-width: 2;
-  paint-order: stroke;
-}
-
-/* =========================================
-   Stage 3
-   ========================================= */
-.hex-tile.reuse-3 {
-  fill: var(--stage3);     
-  stroke: var(--stage2);   
-  stroke-width: 4;
-  filter: url(#hoverGlow); 
-  transform: scale(1.04);
-}
-
-.tile-letter.reuse-3,
-.tile-point.reuse-3 {
-  fill: #0806aa; 
-  stroke: rgba(0, 0, 0, 0.35);
-  stroke-width: 2;
-  paint-order: stroke;
-}
 
 /* =========================================================
    2) LAYOUT CONTAINERS
@@ -280,22 +206,20 @@ body.panel-open #backdrop {
   box-shadow: 0 0 12px rgba(0,229,255,0.6);
 }
 
-/* ---------- Left Panel (Word Panel — Electric Cyan Theme) ---------- */
+
 #left-panel .panel-content {
-  position: absolute;  
-  inset: 0;            
-  overflow-y: auto; 
-  background:
-    radial-gradient(circle at 15% 25%, rgba(0, 238, 255, 0.18), transparent 60%),
-    radial-gradient(circle at 85% 75%, rgba(90, 0, 255, 0.18), transparent 65%),
-    linear-gradient(180deg, rgba(10, 20, 30, 0.85), rgba(10, 16, 26, 0.9));
-  border: 2px solid rgba(0, 238, 255, 0.5);
-  border-radius: 14px;
-  box-shadow:
-    0 0 34px rgba(106, 0, 255, 0.35),
-    inset 0 0 20px rgba(0, 180, 255, 0.25);
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: none;
+  color: #222;
   padding: 18px;
 }
+
+
 
 /* Static shimmer (no animation) */
 #left-panel .panel-content::before {
@@ -320,7 +244,7 @@ body.panel-open #backdrop {
   text-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
 }
 
-/* Word list */
+/* Word list — same as tile style */
 #word-list {
   list-style: none;
   margin: 10px 0 14px;
@@ -331,88 +255,87 @@ body.panel-open #backdrop {
 #word-list li {
   padding: 8px 10px;
   border-radius: 10px;
-  border: 2px solid rgba(0, 238, 255, 0.35);
-  background: rgba(8, 20, 30, 0.6);
-  color: #c9f7ff;
-  font-weight: 700;
+  border: 2px solid #000;
+  background: #fff1e6;      /* tile cream */
+  color: #1b4965;           /* tile text */
+  font-weight: 800;
   letter-spacing: 0.04em;
-  text-shadow: 0 0 6px rgba(0, 238, 255, 0.6);
-  box-shadow: inset 0 0 8px rgba(0, 238, 255, 0.25)
+  text-transform: uppercase;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 #word-list li:hover {
-  transform: translateY(-2px);
-  border-color: rgba(106, 0, 255, 0.6);
-  box-shadow: inset 0 0 12px rgba(106, 0, 255, 0.35)
+  background: #ffe7d5;      /* subtle warm hover */
+  transform: translateY(-1px);
 }
 
-/* Make All Words list items match Submitted Words list items */
+/* Make merged list match word list */
 #merged-list li {
   padding: 8px 10px;
   border-radius: 10px;
-  border: 2px solid rgba(0, 238, 255, 0.35);
-  background: rgba(8, 20, 30, 0.6);
-  color: #c9f7ff;
-  font-weight: 700;
+  border: 2px solid #000;
+  background: #fff1e6;
+  color: #1b4965;
+  font-weight: 800;
   letter-spacing: 0.04em;
-  text-shadow: 0 0 6px rgba(0, 238, 255, 0.6);
-  box-shadow: inset 0 0 8px rgba(0, 238, 255, 0.25);
+  text-transform: uppercase;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+  transition: background 0.15s ease, transform 0.1s ease;
 }
-
-/* Optional: hover effect to match submitted words */
 #merged-list li:hover {
-  transform: translateY(-2px);
-  border-color: rgba(106, 0, 255, 0.6);
-  box-shadow: inset 0 0 12px rgba(106, 0, 255, 0.35);
+  background: #ffe7d5;
+  transform: translateY(-1px);
 }
 
-
-/* Buttons in word list */
+/* Buttons inside word list — simple neutral */
 #word-list button {
   margin-left: 6px;
   padding: 2px 6px;
-  border: 2px solid #28f0ff;
-  background: transparent;
-  color: #a9e7ff;
-  font-weight: bold;
+  border: 1px solid #444;
+  background: #f2f2f2;
+  color: #222;
+  font-weight: 600;
   font-size: 0.85em;
   border-radius: 6px;
   cursor: pointer;
-  text-shadow: 0 0 4px #00e5ff;
-  box-shadow:
-    inset 0 0 6px #28f0ff,
-    0 0 8px rgba(40, 240, 255, 0.35);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 #word-list button:hover {
-  transform: scale(1.08);
-  box-shadow:
-    inset 0 0 10px #6a00ff,
-    0 0 12px rgba(106, 0, 255, 0.45);
+  background: #e0e0e0;
+  transform: scale(1.05);
 }
 #word-list button:active {
   transform: scale(0.96);
-  filter: brightness(0.9);
 }
 
-/* Submit List */
+/* submit button styled like tiles */
 #submit-list {
   display: block;
   margin: 6px auto 0;
   padding: 10px 14px;
-  border-radius: 12px;
-  border: 2px solid #28f0ff;
-  background: transparent;
-  color: #a9e7ff;
+  background: #fff1e6;        /* tile fill */
+  border: 2px solid #000;     /* tile stroke */
+  border-radius: 10px;
+  color: #1b4965;             /* tile text color */
   font-weight: 800;
-  letter-spacing: .06em;
-  cursor: pointer;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  text-shadow: 0 0 6px #00e5ff;
-  box-shadow: inset 0 0 10px #28f0ff, 0 0 12px rgba(40, 240, 255, 0.35);
+  cursor: pointer;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
 }
 #submit-list:hover {
-  transform: translateY(-2px);
-  box-shadow: inset 0 0 14px #6a00ff, 0 0 16px rgba(106, 0, 255, 0.45);
+  background: #ffe7d5;         /* slightly warmer tile */
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 rgba(0,0,0,0.25);
 }
+#submit-list:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+
 #submit-list:active { transform: translateY(0); }
 
 /* New Game button in Word Panel */
@@ -429,38 +352,31 @@ body.panel-open #backdrop {
   margin: 0;
 }
 
-/* NEW GAME button style */
+/* new game button styled like tiles */
 #left-panel #new-game {
   padding: 10px 14px;
-  border-radius: 12px;
-  border: 2px solid #28f0ff;
-  background:
-    radial-gradient(120% 120% at 20% 20%, rgba(0, 238, 255, 0.18) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(8,18,28,0.9), rgba(10,16,26,0.92));
-  color: #c9f7ff;
+  background: #fff1e6;
+  border: 2px solid #000;
+  border-radius: 10px;
+  color: #1b4965;
   font-weight: 800;
-  letter-spacing: .06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  text-shadow: 0 0 6px #00e5ff;
-  box-shadow:
-    inset 0 0 10px #28f0ff,
-    0 0 12px rgba(40, 240, 255, 0.35);
   cursor: pointer;
-  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease, border-color .12s ease;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
 }
-
 #left-panel #new-game:hover {
-  transform: translateY(-2px);
-  border-color: rgba(106, 0, 255, 0.65);
-  box-shadow:
-    inset 0 0 14px #6a00ff,
-    0 0 16px rgba(106, 0, 255, 0.45);
+  background: #ffe7d5;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 rgba(0,0,0,0.25);
 }
-
 #left-panel #new-game:active {
   transform: translateY(0);
-  filter: brightness(0.96);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
+
+
 
 #left-panel #submit-list:focus-visible,
 #left-panel #new-game:focus-visible {
@@ -471,9 +387,8 @@ body.panel-open #backdrop {
     0 0 18px rgba(106, 0, 255, 0.5);
 }
 
-
 /* =========================================================
-   4) SUBMIT AREA (bottom-center)
+   4) SUBMIT AREA — Collage Layout (keeps existing IDs)
    ========================================================= */
 
 #submit-area {
@@ -481,93 +396,109 @@ body.panel-open #backdrop {
   left: 50%;
   bottom: 20px;
   transform: translateX(-50%);
-  z-index: 1000;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-
-  text-align: center;
-  font-family: "Orbitron", system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  gap: 1.4rem;
+  font-family: "DM Sans", sans-serif;
+  background: transparent;
+  z-index: 1000;
 }
 
-
+/* Top paper strip: replaces old neon display, holds current word */
 #current-word-display {
-  margin: 0;
-  font-size: 1.5em;
-  color: #a9e7ff;
-  text-shadow: 0 0 6px #00e5ff, 0 0 14px #6a00ff;
+
+  border-radius: 8px;
+  width: 340px;
+  min-height: 42px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #333;
+ 
+  position: relative;
 }
 
-#controls {
-  display: flex;
+
+/* Score card: middle orange tag with numeric score */
+#score-display {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-}
-
-#score-display {
-  display: inline-block;
-  min-width: 11ch;   
-  text-align: center;
-  font-size: 1.2rem;
+  
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  
+  color: #222;
   font-weight: 700;
-  color: #a9e7ff;
-  text-shadow: 0 0 6px #00e5ff, 0 0 14px #6a00ff;
+  font-size: 1rem;
 }
 
+/* Button container below */
+#controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Submit and Clear buttons */
 #submit-word,
 #clear-word {
-  min-width: 140px;  
-  text-align: center;
-  padding: 0.65em 1.1em;
-  border-radius: 10px;
-  border: 2px solid #28f0ff;
-  background: transparent;
-  color: #a9e7ff;
+  border: none;
   font-weight: 700;
+  width: 140px;
+  height: 60px;
+  border-radius: 30px;
+  padding: 0;
+  font-size: 0.95rem;
+  color: #fff;
   cursor: pointer;
-  box-shadow: inset 0 0 10px #28f0ff, 0 0 10px #28f0ff33;
-  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
 }
 
-#submit-word:hover,
-#clear-word:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
+#submit-word {
+  background: #2c6b80;
+  box-shadow: 0 4px 0 #1e4d5a;
 }
+
+#clear-word {
+  background: #a34735;
+  box-shadow: 0 4px 0 #732c20;
+}
+
+
 #submit-word:active,
 #clear-word:active {
-  transform: translateY(0);
-  filter: brightness(0.95);
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
 }
+
+
+
 
 
 /* =========================================================
    5) SIDE PANEL TOGGLES
    ========================================================= */
-
+/* Deep rich gray side toggle */
 .side-toggle {
-  --neon: #00e5ff;
-  --neon-2: #6a00ff;
-  --text: #e9fcff;
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
   padding: 12px 8px;
-  border-radius: 10px;
-  border: 2px solid var(--neon);
-  background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
-  color: var(--text);
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #2b2b2b; /* rich dark gray */
+  color: #f2f2f2;
   cursor: pointer;
-  font-weight: 800;
-  font-size: 0.9rem;
-  height: 160px;   
-  width: 40px;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  font-size: 0.85rem;
+  height: 140px;
+  width: 38px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   z-index: 1200;
   display: flex;
@@ -577,45 +508,36 @@ body.panel-open #backdrop {
   text-orientation: mixed;
   user-select: none;
   white-space: nowrap;
-  gap: 6px;
-  text-shadow: 0 0 6px var(--neon), 0 0 14px var(--neon-2);
-  box-shadow:
-    inset 0 0 12px var(--neon),
+  gap: 4px;
+  text-shadow: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .side-toggle:hover {
-  transform: translateY(calc(-50% + 0px)) scale(1.03);
-  filter: brightness(1.08);
-  box-shadow:
-    inset 0 0 16px var(--neon),
+  background: #1f1f1f; /* slightly darker hover */
+  transform: translateY(-50%) scale(1.02);
+}
 
-    0 0 36px color-mix(in oklab, var(--neon-2) 45%, transparent);
-}
 .side-toggle:active {
-  transform: translateY(calc(-50% + 0px)) scale(0.98);
-  filter: brightness(0.96);
+  background: #111; /* pressed look */
+  transform: translateY(-50%) scale(0.98);
 }
+
+/* side-specific edges */
 .left-toggle {
-  --neon: #00e5ff;   
-  --neon-2: #6a00ff; 
-  --text: #e9fcff;   
   left: 0;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+
 .right-toggle {
-  --neon: #00ffa6;   
-  --neon-2: #00e5ff; 
-  --text: #e9fff7;   
   right: 0;
   writing-mode: vertical-lr;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
+
 
 
 /* =========================================================
@@ -642,23 +564,23 @@ body.panel-open #backdrop {
   padding: 0;
 }
 
-/* Merged list items (matches your submitted word styling) */
 #merged-list li {
   padding: 8px 10px;
   border-radius: 10px;
-  border: 2px solid rgba(0, 238, 255, 0.35);
-  background: rgba(8, 20, 30, 0.6);
-  color: #c9f7ff;
-  font-weight: 700;
+  border: 2px solid #000;
+  background: #fff1e6;
+  color: #1b4965;
+  font-weight: 800;
   letter-spacing: 0.04em;
-  text-shadow: 0 0 6px rgba(0, 238, 255, 0.6);
-  box-shadow: inset 0 0 8px rgba(0, 238, 255, 0.25);
+  text-transform: uppercase;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 #merged-list li:hover {
-  transform: translateY(-2px);
-  border-color: rgba(106, 0, 255, 0.6);
-  box-shadow: inset 0 0 12px rgba(106, 0, 255, 0.35);
+  background: #ffe7d5;
+  transform: translateY(-1px);
 }
+
 
 /* Hide the original list cleanly when game ends */
 .is-hidden {
@@ -688,12 +610,12 @@ body.panel-open #backdrop {
 #merged-words-wrap .totals__item {
   padding: 8px 10px;
   border-radius: 10px;
-  border: 2px solid rgba(0, 238, 255, 0.45);
-  background:
-    radial-gradient(circle at 15% 25%, rgba(0, 238, 255, 0.08), transparent 60%),
-    linear-gradient(180deg, rgba(10, 20, 30, 0.82), rgba(10, 16, 26, 0.88));
-  box-shadow: 0 0 8px rgba(0, 238, 255, 0.25), inset 0 0 12px rgba(0, 180, 255, 0.12);
+  border: 2px solid #000;
+  background: #fff1e6;
+  color: #1b4965;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.2);
 }
+
 
 #merged-words-wrap .totals__label {
   font-size: 12px;
@@ -729,10 +651,12 @@ body.panel-open #backdrop {
   max-height: 160px;
   overflow-y: auto;
   border-radius: 10px;
-  border: 1px solid rgba(0, 238, 255, 0.3);
-  background:
-    linear-gradient(180deg, rgba(10, 20, 30, 0.7), rgba(10, 16, 26, 0.82));
+  border: 1px solid #000;
+  background: #fff1e6;
+  color: #1b4965;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.12);
 }
+
 
 
 #merged-words-wrap .merged__actions {
@@ -776,32 +700,32 @@ body.panel-open #backdrop {
   margin: 6px 0;
   padding: 8px 10px;
   border-radius: 10px;
-  border: 2px solid rgba(0, 238, 255, 0.45);
-  background:
-    radial-gradient(circle at 15% 25%, rgba(0, 238, 255, 0.12), transparent 60%),
-    radial-gradient(circle at 85% 75%, rgba(90, 0, 255, 0.12), transparent 65%),
-    linear-gradient(180deg, rgba(10, 20, 30, 0.85), rgba(10, 16, 26, 0.9));
-  box-shadow:
-    0 0 8px rgba(0, 238, 255, 0.35),
-    0 0 20px rgba(106, 0, 255, 0.2),
-    inset 0 0 12px rgba(0, 180, 255, 0.15);
+  border: 2px solid #000;
+  background: #fff1e6;
+  color: #1b4965;
   text-transform: uppercase;
-  letter-spacing: .3px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+  transition: background 0.15s ease, transform 0.1s ease;
 }
+#merged-words-wrap .merged__item:hover {
+  background: #ffe7d5;
+  transform: translateY(-1px);
+}
+
 
 
 #merged-words-wrap .merged__item.is-yours {
-  border-color: rgba(65, 1, 20, 0.9);
-  background:
-    radial-gradient(circle at 20% 20%, rgba(103, 75, 153, 0.922), transparent 55%),
-    radial-gradient(circle at 80% 80%, rgba(180, 4, 133, 0.877), transparent 60%),
-    linear-gradient(180deg, rgba(35, 28, 10, 0.9), rgba(28, 24, 12, 0.95));
-  box-shadow:
-    0 0 12px rgba(7, 57, 236, 0.5),
-    inset 0 0 14px rgb(233, 232, 232);
-  color: #53ef1096;
+  border-color: #ffb700;
+  background: #1a1a1a;
+  color: #ffcc33;
   font-weight: 700;
 }
+#merged-words-wrap .merged__item.is-yours:hover {
+  background: #222;
+  border-color: #ffd84d;
+}
+
 
 
 #merged-words-wrap .merged__legend {
@@ -862,115 +786,187 @@ body.panel-open #backdrop {
 }
 
 
-
-
-
-@keyframes glow-hue {
-  to { filter: url(#hoverGlow) hue-rotate(360deg) saturate(1.25); }
-}
-
-
-@keyframes glow-breathe {
-  from { transform: scale(1.03); }
-  to   { transform: scale(1.055); }
-}
-
-@keyframes center-pulse {
-  0%   { r: 1;  opacity: 0.55; }
-  100% { r: 12; opacity: 0; }
-}
-
-
-.pulse-trail {
-  display: inline-block;
-  padding: 14px 32px;
-  background: #222;
-  color: #fff;
-  font-weight: 600;
-  border-radius: 8px;
-  text-decoration: none;
+/* ==== Blueprint Grid Background ==== */
+#game-container {
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease;
-  cursor: pointer;
+  background-color: #f8f9fa;
+  background-image:
+    linear-gradient(#d0d4d8 1px, transparent 1px),
+    linear-gradient(90deg, #d0d4d8 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
 }
 
-.pulse-trail:hover {
-  transform: scale(1.05);
-}
-
-.pulse-trail::before {
-  content: "";
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(0, 255, 180, 0.4) 20%, transparent 60%);
-  top: -50%;
-  left: -50%;
-  transform: scale(0);
-  opacity: 0;
-  transition: transform 0.6s ease, opacity 0.6s ease;
-  pointer-events: none;
-}
-
-.pulse-trail.active::before {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.tile {
-  transition: filter 180ms ease, transform 180ms ease;
-}
-.tile .hex-tile {
-  transition: stroke 180ms ease;
-}
-
-.tile,
-.tile .hex-tile,
-.tile .orbit {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.tile.hover .hex-tile {
-  filter: url(#hoverGlow) hue-rotate(0deg) saturate(1.25);
-  transform: scale(1.035);
-  stroke: rgba(255, 255, 255, 0.85);
-  animation:
-    glow-hue 6s linear infinite,            
-    glow-breathe 1600ms ease-in-out infinite alternate; 
-}
-
-
-.tile.selected .hex-tile {
-  filter: url(#hoverGlow);
-  stroke: rgba(255, 255, 255, 0.98);
-  stroke-width: 3.5;
-  transform: scale(1.035);
-}
-
-
-.tile.selected.hover .hex-tile {
-  stroke-width: 4;
-  transform: scale(1.045);
-}
-
+/* ==== Base Tile and Text ==== */
 .hex-tile {
-  fill: url(#tileShine);
-  stroke: rgba(255, 255, 255, 0.4);
-  stroke-width: 2;
-  transition: fill 160ms, stroke 160ms, stroke-width 160ms;
+  fill: #fff1e6;
+  stroke: #000;
+  stroke-width: 1.6px;
+  shape-rendering: geometricPrecision;
+  transition: transform 160ms ease-out;
 }
 
 .tile-letter,
 .tile-point {
-  fill: #ffffff;
-  transition: fill 160ms, stroke 160ms;
+  fill: #1b4965;
+  font-weight: 900;
+  text-shadow: none;
+  stroke: none;
+}
+
+/* add this next */
+.selected .hex-tile {
+  fill: #4cc9f0;
+  stroke: #000;
+  stroke-width: 2px;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(1.04);
+}
+
+.selected .tile-letter,
+.selected .tile-point {
+  fill: #000;
+}
+
+
+/* ==== Hover Accent ==== */
+.tile:hover .hex-tile {
+  fill: #222;
+  stroke: #ffcc00;
+  stroke-width: 2.5px;
+  transition: fill 180ms ease, stroke 180ms ease, stroke-width 180ms ease;
+}
+
+.tile:hover .tile-letter,
+.tile:hover .tile-point {
+  fill: #ffcc00;
+  transition: fill 160ms ease;
+}
+
+
+  :root {
+  --stage1: #ff5d8f;  
+  --stage2: #fff1e6; 
+  --stage3: #06d6a0; 
+  --stage-outline: #000;
+}
+
+/* =======================
+   REUSE STAGE 1 TILE
+   ======================= */
+
+/* 1. Base hex tile — no gray border, cream fill */
+.hex-tile.reuse-1 {
+  fill: #fff1e6;
+  stroke: none;
+  transform: scale(1);
+}
+
+/* 2. Letters and point values — deep red */
+.tile-letter.reuse-1,
+.tile-point.reuse-1 {
+  fill: #b3002d;
+  font-weight: 800;
+}
+
+/* 3. Coral gap ring (outline path) */
+.tile:has(.hex-tile.reuse-1) path:first-child {
+  fill: #b3002d;     /* coral ring */
+  stroke: #ff5d8f;
 }
 
 
 
 
+
+/* =======================
+   REUSE STAGE 2 TILE
+   ======================= */
+
+/* =======================
+   REUSE STAGE 2 TILE
+   ======================= */
+
+/* 1. Base hex tile — coral fill, no border */
+.hex-tile.reuse-2 {
+  fill: #ff5d8f;     /* coral tile */
+  stroke: none;
+  transform: scale(1);
+}
+
+/* 2. Letters and point values — white */
+.tile-letter.reuse-2,
+.tile-point.reuse-2 {
+  fill: #ffffff;     /* white text */
+  font-weight: 800;
+}
+
+/* 3. Deep red gap ring (outline path) */
+.tile:has(.hex-tile.reuse-2) path:first-child {
+  fill: #b3002d;
+  stroke: #ff5d8f;
+}
+
+
+/* =========================
+   REUSE STAGE 3 — full gap fill
+   ========================= */
+.hex-tile.reuse-3 {
+  fill: #ff5d8f;        /* coral tile fill */
+  stroke: none;
+}
+
+.tile-letter.reuse-3,
+.tile-point.reuse-3 {
+  fill: #4a0000;    /* same blue as starting tiles */
+  stroke: none;
+  font-weight: 800;
+}
+
+
+
+
+
+
+/* green ring filling the entire gap, with dark green edge */
+.tile:has(.hex-tile.reuse-3) path:first-child {
+  fill: #06d6a0;             /* inner bright green */
+  stroke: #024b36;           /* dark green outer edge */
+  stroke-width: 2px;         /* visible border thickness */
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(1.11);    /* keep covering the gap */
+}
+
+
+
+
+/* =====================================
+   SELECTED TILE — match cyan T look
+   ===================================== */
+.selected .hex-tile,
+.selected .hex-tile.reuse-1,
+.selected .hex-tile.reuse-2,
+.selected .hex-tile.reuse-3 {
+  fill: #4cc9f0 !important;   /* cyan fill */
+  stroke: #333 !important;    /* dark gray stroke like T */
+  stroke-width: 1.6px !important;
+}
+
+/* keep the ring gap neutral gray */
+.selected path:first-child {
+  fill: #333 !important;
+  stroke: #333 !important;
+}
+
+/* white letters and numbers */
+.selected .tile-letter,
+.selected .tile-point {
+  fill: #ffffff !important;
+  font-weight: 800;
+}
 
 
 

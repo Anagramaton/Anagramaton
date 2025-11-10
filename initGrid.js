@@ -61,6 +61,7 @@ export function handleTileClick(tile) {
     } else {
       console.warn("Tried to deselect non-last tile");
       alert('❌ You can only deselect the most recently selected tile.');
+      tile.element.classList.add('selected');
     }
     return;
   }

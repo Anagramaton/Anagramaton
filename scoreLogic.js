@@ -102,9 +102,17 @@ if (uses === 1) {
   tile.textPoint?.classList.add('reuse-2');
 } else if (uses >= 3) {
   poly.classList.add('reuse-3');
-  tile.textLetter?.classList.add('reuse-3'); // add these
-  tile.textPoint?.classList.add('reuse-3');  // add these
+  tile.textLetter?.classList.add('reuse-3');
+  tile.textPoint?.classList.add('reuse-3');
+
+  // bring stage-3 tile to front so its gap color covers neighbors
+  const g = tile.element;
+  const parent = g?.parentNode;
+  if (parent && parent.lastChild !== g) {
+    parent.appendChild(g);
+  }
 }
+
 
 }
 

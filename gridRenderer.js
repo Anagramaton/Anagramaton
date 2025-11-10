@@ -88,9 +88,7 @@ export function renderGrid(
 
 
       const poly = tile.element.querySelector('polygon');
-      if (poly) poly.setAttribute('fill', `url(#${ids.tileGradient})`);
       const spark = tile.element.querySelector('.spark');
-      if (spark) spark.setAttribute('filter', `url(#${ids.hoverGlow})`);
 
       tileElements.push(tile);
       board.appendChild(tile.element);

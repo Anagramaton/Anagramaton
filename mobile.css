@@ -153,3 +153,36 @@
 @media (max-width: 768px) {
   #howto-modal .rom__dialog { max-height: 92vh; }
 }
+
+@media (max-width: 768px) {
+  #howto-modal .rom__dialog { max-height: 92vh; }
+}
+
+/* add this block below */
+@media (max-width: 768px) {
+  #left-panel .panel-content,
+  #right-panel .panel-content {
+    width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;    /* keep vertical scroll */
+    overflow-x: hidden;  /* stop side scroll */
+    position: absolute;  /* keep layout consistent */
+    inset: 0;            /* full fit inside panel */
+  }
+
+  #left-panel .panel-content * {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  #round-over-modal .rom__dialog {
+    max-height: 92vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    background: #fff;
+  }
+}

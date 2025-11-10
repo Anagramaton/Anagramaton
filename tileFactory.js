@@ -62,61 +62,28 @@ export function createTile({
   tPoint.setAttribute('class', 'tile-point');
   tPoint.textContent = pointValue;
 
-  // --- Effects (pulse + orbit) ---
-  const pulse = document.createElementNS(SVG_NS, 'circle');
-  pulse.setAttribute('class', 'pulse');
-  pulse.setAttribute('cx', center.x);
-  pulse.setAttribute('cy', center.y);
-  pulse.setAttribute('r', '1');
-  pulse.setAttribute('fill', 'white');
-  pulse.setAttribute('opacity', '0');
-
-  const orbit = document.createElementNS(SVG_NS, 'g');
-  orbit.setAttribute('class', 'orbit');
-  orbit.setAttribute('transform', `translate(${center.x} ${center.y})`);
-
+  // --- Optional spark only (keep hoverGlow support) ---
   const spark = document.createElementNS(SVG_NS, 'circle');
-  spark.setAttribute('cx', String(HEX_RADIUS * 0.92));
-  spark.setAttribute('cy', '0');
+  spark.setAttribute('cx', center.x + HEX_RADIUS * 0.4);
+  spark.setAttribute('cy', center.y - HEX_RADIUS * 0.4);
   spark.setAttribute('r', '2.2');
   spark.setAttribute('fill', '#fff');
   spark.setAttribute('filter', 'url(#hoverGlow)');
   spark.setAttribute('opacity', '0.9');
   spark.setAttribute('class', 'spark');
-  orbit.appendChild(spark);
 
   // --- Group wrapper (interactive root) ---
   const g = document.createElementNS(SVG_NS, 'g');
   g.classList.add('tile');
-  g.append(outline, poly, pulse, orbit, tLetter, tPoint);
+  g.append(outline, poly, spark, tLetter, tPoint);
 
-  // --- Hover behavior ---
+  // --- Hover behavior (simple) ---
   g.addEventListener('mouseenter', () => {
     g.classList.add('hover');
-
-    // restart pulse
-    pulse.style.animation = 'none';
-    void pulse.getBBox();
-    pulse.style.animation = '';
-
-    // spinup orbit -> steady
-    orbit.classList.remove('spindown', 'steady');
-    orbit.classList.add('spinup');
-    const onSpinupEnd = () => {
-      orbit.classList.remove('spinup');
-      orbit.classList.add('steady');
-      orbit.removeEventListener('animationend', onSpinupEnd);
-    };
-    orbit.addEventListener('animationend', onSpinupEnd, { once: true });
   });
 
   g.addEventListener('mouseleave', () => {
     g.classList.remove('hover');
-    orbit.classList.remove('spinup', 'steady');
-    orbit.classList.add('spindown');
-    orbit.addEventListener('animationend', () => {
-      orbit.classList.remove('spindown');
-    }, { once: true });
   });
 
   // --- Selection toggle (visual only) ---
@@ -135,7 +102,6 @@ export function createTile({
     textLetter: tLetter,
     textPoint: tPoint,
 
-    // API for game logic:
     setSelected(val) {
       g.classList.toggle('selected', !!val);
     },

@@ -11,44 +11,18 @@ import { SVG_NS } from './constants.js';
  */
 export function buildDefs(svg, {
   idPrefix = '',
-  palette = {
-    tileTop:    'hsl(210, 20%, 25%)',
-    tileBottom: 'hsl(210, 20%, 35%)',
-  },
 } = {}) {
+
   ensureSVG(svg);
 
   const defs = getOrCreateDefs(svg);
 
   const ids = {
-    tileGradient: `${idPrefix}tileGradient`,
-    tileShine:    `${idPrefix}tileShine`,
-    hoverGlow:    `${idPrefix}hoverGlow`,
+    hoverGlow: `${idPrefix}hoverGlow`,
   };
 
-  // ---- Tile background gradient (linear) ----
-  upsert(defs, 'linearGradient', ids.tileGradient, (grad) => {
-    grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
-    grad.setAttribute('x2', '0%'); grad.setAttribute('y2', '100%');
-    clearChildren(grad);
-    grad.append(
-      makeStop('0%',   palette.tileTop),
-      makeStop('100%', palette.tileBottom),
-    );
-  });
 
-  // ---- Soft radial shine ----
-  upsert(defs, 'radialGradient', ids.tileShine, (shine) => {
-    shine.setAttribute('cx', '50%');
-    shine.setAttribute('cy', '30%');
-    shine.setAttribute('r',  '80%');
-    clearChildren(shine);
-    shine.append(
-      makeStop('0%',   'rgba(255,255,255,0.4)'),
-      makeStop('60%',  'rgba(255,255,255,0.1)'),
-      makeStop('100%', 'rgba(255,255,255,0)'),
-    );
-  });
+  
 
   // ---- Hover glow filter ----
   upsert(defs, 'filter', ids.hoverGlow, (filter) => {
