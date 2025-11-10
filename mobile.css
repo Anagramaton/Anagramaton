@@ -64,12 +64,7 @@
   }
 }
 
-@media (max-width: 768px) {
-  /* Normal position */
-  .side-toggle { top: 80px; }
-  .left-toggle  { left: 0; }
-  .right-toggle { right: 0; }
-}
+
 
 @media (max-width: 768px) {
   /* Help ("?") button — flat royal blue, matches toggles */
