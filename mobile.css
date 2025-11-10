@@ -192,3 +192,9 @@
     margin-top: -40px; /* raise it, adjust as needed */
   }
 }
+
+@media (max-width: 768px) {
+  #hex-grid {
+    touch-action: none;
+  }
+}

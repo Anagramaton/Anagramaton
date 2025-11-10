@@ -355,6 +355,46 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+if (window.matchMedia('(max-width: 768px)').matches) {
+  const hex = document.getElementById('hex-grid');
+  if (hex) {
+    let dragging = false;
+    let lastTile = null;
+
+    const startDrag = (e) => {
+      const el = e.target.closest('.tile');
+      if (!el) return;
+      dragging = true;
+      lastTile = el;
+      el.dispatchEvent(new PointerEvent('click', { bubbles: true }));
+      hex.setPointerCapture(e.pointerId);
+    };
+
+    const moveDrag = (e) => {
+      if (!dragging) return;
+      const hit = document.elementFromPoint(e.clientX, e.clientY);
+      const tile = hit && hit.closest('.tile'); // fixed line
+      if (!tile || tile === lastTile) return;
+      lastTile = tile;
+      tile.dispatchEvent(new PointerEvent('click', { bubbles: true }));
+    };
+
+    const endDrag = (e) => {
+      if (!dragging) return;
+      dragging = false;
+      lastTile = null;
+      try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
+    };
+
+    hex.addEventListener('pointerdown', startDrag);
+    hex.addEventListener('pointermove', moveDrag);
+    hex.addEventListener('pointerup', endDrag);
+    hex.addEventListener('pointercancel', endDrag);
+
+    hex.style.touchAction = 'none';
+  }
+}
+
 
 // NEW GAME wiring
 document.getElementById('new-game')?.addEventListener('click', () => {
