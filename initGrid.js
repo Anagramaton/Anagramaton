@@ -31,44 +31,47 @@ function updateWordPreview() {
     wordPreviewElement.textContent = upper;
   }
 
-  // nothing selected → remove effects
+  // nothing selected → kill effects
   if (!word) {
     if (wordPreviewElement) {
       wordPreviewElement.classList.remove('valid-word');
     }
-    // remove shimmer from any tile that still has it
     document.querySelectorAll('.valid-shimmer').forEach(el => {
       el.classList.remove('valid-shimmer');
+      el.style.removeProperty('--shimmer-delay');
     });
     return;
   }
 
-  // we have letters → check dictionary
+  // same rule as submit: only shimmer on actually valid words
   const isValid = upper.length >= 4 && isValidWord(upper);
 
   if (isValid) {
-    // shimmer the current word bar
     if (wordPreviewElement) {
       wordPreviewElement.classList.add('valid-word');
     }
-    // shimmer only the currently selected tiles
-    selectedTiles.forEach(tile => {
+    // give each selected tile its own delay
+    selectedTiles.forEach((tile, idx) => {
       if (tile?.element) {
         tile.element.classList.add('valid-shimmer');
+        // 0.18s gap between tiles
+        tile.element.style.setProperty('--shimmer-delay', `${idx * 0.18}s`);
       }
     });
   } else {
-    // invalid: make sure visual indicator is off
     if (wordPreviewElement) {
       wordPreviewElement.classList.remove('valid-word');
     }
     selectedTiles.forEach(tile => {
       if (tile?.element) {
         tile.element.classList.remove('valid-shimmer');
+        tile.element.style.removeProperty('--shimmer-delay');
       }
     });
   }
 }
+
+
 
 
 

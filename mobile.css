@@ -200,19 +200,41 @@
 }
 
 @media (max-width: 768px) {
-  /* shimmer selected valid tiles */
-  g.valid-shimmer .hex-tile,
-  .valid-shimmer .hex-tile {
-    animation: mobile-valid-shimmer 0.6s ease-in-out infinite;
+  /* each selected tile gets a staggered delay from JS */
+  .tile.valid-shimmer .hex-tile {
+    animation: mobile-valid-shimmer 1.4s ease-in-out infinite;
+    animation-delay: var(--shimmer-delay, 0s);
+    transform-origin: center;
   }
 
+  /* slower, with a “shine” peak */
   @keyframes mobile-valid-shimmer {
-    0%   { filter: brightness(1);    transform: scale(1); }
-    50%  { filter: brightness(1.25); transform: scale(1.02); }
-    100% { filter: brightness(1);    transform: scale(1); }
+    0% {
+      filter: brightness(0.9);
+      stroke: none;
+      transform: scale(1);
+    }
+    25% {
+      /* main light-up moment */
+      filter: brightness(1.45);
+      stroke: #ffffff;
+      stroke-width: 1.5px;
+      transform: scale(1.025);
+    }
+    55% {
+      filter: brightness(1.05);
+      stroke: rgba(255, 255, 255, 0.3);
+      stroke-width: 0.5px;
+      transform: scale(1.01);
+    }
+    100% {
+      filter: brightness(0.9);
+      stroke: none;
+      transform: scale(1);
+    }
   }
 
-  /* shimmer the current word bar when valid */
+  /* current-word bar stays as before */
   #current-word.valid-word {
     animation: mobile-valid-word 0.6s ease-in-out infinite;
   }
@@ -223,3 +245,4 @@
     100% { background: rgba(6, 214, 160, 0); }
   }
 }
+
