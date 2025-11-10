@@ -198,3 +198,28 @@
     touch-action: none;
   }
 }
+
+@media (max-width: 768px) {
+  /* shimmer selected valid tiles */
+  g.valid-shimmer .hex-tile,
+  .valid-shimmer .hex-tile {
+    animation: mobile-valid-shimmer 0.6s ease-in-out infinite;
+  }
+
+  @keyframes mobile-valid-shimmer {
+    0%   { filter: brightness(1);    transform: scale(1); }
+    50%  { filter: brightness(1.25); transform: scale(1.02); }
+    100% { filter: brightness(1);    transform: scale(1); }
+  }
+
+  /* shimmer the current word bar when valid */
+  #current-word.valid-word {
+    animation: mobile-valid-word 0.6s ease-in-out infinite;
+  }
+
+  @keyframes mobile-valid-word {
+    0%   { background: rgba(6, 214, 160, 0); }
+    50%  { background: rgba(6, 214, 160, 0.25); }
+    100% { background: rgba(6, 214, 160, 0); }
+  }
+}

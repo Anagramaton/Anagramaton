@@ -4,6 +4,8 @@ import { renderGrid } from './gridRenderer.js';
 import { gameState } from './gameState.js';
 import { GRID_RADIUS } from './constants.js';
 import { areAxialNeighbors } from './utils.js';
+import { isValidWord } from './gameLogic.js';
+
 
 
 export const DOM = {
@@ -21,21 +23,72 @@ export let grid;
 
 function updateWordPreview() {
   const selectedTiles = gameState.selectedTiles || [];
-  const selectedWord = selectedTiles.map(t => t.letter).join('');
+  const word = selectedTiles.map(t => t.letter).join('');
+  const upper = word.toUpperCase();
   const wordPreviewElement = document.getElementById('current-word');
+
   if (wordPreviewElement) {
-    // Keep as-is: uppercasing output
-    wordPreviewElement.textContent = selectedWord.toUpperCase();
+    wordPreviewElement.textContent = upper;
+  }
+
+  // nothing selected → remove effects
+  if (!word) {
+    if (wordPreviewElement) {
+      wordPreviewElement.classList.remove('valid-word');
+    }
+    // remove shimmer from any tile that still has it
+    document.querySelectorAll('.valid-shimmer').forEach(el => {
+      el.classList.remove('valid-shimmer');
+    });
+    return;
+  }
+
+  // we have letters → check dictionary
+  const isValid = upper.length >= 4 && isValidWord(upper);
+
+  if (isValid) {
+    // shimmer the current word bar
+    if (wordPreviewElement) {
+      wordPreviewElement.classList.add('valid-word');
+    }
+    // shimmer only the currently selected tiles
+    selectedTiles.forEach(tile => {
+      if (tile?.element) {
+        tile.element.classList.add('valid-shimmer');
+      }
+    });
+  } else {
+    // invalid: make sure visual indicator is off
+    if (wordPreviewElement) {
+      wordPreviewElement.classList.remove('valid-word');
+    }
+    selectedTiles.forEach(tile => {
+      if (tile?.element) {
+        tile.element.classList.remove('valid-shimmer');
+      }
+    });
   }
 }
 
 
+
 export function clearCurrentSelection() {
   const selectedTiles = gameState.selectedTiles || [];
-  selectedTiles.forEach(tile => tile.element.classList.remove('selected'));
+  selectedTiles.forEach(tile => {
+    if (tile?.element) {
+      tile.element.classList.remove('selected');
+      tile.element.classList.remove('valid-shimmer');
+    }
+  });
   gameState.selectedTiles = [];
   updateWordPreview();
+
+  // extra safety: remove any leftover shimmer
+  document.querySelectorAll('.valid-shimmer').forEach(el => {
+    el.classList.remove('valid-shimmer');
+  });
 }
+
 
 // ============================================================================
 // Event Handlers
