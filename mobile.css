@@ -10,11 +10,10 @@
 
   /* Panel toggles: horizontal buttons, same size as Submit/Clear */
   .side-toggle {
-        writing-mode: initial;
+    writing-mode: initial;
     text-orientation: initial;
-    width: auto;
-    min-width: 140px;
-    height: auto;
+    width: 140px;
+    height: 60px;
     padding: 0.65em 1.1em;
     font-size: 0.9rem;
     border-radius: 30px;
@@ -22,9 +21,11 @@
     font-weight: 700;
     color: #fff;
     cursor: pointer;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    background: #2749b0;
+    box-shadow: 0 4px 0 #1c337c;
+    top: 100px;
     transition: all 0.15s ease;
-    background: #555;
+   
   }
 
   /* Word panel toggle — royal blue, flat, no neon */
