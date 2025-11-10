@@ -199,15 +199,19 @@
   }
 }
 
+/* ================================
+   Mobile: Tile shimmer + valid word pulse
+   ================================ */
 @media (max-width: 768px) {
-  /* each selected tile gets a staggered delay from JS */
+
+  /* Shimmer animation for valid tiles */
   .tile.valid-shimmer .hex-tile {
     animation: mobile-valid-shimmer 1.4s ease-in-out infinite;
     animation-delay: var(--shimmer-delay, 0s);
     transform-origin: center;
+    transform-box: fill-box; /* required for SVG scaling */
   }
 
-  /* slower, with a “shine” peak */
   @keyframes mobile-valid-shimmer {
     0% {
       filter: brightness(0.9);
@@ -234,7 +238,7 @@
     }
   }
 
-  /* current-word bar stays as before */
+  /* Valid-word pulse for current word bar */
   #current-word.valid-word {
     animation: mobile-valid-word 0.6s ease-in-out infinite;
   }
