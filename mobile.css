@@ -10,41 +10,36 @@
 
   /* Panel toggles: horizontal buttons, same size as Submit/Clear */
   .side-toggle {
-    writing-mode: initial;
+        writing-mode: initial;
     text-orientation: initial;
     width: auto;
     min-width: 140px;
     height: auto;
     padding: 0.65em 1.1em;
     font-size: 0.9rem;
-    border-radius: 10px;
-    border: 2px solid #28f0ff;
-    background: transparent;
-    color: #a9e7ff;
+    border-radius: 30px;
+    border: none;
     font-weight: 700;
-    box-shadow: inset 0 0 10px #28f0ff,
-                0 0 10px #28f0ff33;
-    text-shadow: none;
-    transition: transform 120ms ease,
-                box-shadow 120ms ease,
-                filter 120ms ease;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    transition: all 0.15s ease;
+    background: #555;
   }
 
-  /* Hover/active effects */
-  .side-toggle:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-  }
-  .side-toggle:active {
-    transform: translateY(0);
-    filter: brightness(0.95);
-  }
-
-  /* Positioning: both toggles sit just under the title */
+  /* Word panel toggle — royal blue, flat, no neon */
   .left-toggle {
-    top: 80px;
-    left: 0;
-    transform: none;
+    background: #2749b0;
+    box-shadow: 0 4px 0 #1c337c;
+  }
+  .left-toggle:hover {
+    background: #3158c4;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 #1c337c;
+  }
+  .left-toggle:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #1c337c;
   }
   .right-toggle {
     top: 80px;
@@ -75,32 +70,40 @@
 }
 
 @media (max-width: 768px) {
+  /* Help ("?") button — flat royal blue, matches toggles */
   #howto-open {
-    display: flex;                 /* visible only on mobile */
+    display: flex;
     align-items: center;
     justify-content: center;
     position: fixed;
     top: calc(8px + env(safe-area-inset-top, 0px));
     right: 10px;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    font-size: 1.3rem;
-    font-weight: bold;
-    border: 2px solid #28f0ff;
-    background: transparent;
-    color: #a9e7ff;
-    box-shadow: inset 0 0 6px #28f0ff,
-                0 0 8px #28f0ff55;
+    font-size: 1.2rem;
+    font-weight: 800;
+    border: none;
+    background: #2749b0;
+    color: #fff;
+    box-shadow: 0 4px 0 #1c337c;
     cursor: pointer;
-    z-index: 900; /* stays above panels */
+    transition: all 0.15s ease;
+    z-index: 900;
   }
 
   #howto-open:hover {
-    filter: brightness(1.2);
-    transform: scale(1.05);
+    background: #3158c4;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 #1c337c;
+  }
+
+  #howto-open:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #1c337c;
   }
 }
+
 
 @media (max-width: 768px) {
   /* Hide right toggle if left panel is open */
