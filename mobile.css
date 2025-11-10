@@ -186,3 +186,9 @@
     background: #fff;
   }
 }
+
+@media (max-width: 768px) {
+  #hex-grid {
+    margin-top: -40px; /* raise it, adjust as needed */
+  }
+}
