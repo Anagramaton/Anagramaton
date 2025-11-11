@@ -70,8 +70,18 @@
     }
   });
 
-  // ---------- Listen for your game's event from main.js to open modal
-  window.addEventListener('round:over', (e) => openModal(e.detail || {}));
+  window.addEventListener('round:over', (e) => {
+    const d = e.detail || {};
+    openModal(d);
+
+    // also hydrate the extra mobile sections
+    try {
+      fillExtraSections(d);
+    } catch (err) {
+      console.warn('[roundOverModal] extra fill failed', err);
+    }
+  });
+
 
   // === Add-only enhancement: Side-by-side "You vs Them" + Fancy Meter ==========
   (() => {
@@ -144,6 +154,179 @@
       dialog.insertBefore(meter, actions);
       return meter;
     }
+
+        function ensureSummarySection() {
+      let sec = document.getElementById('rom-summary');
+      if (sec) return sec;
+      sec = document.createElement('section');
+      sec.id = 'rom-summary';
+      sec.className = 'rom__block rom__block--summary';
+      // content filled later
+      const actions = dialog.querySelector('.rom__actions');
+      dialog.insertBefore(sec, actions);
+      return sec;
+    }
+
+    function ensureBadgeStrip() {
+      let sec = document.getElementById('rom-badges');
+      if (sec) return sec;
+      sec = document.createElement('section');
+      sec.id = 'rom-badges';
+      sec.className = 'rom__block rom__block--badges';
+      const actions = dialog.querySelector('.rom__actions');
+      dialog.insertBefore(sec, actions);
+      return sec;
+    }
+
+    function ensureTabbedArea() {
+      let wrap = document.getElementById('rom-tabs');
+      if (wrap) return wrap;
+
+      wrap = document.createElement('section');
+      wrap.id = 'rom-tabs';
+      wrap.className = 'rom__block rom__block--tabs';
+      wrap.innerHTML = `
+        <div class="rom__tablist" role="tablist" aria-label="Round details">
+          <button type="button" class="rom__tab rom__tab--active" data-tab="summary" role="tab" aria-selected="true">Summary</button>
+          <button type="button" class="rom__tab" data-tab="yours" role="tab" aria-selected="false">Your 10</button>
+          <button type="button" class="rom__tab" data-tab="board" role="tab" aria-selected="false">Board Top 10</button>
+          <button type="button" class="rom__tab" data-tab="missed" role="tab" aria-selected="false">Missed</button>
+        </div>
+        <div class="rom__panels">
+          <div id="rom-panel-summary" class="rom__panel rom__panel--active" data-tabpanel="summary"></div>
+          <div id="rom-panel-yours" class="rom__panel" data-tabpanel="yours"></div>
+          <div id="rom-panel-board" class="rom__panel" data-tabpanel="board"></div>
+          <div id="rom-panel-missed" class="rom__panel" data-tabpanel="missed"></div>
+        </div>
+      `;
+      const actions = dialog.querySelector('.rom__actions');
+      dialog.insertBefore(wrap, actions);
+
+      // tab wiring
+      wrap.addEventListener('click', (evt) => {
+        const btn = evt.target.closest('.rom__tab');
+        if (!btn) return;
+        const tab = btn.dataset.tab;
+        wrap.querySelectorAll('.rom__tab').forEach(t => {
+          t.classList.toggle('rom__tab--active', t === btn);
+          t.setAttribute('aria-selected', t === btn ? 'true' : 'false');
+        });
+        wrap.querySelectorAll('.rom__panel').forEach(p => {
+          p.classList.toggle('rom__panel--active', p.dataset.tabpanel === tab);
+        });
+      });
+
+      return wrap;
+    }
+
+    function fillExtraSections(d) {
+      const {
+        wordsWithScores = [],
+        baseTotal = 0,
+        bonusTotal = 0,
+        totalScore = 0,
+        boardTop10 = [],
+        boardTop10Total = 0,
+      } = d;
+
+      const sumSec = ensureSummarySection();
+      const badgeSec = ensureBadgeStrip();
+      ensureTabbedArea();
+
+      // summary block mirrors existing numbers
+      sumSec.innerHTML = `
+        <div class="rom__summary-grid">
+          <div>
+            <span class="rom__label">Final score</span>
+            <span class="rom__value">${totalScore}</span>
+          </div>
+          <div>
+            <span class="rom__label">Base</span>
+            <span class="rom__value">${baseTotal}</span>
+          </div>
+          <div>
+            <span class="rom__label">Bonus</span>
+            <span class="rom__value">${bonusTotal}</span>
+          </div>
+          <div>
+            <span class="rom__label">Board Top 10</span>
+            <span class="rom__value">${boardTop10Total}</span>
+          </div>
+        </div>
+      `;
+
+      // badges derived from actual payload
+      const longest = wordsWithScores.reduce(
+        (best, curr) => {
+          const len = String(curr.word || '').length;
+          return len > best.len ? { word: curr.word, len } : best;
+        },
+        { word: null, len: 0 }
+      );
+      const topScoring = wordsWithScores.reduce(
+        (best, curr) => (curr.score > best.score ? curr : best),
+        { word: null, score: -1 }
+      );
+      const beatBoard = boardTop10Total > 0 && totalScore >= boardTop10Total;
+      const efficiency = boardTop10Total > 0 ? Math.round((totalScore / boardTop10Total) * 100) : 0;
+
+      badgeSec.innerHTML = `
+        <div class="rom__badge-row">
+          <span class="rom__badge">Eff: ${efficiency}%</span>
+          ${longest.word ? `<span class="rom__badge">Longest: ${longest.word}</span>` : ''}
+          ${topScoring.word ? `<span class="rom__badge">Top: ${topScoring.word} (+${topScoring.score})</span>` : ''}
+          ${beatBoard ? `<span class="rom__badge rom__badge--win">You matched the board</span>` : ''}
+        </div>
+      `;
+
+      // Tab panels
+      const yoursPanel = document.getElementById('rom-panel-yours');
+      const boardPanel = document.getElementById('rom-panel-board');
+      const missedPanel = document.getElementById('rom-panel-missed');
+      const summaryPanel = document.getElementById('rom-panel-summary');
+
+      if (summaryPanel) {
+        summaryPanel.innerHTML = `
+          <p>Your list scored <strong>${totalScore}</strong> vs board’s <strong>${boardTop10Total}</strong>.</p>
+          <p>You submitted <strong>${wordsWithScores.length}</strong> words.</p>
+        `;
+      }
+
+      if (yoursPanel) {
+        yoursPanel.innerHTML = wordsWithScores
+          .sort((a, b) => b.score - a.score)
+          .map(w => `
+            <div class="rom__row">
+              <span class="rom__word">${String(w.word).toUpperCase()}</span>
+              <span class="rom__score-chip">+${w.score}</span>
+            </div>
+          `).join('') || '<p>No words.</p>';
+      }
+
+      if (boardPanel) {
+        boardPanel.innerHTML = (boardTop10 || [])
+          .map(w => `
+            <div class="rom__row">
+              <span class="rom__word">${String(w.word).toUpperCase()}</span>
+              <span class="rom__score-chip">+${w.score}</span>
+            </div>
+          `).join('') || '<p>No board data.</p>';
+      }
+
+      if (missedPanel) {
+        const yourSet = new Set(wordsWithScores.map(w => String(w.word).toUpperCase()));
+        const missed = (boardTop10 || []).filter(b => !yourSet.has(String(b.word).toUpperCase()));
+        missedPanel.innerHTML = missed.length
+          ? missed.map(m => `
+              <div class="rom__row rom__row--missed">
+                <span class="rom__word">${String(m.word).toUpperCase()}</span>
+                <span class="rom__score-chip">+${m.score}</span>
+              </div>
+            `).join('')
+          : '<p>You covered the board’s top set.</p>';
+      }
+    }
+
 
 function renderList(ol, items, matchSet = new Set(), highlightThem = false) {
   ol.innerHTML = '';
