@@ -238,11 +238,6 @@
     }
   }
 
-  /* Valid-word pulse for current word bar */
-  #current-word.valid-word {
-    animation: mobile-valid-word 0.6s ease-in-out infinite;
-  }
-
   @keyframes mobile-valid-word {
     0%   { background: rgba(6, 214, 160, 0); }
     50%  { background: rgba(6, 214, 160, 0.25); }

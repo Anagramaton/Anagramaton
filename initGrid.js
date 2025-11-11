@@ -21,7 +21,7 @@ export let grid;
 // UI Helpers
 // ============================================================================
 
-function updateWordPreview() {
+export function updateWordPreview() {
   const selectedTiles = gameState.selectedTiles || [];
   const word = selectedTiles.map(t => t.letter).join('');
   const upper = word.toUpperCase();
