@@ -392,9 +392,9 @@ body.panel-open #backdrop {
    ========================================================= */
 
 #submit-area {
-  position: fixed;
+  position: absolute;
   left: 50%;
-  bottom: 20px;
+  bottom: 1px;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -403,11 +403,7 @@ body.panel-open #backdrop {
   font-family: "DM Sans", sans-serif;
   background: transparent;
   z-index: 1000;
-  width: 95vw;
-  max-width: 420px;
-  box-sizing: border-box;
 }
-
 
 
 #current-word-display {

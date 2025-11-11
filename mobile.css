@@ -368,115 +368,12 @@
 }
 
 @media (max-width: 768px) {
-  #submit-area {
-    bottom: 10px;
-    width: 90vw;
-    max-width: 360px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 0 8px;
-  }
-
-  #controls {
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  #submit-word,
-  #clear-word {
-    width: 45%;
-    height: 52px;
-  }
-}
-
-
-@media (max-width: 768px) {
-  /* overlay layer for mobile only */
-  #submit-area {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1000;
-  }
-
-  /* current word under title */
-  #current-word-display {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 92vw;
-    max-width: 360px;
-    min-height: 48px;
-    text-align: center;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    padding: 0.6rem 0.4rem;
-    pointer-events: auto;
-  }
-
-  /* score just under current word */
-  #score-display {
-    position: fixed;
-    top: 120px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    max-width: 90vw;
-    text-align: center;
-    pointer-events: auto;
-  }
-
-  /* bottom control bar: only submit + clear from submit-area */
-  #controls {
-    position: fixed;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(360px, 92vw);
-    display: grid;
-    grid-template-columns: repeat(2, minmax(110px, 1fr));
-    gap: 0.6rem;
-    pointer-events: auto;
-  }
-
-  /* 1) submit word = button one = full row */
   #submit-word {
-    grid-column: 1 / -1;
-    height: 50px;
-    font-size: 0.9rem;
+    margin-left: 6vw;   /* pulls in from left */
   }
 
-  /* score lives at the top now, so hide the copy inside controls */
-  #controls #score-display {
-    display: none;
-  }
-
-  /* 3) clear word sits bottom-right */
   #clear-word {
-    grid-column: 2;
-    height: 50px;
-    font-size: 0.9rem;
-  }
-
-  /* 2) word panel button (#toggle-left) is originally higher up.
-     bring it down to bottom-left to match the second row. */
-  #toggle-left {
-    position: fixed;
-    bottom: 14px;
-    /* line up with left side of controls:
-       controls is centered, 360px wide → 180px half */
-    left: calc(50% - 180px);
-    width: 140px;
-    height: 50px;
-    transform: none;
-    z-index: 1001;
-  }
-
-  /* keep right toggle up top as before */
-  #toggle-right {
-    top: 80px;
-    right: 0;
+    margin-right: 6vw;  /* pulls in from right */
   }
 }
 
