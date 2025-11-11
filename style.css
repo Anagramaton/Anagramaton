@@ -405,6 +405,40 @@ body.panel-open #backdrop {
   z-index: 1000;
 }
 
+@media (max-width: 600px) {
+  #submit-area {
+    position: fixed;       /* stick to bottom */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none;       /* no centering calc */
+    width: 100%;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.4rem 0.9rem;
+  }
+
+  #current-word-display {
+    width: 100%;
+    max-width: none;
+  }
+
+  #controls {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;       /* let buttons wrap */
+    justify-content: center;
+    gap: 0.6rem;
+  }
+
+  #submit-word,
+  #clear-word {
+    width: 46%;            /* two across */
+    max-width: 190px;
+  }
+}
+
+
 /* Top paper strip: replaces old neon display, holds current word */
 #current-word-display {
 
@@ -1046,6 +1080,50 @@ body.panel-open #backdrop {
   text-transform: uppercase;
 }
 
+/* overlay while board is building */
+#hex-grid.is-loading {
+  position: relative;
+  min-height: 240px; /* so it doesn’t collapse while building */
+}
+
+#hex-grid.is-loading::before {
+  content: "Building board…";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(14, 14, 14, 0.35);
+  backdrop-filter: blur(2px);
+  font-weight: 600;
+  color: #fff;
+  z-index: 10;
+}
+
+/* simple “tiles appear” animation after build */
+#hex-grid.is-built .tile {
+  opacity: 0;
+  animation: tile-pop 0.35s ease-out forwards;
+}
+
+#hex-grid.is-built .tile:nth-child(1)  { animation-delay: 0.00s; }
+#hex-grid.is-built .tile:nth-child(2)  { animation-delay: 0.03s; }
+#hex-grid.is-built .tile:nth-child(3)  { animation-delay: 0.06s; }
+#hex-grid.is-built .tile:nth-child(4)  { animation-delay: 0.09s; }
+#hex-grid.is-built .tile:nth-child(5)  { animation-delay: 0.12s; }
+#hex-grid.is-built .tile:nth-child(6)  { animation-delay: 0.15s; }
+/* add more nth-child lines if you have more tiles */
+
+@keyframes tile-pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
 
 

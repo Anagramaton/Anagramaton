@@ -257,9 +257,28 @@ document.addEventListener('DOMContentLoaded', () => {
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
+// show loading state on the hex grid
+const hexEl = document.getElementById('hex-grid');
+if (hexEl) {
+  hexEl.classList.add('is-loading');
+}
+
+// let the browser paint the loading state first
+requestAnimationFrame(() => {
   console.log('[main] before initializeGrid()');
   initializeGrid();
   console.log('[main] after initializeGrid()');
+
+  // switch to "built" state so tiles can animate in
+  if (hexEl) {
+    hexEl.classList.remove('is-loading');
+    hexEl.classList.add('is-built');
+
+    // optional: remove after a bit
+    setTimeout(() => hexEl.classList.remove('is-built'), 800);
+  }
+});
+
 
   // --- Right panel visibility based on mode ---
   if (gameState.mode === 'daily') {
@@ -286,10 +305,58 @@ document.addEventListener('DOMContentLoaded', () => {
       ?.addEventListener('click', handleSubmitList);
     syncSubmitListButton();
 
-    document.getElementById('new-game')
-      ?.addEventListener('click', () => {
-        window.dispatchEvent(new Event('game:new'));
-      });
+document.getElementById('new-game')?.addEventListener('click', () => {
+  // reset numbers
+  baseTotal = 0;
+  bonusTotal = 0;
+  totalScore = 0;
+  submittedWords.clear();
+  gameState.words = [];
+  gameState.listLocked = false;
+  updateScoreDisplay(0);
+
+  // close panels
+  const leftPanelEl  = document.getElementById('left-panel');
+  const rightPanelEl = document.getElementById('right-panel');
+  const syncOpenState = () => {
+    const leftOpen  = leftPanelEl?.classList.contains('open');
+    const rightOpen = rightPanelEl?.classList.contains('open');
+    document.body.classList.toggle('left-open',  !!leftOpen);
+    document.body.classList.toggle('right-open', !!rightOpen);
+    document.body.classList.toggle('panel-open', !!(leftOpen || rightOpen));
+  };
+  leftPanelEl?.classList.remove('open');
+  rightPanelEl?.classList.remove('open');
+  syncOpenState();
+
+  // un-merge the left panel title
+  const leftPanel = document.getElementById('left-panel');
+  leftPanel?.classList.remove('is-merged');
+  const h2 = document.querySelector('#left-panel .panel-content h2');
+  if (h2) h2.textContent = 'YOUR WORDS';
+
+  // re-enable buttons
+  document.getElementById('submit-list')?.removeAttribute('disabled');
+  document.getElementById('submit-word')?.removeAttribute('disabled');
+  document
+    .querySelectorAll('#word-list button, #word-list [data-role="remove"]')
+    .forEach(btn => btn.removeAttribute('disabled'));
+
+  // clear word list
+  const wordList = document.getElementById('word-list');
+  if (wordList) {
+    wordList.classList.remove('is-hidden');
+    wordList.innerHTML = '';
+  }
+  syncSubmitListButton();
+
+  // make a fresh grid
+  initializeGrid();
+
+  // tell mergedListPanel to clear itself
+  window.dispatchEvent(new Event('game:new'));
+});
+
   }
 
   // --- General button + word actions ---
@@ -394,66 +461,5 @@ if (window.matchMedia('(max-width: 768px)').matches) {
     hex.style.touchAction = 'none';
   }
 }
-
-
-// NEW GAME wiring
-document.getElementById('new-game')?.addEventListener('click', () => {
-  // --- Reset game state ---
-  baseTotal = 0;
-  bonusTotal = 0;
-  totalScore = 0;
-  submittedWords.clear();
-  gameState.words = [];
-  gameState.listLocked = false;
-  updateScoreDisplay(0);
-
-  // --- Close any open panels + sync <body> classes (no new listeners here) ---
-  const leftPanelEl  = document.getElementById('left-panel');
-  const rightPanelEl = document.getElementById('right-panel');
-
-  // local, lightweight sync (doesn't rely on :has())
-  const syncOpenState = () => {
-    const leftOpen  = leftPanelEl?.classList.contains('open');
-    const rightOpen = rightPanelEl?.classList.contains('open');
-    document.body.classList.toggle('left-open',  !!leftOpen);
-    document.body.classList.toggle('right-open', !!rightOpen);
-    document.body.classList.toggle('panel-open', !!(leftOpen || rightOpen));
-  };
-
-  leftPanelEl?.classList.remove('open');
-  rightPanelEl?.classList.remove('open');
-  syncOpenState();
-
-  // --- Restore left panel header + classes ---
-  const leftPanel = document.getElementById('left-panel');
-  leftPanel?.classList.remove('is-merged');
-
-  const h2 = document.querySelector('#left-panel .panel-content h2');
-  if (h2) h2.textContent = 'YOUR WORDS';
-
-  // ✅ Re-enable top-level buttons
-  document.getElementById('submit-list')?.removeAttribute('disabled');
-  document.getElementById('submit-word')?.removeAttribute('disabled');
-  document
-    .querySelectorAll('#word-list button, #word-list [data-role="remove"]')
-    .forEach(btn => btn.removeAttribute('disabled'));
-
-  // --- Clear out word list UI completely ---
-  const wordList = document.getElementById('word-list');
-  if (wordList) {
-    wordList.classList.remove('is-hidden');
-    wordList.innerHTML = ''; // remove any old words
-  }
-  syncSubmitListButton();
-
-  // --- Generate a new grid ---
-  initializeGrid();
-
-  // --- Tell other modules (like mergedlistpanel.js) to clean up ---
-  window.dispatchEvent(new Event('game:new'));
-});
-
-
-
 
 
