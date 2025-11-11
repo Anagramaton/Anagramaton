@@ -327,7 +327,7 @@ function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys =
 if (postLetters === 0 && gameState.mode !== 'daily') {
   DEBUG && console.info('🚀 Unlimited bootstrap: placing long-word anchors');
 
-  const anchorsNeeded = 2;        
+  const anchorsNeeded = 5;        
   const anchorsMax     = 3;         
   let anchorsPlaced    = 0;
 

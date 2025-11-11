@@ -13,8 +13,8 @@
     position: fixed;
     writing-mode: initial;
     text-orientation: initial;
-    width: 140px;
-    height: 60px;
+    width: min(38vw, 140px);
+    height: min(10vh, 60px);
     padding: 0.65em 1.1em;
     font-size: 0.9rem;
     border-radius: 30px;
@@ -26,7 +26,7 @@
     box-shadow: 0 4px 0 #1c337c;
     top: 120px;
     transition: all 0.15s ease;
-   
+    letter-spacing: 0.02em;
   }
 
   /* Word panel toggle — royal blue, flat, no neon */
