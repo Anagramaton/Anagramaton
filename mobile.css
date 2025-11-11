@@ -369,11 +369,11 @@
 
 @media (max-width: 768px) {
   #submit-word {
-    margin-left: 6vw;   /* pulls in from left */
+    margin-left: 9vw;   /* pulls in from left */
   }
 
   #clear-word {
-    margin-right: 6vw;  /* pulls in from right */
+    margin-right: 9vw;  /* pulls in from right */
   }
 }
 
