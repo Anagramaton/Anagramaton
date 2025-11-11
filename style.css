@@ -885,9 +885,6 @@ body.panel-open #backdrop {
    REUSE STAGE 2 TILE
    ======================= */
 
-/* =======================
-   REUSE STAGE 2 TILE
-   ======================= */
 
 /* 1. Base hex tile — coral fill, no border */
 .hex-tile.reuse-2 {
@@ -967,6 +964,26 @@ body.panel-open #backdrop {
   fill: #ffffff !important;
   font-weight: 800;
 }
+
+/* =====================================
+   LOCKED TILE STATE (after swipe)
+   ===================================== */
+.tile.locked .hex-tile {
+  fill: #4cc9f0;          /* keep the same cyan fill */
+  stroke: #000;
+  stroke-width: 2px;
+  opacity: 0.9;
+}
+
+.tile.locked .tile-letter,
+.tile.locked .tile-point {
+  fill: #000;
+}
+
+.tile.locked {
+  pointer-events: none;   /* block new touches */
+}
+
 
 
 

@@ -360,8 +360,27 @@ if (window.matchMedia('(max-width: 768px)').matches) {
   if (hex) {
     let dragging = false;
     let lastTile = null;
+    let swipeLocked = false; // block building-on after swipe ends
+
+    // stop tile interactions while locked
+    document.addEventListener('pointerdown', (e) => {
+      if (!swipeLocked) return;
+      if (e.target.closest('.tile')) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    // unlock on submit or clear
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('#submit-word') || e.target.closest('#clear-word')) {
+        swipeLocked = false;
+      }
+    }, true);
 
     const startDrag = (e) => {
+      if (swipeLocked) return; // cannot start new path if locked
+      e.preventDefault();
       const el = e.target.closest('.tile');
       if (!el) return;
       dragging = true;
@@ -373,7 +392,7 @@ if (window.matchMedia('(max-width: 768px)').matches) {
     const moveDrag = (e) => {
       if (!dragging) return;
       const hit = document.elementFromPoint(e.clientX, e.clientY);
-      const tile = hit && hit.closest('.tile'); // fixed line
+      const tile = hit && hit.closest('.tile');
       if (!tile || tile === lastTile) return;
       lastTile = tile;
       tile.dispatchEvent(new PointerEvent('click', { bubbles: true }));
@@ -381,9 +400,30 @@ if (window.matchMedia('(max-width: 768px)').matches) {
 
     const endDrag = (e) => {
       if (!dragging) return;
+      e.preventDefault();
       dragging = false;
       lastTile = null;
       try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
+
+      // after swipe ends, decide if we keep or reset
+      const sel = (window.gameState && Array.isArray(window.gameState.selectedTiles))
+        ? window.gameState.selectedTiles
+        : [];
+
+      // if nothing useful was picked (e.g. 0 or 1 tile), clear it
+      if (!sel.length || sel.length < 2) {
+        // clear current word display and selection
+        if (typeof resetSelectionState === 'function') {
+          resetSelectionState();
+        }
+        const cw = document.getElementById('current-word');
+        if (cw) cw.textContent = '';
+        swipeLocked = false;
+        return;
+      }
+
+      // we have a word-ish path; lock it so user must submit or clear
+      swipeLocked = true;
     };
 
     hex.addEventListener('pointerdown', startDrag);
