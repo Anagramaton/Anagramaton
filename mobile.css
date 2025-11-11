@@ -367,4 +367,25 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+@media (max-width: 768px) {
+  #submit-area {
+    bottom: 10px;
+    width: 90vw;
+    max-width: 360px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0 8px;
+  }
+
+  #controls {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  #submit-word,
+  #clear-word {
+    width: 45%;
+    height: 52px;
+  }
+}
 

@@ -257,28 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
-// show loading state on the hex grid
-const hexEl = document.getElementById('hex-grid');
-if (hexEl) {
-  hexEl.classList.add('is-loading');
-}
-
-// let the browser paint the loading state first
-requestAnimationFrame(() => {
   console.log('[main] before initializeGrid()');
   initializeGrid();
   console.log('[main] after initializeGrid()');
-
-  // switch to "built" state so tiles can animate in
-  if (hexEl) {
-    hexEl.classList.remove('is-loading');
-    hexEl.classList.add('is-built');
-
-    // optional: remove after a bit
-    setTimeout(() => hexEl.classList.remove('is-built'), 800);
-  }
-});
-
 
   // --- Right panel visibility based on mode ---
   if (gameState.mode === 'daily') {
