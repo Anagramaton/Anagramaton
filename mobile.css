@@ -201,153 +201,46 @@
 
 /* round over modal mobile enhancements */
 @media (max-width: 768px) {
+  /* dialog shell */
   #round-over-modal .rom__dialog {
+    max-height: 92vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
-
-  #round-over-modal .rom__block {
-    background: #fff;
-    border-radius: 10px;
-    padding: 10px 12px;
-  }
-
-  #round-over-modal .rom__summary-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  #round-over-modal .rom__label {
-    font-size: 0.65rem;
-    color: #666;
-    display: block;
-  }
-
-  #round-over-modal .rom__value {
-    font-weight: 700;
-    font-size: 1.05rem;
-  }
-
-  #round-over-modal .rom__badge-row {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  #round-over-modal .rom__badge-row::-webkit-scrollbar {
-    display: none;
-  }
-
-  #round-over-modal .rom__badge {
-    background: #f4f4f4;
-    border: 1px solid #ddd;
-    border-radius: 999px;
-    padding: 4px 10px;
-    font-size: 0.65rem;
-    white-space: nowrap;
-  }
-  #round-over-modal .rom__badge--win {
-    background: #d1f7c4;
-    border-color: #8ad66d;
-  }
-
-  #round-over-modal .rom__tablist {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-  }
-  #round-over-modal .rom__tab {
-    background: #eee;
-    border: none;
-    border-radius: 999px;
-    padding: 4px 10px;
-    font-size: 0.7rem;
-    flex: 0 0 auto;
-  }
-  #round-over-modal .rom__tab--active {
-    background: #333;
-    color: #fff;
-  }
-
-  #round-over-modal .rom__panel {
-    display: none;
-    max-height: 180px;
-    overflow-y: auto;
-  }
-  #round-over-modal .rom__panel--active {
-    display: block;
-  }
-
-  #round-over-modal .rom__row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 0;
-    border-bottom: 1px solid #eee;
-  }
-  #round-over-modal .rom__row:last-child {
-    border-bottom: none;
-  }
-
-  #round-over-modal .rom__row--missed .rom__word {
-    color: #b4231e;
-  }
-
-  #round-over-modal .rom__actions {
-    position: sticky;
-    bottom: 0;
-    background: #fff;
-    padding-top: 4px;
-  }
-}
-
-@media (max-width: 768px) {
-  #round-over-modal #rom-close-btn {
-    background: #111;
-    color: #fff;
-    font-weight: 600;
-    border: none;
-    border-radius: 999px;
-    height: 42px;
-  }
-  #round-over-modal #rom-close-btn::after {
-    content: "›";
-    margin-left: 6px;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 768px) {
-  #round-over-modal .rom__dialog {
-    transition: transform 0.25s ease, opacity 0.25s ease;
-  }
-  #round-over-modal.rom--hidden .rom__dialog {
-    transform: translateY(10%);
-    opacity: 0;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Dialog background and spacing */
-  #round-over-modal .rom__dialog {
+    border-radius: 14px;
     background: linear-gradient(160deg, #0f172a 0%, #111827 50%, #0f172a 100%);
     padding: 14px 14px 70px;
     position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px) saturate(150%);
+    animation: romSlideUp 0.35s cubic-bezier(0.25, 0.9, 0.3, 1.3);
+    transition: transform 0.25s ease, opacity 0.25s ease;
   }
 
-  /* Body blocks */
+  /* optional texture overlay */
+  #round-over-modal .rom__dialog::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(248, 250, 252, 0.08), transparent 45%);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* base block style */
   #round-over-modal .rom__block {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.03);
     border-radius: 14px;
     padding: 10px 12px;
     backdrop-filter: blur(5px);
+    position: relative;
+    z-index: 1;
   }
 
-  /* Summary card */
+  /* summary card */
   #round-over-modal .rom__block--summary {
     background: linear-gradient(140deg, #f97316 0%, #f97316 35%, #fff 100%);
     color: #0f172a;
@@ -361,14 +254,23 @@
     font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    opacity: 0.8;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  #round-over-modal .rom__block--summary .rom__label {
+    color: rgba(15, 23, 42, 0.7);
   }
   #round-over-modal .rom__value {
     font-size: 1.05rem;
     font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+  }
+  #round-over-modal .rom__block--summary .rom__value {
+    color: #0f172a;
+    text-shadow: none;
   }
 
-  /* Badge strip */
+  /* badges */
   #round-over-modal .rom__block--badges {
     background: rgba(15, 23, 42, 0.2);
   }
@@ -404,7 +306,7 @@
     content: "✅";
   }
 
-  /* Tabs */
+  /* tabs */
   #round-over-modal .rom__block--tabs {
     background: rgba(15, 23, 42, 0.2);
   }
@@ -412,6 +314,10 @@
     display: flex;
     gap: 8px;
     margin-bottom: 8px;
+    overflow-x: auto;
+  }
+  #round-over-modal .rom__tablist::-webkit-scrollbar {
+    display: none;
   }
   #round-over-modal .rom__tab {
     background: rgba(248, 250, 252, 0.04);
@@ -420,6 +326,7 @@
     border-radius: 999px;
     padding: 4px 11px;
     font-size: 0.7rem;
+    flex: 0 0 auto;
   }
   #round-over-modal .rom__tab--active {
     background: #f97316;
@@ -428,7 +335,7 @@
     font-weight: 600;
   }
 
-  /* Panels (lists) */
+  /* panel list */
   #round-over-modal .rom__panel {
     background: rgba(15, 23, 42, 0.12);
     border-radius: 10px;
@@ -436,7 +343,11 @@
     overflow-y: auto;
     padding: 4px 4px 2px;
   }
+  #round-over-modal .rom__panel--active {
+    display: block;
+  }
 
+  /* rows */
   #round-over-modal .rom__row {
     display: flex;
     justify-content: space-between;
@@ -453,25 +364,27 @@
     font-weight: 500;
     letter-spacing: 0.04em;
   }
+  #round-over-modal .rom__row--missed .rom__word {
+    color: #fee2e2;
+  }
   #round-over-modal .rom__row .rom__score-chip {
-    background: rgba(248, 250, 252, 0.05);
+    background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
     border: 1px solid rgba(248, 250, 252, 0.2);
     border-radius: 999px;
     padding: 2px 7px;
     font-size: 0.65rem;
-    color: #f97316;
-  }
-  #round-over-modal .rom__row--missed .rom__word {
-    color: #fee2e2;
+    color: #0f172a;
+    font-weight: 700;
   }
 
-  /* Sticky action footer + close button visual */
+  /* sticky actions */
   #round-over-modal .rom__actions {
     position: sticky;
     bottom: 0;
     background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,1) 35%);
     padding-top: 10px;
     display: flex;
+    z-index: 2;
   }
   #round-over-modal #rom-close-btn {
     background: #f97316;
@@ -481,19 +394,35 @@
     border-radius: 999px;
     height: 42px;
     width: 100%;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   #round-over-modal #rom-close-btn::after {
     content: "›";
     margin-left: 6px;
   }
-
-  /* Smooth exit */
-  #round-over-modal .rom__dialog {
-    transition: transform 0.25s ease, opacity 0.25s ease;
+  #round-over-modal #rom-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.5);
   }
+
+  /* hidden state transition */
   #round-over-modal.rom--hidden .rom__dialog {
     transform: translateY(10%);
     opacity: 0;
   }
+
+  /* font normalization just for modal */
+  #round-over-modal {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.01em;
+  }
 }
+
+/* keyframes */
+@keyframes romSlideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 
