@@ -9,8 +9,6 @@ import { placedWords } from './gridLogic.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
-import { handleTileClick } from './initGrid.js';
-import { updateWordPreview } from './initGrid.js'; // make sure it's exported
 
 // ===== GAME MODE (daily | unlimited) via URL param =====
 const _params = new URLSearchParams(typeof location !== 'undefined' ? location.search : "");
@@ -363,34 +361,30 @@ if (window.matchMedia('(max-width: 768px)').matches) {
     let dragging = false;
     let lastTile = null;
 
-let tilesTouched = new Set();
+    const startDrag = (e) => {
+      const el = e.target.closest('.tile');
+      if (!el) return;
+      dragging = true;
+      lastTile = el;
+      el.dispatchEvent(new PointerEvent('click', { bubbles: true }));
+      hex.setPointerCapture(e.pointerId);
+    };
 
-const startDrag = (e) => {
-  const el = e.target.closest('.tile');
-  if (!el) return;
-  dragging = true;
-  tilesTouched.clear();
-  lastTile = el;
-  tilesTouched.add(el);
-  hex.setPointerCapture(e.pointerId);
-};
+    const moveDrag = (e) => {
+      if (!dragging) return;
+      const hit = document.elementFromPoint(e.clientX, e.clientY);
+      const tile = hit && hit.closest('.tile'); // fixed line
+      if (!tile || tile === lastTile) return;
+      lastTile = tile;
+      tile.dispatchEvent(new PointerEvent('click', { bubbles: true }));
+    };
 
-const moveDrag = (e) => {
-  if (!dragging) return;
-  const hit = document.elementFromPoint(e.clientX, e.clientY);
-  const tile = hit && hit.closest('.tile');
-  if (!tile || tilesTouched.has(tile)) return;
-  tilesTouched.add(tile);
-  handleTileClick(tile); // quietly mark tiles, no word preview yet
-};
-
-const endDrag = (e) => {
-  if (!dragging) return;
-  dragging = false;
-  lastTile = null;
-  try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
-  updateWordPreview(); // shimmer runs only now, once per swipe
-};
+    const endDrag = (e) => {
+      if (!dragging) return;
+      dragging = false;
+      lastTile = null;
+      try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
+    };
 
     hex.addEventListener('pointerdown', startDrag);
     hex.addEventListener('pointermove', moveDrag);
