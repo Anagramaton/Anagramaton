@@ -327,8 +327,8 @@ function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys =
 if (postLetters === 0 && gameState.mode !== 'daily') {
   DEBUG && console.info('🚀 Unlimited bootstrap: placing long-word anchors');
 
-  const anchorsNeeded = 5;        
-  const anchorsMax     = 6;         
+  const anchorsNeeded = 2;        
+  const anchorsMax     = 3;         
   let anchorsPlaced    = 0;
 
   const occupied = new Set();       
@@ -338,7 +338,7 @@ if (postLetters === 0 && gameState.mode !== 'daily') {
   for (const w of longCandidates) {
     if (usedWords.has(w)) continue;
     chosen.push(w);
-    if (chosen.length >= 100) break;
+    if (chosen.length >= 400) break;
   }
 
   for (const word of chosen) {

@@ -394,7 +394,7 @@ body.panel-open #backdrop {
 #submit-area {
   position: absolute;
   left: 50%;
-  bottom: 20px;
+  bottom: 1px;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -452,7 +452,7 @@ body.panel-open #backdrop {
   height: 60px;
   border-radius: 30px;
   padding: 0;
-  font-size: 0.95rem;
+  font-size: 0.91rem;
   color: #fff;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -656,6 +656,8 @@ body.panel-open #backdrop {
   color: #1b4965;
   box-shadow: 0 2px 0 rgba(0,0,0,0.12);
 }
+
+
 
 
 
@@ -963,6 +965,85 @@ body.panel-open #backdrop {
 .selected .tile-point {
   fill: #ffffff !important;
   font-weight: 800;
+}
+
+/* === FONT CLASSES (optional if you use them directly) === */
+.limelight-regular {
+  font-family: "Limelight", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+   text-transform: uppercase;
+}
+
+/* Apply Limelight to score */
+#score-display {
+  font-family: "Limelight", sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+   text-transform: uppercase;
+}
+
+
+
+/* Base Coiny font for all buttons and toggles */
+.side-toggle,
+#right-panel button,
+#left-panel #submit-list,
+#left-panel #new-game,
+#submit-word,
+#clear-word {
+  font-family: "Coiny", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: clamp(1rem, 2vw, 1.4rem); /* slightly smaller base */
+}
+
+/* Fine-tune smaller buttons */
+#wordcount-hint,
+#phrase1-hint1-btn,
+#phrase2-hint1-btn {
+  font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+}
+
+/* Slightly smaller toggles if needed */
+.side-toggle {
+  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+}
+
+
+
+
+.freckle-face-regular {
+  font-family: "Freckle Face", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Current word uses Notable */
+#current-word-display {
+  font-family: "Notable", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-top: 12px;
+}
+
+/* Move the current word lower */
+#submit-area {
+  gap: 2.6rem; /* increases vertical space between word, score, and buttons */
+}
+
+/* Bold and size the word */
+#current-word-display {
+  font-family: "Notable", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 
