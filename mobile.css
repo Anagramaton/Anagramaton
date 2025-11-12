@@ -1,14 +1,7 @@
 /* ================================
    Mobile Layout Overrides
    ================================ */
-@media (max-width: 768px) {
-  /* Title: slightly smaller, leaves room for toggles */
-  #game-title {
-    top: 12px;
-    font-size: clamp(1.8rem, 6vw, 2.4rem);
-  }
 
-  /* Panel toggles: horizontal buttons, same size as Submit/Clear */
   .side-toggle {
     position: fixed;
     writing-mode: initial;
@@ -49,20 +42,7 @@
     transform: none;
   }
 
-  /* Submit area tweaks (optional tighter spacing on small screens) */
-  #submit-area {
-    flex-direction: column;
-    gap: 0.5em;
-    bottom: 10px;
-  }
-  #submit-area div {
-    font-size: 1.2em;
-  }
-  #submit-word,
-  #clear-word {
-    font-size: 0.9rem;
-  }
-}
+
 
 
 
@@ -73,7 +53,6 @@
     align-items: center;
     justify-content: center;
     position: fixed;
-    top: calc(8px + env(safe-area-inset-top, 0px));
     right: 10px;
     width: 38px;
     height: 38px;
@@ -301,7 +280,7 @@
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
   }
 
-  /* tab area */
+ 
   #round-over-modal .rom__block--tabs {
     background: rgba(255, 255, 255, 0.65);
   }
@@ -361,19 +340,5 @@
 }
 
 
-/* keyframes */
-@keyframes romSlideUp {
-  from { transform: translateY(40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
 
-@media (max-width: 768px) {
-  #submit-word {
-    margin-left: 9vw;   /* pulls in from left */
-  }
-
-  #clear-word {
-    margin-right: 9vw;  /* pulls in from right */
-  }
-}
 

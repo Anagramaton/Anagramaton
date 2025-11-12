@@ -387,102 +387,6 @@ body.panel-open #backdrop {
     0 0 18px rgba(106, 0, 255, 0.5);
 }
 
-/* =========================================================
-   4) SUBMIT AREA — Collage Layout (keeps existing IDs)
-   ========================================================= */
-
-#submit-area {
-  position: absolute;
-  left: 50%;
-  bottom: 1px;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.4rem;
-  font-family: "DM Sans", sans-serif;
-  background: transparent;
-  z-index: 1000;
-}
-
-
-#current-word-display {
-
-  border-radius: 8px;
-  width: 340px;
-  min-height: 42px;
-  padding: 1rem 1.5rem;
-  text-align: center;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #333;
- 
-  position: relative;
-}
-
-
-
-#score-display {
-  display: inline-flex;
-  flex-direction: column;       /* stack SCORE: and number vertically */
-  align-items: center;          /* center horizontally */
-  justify-content: center;      /* center vertically */
-  line-height: 1.1;             /* tighten spacing */
-  text-align: center;
-
-  padding: 0.6rem 1.4rem;
-  border-radius: 8px;
-
-  color: #222;
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-
-/* Button container below */
-#controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-}
-
-/* Submit and Clear buttons */
-#submit-word,
-#clear-word {
-  border: none;
-  font-weight: 700;
-  width: 140px;
-  height: 60px;
-  border-radius: 30px;
-  padding: 0;
-  font-size: 0.91rem;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
-}
-
-#submit-word {
-  background: #2c6b80;
-  box-shadow: 0 4px 0 #1e4d5a;
-}
-
-#clear-word {
-  background: #a34735;
-  box-shadow: 0 4px 0 #732c20;
-}
-
-
-#submit-word:active,
-#clear-word:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-}
-
-
-
-
 
 /* =========================================================
    5) SIDE PANEL TOGGLES
@@ -986,6 +890,31 @@ body.panel-open #backdrop {
    text-transform: uppercase;
 }
 
+/* game score above grid */
+#score-display {
+  position: fixed;
+  top: calc(50% - 260px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  color: #ffe84a;
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+/* word score below grid */
+#word-score-display {
+  position: fixed;
+  top: calc(50% + 110px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  color: #ffe84a;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+}
+
+
 
 
 /* Base Coiny font for all buttons and toggles */
@@ -1035,10 +964,7 @@ body.panel-open #backdrop {
   padding-top: 12px;
 }
 
-/* Move the current word lower */
-#submit-area {
-  gap: 2.6rem; /* increases vertical space between word, score, and buttons */
-}
+
 
 /* Bold and size the word */
 #current-word-display {
@@ -1076,24 +1002,7 @@ body.panel-open #backdrop {
   animation: tile-pop 0.35s ease-out forwards;
 }
 
-#hex-grid.is-built .tile:nth-child(1)  { animation-delay: 0.00s; }
-#hex-grid.is-built .tile:nth-child(2)  { animation-delay: 0.03s; }
-#hex-grid.is-built .tile:nth-child(3)  { animation-delay: 0.06s; }
-#hex-grid.is-built .tile:nth-child(4)  { animation-delay: 0.09s; }
-#hex-grid.is-built .tile:nth-child(5)  { animation-delay: 0.12s; }
-#hex-grid.is-built .tile:nth-child(6)  { animation-delay: 0.15s; }
-/* add more nth-child lines if you have more tiles */
 
-@keyframes tile-pop {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
 
 
 
