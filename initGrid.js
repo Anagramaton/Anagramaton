@@ -48,7 +48,6 @@ function playNextTileSound() {
   sound.play().catch(() => {});
 
   if (currentSoundIndex < tileSounds.length - 1) {
-    // Advance through the sequence normally
     currentSoundIndex++;
   } else {
     // Last sound (note9.mp3) has just played; move index past the end
@@ -57,12 +56,15 @@ function playNextTileSound() {
   }
 }
 
-
-
 function resetTileSoundSequence() {
   if (!isMobile) return;               // only reset sequence on mobile
   currentSoundIndex = 0;
 }
+
+// expose for mobile swipe handlers in main.js
+window.playNextTileSound = playNextTileSound;
+window.resetTileSoundSequence = resetTileSoundSequence;
+
 
 
 

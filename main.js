@@ -1,6 +1,6 @@
 
 // main.js
-import { initializeGrid } from './initGrid.js';
+import { initializeGrid, handleTileClick, clearCurrentSelection } from './initGrid.js';
 import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';
 import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
 import { gameState } from './gameState.js';
@@ -489,6 +489,10 @@ if (window.matchMedia('(max-width: 768px)').matches) {
     const startDrag = (e) => {
       const el = e.target.closest('.tile');
       if (!el) return;
+
+      // Clear any previous selection (DOM + state + sounds)
+      clearCurrentSelection();
+
       dragging = true;
       lastTile = null;
       visitedTiles = new Set();
@@ -498,21 +502,21 @@ if (window.matchMedia('(max-width: 768px)').matches) {
 
       hex.setPointerCapture(e.pointerId);
 
-      // Highlight, select, and play sound for the first tile
+      // Use the normal click handler so swipe behaves like tapping
       const tileKey = el.getAttribute('data-key') || el.id;
-      visitedTiles.add(tileKey);
-      el.classList.add('selected');
-      if (typeof window.playNextTileSound === 'function') {
-        window.playNextTileSound();
-      }
-      if (el.tileObject) {
-  gameState.selectedTiles.push(el.tileObject);
-  console.log("Added tile object (startDrag):", el.tileObject); // <--- LOG HERE
-}
+      const tileObj = el.tileObject;
+      if (!tileObj) return;
 
-      // Optionally, dispatch event to update UI (if needed)
+      visitedTiles.add(tileKey);
+      handleTileClick(tileObj);
+      console.log("Added tile object (startDrag):", tileObj); // <--- LOG HERE
+
+      // Keep UI in sync (word preview + 'selection:changed' listeners)
       window.dispatchEvent(new Event('selection:changed'));
     };
+
+    
+
 
     const moveDrag = (e) => {
       if (!dragging) return;
@@ -522,20 +526,21 @@ if (window.matchMedia('(max-width: 768px)').matches) {
 
       const tileKey = tile.getAttribute('data-key') || tile.id;
       if (visitedTiles.has(tileKey)) return;
-      visitedTiles.add(tileKey);
 
-      tile.classList.add('selected');
-      if (typeof window.playNextTileSound === 'function') {
-        window.playNextTileSound();
-      }
+      const tileObj = tile.tileObject;
+      if (!tileObj) return;
+
+      visitedTiles.add(tileKey);
       lastTile = tile;
-      if (tile.tileObject) {
-  gameState.selectedTiles.push(tile.tileObject);
-  console.log("Added tile object (moveDrag):", tile.tileObject); // <--- LOG HERE
-}
+
+      // Reuse the normal click handler for adjacency + sounds + preview
+      handleTileClick(tileObj);
+      console.log("Added tile object (moveDrag):", tileObj); // <--- LOG HERE
 
       window.dispatchEvent(new Event('selection:changed'));
     };
+
+    
 
     const endDrag = (e) => {
       if (!dragging) return;
