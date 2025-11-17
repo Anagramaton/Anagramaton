@@ -1007,18 +1007,21 @@ body.right-open .right-toggle {
   font-style: normal;
 }
 
-#current-word-display {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    top: calc(50% + 290px);
-    z-index: 800;
-    display: block;
-    text-align: center;
-    font-size: 2.9rem;
-    font-family: "Notable", sans-serif;
-    text-transform: uppercase;
+@media (min-width: 769px) {
+  #current-word-display {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      top: calc(50% + 290px);
+      z-index: 800;
+      display: block;
+      text-align: center;
+      font-size: 2.9rem;
+      font-family: "Notable", sans-serif;
+      text-transform: uppercase;
+  }
 }
+
 
 /* overlay while board is building */
 #hex-grid.is-loading {
