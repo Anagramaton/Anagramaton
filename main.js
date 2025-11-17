@@ -29,7 +29,8 @@ function playAlertSound() {
 window.playAlertSound = playAlertSound;
 
 // --- SUBMIT-LIST CELEBRATION SOUND ---
-const submitListSound = new Audio('sounds/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
+const submitListSound = new Audio('sounds/zapsplat_magic_wand_ascend_spell_beeps_12528 (2).mp3');
+
 
 function playSubmitListSound() {
   try {
@@ -476,35 +477,71 @@ document.getElementById('new-game')?.addEventListener('click', () => {
   });
 });
 
+
+
 if (window.matchMedia('(max-width: 768px)').matches) {
+  let dragging = false;
+  let lastTile = null;
+  let visitedTiles = new Set();
+
   const hex = document.getElementById('hex-grid');
   if (hex) {
-    let dragging = false;
-    let lastTile = null;
+    const startDrag = (e) => {
+      const el = e.target.closest('.tile');
+      if (!el) return;
+      dragging = true;
+      lastTile = null;
+      visitedTiles = new Set();
 
-const startDrag = (e) => {
-  const el = e.target.closest('.tile');
-  if (!el) return;
-  dragging = true;
-  lastTile = null;
+      // Start a new selection for this swipe
+      gameState.selectedTiles = [];
 
-  hex.setPointerCapture(e.pointerId);
-};
+      hex.setPointerCapture(e.pointerId);
 
+      // Highlight, select, and play sound for the first tile
+      const tileKey = el.getAttribute('data-key') || el.id;
+      visitedTiles.add(tileKey);
+      el.classList.add('selected');
+      if (typeof window.playNextTileSound === 'function') {
+        window.playNextTileSound();
+      }
+      if (el.tileObject) {
+  gameState.selectedTiles.push(el.tileObject);
+  console.log("Added tile object (startDrag):", el.tileObject); // <--- LOG HERE
+}
+
+      // Optionally, dispatch event to update UI (if needed)
+      window.dispatchEvent(new Event('selection:changed'));
+    };
 
     const moveDrag = (e) => {
       if (!dragging) return;
       const hit = document.elementFromPoint(e.clientX, e.clientY);
-      const tile = hit && hit.closest('.tile'); // fixed line
-      if (!tile || tile === lastTile) return;
+      const tile = hit && hit.closest('.tile');
+      if (!tile) return;
+
+      const tileKey = tile.getAttribute('data-key') || tile.id;
+      if (visitedTiles.has(tileKey)) return;
+      visitedTiles.add(tileKey);
+
+      tile.classList.add('selected');
+      if (typeof window.playNextTileSound === 'function') {
+        window.playNextTileSound();
+      }
       lastTile = tile;
-      tile.dispatchEvent(new PointerEvent('click', { bubbles: true }));
+      if (tile.tileObject) {
+  gameState.selectedTiles.push(tile.tileObject);
+  console.log("Added tile object (moveDrag):", tile.tileObject); // <--- LOG HERE
+}
+
+      window.dispatchEvent(new Event('selection:changed'));
     };
 
     const endDrag = (e) => {
       if (!dragging) return;
       dragging = false;
       lastTile = null;
+      visitedTiles = new Set();
       try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
     };
 
@@ -516,5 +553,7 @@ const startDrag = (e) => {
     hex.style.touchAction = 'none';
   }
 }
+
+
 
 
