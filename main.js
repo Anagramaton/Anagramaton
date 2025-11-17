@@ -45,10 +45,31 @@ const allNoteSounds = Array.isArray(window.tileSounds) ? window.tileSounds : [];
 // --- UNLOCK ALERT + TILE + SUBMIT SOUNDS ON FIRST TOUCH/CLICK ---
 window.addEventListener('pointerdown', function unlockAudio() {
   const prime = (audio) => {
-    audio.play().then(() => {
+    if (!audio) return;
+
+    const prevMuted  = audio.muted;
+    const prevVolume = audio.volume;
+
+    audio.muted  = true;
+    audio.volume = 0;
+
+    const restore = () => {
       audio.pause();
       audio.currentTime = 0;
-    }).catch(() => {});
+      audio.muted  = prevMuted;
+      audio.volume = prevVolume;
+    };
+
+    const p = audio.play();
+    if (p && typeof p.then === 'function') {
+      p.then(restore).catch(() => {
+        // even if play fails, restore original settings
+        audio.muted  = prevMuted;
+        audio.volume = prevVolume;
+      });
+    } else {
+      restore();
+    }
   };
 
   // prime alert sound
@@ -62,6 +83,7 @@ window.addEventListener('pointerdown', function unlockAudio() {
 
   window.removeEventListener('pointerdown', unlockAudio);
 }, { once: true });
+
 
 
 
