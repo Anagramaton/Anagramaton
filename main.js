@@ -7,19 +7,64 @@ import { gameState } from './gameState.js';
 import { initPhrasePanelEvents, revealPhrase } from './phrasePanel.js';
 import { placedWords } from './gridLogic.js';
 import { initMergedListPanel } from './mergedListPanel.js';
-import { reuseMultipliers } from './constants.js';
+import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
+import { isValidWord } from './gameLogic.js';
+
 
 // ===== GAME MODE (daily | unlimited) via URL param =====
 const _params = new URLSearchParams(typeof location !== 'undefined' ? location.search : "");
 gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
 // (no new imports needed; you already import gameState above)
 
+// --- ALERT SOUND ---
+const alertSound = new Audio('sounds/alert.mp3');
+
+function playAlertSound() {
+  alertSound.currentTime = 0;
+  alertSound.play();
+}
+
+// make it callable from other modules (scoreLogic, initGrid, etc.)
+window.playAlertSound = playAlertSound;
+
+// --- SUBMIT-LIST CELEBRATION SOUND ---
+const submitListSound = new Audio('sounds/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
+
+function playSubmitListSound() {
+  try {
+    submitListSound.currentTime = 0;
+  } catch (_) {}
+  submitListSound.play().catch(() => {});
+}
+
+// cache tile sounds that initGrid.js attached to window
+const allNoteSounds = Array.isArray(window.tileSounds) ? window.tileSounds : [];
+
+
+// --- UNLOCK ALERT + TILE + SUBMIT SOUNDS ON FIRST TOUCH/CLICK ---
+window.addEventListener('pointerdown', function unlockAudio() {
+  const prime = (audio) => {
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }).catch(() => {});
+  };
+
+  // prime alert sound
+  prime(alertSound);
+
+  // prime submit-list celebration sound
+  prime(submitListSound);
+
+  // prime each tile note (the originals we now reuse)
+  allNoteSounds.forEach(prime);
+
+  window.removeEventListener('pointerdown', unlockAudio);
+}, { once: true });
 
 
 
-const clickSound = document.getElementById('click-sound');
-const backgroundMusic = document.getElementById('background-music');
 
 
 
@@ -113,11 +158,13 @@ function handleSubmitWordClick() {
 
   // Capacity + duplicate guards
   if (submittedWords.size >= 10) {
+    playAlertSound();
     alert('❌ You can only keep 10 words in your list at a time.');
     resetSelectionState();
     return;
   }
   if (submittedWords.has(word)) {
+    playAlertSound();
     alert(`❌ You've already submitted "${word}".`);
     resetSelectionState();
     return;
@@ -172,8 +219,12 @@ async function handleSubmitList() {
   const count = (gameState.words || []).length;
   if (count !== 10) return;
 
+  // play celebration sound when the list is successfully submitted
+  playSubmitListSound();
+
   const words = (gameState.words || []).map(w => String(w.word || '').toUpperCase());
   gameState.listLocked = true;
+
 
   document.getElementById('submit-list')?.setAttribute('disabled', 'disabled');
   document.getElementById('submit-word')?.setAttribute('disabled', 'disabled');
@@ -257,9 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
-  console.log('[main] before initializeGrid()');
+  
   initializeGrid();
-  console.log('[main] after initializeGrid()');
+  
 
   // --- Right panel visibility based on mode ---
   if (gameState.mode === 'daily') {
@@ -409,14 +460,15 @@ if (window.matchMedia('(max-width: 768px)').matches) {
     let dragging = false;
     let lastTile = null;
 
-    const startDrag = (e) => {
-      const el = e.target.closest('.tile');
-      if (!el) return;
-      dragging = true;
-      lastTile = el;
-      el.dispatchEvent(new PointerEvent('click', { bubbles: true }));
-      hex.setPointerCapture(e.pointerId);
-    };
+const startDrag = (e) => {
+  const el = e.target.closest('.tile');
+  if (!el) return;
+  dragging = true;
+  lastTile = null;
+
+  hex.setPointerCapture(e.pointerId);
+};
+
 
     const moveDrag = (e) => {
       if (!dragging) return;

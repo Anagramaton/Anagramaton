@@ -13,12 +13,14 @@ export function submitCurrentWord(tiles) {
 
   // Validate word length
   if (word.length < 4) {
+    playAlertSound();
     alert('❌ Word must be at least 4 letters long.');
     return null;
   }
 
   // Validate dictionary
   if (!isValidWord(word)) {
+    playAlertSound();
     alert(`❌ "${word}" is not a valid word.`);
     return null;
   }

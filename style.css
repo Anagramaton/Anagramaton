@@ -1,40 +1,71 @@
 
 
 
-/* Global Font Usage */
 #game-title {
-  font-family: 'Coiny', system-ui, sans-serif;
-  font-size: clamp(2.1rem, 5vw, 3.1rem);
+  font-family: 'Rubik+Vinyl';
+  font-size: clamp(4.1rem, 7vw, 5.1rem);
   letter-spacing: 0.08em;
 
   color: hsl(210, 25%, 65%);               /* softer blue-gray fill */
   -webkit-text-stroke: 2px hsl(210, 25%, 26%); /* outline from middle tone */
   text-shadow: 0 2px 6px rgba(0,0,0,0.4);  /* subtle depth, no glow */
 
-  position: absolute;
-  top: 18px;
+  /* match mobile-style top placement but for desktop too */
+  position: fixed;
+  top: 4px;
   left: 50%;
   transform: translateX(-50%);
+
   user-select: none;
   pointer-events: none;
   z-index: 900;
+  margin: 0;
 }
 
-/* Root Variables & Base Styles */
+/* Desktop layout for HOW-TO (help) button */
+#howto-open {
+  position: fixed;
+  top: 5px;
+  right: 8px;
+  z-index: 950;
+
+  background: none;
+  border: none;
+  box-shadow: none;
+
+  width: auto;
+  height: auto;
+  padding: 0;
+
+  /* remove font influence */
+  font-family: initial;
+  font-weight: initial;
+  font-size: 20px;    /* size of the icon */
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+
+  color: #000;        /* matches WORD PANEL text */
+  cursor: pointer;
+}
+
+#howto-open:hover {
+  opacity: 0.7;
+}
+
+#howto-open:active {
+  opacity: 0.45;
+}
+
+
+
 :root {
   --tile-fill-gradient: url(#tileGradient);
   --panel-bg: #222;
   --panel-text: #fff;
 }
 
-:root {
-  --neon: #00e5ff;
-  --neon-2: #6a00ff;
-  --accent: #00ffa6;
-  --text: #e9fcff;
-  --hud-font: 'Rajdhani', system-ui, sans-serif;
-  --hud-head: 'Orbitron', system-ui, sans-serif;
-}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -43,6 +74,7 @@ html, body {
   overflow: hidden;
   font-family: 'Segoe UI', sans-serif;
 }
+
 
 body {
   display: flex;
@@ -53,9 +85,6 @@ body {
   color: var(--text);
 } 
 
-/* =========================================================
-   2) LAYOUT CONTAINERS
-   ========================================================= */
 
 /* Main Game Container */
 #game-container {
@@ -118,12 +147,6 @@ body.panel-open #backdrop {
   transform: translateX(0);
 }
 
-/* Game Board */
-#game-board {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-}
 
 
 /* =========================================================
@@ -388,63 +411,87 @@ body.panel-open #backdrop {
 }
 
 
-/* =========================================================
-   5) SIDE PANEL TOGGLES
-   ========================================================= */
-/* Deep rich gray side toggle */
 .side-toggle {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 95px;
+  transform: none;
   padding: 12px 8px;
   border-radius: 6px;
   border: 1px solid #444;
-  background: #2b2b2b; /* rich dark gray */
+  background: #2b2b2b;
   color: #f2f2f2;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 0.85rem;
+
   height: 140px;
-  width: 38px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  width: 56px;              /* was 38px – give letters room */
+
   z-index: 1200;
   display: flex;
   align-items: center;
   justify-content: center;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+
   user-select: none;
   white-space: nowrap;
-  gap: 4px;
+  gap: 3px;
   text-shadow: none;
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease,
+    left 0.45s ease,
+    right 0.45s ease; /* animate slide */
 }
+
+
+.vword {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  display: inline-block;
+  line-height: 1;      /* removes spacing between letters */
+  letter-spacing: 0;   /* removes added spacing */
+  margin: 0 1px;       /* space between the two words */
+  font-size: 1.4rem;
+}
+
+
 
 .side-toggle:hover {
   background: #1f1f1f; /* slightly darker hover */
-  transform: translateY(-50%) scale(1.02);
+  transform: scale(1.02);
 }
 
 .side-toggle:active {
   background: #111; /* pressed look */
-  transform: translateY(-50%) scale(0.98);
+  transform: scale(0.98);
 }
 
-/* side-specific edges */
+
+/* side-specific edges + slide behavior */
+
+/* LEFT: mostly offscreen by default */
 .left-toggle {
-  left: 0;
+  left: 0px; /* adjust this to control how much of the tab peeks out */
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
+/* RIGHT: mostly offscreen by default */
 .right-toggle {
-  right: 0;
-  writing-mode: vertical-lr;
+  right: 0px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
+
+/* When LEFT panel is open, slide the left toggle fully into view */
+body.left-open .left-toggle {
+  left: -60px;
+}
+
+/* When RIGHT panel is open, slide the right toggle fully into view */
+body.right-open .right-toggle {
+  right: -60;
+}
+
 
 
 
@@ -741,19 +788,22 @@ body.panel-open #backdrop {
 }
 
 
-/* ==== Hover Accent ==== */
-.tile:hover .hex-tile {
-  fill: #222;
-  stroke: #ffcc00;
-  stroke-width: 2.5px;
-  transition: fill 180ms ease, stroke 180ms ease, stroke-width 180ms ease;
+@media (hover: hover) and (pointer: fine) {
+  /* ==== Hover Accent (desktop only) ==== */
+  .tile:hover .hex-tile {
+    fill: #222;
+    stroke: #ffcc00;
+    stroke-width: 2.5px;
+    transition: fill 180ms ease, stroke 180ms ease, stroke-width 180ms ease;
+  }
+
+  .tile:hover .tile-letter,
+  .tile:hover .tile-point {
+    fill: #ffcc00;
+    transition: fill 160ms ease;
+  }
 }
 
-.tile:hover .tile-letter,
-.tile:hover .tile-point {
-  fill: #ffcc00;
-  transition: fill 160ms ease;
-}
 
 
   :root {
@@ -821,13 +871,13 @@ body.panel-open #backdrop {
    REUSE STAGE 3 — full gap fill
    ========================= */
 .hex-tile.reuse-3 {
-  fill: #ff5d8f;        /* coral tile fill */
+  fill: #ff5d8f;       
   stroke: none;
 }
 
 .tile-letter.reuse-3,
 .tile-point.reuse-3 {
-  fill: #4a0000;    /* same blue as starting tiles */
+  fill: #4a0000;    
   stroke: none;
   font-weight: 800;
 }
@@ -837,14 +887,14 @@ body.panel-open #backdrop {
 
 
 
-/* green ring filling the entire gap, with dark green edge */
+
 .tile:has(.hex-tile.reuse-3) path:first-child {
-  fill: #06d6a0;             /* inner bright green */
-  stroke: #024b36;           /* dark green outer edge */
-  stroke-width: 2px;         /* visible border thickness */
+  fill: #06d6a0;             
+  stroke: #024b36;          
+  stroke-width: 2px;         
   transform-box: fill-box;
   transform-origin: center;
-  transform: scale(1.11);    /* keep covering the gap */
+  transform: scale(1.11);   
 }
 
 
@@ -859,7 +909,6 @@ body.panel-open #backdrop {
 .selected .hex-tile.reuse-3 {
   fill: #4cc9f0 !important;   /* cyan fill */
   stroke: #333 !important;    /* dark gray stroke like T */
-  stroke-width: 1.6px !important;
 }
 
 /* keep the ring gap neutral gray */
@@ -875,6 +924,9 @@ body.panel-open #backdrop {
   font-weight: 800;
 }
 
+
+
+
 /* === FONT CLASSES (optional if you use them directly) === */
 .limelight-regular {
   font-family: "Limelight", sans-serif;
@@ -883,36 +935,27 @@ body.panel-open #backdrop {
    text-transform: uppercase;
 }
 
-/* Apply Limelight to score */
+
 #score-display {
   font-family: "Limelight", sans-serif;
-  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-size: clamp(2.8rem, 3vw, 2.8rem);
    text-transform: uppercase;
 }
 
-/* game score above grid */
+
 #score-display {
   position: fixed;
-  top: calc(50% - 260px);
+  top: 120px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2000;
-  color: #ffe84a;
-  font-size: 2rem;
-  text-transform: uppercase;
+  z-index: 800;
+  display: block; 
+  font-size: 2.7rem;
+  text-align: center;
 }
 
-/* word score below grid */
-#word-score-display {
-  position: fixed;
-  top: calc(50% + 110px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2000;
-  color: #ffe84a;
-  font-size: 1.6rem;
-  text-transform: uppercase;
-}
+
+
 
 
 
@@ -924,7 +967,7 @@ body.panel-open #backdrop {
 #left-panel #new-game,
 #submit-word,
 #clear-word {
-  font-family: "Coiny", system-ui;
+  font-family: "Coiny";
   font-weight: 400;
   font-style: normal;
   text-transform: uppercase;
@@ -932,20 +975,31 @@ body.panel-open #backdrop {
   font-size: clamp(1rem, 2vw, 1.4rem); /* slightly smaller base */
 }
 
-/* Fine-tune smaller buttons */
-#wordcount-hint,
-#phrase1-hint1-btn,
-#phrase2-hint1-btn {
-  font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+
+
+/* SUBMIT BUTTON BLOCK */
+@media (min-width: 769px) {
+#submit-word,
+#clear-word {
+  position: fixed;
+  top: calc(40% + 200px);  
+  z-index: 800;
+  display: block;
 }
 
-/* Slightly smaller toggles if needed */
-.side-toggle {
-  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+/* SUBMIT BUTTON BLOCK */
+#submit-word {
+  left: 50%;
+  transform: translateX(-500px); 
 }
 
+/* CLEAR BUTTON BLOCK */
+#clear-word {
+  left: 50%;
+  transform: translateX(265px);  
+  }
 
-
+}
 
 .freckle-face-regular {
   font-family: "Freckle Face", system-ui;
@@ -953,27 +1007,17 @@ body.panel-open #backdrop {
   font-style: normal;
 }
 
-/* Current word uses Notable */
 #current-word-display {
-  font-family: "Notable", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: clamp(1.6rem, 3vw, 2.6rem);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding-top: 12px;
-}
-
-
-
-/* Bold and size the word */
-#current-word-display {
-  font-family: "Notable", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-  font-size: clamp(1.6rem, 3vw, 2.6rem);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(50% + 290px);
+    z-index: 800;
+    display: block;
+    text-align: center;
+    font-size: 2.9rem;
+    font-family: "Notable", sans-serif;
+    text-transform: uppercase;
 }
 
 /* overlay while board is building */
@@ -982,26 +1026,36 @@ body.panel-open #backdrop {
   min-height: 240px; /* so it doesn’t collapse while building */
 }
 
-#hex-grid.is-loading::before {
-  content: "Building board…";
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(14, 14, 14, 0.35);
-  backdrop-filter: blur(2px);
-  font-weight: 600;
-  color: #fff;
-  z-index: 10;
+#submit-word,
+#clear-word {
+  position: fixed;
+  top: calc(50% + 140px);
+  z-index: 900;
+
+  /* remove the big hex shape */
+  width: auto;
+  height: auto;
+  clip-path: none;
+  background: none;
+  border: none;
+  box-shadow: none;
+
+  /* text-only button */
+  font-family: "Notable";
+  font-weight: 900;
+  font-size: 2.6rem;
+  text-transform: uppercase;
+  color: #1b4965;
+  padding: 10px 18px; 
+
+  cursor: pointer;
+  transition: transform 120ms ease;
 }
 
-/* simple “tiles appear” animation after build */
-#hex-grid.is-built .tile {
-  opacity: 0;
-  animation: tile-pop 0.35s ease-out forwards;
+#submit-word:hover,
+#clear-word:hover {
+    color: #4cc9f0;
 }
-
 
 
 

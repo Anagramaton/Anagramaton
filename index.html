@@ -11,10 +11,20 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Coiny&family=Knewave&family=Limelight&family=Rubik+Iso&family=Freckle+Face&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Knewave&family=Notable&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Coiny&family=Knewave&family=Notable&display=swap" rel="stylesheet">
 
+<link href="https://fonts.googleapis.com/css2
+?family=Coiny
+&family=Knewave
+&family=Limelight
+&family=Rubik+Iso
+&family=Freckle+Face
+&family=Notable
+&family=Creepster
+&family=Rubik+Bubbles
+&family=Rubik+Dirt
+&family=Rubik+Vinyl
+&family=Turret+Road:wght@200;300;400;500;700;800
+&display=swap" rel="stylesheet">
 
   
   <link rel="stylesheet" href="style.css" />
@@ -24,35 +34,37 @@
 </head>
 
 <body>
-  
-  <h1 id="game-title">ANAGRAMATON</h1>
 
-  <main id="game-container">
-    <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000" aria-label="Letter hex grid"></svg>
-  </main>
+<button id="howto-open"
+        type="button"
+        aria-haspopup="dialog"
+        aria-controls="howto-modal"
+        aria-label="Open how to play">❓</button>
+<h1 id="game-title">ANAGRAMATON</h1>
+<main id="game-container">
+  <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000" aria-label="Letter hex grid"></svg>
 
-   <button id="howto-open"
-            type="button"
-            aria-haspopup="dialog"
-            aria-controls="howto-modal"
-            aria-label="Open how to play">?</button>
+<!-- Toggle buttons placed here -->
+<button id="toggle-left" class="side-toggle left-toggle" type="button" aria-controls="left-panel" aria-expanded="false" aria-label="Toggle word panel">
+  <span class="vword">WORD</span>
+  <span class="vword">PANEL</span>
+</button>
 
-  <div id="current-word-display">
+<button id="toggle-right" class="side-toggle right-toggle" type="button" aria-controls="right-panel" aria-expanded="false" aria-label="Toggle phrase panel">
+  <span class="vword">PHRASE</span>
+  <span class="vword">PANEL</span>
+</button>
+
+<span id="score-display">SCORE: 0</span>
+
+
+<div id="current-word-display">
   <span id="current-word"></span>
 </div>
 
-<span id="score-display">SCORE: 0</span>
-<span id="word-score-display">WORD SCORE: 0</span>
-
 <button id="submit-word" type="button">SUBMIT</button>
 <button id="clear-word" type="button">CLEAR</button>
-
-
-
-<button id="toggle-left" class="side-toggle left-toggle" type="button" aria-controls="left-panel" aria-expanded="false" aria-label="Toggle word panel">WORD PANEL</button>
-<button id="toggle-right" class="side-toggle right-toggle" type="button" aria-controls="right-panel" aria-expanded="false" aria-label="Toggle phrase panel">PHRASE PANEL</button>
-
-
+</main>
   <div id="backdrop" class="backdrop"></div>
 
   <!-- Left Panel -->
@@ -72,7 +84,7 @@
   <!-- Right Panel -->
   <aside id="right-panel" aria-labelledby="right-panel-title">
     <div class="panel-content">
-      <h2 id="right-panel-title">PHRASE FINDER PANEL</h2>
+      <h2 id="right-panel-title">PHRASE PANEL</h2>
 
       <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
         <span id="hints-used">HINTS: 3/3</span>

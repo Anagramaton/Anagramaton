@@ -1,84 +1,111 @@
 /* ================================
    Mobile Layout Overrides
    ================================ */
+@media (max-width: 768px) {
+    #game-container {
+    background-color: #f4f6f8; /* light background behind grid */
 
-  .side-toggle {
+    background-image:
+      linear-gradient(#d0d4d8 1px, transparent 1px),
+      linear-gradient(90deg, #d0d4d8 1px, transparent 1px);
+
+        background-size: 24px 24px; /* half the current grid size */
+    background-position: center center; /* keeps grid aligned nicely */
+  }
+
+  html, body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;          /* disable all scrolling */
+    touch-action: none;        /* stop panning and zoom gestures */
+    overscroll-behavior: none; /* prevent iOS/Android bounce */
+  }
+}
+
+
+
+.side-toggle {
     position: fixed;
     writing-mode: initial;
     text-orientation: initial;
-    width: min(38vw, 140px);
-    height: min(10vh, 60px);
-    padding: 0.65em 1.1em;
-    font-size: 0.9rem;
-    border-radius: 30px;
+    width: auto;
+    height: auto;
+    padding: 0;
     border: none;
-    font-weight: 700;
-    color: #fff;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    font-family: 'Coiny', cursive;
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: #000;
     cursor: pointer;
-    background: #2749b0;
-    box-shadow: 0 4px 0 #1c337c;
-    top: 120px;
-    transition: all 0.15s ease;
-    letter-spacing: 0.02em;
-  }
-
-  /* Word panel toggle — royal blue, flat, no neon */
-  .left-toggle {
-    background: #2749b0;
-    box-shadow: 0 4px 0 #1c337c;
-  }
-  .left-toggle:hover {
-    background: #3158c4;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 0 #1c337c;
-  }
-  .left-toggle:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 #1c337c;
-  }
-  .right-toggle {
     top: 80px;
-    right: 0;
+    letter-spacing: 0.02em;
+    transition: all 0.15s ease;
+}
+
+.left-toggle {
+    background: transparent;
+    box-shadow: none;
+}
+.left-toggle:hover {
+    background: transparent;
     transform: none;
-  }
+    box-shadow: none;
+    text-decoration: underline;  
+}
+.left-toggle:active {
+    transform: none;
+    box-shadow: none;
+}
+
 
 
 
 
 
 @media (max-width: 768px) {
-  /* Help ("?") button — flat royal blue, matches toggles */
+
+  /* HOW-TO BUTTON styled like panel text buttons */
   #howto-open {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: fixed;
-    right: 10px;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    font-weight: 800;
+    top: 5px;
+    right: .05px;
+    z-index: 800;
+
+    background: none;
     border: none;
-    background: #2749b0;
-    color: #fff;
-    box-shadow: 0 4px 0 #1c337c;
+    box-shadow: none;
+
+    width: auto;
+    height: auto;
+    padding: 0;
+
+    /* remove font influence */
+    font-family: initial;
+    font-weight: initial;
+    font-size: 20px;    /* size of the icon */
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+
+    color: #000;        /* matches WORD PANEL text */
     cursor: pointer;
-    transition: all 0.15s ease;
-    z-index: 900;
   }
 
   #howto-open:hover {
-    background: #3158c4;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 0 #1c337c;
+    opacity: 0.7;
   }
 
   #howto-open:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 #1c337c;
+    opacity: 0.45;
   }
 }
+
+
 
 
 @media (max-width: 768px) {
@@ -166,9 +193,83 @@
   }
 }
 
+  @media (max-width: 768px) {
+  #score-display {
+    position: fixed;
+    top: 100px;              /* below the title, above the grid */
+    left: 47%;
+    transform: translateX(-50%);
+    z-index: 800;          /* under the title, above the grid */
+    display: block;
+    text-align: center;
+    font-size: 24px;
+  }
+}
+  @media (max-width: 768px) {
+  #current-word-display {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(50% + 140px);
+    z-index: 800;
+    display: block;
+    text-align: center;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  #submit-word {
+    position: fixed;
+    top: calc(50% + 255px); 
+    left: calc(50% - 105px); 
+    transform: translateX(-50%);
+    z-index: 800;
+    background: none;
+    border: none;
+    box-shadow: none;
+    font-family: 'Limelight', sans-serif;
+    font-size: 2.00rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #000;
+    padding: 0;
+    margin: 0;
+  }
+  #submit-word:active {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 768px) {
+  #clear-word {
+    position: fixed;
+    top: calc(50% + 255px); 
+    right: calc(50% - 220px); 
+    transform: translateX(-50%);
+    z-index: 800;
+    background: none;
+    border: none;
+    box-shadow: none;
+    font-family: 'Limelight', sans-serif;
+    font-size: 2.00rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #000;
+    padding: 0;
+    margin: 0;
+  }
+  #clear-word:active {
+    opacity: 0.6;
+  }
+}
+
+
 @media (max-width: 768px) {
   #hex-grid {
-    margin-top: -40px; /* raise it, adjust as needed */
+    margin-top: -40px; 
   }
 }
 
@@ -338,6 +439,26 @@
     box-shadow: 0 6px 18px rgba(249, 115, 22, 0.3);
   }
 }
+
+@media (max-width: 768px) {
+  #game-title {
+    position: fixed;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 800;
+    margin: 0;
+
+    font-size: 2.7rem;   /* ← adjust this number */
+    letter-spacing: 0.04em;
+  }
+}
+
+
+
+
+
+
 
 
 

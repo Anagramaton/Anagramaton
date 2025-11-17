@@ -124,31 +124,3 @@
   margin: 0 10px;
 }
 
-/* --- 5. Open button (floating trigger) --- */
-#howto-open {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #a9e7ff;
-  border: 2px solid #28f0ff;
-  background: transparent;
-  box-shadow: inset 0 0 6px #28f0ff,
-              0 0 8px #28f0ff55;
-  cursor: pointer;
-  z-index: 900; /* stays above panels */
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
-}
-
-#howto-open:hover {
-  transform: scale(1.1);
-  box-shadow: inset 0 0 8px #28f0ff,
-              0 0 12px #28f0ff99;
-}
