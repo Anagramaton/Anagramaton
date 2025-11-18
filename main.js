@@ -479,6 +479,7 @@ document.getElementById('new-game')?.addEventListener('click', () => {
 
 
 
+// MOBILE-ONLY: swipe selection + per-tile sounds
 if (window.matchMedia('(max-width: 768px)').matches) {
   let dragging = false;
   let lastTile = null;
@@ -486,45 +487,71 @@ if (window.matchMedia('(max-width: 768px)').matches) {
 
   const hex = document.getElementById('hex-grid');
   if (hex) {
+
+    // 1) Swallow click events on tiles so the desktop click handler
+    //    doesn't fire on top of the swipe logic on mobile.
+    hex.addEventListener('click', (e) => {
+      const tile = e.target.closest('.tile');
+      if (!tile) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true); // capture: intercept before tile's own listener
+
     const startDrag = (e) => {
+      e.preventDefault();
+
       const el = e.target.closest('.tile');
       if (!el) return;
 
-      // Clear any previous selection (DOM + state + sounds)
+      // Clear previous selection + reset sounds for a new word
       clearCurrentSelection();
 
       dragging = true;
       lastTile = null;
       visitedTiles = new Set();
-
-      // Start a new selection for this swipe
       gameState.selectedTiles = [];
 
-      hex.setPointerCapture(e.pointerId);
+      try {
+        hex.setPointerCapture(e.pointerId);
+      } catch (_) {}
 
-      // Use the normal click handler so swipe behaves like tapping
-      const tileKey = el.getAttribute('data-key') || el.id;
+      // Resolve a stable key for this tile (mobile use)
+      let tileKey = el.getAttribute('data-key') || el.id;
+      if (!tileKey) {
+        const poly = el.querySelector('.hex-tile');
+        if (poly) {
+          tileKey = poly.getAttribute('data-key') || poly.id;
+        }
+      }
+      if (!tileKey) return;
+
       const tileObj = el.tileObject;
       if (!tileObj) return;
 
       visitedTiles.add(tileKey);
       handleTileClick(tileObj);
-      console.log("Added tile object (startDrag):", tileObj); // <--- LOG HERE
+      console.log('Added tile object (startDrag):', tileObj);
 
-      // Keep UI in sync (word preview + 'selection:changed' listeners)
       window.dispatchEvent(new Event('selection:changed'));
     };
 
-    
-
-
     const moveDrag = (e) => {
       if (!dragging) return;
+      e.preventDefault();
+
       const hit = document.elementFromPoint(e.clientX, e.clientY);
       const tile = hit && hit.closest('.tile');
       if (!tile) return;
 
-      const tileKey = tile.getAttribute('data-key') || tile.id;
+      // Resolve a stable key for this tile (mobile use)
+      let tileKey = tile.getAttribute('data-key') || tile.id;
+      if (!tileKey) {
+        const poly = tile.querySelector('.hex-tile');
+        if (poly) {
+          tileKey = poly.getAttribute('data-key') || poly.id;
+        }
+      }
+      if (!tileKey) return;
       if (visitedTiles.has(tileKey)) return;
 
       const tileObj = tile.tileObject;
@@ -533,21 +560,21 @@ if (window.matchMedia('(max-width: 768px)').matches) {
       visitedTiles.add(tileKey);
       lastTile = tile;
 
-      // Reuse the normal click handler for adjacency + sounds + preview
       handleTileClick(tileObj);
-      console.log("Added tile object (moveDrag):", tileObj); // <--- LOG HERE
+      console.log('Added tile object (moveDrag):', tileObj);
 
       window.dispatchEvent(new Event('selection:changed'));
     };
-
-    
 
     const endDrag = (e) => {
       if (!dragging) return;
       dragging = false;
       lastTile = null;
       visitedTiles = new Set();
-      try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
+
+      try {
+        hex.releasePointerCapture(e.pointerId);
+      } catch (_) {}
     };
 
     hex.addEventListener('pointerdown', startDrag);
@@ -555,9 +582,11 @@ if (window.matchMedia('(max-width: 768px)').matches) {
     hex.addEventListener('pointerup', endDrag);
     hex.addEventListener('pointercancel', endDrag);
 
+    // Mobile: let hex-grid fully handle touch gestures
     hex.style.touchAction = 'none';
   }
 }
+
 
 
 

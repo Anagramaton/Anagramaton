@@ -124,7 +124,6 @@ export function createTile({
     }
   };
 
-  g.tileObject = tile;
 
 
   return tile;
