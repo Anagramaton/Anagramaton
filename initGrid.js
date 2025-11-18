@@ -28,31 +28,16 @@ const tileSounds = [
   new Audio('sounds/note6.mp3'),
   new Audio('sounds/note7.mp3'),
   new Audio('sounds/note8.mp3'),
-  new Audio('sounds/note9.mp3')
+  new Audio('sounds/note9.mp3'),
 ];
-
-window.tileSounds = tileSounds;
 
 const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
 function playNextTileSound() {
   if (!isMobile) return;               // only play sounds on mobile
-
-  const sound = tileSounds[currentSoundIndex];
-  if (!sound) return;
-
-  try {
-    sound.currentTime = 0;
-  } catch (_) {}
-
-  sound.play().catch(() => {});
-
+  tileSounds[currentSoundIndex].cloneNode().play();
   if (currentSoundIndex < tileSounds.length - 1) {
     currentSoundIndex++;
-  } else {
-    // Last sound (note9.mp3) has just played; move index past the end
-    // so further calls in this swipe are silent until resetTileSoundSequence()
-    currentSoundIndex = tileSounds.length;
   }
 }
 
@@ -60,11 +45,6 @@ function resetTileSoundSequence() {
   if (!isMobile) return;               // only reset sequence on mobile
   currentSoundIndex = 0;
 }
-
-// expose for mobile swipe handlers in main.js
-window.playNextTileSound = playNextTileSound;
-window.resetTileSoundSequence = resetTileSoundSequence;
-
 
 
 
@@ -165,7 +145,6 @@ export function handleTileClick(tile) {
       }
     } else {
       console.warn("Tried to deselect non-last tile");
-      playAlertSound();
       alert('❌ You can only deselect the most recently selected tile.');
       tile.element.classList.add('selected');
     }
@@ -237,4 +216,21 @@ export function initializeGrid() {
   }
 
   console.log(`[initializeGrid] call #${__initCount} — finished`);
+}
+
+// Mobile-only: unlock tile note sounds on first user interaction
+if (isMobile) {
+  window.addEventListener('pointerdown', function unlockTileSounds() {
+    const prime = (audio) => {
+      audio.play()
+        .then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        })
+        .catch(() => {});
+    };
+
+    tileSounds.forEach(prime);
+    window.removeEventListener('pointerdown', unlockTileSounds);
+  }, { once: true });
 }

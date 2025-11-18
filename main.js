@@ -1,6 +1,7 @@
 
+
 // main.js
-import { initializeGrid, handleTileClick, clearCurrentSelection } from './initGrid.js';
+import { initializeGrid } from './initGrid.js';
 import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';
 import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
 import { gameState } from './gameState.js';
@@ -29,8 +30,7 @@ function playAlertSound() {
 window.playAlertSound = playAlertSound;
 
 // --- SUBMIT-LIST CELEBRATION SOUND ---
-const submitListSound = new Audio('sounds/zapsplat_magic_wand_ascend_spell_beeps_12528 (2).mp3');
-
+const submitListSound = new Audio('sounds/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
 
 function playSubmitListSound() {
   try {
@@ -39,38 +39,14 @@ function playSubmitListSound() {
   submitListSound.play().catch(() => {});
 }
 
-// cache tile sounds that initGrid.js attached to window
-const allNoteSounds = Array.isArray(window.tileSounds) ? window.tileSounds : [];
 
 
-// --- UNLOCK ALERT + TILE + SUBMIT SOUNDS ON FIRST TOUCH/CLICK ---
 window.addEventListener('pointerdown', function unlockAudio() {
   const prime = (audio) => {
-    if (!audio) return;
-
-    const prevMuted  = audio.muted;
-    const prevVolume = audio.volume;
-
-    audio.muted  = true;
-    audio.volume = 0;
-
-    const restore = () => {
+    audio.play().then(() => {
       audio.pause();
       audio.currentTime = 0;
-      audio.muted  = prevMuted;
-      audio.volume = prevVolume;
-    };
-
-    const p = audio.play();
-    if (p && typeof p.then === 'function') {
-      p.then(restore).catch(() => {
-        // even if play fails, restore original settings
-        audio.muted  = prevMuted;
-        audio.volume = prevVolume;
-      });
-    } else {
-      restore();
-    }
+    }).catch(() => {});
   };
 
   // prime alert sound
@@ -78,9 +54,6 @@ window.addEventListener('pointerdown', function unlockAudio() {
 
   // prime submit-list celebration sound
   prime(submitListSound);
-
-  // prime each tile note (the originals we now reuse)
-  allNoteSounds.forEach(prime);
 
   window.removeEventListener('pointerdown', unlockAudio);
 }, { once: true });
@@ -477,104 +450,36 @@ document.getElementById('new-game')?.addEventListener('click', () => {
   });
 });
 
-
-
-// MOBILE-ONLY: swipe selection + per-tile sounds
 if (window.matchMedia('(max-width: 768px)').matches) {
-  let dragging = false;
-  let lastTile = null;
-  let visitedTiles = new Set();
-
   const hex = document.getElementById('hex-grid');
   if (hex) {
+    let dragging = false;
+    let lastTile = null;
 
-    // 1) Swallow click events on tiles so the desktop click handler
-    //    doesn't fire on top of the swipe logic on mobile.
-    hex.addEventListener('click', (e) => {
-      const tile = e.target.closest('.tile');
-      if (!tile) return;
-      e.preventDefault();
-      e.stopPropagation();
-    }, true); // capture: intercept before tile's own listener
+const startDrag = (e) => {
+  const el = e.target.closest('.tile');
+  if (!el) return;
+  dragging = true;
+  lastTile = null;
 
-    const startDrag = (e) => {
-      e.preventDefault();
+  hex.setPointerCapture(e.pointerId);
+};
 
-      const el = e.target.closest('.tile');
-      if (!el) return;
-
-      // Clear previous selection + reset sounds for a new word
-      clearCurrentSelection();
-
-      dragging = true;
-      lastTile = null;
-      visitedTiles = new Set();
-      gameState.selectedTiles = [];
-
-      try {
-        hex.setPointerCapture(e.pointerId);
-      } catch (_) {}
-
-      // Resolve a stable key for this tile (mobile use)
-      let tileKey = el.getAttribute('data-key') || el.id;
-      if (!tileKey) {
-        const poly = el.querySelector('.hex-tile');
-        if (poly) {
-          tileKey = poly.getAttribute('data-key') || poly.id;
-        }
-      }
-      if (!tileKey) return;
-
-      const tileObj = el.tileObject;
-      if (!tileObj) return;
-
-      visitedTiles.add(tileKey);
-      handleTileClick(tileObj);
-      console.log('Added tile object (startDrag):', tileObj);
-
-      window.dispatchEvent(new Event('selection:changed'));
-    };
 
     const moveDrag = (e) => {
       if (!dragging) return;
-      e.preventDefault();
-
       const hit = document.elementFromPoint(e.clientX, e.clientY);
-      const tile = hit && hit.closest('.tile');
-      if (!tile) return;
-
-      // Resolve a stable key for this tile (mobile use)
-      let tileKey = tile.getAttribute('data-key') || tile.id;
-      if (!tileKey) {
-        const poly = tile.querySelector('.hex-tile');
-        if (poly) {
-          tileKey = poly.getAttribute('data-key') || poly.id;
-        }
-      }
-      if (!tileKey) return;
-      if (visitedTiles.has(tileKey)) return;
-
-      const tileObj = tile.tileObject;
-      if (!tileObj) return;
-
-      visitedTiles.add(tileKey);
+      const tile = hit && hit.closest('.tile'); // fixed line
+      if (!tile || tile === lastTile) return;
       lastTile = tile;
-
-      handleTileClick(tileObj);
-      console.log('Added tile object (moveDrag):', tileObj);
-
-      window.dispatchEvent(new Event('selection:changed'));
+      tile.dispatchEvent(new PointerEvent('click', { bubbles: true }));
     };
 
     const endDrag = (e) => {
       if (!dragging) return;
       dragging = false;
       lastTile = null;
-      visitedTiles = new Set();
-
-      try {
-        hex.releasePointerCapture(e.pointerId);
-      } catch (_) {}
+      try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
     };
 
     hex.addEventListener('pointerdown', startDrag);
@@ -582,7 +487,6 @@ if (window.matchMedia('(max-width: 768px)').matches) {
     hex.addEventListener('pointerup', endDrag);
     hex.addEventListener('pointercancel', endDrag);
 
-    // Mobile: let hex-grid fully handle touch gestures
     hex.style.touchAction = 'none';
   }
 }
