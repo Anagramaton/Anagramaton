@@ -308,6 +308,71 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeGrid();
   
 
+    // Enable mobile swipe selection AFTER the grid exists
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    const hex = document.getElementById('hex-grid');
+    if (hex) {
+      let dragging = false;
+      let lastTile = null;
+
+      const getTileFromEvent = (e) => {
+        const target = e.target instanceof Element ? e.target : null;
+        return target ? target.closest('.tile') : null;
+      };
+
+      const startDrag = (e) => {
+        // Only care about touch / pen input
+        if (e.pointerType && e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+
+        const el = getTileFromEvent(e);
+        if (!el) return;
+
+        dragging = true;
+        lastTile = null;
+
+        // Select the tile we started on
+        el.click();
+
+        if (hex.setPointerCapture) {
+          try { hex.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+
+      const moveDrag = (e) => {
+        if (!dragging) return;
+
+        const hit = document.elementFromPoint(e.clientX, e.clientY);
+        const tile = hit && hit.closest('.tile');
+        if (!tile || tile === lastTile) return;
+
+        lastTile = tile;
+
+        // Trigger the same click handler as taps
+        tile.click();
+      };
+
+      const endDrag = (e) => {
+        if (!dragging) return;
+
+        dragging = false;
+        lastTile = null;
+
+        if (hex.releasePointerCapture) {
+          try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+
+      hex.addEventListener('pointerdown', startDrag);
+      hex.addEventListener('pointermove', moveDrag);
+      hex.addEventListener('pointerup', endDrag);
+      hex.addEventListener('pointercancel', endDrag);
+
+      hex.style.touchAction = 'none';
+    }
+  }
+
+
+
   // --- Right panel visibility based on mode ---
   if (gameState.mode === 'daily') {
     initPhrasePanelEvents();
@@ -450,46 +515,7 @@ document.getElementById('new-game')?.addEventListener('click', () => {
   });
 });
 
-if (window.matchMedia('(max-width: 768px)').matches) {
-  const hex = document.getElementById('hex-grid');
-  if (hex) {
-    let dragging = false;
-    let lastTile = null;
 
-const startDrag = (e) => {
-  const el = e.target.closest('.tile');
-  if (!el) return;
-  dragging = true;
-  lastTile = null;
-
-  hex.setPointerCapture(e.pointerId);
-};
-
-
-    const moveDrag = (e) => {
-      if (!dragging) return;
-      const hit = document.elementFromPoint(e.clientX, e.clientY);
-      const tile = hit && hit.closest('.tile'); // fixed line
-      if (!tile || tile === lastTile) return;
-      lastTile = tile;
-      tile.dispatchEvent(new PointerEvent('click', { bubbles: true }));
-    };
-
-    const endDrag = (e) => {
-      if (!dragging) return;
-      dragging = false;
-      lastTile = null;
-      try { hex.releasePointerCapture(e.pointerId); } catch (_) {}
-    };
-
-    hex.addEventListener('pointerdown', startDrag);
-    hex.addEventListener('pointermove', moveDrag);
-    hex.addEventListener('pointerup', endDrag);
-    hex.addEventListener('pointercancel', endDrag);
-
-    hex.style.touchAction = 'none';
-  }
-}
 
 
 

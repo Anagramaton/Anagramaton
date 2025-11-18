@@ -6,49 +6,13 @@ import { GRID_RADIUS } from './constants.js';
 import { areAxialNeighbors } from './utils.js';
 import { isValidWord } from './gameLogic.js';
 
-
-
 export const DOM = {
   svg: document.getElementById('hex-grid'),
   wordList: document.getElementById('word-list'),
 };
 
-
 export let tileElements = [];
 export let grid;
-
-let currentSoundIndex = 0;
-
-const tileSounds = [
-  new Audio('sounds/note1.mp3'),
-  new Audio('sounds/note2.mp3'),
-  new Audio('sounds/note3.mp3'),
-  new Audio('sounds/note4.mp3'),
-  new Audio('sounds/note5.mp3'),
-  new Audio('sounds/note6.mp3'),
-  new Audio('sounds/note7.mp3'),
-  new Audio('sounds/note8.mp3'),
-  new Audio('sounds/note9.mp3'),
-];
-
-const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-function playNextTileSound() {
-  if (!isMobile) return;               // only play sounds on mobile
-  tileSounds[currentSoundIndex].cloneNode().play();
-  if (currentSoundIndex < tileSounds.length - 1) {
-    currentSoundIndex++;
-  }
-}
-
-function resetTileSoundSequence() {
-  if (!isMobile) return;               // only reset sequence on mobile
-  currentSoundIndex = 0;
-}
-
-
-
-
 
 // ============================================================================
 // UI Helpers
@@ -90,11 +54,6 @@ function updateWordPreview() {
   }
 }
 
-
-
-
-
-
 export function clearCurrentSelection() {
   const selectedTiles = gameState.selectedTiles || [];
   selectedTiles.forEach(tile => {
@@ -110,16 +69,11 @@ export function clearCurrentSelection() {
   document.querySelectorAll('.valid-shimmer').forEach(el => {
     el.classList.remove('valid-shimmer');
   });
-
-  resetTileSoundSequence(); // <-- Add this line here
 }
-
-
 
 // ============================================================================
 // Event Handlers
 // ============================================================================
-
 
 export function handleTileClick(tile) {
   if (!Array.isArray(gameState.selectedTiles)) {
@@ -127,39 +81,27 @@ export function handleTileClick(tile) {
   }
   const selectedTiles = gameState.selectedTiles;
 
-  // --- If tile already selected.
+  // --- If tile already selected...
   if (selectedTiles.includes(tile)) {
-    // allow deselect only if it's the last selected (stack pop)
+    // ...allow deselect only if it's the last selected (stack pop)
     if (tile === selectedTiles[selectedTiles.length - 1]) {
       selectedTiles.pop();
       tile.element.classList.remove('selected');
       updateWordPreview();
-
-      // keep sound index matched to selection length on mobile
-      if (isMobile) {
-        if (selectedTiles.length === 0) {
-          resetTileSoundSequence();
-        } else if (currentSoundIndex > 0) {
-          currentSoundIndex--;
-        }
-      }
     } else {
-      console.warn("Tried to deselect non-last tile");
+      console.warn('Tried to deselect non-last tile');
       alert('❌ You can only deselect the most recently selected tile.');
       tile.element.classList.add('selected');
     }
     return;
   }
 
-
   // --- If this is the first selection
   if (selectedTiles.length === 0) {
-    console.log("Selecting first tile");
+    console.log('Selecting first tile');
     tile.element.classList.add('selected');
     selectedTiles.push(tile);
     updateWordPreview();
-    resetTileSoundSequence();   // start sequence for this swipe
-    playNextTileSound();
     return;
   }
 
@@ -176,15 +118,11 @@ export function handleTileClick(tile) {
   tile.element.classList.add('selected');
   selectedTiles.push(tile);
   updateWordPreview();
-  playNextTileSound();
 }
-
-
 
 // ============================================================================
 // Initialization
 // ============================================================================
-
 
 let __initCount = 0;
 
@@ -201,11 +139,7 @@ export function initializeGrid() {
 
   gameState.grid = grid;
 
-  console.log('[initializeGrid] before renderGrid');
   renderGrid(grid, DOM.svg, tileElements, handleTileClick, GRID_RADIUS);
-  console.log('[initializeGrid] after renderGrid');
-  console.log('[initializeGrid] tiles=', tileElements.length, 'svg size=', DOM.svg?.clientWidth, 'x', DOM.svg?.clientHeight);
-
 
   gameState.allTiles = tileElements;
 
@@ -216,21 +150,4 @@ export function initializeGrid() {
   }
 
   console.log(`[initializeGrid] call #${__initCount} — finished`);
-}
-
-// Mobile-only: unlock tile note sounds on first user interaction
-if (isMobile) {
-  window.addEventListener('pointerdown', function unlockTileSounds() {
-    const prime = (audio) => {
-      audio.play()
-        .then(() => {
-          audio.pause();
-          audio.currentTime = 0;
-        })
-        .catch(() => {});
-    };
-
-    tileSounds.forEach(prime);
-    window.removeEventListener('pointerdown', unlockTileSounds);
-  }, { once: true });
 }
