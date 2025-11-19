@@ -43,21 +43,28 @@ function playSubmitListSound() {
 
 window.addEventListener('pointerdown', function unlockAudio() {
   const prime = (audio) => {
+    // mute while priming to avoid audible "pop"
+    const wasMuted = audio.muted;
+    audio.muted = true;
     audio.play().then(() => {
       audio.pause();
       audio.currentTime = 0;
-    }).catch(() => {});
+      // restore mute state
+      audio.muted = wasMuted;
+    }).catch(() => {
+      // restore mute state on failure
+      audio.muted = wasMuted;
+    });
   };
 
-  // prime alert sound
+  // prime alert sound silently
   prime(alertSound);
 
-  // prime submit-list celebration sound
+  // prime submit-list celebration sound silently
   prime(submitListSound);
 
   window.removeEventListener('pointerdown', unlockAudio);
 }, { once: true });
-
 
 
 

@@ -325,7 +325,7 @@ function attachSwipeHandlers(svg) {
     evt.preventDefault();
 
     // capture pointer on the svg so we keep receiving move/up
-    try { evt.target.setPointerCapture(evt.pointerId); } catch (_) {}
+    try { svg.setPointerCapture(evt.pointerId); } catch (_) {}
 
     // clear previous selection and select initial tile
     clearCurrentSelection();
@@ -380,7 +380,7 @@ function attachSwipeHandlers(svg) {
     __dragPointerId = null;
     __lastHoveredTileEl = null;
 
-    try { evt.target.releasePointerCapture?.(evt.pointerId); } catch (_) {}
+    try { svg.releasePointerCapture?.(evt.pointerId); } catch (_) {}
 
     // hide tail but keep indicator showing the final path briefly (or clear immediately)
     // Clear immediately for a clean stop:
