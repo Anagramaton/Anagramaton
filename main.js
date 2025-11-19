@@ -18,60 +18,6 @@ const _params = new URLSearchParams(typeof location !== 'undefined' ? location.s
 gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
 // (no new imports needed; you already import gameState above)
 
-// --- ALERT SOUND ---
-const alertSound = new Audio('sounds/alert.mp3');
-
-function playAlertSound() {
-  alertSound.currentTime = 0;
-  alertSound.play();
-}
-
-
-window.playAlertSound = playAlertSound;
-
-// --- SUBMIT-LIST CELEBRATION SOUND ---
-const submitListSound = new Audio('sounds/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
-
-function playSubmitListSound() {
-  try {
-    submitListSound.currentTime = 0;
-  } catch (_) {}
-  submitListSound.play().catch(() => {});
-}
-
-
-
-window.addEventListener('pointerdown', function unlockAudio() {
-  const prime = (audio) => {
-    // mute while priming to avoid audible "pop"
-    const wasMuted = audio.muted;
-    audio.muted = true;
-    audio.play().then(() => {
-      audio.pause();
-      audio.currentTime = 0;
-      // restore mute state
-      audio.muted = wasMuted;
-    }).catch(() => {
-      // restore mute state on failure
-      audio.muted = wasMuted;
-    });
-  };
-
-  // prime alert sound silently
-  prime(alertSound);
-
-  // prime submit-list celebration sound silently
-  prime(submitListSound);
-
-  window.removeEventListener('pointerdown', unlockAudio);
-}, { once: true });
-
-
-
-
-
-
-
 
 // ------------------------------------------------------------
 // Score state
@@ -160,13 +106,11 @@ function handleSubmitWordClick() {
 
   // Capacity + duplicate guards
   if (submittedWords.size >= 10) {
-    playAlertSound();
     alert('❌ You can only keep 10 words in your list at a time.');
     resetSelectionState();
     return;
   }
   if (submittedWords.has(word)) {
-    playAlertSound();
     alert(`❌ You've already submitted "${word}".`);
     resetSelectionState();
     return;
@@ -230,8 +174,7 @@ async function handleSubmitList() {
   const count = (gameState.words || []).length;
   if (count !== 10) return;
 
-  // play celebration sound when the list is successfully submitted
-  playSubmitListSound();
+
 
   const words = (gameState.words || []).map(w => String(w.word || '').toUpperCase());
   gameState.listLocked = true;

@@ -900,32 +900,6 @@ body.right-open .right-toggle {
 
 
 
-/* =====================================
-   SELECTED TILE — match cyan T look
-   ===================================== */
-.selected .hex-tile,
-.selected .hex-tile.reuse-1,
-.selected .hex-tile.reuse-2,
-.selected .hex-tile.reuse-3 {
-  fill: #4cc9f0 !important;   /* cyan fill */
-  stroke: #333 !important;    /* dark gray stroke like T */
-}
-
-/* keep the ring gap neutral gray */
-.selected path:first-child {
-  fill: #333 !important;
-  stroke: #333 !important;
-}
-
-/* white letters and numbers */
-.selected .tile-letter,
-.selected .tile-point {
-  fill: #ffffff !important;
-  font-weight: 800;
-}
-
-
-
 
 /* === FONT CLASSES (optional if you use them directly) === */
 .limelight-regular {
