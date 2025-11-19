@@ -196,10 +196,10 @@
   @media (max-width: 768px) {
   #score-display {
     position: fixed;
-    top: 100px;              /* below the title, above the grid */
+    top: 120px;             
     left: 47%;
     transform: translateX(-50%);
-    z-index: 800;          /* under the title, above the grid */
+    z-index: 800;          
     display: block;
     text-align: center;
     font-size: 24px;
@@ -210,7 +210,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: calc(50% + 180px);
+    top: calc(50% + 200px);
     z-index: 800;
     display: block;
     text-align: center;
@@ -222,7 +222,7 @@
 @media (max-width: 768px) {
   #submit-word {
     position: fixed;
-    top: calc(50% + 255px); 
+    top: calc(50% + 275px); 
     left: calc(50% - 105px); 
     transform: translateX(-50%);
     z-index: 800;
@@ -246,7 +246,7 @@
 @media (max-width: 768px) {
   #clear-word {
     position: fixed;
-    top: calc(50% + 255px); 
+    top: calc(50% + 275px); 
     right: calc(50% - 220px); 
     transform: translateX(-50%);
     z-index: 800;
