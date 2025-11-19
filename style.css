@@ -988,11 +988,7 @@ body.right-open .right-toggle {
 }
 
 
-/* overlay while board is building */
-#hex-grid.is-loading {
-  position: relative;
-  min-height: 240px; /* so it doesn’t collapse while building */
-}
+
 
 #submit-word,
 #clear-word {
@@ -1025,9 +1021,7 @@ body.right-open .right-toggle {
     color: #4cc9f0;
 }
 
-#hex-grid {
-  touch-action: none;
-}
+
 
 .puff-out-hor {
   -webkit-animation: puff-out-hor 1.3s cubic-bezier(0.165, 0.840, 0.440, 1.000) both;
