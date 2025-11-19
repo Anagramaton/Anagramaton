@@ -264,7 +264,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   
   initializeGrid();
-  
+  // --- Drag word auto-submit for mobile ---
+  window.addEventListener('drag:word:ready', () => {
+    if (!gameState.listLocked && (gameState.selectedTiles || []).length >= 4) {
+      handleSubmitWordClick();
+    }
+  });
+
+  // (optional tip)
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    setTimeout(() => {
+      alert("Tip: Drag your finger across tiles to make words!");
+    }, 600);
+  }
 
     
 

@@ -772,7 +772,7 @@ body.right-open .right-toggle {
   stroke: none;
 }
 
-/* add this next */
+
 .selected .hex-tile {
   fill: #4cc9f0;
   stroke: #000;
@@ -788,8 +788,7 @@ body.right-open .right-toggle {
 }
 
 
-@media (hover: hover) and (pointer: fine) {
-  /* ==== Hover Accent (desktop only) ==== */
+
   .tile:hover .hex-tile {
     fill: #222;
     stroke: #ffcc00;
@@ -802,7 +801,7 @@ body.right-open .right-toggle {
     fill: #ffcc00;
     transition: fill 160ms ease;
   }
-}
+
 
 
 
@@ -898,10 +897,6 @@ body.right-open .right-toggle {
 }
 
 
-
-
-
-/* === FONT CLASSES (optional if you use them directly) === */
 .limelight-regular {
   font-family: "Limelight", sans-serif;
   font-weight: 400;
@@ -931,10 +926,6 @@ body.right-open .right-toggle {
 
 
 
-
-
-
-/* Base Coiny font for all buttons and toggles */
 .side-toggle,
 #right-panel button,
 #left-panel #submit-list,
@@ -946,7 +937,7 @@ body.right-open .right-toggle {
   font-style: normal;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-size: clamp(1rem, 2vw, 1.4rem); /* slightly smaller base */
+  font-size: clamp(1rem, 2vw, 1.4rem);
 }
 
 
@@ -1009,7 +1000,7 @@ body.right-open .right-toggle {
   top: calc(50% + 140px);
   z-index: 900;
 
-  /* remove the big hex shape */
+  
   width: auto;
   height: auto;
   clip-path: none;
@@ -1017,7 +1008,7 @@ body.right-open .right-toggle {
   border: none;
   box-shadow: none;
 
-  /* text-only button */
+  
   font-family: "Notable";
   font-weight: 900;
   font-size: 2.6rem;
@@ -1032,6 +1023,10 @@ body.right-open .right-toggle {
 #submit-word:hover,
 #clear-word:hover {
     color: #4cc9f0;
+}
+
+#hex-grid {
+  touch-action: none;
 }
 
 .puff-out-hor {
