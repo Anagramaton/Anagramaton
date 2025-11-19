@@ -214,7 +214,8 @@
     z-index: 800;
     display: block;
     text-align: center;
-    font-size: 24px;
+    font-size: clamp(1.2rem, 8vw, 2.4rem);
+    font-family: "Notable";
   }
 }
 

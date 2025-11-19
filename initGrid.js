@@ -128,14 +128,14 @@ let __initCount = 0;
 
 export function initializeGrid() {
   __initCount++;
-  console.log(`[initializeGrid] call #${__initCount} — starting`);
+
 
   gameState.totalScore = 0;
   tileElements.length = 0;
 
-  console.log('[initializeGrid] before generateSeededBoard');
+
   grid = generateSeededBoard(GRID_RADIUS, gameState);
-  console.log('[initializeGrid] after generateSeededBoard');
+  
 
   gameState.grid = grid;
 
@@ -149,5 +149,5 @@ export function initializeGrid() {
     clearButton.dataset.listener = 'true';
   }
 
-  console.log(`[initializeGrid] call #${__initCount} — finished`);
+
 }
