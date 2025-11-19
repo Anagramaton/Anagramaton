@@ -210,7 +210,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: calc(50% + 140px);
+    top: calc(50% + 180px);
     z-index: 800;
     display: block;
     text-align: center;
