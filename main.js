@@ -26,7 +26,7 @@ function playAlertSound() {
   alertSound.play();
 }
 
-// make it callable from other modules (scoreLogic, initGrid, etc.)
+
 window.playAlertSound = playAlertSound;
 
 // --- SUBMIT-LIST CELEBRATION SOUND ---
@@ -151,7 +151,6 @@ function handleSubmitWordClick() {
   const selectedTiles = gameState.selectedTiles || [];
   const word = selectedTiles.map(t => t.letter).join('').toUpperCase();
 
-
   // Capacity + duplicate guards
   if (submittedWords.size >= 10) {
     playAlertSound();
@@ -180,31 +179,40 @@ function handleSubmitWordClick() {
     resetSelectionState();
     return;
   }
+
   const { li, removeBtn } = result;
 
   // Track with same tile objects
   gameState.words.push({ word, tiles: [...selectedTiles], li, removeBtn, score: wordScore });
   submittedWords.add(word);
 
+  // Setup removal
+  removeBtn.addEventListener('click', () => {
+    li.remove();
+    submittedWords.delete(word);
+    const idx = gameState.words.findIndex(w => w.li === li);
+    if (idx !== -1) {
+      gameState.words.splice(idx, 1);
+    }
+    recomputeAll();
+    syncSubmitListButton();
+  });
 
+  recomputeAll();
+  syncSubmitListButton();
 
-// removal
-removeBtn.addEventListener('click', () => {
-  li.remove();                          // remove the word's list item from the page
-  submittedWords.delete(word);          // delete it from the submitted set
-  const idx = gameState.words.findIndex(w => w.li === li);
-  if (idx !== -1) {
-    gameState.words.splice(idx, 1);     // remove it from the game state list
+  // Animate the current word display
+  const currentWordEl = document.getElementById('current-word');
+  if (currentWordEl) {
+    currentWordEl.classList.add('puff-out-hor');
+    currentWordEl.addEventListener('animationend', () => {
+      currentWordEl.classList.remove('puff-out-hor');
+      currentWordEl.textContent = '';
+      resetSelectionState();
+    }, { once: true });
   }
-  recomputeAll();                       // update score and totals
-  syncSubmitListButton();                // refresh submit button state 
-});
-
-recomputeAll();
-syncSubmitListButton();
-resetSelectionState();
-
 }
+
 
 // ----------------------------------------------
 // Submit the entire list (exactly 10 words)

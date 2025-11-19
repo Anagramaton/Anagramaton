@@ -182,7 +182,6 @@ export function resetSelectionState() {
   });
   gameState.selectedTiles = [];
 
-  // 👇 Add this line so CURRENT WORD clears after submit/reset
+  
   const preview = document.getElementById('current-word');
-  if (preview) preview.textContent = '';
 }
