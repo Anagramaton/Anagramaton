@@ -48,6 +48,8 @@ function updateWordPreview() {
   // nothing selected → no effects
   if (!word) {
     if (wordPreviewElement) wordPreviewElement.classList.remove('valid-word');
+    // Dispatch selection:changed event
+    window.dispatchEvent(new Event('selection:changed'));
     return;
   }
 
@@ -67,18 +69,31 @@ selectedTiles.forEach((tile, idx) => {
   } else {
     if (wordPreviewElement) wordPreviewElement.classList.remove('valid-word');
   }
+
+  // Dispatch selection:changed event
+  window.dispatchEvent(new Event('selection:changed'));
 }
 
 export function clearCurrentSelection() {
   const selectedTiles = gameState.selectedTiles || [];
   selectedTiles.forEach(tile => {
-    if (tile?.element) {
-      const poly = tile.element.querySelector('polygon');
+    if (tile?.setSelected) {
+      tile.setSelected(false);
+    } else if (tile?.element) {
+      // Fallback: manually remove classes
+      const g = tile.element;
+      const poly = g.querySelector('polygon');
+      const letter = g.querySelector('.tile-letter');
+      const point = g.querySelector('.tile-point');
+      
+      g.classList.remove('selected');
       if (poly) {
         poly.classList.remove('selected');
         poly.classList.remove('valid-shimmer');
         poly.style.removeProperty('--shimmer-delay');
       }
+      if (letter) letter.classList.remove('selected');
+      if (point) point.classList.remove('selected');
     }
   });
 
@@ -92,6 +107,54 @@ export function clearCurrentSelection() {
   });
 }
 
+
+// ============================================================================
+// Helper functions for tile selection
+// ============================================================================
+
+function markTileSelected(tile) {
+  if (!tile) return;
+  if (tile.setSelected) {
+    tile.setSelected(true);
+  } else if (tile.element) {
+    // Fallback: manually add classes
+    const g = tile.element;
+    const poly = g.querySelector('polygon');
+    const letter = g.querySelector('.tile-letter');
+    const point = g.querySelector('.tile-point');
+    
+    g.classList.add('selected');
+    if (poly) poly.classList.add('selected');
+    if (letter) letter.classList.add('selected');
+    if (point) point.classList.add('selected');
+  }
+}
+
+function unselectLastTile() {
+  const selectedTiles = gameState.selectedTiles || [];
+  if (selectedTiles.length === 0) return null;
+  
+  const tile = selectedTiles.pop();
+  if (tile?.setSelected) {
+    tile.setSelected(false);
+  } else if (tile?.element) {
+    // Fallback: manually remove classes
+    const g = tile.element;
+    const poly = g.querySelector('polygon');
+    const letter = g.querySelector('.tile-letter');
+    const point = g.querySelector('.tile-point');
+    
+    g.classList.remove('selected');
+    if (poly) {
+      poly.classList.remove('selected');
+      poly.classList.remove('valid-shimmer');
+      poly.style.removeProperty('--shimmer-delay');
+    }
+    if (letter) letter.classList.remove('selected');
+    if (point) point.classList.remove('selected');
+  }
+  return tile;
+}
 
 // ============================================================================
 // Event Handlers
@@ -108,7 +171,6 @@ function handleSwipeTileStep(tile) {
   const selectedTiles = gameState.selectedTiles;
 
   const isAlreadySelected = selectedTiles.includes(tile);
-  const poly = tile.element.querySelector('polygon');
 
   // ------------------------------------------------------------
   // Case 1: Tile already in current path
@@ -116,12 +178,9 @@ function handleSwipeTileStep(tile) {
   if (isAlreadySelected) {
     const isLast = tile === selectedTiles[selectedTiles.length - 1];
 
-    // Swiping back over the last tile → undo last step
+    // Swiping back over the last tile → undo last step (backtracking)
     if (isLast) {
-      selectedTiles.pop();
-      if (poly) {
-        poly.classList.remove('selected');
-      }
+      unselectLastTile();
       updateWordPreview();
     }
 
@@ -133,9 +192,7 @@ function handleSwipeTileStep(tile) {
   // Case 2: First tile in this swipe
   // ------------------------------------------------------------
   if (selectedTiles.length === 0) {
-    if (poly) {
-      poly.classList.add('selected');
-    }
+    markTileSelected(tile);
     selectedTiles.push(tile);
     updateWordPreview();
     return;
@@ -150,9 +207,7 @@ function handleSwipeTileStep(tile) {
     return;
   }
 
-  if (poly) {
-    poly.classList.add('selected');
-  }
+  markTileSelected(tile);
   selectedTiles.push(tile);
   updateWordPreview();
 }
@@ -166,30 +221,41 @@ function handleSwipeTileStep(tile) {
 let __initCount = 0;
 
 function handlePointerDown(e) {
-    e.preventDefault(); // Prevents default touch behaviors (scroll, zoom)
-    console.log('Pointer/Touch Down Event:', e.type, 'Target:', e.target); // DEBUG
-    const tile = getTileFromEventTarget(e.target);
-    console.log('Tile from Event Target:', tile); // DEBUG
-  if (!tile) return;
+  e.preventDefault(); // Prevents default touch behaviors (scroll, zoom)
+  
+  const tile = getTileFromEventTarget(e.target);
+  if (!tile) {
+    isDragging = false;
+    return;
+  }
 
-  isDragging = true;
-  lastHoverTile = null;
-
-
-  // optional: clear any existing word when starting a new drag
+  // Clear previous selection and start fresh
   clearCurrentSelection();
-  if (!Array.isArray(gameState.selectedTiles)) {
-    gameState.selectedTiles = [];
+  gameState.selectedTiles = [];
+  
+  isDragging = true;
+  lastHoverTile = tile;
+
+  // Immediately select the first tile
+  markTileSelected(tile);
+  gameState.selectedTiles.push(tile);
+  updateWordPreview();
+
+  // Attempt pointer capture for smoother touch drags
+  if (e.pointerId !== undefined && e.target.setPointerCapture) {
+    try {
+      e.target.setPointerCapture(e.pointerId);
+    } catch (err) {
+      // Pointer capture not supported or failed, continue without it
+    }
   }
 }
 
 
 function handlePointerMove(e) {
-  console.log('Pointer/Touch Move Event:', e.type, 'Target:', e.target); // DEBUG
   if (!isDragging) return;
 
   const tile = getTileFromEventTarget(e.target);
-  console.log('Tile Hovered:', tile); // DEBUG
   if (!tile || tile === lastHoverTile) return;
 
   handleSwipeTileStep(tile);
@@ -198,7 +264,15 @@ function handlePointerMove(e) {
 
 
 function handlePointerUp(e) {
-  console.log('Pointer/Touch Up Event:', e.type); // DEBUG
+  // Release pointer capture if it was set
+  if (e.pointerId !== undefined && e.target.releasePointerCapture) {
+    try {
+      e.target.releasePointerCapture(e.pointerId);
+    } catch (err) {
+      // Pointer capture wasn't set or release failed
+    }
+  }
+
   isDragging = false;
   lastHoverTile = null;
 
@@ -207,7 +281,7 @@ function handlePointerUp(e) {
     return;
   }
 
-  
+  // Finalize the preview
   updateWordPreview();
 }
 
@@ -217,6 +291,7 @@ export function initializeGrid() {
   __initCount++;
 
   gameState.totalScore = 0;
+  gameState.selectedTiles = [];
   tileElements.length = 0;
 
   grid = generateSeededBoard(GRID_RADIUS, gameState);
@@ -226,16 +301,11 @@ export function initializeGrid() {
 
   gameState.allTiles = tileElements;
 
-  // attach swipe listeners once
+  // attach swipe listeners once (only pointer events, no duplicate touch listeners)
   if (DOM.svg && !DOM.svg.dataset.swipeListeners) {
-// Pointer and Touch Event Setup
-DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });
-DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
-window.addEventListener('pointerup', handlePointerUp);
-
-DOM.svg.addEventListener('touchstart', handlePointerDown, { passive: false }); // Fallback for touch events
-DOM.svg.addEventListener('touchmove', handlePointerMove, { passive: false });
-window.addEventListener('touchend', handlePointerUp);
+    DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
+    window.addEventListener('pointerup', handlePointerUp);
     window.addEventListener('pointercancel', handlePointerUp);
     DOM.svg.dataset.swipeListeners = 'true';
   }

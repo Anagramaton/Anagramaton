@@ -264,6 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   initializeGrid();
   
+  // Dispatch initial selection:changed to ensure UI is in sync
+  window.dispatchEvent(new Event('selection:changed'));
 
     
 
