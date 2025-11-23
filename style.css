@@ -751,6 +751,11 @@ body.right-open .right-toggle {
   background-position: center;
 }
 
+/* ==== Hex Grid Touch Behavior ==== */
+#hex-grid {
+  touch-action: none;
+}
+
 /* ==== Base Tile and Text ==== */
 .hex-tile {
   fill: #fff1e6;
