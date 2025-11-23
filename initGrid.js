@@ -166,7 +166,7 @@ function handleSwipeTileStep(tile) {
     const isLast = tile === selectedTiles[selectedTiles.length - 1];
 
     // Swiping back over the last tile → undo last step (backtrack)
-    if (isLast && selectedTiles.length > 1) {
+    if (isLast) {
       selectedTiles.pop();
       unselectTile(tile);
       updateWordPreview();
@@ -211,6 +211,7 @@ function handleSwipeTileStep(tile) {
 
 let __initCount = 0;
 let activePointerId = null;
+let captureElement = null;
 
 function handlePointerDown(e) {
   e.preventDefault(); // Prevents default touch behaviors (scroll, zoom)
@@ -222,12 +223,14 @@ function handlePointerDown(e) {
   isDragging = true;
   lastHoverTile = tile;
   activePointerId = e.pointerId;
+  captureElement = e.target;
 
   // Attempt pointer capture for smooth drag
   try {
-    e.target.setPointerCapture?.(e.pointerId);
+    captureElement.setPointerCapture?.(e.pointerId);
   } catch (err) {
     // Pointer capture may fail on some elements, that's okay
+    captureElement = null;
   }
 
   // Clear any existing selection and start fresh
@@ -261,14 +264,15 @@ function handlePointerUp(e) {
   isDragging = false;
   lastHoverTile = null;
 
-  // Release pointer capture if held
-  if (activePointerId !== null) {
+  // Release pointer capture if held (use the stored capture element)
+  if (activePointerId !== null && captureElement !== null) {
     try {
-      e.target.releasePointerCapture?.(activePointerId);
+      captureElement.releasePointerCapture?.(activePointerId);
     } catch (err) {
       // Ignore errors on release
     }
     activePointerId = null;
+    captureElement = null;
   }
 
   // Path persists after lifting finger (no auto-clear)
