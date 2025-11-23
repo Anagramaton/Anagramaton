@@ -7,7 +7,6 @@ export function createTile({
   key,                 // unique key (axial)
   letter,              // uppercase letter
   pointValue,          // numeric score
-  onClick,             // (tile) => void
 }) {
   const center = layout.hexToPixel(hex);
 
@@ -36,7 +35,7 @@ export function createTile({
   poly.setAttribute('class', 'hex-tile');
   poly.setAttribute('data-key', key);
   poly.setAttribute('id', key);
-  poly.style.cursor = 'pointer';
+  
 
   // --- Letter ---
   const tLetter = document.createElementNS(SVG_NS, 'text');
@@ -72,10 +71,13 @@ export function createTile({
   spark.setAttribute('opacity', '0.9');
   spark.setAttribute('class', 'spark');
 
-  // --- Group wrapper (interactive root) ---
-  const g = document.createElementNS(SVG_NS, 'g');
-  g.classList.add('tile');
-  g.append(outline, poly, spark, tLetter, tPoint);
+const g = document.createElementNS(SVG_NS, 'g');
+g.classList.add('tile');
+g.append(outline, poly, spark, tLetter, tPoint);
+
+// Debugging for tile interaction
+g.addEventListener('pointerdown', () => console.log('Pointer Down on Tile:', key)); // DEBUG
+g.addEventListener('touchstart', () => console.log('Touch Start on Tile:', key)); // DEBUG
 
   // --- Hover behavior (simple) ---
   g.addEventListener('mouseenter', () => {
@@ -86,11 +88,6 @@ export function createTile({
     g.classList.remove('hover');
   });
 
-  // --- Selection toggle (visual only) ---
-  g.addEventListener('click', () => {
-    g.classList.toggle('selected');
-    onClick && onClick(tile);
-  });
 
   // --- Public tile object & helpers ---
   const tile = {
@@ -102,27 +99,32 @@ export function createTile({
     textLetter: tLetter,
     textPoint: tPoint,
 
-    setSelected(val) {
-      g.classList.toggle('selected', !!val);
-    },
-    setUsed(val) {
-      tile.used = !!val;
-      g.classList.toggle('used', !!val);
-    },
+  setSelected(val) {
+    const on = !!val;
+    g.classList.toggle('selected', on);
+    poly.classList.toggle('selected', on);
+    tLetter.classList.toggle('selected', on);
+    tPoint.classList.toggle('selected', on);
+  },
+  setUsed(val) {
+    poly.used = !!val;
+    g.classList.toggle('used', !!val);
+  },
     setEnabled(val) {
       const on = val !== false;
       g.style.pointerEvents = on ? 'auto' : 'none';
       g.classList.toggle('disabled', !on);
     },
     updateLetter(newLetter, newPoint = null) {
-      tile.letter = newLetter.toUpperCase();
+      poly.letter = newLetter.toUpperCase();
       tLetter.textContent = tile.letter;
       if (newPoint != null) {
-        tile.point = newPoint;
+        poly.point = newPoint;
         tPoint.textContent = newPoint;
       }
     }
   };
+
 
 
 

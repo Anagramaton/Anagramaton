@@ -18,7 +18,6 @@ const TILE_SPACING = 1.25; // tweak 1.1–1.3 for gap size
  * @param {Object}   grid            - map of axial key -> { letter } or 'A'
  * @param {SVGSVGElement} svg        - target <svg>
  * @param {Array}    tileElements    - output array of tile objects (mutated)
- * @param {Function} handleTileClick - (tile) => void
  * @param {number}   gridRadius      - axial radius (q+r+s==0 constraint)
  * @param {Object}   options
  * @param {string}   [options.idPrefix=''] - prefix to avoid defs id collisions if multiple boards mount
@@ -28,16 +27,17 @@ export function renderGrid(
   grid,
   svg,
   tileElements,
-  handleTileClick,
   gridRadius,
   {
     idPrefix = '',
     defaultViewBox = '0 0 1000 1000',
   } = {}
 ) {
+
   // 1) Clear target and output array
-  svg.innerHTML = '';
-  tileElements.length = 0;
+svg.innerHTML = '';
+tileElements.length = 0;
+console.log('Cleared existing SVG tiles and reset tileElements array.'); // DEBUG
 
   // 2) Initialize base SVG behavior (aspect ratio + responsive viewBox helper)
   const { updateViewForBoard } = initSvg(svg, {
@@ -83,7 +83,6 @@ export function renderGrid(
         key,
         letter: L,
         pointValue,
-        onClick: handleTileClick,
       });
 
 
@@ -91,7 +90,12 @@ export function renderGrid(
       const spark = tile.element.querySelector('.spark');
 
       tileElements.push(tile);
-      board.appendChild(tile.element);
+ board.appendChild(tile.element);
+console.log(`Tile Added:`, {
+  letter: tile.letter,
+  key: tile.q + ',' + tile.r, // Axial coordinates of the tile
+  element: tile.element,
+}); // DEBUG
     }
   }
 
@@ -99,5 +103,8 @@ export function renderGrid(
   svg.appendChild(fragment);
 
   // 6) Fit the SVG viewBox around the board on small screens
-  requestAnimationFrame(() => updateViewForBoard(board));
+  requestAnimationFrame(() => {
+  updateViewForBoard(board);
+  console.log('Updated ViewBox:', svg.getAttribute('viewBox')); // DEBUG
+});
 }

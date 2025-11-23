@@ -6,11 +6,11 @@
   font-size: clamp(4.1rem, 7vw, 5.1rem);
   letter-spacing: 0.08em;
 
-  color: hsl(210, 25%, 65%);               /* softer blue-gray fill */
-  -webkit-text-stroke: 2px hsl(210, 25%, 26%); /* outline from middle tone */
-  text-shadow: 0 2px 6px rgba(0,0,0,0.4);  /* subtle depth, no glow */
+  color: hsl(210, 25%, 65%);              
+  -webkit-text-stroke: 2px hsl(210, 25%, 26%); 
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);  
 
-  /* match mobile-style top placement but for desktop too */
+ 
   position: fixed;
   top: 4px;
   left: 50%;
@@ -22,7 +22,6 @@
   margin: 0;
 }
 
-/* Desktop layout for HOW-TO (help) button */
 #howto-open {
   position: fixed;
   top: 5px;
@@ -37,15 +36,15 @@
   height: auto;
   padding: 0;
 
-  /* remove font influence */
+  
   font-family: initial;
   font-weight: initial;
-  font-size: 20px;    /* size of the icon */
+  font-size: 20px;    
   line-height: 1;
   letter-spacing: 0;
   text-transform: none;
 
-  color: #000;        /* matches WORD PANEL text */
+  color: #000;        
   cursor: pointer;
 }
 
@@ -94,25 +93,22 @@ body {
   position: relative;
 }
 
-/* Backdrop is invisible and doesn't catch taps by default */
+
 #backdrop {
   position: fixed;
   inset: 0;
-  z-index: 950;         /* between toggles (900 mobile) and panels (1000) */
+  z-index: 950;         
   opacity: 0;
-  pointer-events: none; /* <— key line */
+  pointer-events: none; 
   transition: opacity 160ms ease;
 }
 
-/* When any panel is open, fade in and become clickable */
+
 body.panel-open #backdrop {
   opacity: 1;
   pointer-events: auto;
 }
 
-
-
-/* Side Panels (layout & slide behavior) */
 #left-panel,
 #right-panel {
   width: 300px;
@@ -127,7 +123,7 @@ body.panel-open #backdrop {
   z-index: 1000;
 }
 
-/* Start off-screen */
+
 #left-panel {
   left: 0;
   transform: translateX(-100%);
@@ -138,7 +134,7 @@ body.panel-open #backdrop {
   transform: translateX(100%);
 }
 
-/* Slide in when open */
+
 #left-panel.open {
   transform: translateX(0);
 }
@@ -244,7 +240,7 @@ body.panel-open #backdrop {
 
 
 
-/* Static shimmer (no animation) */
+
 #left-panel .panel-content::before {
   content: "";
   position: absolute; inset: -40%;
@@ -255,7 +251,7 @@ body.panel-open #backdrop {
   pointer-events: none;
 }
 
-/* Heading */
+
 #left-panel .panel-content h2 {
   margin: 0 0 12px;
   text-align: center;
@@ -288,11 +284,11 @@ body.panel-open #backdrop {
   transition: background 0.15s ease, transform 0.1s ease;
 }
 #word-list li:hover {
-  background: #ffe7d5;      /* subtle warm hover */
+  background: #ffe7d5;      
   transform: translateY(-1px);
 }
 
-/* Make merged list match word list */
+
 #merged-list li {
   padding: 8px 10px;
   border-radius: 10px;
@@ -310,7 +306,7 @@ body.panel-open #backdrop {
   transform: translateY(-1px);
 }
 
-/* Buttons inside word list — simple neutral */
+
 #word-list button {
   margin-left: 6px;
   padding: 2px 6px;
@@ -332,15 +328,15 @@ body.panel-open #backdrop {
   transform: scale(0.96);
 }
 
-/* submit button styled like tiles */
+
 #submit-list {
   display: block;
   margin: 6px auto 0;
   padding: 10px 14px;
-  background: #fff1e6;        /* tile fill */
-  border: 2px solid #000;     /* tile stroke */
+  background: #fff1e6;        
+  border: 2px solid #000;     
   border-radius: 10px;
-  color: #1b4965;             /* tile text color */
+  color: #1b4965;             
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -349,7 +345,7 @@ body.panel-open #backdrop {
   transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
 }
 #submit-list:hover {
-  background: #ffe7d5;         /* slightly warmer tile */
+  background: #ffe7d5;         
   transform: translateY(-1px);
   box-shadow: 0 3px 0 rgba(0,0,0,0.25);
 }
@@ -361,7 +357,7 @@ body.panel-open #backdrop {
 
 #submit-list:active { transform: translateY(0); }
 
-/* New Game button in Word Panel */
+
 #left-panel .panel-actions {
   display: flex;
   gap: 10px;
@@ -370,12 +366,12 @@ body.panel-open #backdrop {
   margin-top: 8px;
 }
 
-/* Keep SUBMIT LIST aligned inside the flex row */
+
 #left-panel #submit-list {
   margin: 0;
 }
 
-/* new game button styled like tiles */
+
 #left-panel #new-game {
   padding: 10px 14px;
   background: #fff1e6;
@@ -423,7 +419,7 @@ body.panel-open #backdrop {
   cursor: pointer;
 
   height: 140px;
-  width: 56px;              /* was 38px – give letters room */
+  width: 56px;              
 
   z-index: 1200;
   display: flex;
@@ -537,7 +533,7 @@ body.right-open .right-toggle {
 }
 
 
-/* Hide the original list cleanly when game ends */
+
 .is-hidden {
   display: none !important;
 }
@@ -715,14 +711,14 @@ body.right-open .right-toggle {
   pointer-events: none;
 }
 
-/* Hide it while list is still active (before merge) */
+
 #left-panel:not(.is-merged) #new-game {
   display: none;
 }
 
-/* Neon styled scrollbar for the left panel */
+
 #left-panel .panel-content {
-  scrollbar-width: thin;               /* Firefox */
+  scrollbar-width: thin;               
   scrollbar-color: #28f0ff20 transparent;
 }
 
@@ -770,10 +766,12 @@ body.right-open .right-toggle {
   font-weight: 900;
   text-shadow: none;
   stroke: none;
+  user-select: none; 
 }
 
 
-.selected .hex-tile {
+
+polygon.selected {
   fill: #4cc9f0;
   stroke: #000;
   stroke-width: 2px;
@@ -781,6 +779,7 @@ body.right-open .right-toggle {
   transform-origin: center;
   transform: scale(1.04);
 }
+
 
 .selected .tile-letter,
 .selected .tile-point {
@@ -881,12 +880,6 @@ body.right-open .right-toggle {
   font-weight: 800;
 }
 
-
-
-
-
-
-
 .tile:has(.hex-tile.reuse-3) path:first-child {
   fill: #06d6a0;             
   stroke: #024b36;          
@@ -895,6 +888,26 @@ body.right-open .right-toggle {
   transform-origin: center;
   transform: scale(1.11);   
 }
+
+polygon.hex-tile.selected {
+  fill: #4cc9f0;
+  stroke: #000;
+  stroke-width: 2px;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(1.04);
+}
+
+.tile-letter.selected,
+.tile-point.selected {
+  fill: #000;
+}
+
+
+
+
+
+
 
 
 .limelight-regular {
@@ -987,9 +1000,6 @@ body.right-open .right-toggle {
   }
 }
 
-
-
-
 #submit-word,
 #clear-word {
   position: fixed;
@@ -1061,6 +1071,10 @@ body.right-open .right-toggle {
     opacity: 0;
   }
 }
+
+
+
+
 
 
 

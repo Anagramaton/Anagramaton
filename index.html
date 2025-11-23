@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>ANAGRAMATON</title>
 
 
@@ -42,29 +43,37 @@
         aria-label="Open how to play">❓</button>
 <h1 id="game-title">ANAGRAMATON</h1>
 <main id="game-container">
-  <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000" aria-label="Letter hex grid"></svg>
-
-<!-- Toggle buttons placed here -->
-<button id="toggle-left" class="side-toggle left-toggle" type="button" aria-controls="left-panel" aria-expanded="false" aria-label="Toggle word panel">
-  <span class="vword">WORD</span>
-  <span class="vword">PANEL</span>
-</button>
-
-<button id="toggle-right" class="side-toggle right-toggle" type="button" aria-controls="right-panel" aria-expanded="false" aria-label="Toggle phrase panel">
-  <span class="vword">PHRASE</span>
-  <span class="vword">PANEL</span>
-</button>
-
-<span id="score-display">SCORE: 0</span>
+  <svg
+    id="hex-grid"
+    width="100%"
+    height="100%"
+    viewBox="0 0 1000 1000"
+    aria-label="Letter hex grid">
+  </svg>
 
 
-<div id="current-word-display">
-  <span id="current-word"></span>
-</div>
 
-<button id="submit-word" type="button">SUBMIT</button>
-<button id="clear-word" type="button">CLEAR</button>
+  <!-- Toggle buttons placed here -->
+  <button id="toggle-left" class="side-toggle left-toggle" type="button" aria-controls="left-panel" aria-expanded="false" aria-label="Toggle word panel">
+    <span class="vword">WORD</span>
+    <span class="vword">PANEL</span>
+  </button>
+
+  <button id="toggle-right" class="side-toggle right-toggle" type="button" aria-controls="right-panel" aria-expanded="false" aria-label="Toggle phrase panel">
+    <span class="vword">PHRASE</span>
+    <span class="vword">PANEL</span>
+  </button>
+
+  <span id="score-display">SCORE: 0</span>
+
+  <div id="current-word-display">
+    <span id="current-word"></span>
+  </div>
+
+  <button id="submit-word" type="button">SUBMIT</button>
+  <button id="clear-word" type="button">CLEAR</button>
 </main>
+
   <div id="backdrop" class="backdrop"></div>
 
   <!-- Left Panel -->

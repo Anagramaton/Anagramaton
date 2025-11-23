@@ -1,6 +1,5 @@
-
-
 // main.js
+
 import { initializeGrid } from './initGrid.js';
 import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';
 import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
@@ -111,6 +110,7 @@ function handleSubmitWordClick() {
     return;
   }
   if (submittedWords.has(word)) {
+
     alert(`❌ You've already submitted "${word}".`);
     resetSelectionState();
     return;
@@ -163,7 +163,6 @@ function handleSubmitWordClick() {
     }, { once: true });
   }
 }
-
 
 // ----------------------------------------------
 // Submit the entire list (exactly 10 words)
@@ -264,19 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   
   initializeGrid();
-  // --- Drag word auto-submit for mobile ---
-  window.addEventListener('drag:word:ready', () => {
-    if (!gameState.listLocked && (gameState.selectedTiles || []).length >= 4) {
-      handleSubmitWordClick();
-    }
-  });
-
-  // (optional tip)
-  if (window.matchMedia("(max-width: 768px)").matches) {
-    setTimeout(() => {
-      alert("Tip: Drag your finger across tiles to make words!");
-    }, 600);
-  }
+  
 
     
 
@@ -421,9 +408,6 @@ document.getElementById('new-game')?.addEventListener('click', () => {
     document.getElementById('left-panel')?.classList.add('is-merged');
   });
 });
-
-
-
 
 
 

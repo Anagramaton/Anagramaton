@@ -81,6 +81,7 @@ export function initSvg(
       const w = b.width  + pad * 2;
       const h = b.height + pad * 2;
       svg.setAttribute('viewBox', `${x} ${y} ${w} ${h}`);
+console.log('Updated SVG ViewBox:', svg.getAttribute('viewBox')); // DEBUG
     } else {
       svg.setAttribute('viewBox', defaultViewBox);
     }
