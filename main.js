@@ -264,6 +264,13 @@ document.addEventListener('DOMContentLoaded', () => {
   
   initializeGrid();
   
+  const grid = document.getElementById('hex-grid');
+['pointerdown','pointermove','pointerup'].forEach(type => {
+  grid.addEventListener(type, e => {
+    console.log(type, e.pointerType);
+  });
+});
+
 
     
 
@@ -343,8 +350,9 @@ document.getElementById('new-game')?.addEventListener('click', () => {
   // tell mergedListPanel to clear itself
   window.dispatchEvent(new Event('game:new'));
 });
-
   }
+
+  window.dispatchEvent(new Event('selection:changed'));
 
   // --- General button + word actions ---
   document.addEventListener('click', (e) => {

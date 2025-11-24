@@ -84,6 +84,9 @@ body {
   color: var(--text);
 } 
 
+#hex-grid {
+  touch-action: none;
+}
 
 /* Main Game Container */
 #game-container {
