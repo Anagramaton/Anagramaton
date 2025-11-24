@@ -92,27 +92,38 @@ export function clearCurrentSelection() {
 // Event Handlers
 // ============================================================================
 
-// Swipe path processing
 function handleSwipeTileStep(tile) {
   if (!isDragging) return;
   if (!tile || !tile.element) return;
 
   const selectedTiles = gameState.selectedTiles || [];
-  const isAlreadySelected = selectedTiles.includes(tile);
-
-  
+  const idx = selectedTiles.indexOf(tile);
+  const isAlreadySelected = idx !== -1;
 
   if (isAlreadySelected) {
-    const isLast = tile === selectedTiles[selectedTiles.length - 1];
+    const isLast = idx === selectedTiles.length - 1;
+
     if (isLast) {
-      selectedTiles.pop();
-      const poly = tile.element.querySelector('polygon');
+      // Dragging back over the last tile again: deselect it
+      const removed = selectedTiles.pop();
+      const poly = removed.element.querySelector('polygon');
       if (poly) poly.classList.remove('selected');
       updateWordPreview();
+      return;
     }
+
+    // Backtracking: drag onto an earlier tile in the path
+    for (let i = selectedTiles.length - 1; i > idx; i--) {
+      const t = selectedTiles[i];
+      const poly = t.element.querySelector('polygon');
+      if (poly) poly.classList.remove('selected');
+      selectedTiles.pop();
+    }
+    updateWordPreview();
     return;
   }
 
+  // New tile: enforce adjacency, then select and extend the path
   if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.length - 1], tile)) {
     const poly = tile.element.querySelector('polygon');
     if (poly) poly.classList.add('selected');
@@ -120,6 +131,7 @@ function handleSwipeTileStep(tile) {
     updateWordPreview();
   }
 }
+
 
 
 function handlePointerDown(e) {

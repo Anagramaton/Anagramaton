@@ -774,23 +774,11 @@ body.right-open .right-toggle {
 
 
 
-polygon.selected {
-  fill: #4cc9f0;
-  stroke: #000;
-  stroke-width: 2px;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(1.04);
-}
-
-
-.selected .tile-letter,
-.selected .tile-point {
-  fill: #000;
-}
 
 
 
+
+@media (hover: hover) and (pointer: fine) {
   .tile:hover .hex-tile {
     fill: #222;
     stroke: #ffcc00;
@@ -803,6 +791,7 @@ polygon.selected {
     fill: #ffcc00;
     transition: fill 160ms ease;
   }
+}
 
 
 
@@ -892,7 +881,7 @@ polygon.selected {
   transform: scale(1.11);   
 }
 
-polygon.hex-tile.selected {
+.hex-tile.selected {
   fill: #4cc9f0;
   stroke: #000;
   stroke-width: 2px;
