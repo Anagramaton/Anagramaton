@@ -15,11 +15,32 @@ import { isValidWord } from './gameLogic.js';
 // ===== GAME MODE (daily | unlimited) via URL param =====
 const _params = new URLSearchParams(typeof location !== 'undefined' ? location.search : "");
 gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
-// (no new imports needed; you already import gameState above)
 
 
-// ------------------------------------------------------------
-// Score state
+
+
+// === Custom Alert with Sound ===
+const alertSound = new Audio('./audio/alert.mp3'); 
+const successSound = new Audio('./audio/ohyeahh.mp3'); // adjust path if needed
+
+
+export function playAlert(msg) {
+  const modal = document.getElementById('alert-modal');
+  const text = document.getElementById('alert-text');
+  const okBtn = document.getElementById('alert-ok');
+  text.textContent = msg;
+  modal.classList.remove('hidden');
+  alertSound.currentTime = 0;
+  alertSound.play().catch(() => {});
+  return new Promise(resolve => {
+    okBtn.onclick = () => {
+      modal.classList.add('hidden');
+      resolve();
+    };
+  });
+}
+
+
 // ------------------------------------------------------------
 let baseTotal = 0;     // Sum of all word scores from recomputeAll()
 let bonusTotal = 0;    // Sum of bonuses coming from score:delta events
@@ -99,29 +120,28 @@ function updateCurrentWordDisplay() {
 // ----------------------------------------------
 // Submit current selection as a word
 // ----------------------------------------------
-function handleSubmitWordClick() {
+async function handleSubmitWordClick() {
   const selectedTiles = gameState.selectedTiles || [];
   const word = selectedTiles.map(t => t.letter).join('').toUpperCase();
 
-  // Capacity + duplicate guards
-  if (submittedWords.size >= 10) {
-    alert('❌ You can only keep 10 words in your list at a time.');
-    resetSelectionState();
-    return;
-  }
-  if (submittedWords.has(word)) {
+if (submittedWords.size >= 10) {
+  await playAlert('❌ You can only keep 10 words in your list at a time.');
+  resetSelectionState();
+  return;
+}
 
-    alert(`❌ You've already submitted "${word}".`);
-    resetSelectionState();
-    return;
-  }
+if (submittedWords.has(word)) {
+  await playAlert(`❌ You've already submitted "${word}".`);
+  resetSelectionState();
+  return;
+}
 
-  // Validate & score once
-  const wordScore = submitCurrentWord(selectedTiles);
-  if (wordScore === null) {
-    resetSelectionState();
-    return;
-  }
+const wordScore = await submitCurrentWord(selectedTiles);
+if (wordScore === null) {
+  resetSelectionState();
+  return;
+}
+
 
   // Add to UI list
   const result = addWordToList(word, wordScore);
@@ -153,6 +173,9 @@ function handleSubmitWordClick() {
   syncSubmitListButton();
 
   // Animate the current word display
+  successSound.currentTime = 0;
+successSound.play().catch(() => {});
+
   const currentWordEl = document.getElementById('current-word');
   if (currentWordEl) {
     currentWordEl.classList.add('puff-out-hor');

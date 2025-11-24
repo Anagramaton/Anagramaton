@@ -1064,6 +1064,150 @@ body.right-open .right-toggle {
   }
 }
 
+/* ===== FANCY ALERT MODAL ===== */
+
+.alert-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+
+  /* Dim + blur the background */
+  background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.85));
+  backdrop-filter: blur(6px);
+
+  /* Simple fade-in */
+  opacity: 1;
+  transition: opacity 180ms ease-out;
+}
+
+.alert-modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Dialog box */
+.alert-box {
+  position: relative;
+  max-width: 360px;
+  width: calc(100% - 40px);
+
+  padding: 18px 22px 20px;
+  border-radius: 18px;
+
+  /* Glass + glow */
+  background: linear-gradient(135deg, rgba(20,20,35,0.96), rgba(35,10,45,0.96));
+  border: 2px solid rgba(255, 120, 180, 0.7);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 12px 30px rgba(0, 0, 0, 0.7),
+    0 0 25px rgba(255, 60, 140, 0.55);
+
+  color: #fef5ff;
+  text-align: center;
+  font-family: "Turret Road", system-ui, sans-serif;
+
+  /* Pop-in animation */
+  animation: alert-pop 180ms ease-out;
+}
+
+/* Optional subtle top glow bar */
+.alert-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 180, 255, 0.35),
+    transparent 45%
+  );
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Alert text */
+#alert-text {
+  position: relative;
+  margin: 0;
+  padding: 6px 4px 2px;
+  font-size: 18px;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+}
+
+/* OK button */
+#alert-ok {
+  position: relative;
+  margin-top: 16px;
+  padding: 8px 26px;
+
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: inherit;
+
+  background: radial-gradient(circle at 20% 0%, #ffe6ff, #ff3c8c);
+  color: #240014;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 6px 16px rgba(0, 0, 0, 0.7);
+
+  transition:
+    transform 80ms ease-out,
+    box-shadow 80ms ease-out,
+    filter 80ms ease-out;
+}
+
+#alert-ok:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 10px 22px rgba(0, 0, 0, 0.9);
+  filter: brightness(1.05);
+}
+
+#alert-ok:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    0 4px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Pop animation */
+@keyframes alert-pop {
+  from {
+    transform: translateY(8px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Small screens tweak */
+@media (max-width: 480px) {
+  .alert-box {
+    max-width: 320px;
+    padding: 16px 18px 18px;
+  }
+
+  #alert-text {
+    font-size: 16px;
+  }
+
+  #alert-ok {
+    width: 100%;
+  }
+}
 
 
 

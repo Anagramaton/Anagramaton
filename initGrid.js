@@ -4,14 +4,36 @@ import { gameState } from './gameState.js';
 import { GRID_RADIUS } from './constants.js';
 import { areAxialNeighbors } from './utils.js';
 import { isValidWord } from './gameLogic.js';
-
 export const DOM = {
   svg: document.getElementById('hex-grid'),
   wordList: document.getElementById('word-list'),
 };
-
 export let tileElements = [];
 export let grid;
+
+
+// === Swipe sounds ===
+// Adjust "./audio" to wherever your 14 mp3 files actually live.
+const ASCEND_SOUND_COUNT = 14;
+const swipeSounds = Array.from({ length: ASCEND_SOUND_COUNT }, (_, i) => {
+  const audio = new Audio(`./audio/ascend${i + 1}.mp3`);
+  audio.preload = 'auto';
+  return audio;
+});
+
+function playSwipeSoundForLength(length) {
+  if (length <= 0) return;
+  const index = Math.min(length, ASCEND_SOUND_COUNT) - 1;
+  const sound = swipeSounds[index];
+  if (!sound) return;
+
+  // Restart from the beginning and play
+  sound.currentTime = 0;
+  sound.play().catch(() => {
+    // Ignore play() errors (e.g. autoplay restrictions)
+  });
+}
+
 
 // swipe / drag state
 let isDragging = false;
@@ -101,35 +123,43 @@ function handleSwipeTileStep(tile) {
   const isAlreadySelected = idx !== -1;
 
   if (isAlreadySelected) {
-    const isLast = idx === selectedTiles.length - 1;
+  const isLast = idx === selectedTiles.length - 1;
 
-    if (isLast) {
-      // Dragging back over the last tile again: deselect it
-      const removed = selectedTiles.pop();
-      const poly = removed.element.querySelector('polygon');
-      if (poly) poly.classList.remove('selected');
-      updateWordPreview();
-      return;
-    }
-
-    // Backtracking: drag onto an earlier tile in the path
-    for (let i = selectedTiles.length - 1; i > idx; i--) {
-      const t = selectedTiles[i];
-      const poly = t.element.querySelector('polygon');
-      if (poly) poly.classList.remove('selected');
-      selectedTiles.pop();
-    }
+  if (isLast) {
+    // Dragging back over the last tile again: deselect it
+    const removed = selectedTiles.pop();
+    const poly = removed.element.querySelector('polygon');
+    if (poly) poly.classList.remove('selected');
     updateWordPreview();
+    // Play sound for new length after removing one tile
+    playSwipeSoundForLength(selectedTiles.length);
     return;
   }
 
-  // New tile: enforce adjacency, then select and extend the path
-  if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.length - 1], tile)) {
-    const poly = tile.element.querySelector('polygon');
-    if (poly) poly.classList.add('selected');
-    selectedTiles.push(tile);
-    updateWordPreview();
+  // Backtracking: drag onto an earlier tile in the path
+  for (let i = selectedTiles.length - 1; i > idx; i--) {
+    const t = selectedTiles[i];
+    const poly = t.element.querySelector('polygon');
+    if (poly) poly.classList.remove('selected');
+    selectedTiles.pop();
   }
+  updateWordPreview();
+  // Play sound for the new length after backtracking
+  playSwipeSoundForLength(selectedTiles.length);
+  return;
+}
+
+
+ // New tile: enforce adjacency, then select and extend the path
+if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.length - 1], tile)) {
+  const poly = tile.element.querySelector('polygon');
+  if (poly) poly.classList.add('selected');
+  selectedTiles.push(tile);
+  updateWordPreview();
+  // Play sound for the new length after adding the tile
+  playSwipeSoundForLength(selectedTiles.length);
+}
+
 }
 
 

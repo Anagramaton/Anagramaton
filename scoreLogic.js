@@ -1,6 +1,8 @@
 import { isValidWord } from './gameLogic.js';
 import { gameState } from './gameState.js';
 import { letterPoints, reuseMultipliers, anagramMultiplier, lengthMultipliers } from './constants.js';
+import { playAlert } from './main.js';
+
 
 // — Check for anagram —
 function isAnagram(word) {
@@ -8,20 +10,21 @@ function isAnagram(word) {
 }
 
 // — Main scoring function —
-export function submitCurrentWord(tiles) {
+export async function submitCurrentWord(tiles) {
   const word = tiles.map(t => t.letter).join('');
 
   // Validate word length
-  if (word.length < 4) {
-    alert('❌ Word must be at least 4 letters long.');
-    return null;
-  }
+if (word.length < 4) {
+  await playAlert('❌ Word must be at least 4 letters long.');
+  return null;
+}
 
-  // Validate dictionary
-  if (!isValidWord(word)) {
-    alert(`❌ "${word}" is not a valid word.`);
-    return null;
-  }
+// Validate dictionary
+if (!isValidWord(word)) {
+  await playAlert(`❌ "${word}" is not a valid word.`);
+  return null;
+}
+
 
   // Step 1: Calculate Base Score (NO lifetime reuse here)
   let baseScore = 0;
@@ -173,10 +176,16 @@ export function computeBoardWordScores(wordsLike) {
 export function resetSelectionState() {
   const selectedTiles = gameState.selectedTiles || [];
   selectedTiles.forEach(tile => {
-    if (tile.element) {
-      
-      tile.element.classList.remove('selected');
-    }
+if (tile.element) {
+  const poly = tile.element.querySelector('polygon');
+  if (poly) poly.classList.remove('selected');
+
+  const letter = tile.textLetter;
+  const point = tile.textPoint;
+  letter?.classList.remove('selected');
+  point?.classList.remove('selected');
+}
+
   });
   gameState.selectedTiles = [];
 
