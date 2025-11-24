@@ -121,28 +121,24 @@ function handleSwipeTileStep(tile) {
   }
 }
 
-// When user starts tapping/swiping
+
 function handlePointerDown(e) {
   e.preventDefault();
-  
-  const tile = getTileFromEventTarget(e.target);
+    const tile = getTileFromEventTarget(e.target);
   if (!tile) {
-  
     return;
   }
-
-  
   isDragging = true;
   lastHoverTile = null;
-
   clearCurrentSelection();
 }
 
-// When user moves while swiping
+
 function handlePointerMove(e) {
   if (!isDragging) return;
-  const tile = getTileFromEventTarget(e.target);
-  
+
+  const hitElement = document.elementFromPoint(e.clientX, e.clientY);
+  const tile = getTileFromEventTarget(hitElement);
 
   if (tile && tile !== lastHoverTile) {
     handleSwipeTileStep(tile);
@@ -150,13 +146,13 @@ function handlePointerMove(e) {
   }
 }
 
-// When user ends the swipe
-function handlePointerUp(e) {
-  
-  isDragging = false;
-  lastHoverTile = null;
 
-  
+
+
+
+function handlePointerUp(e) {
+    isDragging = false;
+    lastHoverTile = null;
   updateWordPreview();
 }
 

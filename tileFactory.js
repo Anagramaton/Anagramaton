@@ -75,19 +75,6 @@ const g = document.createElementNS(SVG_NS, 'g');
 g.classList.add('tile');
 g.append(outline, poly, spark, tLetter, tPoint);
 
-// Debugging for tile interaction
-g.addEventListener('pointerdown', () => console.log('Pointer Down on Tile:', key)); // DEBUG
-g.addEventListener('touchstart', () => console.log('Touch Start on Tile:', key)); // DEBUG
-
-// --- Pointer-based hover (works for mouse + touch) ---
-g.addEventListener('pointerenter', (e) => {
-  g.classList.add('hover');
-});
-
-g.addEventListener('pointerleave', (e) => {
-  g.classList.remove('hover');
-});
-
 
 
   // --- Public tile object & helpers ---
