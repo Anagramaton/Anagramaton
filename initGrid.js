@@ -22,9 +22,6 @@ function getTileFromEventTarget(target) {
   const g = target.closest?.('.tile');
   if (!g) return null;
   const tile = tileElements.find(t => t && t.element === g) || null;
-
-  // Log tile detection
-  console.log('getTileFromEventTarget: Target:', target, 'Detected Tile:', tile); // DEBUG
   return tile;
 }
 
@@ -183,9 +180,10 @@ export function initializeGrid() {
     DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
     window.addEventListener('pointerup', handlePointerUp);
 
-    DOM.svg.addEventListener('touchstart', handlePointerDown, { passive: false });
-    DOM.svg.addEventListener('touchmove', handlePointerMove, { passive: false });
-    window.addEventListener('touchend', handlePointerUp);
+    DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
+    window.addEventListener('pointerup', handlePointerUp);
+
 
     DOM.svg.dataset.swipeListeners = 'true';
   }

@@ -79,14 +79,15 @@ g.append(outline, poly, spark, tLetter, tPoint);
 g.addEventListener('pointerdown', () => console.log('Pointer Down on Tile:', key)); // DEBUG
 g.addEventListener('touchstart', () => console.log('Touch Start on Tile:', key)); // DEBUG
 
-  // --- Hover behavior (simple) ---
-  g.addEventListener('mouseenter', () => {
-    g.classList.add('hover');
-  });
+// --- Pointer-based hover (works for mouse + touch) ---
+g.addEventListener('pointerenter', (e) => {
+  g.classList.add('hover');
+});
 
-  g.addEventListener('mouseleave', () => {
-    g.classList.remove('hover');
-  });
+g.addEventListener('pointerleave', (e) => {
+  g.classList.remove('hover');
+});
+
 
 
   // --- Public tile object & helpers ---
