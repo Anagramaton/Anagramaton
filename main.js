@@ -22,6 +22,7 @@ gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
 async function loadAllGameAudio() {
   await loadSound('alert', './audio/alert.mp3');
   await loadSound('success', './audio/ohyeahh.mp3');
+  await loadSound('magic', './audio/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
 
   for (let i = 1; i <= 14; i++) {
     await loadSound(`swipe${i}`, `./audio/ascend${i}.mp3`);
@@ -203,6 +204,7 @@ async function handleSubmitList() {
   const count = (gameState.words || []).length;
   if (count !== 10) return;
 
+  playSound('magic');
 
 
   const words = (gameState.words || []).map(w => String(w.word || '').toUpperCase());
@@ -275,6 +277,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Kick off loading all audio (fire-and-forget)
   loadAllGameAudio();
 
+  // First-tap overlay to unlock audio on mobile
+  const startOverlay = document.getElementById('start-overlay');
+  const startButton  = document.getElementById('start-button');
+  if (startOverlay && startButton) {
+    startButton.addEventListener('click', () => {
+      // This user gesture will unlock Web Audio on mobile
+      playSound('success'); // or 'alert' or any other loaded sound key
+      startOverlay.style.display = 'none';
+    });
+  }
+
   // --- Reset initial state ---
   baseTotal = 0;
   bonusTotal = 0;
@@ -285,6 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateScoreDisplay(0);
 
   initializeGrid();
+
   
   const grid = document.getElementById('hex-grid');
 ['pointerdown','pointermove','pointerup'].forEach(type => {

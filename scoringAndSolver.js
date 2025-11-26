@@ -242,6 +242,16 @@ export async function solveExactNonBlocking({
       score: Number(finalPerWord?.[j] || 0),
     }))
     .sort((a, b) => b.score - a.score);
+    // === INSERT EXIT DIAGNOSTICS HERE ===
+if (performance.now() - start > timeBudgetMs) {
+  
+  console.warn("[EXACT SOLVER DIAG] EXITED: TIME LIMIT EXCEEDED (", timeBudgetMs, "ms )");
+} else if (explored > hardNodeCap) {
+  console.warn("[EXACT SOLVER DIAG] EXITED: NODE LIMIT EXCEEDED (", hardNodeCap, "nodes )");
+} else if (bestSet.length === 0) {
+  console.warn("[EXACT SOLVER DIAG] EXITED: NO COMPLETE 10-WORD COMBINATION WAS EVER REACHED");
+}
+
 
   return {
     best10,

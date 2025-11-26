@@ -234,62 +234,114 @@ if (gameState.mode === 'daily') {
 // ---------------------------------------------------------------------------
 // STEP 3) GUARANTEED LONG WORDS
 //  - Daily: unchanged suffix-branching off placedSuffixes
-//  - Unlimited: if grid is empty, bootstrap 2–3 long-word anchors through center
+//  - Unlimited: if grid is empty, bootstrap 2–3 long-word anchors with varied,
+//               center-biased, anti-wall paths (reduces repetition and wall hugging)
 // ---------------------------------------------------------------------------
 const postLetters = Object.keys(grid).length;
 DEBUG && console.info(`[diag] post-Step2 letters=${postLetters}, suffixesPlaced=${placedSuffixes.length}`);
 
 function coordKey(q, r) { return `${q},${r}`; }
 
-// Axial neighbors for your hex grid (q,r); adjust if your axial basis differs
-const HEX_DIRS = [
-  { dq: +1, dr:  0 }, { dq: +1, dr: -1 }, { dq:  0, dr: -1 },
-  { dq: -1, dr:  0 }, { dq: -1, dr: +1 }, { dq:  0, dr: +1 },
-];
-
-function dist2FromCenter(q, r) {
-  // cheap heuristic; exact hex distance not required for sorting candidates
-  return q*q + r*r + (q+r)*(q+r);
+// True axial hex distance from center (for better center bias)
+function hexDistance(q, r) {
+  return (Math.abs(q) + Math.abs(r) + Math.abs(q + r)) / 2;
 }
 
-function getCenterishStart(coords) {
-  // prefer cells closest to geometric center
-  return [...coords].sort((a, b) => dist2FromCenter(a.q, a.r) - dist2FromCenter(b.q, b.r))[0];
+// Lightweight RNG (seeded per run to diversify bootstrap)
+function makeRng(seed = Date.now()) {
+  let s = (seed >>> 0) || 1;
+  return () => (s = (s * 1664525 + 1013904223) >>> 0) / 0x100000000;
 }
 
-function buildCenterSnakePath(coords, gridRadius, targetLen, avoidKeys = new Set()) {
- 
+// Weighted pick helper for randomized template
+function pickWeighted(list, rng = Math.random) {
+  const sum = list.reduce((s, x) => s + x.w, 0);
+  if (sum <= 0) return list[0];
+  let t = rng() * sum;
+  for (const item of list) {
+    t -= item.w;
+    if (t <= 0) return item;
+  }
+  return list[list.length - 1];
+}
+
+// Random centerish start: pick among the k-most-central cells
+function getRandomCenterishStart(coords, rng, k = 5) {
+  const sorted = [...coords].sort(
+    (a, b) => hexDistance(a.q, a.r) - hexDistance(b.q, b.r)
+  );
+  const top = sorted.slice(0, Math.min(k, sorted.length));
+  return top[Math.floor(rng() * top.length)];
+}
+
+// Varied, center-biased, anti-wall template (fallback when findPath fails)
+function buildVariedAnchorPath(coords, gridRadius, targetLen, avoidKeys = new Set(), rng = Math.random) {
   const coordMap = new Map(coords.map(c => [coordKey(c.q, c.r), c]));
   const visited = new Set([...avoidKeys]);
   const path = [];
-  let cur = getCenterishStart(coords);
 
+  let cur = getRandomCenterishStart(coords, rng);
   if (!cur) return null;
+
+  // Directions in axial basis; we’ll shuffle each step
+  const DIRS = [
+    { dq: +1, dr:  0 }, { dq: +1, dr: -1 }, { dq:  0, dr: -1 },
+    { dq: -1, dr:  0 }, { dq: -1, dr: +1 }, { dq:  0, dr: +1 },
+  ];
+  let prevDir = null;
 
   for (let i = 0; i < targetLen; i++) {
     const key = coordKey(cur.q, cur.r);
-    if (visited.has(key)) return null; 
+    if (visited.has(key)) return null;
     visited.add(key);
     path.push({ q: cur.q, r: cur.r, key });
 
     if (path.length === targetLen) break;
 
-    // choose the next neighbor preferring ones that continue “outward”
-    let next = null;
-    // deterministic order helps reproducibility
-    for (const d of HEX_DIRS) {
+    // Shuffle directions to avoid determinism
+    for (let j = DIRS.length - 1; j > 0; j--) {
+      const k = Math.floor(rng() * (j + 1));
+      [DIRS[j], DIRS[k]] = [DIRS[k], DIRS[j]];
+    }
+
+    const hereCenter = hexDistance(cur.q, cur.r);
+    const candidates = [];
+    for (const d of DIRS) {
       const nq = cur.q + d.dq, nr = cur.r + d.dr;
       const nKey = coordKey(nq, nr);
-      if (!coordMap.has(nKey)) continue;     
-      if (visited.has(nKey)) continue;       
-      next = { q: nq, r: nr };
-      break;
+      if (!coordMap.has(nKey)) continue;
+      if (visited.has(nKey)) continue;
+
+      const centerDist = hexDistance(nq, nr);
+      const outward = centerDist > hereCenter;
+
+      // Score:
+      //  - prefer staying central (radius - centerDist)
+      //  - mild penalty for moving outward
+      //  - gentle encouragement to turn (avoid long straight runs)
+      //  - small randomness to break ties
+      const centerBias = (gridRadius - centerDist);
+      const sameDir = prevDir && prevDir.dq === d.dq && prevDir.dr === d.dr;
+      const straightPenalty = sameDir ? -0.5 : 0.35; // prefer occasional turns
+      const outwardPenalty = outward ? -0.7 : 0;
+      const jitter = (rng() - 0.5) * 0.8;
+
+      const score = 1.2 * centerBias + straightPenalty + outwardPenalty + jitter;
+      candidates.push({ nq, nr, key: nKey, dir: d, score });
     }
-    if (!next) {
-      return null;
-    }
-    cur = next;
+
+    if (!candidates.length) return null;
+
+    // Normalize scores into positive weights
+    const minScore = candidates.reduce((m, c) => Math.min(m, c.score), Infinity);
+    const shift = minScore < 0 ? -minScore + 0.0001 : 0.0001;
+    for (const c of candidates) c.w = c.score + shift;
+
+    const chosen = pickWeighted(candidates, rng);
+    cur = { q: chosen.nq, r: chosen.nr };
+    prevDir = chosen.dir;
   }
+
   return path.length === targetLen ? path : null;
 }
 
@@ -297,44 +349,45 @@ function placeWordOnPath(grid, word, path) {
   for (let i = 0; i < path.length; i++) grid[path[i].key] = word[i];
 }
 
-function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys = new Set()) {
-  // A) Try your normal pathfinder broadly
-  for (const { q, r } of shuffledArray(coords).slice(0, PATH_TRIES)) {
+// Try standard pathfinder from multiple random starts; fallback to varied template
+function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys = new Set(), rng = Math.random) {
+  // Multiple random starts for better success rate on empty boards
+  const starts = shuffledArray(coords).slice(0, Math.min(coords.length, 40));
+  for (const { q, r } of starts) {
     const path = findPath(
-  grid, word, q, r, 0, new Set(), gridRadius,
-  {
-    allowZigZag: true,
-    preferOverlap: true,
-    wallBuffer: 2,  // 1 ring from border counts as “near wall”
-    maxEdgeRun: 0,  // don’t allow consecutive near-wall steps
-    maxStraight: 1  // avoid long straight grazes
-  }
-);
-
-    if (!path) continue;
-    if (hasConflict(path, word)) continue;
-    return { path, viaTemplate: false };
+      grid, word, q, r, 0, new Set(), gridRadius,
+      {
+        allowZigZag: true,
+        preferOverlap: false,  // critical: nothing to overlap at bootstrap
+        wallBuffer: 0,         // relax near-wall checks initially
+        maxEdgeRun: 999,       // disable wall-run caps at bootstrap
+        maxStraight: 5         // allow longer straight runs for long anchors
+      }
+    );
+    if (path) return { path, viaTemplate: false };
   }
 
-  // B) If that fails on an empty (or nearly empty) grid, lay a center snake template
-  const template = buildCenterSnakePath(coords, gridRadius, word.length, occupiedKeys);
+  // Fallback: center-biased varied template (not deterministic)
+  const template =
+    buildVariedAnchorPath(coords, gridRadius, word.length, occupiedKeys, rng) ||
+    buildVariedAnchorPath(coords, gridRadius, word.length, occupiedKeys, rng);
+
   if (template) return { path: template, viaTemplate: true };
-
   return null;
 }
 
 // ---- Unlimited Bootstrap (only when no letters exist yet) ----
 if (postLetters === 0 && gameState.mode !== 'daily') {
-  DEBUG && console.info('🚀 Unlimited bootstrap: placing long-word anchors');
+  const rng = makeRng(Date.now());
+  DEBUG && console.info('🚀 Unlimited bootstrap: placing long-word anchors (varied)');
 
-  const anchorsNeeded = 5;        
-  const anchorsMax     = 3;         
-  let anchorsPlaced    = 0;
+  const anchorsMax = 3;      // place 2–3 anchors
+  let anchorsPlaced = 0;
 
-  const occupied = new Set();       
+  const occupied = new Set();
   const chosen = [];
 
-  // preselect a small pool of diverse longs
+  // Preselect a pool of diverse long words
   for (const w of longCandidates) {
     if (usedWords.has(w)) continue;
     chosen.push(w);
@@ -344,29 +397,27 @@ if (postLetters === 0 && gameState.mode !== 'daily') {
   for (const word of chosen) {
     if (anchorsPlaced >= anchorsMax) break;
 
-    const result = tryStandardPlacementOrTemplate(word, coords, gridRadius, occupied);
+    const result = tryStandardPlacementOrTemplate(word, coords, gridRadius, occupied, rng);
     if (!result) continue;
 
     const { path, viaTemplate } = result;
     placeWordOnPath(grid, word, path);
 
-    // mark occupancy so subsequent template attempts don’t reuse cells
+    // Mark occupancy so subsequent template attempts don’t reuse cells
     if (viaTemplate) for (const step of path) occupied.add(step.key);
 
     placedWords.push({
       word,
       path,
-      bootstrapAnchor: true,   // ← flag for diagnostics/analytics
+      bootstrapAnchor: true,
       viaTemplate,
       mandatoryLong: true,
     });
     usedWords.add(word);
     anchorsPlaced++;
-
-
   }
 
-  DEBUG && console.info(`✅ Bootstrap anchors placed: ${anchorsPlaced}`);
+  DEBUG && console.info(`✅ Bootstrap anchors placed: ${[...placedWords.filter(p => p.bootstrapAnchor).map(p => p.word)].join(', ')}`);
 }
 
 // ---- Daily suffix-branch branching (unchanged) ----
@@ -566,6 +617,21 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
       }
     }
   }
+
+  // Count 4- and 5-letter word tiles from Step 6 only
+{
+  const step6StartIndex = placedWords.findIndex(p => !p.mandatoryLong && !p.branched && !p.bootstrapAnchor);
+  const step6Placed = placedWords.slice(step6StartIndex);
+  const tilesUsed = new Set();
+  
+  for (const { word, path } of step6Placed) {
+    if (word.length === 4 || word.length === 5) {
+      path.forEach(({ key }) => tilesUsed.add(key));
+    }
+  }
+
+  console.log(`🎯 Step 6 — unique tiles used in 4- and 5-letter words: ${tilesUsed.size}`);
+}
 
   // ---------------------------------------------------------------------------
   // HARD REQUIREMENT CHECK — without touching phrase pairs

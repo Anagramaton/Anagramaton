@@ -23,8 +23,8 @@ function findPath(
   opts = {
     allowZigZag: true,
     preferOverlap: true,
-    maxStraight: 0,
-    wallBuffer: 0,     
+    maxStraight: 2,
+    wallBuffer: 1,     
     maxEdgeRun: 1      
   },
   prevDirIdx = null,
@@ -35,8 +35,8 @@ function findPath(
   const {
     allowZigZag = true,
     preferOverlap = true,
-    maxStraight = 0,
-    wallBuffer = 0,
+    maxStraight = 2,
+    wallBuffer = 1,
     maxEdgeRun = 1
   } = opts;
 
@@ -116,7 +116,7 @@ function findPath(
 
     
         if (nextEdgeRunBase >= maxEdgeRun && nb.staysNearWall && !nb.goesDeeper) {
-      continue; // hard-stop more edge crawling; try a deeper step
+      continue; 
     }
 
 
