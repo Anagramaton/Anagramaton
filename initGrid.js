@@ -168,14 +168,17 @@ if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.
 
 function handlePointerDown(e) {
   e.preventDefault();
-    const tile = getTileFromEventTarget(e.target);
-  if (!tile) {
-    return;
-  }
+  const tile = getTileFromEventTarget(e.target);
+  if (!tile) return;
+
   isDragging = true;
-  lastHoverTile = null;
+  lastHoverTile = tile;
+
+  // Clear any old word, then immediately start the new path on this tile
   clearCurrentSelection();
+  handleSwipeTileStep(tile);
 }
+
 
 
 function handlePointerMove(e) {
