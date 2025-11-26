@@ -73,14 +73,8 @@
   window.addEventListener('round:over', (e) => {
     const d = e.detail || {};
     openModal(d);
-
-    // also hydrate the extra mobile sections
-    try {
-      fillExtraSections(d);
-    } catch (err) {
-      console.warn('[roundOverModal] extra fill failed', err);
-    }
   });
+
 
 
   // === Add-only enhancement: Side-by-side "You vs Them" + Fancy Meter ==========
@@ -373,7 +367,7 @@ function renderList(ol, items, matchSet = new Set(), highlightThem = false) {
       requestAnimationFrame(step);
     }
 
-    // ---------- Fill on round end
+        // ---------- Fill on round end
     window.addEventListener('round:over', (e) => {
       const d = e?.detail || {};
 
@@ -381,11 +375,15 @@ function renderList(ol, items, matchSet = new Set(), highlightThem = false) {
       ensureVSSection();
       ensureMeter();
 
+      // Fill summary / badges / tabs
+      fillExtraSections(d);
+
       // Data prep
       const boardTop10 = Array.isArray(d.boardTop10) ? d.boardTop10 : [];
       const youItems =
         Array.isArray(d.wordsWithScores) ? d.wordsWithScores :
         Array.isArray(d.words) ? d.words.map(w => ({ word: w, score: 0 })) : [];
+
 
       // Sort both by score desc for satisfying comparison
       const byScoreDesc = (a, b) => (Number(b.score) || 0) - (Number(a.score) || 0);

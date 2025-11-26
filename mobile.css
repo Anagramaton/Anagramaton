@@ -274,7 +274,7 @@ html, body {
 
 @media (max-width: 768px) {
   #hex-grid {
-    touch-action: none;
+    touch-action: manipulation;
   }
 }
 

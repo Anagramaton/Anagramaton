@@ -4,6 +4,9 @@ import { gameState } from './gameState.js';
 import { GRID_RADIUS } from './constants.js';
 import { areAxialNeighbors } from './utils.js';
 import { isValidWord } from './gameLogic.js';
+import { playSound } from './gameAudio.js';
+
+
 export const DOM = {
   svg: document.getElementById('hex-grid'),
   wordList: document.getElementById('word-list'),
@@ -12,27 +15,7 @@ export let tileElements = [];
 export let grid;
 
 
-// === Swipe sounds ===
-// Adjust "./audio" to wherever your 14 mp3 files actually live.
-const ASCEND_SOUND_COUNT = 14;
-const swipeSounds = Array.from({ length: ASCEND_SOUND_COUNT }, (_, i) => {
-  const audio = new Audio(`./audio/ascend${i + 1}.mp3`);
-  audio.preload = 'auto';
-  return audio;
-});
 
-function playSwipeSoundForLength(length) {
-  if (length <= 0) return;
-  const index = Math.min(length, ASCEND_SOUND_COUNT) - 1;
-  const sound = swipeSounds[index];
-  if (!sound) return;
-
-  // Restart from the beginning and play
-  sound.currentTime = 0;
-  sound.play().catch(() => {
-    // Ignore play() errors (e.g. autoplay restrictions)
-  });
-}
 
 
 // swipe / drag state
@@ -132,9 +115,16 @@ function handleSwipeTileStep(tile) {
     if (poly) poly.classList.remove('selected');
     updateWordPreview();
     // Play sound for new length after removing one tile
-    playSwipeSoundForLength(selectedTiles.length);
+    const index = Math.min(selectedTiles.length, 14);
+    if (index > 0) {
+      requestAnimationFrame(() => {
+  playSound(`swipe${index}`);
+});
+
+    }
     return;
   }
+
 
   // Backtracking: drag onto an earlier tile in the path
   for (let i = selectedTiles.length - 1; i > idx; i--) {
@@ -145,9 +135,14 @@ function handleSwipeTileStep(tile) {
   }
   updateWordPreview();
   // Play sound for the new length after backtracking
-  playSwipeSoundForLength(selectedTiles.length);
+  const index = Math.min(selectedTiles.length, 14);
+  requestAnimationFrame(() => {
+    playSound(`swipe${index}`);
+  });
+
   return;
 }
+
 
 
  // New tile: enforce adjacency, then select and extend the path
@@ -156,9 +151,16 @@ if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.
   if (poly) poly.classList.add('selected');
   selectedTiles.push(tile);
   updateWordPreview();
-  // Play sound for the new length after adding the tile
-  playSwipeSoundForLength(selectedTiles.length);
+     // Play sound for new length after removing one tile
+    const index = Math.min(selectedTiles.length, 14);
+    if (index > 0) {
+      requestAnimationFrame(() => {
+        playSound(`swipe${index}`);
+      });
+    }
+
 }
+
 
 }
 
@@ -213,15 +215,11 @@ export function initializeGrid() {
 
   gameState.allTiles = tileElements;
 
+
   if (!DOM.svg.dataset.swipeListeners) {
     DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });
     DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
     window.addEventListener('pointerup', handlePointerUp);
-
-    DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });
-    DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
-    window.addEventListener('pointerup', handlePointerUp);
-
 
     DOM.svg.dataset.swipeListeners = 'true';
   }

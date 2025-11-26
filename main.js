@@ -10,6 +10,7 @@ import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
+import { loadSound, playSound } from './gameAudio.js';
 
 
 // ===== GAME MODE (daily | unlimited) via URL param =====
@@ -17,21 +18,27 @@ const _params = new URLSearchParams(typeof location !== 'undefined' ? location.s
 gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
 
 
+// Load all game audio (alert, success, swipe1–14)
+async function loadAllGameAudio() {
+  await loadSound('alert', './audio/alert.mp3');
+  await loadSound('success', './audio/ohyeahh.mp3');
 
-
-// === Custom Alert with Sound ===
-const alertSound = new Audio('./audio/alert.mp3'); 
-const successSound = new Audio('./audio/ohyeahh.mp3'); // adjust path if needed
-
+  for (let i = 1; i <= 14; i++) {
+    await loadSound(`swipe${i}`, `./audio/ascend${i}.mp3`);
+  }
+}
 
 export function playAlert(msg) {
   const modal = document.getElementById('alert-modal');
   const text = document.getElementById('alert-text');
   const okBtn = document.getElementById('alert-ok');
+
   text.textContent = msg;
   modal.classList.remove('hidden');
-  alertSound.currentTime = 0;
-  alertSound.play().catch(() => {});
+
+  // Web Audio alert sound
+  playSound('alert');
+
   return new Promise(resolve => {
     okBtn.onclick = () => {
       modal.classList.add('hidden');
@@ -39,6 +46,7 @@ export function playAlert(msg) {
     };
   });
 }
+
 
 
 // ------------------------------------------------------------
@@ -172,9 +180,8 @@ if (wordScore === null) {
   recomputeAll();
   syncSubmitListButton();
 
-  // Animate the current word display
-  successSound.currentTime = 0;
-successSound.play().catch(() => {});
+playSound('success');
+
 
   const currentWordEl = document.getElementById('current-word');
   if (currentWordEl) {
@@ -239,42 +246,35 @@ const placedWordStrings = placedWordList.map(p => p.word);
 const boardEntries = buildBoardEntries(placedWordList);
 const { POOL } = buildPool(boardEntries, 250);
 
-const { best10, finalTotal } = await solveExactNonBlocking({
-  POOL,
-  boardEntries,
-  TARGET: 10,
-  timeBudgetMs: 800,
+requestAnimationFrame(() => {
+  const boardTop10      = Array.isArray(gameState.boardTop10) ? gameState.boardTop10 : [];
+  const boardTop10Total = Number(gameState.boardTop10Total) || 0;
+
+  window.dispatchEvent(new CustomEvent('round:over', {
+    detail: {
+      words,
+      wordsWithScores,
+      placedWords: placedWordStrings,
+      placedWordsWithPaths: placedWordList,
+      baseTotal,
+      bonusTotal,
+      totalScore: finalScore,
+      finalScoreText,
+      boardTop10,
+      boardTop10Total
+    }
+  }));
 });
 
-gameState.boardTop10 = best10;
-gameState.boardTop10Total = finalTotal;
-
-  // defer so merged panel computes Top 10 first
-  requestAnimationFrame(() => {
-    const boardTop10      = Array.isArray(gameState.boardTop10) ? gameState.boardTop10 : [];
-    const boardTop10Total = Number(gameState.boardTop10Total) || 0;
-
-    window.dispatchEvent(new CustomEvent('round:over', {
-      detail: {
-        words,
-        wordsWithScores,
-        placedWords: placedWordStrings, // ✅ sends plain text to panel
-        placedWordsWithPaths: placedWordList, // ✅ keep full data for replay/solver
-        baseTotal,
-        bonusTotal,
-        totalScore: finalScore,
-        finalScoreText,
-        boardTop10,
-        boardTop10Total
-      }
-    }));
-  });
 }
 
 // =============================
 // DOMContentLoaded Bootstrap
 // =============================
 document.addEventListener('DOMContentLoaded', () => {
+  // Kick off loading all audio (fire-and-forget)
+  loadAllGameAudio();
+
   // --- Reset initial state ---
   baseTotal = 0;
   bonusTotal = 0;
@@ -284,7 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
-  
   initializeGrid();
   
   const grid = document.getElementById('hex-grid');
