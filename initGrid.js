@@ -106,42 +106,25 @@ function handleSwipeTileStep(tile) {
   const isAlreadySelected = idx !== -1;
 
   if (isAlreadySelected) {
-  const isLast = idx === selectedTiles.length - 1;
+    for (let i = selectedTiles.length - 1; i > idx; i--) {
+      const t = selectedTiles[i];
+      const poly = t.element.querySelector('polygon');
+      if (poly) poly.classList.remove('selected');
+      selectedTiles.pop();
+    }
 
-  if (isLast) {
-    // Dragging back over the last tile again: deselect it
-    const removed = selectedTiles.pop();
-    const poly = removed.element.querySelector('polygon');
-    if (poly) poly.classList.remove('selected');
     updateWordPreview();
-    // Play sound for new length after removing one tile
+
     const index = Math.min(selectedTiles.length, 14);
     if (index > 0) {
       requestAnimationFrame(() => {
-  playSound(`swipe${index}`);
-});
-
+        playSound(`swipe${index}`);
+      });
     }
+
     return;
   }
 
-
-  // Backtracking: drag onto an earlier tile in the path
-  for (let i = selectedTiles.length - 1; i > idx; i--) {
-    const t = selectedTiles[i];
-    const poly = t.element.querySelector('polygon');
-    if (poly) poly.classList.remove('selected');
-    selectedTiles.pop();
-  }
-  updateWordPreview();
-  // Play sound for the new length after backtracking
-  const index = Math.min(selectedTiles.length, 14);
-  requestAnimationFrame(() => {
-    playSound(`swipe${index}`);
-  });
-
-  return;
-}
 
 
 
