@@ -428,29 +428,7 @@ body {
   margin: 0;
 }
 
-/* How-to button */
-#howto-open {
-  position: fixed;
-  top: 5px;
-  right: 8px;
-  z-index: 950;
-  background: none;
-  border: none;
-  box-shadow: none;
-  width: auto;
-  height: auto;
-  padding: 0;
-  font-family: initial;
-  font-weight: initial;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--howto-color);
-  cursor: pointer;
-}
-#howto-open:hover { opacity: 0.7; }
-#howto-open:active { opacity: 0.45; }
+
 
 /* Grid Container */
 #hex-grid { touch-action: none; }
@@ -1103,6 +1081,58 @@ body.right-open .right-toggle { right: -60; }
   }
 }
 
+/* Settings Dropdown */
+#settings-wrap {
+  position: fixed;
+  top: 5px;        /* same as old how-to button */
+  right: 8px;      /* same as old how-to button */
+  z-index: 1200;
+}
+
+#settings-btn {
+  font-size: 1.7rem;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+#settings-menu {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  background: var(--panel-bg);
+  color: var(--panel-text);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+#settings-menu button {
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  color: var(--btn-fg);
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+#settings-menu button:hover {
+  filter: brightness(1.08);
+}
+
+#settings-menu[hidden] {
+  display: none !important;
+}
 
 
 

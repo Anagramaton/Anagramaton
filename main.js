@@ -31,13 +31,13 @@ function applySavedTheme() {
 
   if (accessBtn) {
     accessBtn.setAttribute('aria-pressed', String(access === 'colorblind'));
-    accessBtn.textContent = access === 'colorblind' ? '🎯✓' : '🎯';
+    accessBtn.textContent = access === 'colorblind' ? '🌓' : '🌒';
     accessBtn.title = access === 'colorblind' ? 'Disable Colorblind Mode' : 'Enable Colorblind Mode';
   }
 
   if (contrastBtn) {
     contrastBtn.setAttribute('aria-pressed', String(contrast === 'high'));
-    contrastBtn.textContent = contrast === 'high' ? 'HC✓' : 'HC';
+    contrastBtn.textContent = contrast === 'high' ? '◻️' : '◼️';
     contrastBtn.title = contrast === 'high'
       ? 'Disable High Contrast Mode'
       : 'Enable High Contrast Mode';
@@ -68,7 +68,7 @@ function setupThemeControls() {
       document.body.setAttribute('data-accessibility', next);
       localStorage.setItem('accessibility', next);
       accessBtn.setAttribute('aria-pressed', String(next === 'colorblind'));
-      accessBtn.textContent = next === 'colorblind' ? '🎯✓' : '🎯';
+      accessBtn.textContent = next === 'colorblind' ? '🌓' : '🌒';
       accessBtn.title = next === 'colorblind' ? 'Disable Colorblind Mode' : 'Enable Colorblind Mode';
     });
   }
@@ -81,7 +81,7 @@ function setupThemeControls() {
       localStorage.setItem('contrast', next);
 
       contrastBtn.setAttribute('aria-pressed', String(next === 'high'));
-      contrastBtn.textContent = next === 'high' ? 'HC✓' : 'HC';
+      contrastBtn.textContent = next === 'high' ? '◻️' : '◼️';
       contrastBtn.title = next === 'high'
         ? 'Disable High Contrast Mode'
         : 'Enable High Contrast Mode';
@@ -357,7 +357,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize theme + accessibility preferences
   applySavedTheme();
   setupThemeControls();
-  preferOsDarkOnFirstVisit(); // optional
+  preferOsDarkOnFirstVisit(); 
+  // ============================
+// SETTINGS DROPDOWN (⚙️)
+// ============================
+
+const settingsWrap = document.getElementById("settings-wrap");
+const settingsBtn = document.getElementById("settings-btn");
+const settingsMenu = document.getElementById("settings-menu");
+
+// Toggle the dropdown open/closed
+if (settingsBtn) {
+  settingsBtn.addEventListener("click", () => {
+    settingsMenu.hidden = !settingsMenu.hidden;
+  });
+}
+
+// Close menu if clicking outside it
+document.addEventListener("click", (e) => {
+  if (!settingsWrap.contains(e.target)) {
+    settingsMenu.hidden = true;
+  }
+});
+
 
   // First-tap overlay to unlock audio on mobile
   const startOverlay = document.getElementById('start-overlay');
