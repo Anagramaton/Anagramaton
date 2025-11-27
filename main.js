@@ -112,15 +112,19 @@ const _params = new URLSearchParams(typeof location !== 'undefined' ? location.s
 gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
 
 // Load all game audio (alert, success, swipe1–14)
+// Load all game audio (alert, success, swipe1–25 using ascend1A–ascend1Y)
 async function loadAllGameAudio() {
   await loadSound('alert', './audio/alert.mp3');
   await loadSound('success', './audio/ohyeahh.mp3');
   await loadSound('magic', './audio/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
 
-  for (let i = 1; i <= 14; i++) {
-    await loadSound(`swipe${i}`, `./audio/ascend${i}.mp3`);
-  }
+  const swipeLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split(''); // A–Y = 25 clips
+  swipeLetters.forEach((letter, index) => {
+    const swipeIndex = index + 1; // swipe1 ... swipe25
+    loadSound(`swipe${swipeIndex}`, `./audio/ascend1${letter}.mp3`);
+  });
 }
+
 
 export function playAlert(msg) {
   const modal = document.getElementById('alert-modal');

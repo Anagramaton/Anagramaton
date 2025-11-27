@@ -912,7 +912,7 @@ body.right-open .right-toggle { right: -60; }
 #score-display { font-family: "Limelight", sans-serif; font-size: clamp(2.8rem, 3vw, 2.8rem); text-transform: uppercase; }
 #score-display {
   position: fixed;
-  top: 120px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 800;

@@ -113,9 +113,9 @@ function handleSwipeTileStep(tile) {
       selectedTiles.pop();
     }
 
-    updateWordPreview();
+     updateWordPreview();
 
-    const index = Math.min(selectedTiles.length, 14);
+    const index = Math.min(selectedTiles.length, 25);
     if (index > 0) {
       requestAnimationFrame(() => {
         playSound(`swipe${index}`);
@@ -123,6 +123,7 @@ function handleSwipeTileStep(tile) {
     }
 
     return;
+
   }
 
 
@@ -134,13 +135,14 @@ if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.
   if (poly) poly.classList.add('selected');
   selectedTiles.push(tile);
   updateWordPreview();
-     // Play sound for new length after removing one tile
-    const index = Math.min(selectedTiles.length, 14);
-    if (index > 0) {
-      requestAnimationFrame(() => {
-        playSound(`swipe${index}`);
-      });
-    }
+
+  const index = Math.min(selectedTiles.length, 25);
+  if (index > 0) {
+    requestAnimationFrame(() => {
+      playSound(`swipe${index}`);
+    });
+  }
+
 
 }
 
