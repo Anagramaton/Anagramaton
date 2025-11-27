@@ -196,7 +196,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: calc(50% + 200px);
+    top: calc(50% + 240px);
     z-index: 800;
     display: block;
     text-align: center;
@@ -208,7 +208,7 @@
 @media (max-width: 768px) {
   #submit-word {
     position: fixed;
-    top: calc(50% + 275px);
+    top: calc(50% + 325px);
     left: calc(50% - 105px);
     transform: translateX(-50%);
     z-index: 800;
@@ -233,7 +233,7 @@
 @media (max-width: 768px) {
   #clear-word {
     position: fixed;
-    top: calc(50% + 275px);
+    top: calc(50% + 325px);
     right: calc(50% - 220px);
     transform: translateX(-50%);
     z-index: 800;
