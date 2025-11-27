@@ -2,63 +2,50 @@
    Mobile Layout Overrides
    ================================ */
 @media (max-width: 768px) {
-    #game-container {
-    background-color: #f4f6f8; /* light background behind grid */
-
+  #game-container {
+    /* Use theme variables instead of hard-coded light colors */
+    background-color: var(--bg);
     background-image:
-      linear-gradient(#d0d4d8 1px, transparent 1px),
-      linear-gradient(90deg, #d0d4d8 1px, transparent 1px);
-
-        background-size: 24px 24px; /* half the current grid size */
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 24px 24px; /* half the current grid size */
     background-position: center center; /* keeps grid aligned nicely */
   }
-html, body {
+
+  html, body {
     height: 100vh;
     width: 100vw;
     margin: 0;
     padding: 0;
-    overflow: hidden;          
+    overflow: hidden;
     touch-action: auto; /* Allow standard scrolling/pinch */
+  }
 }
-}
+
+
 
 
 
 .side-toggle {
-    position: fixed;
-    writing-mode: initial;
-    text-orientation: initial;
-    width: auto;
-    height: auto;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-    font-family: 'Coiny', cursive;
-    font-weight: 400;
-    font-size: 0.9rem;
-    color: #000;
-    cursor: pointer;
-    top: 80px;
-    letter-spacing: 0.02em;
-    transition: all 0.15s ease;
+  /* Only layout tweaks; keep colors/background from theme in style.css */
+  position: fixed;
+  writing-mode: initial;
+  text-orientation: initial;
+  width: auto;
+  height: auto;
+  padding: 0;
+  border-radius: 0;
+  top: 80px;
+  letter-spacing: 0.02em;
+  transition: all 0.15s ease;
 }
 
-.left-toggle {
-    background: transparent;
-    box-shadow: none;
-}
+
 .left-toggle:hover {
-    background: transparent;
-    transform: none;
-    box-shadow: none;
-    text-decoration: underline;  
+  /* Keep theme styling, just add underline on hover */
+  text-decoration: underline;
 }
-.left-toggle:active {
-    transform: none;
-    box-shadow: none;
-}
+
 
 
 
@@ -67,7 +54,7 @@ html, body {
 
 @media (max-width: 768px) {
 
-  /* HOW-TO BUTTON styled like panel text buttons */
+  /* HOW-TO BUTTON positioned for mobile, color from theme */
   #howto-open {
     position: fixed;
     top: 5px;
@@ -90,7 +77,7 @@ html, body {
     letter-spacing: 0;
     text-transform: none;
 
-    color: #000;        /* matches WORD PANEL text */
+    color: var(--howto-color);
     cursor: pointer;
   }
 
@@ -102,6 +89,7 @@ html, body {
     opacity: 0.45;
   }
 }
+
 
 
 
@@ -220,8 +208,8 @@ html, body {
 @media (max-width: 768px) {
   #submit-word {
     position: fixed;
-    top: calc(50% + 275px); 
-    left: calc(50% - 105px); 
+    top: calc(50% + 275px);
+    left: calc(50% - 105px);
     transform: translateX(-50%);
     z-index: 800;
     background: none;
@@ -232,7 +220,7 @@ html, body {
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #000;
+    color: var(--submit-fg);
     padding: 0;
     margin: 0;
   }
@@ -241,11 +229,12 @@ html, body {
   }
 }
 
+
 @media (max-width: 768px) {
   #clear-word {
     position: fixed;
-    top: calc(50% + 275px); 
-    right: calc(50% - 220px); 
+    top: calc(50% + 275px);
+    right: calc(50% - 220px);
     transform: translateX(-50%);
     z-index: 800;
     background: none;
@@ -256,7 +245,7 @@ html, body {
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #000;
+    color: var(--submit-fg);
     padding: 0;
     margin: 0;
   }
@@ -264,6 +253,7 @@ html, body {
     opacity: 0.6;
   }
 }
+
 
 
 @media (max-width: 768px) {
