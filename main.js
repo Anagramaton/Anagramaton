@@ -366,19 +366,18 @@ const settingsWrap = document.getElementById("settings-wrap");
 const settingsBtn = document.getElementById("settings-btn");
 const settingsMenu = document.getElementById("settings-menu");
 
-// Toggle the dropdown open/closed
-if (settingsBtn) {
-  settingsBtn.addEventListener("click", () => {
-    settingsMenu.hidden = !settingsMenu.hidden;
-  });
-}
+settingsBtn.addEventListener("click", () => {
+  settingsMenu.hidden = !settingsMenu.hidden;
+  settingsWrap.classList.toggle("menu-open", !settingsMenu.hidden);
+});
 
-// Close menu if clicking outside it
 document.addEventListener("click", (e) => {
   if (!settingsWrap.contains(e.target)) {
     settingsMenu.hidden = true;
+    settingsWrap.classList.remove("menu-open");
   }
 });
+
 
 
   // First-tap overlay to unlock audio on mobile

@@ -1086,7 +1086,7 @@ body.right-open .right-toggle { right: -60; }
   position: fixed;
   top: 5px;        /* same as old how-to button */
   right: 8px;      /* same as old how-to button */
-  z-index: 1200;
+  z-index: 800;
 }
 
 #settings-btn {
@@ -1100,7 +1100,7 @@ body.right-open .right-toggle { right: -60; }
 }
 
 #settings-menu {
-  position: absolute;
+  position: fixed;
   top: 42px;
   right: 0;
   display: flex;
@@ -1132,6 +1132,43 @@ body.right-open .right-toggle { right: -60; }
 
 #settings-menu[hidden] {
   display: none !important;
+}
+
+/* MOBILE — move the gear under the title */
+@media (max-width: 768px) {
+  #settings-wrap {
+    top: 58px;            /* under the ANAGRAMATON title */
+    right: 200px;
+    left: auto;
+  }
+}
+
+/* MOBILE — make ONLY the gear icon smaller */
+@media (max-width: 768px) {
+  #settings-btn {
+    font-size: 1.2rem;
+    padding: 4px 6px;
+  }
+}
+
+/* MOBILE — make menu horizontal AND position it to the right of the gear */
+@media (max-width: 768px) {
+  #settings-menu {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 8px);   /* menu sits to the right of the gear */
+    right: auto;
+
+    display: flex;
+    flex-direction: row;      /* horizontal */
+    gap: 8px;
+  }
+
+  #settings-menu > button {
+    width: auto;
+    padding: 4px 6px;
+    white-space: nowrap;
+  }
 }
 
 
