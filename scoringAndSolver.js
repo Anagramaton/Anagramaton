@@ -1,19 +1,9 @@
 import { recomputeAllWordScores } from './scoreLogic.js';
 
 // ============================================================================
-// SECTION 1: Board Entry Construction
-// ----------------------------------------------------------------------------
-// - buildBoardEntries: converts placed words (with cell paths) into
-//   scorer-friendly entries while ensuring SHARED tile objects for overlaps.
+// SECTION 1: Board Entry Construction (unchanged)
 // ============================================================================
 
-/**
- * Build scorer-friendly entries with SHARED tile objects.
- * Ensures overlapping letters share the same tile object.
- *
- * @param {Array<{word:string, path:Array<{key:string,q:number,r:number}>}>} placedWords
- * @returns {Array<{word:string, tiles:Array<{key:string,q:number,r:number,letter:string}>>}
- */
 export function buildBoardEntries(placedWords = []) {
   const tileRegistry = new Map(); // key -> shared tile object
 
@@ -24,7 +14,6 @@ export function buildBoardEntries(placedWords = []) {
       t = { key: k, q: cell.q, r: cell.r, letter };
       tileRegistry.set(k, t);
     } else {
-      // Keep consistent if multiple words share the letter
       t.letter = letter;
     }
     return t;
@@ -40,20 +29,9 @@ export function buildBoardEntries(placedWords = []) {
 }
 
 // ============================================================================
-// SECTION 2: Candidate Pool Building
-// ----------------------------------------------------------------------------
-// - buildPool: ranks entries by solo score and prepares POOL/CANDIDATES/OPT.
-//   Does NOT mutate inputs.
+// SECTION 2: Candidate Pool Building (minor enhancement: preserve uniqueTileCount)
 // ============================================================================
 
-/**
- * Rank candidates by solo score and build the POOL.
- * Does NOT mutate inputs.
- *
- * @param {Array<{word:string, tiles:Array}>} boardEntries
- * @param {number} poolSize
- * @returns {{ POOL:Array, CANDIDATES:Array, soloScores:Array, OPT:Array }}
- */
 export function buildPool(boardEntries, poolSize = 250) {
   const rawScores = recomputeAllWordScores(boardEntries) || [];
   const soloScores = rawScores.map((s, i) => ({
@@ -63,35 +41,42 @@ export function buildPool(boardEntries, poolSize = 250) {
     solo: Number(s || 0),
   }));
 
-  const POOL = [...soloScores].sort((a, b) => b.solo - a.solo).slice(0, poolSize);
+  // Precompute unique tile count (used for ordering)
+  for (const x of soloScores) {
+    const uniq = new Set(x.tiles);
+    x.uniqueTileCount = uniq.size;
+    x.density = x.solo / Math.max(1, x.uniqueTileCount);
+  }
 
-  // Optional back-compat: if other code still reads CANDIDATES
+  // Order by a mix: solo first, then density
+  const POOL = [...soloScores]
+    .sort((a, b) => {
+      if (b.solo !== a.solo) return b.solo - a.solo;
+      return b.density - a.density;
+    })
+    .slice(0, poolSize);
+
+  // Optional back-compat
   const CANDIDATES = POOL;
 
-  // Precompute an optimistic (admissible) upper bound for pruning
+  // Optimistic bound will be computed per-branch now, but keep a simple upper cap as fallback
   const OPT = POOL.map((x) => ({
     idx: x.idx,
     word: x.word,
     tiles: x.tiles,
     solo: x.solo,
-    optimistic: x.solo * 4, // safe overestimate for reuse
+    optimistic: x.solo * 3, // tightened static cap, but per-branch bound below is used instead
+    uniqueTileCount: x.uniqueTileCount,
+    density: x.density,
   }));
 
   return { POOL, CANDIDATES, soloScores, OPT };
 }
 
 // ============================================================================
-// SECTION 3: Private Helpers (Exact Scoring)
-// ----------------------------------------------------------------------------
-// - scoreSetExact: recomputes full interaction scores for a set of indices.
+// SECTION 3: Private Helpers (Exact Scoring) — unchanged
 // ============================================================================
 
-/**
- * Exact score for a set of indices, recomputing with full interaction.
- * @param {Array} boardEntries
- * @param {Array<number>} idxList
- * @returns {{total:number, perWord:number[]}}
- */
 function scoreSetExact(boardEntries, idxList) {
   const picks = idxList.map((i) => boardEntries[i]);
   const perWord = recomputeAllWordScores(picks) || [];
@@ -101,25 +86,14 @@ function scoreSetExact(boardEntries, idxList) {
 }
 
 // ============================================================================
-// SECTION 4: Exact Solver (Cooperative / Non-Blocking)
+// SECTION 4: Exact Solver (Deeper Optimization)
 // ----------------------------------------------------------------------------
-// - solveExactNonBlocking: DFS + branch-and-bound with periodic yields to keep
-//   the UI responsive. Uses optimistic bounds from solo scores.
+// Key additions:
+// - Precompute per-word tile faces and tileKeys for faster overlap checks.
+// - Maintain a light-weight per-branch tile reuse count map for tighter optimistic bounds.
+// - Compute bound that accounts for how reuse multipliers can increase for existing tiles.
 // ============================================================================
 
-/**
- * Cooperative DFS/branch-and-bound exact solver.
- * Yields periodically so the UI stays responsive.
- *
- * @param {Object} args
- * @param {Array} args.POOL               // from buildPool(...)
- * @param {Array} args.boardEntries       // from buildBoardEntries(...)
- * @param {number} [args.TARGET=10]
- * @param {number} [args.timeBudgetMs=800]
- * @param {number} [args.sliceMs=12]
- * @param {number} [args.hardNodeCap=200_000]
- * @returns {Promise<{best10:Array<{word:string,score:number}>, finalTotal:number, explored:number, timedOut:boolean}>}
- */
 export async function solveExactNonBlocking({
   POOL,
   boardEntries,
@@ -127,22 +101,126 @@ export async function solveExactNonBlocking({
   timeBudgetMs = 800,
   sliceMs = 12,
   hardNodeCap = 200_000,
+  onProgress,
+  earlyAcceptRatio = 1.0,
 }) {
-  // Build OPT locally from POOL (keeps function pure)
-  const OPT = POOL.map((x) => ({
-    idx: x.idx,
-    word: x.word,
-    tiles: x.tiles,
-    solo: x.solo,
-    optimistic: x.solo * 4,
-  }));
+  // Precompute per-word data used for bounds and ordering
+  const letterPoints = getLetterPoints(); // pulled from constants indirectly; re-map for speed
+  const reuseMult = { 1: 1, 2: 2, 3: 4 }; // 3+ => 4
 
-  let bestSet = [];
-  let bestTotal = -Infinity;
+  // Build fast per-word tile fingerprints
+  const WORD = POOL.map((x) => {
+    const tiles = x.tiles || [];
+    const keys = tiles.map((t) => t.key);
+    // precompute face values per tile
+    const faces = tiles.map((t) => letterPoints[String(t.letter || '').toUpperCase()] || 1);
+    const uniqueTileKeys = Array.from(new Set(keys));
+    return {
+      idx: x.idx,
+      word: x.word,
+      tiles,
+      solo: x.solo,
+      uniqueTileKeys,
+      keys,
+      faces,
+      uniqueTileCount: x.uniqueTileCount,
+      density: x.density,
+    };
+  });
 
-  // Small cache for partial prefix scores
+  // Ordered indices by a blend of solo and density (already sorted in buildPool; keep reference)
+  const OPT = WORD
+    .map((w, i) => ({
+      pos: i, // the position in POOL order
+      idx: w.idx,
+      solo: w.solo,
+      density: w.density,
+    }))
+    .sort((a, b) => {
+      if (b.solo !== a.solo) return b.solo - a.solo;
+      return b.density - a.density;
+    });
+
+  // Fast letterPoints map builder
+  function getLetterPoints() {
+    // inline cache to avoid importing constants here (we rely on recomputeAllWordScores for exact totals).
+    const lp = {
+      A: 1, B: 3, C: 3, D: 2, E: 1,
+      F: 4, G: 2, H: 4, I: 1, J: 8,
+      K: 5, L: 1, M: 3, N: 1, O: 1,
+      P: 3, Q: 10, R: 1, S: 1, T: 1,
+      U: 1, V: 4, W: 4, X: 8, Y: 4, Z: 10,
+    };
+    return lp;
+  }
+
+  // Per-branch optimistic bound leveraging current tile reuse counts:
+  // For remaining picks, we assume:
+  // - A new word's tiles that are already used by 1 chosen word will get ×2.
+  // - Tiles already used by 2+ chosen words will get ×4.
+  // - Completely new tiles will get ×1.
+  // - We then apply the word-level length/anagram multipliers by approximating with solo's ratio:
+  //   Use (candidate.solo / soloBase1x) to scale the bound for multipliers conservatively.
+  function makeBranchBounder(tileUseCountMap, pickedSet) {
+    // Build quick lookup for "tile key -> uses"
+    // tileUseCountMap: Map<string,int>
+    return function optimisticBoundFromPos(startPos, slots) {
+      if (slots <= 0) return 0;
+
+      // Track top-k optimistic contributions without full sort
+      const top = [];
+
+      for (let p = startPos; p < WORD.length; p++) {
+        const cand = WORD[p];
+        if (pickedSet.has(cand.idx)) continue;
+
+        // Estimate base 1x sum for this word
+        let base1x = 0;
+        for (let i = 0; i < cand.faces.length; i++) {
+          base1x += cand.faces[i];
+        }
+
+        // Estimate reuse-aware multiplier for tiles given current branch state
+        let reuseBoosted = 0;
+        for (let i = 0; i < cand.keys.length; i++) {
+          const k = cand.keys[i];
+          const face = cand.faces[i];
+          const uses = tileUseCountMap.get(k) || 0;
+          // If uses==0 => this word adds first use => ×1
+          // uses==1 => adding second use => ×2
+          // uses>=2 => adding third+ => ×4
+          const mult = uses >= 2 ? reuseMult[3] : reuseMult[uses + 1];
+          reuseBoosted += face * mult;
+        }
+
+        // Scale for word-level multipliers conservatively relative to solo:
+        // solo ≈ base1x * wordMultipliersAvg; bound ≤ reuseBoosted * (solo/base1x)
+        const scale = base1x > 0 ? Math.max(1, cand.solo / base1x) : 1;
+        const optimistic = reuseBoosted * scale;
+
+        if (top.length < slots) {
+          top.push(optimistic);
+          if (top.length === slots) top.sort((a, b) => a - b);
+        } else if (optimistic > top[0]) {
+          top[0] = optimistic;
+          top.sort((a, b) => a - b);
+        }
+      }
+
+      let s = 0;
+      for (let i = 0; i < top.length; i++) s += top[i];
+      return s;
+    };
+  }
+
+  // Partial prefix cache; use a compact key to reduce overhead
   const partialCache = new Map();
-  const keyOf = (idxs) => idxs.join(',');
+  const keyOf = (idxs) => {
+    // Using a simple join is fine but costs string alloc; optimize by fixed-width base36
+    // Given POOL size ≤ 250, idx < 250 → encode as bytes-like string
+    // Keep simple for readability:
+    return idxs.join(',');
+  };
   const partialScore = (idxs) => {
     const k = keyOf(idxs);
     if (partialCache.has(k)) return partialCache.get(k);
@@ -151,49 +229,37 @@ export async function solveExactNonBlocking({
     return total;
   };
 
-  // Fast top-k optimistic fill (no full sort each time)
-  function optimisticFillBound(startPos, chosenSet, remainingSlots) {
-    if (remainingSlots <= 0) return 0;
+  // Initialize DFS stack state with per-branch tile-use counts
+  const stack = [{
+    pos: 0,
+    chosenIdxs: [],
+    chosenSet: new Set(),
+    curTotal: 0,
+    tileUseCountMap: new Map(), // key -> uses in current branch
+  }];
 
-    const top = [];
-    for (let p = startPos; p < OPT.length; p++) {
-      const candIdx = OPT[p].idx;
-      if (chosenSet.has(candIdx)) continue;
-
-      const v = OPT[p].optimistic;
-      if (top.length < remainingSlots) {
-        top.push(v);
-        if (top.length === remainingSlots) top.sort((a, b) => a - b);
-      } else if (v > top[0]) {
-        top[0] = v;
-        top.sort((a, b) => a - b);
-      }
-    }
-
-    let s = 0;
-    for (let i = 0; i < top.length; i++) s += top[i];
-    return s;
-  }
-
-  // Iterative DFS so we can yield to the event loop
-  const stack = [{ pos: 0, chosenIdxs: [], chosenSet: new Set(), curTotal: 0 }];
   let explored = 0;
   const start = performance.now();
   let lastSlice = start;
+  let bestSet = [];
+  let bestTotal = -Infinity;
+  let completedSearch = false;
 
   while (stack.length) {
     const now = performance.now();
-
     if (now - lastSlice >= sliceMs) {
-      // Yield control
       await Promise.resolve();
       lastSlice = performance.now();
       if (lastSlice - start > timeBudgetMs || explored > hardNodeCap) break;
     }
 
     const state = stack.pop();
-    const { pos, chosenIdxs, chosenSet, curTotal } = state;
+    const { pos, chosenIdxs, chosenSet, curTotal, tileUseCountMap } = state;
     explored++;
+
+    if (onProgress && explored % 2500 === 0) {
+      onProgress({ explored, bestTotal, depth: chosenIdxs.length });
+    }
 
     const have = chosenIdxs.length;
     if (have === TARGET) {
@@ -206,14 +272,23 @@ export async function solveExactNonBlocking({
     }
 
     const left = TARGET - have;
-    if (OPT.length - pos < left) continue;
+    if (WORD.length - pos < left) continue;
 
-    const optimistic = optimisticFillBound(pos, chosenSet, left);
+    // Tighter optimistic bound based on current tile reuse counts
+    const bounder = makeBranchBounder(tileUseCountMap, chosenSet);
+    const optimistic = bounder(pos, left);
+
     if (curTotal + optimistic <= bestTotal) continue;
 
-    // Branch in reverse so higher-priority nodes pop first
-    for (let p = OPT.length - 1; p >= pos; p--) {
-      const cand = OPT[p];
+    // Early acceptance: if the global optimistic cannot exceed bestTotal * ratio
+    if (pos === 0 && optimistic <= bestTotal * earlyAcceptRatio && bestSet.length === TARGET) {
+      completedSearch = true;
+      break;
+    }
+
+    // Branch in reverse so stronger candidates pop first
+    for (let p = WORD.length - 1; p >= pos; p--) {
+      const cand = WORD[p];
       const candIdx = cand.idx;
       if (chosenSet.has(candIdx)) continue;
 
@@ -221,8 +296,17 @@ export async function solveExactNonBlocking({
       const nextSet = new Set(chosenSet);
       nextSet.add(candIdx);
 
+      // Update tile-use counts for the next state (copy-on-write Map)
+      const nextTileUse = new Map(tileUseCountMap);
+      for (let i = 0; i < cand.keys.length; i++) {
+        const k = cand.keys[i];
+        nextTileUse.set(k, (nextTileUse.get(k) || 0) + 1);
+      }
+
       const partialTotal = partialScore(nextIdxs);
-      const optimisticRest = optimisticFillBound(p + 1, nextSet, left - 1);
+      const nextBounder = makeBranchBounder(nextTileUse, nextSet);
+      const optimisticRest = nextBounder(p + 1, left - 1);
+
       if (partialTotal + optimisticRest <= bestTotal) continue;
 
       stack.push({
@@ -230,6 +314,7 @@ export async function solveExactNonBlocking({
         chosenIdxs: nextIdxs,
         chosenSet: nextSet,
         curTotal: partialTotal,
+        tileUseCountMap: nextTileUse,
       });
     }
   }
@@ -242,21 +327,19 @@ export async function solveExactNonBlocking({
       score: Number(finalPerWord?.[j] || 0),
     }))
     .sort((a, b) => b.score - a.score);
-    // === INSERT EXIT DIAGNOSTICS HERE ===
-if (performance.now() - start > timeBudgetMs) {
-  
-  console.warn("[EXACT SOLVER DIAG] EXITED: TIME LIMIT EXCEEDED (", timeBudgetMs, "ms )");
-} else if (explored > hardNodeCap) {
-  console.warn("[EXACT SOLVER DIAG] EXITED: NODE LIMIT EXCEEDED (", hardNodeCap, "nodes )");
-} else if (bestSet.length === 0) {
-  console.warn("[EXACT SOLVER DIAG] EXITED: NO COMPLETE 10-WORD COMBINATION WAS EVER REACHED");
-}
 
+  const elapsed = performance.now() - start;
+  const timedOut = elapsed > timeBudgetMs;
 
-  return {
-    best10,
-    finalTotal,
-    explored,
-    timedOut: performance.now() - start > timeBudgetMs,
-  };
+  if (timedOut && !completedSearch) {
+    console.warn("[EXACT SOLVER DIAG] EXITED: TIME LIMIT EXCEEDED (", timeBudgetMs, "ms )");
+  } else if (explored > hardNodeCap && !completedSearch) {
+    console.warn("[EXACT SOLVER DIAG] EXITED: NODE LIMIT EXCEEDED (", hardNodeCap, "nodes )");
+  } else if (!timedOut && !completedSearch) {
+    console.info("[EXACT SOLVER DIAG] SEARCH ENDED: stack emptied; optimality achieved or pruned.");
+  } else if (completedSearch) {
+    console.info("[EXACT SOLVER DIAG] EARLY ACCEPT: global optimistic bound ≤ bestTotal *", earlyAcceptRatio);
+  }
+
+  return { best10, finalTotal, explored, timedOut: timedOut && !completedSearch };
 }

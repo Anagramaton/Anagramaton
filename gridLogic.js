@@ -662,11 +662,20 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
   requestAnimationFrame(() => {
     setTimeout(async () => {
       try {
-        const { best10, finalTotal } = await solveExactNonBlocking({
-          POOL,
-          boardEntries,
-          TARGET: 10,
-        });
+    const { best10, finalTotal, timedOut, explored } = await solveExactNonBlocking({
+    POOL,
+    boardEntries,
+    TARGET: 10,
+    timeBudgetMs: 2500,
+    sliceMs: 16,
+    hardNodeCap: 600_000,
+    earlyAcceptRatio: 1.01,
+    onProgress: ({ explored, bestTotal, depth }) => {
+    if (explored % 5000 === 0) {
+      console.log(`[solver-progress] explored=${explored} depth=${depth} best=${bestTotal}`);
+    }
+  }
+});
         if (!best10?.length) {
           console.warn('Exact solver returned no result; consider falling back to beam.');
           return;
