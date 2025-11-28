@@ -1,4 +1,4 @@
-import { GRID_RADIUS as DEFAULT_RADIUS, letterFrequencies } from './constants.js';
+import { GRID_RADIUS as DEFAULT_RADIUS, letterFrequencies, letterPoints, lengthMultipliers, anagramMultiplier, reuseMultipliers } from './constants.js';
 import wordList from './wordList.js';
 import suffixList from './suffixList.js';
 import phraseHints from './phraseHints.js';
@@ -187,12 +187,81 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
     }
     return overlaps;
   };
-  const placementScore = (word, overlaps, pathLen) => {
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Minimal scoring access integration (NEW small patch)
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // Scoring helpers — minimal integration
+  function isAnagramLocal(word) {
+    return word.length > 1 && word === word.split('').reverse().join('');
+  }
+
+  function soloWordMultiplier(word) {
+    let mult = 1;
+    if (word.length >= 5) {
+      mult *= lengthMultipliers[Math.min(word.length, 10)] || 1;
+    }
+    if (isAnagramLocal(word)) {
+      mult *= anagramMultiplier;
+    }
+    return mult;
+  }
+
+  // Estimate expected score contribution for placing `word` on `path`,
+  // reusing letter face values and approximating reuse multiplier gains.
+  function estimatePlacementScore(word, path) {
+    let baseFaceSum = 0;
+    let overlapBoost = 0;
+
+    for (let i = 0; i < path.length; i++) {
+      const { key } = path[i];
+      const letter = word[i];
+      const face = letterPoints[letter] || 1;
+      const existing = grid[key];
+
+      if (existing === letter) {
+        // approximate how many words already use this tile
+        let uses = 0;
+        for (const pw of placedWords) {
+          if (!pw.path) continue;
+          for (const step of pw.path) {
+            if (step.key === key) { uses++; break; }
+          }
+        }
+        const nextUses = uses + 1;
+        const nextMult = nextUses >= 3 ? reuseMultipliers[3] : (reuseMultipliers[nextUses] || 1);
+        const priorMult = uses >= 3 ? reuseMultipliers[3] : (reuseMultipliers[uses] || 1) || 1;
+        overlapBoost += face * (nextMult - priorMult);
+      } else {
+        baseFaceSum += face;
+      }
+    }
+
+    return (baseFaceSum + overlapBoost) * soloWordMultiplier(word);
+  }
+
+  // Replace local placement scoring with estimator integration
+  const placementScore = (word, overlaps, pathLen, path) => {
+    const estimated = estimatePlacementScore(word, path);
     const newLetters = pathLen - overlaps;
-    const W_OVERLAP = 2;
-    const W_LENGTH = 30.5; // strong length bias
-    const W_NEW_PEN = 10;
-    return W_OVERLAP * overlaps + W_LENGTH * word.length - W_NEW_PEN * newLetters;
+    const W_OVERLAP = 2.0;
+    const W_NEW_PEN = 0.4;
+    return estimated + W_OVERLAP * overlaps - W_NEW_PEN * newLetters;
+  };
+
+  const placementScore2 = (word, overlaps, anchorTouches, pathLen, path) => {
+    const estimated = estimatePlacementScore(word, path);
+    const newLetters = pathLen - overlaps;
+    const W_ANCHOR = 30;
+    const W_OVERLAP = 3;
+    const W_NEW_PEN = 1.4;
+    return (
+      estimated +
+      W_ANCHOR * anchorTouches +
+      W_OVERLAP * overlaps -
+      W_NEW_PEN * newLetters
+    );
   };
 
   const preLetters = Object.keys(grid).length;
@@ -488,7 +557,7 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
         // require *some* overlap to avoid floating snakes, but be lenient for long words
         if (overlaps < 1 && anchorTouches === 0) continue;
         if (hasConflict(path, word)) continue;
-        const score = placementScore(word, overlaps, path.length) + 40 * anchorTouches; // strong anchor bias
+        const score = placementScore(word, overlaps, path.length, path) + 40 * anchorTouches; // strong anchor bias
         if (!best || score > best.score) best = { score, path };
       }
 
@@ -546,7 +615,11 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
           const { key } = path[i];
           grid[key] = word[i];
         }
-        placedWords.push({ word, path, viaSuffix: anchor.chunk, branched: true });
+        // Optional: compute heuristic score for debugging
+        const overlaps = countOverlapLocal(path, word);
+        const heuristicScore = placementScore(word, overlaps, path.length, path);
+
+        placedWords.push({ word, path, viaSuffix: anchor.chunk, branched: true, heuristicScore });
         usedWords.add(word);
         placedCount++;
         bump(anchor.chunk, 'placed');
@@ -580,16 +653,16 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
       return touchCount;
     };
 
-    const placementScore2 = (word, overlaps, anchorTouches, pathLen) => {
+    const placementScore2 = (word, overlaps, anchorTouches, pathLen, path) => {
+      const estimated = estimatePlacementScore(word, path);
       const newLetters = pathLen - overlaps;
       const W_ANCHOR = 30;
       const W_OVERLAP = 3;
-      const W_LENGTH = 3.1;
       const W_NEW_PEN = 1.4;
       return (
+        estimated +
         W_ANCHOR * anchorTouches +
-        W_OVERLAP * overlaps +
-        W_LENGTH * word.length -
+        W_OVERLAP * overlaps -
         W_NEW_PEN * newLetters
       );
     };
@@ -607,7 +680,7 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
         const anchorTouches = touchesAnyAnchor(path, word);
         // light bias: if no touches, require slightly more overlap
         if (anchorTouches === 0 && overlaps < (word.length >= 12 ? 1 : MIN_WORD_OVERLAP + 1)) continue;
-        const score = placementScore2(word, overlaps, anchorTouches, path.length);
+        const score = placementScore2(word, overlaps, anchorTouches, path.length, path);
         if (!best || score > best.score) best = { score, path };
       }
       if (best) {

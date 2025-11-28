@@ -3,24 +3,26 @@
    ================================ */
 @media (max-width: 768px) {
   #game-container {
-    /* Use theme variables instead of hard-coded light colors */
     background-color: var(--bg);
     background-image:
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 24px 24px; /* half the current grid size */
-    background-position: center center; /* keeps grid aligned nicely */
+    background-size: 24px 24px;
+    background-position: center center;
   }
 
   html, body {
-    height: 100vh;
+    /* match desktop: dynamic viewport, but keep mobile override behavior */
+    height: 100dvh;
+    min-height: 100vh;
     width: 100vw;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    touch-action: auto; /* Allow standard scrolling/pinch */
+    touch-action: auto;
   }
 }
+
 
 
 

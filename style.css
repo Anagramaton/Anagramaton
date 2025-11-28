@@ -396,19 +396,23 @@ body[data-accessibility="colorblind"][data-contrast="high"] {
 html, body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  /* use dynamic viewport height so iOS + Android agree */
+  height: 100dvh;
+  min-height: 100vh;      /* fallback for older browsers */
   width: 100vw;
   overflow: hidden;
   font-family: 'Segoe UI', sans-serif;
 }
+
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100dvh;   /* match the new viewport height */
   background: linear-gradient(to right, var(--bg), var(--bg-2));
   color: var(--text);
 }
+
 
 /* Title */
 #game-title {
@@ -434,7 +438,7 @@ body {
 #hex-grid { touch-action: none; }
 #game-container {
   flex: 1;
-  height: 100vh;
+  height: 100dvh;       /* same fix here */
   overflow: hidden;
   position: relative;
   background-color: var(--bg);
@@ -444,6 +448,7 @@ body {
   background-size: 40px 40px;
   background-position: center;
 }
+
 
 /* Backdrop */
 #backdrop {
