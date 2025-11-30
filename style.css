@@ -111,7 +111,6 @@
 
   --panel-border: #ccc;
 
-  /* New: ring width and dash pattern variables + optional letter stroke */
   --reuse-ring-width: 2px;
   --reuse-1-ring-dash: none;
   --reuse-2-ring-dash: none;
@@ -210,41 +209,36 @@ body[data-accessibility="colorblind"] {
   --reuse-3-ring-stroke: #7a5c00;
 }
 
-/* Dark + Colorblind (high-contrast tiles and reuse rings) */
+/* Dark + Colorblind */
 body[data-theme="dark"][data-accessibility="colorblind"] {
-  /* Base tile + letters */
-  --tile-fill: #11161f;            /* dark tile */
-  --tile-stroke: #ffffff;          /* bright outline */
-  --letter-fill: #ffffff;          /* white letters */
-  --letter-stroke-color: #000000;  /* thin dark outline for legibility */
+  --tile-fill: #11161f;
+  --tile-stroke: #ffffff;
+  --letter-fill: #ffffff;
+  --letter-stroke-color: #000000;
   --letter-stroke-width: 0.5px;
 
-  /* Reuse 1: cyan */
   --reuse-1-fill: #11161f;
   --reuse-1-text: #00b4d8;
   --reuse-1-ring-fill: #00b4d8;
   --reuse-1-ring-stroke: #00e5ff;
 
-  /* Reuse 2: yellow */
   --reuse-2-fill: #11161f;
   --reuse-2-text: #ffd166;
   --reuse-2-ring-fill: #ffd166;
   --reuse-2-ring-stroke: #ffe66d;
 
-  /* Reuse 3: magenta/red */
   --reuse-3-fill: #11161f;
   --reuse-3-text: #ff6b6b;
   --reuse-3-ring-fill: #ff6b6b;
   --reuse-3-ring-stroke: #ffb3c1;
 
-  /* Make stages visually distinct by pattern too */
   --reuse-ring-width: 2.5px;
-  --reuse-1-ring-dash: 3 3;   /* dotted */
-  --reuse-2-ring-dash: 7 3;   /* dashed */
-  --reuse-3-ring-dash: none;  /* solid */
+  --reuse-1-ring-dash: 3 3;
+  --reuse-2-ring-dash: 7 3;
+  --reuse-3-ring-dash: none;
 }
 
-/* High Contrast Mode (independent layer) */
+/* High Contrast Mode */
 body[data-contrast="high"] {
   --bg: #ffffff;
   --bg-2: #ffffff;
@@ -320,18 +314,16 @@ body[data-contrast="high"] {
   --alert-ok-shadow-hover-2: rgba(0,0,0,0.8);
   --alert-ok-shadow-active-2: rgba(0,0,0,0.7);
 
-  /* Stronger cues in high-contrast: thicker rings, simple patterns */
   --reuse-ring-width: 3px;
-  --reuse-1-ring-dash: 2 3;  /* dotted */
-  --reuse-2-ring-dash: 6 3;  /* dashed */
-  --reuse-3-ring-dash: none; /* solid */
+  --reuse-1-ring-dash: 2 3;
+  --reuse-2-ring-dash: 6 3;
+  --reuse-3-ring-dash: none;
   --letter-stroke-color: #ffffff;
-  --letter-stroke-width: 0px; /* keep 0 unless on dark tile */
+  --letter-stroke-width: 0px;
 }
 
-/* Combined: High Contrast + Colorblind (most explicit cues) */
+/* High Contrast + Colorblind */
 body[data-accessibility="colorblind"][data-contrast="high"] {
-  /* Maintain the black/white foundations from high contrast */
   --bg: #ffffff;
   --bg-2: #ffffff;
   --text: #000000;
@@ -340,7 +332,6 @@ body[data-accessibility="colorblind"][data-contrast="high"] {
   --tile-stroke: #000000;
   --letter-fill: #000000;
 
-  /* Reuse fill/text keep max contrast; rings use distinct patterns */
   --reuse-1-fill: #ffffff;
   --reuse-1-text: #000000;
   --reuse-1-ring-fill: #000000;
@@ -351,18 +342,16 @@ body[data-accessibility="colorblind"][data-contrast="high"] {
   --reuse-2-ring-fill: #000000;
   --reuse-2-ring-stroke: #000000;
 
-  --reuse-3-fill: #000000;  /* invert for strongest distinction */
+  --reuse-3-fill: #000000;
   --reuse-3-text: #ffffff;
   --reuse-3-ring-fill: #000000;
   --reuse-3-ring-stroke: #000000;
 
-  /* Ring styling: size + patterns */
   --reuse-ring-width: 3px;
-  --reuse-1-ring-dash: 1 3;  /* more dotted */
-  --reuse-2-ring-dash: 6 2;  /* longer dash */
-  --reuse-3-ring-dash: none; /* solid */
+  --reuse-1-ring-dash: 1 3;
+  --reuse-2-ring-dash: 6 2;
+  --reuse-3-ring-dash: none;
 
-  /* Add readable outline to letters when on dark tiles (reuse-3) */
   --letter-stroke-color: #ffffff;
   --letter-stroke-width: 0.6px;
 }
@@ -396,28 +385,25 @@ body[data-accessibility="colorblind"][data-contrast="high"] {
 html, body {
   margin: 0;
   padding: 0;
-  /* use dynamic viewport height so iOS + Android agree */
   height: 100dvh;
-  min-height: 100vh;      /* fallback for older browsers */
+  min-height: 100vh;
   width: 100vw;
   overflow: hidden;
   font-family: 'Segoe UI', sans-serif;
 }
-
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100dvh;   /* match the new viewport height */
+  min-height: 100dvh;
   background: linear-gradient(to right, var(--bg), var(--bg-2));
   color: var(--text);
 }
 
-
-/* Title */
+/* Title (responsive, fixed sizing logic) */
 #game-title {
   font-family: 'Rubik+Vinyl';
-  font-size: clamp(4.1rem, 7vw, 5.1rem);
+  font-size: clamp(3.2rem, 6.2vw, 5rem);
   letter-spacing: 0.08em;
   color: var(--title-fill);
   -webkit-text-stroke: var(--title-stroke-width) var(--title-stroke);
@@ -432,13 +418,11 @@ body {
   margin: 0;
 }
 
-
-
 /* Grid Container */
 #hex-grid { touch-action: none; }
 #game-container {
   flex: 1;
-  height: 100dvh;       /* same fix here */
+  height: 100dvh;
   overflow: hidden;
   position: relative;
   background-color: var(--bg);
@@ -448,7 +432,6 @@ body {
   background-size: 40px 40px;
   background-position: center;
 }
-
 
 /* Backdrop */
 #backdrop {
@@ -689,7 +672,7 @@ body.panel-open #backdrop { opacity: 1; pointer-events: auto; }
     0 0 18px rgba(106, 0, 255, 0.5);
 }
 
-/* Side toggles */
+/* Side toggles (fixed sizing + text sizing) */
 .side-toggle {
   position: fixed;
   top: 95px;
@@ -700,8 +683,8 @@ body.panel-open #backdrop { opacity: 1; pointer-events: auto; }
   background: var(--side-toggle-bg);
   color: var(--side-toggle-fg);
   cursor: pointer;
-  height: 140px;
-  width: 56px;
+  height: 140px;           /* fixed button height */
+  width: 56px;             /* fixed button width */
   z-index: 1200;
   display: flex;
   align-items: center;
@@ -716,23 +699,30 @@ body.panel-open #backdrop { opacity: 1; pointer-events: auto; }
     transform 0.1s ease,
     left 0.45s ease,
     right 0.45s ease;
+  font-family: "Coiny";     /* keep Coiny for the tab */
 }
-.vword { writing-mode: vertical-rl; text-orientation: upright; display: inline-block; line-height: 1; letter-spacing: 0; margin: 0 1px; font-size: 1.4rem; }
+.vword {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  display: inline-block;
+  line-height: 1;
+  letter-spacing: 0;
+  margin: 0 1px;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem); /* fixed/responsive text sizing */
+}
 .side-toggle:hover { background: var(--side-toggle-hover-bg); transform: scale(1.02); }
 .side-toggle:active { background: var(--side-toggle-active-bg); transform: scale(0.98); }
 .left-toggle { left: 0px; border-top-left-radius: 0; border-bottom-left-radius: 0; }
 .right-toggle { right: 0px; border-top-right-radius: 0; border-bottom-right-radius: 0; }
 body.left-open .left-toggle { left: -60px; }
-body.right-open .right-toggle { right: -60; }
+body.right-open .right-toggle { right: -60px; }
 
-/* Merged words section */
 #merged-words-wrap { margin-top: 12px; }
 #merged-scroll { overflow-y: auto; padding: 8px 0; flex: 1 1 auto; min-height: 0; }
 #merged-list li:hover { background: var(--tile-cream-hover); transform: translateY(-1px); }
 .is-hidden { display: none !important; }
 
 #merged-words-wrap .merged__summary { cursor: pointer; font-weight: 700; }
-
 #merged-words-wrap .merged__totals {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -870,7 +860,7 @@ body.right-open .right-toggle { right: -60; }
   }
 }
 
-/* Reuse stages: rings now use dash/width variables */
+/* Reuse stages */
 .hex-tile.reuse-1 { fill: var(--reuse-1-fill); stroke: none; transform: scale(1); }
 .tile-letter.reuse-1, .tile-point.reuse-1 { fill: var(--reuse-1-text); font-weight: 800; }
 .tile:has(.hex-tile.reuse-1) path:first-child {
@@ -912,9 +902,8 @@ body.right-open .right-toggle { right: -60; }
 }
 .tile-letter.selected, .tile-point.selected { fill: #000; }
 
-/* Fonts & score */
+/* Fonts & score (fixed sizing with responsive clamp) */
 .limelight-regular { font-family: "Limelight", sans-serif; font-weight: 400; font-style: normal; text-transform: uppercase; }
-#score-display { font-family: "Limelight", sans-serif; font-size: clamp(2.8rem, 3vw, 2.8rem); text-transform: uppercase; }
 #score-display {
   position: fixed;
   top: 100px;
@@ -922,16 +911,16 @@ body.right-open .right-toggle { right: -60; }
   transform: translateX(-50%);
   z-index: 800;
   display: block;
-  font-size: 2.7rem;
   text-align: center;
+  font-family: "Limelight", sans-serif;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  text-transform: uppercase;
 }
 
-.side-toggle,
+/* Keep Coiny for other controls (exclude side-toggle now handled above) */
 #right-panel button,
 #left-panel #submit-list,
-#left-panel #new-game,
-#submit-word,
-#clear-word {
+#left-panel #new-game {
   font-family: "Coiny";
   font-weight: 400;
   font-style: normal;
@@ -940,21 +929,10 @@ body.right-open .right-toggle { right: -60; }
   font-size: clamp(1rem, 2vw, 1.4rem);
 }
 
-/* Submit/Clear buttons (desktop layout) */
-@media (min-width: 769px) {
-  #submit-word, #clear-word {
-    position: fixed;
-    top: calc(40% + 200px);
-    z-index: 800;
-    display: block;
-  }
-  #submit-word { left: 50%; transform: translateX(-500px); }
-  #clear-word { left: 50%; transform: translateX(265px); }
-}
-
 .freckle-face-regular { font-family: "Freckle Face", system-ui; font-weight: 400; font-style: normal; }
 
-@media (min-width: 769px) {
+/* Desktop current word display */
+@media (min-width: 901px) {
   #current-word-display {
     position: fixed;
     left: 50%;
@@ -968,27 +946,6 @@ body.right-open .right-toggle { right: -60; }
     text-transform: uppercase;
   }
 }
-
-#submit-word, #clear-word {
-  position: fixed;
-  top: calc(50% + 140px);
-  z-index: 900;
-  width: auto;
-  height: auto;
-  clip-path: none;
-  background: none;
-  border: none;
-  box-shadow: none;
-  font-family: "Notable";
-  font-weight: 900;
-  font-size: 2.6rem;
-  text-transform: uppercase;
-  color: var(--submit-fg);
-  padding: 10px 18px;
-  cursor: pointer;
-  transition: transform 120ms ease, color 120ms ease;
-}
-#submit-word:hover, #clear-word:hover { color: var(--submit-hover-fg); }
 
 /* Puff animation */
 .puff-out-hor { animation: puff-out-hor 1.3s cubic-bezier(0.165, 0.840, 0.440, 1.000) both; }
@@ -1072,28 +1029,15 @@ body.right-open .right-toggle { right: -60; }
 }
 @keyframes alert-pop { from { transform: translateY(8px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
 
-/* Mobile tweaks for title size */
-@media (max-width: 768px) {
-  #game-title {
-    position: fixed;
-    top: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 800;
-    margin: 0;
-    font-size: 2.7rem;
-    letter-spacing: 0.04em;
-  }
-}
+
 
 /* Settings Dropdown */
 #settings-wrap {
   position: fixed;
-  top: 5px;        /* same as old how-to button */
-  right: 8px;      /* same as old how-to button */
+  top: 5px;
+  right: 8px;
   z-index: 800;
 }
-
 #settings-btn {
   font-size: 1.7rem;
   background: var(--btn-bg);
@@ -1103,7 +1047,6 @@ body.right-open .right-toggle { right: -60; }
   padding: 6px 10px;
   cursor: pointer;
 }
-
 #settings-menu {
   position: fixed;
   top: 42px;
@@ -1111,7 +1054,6 @@ body.right-open .right-toggle { right: -60; }
   display: flex;
   flex-direction: column;
   gap: 6px;
-
   background: var(--panel-bg);
   color: var(--panel-text);
   border: 1px solid var(--panel-border);
@@ -1119,7 +1061,6 @@ body.right-open .right-toggle { right: -60; }
   padding: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
-
 #settings-menu button {
   background: var(--btn-bg);
   border: 1px solid var(--btn-border);
@@ -1130,45 +1071,19 @@ body.right-open .right-toggle { right: -60; }
   cursor: pointer;
   text-align: left;
 }
+#settings-menu button:hover { filter: brightness(1.08); }
+#settings-menu[hidden] { display: none !important; }
 
-#settings-menu button:hover {
-  filter: brightness(1.08);
-}
-
-#settings-menu[hidden] {
-  display: none !important;
-}
-
-/* MOBILE — move the gear under the title */
-@media (max-width: 768px) {
-  #settings-wrap {
-    top: 58px;            /* under the ANAGRAMATON title */
-    right: 200px;
-    left: auto;
-  }
-}
-
-/* MOBILE — make ONLY the gear icon smaller */
-@media (max-width: 768px) {
-  #settings-btn {
-    font-size: 1.2rem;
-    padding: 4px 6px;
-  }
-}
-
-/* MOBILE — make menu horizontal AND position it to the right of the gear */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  #settings-wrap { top: 58px; right: 200px; left: auto; }
+  #settings-btn { font-size: 1.2rem; padding: 4px 6px; }
   #settings-menu {
     position: absolute;
     top: 0;
-    left: calc(100% + 8px);   /* menu sits to the right of the gear */
-    right: auto;
-
-    display: flex;
-    flex-direction: row;      /* horizontal */
+    left: calc(100% + 8px);
+    flex-direction: row;
     gap: 8px;
   }
-
   #settings-menu > button {
     width: auto;
     padding: 4px 6px;
@@ -1176,5 +1091,28 @@ body.right-open .right-toggle { right: -60; }
   }
 }
 
+
+
+/* Desktop buttons (≥901px) */
+@media (min-width: 901px) {
+  #submit-word,
+  #clear-word {
+    position: fixed;
+    top: calc(50% + 140px);
+    z-index: 900;
+    font-family: "Notable", sans-serif;
+    font-size: 2.4rem;
+    line-height: 1.1;
+    padding: 8px 18px;
+    background: none;
+    box-shadow: none;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--submit-fg);
+    border: none;
+  }
+  #submit-word { transform: translateX(-500px); }
+  #clear-word { transform: translateX(265px); }
+}
 
 

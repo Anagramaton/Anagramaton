@@ -1,61 +1,5 @@
-/* ================================
-   Mobile Layout Overrides
-   ================================ */
 @media (max-width: 768px) {
-  #game-container {
-    background-color: var(--bg);
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 24px 24px;
-    background-position: center center;
-  }
-
-  html, body {
-    /* match desktop: dynamic viewport, but keep mobile override behavior */
-    height: 100dvh;
-    min-height: 100vh;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    touch-action: auto;
-  }
-}
-
-/* Samsung Galaxy Phones (Android Chrome) */
-@media only screen 
-  and (max-width: 430px) 
-  and (max-height: 900px) 
-  and (-webkit-device-pixel-ratio: 3) 
-  and (orientation: portrait) {
-
-    #submit-word, #clear-word {
-      top: auto;
-      bottom: 40px;
-      position: fixed;
-      z-index: 9999;
-    }
-
-    #submit-word {
-      left: 30%;
-      transform: translateX(-50%);
-    }
-
-    #clear-word {
-      left: 70%;
-      transform: translateX(-50%);
-    }
-}
-
-
-
-
-
-
-
 .side-toggle {
-  /* Only layout tweaks; keep colors/background from theme in style.css */
   position: fixed;
   writing-mode: initial;
   text-orientation: initial;
@@ -63,83 +7,74 @@
   height: auto;
   padding: 0;
   border-radius: 0;
-  top: 80px;
+  top: clamp(40px, 10vh, 80px);
   letter-spacing: 0.02em;
   transition: all 0.15s ease;
+  } 
 }
 
-
-.left-toggle:hover {
-  /* Keep theme styling, just add underline on hover */
-  text-decoration: underline;
-}
 
 @media (max-width: 768px) {
-  /* Hide right toggle if left panel is open */
   body:has(#left-panel.open) .right-toggle {
     display: none;
   }
-
-  /* Hide left toggle if right panel is open */
   body:has(#right-panel.open) .left-toggle {
     display: none;
   }
 }
 
-/* Mobile: make backdrop clickable over the toggles */
 @media (max-width: 768px) {
-  .side-toggle { z-index: 900; }   /* below backdrop */
+  .side-toggle { z-index: 900; }   
 }
 
-/* Make the dialog a column so the middle can scroll */
+
 #howto-modal .rom__dialog {
   display: flex;
   flex-direction: column;
-  max-height: 90vh;      /* room on small screens */
-  overflow: hidden;      /* let the inner area handle scrolling */
+  max-height: 90vh;      
+  overflow: hidden;      
 }
 
-/* The page wrapper becomes the scroll container */
+
 #howto-pagewrap {
-  flex: 1;                         /* fill available height */
-  overflow-y: auto;                /* <-- vertical scroll here */
-  -webkit-overflow-scrolling: touch; /* smooth iOS scrolling */
-  overscroll-behavior: contain;    /* keep scroll from bouncing the body */
-  padding: 10px 18px;              /* spacing since footer is separate */
+  flex: 1;                         
+  overflow-y: auto;                
+  -webkit-overflow-scrolling: touch; 
+  overscroll-behavior: contain;    
+  padding: 10px 18px;              
 }
 
-/* Optional: add a little extra bottom padding so text
-   isn't hidden behind the footer on very small screens */
+
 #howto-pagewrap .howto-page:last-child {
   padding-bottom: 16px;
 }
 
-/* Keep the footer fixed to the bottom of the dialog area */
+
 .howto-controls {
   flex: 0 0 auto;
-  position: sticky;   /* stays at the bottom of the dialog as you scroll */
+  position: sticky;   
   bottom: 0;
 }
 
-/* Mobile-specific nudge (optional) */
-@media (max-width: 768px) {
-  #howto-modal .rom__dialog { max-height: 92vh; }
-}
 
 @media (max-width: 768px) {
   #howto-modal .rom__dialog { max-height: 92vh; }
 }
 
-/* add this block below */
+@media (max-width: 768px) {
+  #howto-modal .rom__dialog { max-height: 92vh; }
+}
+
+
 @media (max-width: 768px) {
   #left-panel .panel-content,
   #right-panel .panel-content {
     width: 100%;
     box-sizing: border-box;
-    overflow-y: auto;    /* keep vertical scroll */
-    overflow-x: hidden;  /* stop side scroll */
-    position: absolute;  /* keep layout consistent */
-    inset: 0;            /* full fit inside panel */
+    overflow-y: auto;    
+    overflow-x: hidden;  
+    position: absolute;  
+    inset: 0;            
   }
 
   #left-panel .panel-content * {
@@ -159,24 +94,29 @@
   }
 }
 
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
   #score-display {
     position: fixed;
-    top: 120px;             
+    top: clamp(80px, 25vh, 120px);
     left: 47%;
     transform: translateX(-50%);
-    z-index: 800;          
+    z-index: 800;
     display: block;
     text-align: center;
     font-size: 24px;
   }
 }
+
   @media (max-width: 768px) {
   #current-word-display {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: calc(50% + 240px);
+        bottom: clamp(
+      110px,
+      calc(env(safe-area-inset-bottom) + 14vh),
+      160px
+    );
     z-index: 800;
     display: block;
     text-align: center;
@@ -187,11 +127,15 @@
 
 @media (max-width: 768px) {
   #submit-word {
-    position: fixed;
-    top: calc(50% + 325px);
-    left: calc(50% - 105px);
-    transform: translateX(-50%);
-    z-index: 800;
+  position: fixed;
+  bottom: clamp(
+    16px,
+    calc(env(safe-area-inset-bottom) + 3vh),
+    40px
+  );
+  left: calc(50% - 80px);
+  transform: translateX(-50%);
+  z-index: 800;
     background: none;
     border: none;
     box-shadow: none;
@@ -210,11 +154,16 @@
 }
 
 
+
 @media (max-width: 768px) {
   #clear-word {
     position: fixed;
-    top: calc(50% + 325px);
-    right: calc(50% - 220px);
+      bottom: clamp(
+    16px,
+    calc(env(safe-area-inset-bottom) + 3vh),
+    40px
+  );   /* same row as submit */
+    left: calc(50% + 80px);           /* right side of row */
     transform: translateX(-50%);
     z-index: 800;
     background: none;
@@ -234,13 +183,6 @@
   }
 }
 
-
-
-@media (max-width: 768px) {
-  #hex-grid {
-    margin-top: -40px; 
-  }
-}
 
 @media (max-width: 768px) {
   #hex-grid {
@@ -412,23 +354,12 @@
 @media (max-width: 768px) {
   #game-title {
     position: fixed;
-    top: 4px;
+    top: clamp(6px, 2vh, 20px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 800;
     margin: 0;
-
-    font-size: 2.7rem;   /* ← adjust this number */
+    font-size: 2.2rem;   
     letter-spacing: 0.04em;
   }
 }
-
-
-
-
-
-
-
-
-
-

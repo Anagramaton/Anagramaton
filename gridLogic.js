@@ -635,75 +635,81 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
     // closed groups already above
   }
 
-  // ---------------------------------------------------------------------------
-  // STEP 6) General fill (score-aware, anchor-biased). Slight length bias kept.
-  // ---------------------------------------------------------------------------
-  {
-    const anchorKeySets = (placedSuffixes || []).map((s) => new Set((s.path || []).map((p) => p.key)));
-    const touchesAnyAnchor = (path, word) => {
-      if (!anchorKeySets.length) return 0;
-      let touchCount = 0;
-      for (let i = 0; i < path.length; i++) {
-        const k = path[i].key;
-        const ch = word[i];
+    // ---------------------------------------------------------------------------
+// STEP 6) General fill (score-aware, anchor-biased) + fill leftover tiles
+// ---------------------------------------------------------------------------
+{
+  const anchorKeySets = (placedSuffixes || []).map((s) =>
+    new Set((s.path || []).map((p) => p.key))
+  );
+
+  const touchesAnyAnchor = (path, word) => {
+    if (!anchorKeySets.length) return 0;
+    let touchCount = 0;
+    for (let i = 0; i < path.length; i++) {
+      const k = path[i].key;
+      if (grid[k] === word[i]) {
         for (const ks of anchorKeySets) {
-          if (ks.has(k) && grid[k] === ch) { touchCount++; break; }
+          if (ks.has(k)) {
+            touchCount++;
+            break;
+          }
         }
       }
-      return touchCount;
-    };
+    }
+    return touchCount;
+  };
 
-    const placementScore2 = (word, overlaps, anchorTouches, pathLen, path) => {
-      const estimated = estimatePlacementScore(word, path);
-      const newLetters = pathLen - overlaps;
-      const W_ANCHOR = 30;
-      const W_OVERLAP = 3;
-      const W_NEW_PEN = 1.4;
-      return (
-        estimated +
-        W_ANCHOR * anchorTouches +
-        W_OVERLAP * overlaps -
-        W_NEW_PEN * newLetters
+  for (const word of candidates) {
+    if (usedWords.has(word)) continue;
+
+    const attempts = shuffledArray(coords).slice(0, PATH_TRIES);
+    let best = null;
+
+    for (const { q, r } of attempts) {
+      const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
+      if (!path) continue;
+
+      const overlaps = countOverlapLocal(path, word);
+      if (overlaps < MIN_WORD_OVERLAP) continue;
+      if (hasConflict(path, word)) continue;
+
+      const anchorTouches = touchesAnyAnchor(path, word);
+
+      if (anchorTouches === 0 && overlaps < (word.length >= 12 ? 1 : MIN_WORD_OVERLAP + 1)) {
+        continue;
+      }
+
+      const score = placementScore2(
+        word,
+        overlaps,
+        anchorTouches,
+        path.length,
+        path
       );
-    };
 
-    for (const word of candidates) {
-      if (usedWords.has(word)) continue;
-      const attempts = shuffledArray(coords).slice(0, PATH_TRIES);
-      let best = null; // {score, path}
-      for (const { q, r } of attempts) {
-        const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
-        if (!path) continue;
-        const overlaps = countOverlapLocal(path, word);
-        if (overlaps < MIN_WORD_OVERLAP) continue;
-        if (hasConflict(path, word)) continue;
-        const anchorTouches = touchesAnyAnchor(path, word);
-        // light bias: if no touches, require slightly more overlap
-        if (anchorTouches === 0 && overlaps < (word.length >= 12 ? 1 : MIN_WORD_OVERLAP + 1)) continue;
-        const score = placementScore2(word, overlaps, anchorTouches, path.length, path);
-        if (!best || score > best.score) best = { score, path };
-      }
-      if (best) {
-        best.path.forEach(({ key }, i) => { grid[key] = word[i]; });
-        placedWords.push({ word, path: best.path });
-        usedWords.add(word);
-      }
+      if (!best || score > best.score) best = { score, path };
+    }
+
+    if (best) {
+      best.path.forEach(({ key }, i) => {
+        grid[key] = word[i];
+      });
+      placedWords.push({ word, path: best.path });
+      usedWords.add(word);
     }
   }
 
-  // Count 4- and 5-letter word tiles from Step 6 only
-{
-  const step6StartIndex = placedWords.findIndex(p => !p.mandatoryLong && !p.branched && !p.bootstrapAnchor);
-  const step6Placed = placedWords.slice(step6StartIndex);
-  const tilesUsed = new Set();
-  
-  for (const { word, path } of step6Placed) {
-    if (word.length === 4 || word.length === 5) {
-      path.forEach(({ key }) => tilesUsed.add(key));
+  // NEW: fill any leftover undefined tiles with weighted random letters
+  for (const { q, r } of coords) {
+    const key = hexKey(q, r);
+    if (!grid[key]) {
+      grid[key] =
+        letterFrequencies[
+          Math.floor(Math.random() * letterFrequencies.length)
+        ];
     }
   }
-
-  console.log(`🎯 Step 6 — unique tiles used in 4- and 5-letter words: ${tilesUsed.size}`);
 }
 
   // ---------------------------------------------------------------------------
