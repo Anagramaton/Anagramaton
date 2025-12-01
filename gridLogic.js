@@ -42,7 +42,7 @@ let placedSuffixes = []; // always defined for debug printing
   const coords = getAllCoords(gridRadius);
   const maxTiles = coords.length;
   const MIN_WORD_OVERLAP = 2; 
-  const PATH_TRIES = Math.max(1200, (typeof MAX_ATTEMPTS === 'number' ? MAX_ATTEMPTS : 300));
+  const PATH_TRIES = Math.max(200, (typeof MAX_ATTEMPTS === 'number' ? MAX_ATTEMPTS : 300));
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STEP 1) Seed phrase pair — DAILY ONLY (unchanged behavior, deterministic pick)
@@ -265,8 +265,6 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
   };
 
   const preLetters = Object.keys(grid).length;
-DEBUG && console.info(`[diag] pre-Step2 letters=${preLetters}, mode=${gameState.mode}`);
-DEBUG && preLetters === 0 && console.info('[diag] grid is empty before suffix placement');
 
   
 // ---------------------------------------------------------------------------
@@ -296,7 +294,7 @@ if (gameState.mode === 'daily') {
     console.groupEnd();
   }
 } else {
-  DEBUG && console.info("(Unlimited) Step 2 skipped: no prior anchors to overlap");
+  
 }
 
 
@@ -448,7 +446,7 @@ function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys =
 // ---- Unlimited Bootstrap (only when no letters exist yet) ----
 if (postLetters === 0 && gameState.mode !== 'daily') {
   const rng = makeRng(Date.now());
-  DEBUG && console.info('🚀 Unlimited bootstrap: placing long-word anchors (varied)');
+  
 
   const anchorsMax = 3;      // place 2–3 anchors
   let anchorsPlaced = 0;
@@ -585,9 +583,11 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
     let placedCount = 0;
     const keySet = new Set(anchor.path.map((p) => p.key));
 
-    const pool = candidates.filter((w) => !usedWords.has(w) && w.endsWith(anchor.chunk));
+    const pool = candidates
+  .filter((w) => !usedWords.has(w) && w.endsWith(anchor.chunk))
+  .slice(0, 120);
 
-    if (DEBUG) console.groupCollapsed(`→ Branching from '${anchor.chunk}' (pool=${pool.length})`);
+  
 
     for (const word of pool.sort((a, b) => b.length - a.length)) {
       if (placedCount >= BRANCHES_PER_SUFFIX) break;
@@ -632,7 +632,6 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
   }
 
   if (DEBUG) {
-    // closed groups already above
   }
 
     // ---------------------------------------------------------------------------
