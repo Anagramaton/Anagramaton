@@ -9,11 +9,13 @@ import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } 
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
 import { loadSound, playSound } from './gameAudio.js';
+import { audioCtx } from './gameAudio.js';
+
 
 function applySavedTheme() {
-  const theme = localStorage.getItem('theme') || 'light';            // 'light' | 'dark'
-  const access = localStorage.getItem('accessibility') || 'normal';  // 'normal' | 'colorblind'
-  const contrast = localStorage.getItem('contrast') || 'normal';     // 'normal' | 'high'
+  const theme = localStorage.getItem('theme') || 'light';            
+  const access = localStorage.getItem('accessibility') || 'normal';  
+  const contrast = localStorage.getItem('contrast') || 'normal';     
 
   document.body.setAttribute('data-theme', theme);
   document.body.setAttribute('data-accessibility', access);
@@ -117,7 +119,7 @@ async function loadAllGameAudio() {
   await loadSound('alert', './audio/alert.mp3');
   await loadSound('success', './audio/ohyeahh.mp3');
   await loadSound('magic', './audio/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
-  await loadSound('introAmbient', './audio/zapsplat_musical_violin_rise_short_orchestral_reverb_61337.mp3');
+  
 
   const swipeLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split(''); // A–Y = 25 clips
   swipeLetters.forEach((letter, index) => {
@@ -352,6 +354,20 @@ async function handleSubmitList() {
   });
 }
 
+
+// Unlock audio on the first physical interaction (mobile + desktop)
+let audioUnlocked = false;
+
+window.addEventListener('pointerdown', () => {
+  if (!audioUnlocked && audioCtx.state === 'suspended') {
+    audioCtx.resume().then(() => {
+      audioUnlocked = true;
+    });
+  }
+}, { once: true });
+
+
+
 // =============================
 // DOMContentLoaded Bootstrap
 // =============================
@@ -385,25 +401,10 @@ document.addEventListener("click", (e) => {
 
 
 
-// First-tap overlay unlock + long cinematic exit
-const startOverlay = document.getElementById('start-overlay');
-const startButton  = document.getElementById('start-button');
 
-if (startOverlay && startButton) {
-  startButton.addEventListener('click', () => {
 
-    // Play your intro violin rise (one-shot)
-    playSound("introAmbient");
 
-    // Trigger 7.5s cinematic overlay collapse + fade
-    startOverlay.classList.add('intro-out');
 
-    // Remove overlay after animation completes
-    setTimeout(() => {
-      startOverlay.style.display = 'none';
-    }, 8500);
-  });
-}
 
   
 
