@@ -117,6 +117,7 @@ async function loadAllGameAudio() {
   await loadSound('alert', './audio/alert.mp3');
   await loadSound('success', './audio/ohyeahh.mp3');
   await loadSound('magic', './audio/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
+  await loadSound('introAmbient', './audio/zapsplat_musical_violin_rise_short_orchestral_reverb_61337.mp3');
 
   const swipeLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split(''); // A–Y = 25 clips
   swipeLetters.forEach((letter, index) => {
@@ -384,16 +385,28 @@ document.addEventListener("click", (e) => {
 
 
 
-  // First-tap overlay to unlock audio on mobile
-  const startOverlay = document.getElementById('start-overlay');
-  const startButton  = document.getElementById('start-button');
-  if (startOverlay && startButton) {
-    startButton.addEventListener('click', () => {
-      // This user gesture will unlock Web Audio on mobile
-      playSound('success'); // or 'alert' or any other loaded sound key
+// First-tap overlay unlock + long cinematic exit
+const startOverlay = document.getElementById('start-overlay');
+const startButton  = document.getElementById('start-button');
+
+if (startOverlay && startButton) {
+  startButton.addEventListener('click', () => {
+
+    // Play your intro violin rise (one-shot)
+    playSound("introAmbient");
+
+    // Trigger 7.5s cinematic overlay collapse + fade
+    startOverlay.classList.add('intro-out');
+
+    // Remove overlay after animation completes
+    setTimeout(() => {
       startOverlay.style.display = 'none';
-    });
-  }
+    }, 8500);
+  });
+}
+
+  
+
 
   // --- Reset initial state ---
   baseTotal = 0;
