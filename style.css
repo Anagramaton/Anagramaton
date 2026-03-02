@@ -1084,8 +1084,6 @@ body[data-theme="dark"] .tile-point {
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--text);
-  border-bottom: 2px solid var(--text);
-  padding-bottom: 4px;
 }
 .freckle-face-regular {
   font-family: "Freckle Face", system-ui;
