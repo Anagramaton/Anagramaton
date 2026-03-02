@@ -2,20 +2,49 @@ import { initializeGrid } from './initGrid.js';
 import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';
 import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
 import { gameState } from './gameState.js';
-import { initPhrasePanelEvents, revealPhrase } from './phrasePanel.js';
 import { placedWords } from './gridLogic.js';
+import { initPhrasePanelEvents, revealPhrase, getHintMultiplier } from './phrasePanel.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
-import { loadSound, playSound } from './gameAudio.js';
-import { audioCtx } from './gameAudio.js';
 
+// ============================================================
+// AUDIO — simple <audio> tag system (no Web Audio API needed)
+// ============================================================
+function playSound(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  try {
+    el.currentTime = 0;
+    el.play().catch(err => console.warn(`[audio] ${id} blocked:`, err));
+  } catch (e) {
+    console.warn(`[audio] ${id} error:`, e);
+  }
+}
+
+let audioUnlocked = false;
+window.addEventListener('pointerdown', () => {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  ['sfxAlert', 'sfxSuccess', 'sfxMagic'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    try {
+      el.play().then(() => {
+        el.pause();
+        el.currentTime = 0;
+      }).catch(() => {});
+    } catch (e) {}
+  });
+}, { once: true });
+
+// ============================================================
 
 function applySavedTheme() {
-  const theme = localStorage.getItem('theme') || 'light';            
-  const access = localStorage.getItem('accessibility') || 'normal';  
-  const contrast = localStorage.getItem('contrast') || 'normal';     
+  const theme = localStorage.getItem('theme') || 'light';
+  const access = localStorage.getItem('accessibility') || 'normal';
+  const contrast = localStorage.getItem('contrast') || 'normal';
 
   document.body.setAttribute('data-theme', theme);
   document.body.setAttribute('data-accessibility', access);
@@ -30,26 +59,19 @@ function applySavedTheme() {
     themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
     themeBtn.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
   }
-
   if (accessBtn) {
     accessBtn.setAttribute('aria-pressed', String(access === 'colorblind'));
     accessBtn.textContent = access === 'colorblind' ? '🌓' : '🌒';
     accessBtn.title = access === 'colorblind' ? 'Disable Colorblind Mode' : 'Enable Colorblind Mode';
   }
 
-  if (contrastBtn) {
-    contrastBtn.setAttribute('aria-pressed', String(contrast === 'high'));
-    contrastBtn.textContent = contrast === 'high' ? '◻️' : '◼️';
-    contrastBtn.title = contrast === 'high'
-      ? 'Disable High Contrast Mode'
-      : 'Enable High Contrast Mode';
-  }
 }
 
 function setupThemeControls() {
-  const themeBtn = document.getElementById('toggle-theme');
-  const accessBtn = document.getElementById('toggle-access');
+  const themeBtn    = document.getElementById('toggle-theme');
+  const accessBtn   = document.getElementById('toggle-access');
   const contrastBtn = document.getElementById('toggle-contrast');
+  const modeBtn     = document.getElementById('toggle-mode');
 
   if (themeBtn) {
     themeBtn.addEventListener('click', () => {
@@ -75,24 +97,15 @@ function setupThemeControls() {
     });
   }
 
-  if (contrastBtn) {
-    contrastBtn.addEventListener('click', () => {
-      const current = document.body.getAttribute('data-contrast') || 'normal';
-      const next = current === 'high' ? 'normal' : 'high';
-      document.body.setAttribute('data-contrast', next);
-      localStorage.setItem('contrast', next);
-
-      contrastBtn.setAttribute('aria-pressed', String(next === 'high'));
-      contrastBtn.textContent = next === 'high' ? '◻️' : '◼️';
-      contrastBtn.title = next === 'high'
-        ? 'Disable High Contrast Mode'
-        : 'Enable High Contrast Mode';
+  if (modeBtn) {
+    modeBtn.textContent = gameState.mode === 'daily' ? '♾️ UNLIMITED' : '📅 DAILY';
+    modeBtn.addEventListener('click', () => {
+      const next = gameState.mode === 'daily' ? 'unlimited' : 'daily';
+      window.location.href = `?mode=${next}`;
     });
   }
 }
 
-
-// Optional: honor OS dark preference on first visit if no saved choice
 function preferOsDarkOnFirstVisit() {
   const hasSaved = localStorage.getItem('theme');
   if (hasSaved) return;
@@ -113,32 +126,15 @@ function preferOsDarkOnFirstVisit() {
 const _params = new URLSearchParams(typeof location !== 'undefined' ? location.search : "");
 gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
 
-// Load all game audio (alert, success, swipe1–14)
-// Load all game audio (alert, success, swipe1–25 using ascend1A–ascend1Y)
-async function loadAllGameAudio() {
-  await loadSound('alert', './audio/alert.mp3');
-  await loadSound('success', './audio/ohyeahh.mp3');
-  await loadSound('magic', './audio/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3');
-  
-
-  const swipeLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split(''); // A–Y = 25 clips
-  swipeLetters.forEach((letter, index) => {
-    const swipeIndex = index + 1; // swipe1 ... swipe25
-    loadSound(`swipe${swipeIndex}`, `./audio/ascend1${letter}.mp3`);
-  });
-}
-
-
 export function playAlert(msg) {
-  const modal = document.getElementById('alert-modal');
-  const text = document.getElementById('alert-text');
-  const okBtn = document.getElementById('alert-ok');
+  const modal  = document.getElementById('alert-modal');
+  const text   = document.getElementById('alert-text');
+  const okBtn  = document.getElementById('alert-ok');
 
   text.textContent = msg;
   modal.classList.remove('hidden');
 
-  // Web Audio alert sound
-  playSound('alert');
+  playSound('sfxAlert');
 
   return new Promise(resolve => {
     okBtn.onclick = () => {
@@ -149,41 +145,32 @@ export function playAlert(msg) {
 }
 
 // ------------------------------------------------------------
-let baseTotal = 0;     // Sum of all word scores from recomputeAll()
-let bonusTotal = 0;    // Sum of bonuses coming from score:delta events
-let totalScore = 0;    // Rendered total = baseTotal + bonusTotal
+let baseTotal  = 0;
+let bonusTotal = 0;
+let totalScore = 0;
 
-const submittedWords = new Set(); // Prevent duplicate word strings
-gameState.words = gameState.words || []; // [{ word, tiles, li, removeBtn, score }]
+const submittedWords = new Set();
+gameState.words = gameState.words || [];
 
-// ----------------------------------------------
-// Submit List button enablement
-// ----------------------------------------------
 function syncSubmitListButton() {
   const btn = document.getElementById('submit-list');
   if (!btn) return;
-
   const count = (gameState.words || []).length;
   const locked = !!gameState.listLocked;
   const shouldEnable = !locked && count === 10;
-
   btn.toggleAttribute('disabled', !shouldEnable);
   btn.textContent = shouldEnable ? 'Submit List' : `Submit List (${count}/10)`;
 }
 
-// ----------------------------------------------
-// Recompute scores for the current list
-// ----------------------------------------------
 function recomputeAll() {
   const entries = (gameState.words || []).map(w => ({ word: w.word, tiles: w.tiles }));
-  const scores = recomputeAllWordScores(entries);
+  const scores  = recomputeAllWordScores(entries);
 
   baseTotal = 0;
   (gameState.words || []).forEach((w, i) => {
     const s = scores[i] || 0;
     w.score = s;
     baseTotal += s;
-
     const btn = w.removeBtn;
     w.li.textContent = `${w.word.toUpperCase()} (+${s})`;
     w.li.appendChild(btn);
@@ -193,18 +180,12 @@ function recomputeAll() {
   updateScoreDisplay(totalScore);
 }
 
-// ----------------------------------------------
-// Global bonus deltas
-// ----------------------------------------------
 window.addEventListener('score:delta', (e) => {
   const pts = e?.detail?.delta || 0;
   bonusTotal += pts;
   updateScoreDisplay(baseTotal + bonusTotal);
 });
 
-// ----------------------------------------------
-// CURRENT WORD preview
-// ----------------------------------------------
 function updateCurrentWordDisplay() {
   const el = document.getElementById('current-word');
   if (!el) return;
@@ -215,9 +196,6 @@ function updateCurrentWordDisplay() {
   el.textContent = letters;
 }
 
-// ----------------------------------------------
-// Submit current selection as a word
-// ----------------------------------------------
 async function handleSubmitWordClick() {
   const selectedTiles = gameState.selectedTiles || [];
   const word = selectedTiles.map(t => t.letter).join('').toUpperCase();
@@ -240,7 +218,6 @@ async function handleSubmitWordClick() {
     return;
   }
 
-  // Add to UI list
   const result = addWordToList(word, wordScore);
   if (!result) {
     console.error('❌ Could not add word to list; missing #word-list in DOM');
@@ -250,18 +227,14 @@ async function handleSubmitWordClick() {
 
   const { li, removeBtn } = result;
 
-  // Track with same tile objects
   gameState.words.push({ word, tiles: [...selectedTiles], li, removeBtn, score: wordScore });
   submittedWords.add(word);
 
-  // Setup removal
   removeBtn.addEventListener('click', () => {
     li.remove();
     submittedWords.delete(word);
     const idx = gameState.words.findIndex(w => w.li === li);
-    if (idx !== -1) {
-      gameState.words.splice(idx, 1);
-    }
+    if (idx !== -1) gameState.words.splice(idx, 1);
     recomputeAll();
     syncSubmitListButton();
   });
@@ -269,7 +242,7 @@ async function handleSubmitWordClick() {
   recomputeAll();
   syncSubmitListButton();
 
-  playSound('success');
+  playSound('sfxSuccess');
 
   const currentWordEl = document.getElementById('current-word');
   if (currentWordEl) {
@@ -282,16 +255,12 @@ async function handleSubmitWordClick() {
   }
 }
 
-// ----------------------------------------------
-// Submit the entire list (exactly 10 words)
-// ----------------------------------------------
 async function handleSubmitList() {
   if (gameState.listLocked) return;
-
   const count = (gameState.words || []).length;
   if (count !== 10) return;
 
-  playSound('magic');
+  playSound('sfxMagic');
 
   const words = (gameState.words || []).map(w => String(w.word || '').toUpperCase());
   gameState.listLocked = true;
@@ -301,37 +270,41 @@ async function handleSubmitList() {
   (gameState.words || []).forEach(w => w?.removeBtn?.setAttribute?.('disabled', 'disabled'));
   syncSubmitListButton();
 
-  // fresh recompute
   recomputeAll();
 
-  const scoreEl = document.getElementById('score-display');
-  const finalScoreText = scoreEl ? (scoreEl.textContent || 'SCORE: 0') : 'SCORE: 0';
-  const finalScore = (typeof totalScore === 'number') ? totalScore : 0;
+  if (gameState.mode === 'daily') {
+    const hintMult = getHintMultiplier();
+    bonusTotal += baseTotal * hintMult;
+    totalScore  = baseTotal + bonusTotal;
+    updateScoreDisplay(totalScore);
+  }
 
-  // clear selection + current word
+  const scoreEl        = document.getElementById('score-display');
+  const finalScoreText = scoreEl ? (scoreEl.textContent || 'SCORE: 0') : 'SCORE: 0';
+  const finalScore     = (typeof totalScore === 'number') ? totalScore : 0;
+
   resetSelectionState();
   const cw = document.getElementById('current-word');
   if (cw) cw.textContent = '';
 
-  // board words (from gridLogic.js) — keep PATHS intact
   const placedWordList = Array.isArray(placedWords)
     ? placedWords
         .filter(Boolean)
         .map(p => (
           typeof p === 'string'
-            ? { word: String(p).toUpperCase(), path: [] }         // strings get empty path
-            : { word: String(p.word || '').toUpperCase(), path: p.path || [] } // preserve path
+            ? { word: String(p).toUpperCase(), path: [] }
+            : { word: String(p.word || '').toUpperCase(), path: p.path || [] }
         ))
     : [];
   const placedWordStrings = placedWordList.map(p => p.word);
 
   const wordsWithScores = (gameState.words || []).map(w => ({
-    word: String(w.word || '').toUpperCase(),
+    word:  String(w.word || '').toUpperCase(),
     score: Number(w.score) || 0
   }));
 
   const boardEntries = buildBoardEntries(placedWordList);
-  const { POOL } = buildPool(boardEntries, 250);
+  const { POOL }     = buildPool(boardEntries, 250);
 
   requestAnimationFrame(() => {
     const boardTop10      = Array.isArray(gameState.boardTop10) ? gameState.boardTop10 : [];
@@ -341,98 +314,89 @@ async function handleSubmitList() {
       detail: {
         words,
         wordsWithScores,
-        placedWords: placedWordStrings,
-        placedWordsWithPaths: placedWordList,
+        placedWords:           placedWordStrings,
+        placedWordsWithPaths:  placedWordList,
         baseTotal,
         bonusTotal,
-        totalScore: finalScore,
+        totalScore:     finalScore,
         finalScoreText,
         boardTop10,
         boardTop10Total
       }
     }));
   });
-}
 
-
-// Unlock audio on the first physical interaction (mobile + desktop)
-let audioUnlocked = false;
-
-window.addEventListener('pointerdown', () => {
-  if (!audioUnlocked && audioCtx.state === 'suspended') {
-    audioCtx.resume().then(() => {
-      audioUnlocked = true;
-    });
+  if (gameState.mode === 'daily' && gameState.dailyId) {
+    const dailyResult = {
+      dailyId:    gameState.dailyId,
+      score:      finalScore,
+      words:      words,
+      hintsUsed:  gameState.hintsUsed,
+    };
+    localStorage.setItem(`anagramaton_daily_${gameState.dailyId}`, JSON.stringify(dailyResult));
   }
-}, { once: true });
-
-
+}
 
 // =============================
 // DOMContentLoaded Bootstrap
 // =============================
 document.addEventListener('DOMContentLoaded', () => {
-  // Kick off loading all audio (fire-and-forget)
-  loadAllGameAudio();
 
-  // Initialize theme + accessibility preferences
+  // ============================
+  // ★ SPLASH SCREEN — added here, first thing inside DOMContentLoaded
+  // ============================
+  const splashScreen  = document.getElementById('splash-screen');
+  const splashPlayBtn = document.getElementById('splash-play-btn');
+
+  if (splashPlayBtn && splashScreen) {
+    splashPlayBtn.addEventListener('click', () => {
+      playSound('sfxUnlock');
+      splashScreen.classList.add('hidden');
+      audioUnlocked = true;
+    }, { once: true });
+  }
+  // ============================
+
   applySavedTheme();
   setupThemeControls();
-  preferOsDarkOnFirstVisit(); 
+  preferOsDarkOnFirstVisit();
+
   // ============================
-// SETTINGS DROPDOWN (⚙️)
-// ============================
+  // SETTINGS DROPDOWN (⚙️)
+  // ============================
+  const settingsWrap = document.getElementById('settings-wrap');
+  const settingsBtn  = document.getElementById('settings-btn');
+  const settingsMenu = document.getElementById('settings-menu');
 
-const settingsWrap = document.getElementById("settings-wrap");
-const settingsBtn = document.getElementById("settings-btn");
-const settingsMenu = document.getElementById("settings-menu");
+  settingsBtn.addEventListener('click', () => {
+    settingsMenu.hidden = !settingsMenu.hidden;
+    settingsWrap.classList.toggle('menu-open', !settingsMenu.hidden);
+  });
 
-settingsBtn.addEventListener("click", () => {
-  settingsMenu.hidden = !settingsMenu.hidden;
-  settingsWrap.classList.toggle("menu-open", !settingsMenu.hidden);
-});
-
-document.addEventListener("click", (e) => {
-  if (!settingsWrap.contains(e.target)) {
-    settingsMenu.hidden = true;
-    settingsWrap.classList.remove("menu-open");
-  }
-});
-
-
-
-
-
-
-
-
-  
-
+  document.addEventListener('click', (e) => {
+    if (!settingsWrap.contains(e.target)) {
+      settingsMenu.hidden = true;
+      settingsWrap.classList.remove('menu-open');
+    }
+  });
 
   // --- Reset initial state ---
-  baseTotal = 0;
+  baseTotal  = 0;
   bonusTotal = 0;
   totalScore = 0;
   submittedWords.clear();
-  gameState.words = [];
+  gameState.words      = [];
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
   initializeGrid();
 
-  const grid = document.getElementById('hex-grid');
-  ['pointerdown','pointermove','pointerup'].forEach(type => {
-    grid.addEventListener(type, e => {
-      console.log(type, e.pointerType);
-    });
-  });
-
   // --- Right panel visibility based on mode ---
   if (gameState.mode === 'daily') {
     initPhrasePanelEvents();
   } else {
-    const rightPanel = document.getElementById('right-panel');
-    if (rightPanel) rightPanel.style.display = 'none';
+    const rightPanel  = document.getElementById('right-panel');
+    if (rightPanel)  rightPanel.style.display  = 'none';
     const toggleRight = document.getElementById('toggle-right');
     if (toggleRight) toggleRight.style.display = 'none';
   }
@@ -447,22 +411,19 @@ document.addEventListener("click", (e) => {
       <button id="new-game">New Game</button>
     `;
 
-    // reattach event listeners
     document.getElementById('submit-list')
       ?.addEventListener('click', handleSubmitList);
     syncSubmitListButton();
 
     document.getElementById('new-game')?.addEventListener('click', () => {
-      // reset numbers
-      baseTotal = 0;
+      baseTotal  = 0;
       bonusTotal = 0;
       totalScore = 0;
       submittedWords.clear();
-      gameState.words = [];
+      gameState.words      = [];
       gameState.listLocked = false;
       updateScoreDisplay(0);
 
-      // close panels
       const leftPanelEl  = document.getElementById('left-panel');
       const rightPanelEl = document.getElementById('right-panel');
       const syncOpenState = () => {
@@ -476,20 +437,17 @@ document.addEventListener("click", (e) => {
       rightPanelEl?.classList.remove('open');
       syncOpenState();
 
-      // un-merge the left panel title
-      const leftPanel = document.getElementById('left-panel');
-      leftPanel?.classList.remove('is-merged');
+      const leftPanelInner = document.getElementById('left-panel');
+      leftPanelInner?.classList.remove('is-merged');
       const h2 = document.querySelector('#left-panel .panel-content h2');
       if (h2) h2.textContent = 'YOUR WORDS';
 
-      // re-enable buttons
       document.getElementById('submit-list')?.removeAttribute('disabled');
       document.getElementById('submit-word')?.removeAttribute('disabled');
       document
         .querySelectorAll('#word-list button, #word-list [data-role="remove"]')
         .forEach(btn => btn.removeAttribute('disabled'));
 
-      // clear word list
       const wordList = document.getElementById('word-list');
       if (wordList) {
         wordList.classList.remove('is-hidden');
@@ -497,12 +455,21 @@ document.addEventListener("click", (e) => {
       }
       syncSubmitListButton();
 
-      // make a fresh grid
       initializeGrid();
 
-      // tell mergedListPanel to clear itself
       window.dispatchEvent(new Event('game:new'));
     });
+  }
+
+  // Check if player already completed today's daily
+  if (gameState.mode === 'daily' && gameState.dailyId) {
+    const savedResult = localStorage.getItem(`anagramaton_daily_${gameState.dailyId}`);
+    if (savedResult) {
+      const result = JSON.parse(savedResult);
+      playAlert(
+        `✅ You already completed today's daily!\n\nScore: ${result.score}\nWords: ${result.words.join(', ')}\nHints used: ${result.hintsUsed}`
+      );
+    }
   }
 
   window.dispatchEvent(new Event('selection:changed'));
@@ -520,11 +487,10 @@ document.addEventListener("click", (e) => {
       if (cw) cw.textContent = '';
     });
 
-  // --- Selection preview updates ---
   window.addEventListener('selection:changed', updateCurrentWordDisplay);
 
   // ====================================================
-  // PANEL + BACKDROP HANDLING (runs once at startup)
+  // PANEL + BACKDROP HANDLING
   // ====================================================
   const leftPanelEl  = document.getElementById('left-panel');
   const rightPanelEl = document.getElementById('right-panel');
@@ -556,7 +522,6 @@ document.addEventListener("click", (e) => {
     syncOpenState();
   });
 
-  // Initialize body classes for fallback if :has() unsupported
   syncOpenState();
 
   // ====================================================
@@ -564,11 +529,7 @@ document.addEventListener("click", (e) => {
   // ====================================================
   initMergedListPanel();
 
-  // When merged list is shown, mark left panel as merged
   window.addEventListener('round:merged:show', () => {
     document.getElementById('left-panel')?.classList.add('is-merged');
   });
 });
-
-
-

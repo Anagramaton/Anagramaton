@@ -31,8 +31,7 @@ export const letterFrequencies = [
 ];
 
 // — Scoring Multipliers —
-export const reuseMultipliers = { 2: 2, 3: 4 }; // 2nd use = x2, 3rd+ = x4
+export const reuseMultipliers = { 1: 1, 2: 2, 3: 4 };
 export const anagramMultiplier = 5;
-export const lengthMultipliers = {
-  5: 3, 6: 4, 7: 5, 8: 6, 9: 7, 10: 10
+export const lengthMultipliers = { 5: 3, 6: 4, 7: 5, 8: 6, 9: 7, 10: 10
 };

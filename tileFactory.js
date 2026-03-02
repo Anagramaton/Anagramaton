@@ -81,6 +81,7 @@ g.append(outline, poly, spark, tLetter, tPoint);
   const tile = {
     letter,
     point: pointValue,
+    key,
     q: hex.q, r: hex.r, s: -hex.q - hex.r,
     used: false,
     element: g,

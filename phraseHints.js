@@ -3,7 +3,7 @@ export default [
     phrases: ["CLINT EASTWOOD", "OLD WEST ACTION"],
     hints: {
       phrase1: [
-        "A sun-scraped filmstrip holds a permanent squint beside an oak sundial set to dawn.",
+        "A sun-scraped filmstrip holds a permanent squint and a nub.",
       ],
       phrase2: [
         "An antique rocking chair shuffles into a saloon while gunslingers audition for a stunt double brawl."
@@ -17,7 +17,7 @@ export default [
         "A folded resignation tucked behind a fire-exit over looking a sun burnt cubicle that spits out overtime slips."
       ],
       phrase2: [
-        "A wheelbarrow of marbles traded for a painting of Venus De Milo holding a masked wrestler with a Blackbelt .",
+        "A wheelbarrow of marbles traded for a Venus De Milo holding a masked wrestler with a Blackbelt .",
       ]
     }
   },
@@ -25,7 +25,7 @@ export default [
     phrases: ["MAN ROOSTER",  "MOON STARER"],
     hints: {
       phrase1: [
-        "A skin suited briefcase carrying a male alarm clock set for sunrise."
+        "A skin suited briefcase carrying an alarm clock set for sunrise."
       ],
       phrase2: [
         "A plaster saucer pinned to the night dreaming of a taxidermy eye stitched into a scarecrow's face.",
@@ -39,7 +39,7 @@ export default [
       "A stripped from a divine thunderclouds exhausted office chair thats headed for the weekend. "
       ],
       phrase2: [
-        "A whoopie cushions orchestra rumbles in the hands of Michael J Fox on his way to Ripleys Believe It Or Not exhibit."
+        "A whoopie cushions orchestra rumbles in Michael J Foxs hands on his way to Ripleys Believe It Or Not exhibit."
       ]
     }
   },
@@ -47,7 +47,7 @@ export default [
     phrases: ["DWELL ON THE PAST",   "TOWN DEATH SPELL"],
     hints: {
       phrase1: [
-        "An armchair roots itself to the carpet beside film reel rewinding last summmer."
+        "An armchair roots itself to the carpet beside a film reel rewinding last summer."
       ],
       phrase2: [
         "A cluster of HOAs chained to a crate of crossed out life entries and a runestone engraved Merlin and Morgan le Fay."
@@ -375,13 +375,13 @@ export default [
     }
   },
   {
-    phrases: ["THUNDER SOCIETY",   "NO CITY DUST HERE"],
+    phrases: ["THUNDER SOCIETY",   "HIT YOUR DESCENT"],
     hints: {
       phrase1: [
-        "An echoed drum of sound travels from flash to rumble underneath a house of cards with builders but no architect .",
+        "Sound traveling from flash to rumble stops over a house of cards with builders but no architect .",
       ],
       phrase2: [
-        "An anthill that thinks its Rome beneath the ashes of forgotten footsteps.",
+        ".",
       ]
     }
   },
@@ -392,7 +392,7 @@ export default [
         "A walking pair of binoculars zeroes in on dusty prints and a leafs life cycle.",
       ],
       phrase2: [
-        "The teeth of a zippers path to the the teeth of a squirrels strife.",
+        "The teeth of a zippers path to the teeth of a squirrels strife.",
       ]
     }
   },
@@ -414,7 +414,7 @@ export default [
         "A repurposed pound sign making death threats to a Marionette."
       ],
       phrase2: [
-        "A scratched record echoing down an endless hallway full of doors shaking hands  .",
+        "An endless hallway full of doors shaking hands  .",
       ]
     }
   },
@@ -425,7 +425,7 @@ export default [
         "Mariah Carey getting thawed out in November to celebrate a noose sprouting from its own branch.",
       ],
       phrase2: [
-        "King Midas' corpse sitting at his own dinner table explains Jimmy Hoffa whispering from the trunk.."
+        "King Midas' corpse sitting at his own dinner table explains why Jimmy Hoffa is whispering from the trunk.."
       ]
     }
   },
@@ -433,24 +433,21 @@ export default [
     phrases: ["ELECTION RESULTS",   "LIES LETS RECOUNT"],
     hints: {
       phrase1: [
-        "A tuxedoed ballot box waltzes across a marble floor as a smug scoreboard fans itself with confetti.",
-        "A fiery megaphone argues with a crystal fortune teller inside a glass dome of predictions."
+        "A tuxedoed ballot box argues with a crystal fortune teller inside a glass dome of predictions.",
       ],
       phrase2: [
-        "A puppet with crossed fingers bargains with a stripper double checking their tips at shifts end.",
+        "A puppet with crossed fingers bargains with a stripper double checking their tips at shifts end."
       ]
     }
   },
   {
-    phrases: ["ENDLESS AMBITION",   "LESBIANISM NOTED"],
+    phrases: ["A MENTIONED BLISS",   "LESBIANISM NOTED"],
     hints: {
       phrase1: [
-        "A conveyor belt with a broken 'off' switch chasing a trophy on fire.",
-        "A hallway of inifite doors leads to a ladder that climbs through the clouds."
+        "A social symbol for a modern day Call-out heading for Cloud Nine.",
       ],
       phrase2: [
-        "A rainbow fox kisses a quill that scribbles frantic love letters on a drum.",
-        "A violet panther waltzes with a brass trumpet as sheet music flutters like startled birds."
+        "Rosie the riveters rainbow shines over information received filed and bookmarked. ",
       ]
     }
   },
@@ -469,38 +466,34 @@ export default [
     phrases: ["WITNESS PROTECTION",   "SECRET TWIN OPTIONS"],
     hints: {
       phrase1: [
-        "A wide-eyed camera hides behind a steel umbrella as shadows march in formation.",
-        "A nervous notebook squeezes into the arms of a titanium fortress humming lullabies."
+        "A nervous notebook squeezes into the arms of a bunker made from prayers.",
       ],
       phrase2: [
         "A whispering envelope dances with two synchronized mannequins inside a hall of spinning doors.",
-        "A locked diary shares tea with a mirrored pair of acrobats while a roulette wheel ticks impatiently."
+        "A locked diary shares tea with a mirrored pair of acrobats and a spinning ."
       ]
     }
   },
   {
-    phrases: ["THE MEANING OF LIFE",   "FIFTH ALIEN GENOME"],
+    phrases: ["THE OFFLINE ENIGMA",   "FIFTH ALIEN GENOME"],
     hints: {
       phrase1: [
-        "A golden question mark sits on a throne made of hourglasses while galaxies kneel in silent applause.",
-        "A glowing key unlocks a door carved into the moon, releasing a parade of singing atoms."
+        "A severed line of silence coming from a Rubiks cube with trust issues.",
       ],
       phrase2: [
-        "A bronze shield carved with interlocking angles waltzes beside a humming orchid with glass petals as a spiral staircase made of bones hums in the background.",
-        "A weathered pentagon tattooed with storm clouds dines with a lizard wearing a crown of lanterns while a book that bleeds ink and roots sighs on the floor.."
+        "Pentagon points tattooed on an unidentified ship guided with an instruction manual for life."
       ]
     }
   },
   {
-    phrases: ["ASTRONOMERS",   "A SNORE STORM"],
+    phrases: ["",   ""],
     hints: {
       phrase1: [
-        "A stargazing octopus scribbles constellations on a mirror of black ice.",
-        "A robed hawk peers through a crystal tunnel searching for burning seeds."
+        ".",
+        
       ],
       phrase2: [
-        "A yawning trumpet collides with a hurricane made of whispering pillows.",
-        "A drowsy accordion floats into a tornado of feathered quilts."
+        ".",
       ]
     }
   },
@@ -508,12 +501,11 @@ export default [
     phrases: ["PAID VACATION",   "CAPTAIN AVOID"],
     hints: {
       phrase1: [
-        "A gold coin lounges on a hammock beneath a sky of melting postcards.",
-        "A jeweled wallet sips coconut milk on a beach made of ticking calendars.."
+        "A golden handshake lounges beneath a hammock of empty calendars.",
       ],
       phrase2: [
-        "A monocled parrot steers a phantom ship away from a sea of open jaws.",
-        "An admiral's compass sprints backward as a black hole yawns at the horizon."
+        "A uniform with four bars  .",
+        
       ]
     }
   },
@@ -521,11 +513,9 @@ export default [
     phrases: ["CHASE RAINBOWS",   "SOBER CHAINSAW"],
     hints: {
       phrase1: [
-        "A sprinting fox chases a serpent made of dripping paint across the clouds.",
-        "A racing wind leaps after a bridge woven from shards of stained glass."
+        "A greyhound lunging towards a soap bubble.",
       ],
       phrase2: [
-        "A solemn monk hugs a buzzing iron spine under a flickering streetlamp.",
         "A clear-eyed judge feeds candy to a wooden beast with metal teeth."
       ]
     }
@@ -534,12 +524,10 @@ export default [
     phrases: ["HEAD IN THE CLOUDS",   "UNHATCHED OLDIES"],
     hints: {
       phrase1: [
-        "A marble bust floats among woolly giants playing chess in the sky.",
-        "A golden helmet drifts inside a ballroom of puffed-up ghosts."
+        "A golden helmet floats atop a fog-covered peak in the sky.",
       ],
       phrase2: [
-        "A cracked eggshell hums lullabies to a gramophone made of rust.",
-        "A sleeping nest snores beside a vinyl record wearing cobwebs like jewelry."
+        "A silent incubator hiding behind the glow of films in black and white.",
       ]
     }
   },
@@ -547,10 +535,10 @@ export default [
     phrases: ["GOLDEN OPPORTUNITY",   "ENDURING POOL POTTY"],
     hints: {
       phrase1: [
-        "A shimmering sunlight of dripping jewelry over Willy Wonka waving his last ticket.",
+        "A color that thinks its a currency parades past Willy Wonka waving his last ticket.",
       ],
       phrase2: [
-        "The wick of a trick candle as Deadmau5 begings DJing in vegas next to an inflatable flamingo."
+        "Cher still spinning under the disco lights of Poseidons bathtubs with a white mouth swallowing yesterday."
       ]
     }
   },
@@ -558,10 +546,10 @@ export default [
     phrases: ["BALLPARK FIGURE",   "GRILL A PUB FREAK"],
     hints: {
       phrase1: [
-        "A pretzel vendor stretching signals to the third base silhouette to strike a pose.",
+        "A pretzel vendor signals to the silhouette of the third basemen.",
       ],
       phrase2: [
-        "A confessional puffing cigarrette smoke over a table and a sticky dartboard with a Phantom Telephone Hacker.",
+        "A confessional puffing cigarette smoke over a beer-soaked dartboard with the Phantom Telephone Hacker.",
       ]
     }
   },
@@ -603,7 +591,7 @@ export default [
     phrases: ["HOT WEATHER ICON",   "HEATHEN COW RIOT"],
     hints: {
       phrase1: [
-        "A sweaty matchstick sunbathes under a sky chart being worshipped by thermometers.",
+        "A sweaty matchstick sunbathes under a sky chart being worshipped.",
       ],
       phrase2: [
         "A barefoot preacher scolds a glass calf behind a band of marching pitch forks and tiki torches."

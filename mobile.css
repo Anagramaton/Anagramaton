@@ -1,99 +1,71 @@
 @media (max-width: 768px) {
-.side-toggle {
-  position: fixed;
-  writing-mode: initial;
-  text-orientation: initial;
-  width: auto;
-  height: auto;
-  padding: 0;
-  border-radius: 0;
-  top: clamp(40px, 10vh, 80px);
-  letter-spacing: 0.02em;
-  transition: all 0.15s ease;
-  } 
-}
-
-
-@media (max-width: 768px) {
-  body:has(#left-panel.open) .right-toggle {
-    display: none;
-  }
-  body:has(#right-panel.open) .left-toggle {
-    display: none;
+  .side-toggle {
+    position: fixed;
+    writing-mode: initial;
+    text-orientation: initial;
+    width: auto;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    top: clamp(40px, 10vh, 80px);
+    letter-spacing: 0.02em;
+    transition: all 0.15s ease;
   }
 }
 
 @media (max-width: 768px) {
-  .side-toggle { z-index: 900; }   
+  body:has(#left-panel.open) .right-toggle { display: none; }
+  body:has(#right-panel.open) .left-toggle { display: none; }
 }
 
+@media (max-width: 768px) {
+  .side-toggle { z-index: 900; }
+}
 
+/* ── How-to modal ─────────────────────────────────────────────── */
 #howto-modal .rom__dialog {
   display: flex;
   flex-direction: column;
-  max-height: 90vh;      
-  overflow: hidden;      
+  max-height: 90vh;
+  overflow: hidden;
 }
-
 
 #howto-pagewrap {
-  flex: 1;                         
-  overflow-y: auto;                
-  -webkit-overflow-scrolling: touch; 
-  overscroll-behavior: contain;    
-  padding: 10px 18px;              
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 10px 18px;
 }
 
-
-#howto-pagewrap .howto-page:last-child {
-  padding-bottom: 16px;
-}
-
+#howto-pagewrap .howto-page:last-child { padding-bottom: 16px; }
 
 .howto-controls {
   flex: 0 0 auto;
-  position: sticky;   
+  position: sticky;
   bottom: 0;
 }
 
-
 @media (max-width: 768px) {
   #howto-modal .rom__dialog { max-height: 92vh; }
 }
 
-@media (max-width: 768px) {
-  #howto-modal .rom__dialog { max-height: 92vh; }
-}
-
-
+/* ── Panels ───────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   #left-panel .panel-content,
   #right-panel .panel-content {
     width: 100%;
     box-sizing: border-box;
-    overflow-y: auto;    
-    overflow-x: hidden;  
-    position: absolute;  
-    inset: 0;            
-  }
-
-  #left-panel .panel-content * {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  #round-over-modal .rom__dialog {
-    max-height: 92vh;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    background: #fff;
+    overflow-x: hidden;
+    position: absolute;
+    inset: 0;
   }
+
+  #left-panel .panel-content * { max-width: 100%; }
 }
 
+/* ── Score display ────────────────────────────────────────────── */
 @media (max-width: 768px) {
   #score-display {
     position: fixed;
@@ -107,16 +79,13 @@
   }
 }
 
-  @media (max-width: 768px) {
+/* ── Current word display ─────────────────────────────────────── */
+@media (max-width: 768px) {
   #current-word-display {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-        bottom: clamp(
-      110px,
-      calc(env(safe-area-inset-bottom) + 14vh),
-      160px
-    );
+    bottom: clamp(110px, calc(env(safe-area-inset-bottom) + 14vh), 160px);
     z-index: 800;
     display: block;
     text-align: center;
@@ -125,52 +94,19 @@
   }
 }
 
+/* ── Submit / Clear buttons ───────────────────────────────────── */
 @media (max-width: 768px) {
   #submit-word {
-  position: fixed;
-  bottom: clamp(
-    16px,
-    calc(env(safe-area-inset-bottom) + 3vh),
-    40px
-  );
-  left: calc(50% - 80px);
-  transform: translateX(-50%);
-  z-index: 800;
-    background: none;
-    border: none;
-    box-shadow: none;
-    font-family: 'Limelight', sans-serif;
-    font-size: 2.00rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--submit-fg);
-    padding: 0;
-    margin: 0;
-  }
-  #submit-word:active {
-    opacity: 0.6;
-  }
-}
-
-
-
-@media (max-width: 768px) {
-  #clear-word {
     position: fixed;
-      bottom: clamp(
-    16px,
-    calc(env(safe-area-inset-bottom) + 3vh),
-    40px
-  );   /* same row as submit */
-    left: calc(50% + 80px);           /* right side of row */
+    bottom: clamp(16px, calc(env(safe-area-inset-bottom) + 3vh), 40px);
+    left: calc(50% - 80px);
     transform: translateX(-50%);
     z-index: 800;
     background: none;
     border: none;
     box-shadow: none;
     font-family: 'Limelight', sans-serif;
-    font-size: 2.00rem;
+    font-size: 2rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -178,179 +114,43 @@
     padding: 0;
     margin: 0;
   }
-  #clear-word:active {
-    opacity: 0.6;
-  }
-}
+  #submit-word:active { opacity: 0.6; }
 
-
-@media (max-width: 768px) {
-  #hex-grid {
-    touch-action: none;
-  }
-}
-
-/* round over modal – colorful glass version */
-@media (max-width: 768px) {
-  #round-over-modal .rom__dialog {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    border-radius: 18px;
-    max-height: 92vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    background: linear-gradient(135deg, #fef3c7 0%, #a5f3fc 50%, #c7d2fe 100%);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-    padding: 0 0 70px;
-    position: relative;
-  }
-
-  /* header strip: energetic diagonal blend */
-  #round-over-modal .rom__header {
-    background: linear-gradient(135deg, #f97316, #f43f5e, #3b82f6);
-    color: #fff;
-    padding: 20px 16px 60px;
-    border-radius: 18px 18px 0 0;
-    text-align: center;
-    position: relative;
-  }
-
-  /* floating animated blobs */
-  #round-over-modal .rom__header::before,
-  #round-over-modal .rom__header::after {
-    content: "";
-    position: absolute;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    opacity: 0.3;
-    filter: blur(40px);
-  }
-  #round-over-modal .rom__header::before {
-    background: #22d3ee;
-    top: -40px;
-    right: -30px;
-  }
-  #round-over-modal .rom__header::after {
-    background: #f9a8d4;
-    bottom: -40px;
-    left: -20px;
-  }
-
-  #round-over-modal .rom__title {
-    font-weight: 800;
-    font-size: 1.25rem;
-    letter-spacing: 0.02em;
-  }
-
-  /* floating glass cards */
-  #round-over-modal .rom__block {
-    margin: 0 14px;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 12px 14px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  }
-
-  /* summary grid */
-  #round-over-modal .rom__summary-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  #round-over-modal .rom__label {
-    font-size: 0.6rem;
+  #clear-word {
+    position: fixed;
+    bottom: clamp(16px, calc(env(safe-area-inset-bottom) + 3vh), 40px);
+    left: calc(50% + 80px);
+    transform: translateX(-50%);
+    z-index: 800;
+    background: none;
+    border: none;
+    box-shadow: none;
+    font-family: 'Limelight', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #374151;
+    color: var(--submit-fg);
+    padding: 0;
+    margin: 0;
   }
-  #round-over-modal .rom__value {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #111827;
-  }
+  #clear-word:active { opacity: 0.6; }
+}
 
-  /* badges with gradient chips */
-  #round-over-modal .rom__badge-row {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  #round-over-modal .rom__badge-row::-webkit-scrollbar {
-    display: none;
-  }
-  #round-over-modal .rom__badge {
-    background: linear-gradient(135deg, #f97316, #f43f5e, #3b82f6);
-    color: #fff;
-    border-radius: 999px;
-    padding: 5px 12px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    white-space: nowrap;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
-  }
+/* ── Hex grid ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #hex-grid { touch-action: none; }
+}
 
- 
-  #round-over-modal .rom__block--tabs {
-    background: rgba(255, 255, 255, 0.65);
-  }
-  #round-over-modal .rom__tab {
-    background: #e0f2fe;
-    color: #0f172a;
-    border: none;
-    border-radius: 999px;
-    padding: 4px 12px;
-    font-size: 0.75rem;
-  }
-  #round-over-modal .rom__tab--active {
-    background: linear-gradient(135deg, #f97316, #f43f5e);
-    color: #fff;
-  }
-
-  /* word list */
-  #round-over-modal .rom__row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-  }
-  #round-over-modal .rom__row:last-child {
-    border-bottom: none;
-  }
-  #round-over-modal .rom__word {
-    font-weight: 500;
-    color: #111827;
-  }
-  #round-over-modal .rom__score-chip {
-    background: linear-gradient(135deg, #fde68a, #fcd34d);
-    color: #78350f;
-    border-radius: 999px;
-    padding: 2px 8px;
-    font-size: 0.7rem;
-  }
-
-  /* footer */
-  #round-over-modal .rom__actions {
-    position: sticky;
-    bottom: 0;
-    background: linear-gradient(180deg, rgba(245,245,247,0) 0%, rgba(245,245,247,1) 40%);
-    padding: 10px 14px 16px;
-  }
-  #round-over-modal #rom-close-btn {
-    background: linear-gradient(135deg, #f97316, #f43f5e, #3b82f6);
-    color: #fff;
-    font-weight: 700;
-    border: none;
-    border-radius: 999px;
-    height: 44px;
-    width: 100%;
-    box-shadow: 0 6px 18px rgba(249, 115, 22, 0.3);
+/* ── Round-over modal — mobile tweaks ────────────────────────── */
+@media (max-width: 768px) {
+  /* Dismiss hint: respect notch */
+  .rom__dismiss-hint {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }
 }
 
+/* ── Game title ───────────────────────────────────────────────── */
 @media (max-width: 768px) {
   #game-title {
     position: fixed;
@@ -359,7 +159,7 @@
     transform: translateX(-50%);
     z-index: 800;
     margin: 0;
-    font-size: 2.2rem;   
+    font-size: 2.2rem;
     letter-spacing: 0.04em;
   }
 }

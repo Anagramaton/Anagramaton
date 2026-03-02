@@ -6,25 +6,16 @@ const MAX_HINTS = 3;
 // ==============================
 //  UI HELPERS
 // ==============================
-function disableButtonById(id, labelWhenDisabled = null) {
+function disableButtonById(id) {
   const btn = document.getElementById(id);
   if (!btn) return null;
 
-  
-  btn.disabled = true;                 
+  btn.disabled = true;
   btn.setAttribute('aria-disabled', 'true');
-  btn.style.pointerEvents = 'none';    
-
-  
+  btn.style.pointerEvents = 'none';
   btn.classList.add('btn--disabled');
 
-  if (labelWhenDisabled !== null) {
-    btn.textContent = labelWhenDisabled;
-  }
-
- 
-  btn.title = (btn.title ? btn.title + ' — ' : '') + 'Disabled';
-
+  // No text change — CSS opacity handles the "used" state visually
   return btn;
 }
 
@@ -123,7 +114,7 @@ export function revealPhrase(phraseKey) {
   if (!phraseKey) return;
   if (gameState.mode !== 'daily' || !gameState.seedPhrase) return;
 
-  gameState.phraseRevealed[phraseKey] = true;
+  gameState.hintUsage.phraseRevealed[phraseKey] = true;
 
   const phraseEl = document.getElementById(`${phraseKey}-text`);
   if (phraseEl) {
@@ -132,6 +123,12 @@ export function revealPhrase(phraseKey) {
     phraseEl.textContent = raw.trim();
   }
 } // <-- ✅ added this closing brace
+
+export function getHintMultiplier() {
+  const used = Math.max(0, Math.min(MAX_HINTS, Number(gameState.hintsUsed) || 0));
+  const multiMap = [3, 2, 1, 0]; // 0 hints used = x3, 1 = x2, 2 = x1, 3 = x0
+  return multiMap[used] ?? 0;
+}
 
 export function initPhrasePanelEvents() {
   // Hide / disable in Unlimited (or if daily failed to place a phrase)

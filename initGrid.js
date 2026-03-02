@@ -4,7 +4,7 @@ import { gameState } from './gameState.js';
 import { GRID_RADIUS } from './constants.js';
 import { areAxialNeighbors } from './utils.js';
 import { isValidWord } from './gameLogic.js';
-import { playSound } from './gameAudio.js';
+import { recomputeAllWordScores } from './scoreLogic.js';  // ← ADD THIS
 
 
 export const DOM = {
@@ -15,7 +15,16 @@ export let tileElements = [];
 export let grid;
 
 
-
+function playSound(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  try {
+    el.currentTime = 0;
+    el.play().catch(err => console.warn(`[audio] ${id} blocked:`, err));
+  } catch (e) {
+    console.warn(`[audio] ${id} error:`, e);
+  }
+}
 
 
 // swipe / drag state
@@ -41,8 +50,6 @@ function updateWordPreview() {
   const wordPreviewElement = document.getElementById('current-word');
 
   if (wordPreviewElement) wordPreviewElement.textContent = upper;
-
-
 
   // Clear shimmer from ALL tiles before applying new ones
   document.querySelectorAll('.valid-shimmer').forEach(el => {
@@ -76,9 +83,11 @@ export function clearCurrentSelection() {
   const selectedTiles = gameState.selectedTiles || [];
   selectedTiles.forEach(tile => {
     if (tile?.element) {
+      // Use setSelected(false) so polygon + tLetter + tPoint all lose .selected
+      tile.setSelected(false);
       const poly = tile.element.querySelector('polygon');
       if (poly) {
-        poly.classList.remove('selected', 'valid-shimmer');
+        poly.classList.remove('valid-shimmer');
         poly.style.removeProperty('--shimmer-delay');
       }
     }
@@ -106,50 +115,41 @@ function handleSwipeTileStep(tile) {
   const isAlreadySelected = idx !== -1;
 
   if (isAlreadySelected) {
+    // Deselect all tiles after the tapped one (backtrack)
     for (let i = selectedTiles.length - 1; i > idx; i--) {
       const t = selectedTiles[i];
-      const poly = t.element.querySelector('polygon');
-      if (poly) poly.classList.remove('selected');
+      // Use setSelected(false) so polygon + tLetter + tPoint all lose .selected
+      t.setSelected(false);
       selectedTiles.pop();
     }
 
-     updateWordPreview();
+    updateWordPreview();
 
     const index = Math.min(selectedTiles.length, 25);
     if (index > 0) {
       requestAnimationFrame(() => {
-        playSound(`swipe${index}`);
+        playSound(`sfxSwipe${index}`);
       });
     }
 
     return;
-
   }
 
+  // New tile: enforce adjacency, then select and extend the path
+  if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.length - 1], tile)) {
+    // Use setSelected(true) so polygon + tLetter + tPoint all get .selected
+    tile.setSelected(true);
+    selectedTiles.push(tile);
+    updateWordPreview();
 
-
-
- // New tile: enforce adjacency, then select and extend the path
-if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.length - 1], tile)) {
-  const poly = tile.element.querySelector('polygon');
-  if (poly) poly.classList.add('selected');
-  selectedTiles.push(tile);
-  updateWordPreview();
-
-  const index = Math.min(selectedTiles.length, 25);
-  if (index > 0) {
-    requestAnimationFrame(() => {
-      playSound(`swipe${index}`);
-    });
+    const index = Math.min(selectedTiles.length, 25);
+    if (index > 0) {
+      requestAnimationFrame(() => {
+        playSound(`sfxSwipe${index}`);
+      });
+    }
   }
-
-
 }
-
-
-}
-
-
 
 function handlePointerDown(e) {
   e.preventDefault();
@@ -164,8 +164,6 @@ function handlePointerDown(e) {
   handleSwipeTileStep(tile);
 }
 
-
-
 function handlePointerMove(e) {
   if (!isDragging) return;
 
@@ -178,13 +176,9 @@ function handlePointerMove(e) {
   }
 }
 
-
-
-
-
 function handlePointerUp(e) {
-    isDragging = false;
-    lastHoverTile = null;
+  isDragging = false;
+  lastHoverTile = null;
   updateWordPreview();
 }
 
@@ -203,6 +197,8 @@ export function initializeGrid() {
 
   gameState.allTiles = tileElements;
 
+  // Trigger initial styling so pre-reuse tiles show stage-1 value on load  // ← ADD
+  recomputeAllWordScores([]);                                                // ← ADD
 
   if (!DOM.svg.dataset.swipeListeners) {
     DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });

@@ -69,7 +69,8 @@ export function recomputeAllWordScores(wordEntries) {
 if (Array.isArray(gameState.allTiles)) {
   for (const tile of gameState.allTiles) {
     const uses = totalUseByTile.get(tile) ?? 0;
-    styleTileByReuse(tile, uses);
+    const preReuse = gameState.preReuseKeys?.has(tile.key) ? 1 : 0;  // ← ADD
+    styleTileByReuse(tile, uses + preReuse);                          // ← CHANGE (was: styleTileByReuse(tile, uses))
   }
 }
 
@@ -86,8 +87,9 @@ function styleTileByReuse(tile, uses) {
   tile.textLetter?.setAttribute('class', 'tile-letter');
   tile.textPoint?.setAttribute('class', 'tile-point');
 
-  // --- Compute multiplier ---
-  const multiplier = uses >= 3 ? reuseMultipliers[3] : (reuseMultipliers[uses] ?? 1);
+  const multiplier = uses === 0 ? 1
+                   : uses === 1 ? reuseMultipliers[2]
+                   : reuseMultipliers[3];
 
   // Update displayed point value
   if (tile.textPoint && typeof tile.point === 'number') {
@@ -131,7 +133,9 @@ if (uses === 1) {
       const face = letterPoints[letter] || 1;
 
       const uses = totalUseByTile.get(tile) || 0;
-    let tileMult = reuseMultipliers[uses] || (uses >= 3 ? reuseMultipliers[3] : 1);
+      const preReuse = gameState.preReuseKeys?.has(tile.key) ? 1 : 0;              // ← ADD
+      const effectiveUses = uses + preReuse;                                        // ← ADD
+      let tileMult = reuseMultipliers[effectiveUses] || (effectiveUses >= 3 ? reuseMultipliers[3] : 1);  // ← CHANGE (was: reuseMultipliers[uses])
 
       base += face * tileMult;
     }

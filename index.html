@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="colorblind">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport"
@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2
+<link href="https://fonts.googleapis.com/css2
 ?family=Coiny
 &family=Knewave
 &family=Limelight
@@ -21,7 +21,14 @@
 &family=Rubik+Bubbles
 &family=Rubik+Dirt
 &family=Rubik+Vinyl
+&family=Rubik+Iso
+&family=Akaya+Kanadaka
+&family=Luckiest+Guy
+&family=Wellfleet
 &family=Turret+Road:wght@200;300;400;500;700;800
+&family=Bebas+Neue
+&family=Rhajdhani:wght@300;400;500;600;700
+&family=Orbitron:wght@400;500;600;700;800;900
 &display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css" />
@@ -31,10 +38,14 @@
 </head>
 
 <body>
-
-
-  
-   <!-- Settings under the title -->
+<div id="splash-screen" role="dialog" aria-modal="true" aria-labelledby="splash-title">
+  <div id="splash-content">
+    <h1 id="splash-title">ANAGRAMATON</h1>
+    <p id="splash-tagline">BUILD WORDS. CHAIN TILES. BEAT THE BOARD.</p>
+    <button id="splash-play-btn" type="button" autofocus>PLAY</button>
+  </div>
+</div>
+  <!-- Settings under the title -->
   <div id="settings-wrap">
 
     <button id="settings-btn" aria-haspopup="true">⚙️</button>
@@ -42,17 +53,14 @@
     <div id="settings-menu" hidden>
       <button id="toggle-theme">🌙</button>
       <button id="toggle-access">🌓</button>
-      <button id="toggle-contrast">◼️◻️</button>
+    
       <button id="howto-open">🎮</button>
+      <button id="toggle-mode">📅 DAILY</button>
     </div>
   </div>
 
   <!-- Game Title -->
   <h1 id="game-title">ANAGRAMATON</h1>
-
-
-
-
 
   <!-- UI MOVED OUTSIDE the game container -->
   <span id="score-display">SCORE: 0</span>
@@ -145,22 +153,48 @@
     </div>
   </aside>
 
-  <!-- Round Over Modal -->
-  <div id="round-over-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="rom-title">
+  <!-- ============================================================
+       ROUND OVER MODAL — DUEL BOARD
+       ============================================================ -->
+  <div id="round-over-modal" class="rom rom--hidden"
+       role="dialog" aria-modal="true" aria-labelledby="rom-title">
+
+    <!-- Backdrop: click to close -->
     <div class="rom__backdrop"></div>
+
     <div class="rom__dialog">
-      <h2 id="rom-title">YOU MADE IT!</h2>
 
-      <p><strong>FINAL SCORE:</strong> <span id="rom-total">0</span></p>
-      <p class="rom__sub">BASE <span id="rom-base">0</span> + BONUS <span id="rom-bonus">0</span></p>
+      <!-- ── Hero ──────────────────────────────────────────────── -->
+      <div class="rom__hero">
+        <p class="rom__eyebrow">ROUND COMPLETE</p>
 
-      <!-- Words vs Board + Progress Bar are injected by JS just above the actions -->
+        <div class="rom__score-hero">
+          <span class="score-num" id="rom-total">0</span>
+          <span class="score-label">PTS</span>
+        </div>
+
+        <div class="rom__score-pills">
+          <span class="rom__pill rom__pill--base">
+            <span class="pill-label">BASE</span>
+            <span class="pill-value" id="rom-base">0</span>
+          </span>
+          <span class="rom__pill rom__pill--bonus">
+            <span class="pill-label">BONUS</span>
+            <span class="pill-value" id="rom-bonus">0</span>
+          </span>
+        </div>
+      </div>
+      <!-- /hero -->
+
+      <!-- JS injects: section label + meter, section label + VS grid,
+           badges, summary block, tabbed details — all before .rom__actions -->
 
       <div class="rom__actions">
         <button id="rom-close-btn" type="button">CLOSE</button>
       </div>
-    </div>
-  </div>
+
+    </div><!-- /rom__dialog -->
+  </div><!-- /round-over-modal -->
 
   <!-- THE MODAL -->
   <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
@@ -200,6 +234,7 @@
             <li><strong>1st REUSE:</strong> TILES BASE VALUE IS DOUBLED (×2).</li>
             <li><strong>2nd REUSE:</strong> THAT VALUE IS DOUBLED AGAIN (×4).</li>
             <li><strong>MAXED OUT:</strong> AFTER 2nd REUSE THE TILES VALUE REMAINS MAXED OUT FOR ALL SUBSEQUENT USES</li>
+            <li><strong>HELP:</strong> ENJOY TWO FREE BOOSTED TILES..ON THE HOUSE </li>
           </ul>
         </section>
 
@@ -246,7 +281,7 @@
           <p>NOW, CONSIDER THE WORD QUIZZED & ASSUME BOTH Zs HAVE BEEN USED TWICE</p>
           <ul>
             <li><strong>BASE VALUE:</strong> Q=10, U=1, I=1, Z=10, Z=10, E=1, D=2</li>
-            <li><strong>REUSE BONUS VALUE FOR Zs:</strong> EACH Z’s 10 Pts ARE MULTIPLIED BY 4</li>
+            <li><strong>REUSE BONUS VALUE FOR Zs:</strong> EACH Z's 10 Pts ARE MULTIPLIED BY 4</li>
             <li><strong>SUBTOTAL:</strong> 10 + 1 + 1 + (10×4) + (10×4) + 1 + 2 = 95</li>
             <li><strong>LENGTH MULTIPLIER:</strong> 7 LETTERS ×5 = 475 Pts TOTAL</li>
           </ul>
@@ -271,8 +306,67 @@
     </div>
   </div>
 
+  <!-- Apply colorblind class on load while respecting saved preference.
+       Default: enabled. If localStorage has '0' the class will be removed (user chose off). -->
+  <script>
+    (function(){
+      try {
+        const KEY = 'anagramaton_colorblind'; // storage key
+        const stored = localStorage.getItem(KEY);
+        if (stored === '0') {
+          // user explicitly disabled -> remove class
+          document.documentElement.classList.remove('colorblind');
+          // update toggle button if it exists
+          const b = document.getElementById('toggle-access');
+          if (b) b.setAttribute('aria-pressed', 'false');
+        } else if (stored === '1') {
+          // user explicitly enabled -> ensure class present
+          document.documentElement.classList.add('colorblind');
+          const b = document.getElementById('toggle-access');
+          if (b) b.setAttribute('aria-pressed', 'true');
+        } else {
+          // no stored preference -> leave default (class already present on <html>)
+          const b = document.getElementById('toggle-access');
+          if (b) b.setAttribute('aria-pressed', 'true');
+        }
+      } catch (e) {
+        /* ignore storage errors */
+      }
+    })();
+  </script>
+
   <script type="module" src="./main.js"></script>
   <script type="module" src="./roundOverModal.js"></script>
   <script type="module" src="./howToModal.js"></script>
+  <!-- ===== AUDIO ===== -->
+   <audio id="sfxUnlock" src="./audio/zapsplat_musical_piano_insides_strings_strum_002_101394.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxAlert"   src="./audio/alert.mp3"                                          preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSuccess" src="./audio/ohyeahh.mp3"                                        preload="auto" aria-hidden="true"></audio>
+<audio id="sfxMagic"   src="./audio/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3"   preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe1"  src="./audio/ascend1A.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe2"  src="./audio/ascend1B.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe3"  src="./audio/ascend1C.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe4"  src="./audio/ascend1D.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe5"  src="./audio/ascend1E.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe6"  src="./audio/ascend1F.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe7"  src="./audio/ascend1G.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe8"  src="./audio/ascend1H.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe9"  src="./audio/ascend1I.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe10" src="./audio/ascend1J.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe11" src="./audio/ascend1K.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe12" src="./audio/ascend1L.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe13" src="./audio/ascend1M.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe14" src="./audio/ascend1N.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe15" src="./audio/ascend1O.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe16" src="./audio/ascend1P.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe17" src="./audio/ascend1Q.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe18" src="./audio/ascend1R.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe19" src="./audio/ascend1S.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe20" src="./audio/ascend1T.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe21" src="./audio/ascend1U.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe22" src="./audio/ascend1V.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe23" src="./audio/ascend1W.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe24" src="./audio/ascend1X.mp3" preload="auto" aria-hidden="true"></audio>
+<audio id="sfxSwipe25" src="./audio/ascend1Y.mp3" preload="auto" aria-hidden="true"></audio>
 </body>
 </html>

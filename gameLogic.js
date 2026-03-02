@@ -1,8 +1,19 @@
-// gameLogic.js
 import wordList from './wordList.js';
 
-export const dictionarySet = new Set(wordList.map(word => word.toUpperCase()));
+// Lazy-init: only build the Set when first needed, not at module load time
+let _dictionarySet = null;
+
+export function getDictionarySet() {
+  if (!_dictionarySet) {
+    _dictionarySet = new Set(wordList.map(word => word.toUpperCase()));
+  }
+  return _dictionarySet;
+}
+
+export const dictionarySet = new Proxy({}, {
+  has(_, key) { return getDictionarySet().has(key); }
+});
 
 export function isValidWord(word) {
-  return dictionarySet.has(word.toUpperCase());
+  return getDictionarySet().has(word.toUpperCase());
 }

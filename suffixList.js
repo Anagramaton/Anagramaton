@@ -1,12 +1,11 @@
 export default [
-  'GRAPHY',
-  'ABLES', 'BERRY', 'GRAPH', 'IALLY', 'IESTS', 'IGHTS', 'ISHES', 
-  'MENTS', 'PROOF', 'SHIPS', 'TURES', 'WOMAN', 'ICAL', 'ALLY', 'PROOFS', 
-  'ABLE', 'ABLY', 'ATES', 'ENCY', 'ENTS', 'ETTE', 'GIES', 'HOOD', 
-  'IERS', 'IEST', 'IGHT', 'INGS', 'IONS', 'IOUS', 'ISMS', 'ISTS', 
-  'IVES', 'LESS', 'LIKE', 'MENT', 'NESS', 'SHIP', 'SOME', 'TIES', 
-  'TURE', 'WARE', 'ANT', 'ARY', 'ATE', 'ERS', 'FUL', 'ICS', 'IER', 
-  'IES', 'ING', 'ION', 'ISH', 'ISM', 'IST', 'ITY', 'IVE', 
-  'NCE', 'OGY', 'TOR'
+
+  'ABLE', 'ABLES', 'ABLY', 'ATE', 'ATES', 'BERRY', 'ENT', 'ENTS', 'ERS',
+  'ETTE', 'FUL', 'GIES', 'GRAPH', 'GRAPHY', 'HOOD', 'ICAL', 'ICS', 'IER', 'IERS', 'IES',
+  'IEST', 'IGHT', 'IGHTS', 'ING', 'INGS', 'IONS', 'IOUS', 'ISH', 'ISHES', 'ISM', 'ISMS', 
+  'IST', 'ISTS', 'ITY', 'IVE', 'IVES', 'LESS', 'LIKE', 'LLY', 'MAN', 'MEN', 'MENT', 'MENTS', 
+  'NCE', 'NCY', 'NESS', 'OGY', 'PROOF', 'PROOFS', 'SHIP', 'SHIPS', 'SOME', 'TIC', 'TIES', 
+  'TOR', 'TORS', 'TURE', 'TURES', 'WARE', 'WOMAN', 'WOMEN',
+  
 ];
 

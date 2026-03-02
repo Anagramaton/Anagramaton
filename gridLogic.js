@@ -4,58 +4,25 @@ import suffixList from './suffixList.js';
 import phraseHints from './phraseHints.js';
 import { gameState } from './gameState.js';
 import { ADJ_DIRS, hexKey, getAllCoords, isValidCoord } from './gridCoords.js';
-import { seedPhrasePair } from './seedPhrases.js';
 import { findPath } from './pathfinding.js';
 import { findPhrasePath, placePhrase } from './seedPhrases.js';
-import { countOverlap, indexByKey } from './overlapUtils.js';
 import { placeOverlappingSuffixes } from './suffixSeeder.js';
 import { computeAnagrams } from './anagrams.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { shuffledArray } from './utils.js';
+import bootstrapWords from './bootstrapWords.js';
 
-
-
-// ===== kept here, per your decision =====
 export const placedWords = [];
 
-// ===== local helpers you still use in this file =====
 const MAX_ATTEMPTS = 150;
 
-function randomFrom(arr) {
-  const index = Math.floor(Math.random() * arr.length);
-  return arr[index];
-}
+// ─── Moved outside so both generateSeededBoard and _generateBoard can use them ───
 
-// ======================================================================
-// MAIN: generateSeededBoard (kept in this file, Steps 1–6 unchanged)
-// ======================================================================
-export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
-  const DEBUG = true; 
-
-const isDaily = gameState.mode === 'daily';
-let placedSuffixes = []; // always defined for debug printing
-
-
-  const grid = {};
-  placedWords.length = 0;
-
-  const coords = getAllCoords(gridRadius);
-  const maxTiles = coords.length;
-  const MIN_WORD_OVERLAP = 2; 
-  const PATH_TRIES = Math.max(200, (typeof MAX_ATTEMPTS === 'number' ? MAX_ATTEMPTS : 300));
-
-// ─────────────────────────────────────────────────────────────────────────────
-// STEP 1) Seed phrase pair — DAILY ONLY (unchanged behavior, deterministic pick)
-// ─────────────────────────────────────────────────────────────────────────────
-
-// tiny deterministic RNG so "daily" is reproducible without new deps
 function mkSeededRng(seed) {
-  // LCG constants (Numerical Recipes)
   let s = (seed >>> 0) || 1;
   return () => (s = (s * 1664525 + 1013904223) >>> 0) / 0x100000000;
 }
 
-// stable daily id like 2025_10_11; replace if you already have one
 function getDailyId() {
   const d = new Date();
   const y = d.getUTCFullYear();
@@ -64,12 +31,9 @@ function getDailyId() {
   return `${y}_${String(m).padStart(2, "0")}_${String(day).padStart(2, "0")}`;
 }
 
-// pure: attempt to place a phrase pair exactly like "before", but using a seeded RNG
 function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
   const coords = getAllCoords(gridRadius);
   const maxTiles = coords.length;
-
-  // helper: pick a random index with the seeded rng
   const pick = (n) => Math.floor(rng() * n);
 
   for (let i = 0; i < maxTries; i++) {
@@ -90,62 +54,120 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
 
     const pathB = findPhrasePath(grid, B, gridRadius);
     if (!pathB) {
-      // rollback A if B fails (match original semantics of “both or neither”)
       for (let k = 0; k < pathA.length; k++) {
         const key = pathA[k].key;
-        // only clear if it still matches A[k]; be conservative about collisions
         if (grid[key] === A[k]) delete grid[key];
       }
       continue;
     }
     placePhrase(grid, pathB, B);
 
-    // mirror the "before" state shape & values
     gameState.seedPhrase = `${rawA} / ${rawB}`;
     gameState.seedPaths = { phraseA: pathA, phraseB: pathB };
     gameState.seedHints = hints;
 
-    return true; // success
+    return true;
   }
-  return false; // couldn’t place a pair
+  return false;
 }
 
-// ── Dispatcher (insert this where Step 1 lives inside generateSeededBoard) ──
-{
+function seededShuffle(arr) {
+  if (gameState.mode !== 'daily' || !gameState.dailyRng) {
+    return shuffledArray(arr);
+  }
+  const copy = Array.isArray(arr) ? arr.slice() : Array.from(arr);
+  const r = gameState.dailyRng;
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = (r() * (i + 1)) | 0;
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+// ======================================================================
+// PUBLIC ENTRY POINT — thin wrapper that installs the seeded RNG for
+// daily mode so that EVERY call inside (findPath, shuffledArray, etc.)
+// is deterministic. Math.random is always restored in the finally block.
+// ======================================================================
+export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
+  if (gameState.mode === 'daily') {
+    const dailyId = getDailyId();
+    gameState.dailyId = dailyId;
+
+    const seedNum = Array.from(dailyId)
+      .reduce((h, c) => ((h * 131) ^ c.charCodeAt(0)) >>> 0, 2166136261);
+
+    const rng = mkSeededRng(seedNum);
+    gameState.dailyRng = rng;
+
+    const originalRandom = Math.random;
+    Math.random = rng;
+
+    try {
+      return _generateBoard(gridRadius, state);
+    } finally {
+      Math.random = originalRandom;
+    }
+  }
+
+  // Unlimited — clear daily state and generate normally
+  gameState.seedPhrase = undefined;
+  gameState.seedPaths = undefined;
+  gameState.seedHints = undefined;
+  gameState.dailyRng = undefined;
+
+  return _generateBoard(gridRadius, state);
+}
+
+// ======================================================================
+// INTERNAL: all existing generation logic, unchanged
+// ======================================================================
+function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
   const DEBUG = true;
 
-  if (gameState.mode === "daily") {
-    const dailyId = getDailyId();
-    const rng = mkSeededRng(
-      // turn the id into a simple numeric seed
-      Array.from(dailyId).reduce((h, c) => ((h * 131) ^ c.charCodeAt(0)) >>> 0, 2166136261)
-    );
+  const isDaily = gameState.mode === 'daily';
+  let placedSuffixes = [];
 
-    const placed = placeDailyPhrasePair(grid, gridRadius, rng, /*maxTries=*/100);
+  const grid = {};
+  placedWords.length = 0;
 
-    if (!placed) {
-      // if nothing could be placed today, keep the fields undefined (match “before” failure path)
+  const coords = getAllCoords(gridRadius);
+  const maxTiles = coords.length;
+  const MIN_WORD_OVERLAP = 2;
+  const PATH_TRIES = Math.max(61, (typeof MAX_ATTEMPTS === 'number' ? MAX_ATTEMPTS : 61));
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // STEP 1) Seed phrase pair — DAILY ONLY
+  // ─────────────────────────────────────────────────────────────────────────────
+  {
+    const DEBUG = true;
+
+    if (gameState.mode === "daily") {
+      // dailyId and dailyRng are already set by generateSeededBoard wrapper
+      const dailyId = gameState.dailyId;
+      const rng = gameState.dailyRng;
+
+      const placed = placeDailyPhrasePair(grid, gridRadius, rng, 100);
+
+      if (!placed) {
+        gameState.seedPhrase = undefined;
+        gameState.seedPaths = undefined;
+        gameState.seedHints = undefined;
+        DEBUG && console.info(`🌟 Daily (${dailyId}): no seed phrase placed`);
+      } else {
+        DEBUG && console.info(`🌟 Daily (${dailyId}) seed phrase: ${gameState.seedPhrase}`);
+        DEBUG && console.info(`✅ Loaded hints:`, gameState.seedHints);
+      }
+    } else {
       gameState.seedPhrase = undefined;
       gameState.seedPaths = undefined;
       gameState.seedHints = undefined;
-      DEBUG && console.info(`🌟 Daily (${dailyId}): no seed phrase placed`);
-    } else {
-      DEBUG && console.info(`🌟 Daily (${dailyId}) seed phrase: ${gameState.seedPhrase}`);
-      DEBUG && console.info(`✅ Loaded hints:`, gameState.seedHints);
+      DEBUG && console.info(`(Unlimited) Step 1: phrase pair seeding skipped`);
     }
-  } else {
-    // UNLIMITED: no phrase pair seeding in Step 1
-    gameState.seedPhrase = undefined;
-    gameState.seedPaths = undefined;
-    gameState.seedHints = undefined;
-    // (grid remains empty at this point; later steps handle their own seeding)
-    DEBUG && console.info(`(Unlimited) Step 1: phrase pair seeding skipped`);
   }
-}
-
 
   // ---------------------------------------------------------------------------
-  // Candidate prep (same filters as you had, pulled up once so all stages share)
+  // Candidate prep
   // ---------------------------------------------------------------------------
   const MAX_FRIENDLY_LEN = Math.min(14, Math.floor(3.5 * gridRadius + 1));
   const MIN_FRIENDLY_LEN = 4;
@@ -154,10 +176,9 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
     if (w.length < MIN_FRIENDLY_LEN || w.length > MAX_FRIENDLY_LEN) return false;
     if (!/^[A-Za-z]+$/.test(w)) return false;
     if (TECHY_RE.test(w)) return false;
-
     return true;
   }
-  const candidates = shuffledArray(
+  const candidates = seededShuffle(
     wordList.map((w) => w.toUpperCase()).filter(isFriendlyWord)
   ).sort((a, b) => b.length - a.length);
 
@@ -169,7 +190,6 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
 
   const countLongPlaced = () => placedWords.reduce((n, p) => n + (p.word && isLong(p.word) ? 1 : 0), 0);
 
-  // Small utilities shared by stages (do NOT touch phrase logic)
   const hasConflict = (path, word) => {
     for (let i = 0; i < path.length; i++) {
       const { key } = path[i];
@@ -189,10 +209,8 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
   };
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // Minimal scoring access integration (NEW small patch)
+  // Scoring helpers
   // ─────────────────────────────────────────────────────────────────────────────
-
-  // Scoring helpers — minimal integration
   function isAnagramLocal(word) {
     return word.length > 1 && word === word.split('').reverse().join('');
   }
@@ -208,8 +226,6 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
     return mult;
   }
 
-  // Estimate expected score contribution for placing `word` on `path`,
-  // reusing letter face values and approximating reuse multiplier gains.
   function estimatePlacementScore(word, path) {
     let baseFaceSum = 0;
     let overlapBoost = 0;
@@ -221,7 +237,6 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
       const existing = grid[key];
 
       if (existing === letter) {
-        // approximate how many words already use this tile
         let uses = 0;
         for (const pw of placedWords) {
           if (!pw.path) continue;
@@ -241,7 +256,6 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
     return (baseFaceSum + overlapBoost) * soloWordMultiplier(word);
   }
 
-  // Replace local placement scoring with estimator integration
   const placementScore = (word, overlaps, pathLen, path) => {
     const estimated = estimatePlacementScore(word, path);
     const newLetters = pathLen - overlaps;
@@ -264,268 +278,374 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
     );
   };
 
-  const preLetters = Object.keys(grid).length;
+  // ---------------------------------------------------------------------------
+  // STEP 2) Overlapping suffix seeds
+  // ---------------------------------------------------------------------------
+  placedSuffixes = [];
 
-  
-// ---------------------------------------------------------------------------
-// STEP 2) Overlapping suffix seeds
-// ---------------------------------------------------------------------------
+  if (gameState.mode === 'daily') {
+    placedSuffixes = placeOverlappingSuffixes(grid, suffixList, gridRadius);
 
-// keep the same variable shape no matter the mode
- placedSuffixes = [];
-
-if (gameState.mode === 'daily') {
-  placedSuffixes = placeOverlappingSuffixes(grid, suffixList, gridRadius);
-
-  if (DEBUG) {
-    console.group("🧷 Overlapping suffixes (placed)");
-    for (const p of placedSuffixes) {
-      const overlapCount = p.path.reduce(
-        (n, step, i) => n + (grid[step.key] === p.chunk[i] ? 1 : 0),
-        0
-      );
-      console.log({
-        chunk: p.chunk,
-        pathLen: p.path.length,
-        overlapCount,
-        pathKeys: p.path.map((s) => s.key),
-      });
-    }
-    console.groupEnd();
-  }
-} else {
-  
-}
-
-
-// ---------------------------------------------------------------------------
-// STEP 3) GUARANTEED LONG WORDS
-//  - Daily: unchanged suffix-branching off placedSuffixes
-//  - Unlimited: if grid is empty, bootstrap 2–3 long-word anchors with varied,
-//               center-biased, anti-wall paths (reduces repetition and wall hugging)
-// ---------------------------------------------------------------------------
-const postLetters = Object.keys(grid).length;
-DEBUG && console.info(`[diag] post-Step2 letters=${postLetters}, suffixesPlaced=${placedSuffixes.length}`);
-
-function coordKey(q, r) { return `${q},${r}`; }
-
-// True axial hex distance from center (for better center bias)
-function hexDistance(q, r) {
-  return (Math.abs(q) + Math.abs(r) + Math.abs(q + r)) / 2;
-}
-
-// Lightweight RNG (seeded per run to diversify bootstrap)
-function makeRng(seed = Date.now()) {
-  let s = (seed >>> 0) || 1;
-  return () => (s = (s * 1664525 + 1013904223) >>> 0) / 0x100000000;
-}
-
-// Weighted pick helper for randomized template
-function pickWeighted(list, rng = Math.random) {
-  const sum = list.reduce((s, x) => s + x.w, 0);
-  if (sum <= 0) return list[0];
-  let t = rng() * sum;
-  for (const item of list) {
-    t -= item.w;
-    if (t <= 0) return item;
-  }
-  return list[list.length - 1];
-}
-
-// Random centerish start: pick among the k-most-central cells
-function getRandomCenterishStart(coords, rng, k = 5) {
-  const sorted = [...coords].sort(
-    (a, b) => hexDistance(a.q, a.r) - hexDistance(b.q, b.r)
-  );
-  const top = sorted.slice(0, Math.min(k, sorted.length));
-  return top[Math.floor(rng() * top.length)];
-}
-
-// Varied, center-biased, anti-wall template (fallback when findPath fails)
-function buildVariedAnchorPath(coords, gridRadius, targetLen, avoidKeys = new Set(), rng = Math.random) {
-  const coordMap = new Map(coords.map(c => [coordKey(c.q, c.r), c]));
-  const visited = new Set([...avoidKeys]);
-  const path = [];
-
-  let cur = getRandomCenterishStart(coords, rng);
-  if (!cur) return null;
-
-  // Directions in axial basis; we’ll shuffle each step
-  const DIRS = [
-    { dq: +1, dr:  0 }, { dq: +1, dr: -1 }, { dq:  0, dr: -1 },
-    { dq: -1, dr:  0 }, { dq: -1, dr: +1 }, { dq:  0, dr: +1 },
-  ];
-  let prevDir = null;
-
-  for (let i = 0; i < targetLen; i++) {
-    const key = coordKey(cur.q, cur.r);
-    if (visited.has(key)) return null;
-    visited.add(key);
-    path.push({ q: cur.q, r: cur.r, key });
-
-    if (path.length === targetLen) break;
-
-    // Shuffle directions to avoid determinism
-    for (let j = DIRS.length - 1; j > 0; j--) {
-      const k = Math.floor(rng() * (j + 1));
-      [DIRS[j], DIRS[k]] = [DIRS[k], DIRS[j]];
-    }
-
-    const hereCenter = hexDistance(cur.q, cur.r);
-    const candidates = [];
-    for (const d of DIRS) {
-      const nq = cur.q + d.dq, nr = cur.r + d.dr;
-      const nKey = coordKey(nq, nr);
-      if (!coordMap.has(nKey)) continue;
-      if (visited.has(nKey)) continue;
-
-      const centerDist = hexDistance(nq, nr);
-      const outward = centerDist > hereCenter;
-
-      // Score:
-      //  - prefer staying central (radius - centerDist)
-      //  - mild penalty for moving outward
-      //  - gentle encouragement to turn (avoid long straight runs)
-      //  - small randomness to break ties
-      const centerBias = (gridRadius - centerDist);
-      const sameDir = prevDir && prevDir.dq === d.dq && prevDir.dr === d.dr;
-      const straightPenalty = sameDir ? -0.5 : 0.35; // prefer occasional turns
-      const outwardPenalty = outward ? -0.7 : 0;
-      const jitter = (rng() - 0.5) * 0.8;
-
-      const score = 1.2 * centerBias + straightPenalty + outwardPenalty + jitter;
-      candidates.push({ nq, nr, key: nKey, dir: d, score });
-    }
-
-    if (!candidates.length) return null;
-
-    // Normalize scores into positive weights
-    const minScore = candidates.reduce((m, c) => Math.min(m, c.score), Infinity);
-    const shift = minScore < 0 ? -minScore + 0.0001 : 0.0001;
-    for (const c of candidates) c.w = c.score + shift;
-
-    const chosen = pickWeighted(candidates, rng);
-    cur = { q: chosen.nq, r: chosen.nr };
-    prevDir = chosen.dir;
-  }
-
-  return path.length === targetLen ? path : null;
-}
-
-function placeWordOnPath(grid, word, path) {
-  for (let i = 0; i < path.length; i++) grid[path[i].key] = word[i];
-}
-
-// Try standard pathfinder from multiple random starts; fallback to varied template
-function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys = new Set(), rng = Math.random) {
-  // Multiple random starts for better success rate on empty boards
-  const starts = shuffledArray(coords).slice(0, Math.min(coords.length, 40));
-  for (const { q, r } of starts) {
-    const path = findPath(
-      grid, word, q, r, 0, new Set(), gridRadius,
-      {
-        allowZigZag: true,
-        preferOverlap: false,  // critical: nothing to overlap at bootstrap
-        wallBuffer: 0,         // relax near-wall checks initially
-        maxEdgeRun: 999,       // disable wall-run caps at bootstrap
-        maxStraight: 5         // allow longer straight runs for long anchors
+    if (DEBUG) {
+      console.group("🧷 Overlapping suffixes (placed)");
+      for (const p of placedSuffixes) {
+        const overlapCount = p.path.reduce(
+          (n, step, i) => n + (grid[step.key] === p.chunk[i] ? 1 : 0),
+          0
+        );
+        console.log({
+          chunk: p.chunk,
+          pathLen: p.path.length,
+          overlapCount,
+          pathKeys: p.path.map((s) => s.key),
+        });
       }
+      console.groupEnd();
+    }
+  }
+
+  const postLetters = Object.keys(grid).length;
+  DEBUG && console.info(`[diag] post-Step2 letters=${postLetters}, suffixesPlaced=${placedSuffixes.length}`);
+
+  function coordKey(q, r) { return `${q},${r}`; }
+
+  function hexDistance(q, r) {
+    return (Math.abs(q) + Math.abs(r) + Math.abs(q + r)) / 2;
+  }
+
+  function makeRng(seed = Date.now()) {
+    let s = (seed >>> 0) || 1;
+    return () => (s = (s * 1664525 + 1013904223) >>> 0) / 0x100000000;
+  }
+
+  function pickWeighted(list, rng = Math.random) {
+    const sum = list.reduce((s, x) => s + x.w, 0);
+    if (sum <= 0) return list[0];
+    let t = rng() * sum;
+    for (const item of list) {
+      t -= item.w;
+      if (t <= 0) return item;
+    }
+    return list[list.length - 1];
+  }
+
+  function getRandomCenterishStart(coords, rng, k = 5) {
+    const sorted = [...coords].sort(
+      (a, b) => hexDistance(a.q, a.r) - hexDistance(b.q, b.r)
     );
-    if (path) return { path, viaTemplate: false };
+    const top = sorted.slice(0, Math.min(k, sorted.length));
+    return top[Math.floor(rng() * top.length)];
   }
 
-  // Fallback: center-biased varied template (not deterministic)
-  const template =
-    buildVariedAnchorPath(coords, gridRadius, word.length, occupiedKeys, rng) ||
-    buildVariedAnchorPath(coords, gridRadius, word.length, occupiedKeys, rng);
+  function buildVariedAnchorPath(coords, gridRadius, targetLen, avoidKeys = new Set(), rng = Math.random) {
+    const coordMap = new Map(coords.map(c => [coordKey(c.q, c.r), c]));
+    const visited = new Set([...avoidKeys]);
+    const path = [];
 
-  if (template) return { path: template, viaTemplate: true };
-  return null;
-}
+    let cur = getRandomCenterishStart(coords, rng);
+    if (!cur) return null;
 
-// ---- Unlimited Bootstrap (only when no letters exist yet) ----
-if (postLetters === 0 && gameState.mode !== 'daily') {
-  const rng = makeRng(Date.now());
-  
+    const DIRS = [
+      { dq: +1, dr:  0 }, { dq: +1, dr: -1 }, { dq:  0, dr: -1 },
+      { dq: -1, dr:  0 }, { dq: -1, dr: +1 }, { dq:  0, dr: +1 },
+    ];
+    let prevDir = null;
 
-  const anchorsMax = 3;      // place 2–3 anchors
-  let anchorsPlaced = 0;
+    for (let i = 0; i < targetLen; i++) {
+      const key = coordKey(cur.q, cur.r);
+      if (visited.has(key)) return null;
+      visited.add(key);
+      path.push({ q: cur.q, r: cur.r, key });
 
-  const occupied = new Set();
-  const chosen = [];
+      if (path.length === targetLen) break;
 
-  // Preselect a pool of diverse long words
-  for (const w of longCandidates) {
-    if (usedWords.has(w)) continue;
-    chosen.push(w);
-    if (chosen.length >= 400) break;
+      for (let j = DIRS.length - 1; j > 0; j--) {
+        const k = Math.floor(rng() * (j + 1));
+        [DIRS[j], DIRS[k]] = [DIRS[k], DIRS[j]];
+      }
+
+      const hereCenter = hexDistance(cur.q, cur.r);
+      const candidates = [];
+      for (const d of DIRS) {
+        const nq = cur.q + d.dq, nr = cur.r + d.dr;
+        const nKey = coordKey(nq, nr);
+        if (!coordMap.has(nKey)) continue;
+        if (visited.has(nKey)) continue;
+
+        const centerDist = hexDistance(nq, nr);
+        const outward = centerDist > hereCenter;
+
+        const centerBias = (gridRadius - centerDist);
+        const sameDir = prevDir && prevDir.dq === d.dq && prevDir.dr === d.dr;
+        const straightPenalty = sameDir ? -0.5 : 0.35;
+        const outwardPenalty = outward ? -0.7 : 0;
+        const jitter = (rng() - 0.5) * 0.8;
+
+        const score = 1.2 * centerBias + straightPenalty + outwardPenalty + jitter;
+        candidates.push({ nq, nr, key: nKey, dir: d, score });
+      }
+
+      if (!candidates.length) return null;
+
+      const minScore = candidates.reduce((m, c) => Math.min(m, c.score), Infinity);
+      const shift = minScore < 0 ? -minScore + 0.0001 : 0.0001;
+      for (const c of candidates) c.w = c.score + shift;
+
+      const chosen = pickWeighted(candidates, rng);
+      cur = { q: chosen.nq, r: chosen.nr };
+      prevDir = chosen.dir;
+    }
+
+    return path.length === targetLen ? path : null;
   }
 
-  for (const word of chosen) {
-    if (anchorsPlaced >= anchorsMax) break;
-
-    const result = tryStandardPlacementOrTemplate(word, coords, gridRadius, occupied, rng);
-    if (!result) continue;
-
-    const { path, viaTemplate } = result;
-    placeWordOnPath(grid, word, path);
-
-    // Mark occupancy so subsequent template attempts don’t reuse cells
-    if (viaTemplate) for (const step of path) occupied.add(step.key);
-
-    placedWords.push({
-      word,
-      path,
-      bootstrapAnchor: true,
-      viaTemplate,
-      mandatoryLong: true,
-    });
-    usedWords.add(word);
-    anchorsPlaced++;
+  function placeWordOnPath(grid, word, path) {
+    for (let i = 0; i < path.length; i++) grid[path[i].key] = word[i];
   }
 
-  DEBUG && console.info(`✅ Bootstrap anchors placed: ${[...placedWords.filter(p => p.bootstrapAnchor).map(p => p.word)].join(', ')}`);
-}
-
-// ---- Daily suffix-branch branching (unchanged) ----
-let neededLong = Math.max(0, 2 - countLongPlaced());
-
-if (neededLong > 0 && placedSuffixes.length > 0) {
-  const MIN_OVERLAP_WITH_ANCHOR = 1;
-  for (const anchor of placedSuffixes) {
-    if (neededLong <= 0) break;
-    const keySet = new Set(anchor.path.map((p) => p.key));
-    const pool = longCandidates.filter((w) => !usedWords.has(w) && w.endsWith(anchor.chunk));
-
-    for (const word of shuffledArray(pool)) {
-      for (const { q, r } of shuffledArray(coords).slice(0, PATH_TRIES)) {
-        const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
-        if (!path) continue;
-
-        let anchorHits = 0;
-        for (let i = 0; i < path.length; i++) {
-          const key = path[i].key;
-          if (keySet.has(key) && grid[key] === word[i]) anchorHits++;
+  function tryStandardPlacementOrTemplate(word, coords, gridRadius, occupiedKeys = new Set(), rng = Math.random) {
+    const starts = seededShuffle(coords).slice(0, Math.min(coords.length, 40));
+    for (const { q, r } of starts) {
+      const path = findPath(
+        grid, word, q, r, 0, new Set(), gridRadius,
+        {
+          allowZigZag: true,
+          preferOverlap: false,
+          wallBuffer: 0,
+          maxEdgeRun: 999,
+          maxStraight: 5
         }
-        if (anchorHits < MIN_OVERLAP_WITH_ANCHOR) continue;
+      );
+      if (path) return { path, viaTemplate: false };
+    }
 
-        const overlaps = countOverlapLocal(path, word);
-        if (hasConflict(path, word)) continue;
+    const template =
+      buildVariedAnchorPath(coords, gridRadius, word.length, occupiedKeys, rng) ||
+      buildVariedAnchorPath(coords, gridRadius, word.length, occupiedKeys, rng);
 
-        path.forEach(({ key }, i) => (grid[key] = word[i]));
-        placedWords.push({ word, path, viaSuffix: anchor.chunk, branched: true, mandatoryLong: true });
+    if (template) return { path: template, viaTemplate: true };
+    return null;
+  }
+
+    // Step 2b — Bootstrap anchor (unlimited only, when grid is empty)
+  if (postLetters === 0 && gameState.mode !== 'daily') {
+    const rng = makeRng(Date.now());
+    const occupied = new Set();
+
+    // ── Suffix rotation deck ─────────────────────────────────────────────────
+    // Build the eligible suffix list (must have 2+ matching bootstrap words)
+    const eligibleSuffixes = suffixList
+      .map(suffix => {
+        const upper = suffix.toUpperCase();
+        const pool = bootstrapWords.filter(w => !usedWords.has(w) && w.endsWith(upper));
+        return { suffix: upper, pool };
+      })
+      .filter(s => s.pool.length >= 2);
+
+    // If the deck is empty or exhausted, reshuffle all eligible suffixes into it
+    if (!gameState.suffixDeck || gameState.suffixDeck.length === 0) {
+      gameState.suffixDeck = seededShuffle(eligibleSuffixes.map(s => s.suffix));
+      DEBUG && console.info(`🔀 Suffix deck reshuffled — ${gameState.suffixDeck.length} suffixes in rotation`);
+    }
+
+    // Draw the next suffix from the top of the deck
+    const selectedSuffix = gameState.suffixDeck.pop();
+    const selectedEntry = eligibleSuffixes.find(s => s.suffix === selectedSuffix);
+    let suffixPool = selectedEntry ? seededShuffle(selectedEntry.pool) : [];
+
+    DEBUG && console.info(`🎯 Bootstrap suffix: "${selectedSuffix}" — pool: ${suffixPool.length} words — ${gameState.suffixDeck.length} remaining in deck`);
+
+    // ── Fallback — no suffix with 2+ matches ────────────────────────────────
+    if (!selectedSuffix || suffixPool.length < 2) {
+      DEBUG && console.info(`⚠️ No suffix with 2+ matches — placing single anchor from full pool`);
+      const fallbackPool = seededShuffle(bootstrapWords).filter(w => !usedWords.has(w));
+      for (const word of fallbackPool) {
+        const result = tryStandardPlacementOrTemplate(word, coords, gridRadius, occupied, rng);
+        if (!result) continue;
+        const { path, viaTemplate } = result;
+        placeWordOnPath(grid, word, path);
+        if (viaTemplate) for (const step of path) occupied.add(step.key);
+        placedWords.push({ word, path, bootstrapAnchor: true, viaTemplate, mandatoryLong: true });
         usedWords.add(word);
-        neededLong--;
         break;
       }
+      DEBUG && console.info(`✅ Bootstrap anchors placed: ${[...placedWords.filter(p => p.bootstrapAnchor).map(p => p.word)].join(', ')}`);
+      return;
+    }
+
+    // ── Place first anchor word ──────────────────────────────────────────────
+    let firstPath = null;
+    let firstWord = null;
+    let suffixTileKeys = null;
+
+    for (const word of suffixPool) {
+      const result = tryStandardPlacementOrTemplate(word, coords, gridRadius, occupied, rng);
+      if (!result) continue;
+
+      firstWord = word;
+      firstPath = result.path;
+
+      const suffixStart = word.length - selectedSuffix.length;
+      suffixTileKeys = new Set(firstPath.slice(suffixStart).map(t => t.key));
+
+      placeWordOnPath(grid, word, firstPath);
+      if (result.viaTemplate) for (const step of firstPath) occupied.add(step.key);
+
+      placedWords.push({
+        word,
+        path: firstPath,
+        bootstrapAnchor: true,
+        viaTemplate: result.viaTemplate,
+        mandatoryLong: true,
+      });
+      usedWords.add(word);
+      DEBUG && console.info(`🔵 Bootstrap anchor 1: "${word}" — suffix "${selectedSuffix}"`);
+      break;
+    }
+
+    if (!firstWord || !suffixTileKeys) {
+      DEBUG && console.info(`⚠️ Could not place first bootstrap anchor`);
+      return;
+    }
+
+    // ── Place second anchor word — must reuse the suffix tiles ───────────────
+    const remainingPool = suffixPool.filter(w => w !== firstWord && !usedWords.has(w));
+    let secondPlaced = false;
+
+    // ATTEMPT 1 — suffix portion lands on the exact same tiles
+    for (const word of remainingPool) {
+      for (const { q, r } of seededShuffle(coords).slice(0, PATH_TRIES)) {
+        const path = findPath(grid, word, q, r, 0, new Set(), gridRadius, {
+          allowZigZag: true,
+          preferOverlap: true,
+          wallBuffer: 0,
+          maxEdgeRun: 999,
+          maxStraight: 5,
+        });
+        if (!path) continue;
+        if (hasConflict(path, word)) continue;
+
+        const suffixStart = word.length - selectedSuffix.length;
+        const thisSuffixKeys = new Set(path.slice(suffixStart).map(t => t.key));
+        const sharedSuffixTiles = [...thisSuffixKeys].filter(k => suffixTileKeys.has(k));
+        if (sharedSuffixTiles.length < selectedSuffix.length) continue;
+
+        placeWordOnPath(grid, word, path);
+        for (const step of path) occupied.add(step.key);
+        placedWords.push({ word, path, bootstrapAnchor: true, viaTemplate: false, mandatoryLong: true });
+        usedWords.add(word);
+        secondPlaced = true;
+        DEBUG && console.info(`🔵 Bootstrap anchor 2: "${word}" — shares suffix tiles with "${firstWord}"`);
+        break;
+      }
+      if (secondPlaced) break;
+    }
+
+    // ATTEMPT 2 — fallback: any bootstrap word containing the suffix string
+    // anywhere in the word, landing on the same suffix tiles
+    if (!secondPlaced) {
+      DEBUG && console.info(`⚠️ Attempt 1 failed — trying words containing "${selectedSuffix}" anywhere`);
+
+      const containsPool = seededShuffle(bootstrapWords).filter(w =>
+        !usedWords.has(w) &&
+        w.includes(selectedSuffix) &&
+        !suffixPool.includes(w)
+      );
+
+      for (const word of containsPool) {
+        const matchPositions = [];
+        let searchFrom = 0;
+        while (true) {
+          const pos = word.indexOf(selectedSuffix, searchFrom);
+          if (pos === -1) break;
+          matchPositions.push(pos);
+          searchFrom = pos + 1;
+        }
+
+        let placed = false;
+        for (const { q, r } of seededShuffle(coords).slice(0, PATH_TRIES)) {
+          const path = findPath(grid, word, q, r, 0, new Set(), gridRadius, {
+            allowZigZag: true,
+            preferOverlap: true,
+            wallBuffer: 0,
+            maxEdgeRun: 999,
+            maxStraight: 5,
+          });
+          if (!path) continue;
+          if (hasConflict(path, word)) continue;
+
+          let suffixOverlapFound = false;
+          for (const pos of matchPositions) {
+            const thisSuffixKeys = new Set(
+              path.slice(pos, pos + selectedSuffix.length).map(t => t.key)
+            );
+            const shared = [...thisSuffixKeys].filter(k => suffixTileKeys.has(k));
+            if (shared.length === selectedSuffix.length) {
+              suffixOverlapFound = true;
+              break;
+            }
+          }
+          if (!suffixOverlapFound) continue;
+
+          placeWordOnPath(grid, word, path);
+          for (const step of path) occupied.add(step.key);
+          placedWords.push({ word, path, bootstrapAnchor: true, viaTemplate: false, mandatoryLong: true });
+          usedWords.add(word);
+          secondPlaced = true;
+          DEBUG && console.info(`🔵 Bootstrap anchor 2 (fallback): "${word}" — contains "${selectedSuffix}" landing on shared tiles`);
+          placed = true;
+          break;
+        }
+        if (placed) break;
+      }
+    }
+
+    if (!secondPlaced) {
+      DEBUG && console.info(`⚠️ Could not place second anchor — board continues with 1 anchor`);
+    }
+
+    DEBUG && console.info(`✅ Bootstrap anchors placed: ${[...placedWords.filter(p => p.bootstrapAnchor).map(p => p.word)].join(', ')}`);
+  }
+  // ---------------------------------------------------------------------------
+  // STEP 3) Long words via suffix anchors
+  // ---------------------------------------------------------------------------
+  let neededLong = Math.max(0, 2 - countLongPlaced());
+
+  if (neededLong > 0 && placedSuffixes.length > 0) {
+    const MIN_OVERLAP_WITH_ANCHOR = 1;
+    for (const anchor of placedSuffixes) {
       if (neededLong <= 0) break;
+      const keySet = new Set(anchor.path.map((p) => p.key));
+      const pool = longCandidates.filter((w) => !usedWords.has(w) && w.endsWith(anchor.chunk));
+
+      for (const word of seededShuffle(pool)) {
+        for (const { q, r } of seededShuffle(coords).slice(0, PATH_TRIES)) {
+          const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
+          if (!path) continue;
+
+          let anchorHits = 0;
+          for (let i = 0; i < path.length; i++) {
+            const key = path[i].key;
+            if (keySet.has(key) && grid[key] === word[i]) anchorHits++;
+          }
+          if (anchorHits < MIN_OVERLAP_WITH_ANCHOR) continue;
+
+          const overlaps = countOverlapLocal(path, word);
+          if (hasConflict(path, word)) continue;
+
+          path.forEach(({ key }, i) => (grid[key] = word[i]));
+          placedWords.push({ word, path, viaSuffix: anchor.chunk, branched: true, mandatoryLong: true });
+          usedWords.add(word);
+          neededLong--;
+          break;
+        }
+        if (neededLong <= 0) break;
+      }
     }
   }
-}
-
 
   // ---------------------------------------------------------------------------
-  // STEP 4) If still short, run a LONG-WORD PASS in General Fill (anchor-biased)
+  // STEP 4) Long word pass (anchor-biased)
   // ---------------------------------------------------------------------------
   if (neededLong > 0) {
     const anchorKeySets = (placedSuffixes || []).map((s) => new Set((s.path || []).map((p) => p.key)));
@@ -546,16 +666,15 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
       if (neededLong <= 0) break;
       if (usedWords.has(word)) continue;
 
-      let best = null; // {score, path}
-      for (const { q, r } of shuffledArray(coords).slice(0, PATH_TRIES)) {
+      let best = null;
+      for (const { q, r } of seededShuffle(coords).slice(0, PATH_TRIES)) {
         const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
         if (!path) continue;
         const overlaps = countOverlapLocal(path, word);
         const anchorTouches = touchesAnyAnchor(path, word);
-        // require *some* overlap to avoid floating snakes, but be lenient for long words
         if (overlaps < 1 && anchorTouches === 0) continue;
         if (hasConflict(path, word)) continue;
-        const score = placementScore(word, overlaps, path.length, path) + 40 * anchorTouches; // strong anchor bias
+        const score = placementScore(word, overlaps, path.length, path) + 40 * anchorTouches;
         if (!best || score > best.score) best = { score, path };
       }
 
@@ -572,7 +691,7 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
   // STEP 5) Regular suffix-centered branching
   // ---------------------------------------------------------------------------
   const BRANCHES_PER_SUFFIX = 4;
-  const MIN_OVERLAP_WITH_ANCHOR = 2;
+  const MIN_OVERLAP_WITH_ANCHOR = 1;
   const branchSummary = new Map();
   const bump = (suf, field) => {
     const cur = branchSummary.get(suf) || { placed: 0, failed: 0 };
@@ -584,14 +703,12 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
     const keySet = new Set(anchor.path.map((p) => p.key));
 
     const pool = candidates
-  .filter((w) => !usedWords.has(w) && w.endsWith(anchor.chunk))
-  .slice(0, 120);
-
-  
+      .filter((w) => !usedWords.has(w) && w.endsWith(anchor.chunk))
+      .slice(0, 120);
 
     for (const word of pool.sort((a, b) => b.length - a.length)) {
       if (placedCount >= BRANCHES_PER_SUFFIX) break;
-      for (const { q, r } of shuffledArray(coords).slice(0, PATH_TRIES)) {
+      for (const { q, r } of seededShuffle(coords).slice(0, PATH_TRIES)) {
         const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
         if (!path) continue;
 
@@ -615,7 +732,7 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
           const { key } = path[i];
           grid[key] = word[i];
         }
-        // Optional: compute heuristic score for debugging
+
         const overlaps = countOverlapLocal(path, word);
         const heuristicScore = placementScore(word, overlaps, path.length, path);
 
@@ -623,137 +740,164 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
         usedWords.add(word);
         placedCount++;
         bump(anchor.chunk, 'placed');
-        break; // next candidate
+        console.log(`🧷 Step 5 | suffix "${anchor.chunk}" → placed "${word}" (${word.length} letters, ${overlaps} overlaps, score ${Math.round(heuristicScore)})`);
+        break;
       }
     }
 
     if (placedCount === 0) bump(anchor.chunk, 'failed');
-    if (DEBUG) console.groupEnd();
   }
-
-  if (DEBUG) {
-  }
-
-    // ---------------------------------------------------------------------------
-// STEP 6) General fill (score-aware, anchor-biased) + fill leftover tiles
-// ---------------------------------------------------------------------------
-{
-  const anchorKeySets = (placedSuffixes || []).map((s) =>
-    new Set((s.path || []).map((p) => p.key))
+console.group('📊 Step 5 — all placed words');
+  console.table(
+    placedWords
+      .filter(p => p.branched && !p.mandatoryLong)
+      .map(p => ({
+        word:        p.word,
+        suffix:      p.viaSuffix,
+        length:      p.word.length,
+        overlaps:    p.heuristicScore ? '(see score)' : '?',
+        score:       Math.round(p.heuristicScore ?? 0),
+      }))
   );
+  console.groupEnd();
 
-  const touchesAnyAnchor = (path, word) => {
-    if (!anchorKeySets.length) return 0;
-    let touchCount = 0;
-    for (let i = 0; i < path.length; i++) {
-      const k = path[i].key;
-      if (grid[k] === word[i]) {
-        for (const ks of anchorKeySets) {
-          if (ks.has(k)) {
-            touchCount++;
-            break;
+  // ---------------------------------------------------------------------------
+  // STEP 6) General fill + leftover tiles
+  // ---------------------------------------------------------------------------
+  {
+    const anchorKeySets = (placedSuffixes || []).map((s) =>
+      new Set((s.path || []).map((p) => p.key))
+    );
+
+    const touchesAnyAnchor = (path, word) => {
+      if (!anchorKeySets.length) return 0;
+      let touchCount = 0;
+      for (let i = 0; i < path.length; i++) {
+        const k = path[i].key;
+        if (grid[k] === word[i]) {
+          for (const ks of anchorKeySets) {
+            if (ks.has(k)) {
+              touchCount++;
+              break;
+            }
           }
         }
       }
-    }
-    return touchCount;
-  };
+      return touchCount;
+    };
 
-  for (const word of candidates) {
-    if (usedWords.has(word)) continue;
+    for (const word of candidates) {
+      if (usedWords.has(word)) continue;
 
-    const attempts = shuffledArray(coords).slice(0, PATH_TRIES);
-    let best = null;
+      const attempts = seededShuffle(coords).slice(0, PATH_TRIES);
+      let best = null;
 
-    for (const { q, r } of attempts) {
-      const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
-      if (!path) continue;
+      for (const { q, r } of attempts) {
+        const path = findPath(grid, word, q, r, 0, new Set(), gridRadius);
+        if (!path) continue;
 
-      const overlaps = countOverlapLocal(path, word);
-      if (overlaps < MIN_WORD_OVERLAP) continue;
-      if (hasConflict(path, word)) continue;
+        const overlaps = countOverlapLocal(path, word);
+        if (overlaps < MIN_WORD_OVERLAP) continue;
+        if (hasConflict(path, word)) continue;
 
-      const anchorTouches = touchesAnyAnchor(path, word);
+        const anchorTouches = touchesAnyAnchor(path, word);
 
-      if (anchorTouches === 0 && overlaps < (word.length >= 12 ? 1 : MIN_WORD_OVERLAP + 1)) {
-        continue;
+        if (anchorTouches === 0 && overlaps < (word.length >= 12 ? 1 : MIN_WORD_OVERLAP + 1)) {
+          continue;
+        }
+
+        const score = placementScore2(word, overlaps, anchorTouches, path.length, path);
+        if (!best || score > best.score) best = { score, path };
       }
 
-      const score = placementScore2(
-        word,
-        overlaps,
-        anchorTouches,
-        path.length,
-        path
-      );
-
-      if (!best || score > best.score) best = { score, path };
+      if (best) {
+        best.path.forEach(({ key }, i) => {
+          grid[key] = word[i];
+        });
+        placedWords.push({ word, path: best.path });
+        usedWords.add(word);
+      }
     }
 
-    if (best) {
-      best.path.forEach(({ key }, i) => {
-        grid[key] = word[i];
-      });
-      placedWords.push({ word, path: best.path });
-      usedWords.add(word);
+    // Fill empty tiles with random letters
+    for (const { q, r } of coords) {
+      const key = hexKey(q, r);
+      if (!grid[key]) {
+        grid[key] = letterFrequencies[Math.floor(Math.random() * letterFrequencies.length)];
+      }
     }
   }
-
-  // NEW: fill any leftover undefined tiles with weighted random letters
-  for (const { q, r } of coords) {
-    const key = hexKey(q, r);
-    if (!grid[key]) {
-      grid[key] =
-        letterFrequencies[
-          Math.floor(Math.random() * letterFrequencies.length)
-        ];
-    }
-  }
-}
 
   // ---------------------------------------------------------------------------
-  // HARD REQUIREMENT CHECK — without touching phrase pairs
+  // HARD REQUIREMENT CHECK
   // ---------------------------------------------------------------------------
   const longCount = countLongPlaced();
   if (longCount < 2) {
-    // (left as-is; you can add any fallback you want)
+    // (no-op currently — logged for diagnosis)
+  }
+
+  // ---------------------------------------------------------------------------
+  // Scan board for any additional legal words
+  // ---------------------------------------------------------------------------
+  {
+    const existing = new Set(placedWords.map(p => p.word));
+    for (const word of candidates) {
+      if (existing.has(word)) continue;
+      if (word.length < 4) continue;
+
+      let found = false;
+      for (const { q, r } of coords) {
+        const startKey = hexKey(q, r);
+        if (grid[startKey] !== word[0]) continue;
+        const path = findPath(grid, word, q, r, 0, new Set(), gridRadius, {
+          allowZigZag: true,
+          preferOverlap: true,
+          maxStraight: 5,
+          wallBuffer: 0,
+          maxEdgeRun: 999,
+        });
+        if (path) {
+          placedWords.push({ word, path, autoFound: true });
+          existing.add(word);
+          found = true;
+          break;
+        }
+      }
+      if (found) continue;
+    }
   }
 
   console.log('🧩 Placed words:', placedWords.map(p => p.word));
 
   // ---------------------------------------------------------------------------
-  // Anagrams — moved to module; keep the call here
+  // Anagrams
   // ---------------------------------------------------------------------------
   state.anagramList = computeAnagrams(placedWords);
   console.log(`🔀 anagram count: ${state.anagramList.length}`, state.anagramList);
 
-  // keep this here per your note
-  let failedAttempts = 0;
-
   // ---------------------------------------------------------------------------
-  // Scoring & Solver — moved to module; keep the calls here
+  // Scoring & Solver
   // ---------------------------------------------------------------------------
   const boardEntries = buildBoardEntries(placedWords);
   const { POOL } = buildPool(boardEntries);
 
-  // Kick off the exact search AFTER the grid renders (unchanged behavior)
   requestAnimationFrame(() => {
     setTimeout(async () => {
       try {
-    const { best10, finalTotal, timedOut, explored } = await solveExactNonBlocking({
-    POOL,
-    boardEntries,
-    TARGET: 10,
-    timeBudgetMs: 2500,
-    sliceMs: 16,
-    hardNodeCap: 600_000,
-    earlyAcceptRatio: 1.01,
-    onProgress: ({ explored, bestTotal, depth }) => {
-    if (explored % 5000 === 0) {
-      console.log(`[solver-progress] explored=${explored} depth=${depth} best=${bestTotal}`);
-    }
-  }
-});
+        const { best10, finalTotal, timedOut, explored } = await solveExactNonBlocking({
+          POOL,
+          boardEntries,
+          TARGET: 10,
+          timeBudgetMs: 2500,
+          sliceMs: 16,
+          hardNodeCap: 600_000,
+          earlyAcceptRatio: 1.01,
+          onProgress: ({ explored, bestTotal, depth }) => {
+            if (explored % 5000 === 0) {
+              console.log(`[solver-progress] explored=${explored} depth=${depth} best=${bestTotal}`);
+            }
+          }
+        });
         if (!best10?.length) {
           console.warn('Exact solver returned no result; consider falling back to beam.');
           return;
@@ -776,5 +920,11 @@ if (neededLong > 0 && placedSuffixes.length > 0) {
     }, 0);
   });
 
+  const allCoordsForPreReuse = getAllCoords(gridRadius);
+  const shuffledForPreReuse = seededShuffle(allCoordsForPreReuse);
+  gameState.preReuseKeys = new Set(
+    shuffledForPreReuse.slice(0, 3).map(c => hexKey(c.q, c.r))
+  );
+  
   return grid;
 }

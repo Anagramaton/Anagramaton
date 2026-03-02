@@ -13,27 +13,28 @@
 }
 
 .rom--hidden {
-  display: none; /* Hidden until JS removes this class */
+  display: none;
 }
 
-.rom__backdrop {
+/* FIX: was targeting .rom__backdrop globally — scoped to #howto-modal only */
+#howto-modal .rom__backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
   z-index: 10;
 }
 
-.rom__dialog {
+/* Scoped to ONLY the how-to modal dialog */
+#howto-modal .rom__dialog {
   position: relative;
   z-index: 20;
   max-width: 640px;
   max-height: 80vh;
-  overflow: auto;
+  overflow: hidden;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-  overflow: hidden;
   background: #fff;
-  color: #111; /* ensures visible text */
+  color: #111;
   font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
@@ -54,29 +55,24 @@
 
 /* --- 3. Page visibility + content --- */
 .howto-page {
-  display: block; /* visible by default */
+  display: block;
 }
-
 .howto-page[hidden] {
-  display: none !important; /* hidden pages truly hidden */
+  display: none !important;
 }
-
 .howto-page h3 {
   font-family: 'Coiny', cursive;
 }
-
 .howto-page ul {
   margin: 0 0 8px 0;
   padding-left: 1.2rem;
   list-style: none;
 }
-
 .howto-page li {
   position: relative;
   padding-left: 1rem;
   margin: 6px 0;
 }
-
 .howto-page li::before {
   content: "●";
   position: absolute;
@@ -96,7 +92,6 @@
   border-top: 1px dashed rgba(0,0,0,0.08);
   background: rgba(255,255,255,0.85);
 }
-
 .howto-controls button {
   border: none;
   background: #ffd64d;
@@ -106,12 +101,10 @@
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
-
 .howto-controls button:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
-
 .howto-controls button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -123,4 +116,3 @@
   gap: 4px;
   margin: 0 10px;
 }
-
