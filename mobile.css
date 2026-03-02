@@ -22,7 +22,37 @@
   .side-toggle { z-index: 900; }
 }
 
-/* ── How-to modal ─────────────────────────────────────────────── */
+/* ── Settings menu — drop DOWN on mobile, never clips right ──── */
+@media (max-width: 900px) {
+  #settings-wrap {
+    top: 8px;
+    right: 8px;
+    left: auto;
+  }
+  #settings-btn {
+    font-size: 1.2rem;
+    padding: 6px 10px;
+  }
+  #settings-menu {
+    position: fixed;        /* ← fixed so it can't be clipped by a parent */
+    top: 48px;              /* ← drop below the button */
+    right: 8px;             /* ← aligned to right edge */
+    left: auto;             /* ← never extends off left */
+    flex-direction: column; /* ← stack vertically */
+    gap: 6px;
+    min-width: 160px;
+    z-index: 1500;
+  }
+  #settings-menu > button {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    text-align: left;
+    white-space: nowrap;
+  }
+}
+
+/* ��─ How-to modal ─────────────────────────────────────────────── */
 #howto-modal .rom__dialog {
   display: flex;
   flex-direction: column;
@@ -144,7 +174,6 @@
 
 /* ── Round-over modal — mobile tweaks ────────────────────────── */
 @media (max-width: 768px) {
-  /* Dismiss hint: respect notch */
   .rom__dismiss-hint {
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }

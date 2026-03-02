@@ -4,7 +4,7 @@ import { gameState } from './gameState.js';
 import { GRID_RADIUS } from './constants.js';
 import { areAxialNeighbors } from './utils.js';
 import { isValidWord } from './gameLogic.js';
-import { recomputeAllWordScores } from './scoreLogic.js';  // ← ADD THIS
+import { recomputeAllWordScores } from './scoreLogic.js';
 
 
 export const DOM = {
@@ -13,6 +13,9 @@ export const DOM = {
 };
 export let tileElements = [];
 export let grid;
+
+// O(1) tile lookup map — rebuilt each time initializeGrid runs
+let tileElementMap = new Map();
 
 
 function playSound(id) {
@@ -31,12 +34,12 @@ function playSound(id) {
 let isDragging = false;
 let lastHoverTile = null;
 
+// O(1) lookup instead of O(n) find
 function getTileFromEventTarget(target) {
   if (!target) return null;
   const g = target.closest?.('.tile');
   if (!g) return null;
-  const tile = tileElements.find(t => t && t.element === g) || null;
-  return tile;
+  return tileElementMap.get(g) || null;
 }
 
 // ============================================================================
@@ -83,7 +86,6 @@ export function clearCurrentSelection() {
   const selectedTiles = gameState.selectedTiles || [];
   selectedTiles.forEach(tile => {
     if (tile?.element) {
-      // Use setSelected(false) so polygon + tLetter + tPoint all lose .selected
       tile.setSelected(false);
       const poly = tile.element.querySelector('polygon');
       if (poly) {
@@ -118,7 +120,6 @@ function handleSwipeTileStep(tile) {
     // Deselect all tiles after the tapped one (backtrack)
     for (let i = selectedTiles.length - 1; i > idx; i--) {
       const t = selectedTiles[i];
-      // Use setSelected(false) so polygon + tLetter + tPoint all lose .selected
       t.setSelected(false);
       selectedTiles.pop();
     }
@@ -127,9 +128,7 @@ function handleSwipeTileStep(tile) {
 
     const index = Math.min(selectedTiles.length, 25);
     if (index > 0) {
-      requestAnimationFrame(() => {
-        playSound(`sfxSwipe${index}`);
-      });
+      playSound(`sfxSwipe${index}`); // ← immediate, no requestAnimationFrame
     }
 
     return;
@@ -137,16 +136,13 @@ function handleSwipeTileStep(tile) {
 
   // New tile: enforce adjacency, then select and extend the path
   if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.length - 1], tile)) {
-    // Use setSelected(true) so polygon + tLetter + tPoint all get .selected
     tile.setSelected(true);
     selectedTiles.push(tile);
     updateWordPreview();
 
     const index = Math.min(selectedTiles.length, 25);
     if (index > 0) {
-      requestAnimationFrame(() => {
-        playSound(`sfxSwipe${index}`);
-      });
+      playSound(`sfxSwipe${index}`); // ← immediate, no requestAnimationFrame
     }
   }
 }
@@ -159,7 +155,6 @@ function handlePointerDown(e) {
   isDragging = true;
   lastHoverTile = tile;
 
-  // Clear any old word, then immediately start the new path on this tile
   clearCurrentSelection();
   handleSwipeTileStep(tile);
 }
@@ -188,6 +183,7 @@ function handlePointerUp(e) {
 
 export function initializeGrid() {
   gameState.totalScore = 0;
+  gameState.boardSolverReady = null;  // reset so new game gets a fresh promise
   tileElements.length = 0;
 
   grid = generateSeededBoard(GRID_RADIUS, gameState);
@@ -197,8 +193,14 @@ export function initializeGrid() {
 
   gameState.allTiles = tileElements;
 
-  // Trigger initial styling so pre-reuse tiles show stage-1 value on load  // ← ADD
-  recomputeAllWordScores([]);                                                // ← ADD
+  // Rebuild O(1) lookup map
+  tileElementMap.clear();
+  for (const tile of tileElements) {
+    if (tile?.element) tileElementMap.set(tile.element, tile);
+  }
+
+  // Trigger initial styling so pre-reuse tiles show stage-1 value on load
+  recomputeAllWordScores([]);
 
   if (!DOM.svg.dataset.swipeListeners) {
     DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });

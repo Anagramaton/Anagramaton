@@ -303,8 +303,12 @@ async function handleSubmitList() {
     score: Number(w.score) || 0
   }));
 
-  const boardEntries = buildBoardEntries(placedWordList);
-  const { POOL }     = buildPool(boardEntries, 250);
+  // Wait for the board solver to finish, but cap at 4s so mobile never hangs forever
+  const solverTimeout = new Promise(resolve => setTimeout(resolve, 4000));
+  await Promise.race([
+    gameState.boardSolverReady ?? Promise.resolve(),
+    solverTimeout
+  ]);
 
   requestAnimationFrame(() => {
     const boardTop10      = Array.isArray(gameState.boardTop10) ? gameState.boardTop10 : [];

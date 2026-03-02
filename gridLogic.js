@@ -103,6 +103,11 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
     const originalRandom = Math.random;
     Math.random = rng;
 
+    // Reset solver promise for this new board
+    gameState.boardSolverReady = new Promise((resolve) => {
+      gameState._resolveBoardSolver = resolve;
+    });
+
     try {
       return _generateBoard(gridRadius, state);
     } finally {
@@ -116,9 +121,13 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
   gameState.seedHints = undefined;
   gameState.dailyRng = undefined;
 
+  // Reset solver promise for this new board
+  gameState.boardSolverReady = new Promise((resolve) => {
+    gameState._resolveBoardSolver = resolve;
+  });
+
   return _generateBoard(gridRadius, state);
 }
-
 // ======================================================================
 // INTERNAL: all existing generation logic, unchanged
 // ======================================================================
@@ -916,6 +925,9 @@ console.group('📊 Step 5 — all placed words');
         console.log('🔎 per-word sum:', Math.round(checkSum), '== highest?', Math.round(checkSum) === Math.round(finalTotal));
       } catch (e) {
         console.error('Exact solver error:', e);
+      } finally {
+        // Always resolve so handleSubmitList is never permanently blocked
+        gameState._resolveBoardSolver?.();
       }
     }, 0);
   });
