@@ -103,11 +103,6 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
     const originalRandom = Math.random;
     Math.random = rng;
 
-    // Reset solver promise for this new board
-    gameState.boardSolverReady = new Promise((resolve) => {
-      gameState._resolveBoardSolver = resolve;
-    });
-
     try {
       return _generateBoard(gridRadius, state);
     } finally {
@@ -120,11 +115,6 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
   gameState.seedPaths = undefined;
   gameState.seedHints = undefined;
   gameState.dailyRng = undefined;
-
-  // Reset solver promise for this new board
-  gameState.boardSolverReady = new Promise((resolve) => {
-    gameState._resolveBoardSolver = resolve;
-  });
 
   return _generateBoard(gridRadius, state);
 }

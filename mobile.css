@@ -99,13 +99,15 @@
 @media (max-width: 768px) {
   #score-display {
     position: fixed;
-    top: clamp(80px, 25vh, 120px);
-    left: 47%;
+    top: clamp(52px, 8vh, 80px);
+    left: 50%;
     transform: translateX(-50%);
     z-index: 800;
     display: block;
     text-align: center;
     font-size: 24px;
+    width: max-content;
+    pointer-events: none;
   }
 }
 

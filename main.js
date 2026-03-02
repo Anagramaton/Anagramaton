@@ -27,9 +27,8 @@ let audioUnlocked = false;
 window.addEventListener('pointerdown', () => {
   if (audioUnlocked) return;
   audioUnlocked = true;
-  ['sfxAlert', 'sfxSuccess', 'sfxMagic'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
+  // Prime ALL audio elements on first touch so iOS has no decode delay
+  document.querySelectorAll('audio').forEach(el => {
     try {
       el.play().then(() => {
         el.pause();
@@ -353,7 +352,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const splashPlayBtn = document.getElementById('splash-play-btn');
 
   if (splashPlayBtn && splashScreen) {
+    let playerClickedPlay = false;
+
+    // Show a loading state on the button while the grid generates
+    if (!gameState.gridReady) {
+      splashPlayBtn.textContent = 'LOADING...';
+      splashPlayBtn.setAttribute('disabled', 'disabled');
+    }
+
+    // Re-enable the button once the grid is ready
+    window.addEventListener('grid:ready', () => {
+      splashPlayBtn.textContent = 'PLAY';
+      splashPlayBtn.removeAttribute('disabled');
+      // If player already clicked while loading, dismiss immediately
+      if (playerClickedPlay) {
+        playSound('sfxUnlock');
+        splashScreen.classList.add('hidden');
+        audioUnlocked = true;
+      }
+    }, { once: true });
+
     splashPlayBtn.addEventListener('click', () => {
+      playerClickedPlay = true;
+      if (!gameState.gridReady) return; // grid not ready yet — button shouldn't be clickable but belt-and-suspenders
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
       audioUnlocked = true;

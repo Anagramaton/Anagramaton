@@ -25,5 +25,6 @@ export const gameState = {
 
   words: [], 
   boardTop10: [],         
-  boardTop10Total: 0      
+  boardTop10Total: 0,     // ← added comma here
+  gridReady: false        // ← ADD THIS
 };

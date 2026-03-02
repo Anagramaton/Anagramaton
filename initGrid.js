@@ -183,7 +183,12 @@ function handlePointerUp(e) {
 
 export function initializeGrid() {
   gameState.totalScore = 0;
-  gameState.boardSolverReady = null;  // reset so new game gets a fresh promise
+  gameState.gridReady = false;        // ← reset on each new game
+
+  gameState.boardSolverReady = new Promise((resolve) => {
+    gameState._resolveBoardSolver = resolve;
+  });
+
   tileElements.length = 0;
 
   grid = generateSeededBoard(GRID_RADIUS, gameState);
@@ -193,20 +198,17 @@ export function initializeGrid() {
 
   gameState.allTiles = tileElements;
 
-  // Rebuild O(1) lookup map
   tileElementMap.clear();
   for (const tile of tileElements) {
     if (tile?.element) tileElementMap.set(tile.element, tile);
   }
 
-  // Trigger initial styling so pre-reuse tiles show stage-1 value on load
   recomputeAllWordScores([]);
 
   if (!DOM.svg.dataset.swipeListeners) {
     DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });
     DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
     window.addEventListener('pointerup', handlePointerUp);
-
     DOM.svg.dataset.swipeListeners = 'true';
   }
 
@@ -215,4 +217,10 @@ export function initializeGrid() {
     clearButton.addEventListener('click', clearCurrentSelection);
     clearButton.dataset.listener = 'true';
   }
+
+  // Signal that the grid is ready — dispatched after renderGrid completes
+  requestAnimationFrame(() => {
+    gameState.gridReady = true;
+    window.dispatchEvent(new Event('grid:ready'));   // ← ADD THIS
+  });
 }

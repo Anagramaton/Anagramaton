@@ -60,8 +60,9 @@
 
   --reuse-3-fill: #1a1a2e;
   --reuse-3-text: #4cc9f0;
-  --reuse-3-ring-fill: #4cc9f0;
-  --reuse-3-ring-stroke: #ffffff;
+  --reuse-3-ring-fill: #303055;      /* keeps dark navy ring */
+  --reuse-3-ring-stroke: #9400D3;    /* orange outline around the ring */
+  --reuse-ring-width: 2px;
 
   --tile-fill: #fafafa;
   --tile-stroke: #1a1a2e;
@@ -1040,7 +1041,7 @@ body[data-theme="dark"] .tile-point {
   fill: var(--reuse-3-ring-fill);
   stroke: var(--reuse-3-ring-stroke);
   stroke-dasharray: var(--reuse-3-ring-dash);
-  stroke-width: var(--reuse-ring-width);
+  stroke-width: 2.75px;                /* ← direct override, stage 3 only */
   transform-box: fill-box;
   transform-origin: center;
   transform: scale(1.11);
