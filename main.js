@@ -104,6 +104,19 @@ function setupThemeControls() {
       window.location.href = `?mode=${next}`;
     });
   }
+
+  if (gameState.mode === 'daily') {
+    const resetDailyBtn = document.getElementById('reset-daily-btn');
+    if (resetDailyBtn) {
+      resetDailyBtn.hidden = false;
+      resetDailyBtn.addEventListener('click', () => {
+        if (gameState.dailyId) {
+          localStorage.removeItem(`anagramaton_daily_${gameState.dailyId}`);
+          window.location.href = '?mode=daily';
+        }
+      });
+    }
+  }
 }
 
 function preferOsDarkOnFirstVisit() {
