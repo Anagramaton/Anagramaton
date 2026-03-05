@@ -1386,6 +1386,26 @@ body[data-theme="dark"] .tile-point {
 #splash-play-btn:active {
   transform: translateY(1px) scale(0.97);
 }
+#splash-howto-btn {
+  padding: 10px 36px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(0.75rem, 1.8vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #4cc9f0;
+  background: transparent;
+  border: 1px solid rgba(76, 201, 240, 0.5);
+  border-radius: 0;
+  cursor: pointer;
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+#splash-howto-btn:hover {
+  background: rgba(76, 201, 240, 0.12);
+  border-color: rgba(76, 201, 240, 0.85);
+  color: #fff;
+}
 @keyframes splash-fade-in {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0);    }

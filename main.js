@@ -369,6 +369,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================
   const splashScreen  = document.getElementById('splash-screen');
   const splashPlayBtn = document.getElementById('splash-play-btn');
+  const splashHowtoBtn = document.getElementById('splash-howto-btn');
+
+  const VISITED_KEY = 'anagramaton_visited';
+  const isFirstVisit = !localStorage.getItem(VISITED_KEY);
+
+  function openHowtoIfFirstVisit(delay = 300) {
+    if (!isFirstVisit) return;
+    localStorage.setItem(VISITED_KEY, '1');
+    setTimeout(() => window.howto?.open(), delay);
+  }
 
   if (splashPlayBtn && splashScreen) {
     let playerClickedPlay = false;
@@ -388,6 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playSound('sfxUnlock');
         splashScreen.classList.add('hidden');
         audioUnlocked = true;
+        openHowtoIfFirstVisit(300);
       }
     }, { once: true });
 
@@ -397,8 +408,18 @@ document.addEventListener('DOMContentLoaded', () => {
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
       audioUnlocked = true;
+      openHowtoIfFirstVisit(300);
     }, { once: true });
   }
+
+  // HOW TO PLAY button on splash screen
+  splashHowtoBtn?.addEventListener('click', () => {
+    splashScreen?.classList.add('hidden');
+    playSound('sfxUnlock');
+    audioUnlocked = true;
+    openHowtoIfFirstVisit(100);
+    if (!isFirstVisit) setTimeout(() => window.howto?.open(), 100);
+  });
   // ============================
 
   applySavedTheme();
