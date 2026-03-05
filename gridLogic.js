@@ -65,6 +65,7 @@ function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
     gameState.seedPhrase = `${rawA} / ${rawB}`;
     gameState.seedPaths = { phraseA: pathA, phraseB: pathB };
     gameState.seedHints = hints;
+    gameState.phraseCleanLetters = { phrase1: A, phrase2: B };
 
     return true;
   }
@@ -114,6 +115,8 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
   gameState.seedPhrase = undefined;
   gameState.seedPaths = undefined;
   gameState.seedHints = undefined;
+  gameState.phraseCleanLetters = { phrase1: '', phrase2: '' };
+  gameState.phrasesFound = { phrase1: false, phrase2: false };
   gameState.dailyRng = undefined;
 
   return _generateBoard(gridRadius, state);
@@ -152,6 +155,8 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
         gameState.seedPhrase = undefined;
         gameState.seedPaths = undefined;
         gameState.seedHints = undefined;
+        gameState.phraseCleanLetters = { phrase1: '', phrase2: '' };
+        gameState.phrasesFound = { phrase1: false, phrase2: false };
         DEBUG && console.info(`🌟 Daily (${dailyId}): no seed phrase placed`);
       } else {
         DEBUG && console.info(`🌟 Daily (${dailyId}) seed phrase: ${gameState.seedPhrase}`);
@@ -161,6 +166,8 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
       gameState.seedPhrase = undefined;
       gameState.seedPaths = undefined;
       gameState.seedHints = undefined;
+      gameState.phraseCleanLetters = { phrase1: '', phrase2: '' };
+      gameState.phrasesFound = { phrase1: false, phrase2: false };
       DEBUG && console.info(`(Unlimited) Step 1: phrase pair seeding skipped`);
     }
   }

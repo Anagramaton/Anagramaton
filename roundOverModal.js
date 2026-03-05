@@ -294,16 +294,22 @@ import { fetchLeaderboard, getPlayerName } from './leaderboard.js';
     /* ── Fill extra sections on round:over ───────────────────── */
     function fillExtraSections(d) {
       const {
-        wordsWithScores = [],
-        baseTotal       = 0,
-        bonusTotal      = 0,
-        totalScore      = 0,
-        boardTop10      = [],
-        boardTop10Total = 0,
+        wordsWithScores  = [],
+        baseTotal        = 0,
+        bonusTotal       = 0,
+        totalScore       = 0,
+        boardTop10       = [],
+        boardTop10Total  = 0,
+        phrasesFound     = {},
+        bothPhrasesFound = false,
+        phraseBonus      = 0,
       } = d;
 
       /* Summary block */
       const sumSec = ensureSummarySection();
+      const phrase1Found = !!phrasesFound.phrase1;
+      const phrase2Found = !!phrasesFound.phrase2;
+      const showPhraseRow = phrase1Found || phrase2Found || d.dailyId;
       sumSec.innerHTML = `
         <div class="rom__summary-grid">
           <div><span class="rom__label">Your Score</span>   <span class="rom__value" style="color:var(--rom-you)">${totalScore}</span></div>
@@ -311,6 +317,14 @@ import { fetchLeaderboard, getPlayerName } from './leaderboard.js';
           <div><span class="rom__label">Base</span>         <span class="rom__value">${baseTotal}</span></div>
           <div><span class="rom__label">Bonus</span>        <span class="rom__value">${bonusTotal}</span></div>
         </div>
+        ${showPhraseRow ? `
+        <div class="rom__phrase-status${bothPhrasesFound ? ' rom__phrase-status--found' : ''}">
+          ${bothPhrasesFound
+            ? `🎉 Both phrases found! Phrase bonus: <strong>+${phraseBonus}</strong>`
+            : `Phrase 1: ${phrase1Found ? '✅' : '❌'} &nbsp; Phrase 2: ${phrase2Found ? '✅' : '❌'}
+               <br><small>Find both phrases to earn the phrase bonus!</small>`
+          }
+        </div>` : ''}
       `;
 
       /* Badges */
