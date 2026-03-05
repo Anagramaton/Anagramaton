@@ -23,6 +23,10 @@ export default async function handler(req, res) {
 
   const dailyId = req.query?.dailyId || getTodayId();
 
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    return res.status(200).json({ configured: false, dailyId, leaderboard: [] });
+  }
+
   const supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_ANON_KEY

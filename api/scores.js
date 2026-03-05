@@ -23,6 +23,10 @@ export default async function handler(req, res) {
 
   const { dailyId, playerName, score, words, hintsUsed } = req.body || {};
 
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+    return res.status(503).json({ configured: false, error: 'Leaderboard not configured' });
+  }
+
   // Validate dailyId matches today
   const todayId = getTodayId();
   if (!dailyId || dailyId !== todayId) {

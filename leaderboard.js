@@ -194,11 +194,14 @@ export async function fetchLeaderboard(dailyId) {
   try {
     const url = dailyId ? `/api/leaderboard?dailyId=${encodeURIComponent(dailyId)}` : '/api/leaderboard';
     const res = await fetch(url);
-    if (!res.ok) return [];
+    if (!res.ok) return { configured: true, entries: [] };
     const data = await res.json();
-    return Array.isArray(data.leaderboard) ? data.leaderboard : [];
+    return {
+      configured: data.configured !== false,
+      entries: Array.isArray(data.leaderboard) ? data.leaderboard : [],
+    };
   } catch (err) {
     console.warn('[leaderboard] fetchLeaderboard failed:', err);
-    return [];
+    return { configured: true, entries: [] };
   }
 }

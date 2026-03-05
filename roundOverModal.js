@@ -389,7 +389,23 @@ import { fetchLeaderboard, getPlayerName } from './leaderboard.js';
       if (lbPanel) {
         if (d.dailyId) {
           lbPanel.innerHTML = '<p style="color:var(--rom-muted)">Loading leaderboard…</p>';
-          fetchLeaderboard(d.dailyId).then((entries) => {
+          fetchLeaderboard(d.dailyId).then(({ configured, entries }) => {
+            if (!configured) {
+              lbPanel.innerHTML = `
+                <p style="color:var(--rom-muted)">🔧 <strong>Leaderboard not connected yet.</strong></p>
+                <p style="font-size:0.85em;color:var(--rom-muted)">
+                  To enable global scores, add these environment variables in your
+                  <a href="https://vercel.com/docs/environment-variables" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">Vercel project settings</a>:
+                </p>
+                <ul style="font-size:0.82em;color:var(--rom-muted);padding-left:1.2em;line-height:1.8">
+                  <li><code>SUPABASE_URL</code></li>
+                  <li><code>SUPABASE_ANON_KEY</code></li>
+                  <li><code>SUPABASE_SERVICE_KEY</code></li>
+                </ul>
+                <p style="font-size:0.8em;color:var(--rom-muted)">See the <strong>README</strong> for full setup instructions.</p>
+              `;
+              return;
+            }
             if (!entries || entries.length === 0) {
               lbPanel.innerHTML = '<p>No scores yet for today. Be the first! 🏆</p>';
               return;
