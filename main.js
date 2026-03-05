@@ -8,6 +8,7 @@ import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
+import { submitScore, getPlayerName, promptPlayerName } from './leaderboard.js';
 
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
@@ -324,7 +325,8 @@ async function handleSubmitList() {
         totalScore:     finalScore,
         finalScoreText,
         boardTop10,
-        boardTop10Total
+        boardTop10Total,
+        dailyId:        gameState.mode === 'daily' ? (gameState.dailyId || null) : null,
       }
     }));
   });
@@ -337,6 +339,23 @@ async function handleSubmitList() {
       hintsUsed:  gameState.hintsUsed,
     };
     localStorage.setItem(`anagramaton_daily_${gameState.dailyId}`, JSON.stringify(dailyResult));
+
+    // Submit score to leaderboard (fire-and-forget)
+    (async () => {
+      let playerName = getPlayerName();
+      if (!playerName) {
+        await promptPlayerName();
+        playerName = getPlayerName();
+        // Update set-name-btn text after name is set
+        const nameBtn = document.getElementById('set-name-btn');
+        if (nameBtn) {
+          nameBtn.textContent = playerName ? `👤 ${playerName.toUpperCase()}` : '👤 SET NAME';
+        }
+      }
+      if (playerName) {
+        await submitScore(gameState.dailyId, finalScore, words, gameState.hintsUsed || 0);
+      }
+    })();
   }
 }
 
@@ -404,6 +423,21 @@ document.addEventListener('DOMContentLoaded', () => {
       settingsWrap.classList.remove('menu-open');
     }
   });
+
+  // ============================
+  // SET NAME BUTTON
+  // ============================
+  const setNameBtn = document.getElementById('set-name-btn');
+  if (setNameBtn) {
+    const existingName = getPlayerName();
+    if (existingName) setNameBtn.textContent = `👤 ${existingName.toUpperCase()}`;
+
+    setNameBtn.addEventListener('click', async () => {
+      await promptPlayerName();
+      const saved = getPlayerName();
+      setNameBtn.textContent = saved ? `👤 ${saved.toUpperCase()}` : '👤 SET NAME';
+    });
+  }
 
   // --- Reset initial state ---
   baseTotal  = 0;

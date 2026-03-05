@@ -530,6 +530,12 @@ body.rom-open { overflow: hidden; }
 .rom__row:hover { background: rgba(255,255,255,0.04); }
 .rom__row--missed { opacity: 0.5; }
 .rom__row--missed .rom__word { text-decoration: line-through; }
+.rom__row--you {
+  color: var(--rom-you);
+  background: var(--rom-you-dim);
+  border: 1px solid var(--rom-you-border);
+  border-radius: 6px;
+}
 
 /* ── Block wrappers ──────────────────────────────────────────── */
 .rom__block { background: transparent; border: none; padding: 0; }

@@ -1,3 +1,5 @@
+import { fetchLeaderboard, getPlayerName } from './leaderboard.js';
+
 (function () {
   const $ = (id) => document.getElementById(id);
 
@@ -213,16 +215,18 @@
       wrap.innerHTML = `
         <div class="rom__section-label" style="padding-left:0;">Details</div>
         <div class="rom__tablist" role="tablist" aria-label="Round details">
-          <button type="button" class="rom__tab rom__tab--active" data-tab="summary"  role="tab" aria-selected="true">Summary</button>
-          <button type="button" class="rom__tab"                  data-tab="yours"   role="tab" aria-selected="false">Your 10</button>
-          <button type="button" class="rom__tab"                  data-tab="board"   role="tab" aria-selected="false">Board Top 10</button>
-          <button type="button" class="rom__tab"                  data-tab="missed"  role="tab" aria-selected="false">Missed</button>
+          <button type="button" class="rom__tab rom__tab--active" data-tab="summary"     role="tab" aria-selected="true">Summary</button>
+          <button type="button" class="rom__tab"                  data-tab="yours"       role="tab" aria-selected="false">Your 10</button>
+          <button type="button" class="rom__tab"                  data-tab="board"       role="tab" aria-selected="false">Board Top 10</button>
+          <button type="button" class="rom__tab"                  data-tab="missed"      role="tab" aria-selected="false">Missed</button>
+          <button type="button" class="rom__tab"                  data-tab="leaderboard" role="tab" aria-selected="false">Leaderboard</button>
         </div>
         <div class="rom__panels">
-          <div id="rom-panel-summary" class="rom__panel rom__panel--active" data-tabpanel="summary"></div>
-          <div id="rom-panel-yours"   class="rom__panel"                    data-tabpanel="yours"></div>
-          <div id="rom-panel-board"   class="rom__panel"                    data-tabpanel="board"></div>
-          <div id="rom-panel-missed"  class="rom__panel"                    data-tabpanel="missed"></div>
+          <div id="rom-panel-summary"     class="rom__panel rom__panel--active" data-tabpanel="summary"></div>
+          <div id="rom-panel-yours"       class="rom__panel"                    data-tabpanel="yours"></div>
+          <div id="rom-panel-board"       class="rom__panel"                    data-tabpanel="board"></div>
+          <div id="rom-panel-missed"      class="rom__panel"                    data-tabpanel="missed"></div>
+          <div id="rom-panel-leaderboard" class="rom__panel"                    data-tabpanel="leaderboard"></div>
         </div>
       `;
       const actions = dialog.querySelector('.rom__actions');
@@ -378,6 +382,31 @@
                 <span class="rom__score-chip">+${m.score}</span>
               </div>`).join('')
           : '<p>You covered all of the board\'s top words! 🎯</p>';
+      }
+
+      /* Leaderboard panel — populated async after fetch */
+      const lbPanel = $('rom-panel-leaderboard');
+      if (lbPanel) {
+        if (d.dailyId) {
+          lbPanel.innerHTML = '<p style="color:var(--rom-muted)">Loading leaderboard…</p>';
+          fetchLeaderboard(d.dailyId).then((entries) => {
+            if (!entries || entries.length === 0) {
+              lbPanel.innerHTML = '<p>No scores yet for today. Be the first! 🏆</p>';
+              return;
+            }
+            const playerName = getPlayerName();
+            lbPanel.innerHTML = entries.map((entry, idx) => {
+              const isYou = playerName && entry.player_name === playerName;
+              return `
+                <div class="rom__row${isYou ? ' rom__row--you' : ''}">
+                  <span class="rom__word">${idx + 1}. ${String(entry.player_name || 'Anonymous')}</span>
+                  <span class="rom__score-chip">${Number(entry.score) || 0}</span>
+                </div>`;
+            }).join('');
+          });
+        } else {
+          lbPanel.innerHTML = '<p style="color:var(--rom-muted)">Leaderboard available in Daily mode.</p>';
+        }
       }
     }
 
