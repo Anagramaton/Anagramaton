@@ -21,8 +21,6 @@ export const letterPoints = {
 };
 
 export const letterFrequencies = [
-  'U','U','U','U',
-  'D','D','D','D',
   'G','G','G','G','B','B','B','B','C','C','C','C','M','M','M','M',
   'P','P','P','P','H','H','H','H','V','V','V','V',
   'W','W','W','W','Y','Y','Y','Y','K','K','K','K',

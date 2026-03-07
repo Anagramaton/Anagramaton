@@ -439,7 +439,7 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
         const pool = bootstrapWords.filter(w => !usedWords.has(w) && w.endsWith(upper));
         return { suffix: upper, pool };
       })
-      .filter(s => s.pool.length >= 2);
+      .filter(s => s.pool.length >= 3);
 
     // If the deck is empty or exhausted, reshuffle all eligible suffixes into it
     if (!gameState.suffixDeck || gameState.suffixDeck.length === 0) {
@@ -682,6 +682,7 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
         placedWords.push({ word, path: best.path, mandatoryLong: true });
         usedWords.add(word);
         neededLong--;
+        console.log(`📏 Step 4 | placed long word "${word}" (${word.length} letters)`);
       }
     }
   }

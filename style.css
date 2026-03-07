@@ -60,9 +60,9 @@
 
   --reuse-3-fill: #1a1a2e;
   --reuse-3-text: #4cc9f0;
-  --reuse-3-ring-fill: #303055;      /* keeps dark navy ring */
-  --reuse-3-ring-stroke: #9400D3;    /* orange outline around the ring */
-  --reuse-ring-width: 2px;
+  --reuse-3-ring-fill: #303055;     
+  --reuse-3-ring-stroke: #9400D3;    
+  
 
   --tile-fill: #fafafa;
   --tile-stroke: #1a1a2e;
@@ -320,13 +320,16 @@ body[data-theme="dark"] {
 /* Title */
 #game-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3.4rem, 7vw, 6rem);
+  font-size: clamp(3.2rem, 6.5vw, 5.6rem);
   letter-spacing: 0.18em;
   font-weight: 400;
   color: transparent;
-  -webkit-text-stroke: var(--title-stroke-width) var(--title-stroke);
+  -webkit-text-stroke: 2px var(--title-stroke);
   text-shadow: none;
-  filter: drop-shadow(3px 3px 0px #d0d4e8) drop-shadow(-1px -1px 0px #8898bb);
+  filter:
+    drop-shadow(3px 3px 0px #c0c8d8)
+    drop-shadow(-1px -1px 0px #8090b0)
+    drop-shadow(0 0 18px rgba(76, 201, 240, 0.22));   /* ← subtle cyan glow */
   position: fixed;
   top: 4px;
   left: 50%;
@@ -338,7 +341,10 @@ body[data-theme="dark"] {
 }
 
 body[data-theme="dark"] #game-title {
-  filter: drop-shadow(3px 3px 0px #1e2a3a) drop-shadow(-1px -1px 0px #4a6080);
+  filter:
+    drop-shadow(3px 3px 0px #1e2a3a)
+    drop-shadow(-1px -1px 0px #4a6080)
+    drop-shadow(0 0 28px rgba(76, 201, 240, 0.45));   /* stronger glow in dark mode */
 }
 
 /* Grid Container */
@@ -879,42 +885,43 @@ details#merged-words-details > summary {
 .side-toggle {
   position: fixed;
   top: 95px;
-  transform: none;
-  padding: 12px 8px;
-  border-radius: 0;
-  border: 2px solid var(--side-toggle-border);
+  padding: 0;
+  border: 2.5px solid var(--side-toggle-border);
   background: var(--side-toggle-bg);
   color: var(--side-toggle-fg);
   cursor: pointer;
-  height: 140px;
-  width: 56px;
+  height: 130px;
+  width: 44px;
   z-index: 1200;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
   white-space: nowrap;
-  gap: 3px;
+  gap: 2px;
   text-shadow: none;
-  box-shadow: none;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.18);
   transition:
     background 0.15s ease,
     color 0.15s ease,
     transform 0.1s ease,
     left 0.45s ease,
     right 0.45s ease;
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Limelight', sans-serif;
 }
+
+
 .vword {
   writing-mode: vertical-rl;
   text-orientation: upright;
   display: inline-block;
   line-height: 1;
-  letter-spacing: 0;
-  margin: 0 1px;
-  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
-  font-family: 'Rajdhani', sans-serif;
-  font-weight: 700;
+  letter-spacing: 0.10em;
+  margin: 0;
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-family: 'Limelight', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
 }
 .side-toggle:hover  {
   background: var(--side-toggle-hover-bg);
@@ -1041,7 +1048,7 @@ body[data-theme="dark"] .tile-point {
   fill: var(--reuse-3-ring-fill);
   stroke: var(--reuse-3-ring-stroke);
   stroke-dasharray: var(--reuse-3-ring-dash);
-  stroke-width: 2.75px;                /* ← direct override, stage 3 only */
+  stroke-width: 2px;                /* ← direct override, stage 3 only */
   transform-box: fill-box;
   transform-origin: center;
   transform: scale(1.11);
@@ -1078,17 +1085,31 @@ body[data-theme="dark"] .tile-point {
   z-index: 800;
   display: block;
   text-align: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1rem, 2.2vw, 1.6rem);
-  font-weight: 700;
-  letter-spacing: 0.25em;
+  white-space: nowrap;
+
+  /* ── Hex-stamp shape — stage 1 tile: pale cyan, navy text ── */
+  clip-path: polygon(
+    14px 0%,
+    calc(100% - 14px) 0%,
+    100% 50%,
+    calc(100% - 14px) 100%,
+    14px 100%,
+    0% 50%
+  );
+
+  padding: 9px 36px 9px 32px;
+  background: linear-gradient(160deg, #d5f0fa 0%, #8481ce 45%, #d5f0fa 100%);
+  color: #1a1a2e;
+
+  font-family: 'Turret Road', sans-serif;
+  font-size: clamp(1rem, 1.4vw, 1rem);
+  font-weight: 900;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--text);
-}
-.freckle-face-regular {
-  font-family: "Freckle Face", system-ui;
-  font-weight: 400;
-  font-style: normal;
+
+  filter: drop-shadow(2px 3px 0px #0a5a72)
+          drop-shadow(10px 10px 10px rgba(76, 201, 240, 0.2));
+  transition: filter 0.2s ease;
 }
 
 /* Desktop current word display */
@@ -1101,12 +1122,12 @@ body[data-theme="dark"] .tile-point {
     z-index: 800;
     display: block;
     text-align: center;
-    font-size: 2.9rem;
+    font-size: 2.5rem;
     font-family: 'Orbitron', sans-serif;
     font-weight: 900;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--text);
+    color:#0a4a60
   }
 }
 
@@ -1274,39 +1295,95 @@ body[data-theme="dark"] .tile-point {
   }
 }
 
+
 /* =========================================
    Desktop submit / clear buttons
    ========================================= */
 @media (min-width: 901px) {
+
+  /* ── Shared hex-stamp base ── */
   #submit-word,
   #clear-word {
     position: fixed;
-    top: calc(50% + 140px);
+    top: calc(50% + 345px);
     z-index: 900;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1.5rem;
-    font-weight: 400;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 8px 22px;
-    background: transparent;
-    border: 2px solid var(--submit-fg);
-    color: var(--submit-fg);
-    border-radius: 0;
-    cursor: pointer;
-    clip-path: polygon(6px 0%, calc(100% - 6px) 0%, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0% calc(100% - 6px), 0% 6px);
-    transition: background 0.15s ease, color 0.15s ease, letter-spacing 0.15s ease;
-    left: 50%;
-  }
-  #submit-word { transform: translateX(-500px); }
-  #clear-word  { transform: translateX(265px);  }
+    transform: none;
 
-  #submit-word:hover,
-  #clear-word:hover {
-    background: var(--submit-fg);
-    color: var(--btn-bg);
-    letter-spacing: 0.28em;
+    font-family: 'Limelight', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+
+    clip-path: polygon(
+      14px 0%,
+      calc(100% - 14px) 0%,
+      100% 50%,
+      calc(100% - 14px) 100%,
+      14px 100%,
+      0% 50%
+    );
+
+    padding: 12px 38px 12px 34px;
+    border: none;
+    cursor: pointer;
+    transition:
+      transform 0.12s ease,
+      filter 0.12s ease,
+      letter-spacing 0.15s ease;
   }
+
+  /* ── SUBMIT — reuse stage 2: cyan fill, navy text ── */
+  #submit-word {
+    left: calc(50% - 230px);
+    background: linear-gradient(160deg, #61bfd8 0%, #3d6470 45%, #4db2d1 100%);
+    color: #fbfbff;
+    filter: drop-shadow(2px 4px 0px #0a5a72)
+            drop-shadow(10px 10px 10px rgba(76, 201, 240, 0.25));
+  }
+  #submit-word:hover {
+    transform: translateY(-3px) scale(1.05);
+    letter-spacing: 0.32em;
+    filter: drop-shadow(2px 6px 0px #0a5a72)
+            drop-shadow(10px 10px 18px rgba(76, 201, 240, 0.55));
+  }
+  #submit-word:active {
+    transform: translateY(2px) scale(0.97);
+    filter: drop-shadow(10px 1px 10px #0a5a72);
+  }
+
+  /* ── CLEAR — reuse stage 3: navy fill, cyan text ── */
+  #clear-word {
+    left: calc(50% + 60px);
+    background: linear-gradient(160deg, #464f79 0%, #1a1a2e 45%, #2d305f 100%);
+    color: #4cc9f0;
+    filter: drop-shadow(2px 4px 0px #050810)
+            drop-shadow(10px 10px 10px rgba(26, 26, 46, 0.6));
+  }
+  #clear-word:hover {
+    transform: translateY(-3px) scale(1.05);
+    letter-spacing: 0.32em;
+    color: #7ee8ff;
+    filter: drop-shadow(2px 6px 0px #050810)
+            drop-shadow(10px 10px 16px rgba(76, 201, 240, 0.4));
+  }
+  #clear-word:active {
+    transform: translateY(2px) scale(0.97);
+    filter: drop-shadow(10px 1px 10px #050810);
+  }
+}
+
+/* ── Dark mode button overrides ── */
+body[data-theme="dark"] #submit-word {
+  background: linear-gradient(160deg, #5dcfed 0%, #3ab8e0 45%, #1a9abf 100%);
+  color: #0a0c12;
+  filter: drop-shadow(2px 4px 0px #0a4a60)
+          drop-shadow(0 0 14px rgba(76, 201, 240, 0.4));
+}
+body[data-theme="dark"] #clear-word {
+  background: linear-gradient(160deg, #1a1f32 0%, #0d1018 45%, #070a12 100%);
+  color: #4cc9f0;
+  filter: drop-shadow(2px 4px 0px #020408)
+          drop-shadow(0 0 12px rgba(76, 201, 240, 0.25));
 }
 
 /* =========================================

@@ -61,7 +61,7 @@ export default [
         "A daily mailbox mouth hole routine regurgitating mimetic polyalloy into the lap of a T1000.",
       ],
       phrase2: [
-       "A red dragon market huffs smoke down back roads rest rooms with numbered nightboxes."
+       "A red dragon market huffs smoke down back-road restrooms with numbered nightboxes."
       ]
     }
   },
@@ -80,7 +80,7 @@ export default [
     phrases: ["CONVERSATION",   "VOICES RANT ON"],
     hints: {
       phrase1: [
-        "A turn based, minimum two party system serving a little bit of this and that with a side of awkward pauses.",
+        "A turn based, two-party minimum serving a little bit of this and that with a side of awkward pauses.",
       ],
       phrase2: [
         "An auditory hallucination sound of a barrel of steam breaking loose in jagged syllables.",
@@ -88,13 +88,13 @@ export default [
     }
   },
   {
-    phrases: ["FROM RAGS TO RICHES",   "GHOSTFACE MIRRORS"],
+    phrases: ["CHOIRMASTERS FROG",   "GHOSTFACE MIRRORS"],
     hints: {
       phrase1: [
-        "A heap of threadbare cloth coughs up lint traps disguised as diamond infused money trees on endl.",
+        "Leaders who raise the bar(itone) on a leap of faith with legs.",
       ],
       phrase2: [
-        "A mask of missing features and throwing voices roam a corridor of reflection copies the room until it becomes a crowd.",
+        "A mask of missing features that throws voices to a corridor of reflections.",
       ]
     }
   },
@@ -143,17 +143,6 @@ export default [
     }
   },
   {
-    phrases: ["STATUE OF LIBERTY",   "BUILT TO STAY FREE"],
-    hints: {
-      phrase1: [
-        "A gallery of Medusas admirers stuffed into a birdcage with its door ripped off."
-      ],
-      phrase2: [
-        "An above ground mausoleum for the living to pay respect for the short lived platform of Napster."
-      ]
-    }
-  },
-  {
     phrases: ["MARTIN SCORSESE",   "SCREEN IS A STORM"],
     hints: {
       phrase1: [
@@ -193,7 +182,7 @@ export default [
         "A thumb sized confession button disguised as a horned pocket square with daddy issues.",
       ],
       phrase2: [
-        "Marty Mcfly setting the clock in the Delorean expecting a baby throwing a tantrum but getting Dylans protest of blowing wind. ",
+        "Two calendars holding hands with Squidward Tentacles critiquing existence while listening to the music of the people. ",
       ]
     }
   },
@@ -215,7 +204,7 @@ export default [
         "A forest transcript documents an interview with a squirrel, the algaes testimony and a concern about the squatting river monsters.",
       ],
       phrase2: [
-        "A satin stilleto spitting kiosk hawks secondhand kisses behind a line of patched sleeping cabins."
+        "A spotlight that refuses to draw the curtains on a smoking centipede."
       ]
     }
   },
@@ -234,7 +223,7 @@ export default [
     phrases: ["DOUBLE ENTENDRE",   "NEUTERED BLONDE"],
     hints: {
       phrase1: [
-        "Two mirrors argue over which reflection  as a single word steps on stage wearing a disguise to deliver its hidden line."
+        "Two mirrors argue over their reflection as a single word steps on stage wearing a disguise to deliver its hidden line."
       ],
       phrase2: [
         "A Tom Cat from post Saturday morning reruns chasing yarn that resembles a toe and a head.",
@@ -245,7 +234,7 @@ export default [
     phrases: ["BLOW A FUSE",   "WOEFUL ABS"],
     hints: {
       phrase1: [
-        "An exhausted birthday candle attached to a timer disguised as a string with an expiration date."
+        "An exhausted birthday candle attached to a hissing as a string with an expiration date."
       ],
       phrase2: [
         "The braying sobs of a pessimistic ass protected by a brick wall of stomach crunches ."
@@ -256,7 +245,7 @@ export default [
     phrases: ["CAUSE AND EFFECT",   "NUDEST FACE CAFE"],
     hints: {
       phrase1: [
-        "A spark struck from flint and the constant sign flicker of a town with power lost.",
+        "A spark struck from flint over the signs constant flicker of a town with power lost.",
       ],
       phrase2: [
         "A sunbathed skeleteon wears a painted mask waiting for a $5 milk shake in a car shaped booth.",
@@ -267,7 +256,7 @@ export default [
     phrases: ["BEAT AROUND THE BUSH",   "BATHTUB SUNDAE HERO"],
     hints: {
       phrase1: [
-        "A fist pump in BPMs orbits in circles while a tangled hedge waits untouched at the center of the path.",
+        "A fist pump in BPMs orbits a tangled hedge that waits untouched at the center of the path.",
       ],
       phrase2: [
         "A basin collecting still water in porcelain slides down a mountain of syrup and cream while a cape figure of courage stands ready at the rim."
@@ -278,7 +267,7 @@ export default [
     phrases: ["OLDER AND WISER",   "WORDS I LEARNED"],
     hints: {
       phrase1: [
-        "A wrinkled grandfather clocks wrinkles sips tea with the insight of an owls insight.",
+        "A wrinkled grandfather clock's wrinkles sips tea with the insight of an owl's insight.",
         
       ],
       phrase2: [
@@ -293,7 +282,7 @@ export default [
         "A mob of mischief pickpockets leaves a paper trail of pebbles with nervous heartbeats.",
       ],
       phrase2: [
-        "A reincarnating fur coat walking on jellybeans watching Kreuger tapping at its bedroom window."
+        "A fur coat walking on jellybeans watching Freddy Krueger tap on its bedroom window."
       ]
     }
   },
@@ -301,10 +290,10 @@ export default [
     phrases: ["BREAD WINNER",   "NEW BRA DINER"],
     hints: {
       phrase1: [
-        "A flour-dusted boule reclines beside a blue-ribbon scorecard.",
+        "A flour-dusted boule with a gold medal.",
       ],
       phrase2: [
-        "Breaking in unworn clogs wearing two hammocks for restless gravity and Guy Fieri.. pulling up in a red camaro.",
+        "Breaking in unworn clogs wearing two hammocks for restless gravity where you'd find Guy Fieri.",
       ]
     }
   },
@@ -315,7 +304,7 @@ export default [
         "A purchased rigged odor of obnoxiousness by a shadow of happy hours."
       ],
       phrase2: [
-        "An armored legume from down under unveils an exhibition of framed faces in a hallway of judgment.",
+        "An armored legume from down under unveils exhibitions of passing hallways of judgment.",
       ]
     }
   },
@@ -331,10 +320,10 @@ export default [
     }
   },
   {
-    phrases: ["POSTMASTER",   "STAMP STORE"],
+    phrases: ["OTTER SPASM",   "STAMP STORE"],
     hints: {
       phrase1: [
-        "A throne of envelopes crowns a ruler who commands paper armies with ink-stained decrees.",
+        "Rocket Raccoon all wet being confused for a jerk with commitment issues.",
       ],
       phrase2: [
         "A forever flattened Washington in need of a clean up in Aisle 7.",
@@ -370,18 +359,18 @@ export default [
         "A cardboard cowboy campaigns on a horse made of dollar bills, promising bedtime stories to the missiles.",
       ],
       phrase2: [
-        "A jar of honey-glued oats and seeds take notes from a bespectacled encyclopedia.",
+        "A jar of honey-glued oats and seeds being tutored by a bespectacled encyclopedia.",
       ]
     }
   },
   {
-    phrases: ["THUNDER SOCIETY",   "HIT YOUR DESCENT"],
+    phrases: ["THUNDER SOCIETY",   "UNTIDY TROCHEES "],
     hints: {
       phrase1: [
-        "Sound traveling from flash to rumble stops over a house of cards with builders but no architect .",
+        "Flash and sound traveling and rumbling from a beehive built from opinions.",
       ],
       phrase2: [
-        ".",
+        "A desk in mid mid-life crisis to the sounds of its own pulse winding down. ",
       ]
     }
   },
@@ -389,10 +378,10 @@ export default [
     phrases: ["NATURALIST",   "A TRAILS NUT"],
     hints: {
       phrase1: [
-        "A walking pair of binoculars zeroes in on dusty prints and a leafs life cycle.",
+        "A walking pair of binoculars zeroes in on the dusty prints of a leafs life cycle.",
       ],
       phrase2: [
-        "The teeth of a zippers path to the teeth of a squirrels strife.",
+        "The teeth of a zippers path into the teeth of a squirrels shell.",
       ]
     }
   },
@@ -400,7 +389,7 @@ export default [
     phrases: ["ASTEROID PEN",   "A ROPE ENDS IT"],
     hints: {
       phrase1: [
-        "A wandering orphan of the cosmos published by Stephen Kings typewriter in pocket size.",
+        "A wandering orphan of the cosmos published on Stephen Kings pocket-sized typewriter.",
       ],
       phrase2: [
         "A stretched violin string mimics the tone of a Soprano in all black.",
@@ -408,13 +397,13 @@ export default [
     }
   },
   {
-    phrases: ["A TELEPHONE GIRL",   "REPEATING HELLO"],
+    phrases: ["A TELEPHONE GIRL",   "HALOGEN REPTILE"],
     hints: {
       phrase1: [
-        "A repurposed pound sign making death threats to a Marionette."
+        "A repurposed pound sign threatening a Marionette."
       ],
       phrase2: [
-        "An endless hallway full of doors shaking hands  .",
+        "Lightbulbs with chemical ambitions displayed on the fences of Juraassic Park.",
       ]
     }
   },
@@ -444,10 +433,10 @@ export default [
     phrases: ["A MENTIONED BLISS",   "LESBIANISM NOTED"],
     hints: {
       phrase1: [
-        "A social symbol for a modern day Call-out heading for Cloud Nine.",
+        "Your 15 seconds of fame hidden behind a blindfold ofignorance.",
       ],
       phrase2: [
-        "Rosie the riveters rainbow shines over information received filed and bookmarked. ",
+        "Rosie the riveters rainbow reigns over information received and bookmarked. ",
       ]
     }
   },
@@ -455,7 +444,7 @@ export default [
     phrases: ["GRADUATION DAY",   "GAY RADIANT DUO"],
     hints: {
       phrase1: [
-        "Air floating hats burnt by a sun not setting in fear of tomrrow .",
+        "Air floating hats burnt by a sun not setting in fear of tomorrow .",
       ],
       phrase2: [
         "A rainbow-feathered peacock being serenaded on a very bright sunbeam by Castor and Pollux.",
@@ -466,11 +455,9 @@ export default [
     phrases: ["WITNESS PROTECTION",   "SECRET TWIN OPTIONS"],
     hints: {
       phrase1: [
-        "A nervous notebook squeezes into the arms of a bunker made from prayers.",
-      ],
+        "A nervous notebooks encounter of a specific sigil tattooed on Sam and Deans chests.",    ],
       phrase2: [
-        "A whispering envelope dances with two synchronized mannequins inside a hall of spinning doors.",
-        "A locked diary shares tea with a mirrored pair of acrobats and a spinning ."
+        "A whispering envelope dances with two synchronized mannequins from inside a Choose Your Adventure book.",
       ]
     }
   },
@@ -486,14 +473,14 @@ export default [
     }
   },
   {
-    phrases: ["",   ""],
+    phrases: ["SOBER CHAINSAW",   "A CABINS WHORES"],
     hints: {
       phrase1: [
-        ".",
+        "A mosquito with a steel throat leaving a party after the music died.",
         
       ],
       phrase2: [
-        ".",
+        "A backpack pretending to be a house where Vivian Wards fairy tales were sold by the hour.",
       ]
     }
   },
@@ -504,8 +491,7 @@ export default [
         "A golden handshake lounges beneath a hammock of empty calendars.",
       ],
       phrase2: [
-        "A uniform with four bars  .",
-        
+        "A uniform with four bars that doesn't want to talk.",
       ]
     }
   },
