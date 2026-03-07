@@ -122,7 +122,10 @@ export function revealPhrase(phraseKey) {
     const raw = (gameState.seedPhrase || '').split('/')[phraseIndex] || '';
     phraseEl.textContent = raw.trim();
   }
-} // <-- ✅ added this closing brace
+
+  // Disable the hint button — phrase is now revealed, hint no longer needed
+  disableButtonById(`${phraseKey}-hint1-btn`);
+}
 
 export function getHintMultiplier() {
   const used = Math.max(0, Math.min(MAX_HINTS, Number(gameState.hintsUsed) || 0));

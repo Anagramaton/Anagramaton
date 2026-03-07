@@ -4,9 +4,11 @@ export const gameState = {
   seedPaths: null,        // daily-only
   seedHints: null,        // daily-only
   dailyId: null,          // daily-only
-  
-  
-  
+
+  // Phrase pair tracking (daily-only)
+  phrasesFound: { phrase1: false, phrase2: false },
+  phraseCleanLetters: { phrase1: '', phrase2: '' },
+
   hintUsage: {
     wordcount: false,
     phraseRevealed: {

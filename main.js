@@ -8,6 +8,7 @@ import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
+import { submitScore, getPlayerName, promptPlayerName } from './leaderboard.js';
 
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
@@ -103,6 +104,19 @@ function setupThemeControls() {
       window.location.href = `?mode=${next}`;
     });
   }
+
+  if (gameState.mode === 'daily') {
+    const resetDailyBtn = document.getElementById('reset-daily-btn');
+    if (resetDailyBtn) {
+      resetDailyBtn.hidden = false;
+      resetDailyBtn.addEventListener('click', () => {
+        if (gameState.dailyId) {
+          localStorage.removeItem(`anagramaton_daily_${gameState.dailyId}`);
+          window.location.href = '?mode=daily';
+        }
+      });
+    }
+  }
 }
 
 function preferOsDarkOnFirstVisit() {
@@ -151,6 +165,68 @@ let totalScore = 0;
 const submittedWords = new Set();
 gameState.words = gameState.words || [];
 
+// ── Phrase pair helpers ────────────────────────────────────
+
+/** Returns 'phrase1' | 'phrase2' | null if tiles spell out a full phrase. */
+function checkPhraseMatch(tiles) {
+  if (!tiles || tiles.length < 4) return null;
+  if (gameState.mode !== 'daily' || !gameState.seedPhrase) return null;
+  const letters = tiles.map(t => String(t.letter || '').toUpperCase()).join('');
+  const { phrase1, phrase2 } = gameState.phraseCleanLetters || {};
+  if (phrase1 && !gameState.phrasesFound.phrase1 && letters === phrase1) return 'phrase1';
+  if (phrase2 && !gameState.phrasesFound.phrase2 && letters === phrase2) return 'phrase2';
+  return null;
+}
+
+/** Returns true when both daily phrases have been found. */
+function areBothPhrasesFound() {
+  return !!(gameState.phrasesFound?.phrase1 && gameState.phrasesFound?.phrase2);
+}
+
+/** Returns the raw (spaced) phrase text for display. */
+function getPhraseRawText(phraseKey) {
+  const idx = phraseKey === 'phrase1' ? 0 : 1;
+  const parts = (gameState.seedPhrase || '').split('/');
+  return (parts[idx] || '').trim();
+}
+
+/** Applies the persistent border colour + one-shot celebration animation to found phrase tiles. */
+function applyPhraseTileStyle(phraseKey, tiles) {
+  const classNum = phraseKey === 'phrase1' ? '1' : '2';
+  tiles.forEach((tile, idx) => {
+    const poly = tile.element?.querySelector('polygon');
+    if (poly) poly.classList.add(`phrase-tile-${classNum}`);
+    if (tile.element) {
+      tile.element.style.setProperty('--celebrate-delay', `${idx * 0.06}s`);
+      tile.element.classList.add('phrase-celebrate');
+      tile.element.addEventListener('animationend', () => {
+        tile.element.classList.remove('phrase-celebrate');
+        tile.element.style.removeProperty('--celebrate-delay');
+      }, { once: true });
+    }
+  });
+}
+
+/** Called when a phrase is successfully found. */
+async function handlePhraseFound(phraseKey, tiles) {
+  gameState.phrasesFound[phraseKey] = true;
+
+  applyPhraseTileStyle(phraseKey, tiles);
+  playSound('sfxMagic');
+  revealPhrase(phraseKey);
+
+  const phraseNum = phraseKey === 'phrase1' ? 1 : 2;
+  const rawPhrase = getPhraseRawText(phraseKey);
+
+  if (areBothPhrasesFound()) {
+    const otherKey = phraseKey === 'phrase1' ? 'phrase2' : 'phrase1';
+    const otherPhrase = getPhraseRawText(otherKey);
+    await playAlert(`🎉 You found BOTH phrases!\n"${rawPhrase}" & "${otherPhrase}"\n\nPhrase bonus unlocked — submit your list to collect it!`);
+  } else {
+    await playAlert(`🎉 Phrase ${phraseNum} found!\n"${rawPhrase}"\n\nFind phrase ${phraseNum === 1 ? 2 : 1} to unlock the phrase bonus!`);
+  }
+}
+
 function syncSubmitListButton() {
   const btn = document.getElementById('submit-list');
   if (!btn) return;
@@ -198,6 +274,14 @@ function updateCurrentWordDisplay() {
 async function handleSubmitWordClick() {
   const selectedTiles = gameState.selectedTiles || [];
   const word = selectedTiles.map(t => t.letter).join('').toUpperCase();
+
+  // ── Phrase match check (before word validation) ──────────
+  const phraseMatch = checkPhraseMatch(selectedTiles);
+  if (phraseMatch) {
+    await handlePhraseFound(phraseMatch, [...selectedTiles]);
+    resetSelectionState();
+    return;
+  }
 
   if (submittedWords.size >= 10) {
     await playAlert('❌ You can only keep 10 words in your list at a time.');
@@ -271,7 +355,8 @@ async function handleSubmitList() {
 
   recomputeAll();
 
-  if (gameState.mode === 'daily') {
+  const bothPhrasesFound = areBothPhrasesFound();
+  if (gameState.mode === 'daily' && bothPhrasesFound) {
     const hintMult = getHintMultiplier();
     bonusTotal += baseTotal * hintMult;
     totalScore  = baseTotal + bonusTotal;
@@ -309,6 +394,8 @@ async function handleSubmitList() {
     solverTimeout
   ]);
 
+  const phraseBonus = bothPhrasesFound ? (baseTotal * getHintMultiplier()) : 0;
+
   requestAnimationFrame(() => {
     const boardTop10      = Array.isArray(gameState.boardTop10) ? gameState.boardTop10 : [];
     const boardTop10Total = Number(gameState.boardTop10Total) || 0;
@@ -324,7 +411,11 @@ async function handleSubmitList() {
         totalScore:     finalScore,
         finalScoreText,
         boardTop10,
-        boardTop10Total
+        boardTop10Total,
+        dailyId:        gameState.mode === 'daily' ? (gameState.dailyId || null) : null,
+        phrasesFound:   { ...gameState.phrasesFound },
+        bothPhrasesFound,
+        phraseBonus,
       }
     }));
   });
@@ -337,6 +428,23 @@ async function handleSubmitList() {
       hintsUsed:  gameState.hintsUsed,
     };
     localStorage.setItem(`anagramaton_daily_${gameState.dailyId}`, JSON.stringify(dailyResult));
+
+    // Submit score to leaderboard (fire-and-forget)
+    (async () => {
+      let playerName = getPlayerName();
+      if (!playerName) {
+        await promptPlayerName();
+        playerName = getPlayerName();
+        // Update set-name-btn text after name is set
+        const nameBtn = document.getElementById('set-name-btn');
+        if (nameBtn) {
+          nameBtn.textContent = playerName ? `👤 ${playerName.toUpperCase()}` : '👤 SET NAME';
+        }
+      }
+      if (playerName) {
+        await submitScore(gameState.dailyId, finalScore, words, gameState.hintsUsed || 0);
+      }
+    })();
   }
 }
 
@@ -350,6 +458,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================
   const splashScreen  = document.getElementById('splash-screen');
   const splashPlayBtn = document.getElementById('splash-play-btn');
+  const splashHowtoBtn = document.getElementById('splash-howto-btn');
+
+  const VISITED_KEY = 'anagramaton_visited';
+  const isFirstVisit = !localStorage.getItem(VISITED_KEY);
+
+  function openHowtoIfFirstVisit(delay = 300) {
+    if (!isFirstVisit) return;
+    localStorage.setItem(VISITED_KEY, '1');
+    setTimeout(() => window.howto?.open(), delay);
+  }
 
   if (splashPlayBtn && splashScreen) {
     let playerClickedPlay = false;
@@ -369,6 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playSound('sfxUnlock');
         splashScreen.classList.add('hidden');
         audioUnlocked = true;
+        openHowtoIfFirstVisit(300);
       }
     }, { once: true });
 
@@ -378,8 +497,18 @@ document.addEventListener('DOMContentLoaded', () => {
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
       audioUnlocked = true;
+      openHowtoIfFirstVisit(300);
     }, { once: true });
   }
+
+  // HOW TO PLAY button on splash screen
+  splashHowtoBtn?.addEventListener('click', () => {
+    splashScreen?.classList.add('hidden');
+    playSound('sfxUnlock');
+    audioUnlocked = true;
+    openHowtoIfFirstVisit(100);
+    if (!isFirstVisit) setTimeout(() => window.howto?.open(), 100);
+  });
   // ============================
 
   applySavedTheme();
@@ -404,6 +533,21 @@ document.addEventListener('DOMContentLoaded', () => {
       settingsWrap.classList.remove('menu-open');
     }
   });
+
+  // ============================
+  // SET NAME BUTTON
+  // ============================
+  const setNameBtn = document.getElementById('set-name-btn');
+  if (setNameBtn) {
+    const existingName = getPlayerName();
+    if (existingName) setNameBtn.textContent = `👤 ${existingName.toUpperCase()}`;
+
+    setNameBtn.addEventListener('click', async () => {
+      await promptPlayerName();
+      const saved = getPlayerName();
+      setNameBtn.textContent = saved ? `👤 ${saved.toUpperCase()}` : '👤 SET NAME';
+    });
+  }
 
   // --- Reset initial state ---
   baseTotal  = 0;
@@ -445,8 +589,9 @@ document.addEventListener('DOMContentLoaded', () => {
       bonusTotal = 0;
       totalScore = 0;
       submittedWords.clear();
-      gameState.words      = [];
-      gameState.listLocked = false;
+      gameState.words        = [];
+      gameState.listLocked   = false;
+      gameState.phrasesFound = { phrase1: false, phrase2: false };
       updateScoreDisplay(0);
 
       const leftPanelEl  = document.getElementById('left-panel');

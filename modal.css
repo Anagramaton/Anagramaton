@@ -439,6 +439,26 @@ body.rom-open { overflow: hidden; }
 
 /* ── Summary block ───────────────────────────────────────────── */
 #rom-summary { margin: 0 18px 4px; }
+
+/* Phrase found status bar (shown in summary) */
+.rom__phrase-status {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--rom-border);
+  background: var(--rom-surface);
+  font-family: 'Turret Road', system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--rom-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+.rom__phrase-status--found {
+  border-color: #f59e0b;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
 .rom__summary-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -530,6 +550,12 @@ body.rom-open { overflow: hidden; }
 .rom__row:hover { background: rgba(255,255,255,0.04); }
 .rom__row--missed { opacity: 0.5; }
 .rom__row--missed .rom__word { text-decoration: line-through; }
+.rom__row--you {
+  color: var(--rom-you);
+  background: var(--rom-you-dim);
+  border: 1px solid var(--rom-you-border);
+  border-radius: 6px;
+}
 
 /* ── Block wrappers ──────────────────────────────────────────── */
 .rom__block { background: transparent; border: none; padding: 0; }
