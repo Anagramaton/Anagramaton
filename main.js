@@ -574,14 +574,19 @@ document.addEventListener('DOMContentLoaded', () => {
       ?.addEventListener('click', handleSubmitList);
     syncSubmitListButton();
 
-    document.getElementById('new-game')?.addEventListener('click', () => {
-      baseTotal  = 0;
-      bonusTotal = 0;
-      totalScore = 0;
-      submittedWords.clear();
-      gameState.words        = [];
-      gameState.listLocked   = false;
-      gameState.phrasesFound = { phrase1: false, phrase2: false };
+document.getElementById('new-game')?.addEventListener('click', () => {
+  baseTotal  = 0;
+  bonusTotal = 0;
+  totalScore = 0;
+  submittedWords.clear();
+  gameState.words           = [];
+  gameState.listLocked      = false;
+  gameState.phrasesFound    = { phrase1: false, phrase2: false };
+  gameState.boardTop10      = [];    
+  gameState.boardTop10Total = 0;     
+  gameState.boardTop10Paths = [];    
+  gameState.playerTop10      = [];   
+  gameState.playerTop10Total = 0; 
       updateScoreDisplay(0);
 
       const leftPanelEl  = document.getElementById('left-panel');
