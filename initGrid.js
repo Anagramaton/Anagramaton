@@ -1,4 +1,5 @@
 import { generateSeededBoard } from './gridLogic.js';
+import { playSound } from './audioEngine.js';
 import { renderGrid } from './gridRenderer.js';
 import { gameState } from './gameState.js';
 import { GRID_RADIUS } from './constants.js';
@@ -17,17 +18,6 @@ export let grid;
 // O(1) tile lookup map — rebuilt each time initializeGrid runs
 let tileElementMap = new Map();
 
-
-function playSound(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  try {
-    el.currentTime = 0;
-    el.play().catch(err => console.warn(`[audio] ${id} blocked:`, err));
-  } catch (e) {
-    console.warn(`[audio] ${id} error:`, e);
-  }
-}
 
 
 // swipe / drag state

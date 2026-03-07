@@ -9,34 +9,16 @@ import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } 
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName } from './leaderboard.js';
+import { unlockAndPreload, playSound } from './audioEngine.js'; // ← ADD THIS
 
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
 // ============================================================
-function playSound(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  try {
-    el.currentTime = 0;
-    el.play().catch(err => console.warn(`[audio] ${id} blocked:`, err));
-  } catch (e) {
-    console.warn(`[audio] ${id} error:`, e);
-  }
-}
-
 let audioUnlocked = false;
-window.addEventListener('pointerdown', () => {
+window.addEventListener('pointerdown', async () => {
   if (audioUnlocked) return;
   audioUnlocked = true;
-  // Prime ALL audio elements on first touch so iOS has no decode delay
-  document.querySelectorAll('audio').forEach(el => {
-    try {
-      el.play().then(() => {
-        el.pause();
-        el.currentTime = 0;
-      }).catch(() => {});
-    } catch (e) {}
-  });
+  await unlockAndPreload();
 }, { once: true });
 
 // ============================================================
@@ -453,11 +435,11 @@ async function handleSubmitList() {
 // =============================
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ============================
+  // ★ SPLASH SCREEN
   // ============================
-  // ★ SPLASH SCREEN — added here, first thing inside DOMContentLoaded
-  // ============================
-  const splashScreen  = document.getElementById('splash-screen');
-  const splashPlayBtn = document.getElementById('splash-play-btn');
+  const splashScreen   = document.getElementById('splash-screen');
+  const splashPlayBtn  = document.getElementById('splash-play-btn');
   const splashHowtoBtn = document.getElementById('splash-howto-btn');
 
   const VISITED_KEY = 'anagramaton_visited';
@@ -472,40 +454,48 @@ document.addEventListener('DOMContentLoaded', () => {
   if (splashPlayBtn && splashScreen) {
     let playerClickedPlay = false;
 
-    // Show a loading state on the button while the grid generates
     if (!gameState.gridReady) {
       splashPlayBtn.textContent = 'LOADING...';
       splashPlayBtn.setAttribute('disabled', 'disabled');
     }
 
-    // Re-enable the button once the grid is ready
     window.addEventListener('grid:ready', () => {
       splashPlayBtn.textContent = 'PLAY';
       splashPlayBtn.removeAttribute('disabled');
-      // If player already clicked while loading, dismiss immediately
       if (playerClickedPlay) {
-        playSound('sfxUnlock');
-        splashScreen.classList.add('hidden');
-        audioUnlocked = true;
-        openHowtoIfFirstVisit(300);
+        (async () => {
+          if (!audioUnlocked) {
+            audioUnlocked = true;
+            await unlockAndPreload();
+          }
+          playSound('sfxUnlock');
+          splashScreen.classList.add('hidden');
+          openHowtoIfFirstVisit(300);
+        })();
       }
     }, { once: true });
 
-    splashPlayBtn.addEventListener('click', () => {
+    splashPlayBtn.addEventListener('click', async () => {
       playerClickedPlay = true;
-      if (!gameState.gridReady) return; // grid not ready yet — button shouldn't be clickable but belt-and-suspenders
+      if (!gameState.gridReady) return;
+      if (!audioUnlocked) {
+        audioUnlocked = true;
+        await unlockAndPreload();
+      }
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
-      audioUnlocked = true;
       openHowtoIfFirstVisit(300);
     }, { once: true });
   }
 
   // HOW TO PLAY button on splash screen
-  splashHowtoBtn?.addEventListener('click', () => {
+  splashHowtoBtn?.addEventListener('click', async () => {
     splashScreen?.classList.add('hidden');
+    if (!audioUnlocked) {
+      audioUnlocked = true;
+      await unlockAndPreload();
+    }
     playSound('sfxUnlock');
-    audioUnlocked = true;
     openHowtoIfFirstVisit(100);
     if (!isFirstVisit) setTimeout(() => window.howto?.open(), 100);
   });
