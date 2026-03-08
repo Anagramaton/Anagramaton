@@ -170,8 +170,8 @@
 }
 
 /* ── Hex grid ─────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  #hex-grid { touch-action: none; }
+#hex-grid {
+  touch-action: none; 
 }
 
 /* ── Round-over modal — mobile tweaks ────────────────────────── */

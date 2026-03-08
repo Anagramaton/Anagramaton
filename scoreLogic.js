@@ -3,6 +3,8 @@ import { gameState } from './gameState.js';
 import { letterPoints, reuseMultipliers, anagramMultiplier, lengthMultipliers } from './constants.js';
 import { playAlert } from './main.js';
 
+// Track previous reuse counts so we only touch DOM when something changed
+const _prevReuseCount = new WeakMap();
 
 // — Check for anagram —
 function isAnagram(word) {
@@ -13,43 +15,34 @@ function isAnagram(word) {
 export async function submitCurrentWord(tiles) {
   const word = tiles.map(t => t.letter).join('');
 
-  // Validate word length
-if (word.length < 4) {
-  await playAlert('❌ Word must be at least 4 letters long.');
-  return null;
-}
+  if (word.length < 4) {
+    await playAlert('❌ Word must be at least 4 letters long.');
+    return null;
+  }
 
-// Validate dictionary
-if (!isValidWord(word)) {
-  await playAlert(`❌ "${word}" is not a valid word.`);
-  return null;
-}
+  if (!isValidWord(word)) {
+    await playAlert(`❌ "${word}" is not a valid word.`);
+    return null;
+  }
 
-
-  // Step 1: Calculate Base Score (NO lifetime reuse here)
+  // Step 1: Base Score
   let baseScore = 0;
   for (const tile of tiles) {
-  const letter = String(tile.letter || '').toUpperCase();
-  const face = letterPoints[letter] || 1;
-  baseScore += face;
+    const letter = String(tile.letter || '').toUpperCase();
+    const face = letterPoints[letter] || 1;
+    baseScore += face;
   }
 
-
-  // Step 2: Calculate Bonus Multipliers
+  // Step 2: Multipliers
   let multiplier = 1;
-
-  // Length bonuses (5+ letters only)
   if (word.length >= 5) {
-    const lengthKey = Math.min(word.length, 10); // cap at 10+
+    const lengthKey = Math.min(word.length, 10);
     multiplier *= lengthMultipliers[lengthKey] || 1;
   }
-
-  // Anagram bonus
   if (isAnagram(word)) {
     multiplier *= anagramMultiplier;
   }
 
-  // Step 3: Calculate Final Score
   return baseScore * multiplier;
 }
 
@@ -65,65 +58,60 @@ export function recomputeAllWordScores(wordEntries) {
     }
   }
 
-// 🎨 Apply styling to tiles based on reuse count (idempotent)
-if (Array.isArray(gameState.allTiles)) {
-  for (const tile of gameState.allTiles) {
-    const uses = totalUseByTile.get(tile) ?? 0;
-    const preReuse = gameState.preReuseKeys?.has(tile.key) ? 1 : 0;  // ← ADD
-    styleTileByReuse(tile, uses + preReuse);                          // ← CHANGE (was: styleTileByReuse(tile, uses))
-  }
-}
-
-
-
-function styleTileByReuse(tile, uses) {
-  if (!tile || !tile.element) return;
-
-  const poly = tile.shape || tile.element.querySelector('polygon.hex-tile');
-  if (!poly) return;
-
-  // --- Reset classes ---
-  poly.setAttribute('class', 'hex-tile');
-  tile.textLetter?.setAttribute('class', 'tile-letter');
-  tile.textPoint?.setAttribute('class', 'tile-point');
-
-  const multiplier = uses === 0 ? 1
-                   : uses === 1 ? reuseMultipliers[2]
-                   : reuseMultipliers[3];
-
-  // Update displayed point value
-  if (tile.textPoint && typeof tile.point === 'number') {
-    tile.textPoint.textContent = String(tile.point * multiplier);
+  // Only restyle tiles whose reuse count has actually changed
+  if (Array.isArray(gameState.allTiles)) {
+    for (const tile of gameState.allTiles) {
+      const uses = totalUseByTile.get(tile) ?? 0;
+      const preReuse = gameState.preReuseKeys?.has(tile.key) ? 1 : 0;
+      const effective = uses + preReuse;
+      if (_prevReuseCount.get(tile) !== effective) {
+        styleTileByReuse(tile, effective);
+        _prevReuseCount.set(tile, effective);
+      }
+    }
   }
 
-// --- Apply reuse classes ---
-if (uses === 1) {
-  poly.classList.add('reuse-1');
-    tile.textLetter?.classList.add('reuse-1');
-  tile.textPoint?.classList.add('reuse-1');
-} else if (uses === 2) {
-  poly.classList.add('reuse-2');
-  tile.textLetter?.classList.add('reuse-2');
-  tile.textPoint?.classList.add('reuse-2');
-} else if (uses >= 3) {
-  poly.classList.add('reuse-3');
-  tile.textLetter?.classList.add('reuse-3');
-  tile.textPoint?.classList.add('reuse-3');
+  function styleTileByReuse(tile, uses) {
+    if (!tile || !tile.element) return;
 
-  // bring stage-3 tile to front so its gap color covers neighbors
-  const g = tile.element;
-  const parent = g?.parentNode;
-  if (parent && parent.lastChild !== g) {
-    parent.appendChild(g);
+    const poly = tile.shape || tile.element.querySelector('polygon.hex-tile');
+    if (!poly) return;
+
+    // Reset classes
+    poly.setAttribute('class', 'hex-tile');
+    tile.textLetter?.setAttribute('class', 'tile-letter');
+    tile.textPoint?.setAttribute('class', 'tile-point');
+
+    const multiplier = uses === 0 ? 1
+                     : uses === 1 ? reuseMultipliers[2]
+                     : reuseMultipliers[3];
+
+    if (tile.textPoint && typeof tile.point === 'number') {
+      tile.textPoint.textContent = String(tile.point * multiplier);
+    }
+
+    if (uses === 1) {
+      poly.classList.add('reuse-1');
+      tile.textLetter?.classList.add('reuse-1');
+      tile.textPoint?.classList.add('reuse-1');
+    } else if (uses === 2) {
+      poly.classList.add('reuse-2');
+      tile.textLetter?.classList.add('reuse-2');
+      tile.textPoint?.classList.add('reuse-2');
+    } else if (uses >= 3) {
+      poly.classList.add('reuse-3');
+      tile.textLetter?.classList.add('reuse-3');
+      tile.textPoint?.classList.add('reuse-3');
+
+      const g = tile.element;
+      const parent = g?.parentNode;
+      if (parent && parent.lastChild !== g) {
+        parent.appendChild(g);
+      }
+    }
   }
-}
 
-
-}
-
-
-  // Score each word using the SAME tile multiplier for every word that uses that tile:
-  // 1 word → ×1, 2 words → ×2, 3+ words → ×4
+  // Score each word with reuse-aware tile multipliers
   return wordEntries.map(entry => {
     const letters = (entry.tiles || []).map(t => String(t.letter || '').toUpperCase());
     let base = 0;
@@ -131,16 +119,13 @@ if (uses === 1) {
     for (const tile of entry.tiles || []) {
       const letter = String(tile.letter || '').toUpperCase();
       const face = letterPoints[letter] || 1;
-
       const uses = totalUseByTile.get(tile) || 0;
-      const preReuse = gameState.preReuseKeys?.has(tile.key) ? 1 : 0;              // ← ADD
-      const effectiveUses = uses + preReuse;                                        // ← ADD
-      let tileMult = reuseMultipliers[effectiveUses] || (effectiveUses >= 3 ? reuseMultipliers[3] : 1);  // ← CHANGE (was: reuseMultipliers[uses])
-
+      const preReuse = gameState.preReuseKeys?.has(tile.key) ? 1 : 0;
+      const effectiveUses = uses + preReuse;
+      const tileMult = reuseMultipliers[effectiveUses] || (effectiveUses >= 3 ? reuseMultipliers[3] : 1);
       base += face * tileMult;
     }
 
-    // word-level multipliers
     let mult = 1;
     const len = letters.length;
     if (len >= 5) mult *= (lengthMultipliers[Math.min(len, 10)] || 1);
@@ -151,48 +136,34 @@ if (uses === 1) {
 }
 
 export function computeBoardWordScores(wordsLike) {
-  // Normalize to consistent entry objects with word + tiles
   const entries = (wordsLike || []).map(w =>
     typeof w === 'string'
       ? { word: String(w).toUpperCase(), tiles: [] }
       : { word: String(w?.word || '').toUpperCase(), tiles: w?.tiles || [] }
   );
 
-  // Reuse the existing recomputeAllWordScores logic for identical scoring rules
   const scores = recomputeAllWordScores(entries) || [];
 
-  // Normalize to simple {word, score} pairs and sort high-to-low
   return entries
     .map((entry, i) => ({
       word: entry.word,
-      score: Number(
-        scores[i]?.score ??
-        scores[i] ??
-        0
-      ),
+      score: Number(scores[i]?.score ?? scores[i] ?? 0),
     }))
-    .filter(x => x.word) // drop any blanks
+    .filter(x => x.word)
     .sort((a, b) => b.score - a.score);
 }
-
-
 
 export function resetSelectionState() {
   const selectedTiles = gameState.selectedTiles || [];
   selectedTiles.forEach(tile => {
-if (tile.element) {
-  const poly = tile.element.querySelector('polygon');
-  if (poly) poly.classList.remove('selected');
-
-  const letter = tile.textLetter;
-  const point = tile.textPoint;
-  letter?.classList.remove('selected');
-  point?.classList.remove('selected');
-}
-
+    if (tile.element) {
+      const poly = tile.element.querySelector('polygon');
+      if (poly) poly.classList.remove('selected');
+      tile.textLetter?.classList.remove('selected');
+      tile.textPoint?.classList.remove('selected');
+    }
   });
   gameState.selectedTiles = [];
 
-  
   const preview = document.getElementById('current-word');
 }

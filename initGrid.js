@@ -18,11 +18,14 @@ export let grid;
 // O(1) tile lookup map — rebuilt each time initializeGrid runs
 let tileElementMap = new Map();
 
-
-
 // swipe / drag state
 let isDragging = false;
 let lastHoverTile = null;
+
+// Throttle pointermove hit-testing — only re-check when finger moves 6px+
+let _lastMoveX = 0;
+let _lastMoveY = 0;
+const MOVE_THRESHOLD = 6; // pixels
 
 // O(1) lookup instead of O(n) find
 function getTileFromEventTarget(target) {
@@ -30,6 +33,11 @@ function getTileFromEventTarget(target) {
   const g = target.closest?.('.tile');
   if (!g) return null;
   return tileElementMap.get(g) || null;
+}
+
+function getTileAtPoint(x, y) {
+  const el = document.elementFromPoint(x, y);
+  return getTileFromEventTarget(el);
 }
 
 // ============================================================================
@@ -44,54 +52,24 @@ function updateWordPreview() {
 
   if (wordPreviewElement) wordPreviewElement.textContent = upper;
 
-  // Clear shimmer from ALL tiles before applying new ones
-  document.querySelectorAll('.valid-shimmer').forEach(el => {
-    el.classList.remove('valid-shimmer');
-    el.style.removeProperty('--shimmer-delay');
-  });
-
   if (!word) {
     if (wordPreviewElement) wordPreviewElement.classList.remove('valid-word');
     return;
   }
 
   const isValid = upper.length >= 4 && isValidWord(upper);
-
-  if (isValid) {
-    if (wordPreviewElement) wordPreviewElement.classList.add('valid-word');
-    selectedTiles.forEach((tile, idx) => {
-      const poly = tile.element.querySelector('polygon');
-      if (poly) {
-        poly.classList.add('valid-shimmer');
-        poly.style.setProperty('--shimmer-delay', `${idx * 0.18}s`);
-      }
-    });
-  } else {
-    if (wordPreviewElement) wordPreviewElement.classList.remove('valid-word');
-  }
+  if (wordPreviewElement) wordPreviewElement.classList.toggle('valid-word', isValid);
 }
 
 // Clear word builder state
 export function clearCurrentSelection() {
   const selectedTiles = gameState.selectedTiles || [];
   selectedTiles.forEach(tile => {
-    if (tile?.element) {
-      tile.setSelected(false);
-      const poly = tile.element.querySelector('polygon');
-      if (poly) {
-        poly.classList.remove('valid-shimmer');
-        poly.style.removeProperty('--shimmer-delay');
-      }
-    }
+    if (tile?.element) tile.setSelected(false);
   });
 
   gameState.selectedTiles = [];
   updateWordPreview();
-
-  document.querySelectorAll('polygon.valid-shimmer').forEach(poly => {
-    poly.classList.remove('valid-shimmer');
-    poly.style.removeProperty('--shimmer-delay');
-  });
 }
 
 // ============================================================================
@@ -117,10 +95,7 @@ function handleSwipeTileStep(tile) {
     updateWordPreview();
 
     const index = Math.min(selectedTiles.length, 25);
-    if (index > 0) {
-      playSound(`sfxSwipe${index}`); // ← immediate, no requestAnimationFrame
-    }
-
+    if (index > 0) playSound(`sfxSwipe${index}`);
     return;
   }
 
@@ -131,19 +106,19 @@ function handleSwipeTileStep(tile) {
     updateWordPreview();
 
     const index = Math.min(selectedTiles.length, 25);
-    if (index > 0) {
-      playSound(`sfxSwipe${index}`); // ← immediate, no requestAnimationFrame
-    }
+    if (index > 0) playSound(`sfxSwipe${index}`);
   }
 }
 
 function handlePointerDown(e) {
   e.preventDefault();
-  const tile = getTileFromEventTarget(e.target);
+  const tile = getTileAtPoint(e.clientX, e.clientY);
   if (!tile) return;
 
   isDragging = true;
   lastHoverTile = tile;
+  _lastMoveX = e.clientX;
+  _lastMoveY = e.clientY;
 
   clearCurrentSelection();
   handleSwipeTileStep(tile);
@@ -151,10 +126,17 @@ function handlePointerDown(e) {
 
 function handlePointerMove(e) {
   if (!isDragging) return;
+  e.preventDefault();
 
-  const hitElement = document.elementFromPoint(e.clientX, e.clientY);
-  const tile = getTileFromEventTarget(hitElement);
+  // Only hit-test if finger has moved enough — avoids redundant elementFromPoint calls
+  const dx = e.clientX - _lastMoveX;
+  const dy = e.clientY - _lastMoveY;
+  if (dx * dx + dy * dy < MOVE_THRESHOLD * MOVE_THRESHOLD) return;
 
+  _lastMoveX = e.clientX;
+  _lastMoveY = e.clientY;
+
+  const tile = getTileAtPoint(e.clientX, e.clientY);
   if (tile && tile !== lastHoverTile) {
     handleSwipeTileStep(tile);
     lastHoverTile = tile;
@@ -173,7 +155,7 @@ function handlePointerUp(e) {
 
 export function initializeGrid() {
   gameState.totalScore = 0;
-  gameState.gridReady = false;        // ← reset on each new game
+  gameState.gridReady = false;
 
   gameState.boardSolverReady = new Promise((resolve) => {
     gameState._resolveBoardSolver = resolve;
@@ -208,9 +190,8 @@ export function initializeGrid() {
     clearButton.dataset.listener = 'true';
   }
 
-  // Signal that the grid is ready — dispatched after renderGrid completes
   requestAnimationFrame(() => {
     gameState.gridReady = true;
-    window.dispatchEvent(new Event('grid:ready'));   // ← ADD THIS
+    window.dispatchEvent(new Event('grid:ready'));
   });
 }
