@@ -173,14 +173,14 @@ export function promptPlayerName() {
 
 /* ── Score submission ──────────────────────────────────────────── */
 
-export async function submitScore(dailyId, score, words, hintsUsed) {
+export async function submitScore(dailyId, score, words, hintsUsed, mode = 'daily') {
   const playerName = getPlayerName();
   if (!playerName) return;
   try {
     await fetch('/api/scores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dailyId, playerName, score, words, hintsUsed }),
+      body: JSON.stringify({ dailyId, playerName, score, words, hintsUsed, mode }),
     });
   } catch (err) {
     // Silently fail — offline or server error should not affect gameplay
@@ -190,9 +190,11 @@ export async function submitScore(dailyId, score, words, hintsUsed) {
 
 /* ── Leaderboard fetch ─────────────────────────────────────────── */
 
-export async function fetchLeaderboard(dailyId) {
+export async function fetchLeaderboard(dailyId, mode = 'daily') {
   try {
-    const url = dailyId ? `/api/leaderboard?dailyId=${encodeURIComponent(dailyId)}` : '/api/leaderboard';
+    const url = dailyId
+      ? `/api/leaderboard?dailyId=${encodeURIComponent(dailyId)}&mode=${encodeURIComponent(mode)}`
+      : `/api/leaderboard?mode=${encodeURIComponent(mode)}`;
     const res = await fetch(url);
     if (!res.ok) return { configured: true, entries: [] };
     const data = await res.json();
