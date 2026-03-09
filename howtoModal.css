@@ -1,5 +1,5 @@
 /* ================================
-   HOW TO MODAL — COMPLETE CSS
+   HOW TO MODAL — GAME THEME CSS
    ================================ */
 
 /* --- 1. Modal base layout and visibility --- */
@@ -16,11 +16,11 @@
   display: none;
 }
 
-/* FIX: was targeting .rom__backdrop globally — scoped to #howto-modal only */
+/* FIX: scoped to #howto-modal only */
 #howto-modal .rom__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.55);
   z-index: 10;
 }
 
@@ -28,91 +28,177 @@
 #howto-modal .rom__dialog {
   position: relative;
   z-index: 20;
-  max-width: 640px;
-  max-height: 80vh;
+  background: #0f1520;
+  color: #e0eaf8;
+  border: 1.5px solid rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 60px rgba(245, 158, 11, 0.12), 0 20px 60px rgba(0, 0, 0, 0.7);
+  font-family: 'Rajdhani', sans-serif;
+  border-radius: 18px;
+  width: min(600px, 94vw);
+  max-height: min(85vh, 680px);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-  background: #fff;
-  color: #111;
-  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
 /* --- 2. Modal title --- */
 #howto-title {
-  font-family: 'Coiny', cursive;
-  font-size: 28px;
+  font-family: 'Limelight', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  color: #f59e0b;
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  background: transparent;
+  border-bottom: 2px solid rgba(245, 158, 11, 0.25);
+  padding: 20px 24px 16px;
   margin: 0;
-  padding: 16px 18px;
-  background: linear-gradient(
-    90deg,
-    rgba(255,226,130,0.55),
-    rgba(255,167,167,0.55) 40%,
-    rgba(167,208,255,0.55)
-  );
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* --- 3. Page visibility + content --- */
+/* --- 3. Page wrapper --- */
+#howto-pagewrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: #f59e0b #0f1520;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* --- 4. Page visibility + content --- */
 .howto-page {
   display: block;
 }
 .howto-page[hidden] {
   display: none !important;
 }
+
 .howto-page h3 {
-  font-family: 'Coiny', cursive;
+  font-family: 'Turret Road', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: #f59e0b;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
 }
+
+.howto-page p {
+  color: #bcd2ea;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+
 .howto-page ul {
-  margin: 0 0 8px 0;
-  padding-left: 1.2rem;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
+
 .howto-page li {
   position: relative;
-  padding-left: 1rem;
-  margin: 6px 0;
+  padding: 7px 0 7px 18px;
+  color: #bcd2ea;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
+
+.howto-page li:last-child {
+  border-bottom: none;
+}
+
 .howto-page li::before {
-  content: "●";
+  content: "▸";
   position: absolute;
   left: 0;
-  top: 0.15rem;
-  font-size: 0.8rem;
-  opacity: 0.6;
+  color: #f59e0b;
+  font-size: 0.85rem;
 }
 
-/* --- 4. Footer controls --- */
+.howto-page li strong {
+  color: #4cc9f0;
+  font-weight: 700;
+}
+
+/* --- 5. Footer controls --- */
 .howto-controls {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.2);
   gap: 8px;
-  padding: 12px;
-  border-top: 1px dashed rgba(0,0,0,0.08);
-  background: rgba(255,255,255,0.85);
-}
-.howto-controls button {
-  border: none;
-  background: #ffd64d;
-  border-radius: 10px;
-  padding: 6px 12px;
-  font-family: 'Coiny', cursive;
-  cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-.howto-controls button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-}
-.howto-controls button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  flex: 0 0 auto;
 }
 
+.howto-controls button {
+  padding: 9px 18px;
+  background: #1a1a2e;
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  border-radius: 7px;
+  color: #f59e0b;
+  font-family: 'Turret Road', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.howto-controls button:hover {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: #f59e0b;
+  color: #fff;
+}
+
+.howto-controls button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Close button override — more prominent */
+#howto-close {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+/* --- 6. Dots --- */
 #howto-dots {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   margin: 0 10px;
+}
+
+#howto-dots .howto-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.5) !important;
+  transition: background 0.15s, border-color 0.15s !important;
+}
+
+/* --- 7. Mobile --- */
+@media (max-width: 768px) {
+  #howto-modal .rom__dialog {
+    width: 96vw;
+    max-height: 90vh;
+    border-radius: 14px;
+  }
+  #howto-title { font-size: 1.3rem; padding: 16px 18px 12px; }
+  #howto-pagewrap { padding: 12px 16px; }
+  .howto-controls { padding: 10px 14px; }
+  .howto-controls button { font-size: 0.7rem; padding: 8px 14px; }
 }

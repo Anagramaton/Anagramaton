@@ -22,13 +22,7 @@
   .side-toggle { z-index: 900; }
 }
 
-/* ── Settings menu — drop DOWN on mobile, never clips right ──── */
-@media (max-width: 900px) {
-  #settings-wrap {
-    top: 8px;
-    right: 8px;
-    left: auto;
-  }
+/* ── Settings menu — handled in style.css @media (max-width: 900px) ──── */
   #settings-btn {
     font-size: 1.2rem;
     padding: 6px 10px;
