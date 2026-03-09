@@ -600,3 +600,81 @@ body.rom-open { overflow: hidden; }
   .rom__duel-vs { display: none; }
   .rom__summary-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ============================================================
+   STANDALONE LEADERBOARD MODAL
+   ============================================================ */
+
+#lb-scores-modal {
+  z-index: 10000; /* one step above round-over modal (9999) */
+}
+
+body.lb-modal-open { overflow: hidden; }
+
+#lb-scores-modal .rom__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+  z-index: 0;
+  pointer-events: auto;
+}
+
+#lb-scores-modal .rom__dialog {
+  position: relative;
+  z-index: 2;
+  background: var(--rom-panel);
+  color: var(--rom-ink);
+  border-radius: 28px;
+  width: min(520px, 96vw);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 0 0 28px;
+  border: 1px solid rgba(255,255,255,0.09);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 32px 80px rgba(0,0,0,0.85),
+    0 0 60px rgba(245,158,11,0.12);
+  animation: rom-enter 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#lb-scores-modal .rom__dialog::-webkit-scrollbar { width: 3px; }
+#lb-scores-modal .rom__dialog::-webkit-scrollbar-track { background: transparent; }
+#lb-scores-modal .rom__dialog::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 99px;
+}
+
+/* ── Header: title + tab strip ───────────────────────────── */
+.lb-modal__header {
+  padding: 32px 24px 16px;
+  border-bottom: 1px solid var(--rom-border);
+}
+
+.lb-modal__title {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--rom-you);
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+/* ── Panel list area ─────────────────────────────────────── */
+.lb-modal__panels {
+  padding: 16px 20px;
+  min-height: 120px;
+}
+
+.lb-modal__note {
+  color: var(--rom-muted);
+  font-family: 'Turret Road', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 20px 0;
+}

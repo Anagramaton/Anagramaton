@@ -394,6 +394,13 @@ async function handleSubmitList() {
 
   const phraseBonus = bothPhrasesFound ? (baseTotal * getHintMultiplier()) : 0;
 
+  // Close both panels so the round-over modal has a clean backdrop
+  const leftPanelEl  = document.getElementById('left-panel');
+  const rightPanelEl = document.getElementById('right-panel');
+  leftPanelEl?.classList.remove('open');
+  rightPanelEl?.classList.remove('open');
+  document.body.classList.remove('left-open', 'right-open', 'panel-open');
+
   requestAnimationFrame(() => {
     const boardTop10      = Array.isArray(gameState.boardTop10) ? gameState.boardTop10 : [];
     const boardTop10Total = Number(gameState.boardTop10Total) || 0;
@@ -562,6 +569,15 @@ window.addEventListener('grid:ready', () => {
       settingsWrap.classList.remove('menu-open');
     }
   });
+
+  const lbBtn = document.getElementById('lb-open-btn');
+  if (lbBtn) {
+    lbBtn.addEventListener('click', () => {
+      settingsMenu.hidden = true;
+      settingsWrap.classList.remove('menu-open');
+      window.lbModal?.open();
+    });
+  }
 
   // ============================
   // SET NAME BUTTON
