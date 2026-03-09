@@ -9,16 +9,16 @@ import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } 
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName } from './leaderboard.js';
-import { unlockAndPreload, playSound } from './audioEngine.js'; // ← ADD THIS
+import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
 
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
 // ============================================================
-let audioUnlocked = false;
-window.addEventListener('pointerdown', async () => {
+window.addEventListener('pointerdown', () => {
   if (audioUnlocked) return;
   audioUnlocked = true;
-  await unlockAndPreload();
+  unlockAudioContext();        // ← synchronous, runs inside gesture while iOS allows it
+  preloadBuffers();            // ← async, runs after — context already unlocked by now
 }, { once: true });
 
 // ============================================================
