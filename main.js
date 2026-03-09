@@ -14,11 +14,11 @@ import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js'
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
 // ============================================================
-window.addEventListener('pointerdown', () => {
+let audioUnlocked = false;
+window.addEventListener('pointerdown', async () => {
   if (audioUnlocked) return;
   audioUnlocked = true;
-  unlockAudioContext();        // ← synchronous, runs inside gesture while iOS allows it
-  preloadBuffers();            // ← async, runs after — context already unlocked by now
+  await unlockAndPreload();
 }, { once: true });
 
 // ============================================================

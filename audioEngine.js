@@ -1,9 +1,11 @@
 // audioEngine.js — Web Audio API pre-decoded buffer playback
+// Drop-in replacement for the <audio> tag swipe sounds
 
 let _ctx = null;
 const _buffers = new Map();
 const _audioFiles = {};
 
+// Register all your swipe sounds + other SFX here
 for (let i = 1; i <= 25; i++) {
   _audioFiles[`sfxSwipe${i}`] = `./audio/ascend1${String.fromCharCode(64 + i)}.mp3`;
 }
@@ -14,36 +16,21 @@ _audioFiles['sfxUnlock']  = './audio/zapsplat_musical_piano_insides_strings_stru
 
 function getCtx() {
   if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
-  window._debugAudioCtx = _ctx;
+  window._debugAudioCtx = _ctx; // ← expose for debug logging
   return _ctx;
 }
 
-/**
- * STEP 1 — call this SYNCHRONOUSLY inside a user gesture handler.
- * Creates and resumes the AudioContext while iOS still considers
- * the gesture active. Must NOT be awaited before calling.
- */
-export function unlockAudioContext() {
+/** Call once on first user gesture to unlock + preload all buffers */
+export async function unlockAndPreload() {
   const ctx = getCtx();
-  if (ctx.state === 'suspended') {
-    // resume() must be called synchronously inside the gesture
-    ctx.resume().then(() => {
-      console.log(`🔊 [audio] context resumed — state: ${ctx.state}`);
-    }).catch(e => {
-      console.warn(`🔊 [audio] resume failed:`, e);
-    });
-  } else {
-    console.log(`🔊 [audio] context already active — state: ${ctx.state}`);
-  }
-}
+  console.log(`🔊 [audio] unlockAndPreload called — context state: ${ctx.state}`);
 
-/**
- * STEP 2 — call this after unlockAudioContext() to decode all buffers.
- * Safe to await since the context is already unlocked by this point.
- */
-export async function preloadBuffers() {
-  const ctx = getCtx();
-  console.log(`🔊 [audio] preloadBuffers called — ctx.state: ${ctx.state}`);
+  if (ctx.state === 'suspended') {
+    await ctx.resume();
+    console.log(`🔊 [audio] context resumed — new state: ${ctx.state}`);
+  } else {
+    console.log(`🔊 [audio] context was not suspended — state: ${ctx.state}`);
+  }
 
   const loads = Object.entries(_audioFiles).map(async ([id, url]) => {
     const t0 = performance.now();
@@ -54,7 +41,7 @@ export async function preloadBuffers() {
       _buffers.set(id, audioBuf);
       console.log(`🔊 [audio] ✅ loaded ${id} in ${Math.round(performance.now() - t0)}ms`);
     } catch (e) {
-      console.warn(`🔊 [audio] ❌ failed to load ${id}:`, e);
+      console.warn(`🔊 [audio] ❌ Failed to load ${id} in ${Math.round(performance.now() - t0)}ms:`, e);
     }
   });
 
@@ -62,14 +49,11 @@ export async function preloadBuffers() {
   console.log(`🔊 [audio] all files loaded — ${_buffers.size} buffers ready`);
 }
 
-/** Keep this export so existing calls to unlockAndPreload() don't break */
-export async function unlockAndPreload() {
-  unlockAudioContext();       // sync — resumes context inside gesture
-  await preloadBuffers();     // async — decodes files after context is active
-}
-
+/** Play a pre-decoded buffer — near-zero latency */
 export function playSound(id) {
   const ctx = getCtx();
+
+  // DEBUG — log every play attempt
   console.log(`🔊 [audio] playSound("${id}") — ctx.state: ${ctx.state} — buffer loaded: ${_buffers.has(id)}`);
 
   const buf = _buffers.get(id);
@@ -80,7 +64,7 @@ export function playSound(id) {
       try { el.currentTime = 0; el.play().catch(err => console.warn(`🔊 [audio] <audio> fallback failed:`, err)); }
       catch(e) { console.warn(`🔊 [audio] <audio> fallback error:`, e); }
     } else {
-      console.warn(`🔊 [audio] ⚠️ no <audio> element found for "${id}"`);
+      console.warn(`🔊 [audio] ⚠️ no <audio> element found for id "${id}"`);
     }
     return;
   }
@@ -91,6 +75,6 @@ export function playSound(id) {
     src.connect(ctx.destination);
     src.start(0);
   } catch (e) {
-    console.warn(`🔊 [audio] ❌ playback failed for "${id}":`, e);
+    console.warn(`🔊 [audio] ❌ createBufferSource/start failed for "${id}":`, e);
   }
 }
