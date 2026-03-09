@@ -1557,3 +1557,9 @@ body[data-theme="dark"] #clear-word {
   margin-bottom: 15px;
   text-align: center;
 }
+
+/* Settings wrap must sit below any open modal */
+body.rom-open #settings-wrap,
+body.lb-modal-open #settings-wrap {
+  z-index: 100;
+}
