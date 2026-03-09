@@ -185,7 +185,7 @@
   width: 8px !important;
   height: 8px !important;
   border-radius: 50% !important;
-  background: transparent !important;
+  background: transparent;
   border: 1.5px solid rgba(245, 158, 11, 0.5) !important;
   transition: background 0.15s, border-color 0.15s !important;
 }

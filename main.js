@@ -95,19 +95,6 @@ function setupThemeControls() {
       window.location.href = `?mode=${next}`;
     });
   }
-
-  if (gameState.mode === 'daily') {
-    const resetDailyBtn = document.getElementById('reset-daily-btn');
-    if (resetDailyBtn) {
-      resetDailyBtn.hidden = false;
-      resetDailyBtn.addEventListener('click', () => {
-        if (gameState.dailyId) {
-          localStorage.removeItem(`anagramaton_daily_${gameState.dailyId}`);
-          window.location.href = '?mode=daily';
-        }
-      });
-    }
-  }
 }
 
 function preferOsDarkOnFirstVisit() {
@@ -193,17 +180,16 @@ function getPhraseRawText(phraseKey) {
   return (parts[idx] || '').trim();
 }
 
-/** Applies the persistent border colour + one-shot celebration animation to found phrase tiles.
+/** Applies the persistent orange text colour + one-shot celebration animation to found phrase tiles.
  *  Returns a Promise that resolves when the last tile's animation ends (or immediately if no tiles). */
 function applyPhraseTileStyle(phraseKey, tiles) {
-  const classNum = phraseKey === 'phrase1' ? '1' : '2';
   return new Promise(resolve => {
     if (tiles.length === 0) { resolve(); return; }
     const lastIdx = tiles.length - 1;
     tiles.forEach((tile, idx) => {
-      if (tile.element) tile.element.classList.add(`phrase-found-${classNum}`);
-      const poly = tile.element?.querySelector('polygon');
-      if (poly) poly.classList.add(`phrase-tile-${classNum}`);
+      // Colour the letter and point value text orange
+      tile.textLetter?.classList.add('phrase-text');
+      tile.textPoint?.classList.add('phrase-text');
       if (tile.element) {
         tile.element.style.setProperty('--celebrate-delay', `${idx * 0.06}s`);
         tile.element.classList.add('phrase-celebrate');

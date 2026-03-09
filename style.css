@@ -1122,7 +1122,7 @@ body[data-theme="dark"] .tile-point {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: calc(50% + 290px);
+    top: min(calc(50% + 290px), calc(100dvh - 112px));
     z-index: 800;
     display: block;
     text-align: center;
@@ -1139,31 +1139,11 @@ body[data-theme="dark"] .tile-point {
    Phrase found tile styling + celebration animation
    ═══════════════════════════════════════════════════════════ */
 
-/* Found phrase tile border — both phrase-1 and phrase-2 use orange */
-polygon.phrase-tile-1,
-polygon.phrase-tile-2 {
-  stroke: #f59e0b !important;
-  stroke-width: 3px !important;
-}
-
-/* Persistent ring colour for phrase 1 tiles (amber/gold) */
-.tile:has(.hex-tile.phrase-tile-1) path:first-child {
-  fill: rgba(245, 158, 11, 0.25);
-  stroke: #f59e0b;
-  stroke-width: 3px;
-}
-
-/* Persistent ring colour for phrase 2 tiles — also orange to match spec */
-.tile:has(.hex-tile.phrase-tile-2) path:first-child {
-  fill: rgba(245, 158, 11, 0.18);
-  stroke: #f59e0b;
-  stroke-width: 3px;
-}
-
-/* Phrase found: add an outer orange glow/ring WITHOUT overriding fill/reuse colours */
-.tile.phrase-found-1,
-.tile.phrase-found-2 {
-  filter: drop-shadow(0 0 4px #f59e0b) drop-shadow(0 0 1px #f59e0b);
+/* Found phrase tile: colour the letter and point value text orange */
+.tile-letter.phrase-text,
+.tile-point.phrase-text {
+  fill: #f59e0b !important;
+  font-weight: 800;
 }
 
 /* One-shot celebration burst — applied to the <g class="tile"> element */
@@ -1372,7 +1352,7 @@ polygon.phrase-tile-2 {
   #submit-word,
   #clear-word {
     position: fixed;
-    top: calc(50% + 345px);
+    top: min(calc(50% + 345px), calc(100dvh - 56px));
     z-index: 900;
     transform: none;
 
