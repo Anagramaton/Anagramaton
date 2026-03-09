@@ -391,6 +391,7 @@ async function handleSubmitList() {
         boardTop10,
         boardTop10Total,
         dailyId:        gameState.mode === 'daily' ? (gameState.dailyId || null) : null,
+        mode:           gameState.mode,
         phrasesFound:   { ...gameState.phrasesFound },
         bothPhrasesFound,
         phraseBonus,
@@ -421,6 +422,21 @@ async function handleSubmitList() {
       }
       if (playerName) {
         await submitScore(gameState.dailyId, finalScore, words, gameState.hintsUsed || 0);
+      }
+    })();
+  }
+
+  if (gameState.mode === 'unlimited') {
+    (async () => {
+      let playerName = getPlayerName();
+      if (!playerName) {
+        await promptPlayerName();
+        playerName = getPlayerName();
+        const nameBtn = document.getElementById('set-name-btn');
+        if (nameBtn) nameBtn.textContent = playerName ? `👤 ${playerName.toUpperCase()}` : '👤 SET NAME';
+      }
+      if (playerName) {
+        await submitScore('unlimited', finalScore, words, 0, 'unlimited');
       }
     })();
   }

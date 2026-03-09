@@ -21,10 +21,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const dailyId = req.query?.dailyId || getTodayId();
+  const mode = req.query?.mode === 'unlimited' ? 'unlimited' : 'daily';
+  const dailyId = mode === 'unlimited' ? 'unlimited' : (req.query?.dailyId || getTodayId());
 
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
-    return res.status(200).json({ configured: false, dailyId, leaderboard: [] });
+    return res.status(200).json({ configured: false, mode, dailyId, leaderboard: [] });
   }
 
   const supabase = createClient(
@@ -44,5 +45,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to fetch leaderboard' });
   }
 
-  return res.status(200).json({ dailyId, leaderboard: data || [] });
+  return res.status(200).json({ mode, dailyId, leaderboard: data || [] });
 }

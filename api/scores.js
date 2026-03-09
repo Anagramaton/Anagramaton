@@ -21,16 +21,20 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { dailyId, playerName, score, words, hintsUsed } = req.body || {};
+  const { dailyId, playerName, score, words, hintsUsed, mode = 'daily' } = req.body || {};
 
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
     return res.status(503).json({ configured: false, error: 'Leaderboard not configured' });
   }
 
-  // Validate dailyId matches today
-  const todayId = getTodayId();
-  if (!dailyId || dailyId !== todayId) {
-    return res.status(400).json({ error: 'Invalid or expired dailyId' });
+  if (mode === 'unlimited') {
+    // No date validation for unlimited mode; use fixed partition key
+  } else {
+    // Validate dailyId matches today
+    const todayId = getTodayId();
+    if (!dailyId || dailyId !== todayId) {
+      return res.status(400).json({ error: 'Invalid or expired dailyId' });
+    }
   }
 
   // Validate playerName
@@ -56,15 +60,18 @@ export default async function handler(req, res) {
     process.env.SUPABASE_SERVICE_KEY
   );
 
+  const partitionId = mode === 'unlimited' ? 'unlimited' : dailyId;
+
   const { error } = await supabase
     .from('scores')
     .upsert(
       {
-        daily_id:    dailyId,
+        daily_id:    partitionId,
         player_name: playerName.trim(),
         score:       Math.round(score),
         words:       words.map(String),
         hints_used:  Number(hintsUsed) || 0,
+        mode:        mode === 'unlimited' ? 'unlimited' : 'daily',
       },
       { onConflict: 'daily_id,player_name', ignoreDuplicates: false }
     );
