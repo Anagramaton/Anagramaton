@@ -9,18 +9,14 @@ import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } 
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName } from './leaderboard.js';
-import { unlockAndPreload, playSound } from './audioEngine.js'; // ← ADD THIS
+import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+
 
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
 // ============================================================
 let audioUnlocked = false;
-window.addEventListener('pointerdown', async () => {
-  if (audioUnlocked) return;
-  audioUnlocked = true;
-  await unlockAndPreload();
-}, { once: true });
-
+let audioReadyPromise = Promise.resolve();
 // ============================================================
 
 function applySavedTheme() {
@@ -435,7 +431,7 @@ async function handleSubmitList() {
 // =============================
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ============================
+  // ============================
   // ★ SPLASH SCREEN
   // ============================
   const splashScreen   = document.getElementById('splash-screen');
@@ -459,29 +455,33 @@ document.addEventListener('DOMContentLoaded', () => {
       splashPlayBtn.setAttribute('disabled', 'disabled');
     }
 
-    window.addEventListener('grid:ready', () => {
-      splashPlayBtn.textContent = 'PLAY';
-      splashPlayBtn.removeAttribute('disabled');
-      if (playerClickedPlay) {
-        (async () => {
-          if (!audioUnlocked) {
-            audioUnlocked = true;
-            await unlockAndPreload();
-          }
-          playSound('sfxUnlock');
-          splashScreen.classList.add('hidden');
-          openHowtoIfFirstVisit(300);
-        })();
-      }
-    }, { once: true });
+window.addEventListener('grid:ready', () => {
+  splashPlayBtn.textContent = 'PLAY';
+  splashPlayBtn.removeAttribute('disabled');
+  if (playerClickedPlay) {
+    // Wait for buffers, but cap at 1.5s so slow connections never block the transition
+    const bufferTimeout = new Promise(resolve => setTimeout(resolve, 1500));
+    Promise.race([audioReadyPromise, bufferTimeout]).then(() => {
+      playSound('sfxUnlock');
+      splashScreen.classList.add('hidden');
+      openHowtoIfFirstVisit(300);
+    });
+  }
+}, { once: true });
 
-    splashPlayBtn.addEventListener('click', async () => {
+    splashPlayBtn.addEventListener('click', () => {
       playerClickedPlay = true;
-      if (!gameState.gridReady) return;
+
+
       if (!audioUnlocked) {
         audioUnlocked = true;
-        await unlockAndPreload();
+        unlockAudioContext(); 
+        audioReadyPromise = preloadBuffers();    
       }
+
+
+      if (!gameState.gridReady) return;
+
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
       openHowtoIfFirstVisit(300);
@@ -489,12 +489,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // HOW TO PLAY button on splash screen
-  splashHowtoBtn?.addEventListener('click', async () => {
+  splashHowtoBtn?.addEventListener('click', () => {
     splashScreen?.classList.add('hidden');
+
+    // Same pattern — unlock synchronously inside the tap gesture
     if (!audioUnlocked) {
       audioUnlocked = true;
-      await unlockAndPreload();
+      unlockAudioContext(); // synchronous — still inside the tap
+      audioReadyPromise = preloadBuffers();    // background — fire and forget
     }
+
     playSound('sfxUnlock');
     openHowtoIfFirstVisit(100);
     if (!isFirstVisit) setTimeout(() => window.howto?.open(), 100);
