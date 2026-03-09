@@ -7,7 +7,7 @@ import { gameState } from './gameState.js';
   let focusHandler = null;
 
   const cache = {}; // { daily: { data, timestamp }, unlimited: { data, timestamp } }
-  const CACHE_TTL = 60_000; // 60 seconds
+  const CACHE_TTL = 60_000; // 60 seconds — short enough to pick up new scores without hammering the API
 
   /* ── Build & inject modal on first open ──────────────────── */
   function buildModal() {
@@ -92,7 +92,7 @@ import { gameState } from './gameState.js';
     if (tabName === 'daily') {
       result = await fetchLeaderboard(gameState.dailyId, 'daily');
     } else {
-      result = await fetchLeaderboard(null, 'unlimited');
+      result = await fetchLeaderboard('unlimited', 'unlimited');
     }
 
     cache[tabName] = { data: result, timestamp: Date.now() };
