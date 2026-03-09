@@ -43,7 +43,7 @@
     <h1 id="splash-title">ANAGRAMATON</h1>
     <p id="splash-tagline">BUILD WORDS. CHAIN TILES. BEAT THE BOARD.</p>
     <button id="splash-play-btn" type="button" autofocus>PLAY</button>
-    <button id="splash-howto-btn" type="button">HOW TO PLAY</button>
+    <button id="splash-name-btn" type="button">👤 SET YOUR NAME</button>
   </div>
 </div>
   <!-- Settings under the title -->
@@ -52,10 +52,10 @@
     <button id="settings-btn" aria-haspopup="true">⚙️</button>
 
     <div id="settings-menu" hidden>
-      <button id="toggle-theme">🌙</button>
-      <button id="toggle-access">🌓</button>
+      <button id="toggle-theme">🌙 THEME</button>
+      <button id="toggle-access">🌓 CONTRAST</button>
     
-      <button id="howto-open">🎮</button>
+      <button id="howto-open">🎮 HOW TO PLAY</button>
       <button id="toggle-mode">📅 DAILY</button>
       <button id="set-name-btn">👤 SET NAME</button>
       <button id="reset-daily-btn" hidden>🔄 RESET DAILY</button>
@@ -203,20 +203,20 @@
   <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
     <div class="rom__backdrop"></div>
 
-    <div class="rom__dialog" style="max-width: 640px;">
+    <div class="rom__dialog">
       <h2 id="howto-title">How to Play</h2>
 
       <!-- Pages -->
-      <div id="howto-pagewrap" style="min-height:220px; margin:10px 0 16px;">
+      <div id="howto-pagewrap">
         <!-- PAGE 1 — OBJECTIVE -->
         <section class="howto-page" data-page="0">
-          <h3>PAGE 1 — OBJECTIVE</h3>
+          <h3>🎯 PAGE 1 — OBJECTIVE</h3>
         </p>PLAYERS MUST FIND AND SUBMIT A LIST OF 10 VALID WORDS THAT ACHIEVES THE HIGHEST CUMULATIVE SCORE OF THOSE 10 WORDS. WORDS ARE FORMED BY CHAINING 4+ TILES TOGETHER WITH EACH TILE CONNECTED TO AN ADJACENT NEIGHBOR TILE OF THE ONE THAT CAME BEFORE</p>
         </section>
 
         <!-- PAGE 2 — TILE VALUES -->
         <section class="howto-page" data-page="1" hidden>
-          <h3>PAGE 2 — TILE VALUES</h3>
+          <h3>🔢 PAGE 2 — TILE VALUES</h3>
           <p>EACH TILE STARTS WITH A STANDARD BASE POINT VALUE</p>
           <ul>
             <li><strong>1 point:</strong> A, E, I, O, U, L, N, R, S, T</li>
@@ -231,7 +231,7 @@
 
         <!-- PAGE 3 — TILE REUSE MULTIPLIER -->
         <section class="howto-page" data-page="2" hidden>
-          <h3>PAGE 3 — TILE REUSE MULTIPLIER</h3>
+          <h3>🔄 PAGE 3 — TILE REUSE MULTIPLIER</h3>
           <p>THIS BONUS APPLIES TO A TILES BASE POINT VALUE EACH TIME ITS BEEN REUSED</p>
           <ul>
             <li><strong>1st REUSE:</strong> TILES BASE VALUE IS DOUBLED (×2).</li>
@@ -243,7 +243,7 @@
 
         <!-- PAGE 4 — WORD LENGTH MULTIPLIER -->
         <section class="howto-page" data-page="3" hidden>
-          <h3>PAGE 4 — WORD LENGTH MULTIPLIER</h3>
+          <h3>📏 PAGE 4 — WORD LENGTH MULTIPLIER</h3>
           <p>WHEN THE LENGTH OF A WORD CONTAINS 5+ LETTERS</p>
           <ul>
             <li>5 LETTERS: ×3</li>
@@ -257,7 +257,7 @@
 
         <!-- PAGE 5 — PHRASE PANEL / ANAGRAM BONUS -->
         <section class="howto-page" data-page="4" hidden>
-          <h3>PAGE 5 — PHRASE PANEL &amp; PHRASE BONUS</h3>
+          <h3>💬 PAGE 5 — PHRASE PANEL &amp; PHRASE BONUS</h3>
           <p>In <strong>DAILY MODE</strong> two secret anagram phrases are hidden in the grid.</p>
           <ul>
             <li><strong>FIND A PHRASE:</strong> Swipe all the letters of a phrase in order and press SUBMIT. No need to use the exact same tiles the board placed — just spell the letters in sequence.</li>
@@ -270,7 +270,7 @@
 
         <!-- PAGE 6 — STRATEGY TIPS -->
         <section class="howto-page" data-page="5" hidden>
-          <h3>PAGE 6 — STRATEGY TIPS</h3>
+          <h3>🧠 PAGE 6 — STRATEGY TIPS</h3>
           <ul>
             <li><strong>PRIORITIZE LONG WORDS:</strong> THE LENGTH MULTIPLIER GIVES A HEFTY BOOST TO WORDS OF 5 LETTERS OR MORE</li>
             <li><strong>LOOK FOR REUSE OPPORTUNITIES:</strong> TAKE ADVANTAGE OF REUSING AND MAXING OUT TILES TO REAP THE FULL REWARDS </li>
@@ -280,7 +280,7 @@
 
         <!-- PAGE 7 — EXAMPLE CALCULATION -->
         <section class="howto-page" data-page="6" hidden>
-          <h3>PAGE 7 — EXAMPLE CALCULATION</h3>
+          <h3>🧮 PAGE 7 — EXAMPLE CALCULATION</h3>
           <p>HERE IS AN EXAMPLE USING QUIZ:</p>
           <ul>
             <li><strong>BASE VALUE:</strong> (Q=10) + (U=1) + (I=1) + (Z=10) = 22 Pts</li>
@@ -301,7 +301,10 @@
       <!-- Controls -->
       <div class="howto-controls">
         <button id="howto-prev" type="button" aria-label="Previous page">Back</button>
-        <div id="howto-dots" class="howto-dots" aria-label="How to page navigation"></div>
+        <div class="howto-nav-center">
+          <span id="howto-page-label" class="howto-page-label">Page 1 of 7</span>
+          <div id="howto-dots" class="howto-dots" aria-label="How to page navigation"></div>
+        </div>
         <button id="howto-next" type="button" aria-label="Next page">Next</button>
         <button id="howto-close" type="button" aria-label="Close how to">Close</button>
       </div>

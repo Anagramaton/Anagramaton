@@ -885,12 +885,13 @@ details#merged-words-details > summary {
 .side-toggle {
   position: fixed;
   top: 95px;
-  padding: 0;
+  padding: 12px 0;
   border: 2.5px solid var(--side-toggle-border);
   background: var(--side-toggle-bg);
   color: var(--side-toggle-fg);
   cursor: pointer;
-  height: 130px;
+  height: auto;
+  min-height: 160px;
   width: 44px;
   z-index: 1200;
   display: flex;
@@ -913,12 +914,12 @@ details#merged-words-details > summary {
 
 .vword {
   writing-mode: vertical-rl;
-  text-orientation: upright;
+  text-orientation: mixed;
   display: inline-block;
   line-height: 1;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.12em;
   margin: 0;
-  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
   font-family: 'Limelight', sans-serif;
   font-weight: 400;
   text-transform: uppercase;
@@ -1142,11 +1143,17 @@ body[data-theme="dark"] .tile-point {
   stroke-width: 3px;
 }
 
-/* Persistent ring colour for phrase 2 tiles (cyan/teal) */
+/* Persistent ring colour for phrase 2 tiles (amber/orange — matches phrase 1) */
 .tile:has(.hex-tile.phrase-tile-2) path:first-child {
-  fill: rgba(6, 182, 212, 0.25);
-  stroke: #06b6d4;
+  fill: rgba(245, 158, 11, 0.25);
+  stroke: #f59e0b;
   stroke-width: 3px;
+}
+
+/* Orange glow ring for phrase tiles — overlaid on top of reuse multiplier colors */
+.tile:has(.hex-tile.phrase-tile-1),
+.tile:has(.hex-tile.phrase-tile-2) {
+  filter: drop-shadow(0 0 4px #f59e0b) drop-shadow(0 0 2px #f59e0b);
 }
 
 /* One-shot celebration burst — applied to the <g class="tile"> element */
@@ -1159,7 +1166,7 @@ body[data-theme="dark"] .tile-point {
   100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
 }
 .tile.phrase-celebrate {
-  animation: phrase-celebrate 1.4s ease-out var(--celebrate-delay, 0s) both;
+  animation: phrase-celebrate 1.4s ease-out var(--celebrate-delay, 0s) backwards;
 }
 
 /* Puff animation */
@@ -1286,9 +1293,10 @@ body[data-theme="dark"] .tile-point {
   background: var(--btn-bg);
   color: var(--btn-fg);
   border: 2px solid var(--btn-border);
-  border-radius: 0;
-  padding: 10px;
-  box-shadow: 4px 4px 0 #c8cfd8;
+  border-radius: 16px;
+  padding: 14px 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.22), 4px 4px 0 rgba(0,0,0,0.08);
+  min-width: 160px;
 }
 #settings-menu button {
   background: transparent;
@@ -1297,10 +1305,12 @@ body[data-theme="dark"] .tile-point {
   font-family: 'Share Tech Mono', monospace;
   font-size: 0.82rem;
   letter-spacing: 0.1em;
-  padding: 5px 10px;
-  border-radius: 0;
+  padding: 7px 14px;
+  border-radius: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
+  white-space: nowrap;
+  width: 100%;
   transition: background 0.12s, color 0.12s;
 }
 #settings-menu button:hover {
@@ -1318,11 +1328,14 @@ body[data-theme="dark"] .tile-point {
     left: calc(100% + 8px);
     flex-direction: row;
     gap: 8px;
+    border-radius: 12px;
+    min-width: unset;
   }
   #settings-menu > button {
     width: auto;
-    padding: 4px 6px;
+    padding: 4px 8px;
     white-space: nowrap;
+    border-radius: 6px;
   }
 }
 
@@ -1494,7 +1507,7 @@ body[data-theme="dark"] #clear-word {
 #splash-play-btn:active {
   transform: translateY(1px) scale(0.97);
 }
-#splash-howto-btn {
+#splash-name-btn {
   padding: 10px 36px;
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(0.75rem, 1.8vw, 1rem);
@@ -1509,7 +1522,7 @@ body[data-theme="dark"] #clear-word {
   clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-#splash-howto-btn:hover {
+#splash-name-btn:hover {
   background: rgba(76, 201, 240, 0.12);
   border-color: rgba(76, 201, 240, 0.85);
   color: #fff;

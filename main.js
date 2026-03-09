@@ -17,6 +17,9 @@ import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js'
 // ============================================================
 let audioUnlocked = false;
 let audioReadyPromise = Promise.resolve();
+
+// Duration (ms) to wait after phrase celebration animation before showing alert
+const PHRASE_CELEBRATION_DURATION = 1600;
 // ============================================================
 
 function applySavedTheme() {
@@ -192,6 +195,9 @@ async function handlePhraseFound(phraseKey, tiles) {
   applyPhraseTileStyle(phraseKey, tiles);
   playSound('sfxMagic');
   revealPhrase(phraseKey);
+
+  // Wait for the celebration animation to finish (1.4s + a small buffer)
+  await new Promise(resolve => setTimeout(resolve, PHRASE_CELEBRATION_DURATION));
 
   const phraseNum = phraseKey === 'phrase1' ? 1 : 2;
   const rawPhrase = getPhraseRawText(phraseKey);
@@ -452,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================
   const splashScreen   = document.getElementById('splash-screen');
   const splashPlayBtn  = document.getElementById('splash-play-btn');
-  const splashHowtoBtn = document.getElementById('splash-howto-btn');
+  const splashNameBtn  = document.getElementById('splash-name-btn');
 
   const VISITED_KEY = 'anagramaton_visited';
   const isFirstVisit = !localStorage.getItem(VISITED_KEY);
@@ -504,20 +510,22 @@ window.addEventListener('grid:ready', () => {
     }, { once: true });
   }
 
-  // HOW TO PLAY button on splash screen
-  splashHowtoBtn?.addEventListener('click', () => {
+  // SET YOUR NAME button on splash screen
+  splashNameBtn?.addEventListener('click', async () => {
     splashScreen?.classList.add('hidden');
 
-    // Same pattern — unlock synchronously inside the tap gesture
+    // Unlock audio inside the tap gesture
     if (!audioUnlocked) {
       audioUnlocked = true;
-      unlockAudioContext(); // synchronous — still inside the tap
-      audioReadyPromise = preloadBuffers();    // background — fire and forget
+      unlockAudioContext();
+      audioReadyPromise = preloadBuffers();
     }
 
     playSound('sfxUnlock');
-    openHowtoIfFirstVisit(100);
-    if (!isFirstVisit) setTimeout(() => window.howto?.open(), 100);
+    await promptPlayerName();
+    const saved = getPlayerName();
+    const setNameBtn = document.getElementById('set-name-btn');
+    if (setNameBtn) setNameBtn.textContent = saved ? `👤 ${saved.toUpperCase()}` : '👤 SET NAME';
   });
   // ============================
 

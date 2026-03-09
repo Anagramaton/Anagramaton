@@ -54,6 +54,8 @@
     if (prevBtn) prevBtn.disabled = page === 0;
     if (nextBtn) nextBtn.disabled = page === pages.length - 1;
     setDotStyles();
+    const pageLabel = document.getElementById('howto-page-label');
+    if (pageLabel) pageLabel.textContent = `Page ${page + 1} of ${pages.length}`;
   }
 
   function go(n) {
