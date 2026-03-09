@@ -34,12 +34,16 @@ function applySavedTheme() {
 
   if (themeBtn) {
     themeBtn.setAttribute('aria-pressed', String(theme === 'dark'));
-    themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    const themeIcon = themeBtn.querySelector('.setting-icon');
+    if (themeIcon) themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    else themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
     themeBtn.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
   }
   if (accessBtn) {
     accessBtn.setAttribute('aria-pressed', String(access === 'colorblind'));
-    accessBtn.textContent = access === 'colorblind' ? '🌓' : '🌒';
+    const accessIcon = accessBtn.querySelector('.setting-icon');
+    if (accessIcon) accessIcon.textContent = access === 'colorblind' ? '🌓' : '🌒';
+    else accessBtn.textContent = access === 'colorblind' ? '🌓' : '🌒';
     accessBtn.title = access === 'colorblind' ? 'Disable Colorblind Mode' : 'Enable Colorblind Mode';
   }
 
@@ -58,7 +62,8 @@ function setupThemeControls() {
       document.body.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       themeBtn.setAttribute('aria-pressed', String(next === 'dark'));
-      themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      const themeIcon = themeBtn.querySelector('.setting-icon');
+      if (themeIcon) themeIcon.textContent = next === 'dark' ? '☀️' : '🌙';
       themeBtn.title = next === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
     });
   }
@@ -70,30 +75,25 @@ function setupThemeControls() {
       document.body.setAttribute('data-accessibility', next);
       localStorage.setItem('accessibility', next);
       accessBtn.setAttribute('aria-pressed', String(next === 'colorblind'));
-      accessBtn.textContent = next === 'colorblind' ? '🌓' : '🌒';
+      const accessIcon = accessBtn.querySelector('.setting-icon');
+      if (accessIcon) accessIcon.textContent = next === 'colorblind' ? '🌓' : '🌒';
       accessBtn.title = next === 'colorblind' ? 'Disable Colorblind Mode' : 'Enable Colorblind Mode';
     });
   }
 
   if (modeBtn) {
-    modeBtn.textContent = gameState.mode === 'daily' ? '♾️ UNLIMITED' : '📅 DAILY';
+    const modeIcon = modeBtn.querySelector('.setting-icon');
+    const modeLabel = modeBtn.querySelector('.setting-label');
+    if (modeIcon && modeLabel) {
+      modeIcon.textContent = gameState.mode === 'daily' ? '♾️' : '📅';
+      modeLabel.textContent = gameState.mode === 'daily' ? 'UNLIMITED' : 'DAILY';
+    } else {
+      modeBtn.textContent = gameState.mode === 'daily' ? '♾️ UNLIMITED' : '📅 DAILY';
+    }
     modeBtn.addEventListener('click', () => {
       const next = gameState.mode === 'daily' ? 'unlimited' : 'daily';
       window.location.href = `?mode=${next}`;
     });
-  }
-
-  if (gameState.mode === 'daily') {
-    const resetDailyBtn = document.getElementById('reset-daily-btn');
-    if (resetDailyBtn) {
-      resetDailyBtn.hidden = false;
-      resetDailyBtn.addEventListener('click', () => {
-        if (gameState.dailyId) {
-          localStorage.removeItem(`anagramaton_daily_${gameState.dailyId}`);
-          window.location.href = '?mode=daily';
-        }
-      });
-    }
   }
 }
 
@@ -107,9 +107,21 @@ function preferOsDarkOnFirstVisit() {
     const themeBtn = document.getElementById('toggle-theme');
     if (themeBtn) {
       themeBtn.setAttribute('aria-pressed', 'true');
-      themeBtn.textContent = '☀️';
+      const themeIcon = themeBtn.querySelector('.setting-icon');
+      if (themeIcon) themeIcon.textContent = '☀️';
       themeBtn.title = 'Switch to Light Mode';
     }
+  }
+}
+
+/** Updates the set-name button to show the player name (or fallback label). */
+function updateNameBtnText(btn, name) {
+  if (!btn) return;
+  const label = btn.querySelector('.setting-label');
+  if (label) {
+    label.textContent = name ? name.toUpperCase() : 'SET NAME';
+  } else {
+    btn.textContent = name ? `👤 ${name.toUpperCase()}` : '👤 SET NAME';
   }
 }
 
@@ -168,20 +180,28 @@ function getPhraseRawText(phraseKey) {
   return (parts[idx] || '').trim();
 }
 
-/** Applies the persistent border colour + one-shot celebration animation to found phrase tiles. */
+/** Applies the persistent orange text colour + one-shot celebration animation to found phrase tiles.
+ *  Returns a Promise that resolves when the last tile's animation ends (or immediately if no tiles). */
 function applyPhraseTileStyle(phraseKey, tiles) {
-  const classNum = phraseKey === 'phrase1' ? '1' : '2';
-  tiles.forEach((tile, idx) => {
-    const poly = tile.element?.querySelector('polygon');
-    if (poly) poly.classList.add(`phrase-tile-${classNum}`);
-    if (tile.element) {
-      tile.element.style.setProperty('--celebrate-delay', `${idx * 0.06}s`);
-      tile.element.classList.add('phrase-celebrate');
-      tile.element.addEventListener('animationend', () => {
-        tile.element.classList.remove('phrase-celebrate');
-        tile.element.style.removeProperty('--celebrate-delay');
-      }, { once: true });
-    }
+  return new Promise(resolve => {
+    if (tiles.length === 0) { resolve(); return; }
+    const lastIdx = tiles.length - 1;
+    tiles.forEach((tile, idx) => {
+      // Colour the letter and point value text orange
+      tile.textLetter?.classList.add('phrase-text');
+      tile.textPoint?.classList.add('phrase-text');
+      if (tile.element) {
+        tile.element.style.setProperty('--celebrate-delay', `${idx * 0.06}s`);
+        tile.element.classList.add('phrase-celebrate');
+        tile.element.addEventListener('animationend', () => {
+          tile.element.classList.remove('phrase-celebrate');
+          tile.element.style.removeProperty('--celebrate-delay');
+          if (idx === lastIdx) resolve();
+        }, { once: true });
+      } else if (idx === lastIdx) {
+        resolve();
+      }
+    });
   });
 }
 
@@ -189,7 +209,7 @@ function applyPhraseTileStyle(phraseKey, tiles) {
 async function handlePhraseFound(phraseKey, tiles) {
   gameState.phrasesFound[phraseKey] = true;
 
-  applyPhraseTileStyle(phraseKey, tiles);
+  await applyPhraseTileStyle(phraseKey, tiles);
   playSound('sfxMagic');
   revealPhrase(phraseKey);
 
@@ -416,9 +436,7 @@ async function handleSubmitList() {
         playerName = getPlayerName();
         // Update set-name-btn text after name is set
         const nameBtn = document.getElementById('set-name-btn');
-        if (nameBtn) {
-          nameBtn.textContent = playerName ? `👤 ${playerName.toUpperCase()}` : '👤 SET NAME';
-        }
+        updateNameBtnText(nameBtn, playerName);
       }
       if (playerName) {
         await submitScore(gameState.dailyId, finalScore, words, gameState.hintsUsed || 0);
@@ -433,7 +451,7 @@ async function handleSubmitList() {
         await promptPlayerName();
         playerName = getPlayerName();
         const nameBtn = document.getElementById('set-name-btn');
-        if (nameBtn) nameBtn.textContent = playerName ? `👤 ${playerName.toUpperCase()}` : '👤 SET NAME';
+        updateNameBtnText(nameBtn, playerName);
       }
       if (playerName) {
         await submitScore('unlimited', finalScore, words, 0, 'unlimited');
@@ -452,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================
   const splashScreen   = document.getElementById('splash-screen');
   const splashPlayBtn  = document.getElementById('splash-play-btn');
-  const splashHowtoBtn = document.getElementById('splash-howto-btn');
+  const splashSignupBtn = document.getElementById('splash-signup-btn');
 
   const VISITED_KEY = 'anagramaton_visited';
   const isFirstVisit = !localStorage.getItem(VISITED_KEY);
@@ -504,20 +522,21 @@ window.addEventListener('grid:ready', () => {
     }, { once: true });
   }
 
-  // HOW TO PLAY button on splash screen
-  splashHowtoBtn?.addEventListener('click', () => {
-    splashScreen?.classList.add('hidden');
-
-    // Same pattern — unlock synchronously inside the tap gesture
+  // SIGN UP button on splash screen
+  splashSignupBtn?.addEventListener('click', async () => {
     if (!audioUnlocked) {
       audioUnlocked = true;
-      unlockAudioContext(); // synchronous — still inside the tap
-      audioReadyPromise = preloadBuffers();    // background — fire and forget
+      unlockAudioContext();
+      audioReadyPromise = preloadBuffers();
     }
-
     playSound('sfxUnlock');
-    openHowtoIfFirstVisit(100);
-    if (!isFirstVisit) setTimeout(() => window.howto?.open(), 100);
+    await promptPlayerName();
+    const saved = getPlayerName();
+    const nameBtn = document.getElementById('set-name-btn');
+    updateNameBtnText(nameBtn, saved);
+    // Hide splash and open how-to on first visit
+    splashScreen?.classList.add('hidden');
+    openHowtoIfFirstVisit(300);
   });
   // ============================
 
@@ -550,12 +569,12 @@ window.addEventListener('grid:ready', () => {
   const setNameBtn = document.getElementById('set-name-btn');
   if (setNameBtn) {
     const existingName = getPlayerName();
-    if (existingName) setNameBtn.textContent = `👤 ${existingName.toUpperCase()}`;
+    updateNameBtnText(setNameBtn, existingName);
 
     setNameBtn.addEventListener('click', async () => {
       await promptPlayerName();
       const saved = getPlayerName();
-      setNameBtn.textContent = saved ? `👤 ${saved.toUpperCase()}` : '👤 SET NAME';
+      updateNameBtnText(setNameBtn, saved);
     });
   }
 

@@ -77,10 +77,10 @@ export function recomputeAllWordScores(wordEntries) {
     const poly = tile.shape || tile.element.querySelector('polygon.hex-tile');
     if (!poly) return;
 
-    // Reset classes
-    poly.setAttribute('class', 'hex-tile');
-    tile.textLetter?.setAttribute('class', 'tile-letter');
-    tile.textPoint?.setAttribute('class', 'tile-point');
+    // Reset only reuse classes — preserve phrase-text and other persistent classes
+    poly.classList.remove('reuse-1', 'reuse-2', 'reuse-3');
+    tile.textLetter?.classList.remove('reuse-1', 'reuse-2', 'reuse-3');
+    tile.textPoint?.classList.remove('reuse-1', 'reuse-2', 'reuse-3');
 
     const multiplier = uses === 0 ? 1
                      : uses === 1 ? reuseMultipliers[2]

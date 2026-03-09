@@ -378,7 +378,7 @@ body.panel-open #backdrop { opacity: 1; pointer-events: auto; }
   top: 0;
   bottom: 0;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 1600;
   background: transparent;
   padding: 0;
   color: #fff;
@@ -890,7 +890,7 @@ details#merged-words-details > summary {
   background: var(--side-toggle-bg);
   color: var(--side-toggle-fg);
   cursor: pointer;
-  height: 130px;
+  height: 150px;
   width: 44px;
   z-index: 1200;
   display: flex;
@@ -918,10 +918,14 @@ details#merged-words-details > summary {
   line-height: 1;
   letter-spacing: 0.10em;
   margin: 0;
-  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
   font-family: 'Limelight', sans-serif;
   font-weight: 400;
   text-transform: uppercase;
+}
+.right-toggle .vword {
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  letter-spacing: 0.06em;
 }
 .side-toggle:hover  {
   background: var(--side-toggle-hover-bg);
@@ -1118,7 +1122,7 @@ body[data-theme="dark"] .tile-point {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: calc(50% + 290px);
+    top: min(calc(50% + 290px), calc(100dvh - 112px));
     z-index: 800;
     display: block;
     text-align: center;
@@ -1135,18 +1139,11 @@ body[data-theme="dark"] .tile-point {
    Phrase found tile styling + celebration animation
    ═══════════════════════════════════════════════════════════ */
 
-/* Persistent ring colour for phrase 1 tiles (amber/gold) */
-.tile:has(.hex-tile.phrase-tile-1) path:first-child {
-  fill: rgba(245, 158, 11, 0.25);
-  stroke: #f59e0b;
-  stroke-width: 3px;
-}
-
-/* Persistent ring colour for phrase 2 tiles (cyan/teal) */
-.tile:has(.hex-tile.phrase-tile-2) path:first-child {
-  fill: rgba(6, 182, 212, 0.25);
-  stroke: #06b6d4;
-  stroke-width: 3px;
+/* Found phrase tile: colour the letter and point value text orange */
+.tile-letter.phrase-text,
+.tile-point.phrase-text {
+  fill: #f59e0b !important;
+  font-weight: 800;
 }
 
 /* One-shot celebration burst — applied to the <g class="tile"> element */
@@ -1185,13 +1182,14 @@ body[data-theme="dark"] .tile-point {
   backdrop-filter: blur(6px);
   opacity: 1;
   transition: opacity 180ms ease-out;
+  padding: 16px;
 }
 .alert-modal.hidden { opacity: 0; pointer-events: none; }
 .alert-box {
   position: relative;
-  max-width: 360px;
+  max-width: min(420px, 90vw);
   width: calc(100% - 40px);
-  padding: 18px 22px 20px;
+  padding: 28px 24px 22px;
   border-radius: 0;
   background: linear-gradient(135deg, var(--alert-box-grad-1), var(--alert-box-grad-2));
   border: 2px solid var(--alert-box-border);
@@ -1256,12 +1254,14 @@ body[data-theme="dark"] .tile-point {
    ========================================= */
 #settings-wrap {
   position: fixed;
-  top: 5px;
-  right: 8px;
-  z-index: 800;
+  top: 12px;
+  right: 16px;
+  z-index: 1100;
 }
 #settings-btn {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
+  min-width: 44px;
+  min-height: 44px;
   background: var(--btn-bg);
   color: var(--btn-fg);
   border: 2px solid var(--btn-border);
@@ -1277,51 +1277,67 @@ body[data-theme="dark"] .tile-point {
   color: var(--btn-bg);
 }
 #settings-menu {
-  position: fixed;
-  top: 42px;
+  position: absolute;
+  top: calc(100% + 8px);
   right: 0;
+  min-width: 200px;
+  background: #1a1a1a;
+  border: 2px solid #f59e0b;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  border: 2px solid var(--btn-border);
-  border-radius: 0;
-  padding: 10px;
-  box-shadow: 4px 4px 0 #c8cfd8;
-}
-#settings-menu button {
-  background: transparent;
-  border: 1.5px solid var(--btn-border);
-  color: var(--btn-fg);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.82rem;
-  letter-spacing: 0.1em;
-  padding: 5px 10px;
-  border-radius: 0;
-  cursor: pointer;
-  text-align: center;
-  transition: background 0.12s, color 0.12s;
-}
-#settings-menu button:hover {
-  background: var(--btn-fg);
-  color: var(--btn-bg);
+  gap: 4px;
 }
 #settings-menu[hidden] { display: none !important; }
+#settings-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: #f0ebe0;
+  font-family: 'Turret Road', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+#settings-menu button:hover {
+  background: rgba(245,158,11,0.12);
+  border-color: rgba(245,158,11,0.4);
+}
+.setting-icon { font-size: 1.1rem; flex-shrink: 0; }
+.setting-label { flex: 1; }
+
+@media (max-width: 480px) {
+  #settings-wrap { right: 8px; top: 8px; }
+  #settings-menu { min-width: 180px; }
+  #settings-menu button { font-size: 0.75rem; padding: 9px 12px; }
+}
 
 @media (max-width: 900px) {
-  #settings-wrap { top: 58px; right: 200px; left: auto; }
-  #settings-btn  { font-size: 1.2rem; padding: 4px 6px; }
+  #settings-wrap { top: 8px; right: 8px; left: auto; }
+  #settings-btn  { font-size: 1.2rem; padding: 6px 10px; }
   #settings-menu {
-    position: absolute;
-    top: 0;
-    left: calc(100% + 8px);
-    flex-direction: row;
-    gap: 8px;
+    position: fixed;
+    top: 56px;
+    right: 8px;
+    left: auto;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 190px;
+    z-index: 1500;
   }
   #settings-menu > button {
-    width: auto;
-    padding: 4px 6px;
+    width: 100%;
     white-space: nowrap;
   }
 }
@@ -1336,7 +1352,7 @@ body[data-theme="dark"] .tile-point {
   #submit-word,
   #clear-word {
     position: fixed;
-    top: calc(50% + 345px);
+    top: min(calc(50% + 345px), calc(100dvh - 56px));
     z-index: 900;
     transform: none;
 
@@ -1494,25 +1510,24 @@ body[data-theme="dark"] #clear-word {
 #splash-play-btn:active {
   transform: translateY(1px) scale(0.97);
 }
-#splash-howto-btn {
+#splash-signup-btn {
   padding: 10px 36px;
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(0.75rem, 1.8vw, 1rem);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #4cc9f0;
+  color: #fff;
   background: transparent;
-  border: 1px solid rgba(76, 201, 240, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.45);
   border-radius: 0;
   cursor: pointer;
   clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-#splash-howto-btn:hover {
-  background: rgba(76, 201, 240, 0.12);
-  border-color: rgba(76, 201, 240, 0.85);
-  color: #fff;
+#splash-signup-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.85);
 }
 @keyframes splash-fade-in {
   from { opacity: 0; transform: translateY(20px); }
@@ -1521,4 +1536,24 @@ body[data-theme="dark"] #clear-word {
 @keyframes splash-pulse {
   0%, 100% { box-shadow: 0 0 24px rgba(76,201,240,0.6), 0 0 48px rgba(76,201,240,0.3), 0 4px 12px rgba(0,0,0,0.5); }
   50%       { box-shadow: 0 0 36px rgba(76,201,240,0.9), 0 0 72px rgba(76,201,240,0.5), 0 4px 12px rgba(0,0,0,0.5); }
+}
+/* =========================================
+   Phrase Panel Classes (replaces inline styles)
+   ========================================= */
+.phrase-panel-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.phrase-section {
+  margin-bottom: 15px;
+}
+.phrase-layout {
+  margin-top: 5px;
+  font-weight: bold;
+}
+.phrase-wordcount-wrap {
+  margin-bottom: 15px;
+  text-align: center;
 }
