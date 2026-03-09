@@ -9,7 +9,7 @@ import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } 
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName } from './leaderboard.js';
-import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+import { unlockAndPreload, playSound } from './audioEngine.js'; // ← ADD THIS
 
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
