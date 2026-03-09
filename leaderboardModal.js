@@ -7,7 +7,7 @@ import { gameState } from './gameState.js';
   let focusHandler = null;
 
   const cache = {}; // { daily: { data, timestamp }, unlimited: { data, timestamp } }
-  const CACHE_TTL = 60_000; // 60 seconds — short enough to pick up new scores without hammering the API
+  const CACHE_TTL = 60_000; // 60 seconds
 
   /* ── Build & inject modal on first open ──────────────────── */
   function buildModal() {
@@ -26,12 +26,12 @@ import { gameState } from './gameState.js';
       <div class="rom__backdrop"></div>
       <div class="rom__dialog" tabindex="-1">
         <div class="lb-modal__header">
-          <h2 id="lb-scores-title" class="lb-modal__title">🏆 LEADERBOARD</h2>
+          <h2 id="lb-scores-title" class="lb-modal__title">🏆 HIGH SCORE LEADERBOARD</h2>
           <div class="rom__tablist" role="tablist" aria-label="Leaderboard tabs">
             <button type="button" class="rom__tab rom__tab--active" data-tab="daily"
-              role="tab" aria-selected="true" aria-controls="lb-panel-daily">TODAY</button>
+              role="tab" aria-selected="true" aria-controls="lb-panel-daily">DAILY</button>
             <button type="button" class="rom__tab" data-tab="unlimited"
-              role="tab" aria-selected="false" aria-controls="lb-panel-unlimited">ALL TIME</button>
+              role="tab" aria-selected="false" aria-controls="lb-panel-unlimited">UNLIMITED</button>
           </div>
         </div>
         <div class="lb-modal__panels">
@@ -43,6 +43,67 @@ import { gameState } from './gameState.js';
     `;
     document.body.appendChild(el);
     modal = el;
+
+    /* Inject leaderboard-specific font + size overrides */
+    if (!document.getElementById('lb-modal-font-styles')) {
+      const style = document.createElement('style');
+      style.id = 'lb-modal-font-styles';
+      style.textContent = `
+        #lb-scores-modal .lb-modal__title {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 1.35rem;
+          font-weight: 900;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--rom-you, #f59e0b);
+          margin: 0 0 14px;
+          padding: 28px 22px 0;
+        }
+        #lb-scores-modal .lb-modal__header {
+          padding-bottom: 4px;
+          border-bottom: 1px solid var(--rom-border, rgba(255,255,255,0.08));
+        }
+        #lb-scores-modal .lb-modal__header .rom__tablist {
+          margin: 0 18px 12px;
+        }
+        #lb-scores-modal .rom__tab {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 0.78rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+        }
+        #lb-scores-modal .lb-modal__panels {
+          padding: 12px 18px 0;
+          min-height: 160px;
+        }
+        #lb-scores-modal .rom__word {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 0.88rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+        }
+        #lb-scores-modal .rom__score-chip {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 0.78rem;
+          font-weight: 800;
+        }
+        #lb-scores-modal .lb-modal__note {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 0.82rem;
+          color: var(--rom-muted, #6b7280);
+          padding: 16px 0;
+          text-align: center;
+        }
+        #lb-scores-modal .rom__row {
+          padding: 9px 6px;
+        }
+        #lb-scores-modal .rom__dismiss-hint {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 0.6rem;
+        }
+      `;
+      document.head.appendChild(style);
+    }
 
     /* Tab switching */
     modal.querySelector('.rom__tablist').addEventListener('click', (e) => {
@@ -121,7 +182,7 @@ import { gameState } from './gameState.js';
     if (!entries || entries.length === 0) {
       const msg = tabName === 'daily'
         ? 'No scores yet for today. Be the first! 🏆'
-        : 'No scores yet. Be the first on the all-time board! 🏆';
+        : 'No unlimited scores yet. Be the first! 🏆';
       panel.innerHTML = `<p class="lb-modal__note">${msg}</p>`;
       return;
     }
@@ -157,7 +218,7 @@ import { gameState } from './gameState.js';
     modal.classList.remove('rom--hidden');
     document.body.classList.add('lb-modal-open');
 
-    /* Start on daily tab when in daily mode, otherwise all-time */
+    /* Start on daily tab when in daily mode, otherwise unlimited */
     const initialTab = (gameState.mode === 'daily' && gameState.dailyId) ? 'daily' : 'unlimited';
     switchTab(initialTab);
 
