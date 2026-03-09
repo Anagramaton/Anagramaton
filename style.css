@@ -378,7 +378,7 @@ body.panel-open #backdrop { opacity: 1; pointer-events: auto; }
   top: 0;
   bottom: 0;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 1600;
   background: transparent;
   padding: 0;
   color: #fff;
