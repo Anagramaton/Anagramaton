@@ -1,5 +1,4 @@
 // audioEngine.js — Web Audio API pre-decoded buffer playback
-// Drop-in replacement for the <audio> tag swipe sounds
 
 let _ctx = null;
 const _buffers = new Map();
@@ -16,68 +15,53 @@ _audioFiles['sfxUnlock']  = './audio/zapsplat_musical_piano_insides_strings_stru
 
 function getCtx() {
   if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
-  window._debugAudioCtx = _ctx;
   return _ctx;
 }
 
 /**
- * STEP 1 — Call this synchronously (no await before it) inside the tap handler.
+ * STEP 1 — Call synchronously (no await before it) inside the tap handler.
  * Creates the AudioContext and calls resume() while still inside the gesture
  * trust window that mobile Safari requires.
- * Returns the resume promise — caller can await it or ignore it.
  */
 export function unlockAudioContext() {
   const ctx = getCtx();
-  console.log(`🔊 [audio] unlockAudioContext called — context state: ${ctx.state}`);
   if (ctx.state === 'suspended') {
-    return ctx.resume().then(() => {
-      console.log(`🔊 [audio] context resumed — new state: ${ctx.state}`);
-    });
+    return ctx.resume();
   }
-  console.log(`🔊 [audio] context was not suspended — state: ${ctx.state}`);
   return Promise.resolve();
 }
 
 /**
- * STEP 2 — Call this after unlockAudioContext(). Safe to await.
+ * STEP 2 — Call after unlockAudioContext(). Safe to await.
  * Fetches and decodes all audio files into memory buffers.
  */
 export async function preloadBuffers() {
   const ctx = getCtx();
-  console.log(`🔊 [audio] preloadBuffers called — context state: ${ctx.state}`);
 
   const loads = Object.entries(_audioFiles).map(async ([id, url]) => {
-    const t0 = performance.now();
     try {
       const res = await fetch(url);
       const arrayBuf = await res.arrayBuffer();
       const audioBuf = await ctx.decodeAudioData(arrayBuf);
       _buffers.set(id, audioBuf);
-      console.log(`🔊 [audio] ✅ loaded ${id} in ${Math.round(performance.now() - t0)}ms`);
     } catch (e) {
-      console.warn(`🔊 [audio] ❌ Failed to load ${id} in ${Math.round(performance.now() - t0)}ms:`, e);
+      // silently ignore — playSound will fall back to <audio> tag
     }
   });
 
   await Promise.all(loads);
-  console.log(`🔊 [audio] all files loaded — ${_buffers.size} buffers ready`);
 }
 
 /** Play a pre-decoded buffer — near-zero latency */
 export function playSound(id) {
   const ctx = getCtx();
 
-  console.log(`🔊 [audio] playSound("${id}") — ctx.state: ${ctx.state} — buffer loaded: ${_buffers.has(id)}`);
-
   const buf = _buffers.get(id);
   if (!buf) {
-    console.warn(`🔊 [audio] ⚠️ buffer not found for "${id}" — falling back to <audio> tag`);
     const el = document.getElementById(id);
     if (el) {
-      try { el.currentTime = 0; el.play().catch(err => console.warn(`🔊 [audio] <audio> fallback failed:`, err)); }
-      catch(e) { console.warn(`🔊 [audio] <audio> fallback error:`, e); }
-    } else {
-      console.warn(`🔊 [audio] ⚠️ no <audio> element found for id "${id}"`);
+      try { el.currentTime = 0; el.play().catch(() => {}); }
+      catch(e) {}
     }
     return;
   }
@@ -87,7 +71,5 @@ export function playSound(id) {
     src.buffer = buf;
     src.connect(ctx.destination);
     src.start(0);
-  } catch (e) {
-    console.warn(`🔊 [audio] ❌ createBufferSource/start failed for "${id}":`, e);
-  }
+  } catch (e) {}
 }
