@@ -14,7 +14,8 @@ export const gameState = {
     phraseRevealed: {
       phrase1: false,
       phrase2: false
-    }
+    },
+    hintOrder: [],
   },
 
   multiplier: 10,           

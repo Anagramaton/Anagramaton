@@ -1,0 +1,326 @@
+/* player.css — Player Profile Page Styles */
+
+:root {
+  --rom-bg:           #07080d;
+  --rom-panel:        rgba(10, 12, 22, 0.98);
+  --rom-border:       rgba(255, 255, 255, 0.08);
+  --rom-muted:        #6b7280;
+  --rom-ink:          #f1f5f9;
+  --rom-ink-dim:      #94a3b8;
+  --rom-you:          #f59e0b;
+  --rom-you-dim:      rgba(245, 158, 11, 0.12);
+  --rom-you-border:   rgba(245, 158, 11, 0.32);
+  --rom-them:         #38bdf8;
+  --rom-them-dim:     rgba(56, 189, 248, 0.1);
+  --rom-them-border:  rgba(56, 189, 248, 0.32);
+  --rom-win:          #34d399;
+  --rom-gold:         #fbbf24;
+  --rom-chip-bg:      rgba(255, 255, 255, 0.06);
+  --rom-surface:      rgba(255, 255, 255, 0.035);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--rom-bg);
+  color: var(--rom-ink);
+  font-family: 'Turret Road', 'Orbitron', monospace, sans-serif;
+  min-height: 100vh;
+}
+
+/* ── Layout ───────────────────────────────────────────── */
+.player-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.player-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.player-back-btn {
+  background: none;
+  border: 1px solid var(--rom-border);
+  color: var(--rom-muted);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.player-back-btn:hover {
+  color: var(--rom-you);
+  border-color: var(--rom-you-border);
+}
+
+.player-site-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: var(--rom-you);
+  text-transform: uppercase;
+  flex: 1;
+  text-align: center;
+}
+
+/* ── Player Name ──────────────────────────────────────── */
+.player-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 32px;
+}
+
+.player-avatar {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.player-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rom-ink);
+  word-break: break-all;
+}
+
+/* ── Section ──────────────────────────────────────────── */
+.player-section {
+  margin-bottom: 36px;
+}
+
+.player-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.player-section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rom-you);
+}
+
+.player-section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--rom-border);
+}
+
+/* ── Empty State ──────────────────────────────────────── */
+.player-empty {
+  color: var(--rom-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  padding: 8px 0 4px;
+}
+
+/* ── Stat Grid ────────────────────────────────────────── */
+.player-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 700px) {
+  .player-stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .player-stat-grid .stat-card:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 860px) {
+  .player-stat-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stat-card {
+  background: var(--rom-surface);
+  border: 1px solid var(--rom-border);
+  border-radius: 6px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-card__label {
+  font-family: 'Turret Road', monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rom-muted);
+}
+
+.stat-card__value {
+  font-family: 'Turret Road', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--rom-ink);
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.stat-card--highlight .stat-card__value {
+  color: var(--rom-you);
+}
+
+/* ── Achievements Placeholder ─────────────────────────── */
+.achievements-placeholder {
+  background: var(--rom-you-dim);
+  border: 1px solid var(--rom-you-border);
+  border-radius: 8px;
+  padding: 28px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.achievements-placeholder__icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.achievements-placeholder__text {
+  font-family: 'Turret Road', monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--rom-ink-dim);
+  max-width: 380px;
+}
+
+/* ── Recent Games Table ───────────────────────────────── */
+.player-table-wrap {
+  overflow-x: auto;
+  border-radius: 6px;
+  border: 1px solid var(--rom-border);
+}
+
+.player-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.player-table th {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rom-muted);
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--rom-border);
+  white-space: nowrap;
+}
+
+.player-table td {
+  padding: 9px 12px;
+  color: var(--rom-ink);
+  font-family: 'Turret Road', monospace;
+  border-bottom: 1px solid var(--rom-border);
+  vertical-align: top;
+}
+
+.player-table tr:last-child td {
+  border-bottom: none;
+}
+
+.player-table tr:nth-child(even) td {
+  background: var(--rom-surface);
+}
+
+.player-table .words-cell {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--rom-ink-dim);
+  font-size: 0.72rem;
+}
+
+/* ── Mode Pills ───────────────────────────────────────── */
+.mode-pill {
+  display: inline-block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.mode-pill--daily {
+  background: var(--rom-you-dim);
+  color: var(--rom-you);
+  border: 1px solid var(--rom-you-border);
+}
+
+.mode-pill--unlimited {
+  background: var(--rom-them-dim);
+  color: var(--rom-them);
+  border: 1px solid var(--rom-them-border);
+}
+
+/* ── Loading / Error States ───────────────────────────── */
+.player-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--rom-muted);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+}
+
+.player-error {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.player-error__msg {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--rom-muted);
+  margin-bottom: 20px;
+}
+
+.player-error__link {
+  color: var(--rom-you);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+.player-error__link:hover {
+  text-decoration: underline;
+}

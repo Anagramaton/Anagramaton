@@ -3,7 +3,7 @@ import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from '
 import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
 import { gameState } from './gameState.js';
 import { placedWords } from './gridLogic.js';
-import { initPhrasePanelEvents, revealPhrase, getHintMultiplier } from './phrasePanel.js';
+import { initPhrasePanelEvents, revealPhrase, computePhraseBonus } from './phrasePanel.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
@@ -355,8 +355,8 @@ async function handleSubmitList() {
 
   const bothPhrasesFound = areBothPhrasesFound();
   if (gameState.mode === 'daily' && bothPhrasesFound) {
-    const hintMult = getHintMultiplier();
-    bonusTotal += baseTotal * hintMult;
+    const phraseBonus = computePhraseBonus();
+    bonusTotal += phraseBonus;
     totalScore  = baseTotal + bonusTotal;
     updateScoreDisplay(totalScore);
   }
@@ -392,7 +392,7 @@ async function handleSubmitList() {
     solverTimeout
   ]);
 
-  const phraseBonus = bothPhrasesFound ? (baseTotal * getHintMultiplier()) : 0;
+  const phraseBonus = bothPhrasesFound ? computePhraseBonus() : 0;
 
   // Close both panels so the round-over modal has a clean backdrop
   const leftPanelEl  = document.getElementById('left-panel');

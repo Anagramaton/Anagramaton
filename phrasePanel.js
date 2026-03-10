@@ -1,6 +1,28 @@
 import { gameState } from './gameState.js';
 
-const MAX_HINTS = 3; 
+const MAX_HINTS = 3;
+
+// ── Hint weight config ─────────────────────────────────────
+const PHRASE_BONUS_BASE = 2000;
+
+const HINT_COSTS = {
+  phrase1:   500,
+  phrase2:   500,
+  wordCount: 800,
+};
+
+const ORDER_AMPLIFIERS = [1.5, 1.2, 1.0]; // index = 0-based position in hintOrder
+
+export function computePhraseBonus() {
+  const order = gameState.hintUsage.hintOrder || [];
+  let totalDeduction = 0;
+  order.forEach((hintKey, i) => {
+    const baseCost = HINT_COSTS[hintKey] ?? 500;
+    const amp = ORDER_AMPLIFIERS[i] ?? 1.0;
+    totalDeduction += Math.round(baseCost * amp);
+  });
+  return Math.max(0, PHRASE_BONUS_BASE - totalDeduction);
+}
 
 
 // ==============================
@@ -29,6 +51,7 @@ export function useHint(phraseKey, hintType = null) {
     if (gameState.hintUsage.wordCount) return; 
     gameState.hintUsage.wordCount = true;
     gameState.hintsUsed++;
+    gameState.hintUsage.hintOrder.push('wordCount');
     updateHintAndMultiPanel();
 
     const phrase1Layout = generateWordCountLayout(
@@ -53,6 +76,7 @@ export function useHint(phraseKey, hintType = null) {
       
       gameState.hintUsage[phraseKey] = true;
       gameState.hintsUsed++;
+      gameState.hintUsage.hintOrder.push(phraseKey);
       updateHintAndMultiPanel();
 
      
@@ -76,18 +100,15 @@ export function useHint(phraseKey, hintType = null) {
 }
 
 function updateHintAndMultiPanel() {
-  const used = Math.max(0, Math.min(MAX_HINTS, Number(gameState.hintsUsed) || 0));
+  const used = (gameState.hintUsage.hintOrder || []).length;
   const remaining = MAX_HINTS - used;
 
-  
   const headerHints = document.getElementById('hints-used');
   if (headerHints) headerHints.textContent = `HINTS: ${remaining}/${MAX_HINTS}`;
 
-  
-  const multiMap = ['x3', 'x2', 'x1', 'X']; 
-  const multiLabel = multiMap[used] ?? 'X';
+  const projectedBonus = computePhraseBonus();
   const multiEl = document.getElementById('bonus-multi');
-  if (multiEl) multiEl.textContent = `BONUS MULTI: ${multiLabel}`;
+  if (multiEl) multiEl.textContent = `PHRASE BONUS: ${projectedBonus} PTS`;
 }
 
 
@@ -125,12 +146,6 @@ export function revealPhrase(phraseKey) {
 
   // Disable the hint button — phrase is now revealed, hint no longer needed
   disableButtonById(`${phraseKey}-hint1-btn`);
-}
-
-export function getHintMultiplier() {
-  const used = Math.max(0, Math.min(MAX_HINTS, Number(gameState.hintsUsed) || 0));
-  const multiMap = [3, 2, 1, 0]; // 0 hints used = x3, 1 = x2, 2 = x1, 3 = x0
-  return multiMap[used] ?? 0;
 }
 
 export function initPhrasePanelEvents() {

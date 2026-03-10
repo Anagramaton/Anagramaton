@@ -101,6 +101,15 @@ import { gameState } from './gameState.js';
           font-family: 'Orbitron', sans-serif;
           font-size: 0.6rem;
         }
+        #lb-scores-modal .lb-player-link {
+          color: inherit;
+          text-decoration: none;
+        }
+        #lb-scores-modal .lb-player-link:hover {
+          text-decoration: underline;
+          text-decoration-color: var(--rom-you, #f59e0b);
+          text-underline-offset: 3px;
+        }
       `;
       document.head.appendChild(style);
     }
@@ -189,9 +198,11 @@ import { gameState } from './gameState.js';
     const playerName = getPlayerName();
     panel.innerHTML = entries.map((entry, idx) => {
       const isYou = playerName && entry.player_name === playerName;
+      const encodedName = encodeURIComponent(entry.player_name || 'Anonymous');
+      const nameHtml = `<a class="lb-player-link" href="/player.html?name=${encodedName}" target="_self">${String(entry.player_name || 'Anonymous')}</a>`;
       return `
         <div class="rom__row${isYou ? ' rom__row--you' : ''}">
-          <span class="rom__word">${idx + 1}. ${String(entry.player_name || 'Anonymous')}</span>
+          <span class="rom__word">${idx + 1}. ${nameHtml}</span>
           <span class="rom__score-chip">${Number(entry.score) || 0}</span>
         </div>`;
     }).join('');

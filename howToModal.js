@@ -138,8 +138,6 @@
       // Replace the first paragraph after the h3 (keeps the heading)
       const p = phrase.querySelector('p');
       if (p) p.innerHTML = html;
-      // jump there to preview if you want:
-      // go(4);
     }
   };
 })();
