@@ -198,10 +198,17 @@ html, body {
 }
 
 /* ── Stat Grid ────────────────────────────────────────── */
+/* Desktop: 7 virtual columns so word cards (span 2) have room for long text */
+/* Layout: [Games 1] [Score 1] [Longest Word 2] [Top Word 2] [Hints 1] = 7  */
 .player-stat-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 10px;
+}
+
+.player-stat-grid [data-stat="longestWord"],
+.player-stat-grid [data-stat="topWord"] {
+  grid-column: span 2;
 }
 
 @media (max-width: 700px) {
@@ -211,11 +218,21 @@ html, body {
   .player-stat-grid .stat-card:nth-child(5) {
     grid-column: 1 / -1;
   }
+  /* Word cards full-width so long words always fit on one line */
+  .player-stat-grid [data-stat="longestWord"],
+  .player-stat-grid [data-stat="topWord"] {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (min-width: 701px) and (max-width: 860px) {
   .player-stat-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  /* Word cards full-width on tablet */
+  .player-stat-grid [data-stat="longestWord"],
+  .player-stat-grid [data-stat="topWord"] {
+    grid-column: 1 / -1;
   }
 }
 
@@ -243,7 +260,6 @@ html, body {
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--rom-ink);
-  word-break: break-word;
   line-height: 1.2;
 }
 
@@ -458,9 +474,6 @@ html, body {
   }
 
   .stat-card__value {
-    font-size: 0.8rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 1.1rem;
   }
 }
