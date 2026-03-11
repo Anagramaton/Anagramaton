@@ -8,7 +8,7 @@ import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
-import { submitScore, getPlayerName, promptPlayerName } from './leaderboard.js';
+import { submitScore, getPlayerName, promptPlayerName, promptSignOut, clearPlayerName } from './leaderboard.js';
 import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
 
 
@@ -122,6 +122,20 @@ function updateNameBtnText(btn, name) {
     label.textContent = name ? name.toUpperCase() : 'SET NAME';
   } else {
     btn.textContent = name ? `👤 ${name.toUpperCase()}` : '👤 SET NAME';
+  }
+}
+
+/** Updates the splash sign-up button state based on whether a player name is saved. */
+function updateSplashSignupBtn(btn, name) {
+  if (!btn) return;
+  if (name) {
+    btn.disabled = true;
+    btn.classList.add('splash-signup--signed-in');
+    btn.textContent = `✓ SIGNED IN AS ${name.toUpperCase()}`;
+  } else {
+    btn.disabled = false;
+    btn.classList.remove('splash-signup--signed-in');
+    btn.textContent = '✨ SIGN UP';
   }
 }
 
@@ -530,21 +544,27 @@ window.addEventListener('grid:ready', () => {
   }
 
   // SIGN UP button on splash screen
-  splashSignupBtn?.addEventListener('click', async () => {
-    if (!audioUnlocked) {
-      audioUnlocked = true;
-      unlockAudioContext();
-      audioReadyPromise = preloadBuffers();
-    }
-    playSound('sfxUnlock');
-    await promptPlayerName();
-    const saved = getPlayerName();
-    const nameBtn = document.getElementById('set-name-btn');
-    updateNameBtnText(nameBtn, saved);
-    // Hide splash and open how-to on first visit
-    splashScreen?.classList.add('hidden');
-    openHowtoIfFirstVisit(300);
-  });
+  if (splashSignupBtn) {
+    // Reflect current sign-in state immediately
+    updateSplashSignupBtn(splashSignupBtn, getPlayerName());
+
+    splashSignupBtn.addEventListener('click', async () => {
+      if (!audioUnlocked) {
+        audioUnlocked = true;
+        unlockAudioContext();
+        audioReadyPromise = preloadBuffers();
+      }
+      playSound('sfxUnlock');
+      await promptPlayerName();
+      const saved = getPlayerName();
+      const nameBtn = document.getElementById('set-name-btn');
+      updateNameBtnText(nameBtn, saved);
+      updateSplashSignupBtn(splashSignupBtn, saved);
+      // Hide splash and open how-to on first visit
+      splashScreen?.classList.add('hidden');
+      openHowtoIfFirstVisit(300);
+    });
+  }
   // ============================
 
   applySavedTheme();
@@ -588,9 +608,24 @@ window.addEventListener('grid:ready', () => {
     updateNameBtnText(setNameBtn, existingName);
 
     setNameBtn.addEventListener('click', async () => {
-      await promptPlayerName();
-      const saved = getPlayerName();
-      updateNameBtnText(setNameBtn, saved);
+      settingsMenu.hidden = true;
+      settingsWrap.classList.remove('menu-open');
+
+      const currentName = getPlayerName();
+      if (currentName) {
+        // Player already signed in — show sign-out modal
+        const confirmedSignOut = await promptSignOut();
+        if (confirmedSignOut) {
+          updateNameBtnText(setNameBtn, null);
+          updateSplashSignupBtn(document.getElementById('splash-signup-btn'), null);
+        }
+      } else {
+        // No name yet — let player sign up
+        await promptPlayerName();
+        const saved = getPlayerName();
+        updateNameBtnText(setNameBtn, saved);
+        updateSplashSignupBtn(document.getElementById('splash-signup-btn'), saved);
+      }
     });
   }
 

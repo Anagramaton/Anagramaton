@@ -1,6 +1,8 @@
 /* player.css — Player Profile Page Styles */
 
-:root {
+/* ── Dark theme (default) ─────────────────────────────── */
+:root,
+html[data-theme="dark"] {
   --rom-bg:           #07080d;
   --rom-panel:        rgba(10, 12, 22, 0.98);
   --rom-border:       rgba(255, 255, 255, 0.08);
@@ -17,6 +19,26 @@
   --rom-gold:         #fbbf24;
   --rom-chip-bg:      rgba(255, 255, 255, 0.06);
   --rom-surface:      rgba(255, 255, 255, 0.035);
+}
+
+/* ── Light theme overrides ────────────────────────────── */
+html[data-theme="light"] {
+  --rom-bg:           #f0f2f5;
+  --rom-panel:        rgba(255, 255, 255, 0.98);
+  --rom-border:       rgba(0, 0, 0, 0.1);
+  --rom-muted:        #6b7280;
+  --rom-ink:          #1a1a2e;
+  --rom-ink-dim:      #4b5563;
+  --rom-you:          #d97706;
+  --rom-you-dim:      rgba(217, 119, 6, 0.1);
+  --rom-you-border:   rgba(217, 119, 6, 0.3);
+  --rom-them:         #0284c7;
+  --rom-them-dim:     rgba(2, 132, 199, 0.1);
+  --rom-them-border:  rgba(2, 132, 199, 0.3);
+  --rom-win:          #059669;
+  --rom-gold:         #d97706;
+  --rom-chip-bg:      rgba(0, 0, 0, 0.05);
+  --rom-surface:      rgba(0, 0, 0, 0.03);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -131,6 +153,49 @@ html, body {
   font-size: 0.82rem;
   letter-spacing: 0.08em;
   padding: 8px 0 4px;
+}
+
+/* ── Mode Tabs ────────────────────────────────────────── */
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.mode-tab {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 9px 22px;
+  border-radius: 4px;
+  border: 1px solid var(--rom-border);
+  background: var(--rom-surface);
+  color: var(--rom-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.mode-tab:hover {
+  color: var(--rom-ink);
+  border-color: var(--rom-border);
+}
+
+.mode-tab--active[data-mode="daily"] {
+  background: var(--rom-you-dim);
+  border-color: var(--rom-you-border);
+  color: var(--rom-you);
+}
+
+.mode-tab--active[data-mode="unlimited"] {
+  background: var(--rom-them-dim);
+  border-color: var(--rom-them-border);
+  color: var(--rom-them);
+}
+
+.mode-panel--hidden {
+  display: none;
 }
 
 /* ── Stat Grid ────────────────────────────────────────── */

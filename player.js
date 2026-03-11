@@ -84,8 +84,17 @@ function renderProfile(root, data) {
       <h1 class="player-name">${escHtml(playerName)}</h1>
     </div>
 
-    ${renderModeSection('📅 DAILY MODE', 'daily', daily)}
-    ${renderModeSection('♾️ UNLIMITED MODE', 'unlimited', unlimited)}
+    <div class="mode-tabs" role="tablist" aria-label="Stats mode">
+      <button class="mode-tab mode-tab--active" data-mode="daily" role="tab" aria-selected="true" aria-controls="mode-panel-daily">📅 DAILY</button>
+      <button class="mode-tab" data-mode="unlimited" role="tab" aria-selected="false" aria-controls="mode-panel-unlimited">♾️ UNLIMITED</button>
+    </div>
+
+    <div id="mode-panel-daily" role="tabpanel">
+      ${renderModePanelContent('daily', daily)}
+    </div>
+    <div id="mode-panel-unlimited" class="mode-panel--hidden" role="tabpanel">
+      ${renderModePanelContent('unlimited', unlimited)}
+    </div>
 
     <section class="player-section">
       <div class="player-section-header">
@@ -106,13 +115,28 @@ function renderProfile(root, data) {
       ${renderRecentGames(allRecent)}
     </section>
   `;
+
+  // Wire up tab switching
+  root.querySelectorAll('.mode-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const mode = tab.dataset.mode;
+      root.querySelectorAll('.mode-tab').forEach(t => {
+        const active = t === tab;
+        t.classList.toggle('mode-tab--active', active);
+        t.setAttribute('aria-selected', String(active));
+      });
+      document.getElementById('mode-panel-daily').classList.toggle('mode-panel--hidden', mode !== 'daily');
+      document.getElementById('mode-panel-unlimited').classList.toggle('mode-panel--hidden', mode !== 'unlimited');
+    });
+  });
 }
 
-function renderModeSection(title, modeKey, stats) {
+function renderModePanelContent(modeKey, stats) {
   const isEmpty = stats.gamesPlayed === 0;
   const emptyMsg = modeKey === 'daily'
     ? 'No daily games recorded yet.'
     : 'No unlimited games recorded yet.';
+  const title = modeKey === 'daily' ? '📅 DAILY MODE' : '♾️ UNLIMITED MODE';
 
   return `
     <section class="player-section">
