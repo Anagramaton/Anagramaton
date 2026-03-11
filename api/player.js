@@ -85,6 +85,27 @@ export default async function handler(req, res) {
   });
 }
 
+// Compute an approximate word score using the same letter/length/palindrome
+// logic as the game (tile-reuse multipliers cannot be reconstructed from
+// stored data, so they are omitted).
+function computeWordScore(word) {
+  const pts = {
+    A: 1, B: 3, C: 3, D: 2, E: 1,
+    F: 4, G: 2, H: 4, I: 1, J: 8,
+    K: 5, L: 1, M: 3, N: 1, O: 1,
+    P: 3, Q: 10, R: 1, S: 1, T: 1,
+    U: 1, V: 4, W: 4, X: 8, Y: 4, Z: 10,
+  };
+  const lengthMults = { 5: 3, 6: 4, 7: 5, 8: 6, 9: 7, 10: 10 };
+  const upper = word.toUpperCase();
+  let base = 0;
+  for (const ch of upper) base += pts[ch] || 1;
+  const len = upper.length;
+  const lm = len >= 5 ? (lengthMults[Math.min(len, 10)] || 1) : 1;
+  const isPalindrome = upper === upper.split('').reverse().join('');
+  return Math.round(base * lm * (isPalindrome ? 5 : 1));
+}
+
 function computeStats(rows) {
   if (rows.length === 0) {
     return {
@@ -129,13 +150,14 @@ function computeStats(rows) {
     }
   }
 
-  // topWord: most frequently appearing word across all games
+  // topWord: word with the highest computed score across all games
   let topWord = null;
-  let topCount = 0;
-  for (const [word, count] of Object.entries(wordFreq)) {
-    if (count > topCount || (count === topCount && topWord !== null && word > topWord)) {
+  let topWordScore = 0;
+  for (const word of Object.keys(wordFreq)) {
+    const score = computeWordScore(word);
+    if (score > topWordScore || (score === topWordScore && topWord !== null && word > topWord)) {
       topWord = word;
-      topCount = count;
+      topWordScore = score;
     }
   }
 
@@ -164,8 +186,8 @@ function computeStats(rows) {
     : null;
   const topWordGame = topWordRow ? toGameObj(topWordRow) : null;
 
-  // Format topWord to include play count
-  const topWordDisplay = topWord ? `${topWord} ×${topCount}` : null;
+  // Format topWord to include its computed score
+  const topWordDisplay = topWord ? `${topWord} (${topWordScore})` : null;
 
   // recentGames: last 20 rows (already sorted by created_at desc)
   const recentGames = rows.slice(0, 20).map(toGameObj);
