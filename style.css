@@ -130,27 +130,27 @@ body[data-theme="dark"] {
 
   --howto-color: #bcd2ea;
 
-  --tile-fill: #0f1520;
-  --tile-stroke: #bcd2ea;
-  --letter-fill: #e0eaf8;
+  --tile-fill: #fafafa;
+  --tile-stroke: #1a1a2e;
+  --letter-fill: #1a1a2e;
 
-  --reuse-1-fill: #0d2a36;
-  --reuse-1-text: #4cc9f0;
+  --reuse-1-fill: #dff4fb;
+  --reuse-1-text: #1a1a2e;
   --reuse-1-ring-fill: #4cc9f0;
-  --reuse-1-ring-stroke: #0a1a2e;
+  --reuse-1-ring-stroke: #1a1a2e;
 
   --reuse-2-fill: #4cc9f0;
-  --reuse-2-text: #0a0c12;
-  --reuse-2-ring-fill: #0a0c12;
+  --reuse-2-text: #ffffff;
+  --reuse-2-ring-fill: #1a1a2e;
   --reuse-2-ring-stroke: #4cc9f0;
 
-  --reuse-3-fill: #0a0c12;
+  --reuse-3-fill: #1a1a2e;
   --reuse-3-text: #4cc9f0;
-  --reuse-3-ring-fill: #4cc9f0;
-  --reuse-3-ring-stroke: #bcd2ea;
+  --reuse-3-ring-fill: #303055;
+  --reuse-3-ring-stroke: #9400D3;
 
---hover-hex-fill: #f5a623;
---hover-hex-stroke: #c47d0e;
+--hover-hex-fill: #bdadfb;
+--hover-hex-stroke: #4a3a9e;
 --hover-letter: #1a1a2e;
 
   --selected-fill: #1a1a2e;
@@ -977,7 +977,7 @@ body.right-open .right-toggle { right: -60px; }
   fill: #5a6080;
 }
 body[data-theme="dark"] .tile-point {
-  fill: #7a9abf;
+  fill: #5a6080;
 }
 
 /* =========================================
