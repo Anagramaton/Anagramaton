@@ -28,29 +28,7 @@
   .side-toggle { z-index: 900; }
 }
 
-/* ── Settings menu — handled in style.css @media (max-width: 900px) ──── */
-  #settings-btn {
-    font-size: 1.2rem;
-    padding: 6px 10px;
-  }
-  #settings-menu {
-    position: fixed;        /* ← fixed so it can't be clipped by a parent */
-    top: 48px;              /* ← drop below the button */
-    right: 8px;             /* ← aligned to right edge */
-    left: auto;             /* ← never extends off left */
-    flex-direction: column; /* ← stack vertically */
-    gap: 6px;
-    min-width: 160px;
-    z-index: 1500;
-  }
-  #settings-menu > button {
-    width: 100%;
-    padding: 10px 14px;
-    font-size: 0.9rem;
-    text-align: left;
-    white-space: nowrap;
-  }
-}
+/* ──────────────────────────────────────────────────────────────── */
 
 /* ��─ How-to modal ─────────────────────────────────────────────── */
 #howto-modal .rom__dialog {
@@ -144,7 +122,7 @@
 @media (max-width: 768px) {
   #submit-word {
     position: fixed;
-    bottom: clamp(16px, calc(env(safe-area-inset-bottom) + 3vh), 40px);
+    bottom: clamp(52px, calc(env(safe-area-inset-bottom) + 8vh), 80px);
     left: calc(50% - 80px);
     transform: translateX(-50%);
     z-index: 800;
@@ -164,7 +142,7 @@
 
   #clear-word {
     position: fixed;
-    bottom: clamp(16px, calc(env(safe-area-inset-bottom) + 3vh), 40px);
+    bottom: clamp(52px, calc(env(safe-area-inset-bottom) + 8vh), 80px);
     left: calc(50% + 80px);
     transform: translateX(-50%);
     z-index: 800;
@@ -181,6 +159,35 @@
     margin: 0;
   }
   #clear-word:active { opacity: 0.6; }
+}
+
+/* ── Settings button — mobile: bottom center below submit/clear ── */
+@media (max-width: 768px) {
+  #settings-wrap {
+    position: fixed;
+    bottom: clamp(10px, calc(env(safe-area-inset-bottom) + 1.5vh), 22px);
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    right: auto;
+    z-index: 1100;
+  }
+  #settings-btn {
+    font-size: 1rem;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 4px 8px;
+  }
+  #settings-menu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    top: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    min-width: 180px;
+    z-index: 1500;
+  }
 }
 
 /* ── Hex grid ─────────────────────────────────────────────────── */

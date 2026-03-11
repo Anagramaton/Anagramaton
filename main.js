@@ -398,7 +398,7 @@ async function handleSubmitList() {
   }
 
   const scoreEl        = document.getElementById('score-display');
-  const finalScoreText = scoreEl ? (scoreEl.textContent || 'SCORE: 0') : 'SCORE: 0';
+  const finalScoreText = scoreEl ? (scoreEl.textContent || '0') : '0';
   const finalScore     = (typeof totalScore === 'number') ? totalScore : 0;
 
   resetSelectionState();
