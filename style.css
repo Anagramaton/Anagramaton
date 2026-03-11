@@ -1479,55 +1479,79 @@ body[data-theme="dark"] #clear-word {
   text-transform: uppercase;
 }
 #splash-play-btn {
-  margin-top: 20px;
-  padding: 16px 56px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1.2rem, 2.8vw, 1.8rem);
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #0a0c12;
-  background: #4cc9f0;
-  border: none;
-  border-radius: 0;
-  cursor: pointer;
-  clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px), 0% 10px);
-  box-shadow:
-    0 0 24px rgba(76, 201, 240, 0.6),
-    0 0 48px rgba(76, 201, 240, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.5);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-  animation: splash-pulse 2.2s ease-in-out infinite;
-}
-#splash-play-btn:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow:
-    0 0 36px rgba(76, 201, 240, 0.9),
-    0 0 64px rgba(76, 201, 240, 0.5),
-    0 8px 20px rgba(0, 0, 0, 0.55);
-  filter: brightness(1.1);
-}
-#splash-play-btn:active {
-  transform: translateY(1px) scale(0.97);
-}
-#splash-signup-btn {
   padding: 10px 36px;
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(0.75rem, 1.8vw, 1rem);
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #fff;
   background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.45);
+  border: 2px solid rgba(76, 201, 240, 0.5);
   border-radius: 0;
   cursor: pointer;
   clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
+#splash-play-btn:hover {
+  background: rgba(76, 201, 240, 0.12);
+  border-color: rgba(76, 201, 240, 0.85);
+}
+#splash-play-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+#splash-signup-btn {
+  margin-top: 20px;
+  padding: 16px 56px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #0a0c12;
+  background: #f59e0b;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px), 0% 10px);
+  box-shadow:
+    0 0 24px rgba(245, 158, 11, 0.6),
+    0 0 48px rgba(245, 158, 11, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  animation: splash-signup-pulse 2.2s ease-in-out infinite;
+}
 #splash-signup-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.85);
+  transform: translateY(-3px) scale(1.04);
+  box-shadow:
+    0 0 36px rgba(245, 158, 11, 0.9),
+    0 0 64px rgba(245, 158, 11, 0.5),
+    0 8px 20px rgba(0, 0, 0, 0.55);
+  filter: brightness(1.1);
+}
+#splash-signup-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+#splash-signup-btn.splash-signup--signed-in,
+#splash-signup-btn:disabled {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 2px solid rgba(245, 158, 11, 0.45);
+  box-shadow: none;
+  animation: none;
+  cursor: default;
+  opacity: 0.85;
+  font-size: clamp(0.78rem, 1.8vw, 1rem);
+  padding: 10px 24px;
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+}
+#splash-lb-note {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(0.6rem, 1.4vw, 0.75rem);
+  color: rgba(245, 158, 11, 0.7);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0;
 }
 @keyframes splash-fade-in {
   from { opacity: 0; transform: translateY(20px); }
@@ -1536,6 +1560,10 @@ body[data-theme="dark"] #clear-word {
 @keyframes splash-pulse {
   0%, 100% { box-shadow: 0 0 24px rgba(76,201,240,0.6), 0 0 48px rgba(76,201,240,0.3), 0 4px 12px rgba(0,0,0,0.5); }
   50%       { box-shadow: 0 0 36px rgba(76,201,240,0.9), 0 0 72px rgba(76,201,240,0.5), 0 4px 12px rgba(0,0,0,0.5); }
+}
+@keyframes splash-signup-pulse {
+  0%, 100% { box-shadow: 0 0 24px rgba(245,158,11,0.6), 0 0 48px rgba(245,158,11,0.3), 0 4px 12px rgba(0,0,0,0.5); }
+  50%       { box-shadow: 0 0 36px rgba(245,158,11,0.9), 0 0 72px rgba(245,158,11,0.5), 0 4px 12px rgba(0,0,0,0.5); }
 }
 /* =========================================
    Phrase Panel Classes (replaces inline styles)

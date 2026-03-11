@@ -2,7 +2,7 @@
 
 const PLAYER_NAME_KEY = 'anagramaton_player_name';
 
-/* ── Player name helpers ───────────────────────────────────────── */
+/* ── Player Name helpers ───────────────────────────────────────── */
 
 export function getPlayerName() {
   return localStorage.getItem(PLAYER_NAME_KEY) || null;
@@ -14,6 +14,10 @@ export function setPlayerName(name) {
   if (trimmed.length === 0 || trimmed.length > 30) return null;
   localStorage.setItem(PLAYER_NAME_KEY, trimmed);
   return trimmed;
+}
+
+export function clearPlayerName() {
+  localStorage.removeItem(PLAYER_NAME_KEY);
 }
 
 /* ── Name prompt modal ─────────────────────────────────────────── */
@@ -167,6 +171,47 @@ export function promptPlayerName() {
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') handleOk();
       if (e.key === 'Escape') handleCancel();
+    }, { signal });
+  });
+}
+
+/* ── Sign-out prompt ───────────────────────────────────────────── */
+
+export function promptSignOut() {
+  return new Promise((resolve) => {
+    const currentName = getPlayerName();
+    const modal = ensureNameModal();
+    const box = document.getElementById('lb-name-box');
+    const savedHTML = box.innerHTML;
+
+    box.innerHTML = `
+      <p id="lb-name-title">👤 ${String(currentName || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
+      <p style="font-size:0.8rem;opacity:0.7;margin-bottom:1.25rem;">Your name &amp; stats are saved on this device.<br>Sign out to remove your name from this device.</p>
+      <div class="lb-name-btns">
+        <button type="button" id="lb-name-cancel">CANCEL</button>
+        <button type="button" id="lb-name-ok" style="border-color:#ef4444;background:rgba(239,68,68,0.15);color:#ef4444;">SIGN OUT</button>
+      </div>
+    `;
+
+    modal.classList.remove('lb-hidden');
+
+    const ac = new AbortController();
+    const { signal } = ac;
+
+    function finish(signedOut) {
+      modal.classList.add('lb-hidden');
+      box.innerHTML = savedHTML;
+      ac.abort();
+      resolve(signedOut);
+    }
+
+    document.getElementById('lb-name-ok').addEventListener('click', () => {
+      clearPlayerName();
+      finish(true);
+    }, { signal });
+    document.getElementById('lb-name-cancel').addEventListener('click', () => finish(false), { signal });
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') finish(false);
     }, { signal });
   });
 }
