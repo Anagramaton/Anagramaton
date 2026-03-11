@@ -5,11 +5,17 @@
     text-orientation: initial;
     width: auto;
     height: auto;
-    padding: 0;
-    border-radius: 0;
+    padding: 8px 10px;
+    border-radius: 4px;
     top: clamp(40px, 10vh, 80px);
     letter-spacing: 0.02em;
     transition: all 0.15s ease;
+    background: #000000;
+    color: #ffffff;
+    border: 2.5px solid #000000;
+  }
+  .side-toggle .vword {
+    color: #ffffff;
   }
 }
 
@@ -99,9 +105,18 @@
     z-index: 800;
     display: block;
     text-align: center;
-    font-size: 24px;
     width: max-content;
     pointer-events: none;
+    background: linear-gradient(160deg, #61bfd8 0%, #3d6470 45%, #4db2d1 100%);
+    color: #1a1a2e;
+    font-family: 'Limelight', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 10px 28px;
+    border: none;
+    clip-path: polygon(14px 0%, calc(100% - 14px) 0%, 100% 50%, calc(100% - 14px) 100%, 14px 100%, 0% 50%);
+    filter: drop-shadow(2px 3px 0px #0a5a72) drop-shadow(0 0 10px rgba(76, 201, 240, 0.2));
   }
 }
 
@@ -115,8 +130,13 @@
     z-index: 800;
     display: block;
     text-align: center;
-    font-size: clamp(1.2rem, 8vw, 2.4rem);
+    font-size: clamp(0.8rem, 5.5vw, 2.4rem);
     font-family: "Notable";
+    max-width: 90vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: keep-all;
   }
 }
 
@@ -184,7 +204,11 @@
     transform: translateX(-50%);
     z-index: 800;
     margin: 0;
-    font-size: 2.2rem;
+    font-size: clamp(2.6rem, 7vw, 3.6rem);
+    font-family: 'Black Han Sans', sans-serif;
+    font-weight: 900;
+    color: #000000;
+    -webkit-text-stroke: 0;
     letter-spacing: 0.04em;
   }
 }
