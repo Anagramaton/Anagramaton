@@ -134,24 +134,24 @@ body[data-theme="dark"] {
   --tile-stroke: #bcd2ea;
   --letter-fill: #e0eaf8;
 
-  --reuse-1-fill: #0d2a36;
-  --reuse-1-text: #4cc9f0;
+  --reuse-1-fill: #dff4fb;
+  --reuse-1-text: #1a1a2e;
   --reuse-1-ring-fill: #4cc9f0;
-  --reuse-1-ring-stroke: #0a1a2e;
+  --reuse-1-ring-stroke: #1a1a2e;
 
   --reuse-2-fill: #4cc9f0;
   --reuse-2-text: #0a0c12;
   --reuse-2-ring-fill: #0a0c12;
   --reuse-2-ring-stroke: #4cc9f0;
 
-  --reuse-3-fill: #0a0c12;
+  --reuse-3-fill: #1a1a2e;
   --reuse-3-text: #4cc9f0;
-  --reuse-3-ring-fill: #4cc9f0;
-  --reuse-3-ring-stroke: #bcd2ea;
+  --reuse-3-ring-fill: #303055;
+  --reuse-3-ring-stroke: #9400D3;
 
---hover-hex-fill: #f5a623;
---hover-hex-stroke: #c47d0e;
---hover-letter: #1a1a2e;
+  --hover-hex-fill: #bdadfb;
+  --hover-hex-stroke: #4a3a9e;
+  --hover-letter: #e0eaf8;
 
   --selected-fill: #1a1a2e;
   --selected-stroke: #4cc9f0;
@@ -918,13 +918,14 @@ details#merged-words-details > summary {
   line-height: 1;
   letter-spacing: 0.10em;
   margin: 0;
-  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
   font-family: 'Limelight', sans-serif;
-  font-weight: 400;
+  font-weight: 700;
   text-transform: uppercase;
+  -webkit-text-stroke: 0.5px currentColor;
 }
 .right-toggle .vword {
-  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  font-size: clamp(0.95rem, 1.5vw, 1.25rem);
   letter-spacing: 0.06em;
 }
 .side-toggle:hover  {
@@ -935,6 +936,11 @@ details#merged-words-details > summary {
 .side-toggle:active {
   background: var(--side-toggle-active-bg);
   transform: scale(0.98);
+}
+.side-toggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 .left-toggle {
   left: 0;
@@ -1091,18 +1097,6 @@ body[data-theme="dark"] .tile-point {
   text-align: center;
   white-space: nowrap;
 
-  /* ── Hex-stamp shape — stage 1 tile: pale cyan, navy text ── */
-  clip-path: polygon(
-    14px 0%,
-    calc(100% - 14px) 0%,
-    100% 50%,
-    calc(100% - 14px) 100%,
-    14px 100%,
-    0% 50%
-  );
-
-  padding: 9px 36px 9px 32px;
-  background: linear-gradient(160deg, #d5f0fa 0%, #8481ce 45%, #d5f0fa 100%);
   color: #1a1a2e;
 
   font-family: 'Turret Road', sans-serif;
@@ -1110,10 +1104,6 @@ body[data-theme="dark"] .tile-point {
   font-weight: 900;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-
-  filter: drop-shadow(2px 3px 0px #0a5a72)
-          drop-shadow(10px 10px 10px rgba(76, 201, 240, 0.2));
-  transition: filter 0.2s ease;
 }
 
 /* Desktop current word display */
@@ -1157,6 +1147,23 @@ body[data-theme="dark"] .tile-point {
 }
 .tile.phrase-celebrate {
   animation: phrase-celebrate 1.4s ease-out var(--celebrate-delay, 0s) both;
+}
+
+/* Dark mode phrase-found tile text and celebration */
+body[data-theme="dark"] .tile-letter.phrase-text,
+body[data-theme="dark"] .tile-point.phrase-text {
+  fill: #fbbf24 !important;
+}
+body[data-theme="dark"] .tile.phrase-celebrate {
+  animation: phrase-celebrate-dark 1.4s ease-out var(--celebrate-delay, 0s) both;
+}
+@keyframes phrase-celebrate-dark {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  20%  { filter: brightness(2.2) drop-shadow(0 0 16px #fde68a); }
+  45%  { filter: brightness(1.6) drop-shadow(0 0 10px #fbbf24); }
+  70%  { filter: brightness(1.9) drop-shadow(0 0 14px #fde68a); }
+  85%  { filter: brightness(1.3) drop-shadow(0 0  8px #fbbf24); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
 }
 
 /* Puff animation */

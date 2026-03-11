@@ -155,7 +155,10 @@ export function initPhrasePanelEvents() {
     if (rightPanel) rightPanel.style.display = 'none';
 
     const toggleRight = document.getElementById('toggle-right');
-    if (toggleRight) toggleRight.style.display = 'none';
+    if (toggleRight) {
+      toggleRight.disabled = true;
+      toggleRight.setAttribute('aria-disabled', 'true');
+    }
 
     // defensively disable the hint buttons if they exist
     ['phrase1-hint1-btn', 'phrase2-hint1-btn', 'wordcount-hint'].forEach((id) => {
