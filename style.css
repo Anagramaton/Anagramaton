@@ -39,11 +39,11 @@
   --scrollbar-thumb-shadow: rgba(76, 201, 240, 0.5);
   --scrollbar-thumb-hover-shadow: rgba(26, 26, 46, 0.7);
 
-  --side-toggle-bg: #ffffff;
-  --side-toggle-fg: #1a1a2e;
-  --side-toggle-hover-bg: #1a1a2e;
-  --side-toggle-active-bg: #3a3a5e;
-  --side-toggle-border: #1a1a2e;
+  --side-toggle-bg: #000000;
+  --side-toggle-fg: #ffffff;
+  --side-toggle-hover-bg: #222222;
+  --side-toggle-active-bg: #333333;
+  --side-toggle-border: #000000;
   --side-toggle-shadow: rgba(0, 0, 0, 0.1);
 
   --stage-outline: #1a1a2e;
@@ -159,11 +159,11 @@ body[data-theme="dark"] {
   --submit-fg: #bcd2ea;
   --submit-hover-fg: #4cc9f0;
 
-  --side-toggle-bg: #0a0c12;
-  --side-toggle-fg: #bcd2ea;
-  --side-toggle-hover-bg: #bcd2ea;
-  --side-toggle-active-bg: #7a9abf;
-  --side-toggle-border: #bcd2ea;
+  --side-toggle-bg: #000000;
+  --side-toggle-fg: #ffffff;
+  --side-toggle-hover-bg: #222222;
+  --side-toggle-active-bg: #333333;
+  --side-toggle-border: #000000;
 
   --alert-box-border: rgba(76, 201, 240, 0.6);
   --alert-box-shadow-3: rgba(76, 201, 240, 0.5);
@@ -890,8 +890,8 @@ details#merged-words-details > summary {
   background: var(--side-toggle-bg);
   color: var(--side-toggle-fg);
   cursor: pointer;
-  height: 150px;
-  width: 44px;
+  height: 180px;
+  width: 56px;
   z-index: 1200;
   display: flex;
   align-items: center;
@@ -900,7 +900,7 @@ details#merged-words-details > summary {
   white-space: nowrap;
   gap: 2px;
   text-shadow: none;
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.18);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
   transition:
     background 0.15s ease,
     color 0.15s ease,
@@ -929,8 +929,8 @@ details#merged-words-details > summary {
   letter-spacing: 0.06em;
 }
 .side-toggle:hover  {
-  background: var(--side-toggle-hover-bg);
-  color: var(--btn-bg);
+  background: #222222;
+  color: #ffffff;
   transform: scale(1.02);
 }
 .side-toggle:active {
@@ -1266,22 +1266,23 @@ body[data-theme="dark"] .tile.phrase-celebrate {
   z-index: 1100;
 }
 #settings-btn {
-  font-size: 1.3rem;
-  min-width: 44px;
-  min-height: 44px;
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  border: 2px solid var(--btn-border);
+  font-size: 1.4rem;
+  font-weight: 900;
+  font-family: 'Orbitron', sans-serif;
+  min-width: 52px;
+  min-height: 52px;
+  background: #1a1a2e;
+  color: #ffffff;
+  border: 2px solid #4cc9f0;
   border-radius: 0;
   padding: 6px 10px;
   cursor: pointer;
-  font-family: 'Rajdhani', sans-serif;
-  clip-path: polygon(5px 0%, calc(100% - 5px) 0%, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0% calc(100% - 5px), 0% 5px);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   transition: background 0.15s, color 0.15s;
 }
 #settings-btn:hover {
-  background: var(--btn-fg);
-  color: var(--btn-bg);
+  background: #4cc9f0;
+  color: #1a1a2e;
 }
 #settings-menu {
   position: absolute;

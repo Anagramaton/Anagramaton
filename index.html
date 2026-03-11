@@ -29,6 +29,7 @@
 &family=Bebas+Neue
 &family=Rhajdhani:wght@300;400;500;600;700
 &family=Orbitron:wght@400;500;600;700;800;900
+&family=Black+Han+Sans
 &display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css" />
@@ -50,7 +51,7 @@
   <!-- Settings under the title -->
   <div id="settings-wrap">
 
-    <button id="settings-btn" aria-haspopup="true">⚙️</button>
+    <button id="settings-btn" aria-haspopup="true" aria-label="Settings">?</button>
 
     <div id="settings-menu" hidden>
       <button id="toggle-theme"><span class="setting-icon">🌙</span> <span class="setting-label">THEME</span></button>
@@ -67,7 +68,7 @@
   <h1 id="game-title">ANAGRAMATON</h1>
 
   <!-- UI MOVED OUTSIDE the game container -->
-  <span id="score-display">SCORE: 0</span>
+  <span id="score-display">0</span>
 
   <button id="toggle-left" class="side-toggle left-toggle" type="button"
     aria-controls="left-panel" aria-expanded="false"
