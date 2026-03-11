@@ -117,7 +117,6 @@ html, body {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--rom-ink);
-  word-break: break-all;
 }
 
 /* ── Section ──────────────────────────────────────────── */
@@ -388,4 +387,77 @@ html, body {
 }
 .player-error__link:hover {
   text-decoration: underline;
+}
+
+/* ── Stat Card — Interactive States ──────────────────── */
+.stat-card[data-stat] {
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.stat-card[data-stat]:hover {
+  border-color: var(--rom-you-border);
+  background: var(--rom-you-dim);
+}
+
+.stat-card--active {
+  border-color: var(--rom-you);
+  background: var(--rom-you-dim);
+}
+
+/* ── Recent Games Filter Bar ──────────────────────────── */
+.recent-games-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.recent-games-filter-label {
+  font-family: 'Turret Road', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--rom-ink-dim);
+}
+
+.recent-games-show-all {
+  background: none;
+  border: 1px solid var(--rom-border);
+  color: var(--rom-you);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.recent-games-show-all:hover {
+  border-color: var(--rom-you-border);
+}
+
+/* ── Mobile Overrides (≤ 480px) ───────────────────────── */
+@media (max-width: 480px) {
+  .player-name-row {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .player-name {
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .stat-card__label {
+    font-size: 0.54rem;
+  }
+
+  .stat-card__value {
+    font-size: 1.05rem;
+  }
 }

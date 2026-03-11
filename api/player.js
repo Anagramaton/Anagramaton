@@ -139,23 +139,47 @@ function computeStats(rows) {
     }
   }
 
-  // recentGames: last 20 rows (already sorted by created_at desc)
-  const recentGames = rows.slice(0, 20).map(r => ({
+  // Helper: convert a DB row to a game object
+  const toGameObj = r => ({
     dailyId: r.daily_id,
     score: Number(r.score) || 0,
     words: Array.isArray(r.words) ? r.words : [],
     hintsUsed: Number(r.hints_used) || 0,
     mode: r.mode || (r.daily_id === 'unlimited' ? 'unlimited' : 'daily'),
     date: r.created_at || null,
-  }));
+  });
+
+  // Find source game for key stats (rows already sorted by created_at desc → most recent first)
+  const highestScoreRow = rows.find(r => (Number(r.score) || 0) === highestScore);
+  const highestScoreGame = highestScoreRow ? toGameObj(highestScoreRow) : null;
+
+  const longestWordRow = longestWord
+    ? rows.find(r => (Array.isArray(r.words) ? r.words : []).some(w => typeof w === 'string' && w.toUpperCase() === longestWord))
+    : null;
+  const longestWordGame = longestWordRow ? toGameObj(longestWordRow) : null;
+
+  const topWordRaw = topWord;
+  const topWordRow = topWordRaw
+    ? rows.find(r => (Array.isArray(r.words) ? r.words : []).some(w => typeof w === 'string' && w.toUpperCase() === topWordRaw))
+    : null;
+  const topWordGame = topWordRow ? toGameObj(topWordRow) : null;
+
+  // Format topWord to include play count
+  const topWordDisplay = topWord ? `${topWord} ×${topCount}` : null;
+
+  // recentGames: last 20 rows (already sorted by created_at desc)
+  const recentGames = rows.slice(0, 20).map(toGameObj);
 
   return {
     gamesPlayed,
     highestScore,
     averageScore,
     longestWord,
-    topWord,
+    topWord: topWordDisplay,
     totalHintsUsed,
     recentGames,
+    highestScoreGame,
+    longestWordGame,
+    topWordGame,
   };
 }

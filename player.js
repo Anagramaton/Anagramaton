@@ -68,6 +68,9 @@ function escHtml(str) {
 function renderProfile(root, data) {
   const { playerName, daily, unlimited } = data;
 
+  // Truncate display name to 15 chars for layout; keep full name for title/API
+  const displayName = playerName.length > 15 ? playerName.slice(0, 15) + '…' : playerName;
+
   // Combine recent games from both modes, sort newest first, take top 20
   const allRecent = [
     ...(daily.recentGames || []),
@@ -81,7 +84,7 @@ function renderProfile(root, data) {
   root.innerHTML = `
     <div class="player-name-row">
       <span class="player-avatar">👤</span>
-      <h1 class="player-name">${escHtml(playerName)}</h1>
+      <h1 class="player-name">${escHtml(displayName)}</h1>
     </div>
 
     <div class="mode-tabs" role="tablist" aria-label="Stats mode">
@@ -112,9 +115,70 @@ function renderProfile(root, data) {
         <span class="player-section-title">RECENT GAMES</span>
         <div class="player-section-line"></div>
       </div>
-      ${renderRecentGames(allRecent)}
+      <div id="recent-games-filter-bar" class="recent-games-filter-bar" style="display:none"></div>
+      <div id="recent-games-body">
+        ${renderRecentGames(allRecent)}
+      </div>
     </section>
   `;
+
+  const statsMap = { daily, unlimited };
+
+  // Updates the Recent Games section; pass label=null to show all games
+  function showGames(games, label) {
+    const filterBar = root.querySelector('#recent-games-filter-bar');
+    const body = root.querySelector('#recent-games-body');
+    if (!filterBar || !body) return;
+
+    if (label) {
+      filterBar.style.display = '';
+      filterBar.innerHTML = `<span class="recent-games-filter-label">Showing: ${escHtml(label)}</span><button class="recent-games-show-all">× Show All</button>`;
+      filterBar.querySelector('.recent-games-show-all').addEventListener('click', () => {
+        root.querySelectorAll('.stat-card--active').forEach(c => c.classList.remove('stat-card--active'));
+        showGames(allRecent, null);
+      });
+    } else {
+      filterBar.style.display = 'none';
+      filterBar.innerHTML = '';
+    }
+    body.innerHTML = renderRecentGames(games);
+  }
+
+  // Attach stat card click handlers
+  root.querySelectorAll('.stat-card[data-stat]').forEach(card => {
+    card.addEventListener('click', () => {
+      const statKey = card.dataset.stat;
+      const modeKey = card.dataset.mode;
+      const isActive = card.classList.contains('stat-card--active');
+
+      root.querySelectorAll('.stat-card--active').forEach(c => c.classList.remove('stat-card--active'));
+
+      // 'Games Played' and 'Total Hints Used' always reset to full list
+      if (isActive || statKey === 'gamesPlayed' || statKey === 'totalHintsUsed') {
+        showGames(allRecent, null);
+        return;
+      }
+
+      card.classList.add('stat-card--active');
+
+      const modeStats = statsMap[modeKey];
+      let game = null;
+      let label = '';
+
+      if (statKey === 'highestScore') {
+        game = modeStats?.highestScoreGame || null;
+        label = 'Highest Score game';
+      } else if (statKey === 'longestWord') {
+        game = modeStats?.longestWordGame || null;
+        label = 'Longest Word game';
+      } else if (statKey === 'topWord') {
+        game = modeStats?.topWordGame || null;
+        label = 'Top Word game';
+      }
+
+      showGames(game ? [game] : allRecent, game ? label : null);
+    });
+  });
 
   // Wire up tab switching
   root.querySelectorAll('.mode-tab').forEach(tab => {
@@ -146,25 +210,26 @@ function renderModePanelContent(modeKey, stats) {
       </div>
       ${isEmpty
         ? `<p class="player-empty">${emptyMsg}</p>`
-        : renderStatGrid(stats)
+        : renderStatGrid(modeKey, stats)
       }
     </section>`;
 }
 
-function renderStatGrid(stats) {
+function renderStatGrid(modeKey, stats) {
   return `
     <div class="player-stat-grid">
-      ${statCard('Games Played', stats.gamesPlayed)}
-      ${statCard('Highest Score', stats.highestScore, true)}
-      ${statCard('Longest Word', stats.longestWord || '—')}
-      ${statCard('Top Word', stats.topWord || '—')}
-      ${statCard('Total Hints Used', stats.totalHintsUsed)}
+      ${statCard('Games Played', stats.gamesPlayed, false, 'gamesPlayed', modeKey)}
+      ${statCard('Highest Score', stats.highestScore, true, 'highestScore', modeKey)}
+      ${statCard('Longest Word', stats.longestWord || '—', false, 'longestWord', modeKey)}
+      ${statCard('Top Word', stats.topWord || '—', false, 'topWord', modeKey)}
+      ${statCard('Total Hints Used', stats.totalHintsUsed, false, 'totalHintsUsed', modeKey)}
     </div>`;
 }
 
-function statCard(label, value, highlight = false) {
+function statCard(label, value, highlight = false, statKey = '', modeKey = '') {
+  const dataAttrs = statKey ? ` data-stat="${escHtml(statKey)}" data-mode="${escHtml(modeKey)}"` : '';
   return `
-    <div class="stat-card${highlight ? ' stat-card--highlight' : ''}">
+    <div class="stat-card${highlight ? ' stat-card--highlight' : ''}"${dataAttrs}>
       <span class="stat-card__label">${escHtml(label)}</span>
       <span class="stat-card__value">${escHtml(String(value))}</span>
     </div>`;
