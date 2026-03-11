@@ -30,13 +30,15 @@ function scoreWord(word) {
 function rowToGameRef(row) {
   if (!row) return null;
   const words = Array.isArray(row.words) ? row.words : [];
+  const wordsWithScores = words
+    .filter(w => w && typeof w === 'string')
+    .map(w => ({ word: w.toUpperCase(), score: scoreWord(w) }))
+    .sort((a, b) => b.score - a.score);
+  const calculatedScore = wordsWithScores.reduce((sum, ws) => sum + ws.score, 0);
   return {
     dailyId: row.daily_id,
-    score: Number(row.score) || 0,
-    wordsWithScores: words
-      .filter(w => w && typeof w === 'string')
-      .map(w => ({ word: w.toUpperCase(), score: scoreWord(w) }))
-      .sort((a, b) => b.score - a.score),
+    score: calculatedScore,
+    wordsWithScores,
     hintsUsed: Number(row.hints_used) || 0,
     mode: row.mode || (row.daily_id === 'unlimited' ? 'unlimited' : 'daily'),
     date: row.created_at || null,
@@ -145,10 +147,15 @@ function computeStats(rows) {
   }
 
   const gamesPlayed = rows.length;
-  const highestScore = Math.max(...rows.map(r => Number(r.score) || 0));
-  const averageScore = Math.round(
-    rows.reduce((sum, r) => sum + (Number(r.score) || 0), 0) / gamesPlayed
+
+  // Compute word-list-based score for each row
+  const rowScores = rows.map(r =>
+    (Array.isArray(r.words) ? r.words : [])
+      .reduce((sum, w) => sum + (w && typeof w === 'string' ? scoreWord(w) : 0), 0)
   );
+
+  const highestScore = Math.max(...rowScores);
+  const averageScore = Math.round(rowScores.reduce((s, v) => s + v, 0) / gamesPlayed);
   const totalHintsUsed = rows.reduce((sum, r) => sum + (Number(r.hints_used) || 0), 0);
 
   // Collect all words across all rows
@@ -187,8 +194,9 @@ function computeStats(rows) {
     }
   }
 
-  // highestScoreGame: most recent row with the highest score (rows already sorted desc)
-  const highestScoreRow = rows.find(r => Number(r.score) === highestScore) || null;
+  // highestScoreGame: row with the highest calculated score (rows already sorted desc by created_at)
+  const highestScoreIdx = rowScores.indexOf(highestScore);
+  const highestScoreRow = highestScoreIdx >= 0 ? rows[highestScoreIdx] : null;
 
   // recentGames: last 20 rows (already sorted by created_at desc)
   const recentGames = rows.slice(0, 20).map(r => ({

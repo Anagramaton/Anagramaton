@@ -350,6 +350,19 @@ async function handleSubmitWordClick() {
   }
 }
 
+function computeWordListScore(wordList) {
+  return wordList.reduce((sum, word) => {
+    const upper = String(word).toUpperCase();
+    let base = 0;
+    for (const c of upper) base += letterPoints[c] || 1;
+    let mult = 1;
+    const len = upper.length;
+    if (len >= 5) mult *= lengthMultipliers[Math.min(len, 10)] || 1;
+    if (len > 1 && upper === upper.split('').reverse().join('')) mult *= anagramMultiplier;
+    return sum + (base * mult);
+  }, 0);
+}
+
 async function handleSubmitList() {
   if (gameState.listLocked) return;
   const count = (gameState.words || []).length;
@@ -460,7 +473,7 @@ async function handleSubmitList() {
         updateNameBtnText(nameBtn, playerName);
       }
       if (playerName) {
-        await submitScore(gameState.dailyId, finalScore, words, gameState.hintsUsed || 0);
+        await submitScore(gameState.dailyId, computeWordListScore(words), words, gameState.hintsUsed || 0);
       }
     })();
   }
@@ -475,7 +488,7 @@ async function handleSubmitList() {
         updateNameBtnText(nameBtn, playerName);
       }
       if (playerName) {
-        await submitScore('unlimited', finalScore, words, 0, 'unlimited');
+        await submitScore('unlimited', computeWordListScore(words), words, 0, 'unlimited');
       }
     })();
   }
