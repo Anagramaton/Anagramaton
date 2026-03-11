@@ -102,19 +102,11 @@ function renderProfile(root, data) {
         <span class="player-section-title">RECENT GAMES</span>
         <div class="player-section-line"></div>
       </div>
-      <div id="selected-game-content">
-        <p class="player-empty">Select a stat above to view the associated game.</p>
-      </div>
-    </section>
-
-    <section class="player-section">
-      <div class="player-section-header">
-        <span class="player-section-title">WORDS PLAYED</span>
-        <div class="player-section-line"></div>
-      </div>
-      <div id="words-played-content">
-        <p class="player-empty">Select a stat above to view words played.</p>
-      </div>
+      ${renderRecentGamesList([...(daily.recentGames || []), ...(unlimited.recentGames || [])].sort((a, b) => {
+        const da = a.date ? new Date(a.date).getTime() : -Infinity;
+        const db = b.date ? new Date(b.date).getTime() : -Infinity;
+        return db - da;
+      }).slice(0, 20))}
     </section>
   `;
 
@@ -129,54 +121,8 @@ function renderProfile(root, data) {
       });
       document.getElementById('mode-panel-daily').classList.toggle('mode-panel--hidden', mode !== 'daily');
       document.getElementById('mode-panel-unlimited').classList.toggle('mode-panel--hidden', mode !== 'unlimited');
-
-      // Clear all selected stat cards
-      root.querySelectorAll('.stat-card--selected').forEach(c => c.classList.remove('stat-card--selected'));
-
-      // Default to highest score game for the new mode
-      const modeStats = mode === 'daily' ? daily : unlimited;
-      selectDefaultStat(root, mode, modeStats);
     });
   });
-
-  // Wire up stat card clicks
-  root.querySelectorAll('.stat-card--clickable').forEach(card => {
-    card.addEventListener('click', () => {
-      // Deselect all in the same mode panel
-      const modePanel = card.closest('[role="tabpanel"]');
-      if (modePanel) {
-        modePanel.querySelectorAll('.stat-card--selected').forEach(c => c.classList.remove('stat-card--selected'));
-      }
-      card.classList.add('stat-card--selected');
-
-      const gameKey = card.dataset.gameKey;
-      const mode = card.dataset.mode;
-      const modeStats = mode === 'daily' ? daily : unlimited;
-      updateGameDisplay(root, modeStats[gameKey]);
-    });
-  });
-
-  // Default: show the highest score game for the active mode
-  const defaultMode = daily.gamesPlayed > 0 ? 'daily' : 'unlimited';
-  const defaultStats = defaultMode === 'daily' ? daily : unlimited;
-  selectDefaultStat(root, defaultMode, defaultStats);
-}
-
-function selectDefaultStat(root, modeKey, modeStats) {
-  const card = root.querySelector(`#mode-panel-${modeKey} .stat-card--clickable[data-game-key="highestScoreGame"]`);
-  if (card) {
-    card.classList.add('stat-card--selected');
-    updateGameDisplay(root, modeStats.highestScoreGame);
-  } else {
-    updateGameDisplay(root, null);
-  }
-}
-
-function updateGameDisplay(root, game) {
-  const gameContent = root.querySelector('#selected-game-content');
-  const wordsContent = root.querySelector('#words-played-content');
-  if (gameContent) gameContent.innerHTML = renderSelectedGame(game);
-  if (wordsContent) wordsContent.innerHTML = renderWordsPlayed(game);
 }
 
 function renderModePanelContent(modeKey, stats) {
@@ -194,38 +140,34 @@ function renderModePanelContent(modeKey, stats) {
       </div>
       ${isEmpty
         ? `<p class="player-empty">${emptyMsg}</p>`
-        : renderStatGrid(stats, modeKey)
+        : renderStatGrid(stats)
       }
     </section>`;
 }
 
-function renderStatGrid(stats, modeKey) {
+function renderStatGrid(stats) {
   return `
     <div class="player-stat-grid">
       ${statCard('Games Played', stats.gamesPlayed)}
-      ${statCard('Highest Score', stats.highestScore, true, stats.highestScoreGame ? 'highestScoreGame' : '', modeKey)}
-      ${statCard('Longest Word', stats.longestWord || '—', false, stats.longestWordGame ? 'longestWordGame' : '', modeKey, true)}
-      ${topWordCard(stats.topWord, stats.topWordGame ? modeKey : '')}
+      ${statCard('Highest Score', stats.highestScore, true)}
+      ${statCard('Longest Word', stats.longestWord || '—', false, true)}
+      ${topWordCard(stats.topWord)}
       ${statCard('Total Hints Used', stats.totalHintsUsed)}
     </div>`;
 }
 
-function statCard(label, value, highlight = false, gameKey = '', modeKey = '', isWord = false) {
-  const clickable = !!gameKey;
+function statCard(label, value, highlight = false, isWord = false) {
   const valueClass = isWord ? 'stat-card__value stat-card__value--word' : 'stat-card__value';
   return `
-    <div class="stat-card${highlight ? ' stat-card--highlight' : ''}${clickable ? ' stat-card--clickable' : ''}"
-         ${clickable ? `data-game-key="${escHtml(gameKey)}" data-mode="${escHtml(modeKey)}"` : ''}>
+    <div class="stat-card${highlight ? ' stat-card--highlight' : ''}">
       <span class="stat-card__label">${escHtml(label)}</span>
       <span class="${valueClass}">${escHtml(String(value))}</span>
     </div>`;
 }
 
-function topWordCard(topWord, modeKey) {
-  const clickable = !!modeKey && !!topWord;
+function topWordCard(topWord) {
   return `
-    <div class="stat-card${clickable ? ' stat-card--clickable' : ''}"
-         ${clickable ? `data-game-key="topWordGame" data-mode="${escHtml(modeKey)}"` : ''}>
+    <div class="stat-card">
       <span class="stat-card__label">Top Word</span>
       ${topWord
         ? `<span class="stat-card__value stat-card__value--word">${escHtml(topWord.word)}</span>
@@ -235,61 +177,43 @@ function topWordCard(topWord, modeKey) {
     </div>`;
 }
 
-function renderSelectedGame(game) {
-  if (!game) return `<p class="player-empty">No game data available.</p>`;
-
-  const dateStr = formatDate(game.dailyId, game.date, game.mode);
-  const modePill = game.mode === 'unlimited'
-    ? `<span class="mode-pill mode-pill--unlimited">UNLIMITED</span>`
-    : `<span class="mode-pill mode-pill--daily">DAILY</span>`;
-  const wordCount = Array.isArray(game.wordsWithScores) ? game.wordsWithScores.length : 0;
-
-  return `
-    <div class="selected-game-card">
-      <div class="selected-game-meta">
-        <span class="selected-game-date">${escHtml(dateStr)}</span>
-        ${modePill}
-      </div>
-      <div class="selected-game-stats">
-        <div class="selected-game-stat">
-          <span class="selected-game-stat__label">SCORE</span>
-          <span class="selected-game-stat__value highlight">${escHtml(String(game.score))}</span>
-        </div>
-        <div class="selected-game-stat">
-          <span class="selected-game-stat__label">WORDS PLAYED</span>
-          <span class="selected-game-stat__value">${escHtml(String(wordCount))}</span>
-        </div>
-        <div class="selected-game-stat">
-          <span class="selected-game-stat__label">HINTS USED</span>
-          <span class="selected-game-stat__value">${escHtml(String(game.hintsUsed))}</span>
-        </div>
-      </div>
-    </div>`;
-}
-
-function renderWordsPlayed(game) {
-  if (!game || !Array.isArray(game.wordsWithScores) || game.wordsWithScores.length === 0) {
-    return `<p class="player-empty">No words recorded for this game.</p>`;
+function renderRecentGamesList(games) {
+  if (!games || games.length === 0) {
+    return `<p class="player-empty">No recent games recorded.</p>`;
   }
 
-  const rows = game.wordsWithScores.map(ws => `
-    <tr>
-      <td>${escHtml(ws.word)}</td>
-      <td class="score-cell">${escHtml(String(ws.score))}</td>
-    </tr>`).join('');
+  return games.map(game => {
+    const dateStr = formatDate(game.dailyId, game.date, game.mode);
+    const modePill = game.mode === 'unlimited'
+      ? `<span class="mode-pill mode-pill--unlimited">UNLIMITED</span>`
+      : `<span class="mode-pill mode-pill--daily">DAILY</span>`;
 
-  return `
-    <div class="player-table-wrap">
-      <table class="player-table">
-        <thead>
+    const wordRows = Array.isArray(game.wordsWithScores) && game.wordsWithScores.length > 0
+      ? game.wordsWithScores.map(ws => `
           <tr>
-            <th>Word</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>`;
+            <td>${escHtml(ws.word)}</td>
+            <td class="score-cell">${escHtml(String(ws.score))}</td>
+          </tr>`).join('')
+      : `<tr><td colspan="2" class="player-empty">No words recorded.</td></tr>`;
+
+    return `
+      <div class="recent-game-entry">
+        <div class="recent-game-header">
+          <span class="selected-game-date">${escHtml(dateStr)}</span>
+          ${modePill}
+          <span class="recent-game-score-chip">${escHtml(String(game.score))}</span>
+          ${game.hintsUsed > 0 ? `<span class="recent-game-hints">${escHtml(String(game.hintsUsed))} hint${game.hintsUsed !== 1 ? 's' : ''}</span>` : ''}
+        </div>
+        <div class="player-table-wrap recent-game-words">
+          <table class="player-table">
+            <thead>
+              <tr><th>Word</th><th>Score</th></tr>
+            </thead>
+            <tbody>${wordRows}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 // ── Date formatting ───────────────────────────────────────────────

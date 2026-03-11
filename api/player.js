@@ -199,14 +199,8 @@ function computeStats(rows) {
   const highestScoreRow = highestScoreIdx >= 0 ? rows[highestScoreIdx] : null;
 
   // recentGames: last 20 rows (already sorted by created_at desc)
-  const recentGames = rows.slice(0, 20).map(r => ({
-    dailyId: r.daily_id,
-    score: Number(r.score) || 0,
-    words: Array.isArray(r.words) ? r.words : [],
-    hintsUsed: Number(r.hints_used) || 0,
-    mode: r.mode || (r.daily_id === 'unlimited' ? 'unlimited' : 'daily'),
-    date: r.created_at || null,
-  }));
+  // Use rowToGameRef so each entry has calculated scores and wordsWithScores
+  const recentGames = rows.slice(0, 20).map(rowToGameRef);
 
   return {
     gamesPlayed,
