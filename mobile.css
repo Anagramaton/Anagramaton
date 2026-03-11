@@ -10,12 +10,12 @@
     top: clamp(40px, 10vh, 80px);
     letter-spacing: 0.02em;
     transition: all 0.15s ease;
-    background: #000000;
-    color: #ffffff;
-    border: 2.5px solid #000000;
+    background: var(--side-toggle-bg);
+    color: var(--side-toggle-fg);
+    border: 2.5px solid var(--side-toggle-border);
   }
   .side-toggle .vword {
-    color: #ffffff;
+    color: var(--side-toggle-fg);
   }
 }
 
@@ -85,16 +85,14 @@
     text-align: center;
     width: max-content;
     pointer-events: none;
-    background: linear-gradient(160deg, #61bfd8 0%, #3d6470 45%, #4db2d1 100%);
-    color: #1a1a2e;
+    background: none;
+    clip-path: none;
+    filter: none;
+    padding: 0;
     font-family: 'Limelight', sans-serif;
-    font-size: 1.6rem;
+    font-size: 2rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    padding: 10px 28px;
-    border: none;
-    clip-path: polygon(14px 0%, calc(100% - 14px) 0%, 100% 50%, calc(100% - 14px) 100%, 14px 100%, 0% 50%);
-    filter: drop-shadow(2px 3px 0px #0a5a72) drop-shadow(0 0 10px rgba(76, 201, 240, 0.2));
+    letter-spacing: 0.04em;
   }
 }
 
@@ -163,15 +161,6 @@
 
 /* ── Settings button — mobile: bottom center below submit/clear ── */
 @media (max-width: 768px) {
-  #settings-wrap {
-    position: fixed;
-    bottom: clamp(10px, calc(env(safe-area-inset-bottom) + 1.5vh), 22px);
-    left: 50%;
-    transform: translateX(-50%);
-    top: auto;
-    right: auto;
-    z-index: 1100;
-  }
   #settings-btn {
     font-size: 1rem;
     min-width: 36px;
@@ -179,12 +168,6 @@
     padding: 4px 8px;
   }
   #settings-menu {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    top: auto;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
     min-width: 180px;
     z-index: 1500;
   }
