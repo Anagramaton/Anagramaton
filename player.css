@@ -103,21 +103,26 @@ html, body {
   align-items: center;
   gap: 10px;
   margin: 20px 0 32px;
+  min-width: 0;
 }
 
 .player-avatar {
   font-size: 2rem;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .player-name {
   font-family: 'Orbitron', sans-serif;
-  font-size: 1.6rem;
+  font-size: clamp(1rem, 5vw, 1.6rem);
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--rom-ink);
-  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* ── Section ──────────────────────────────────────────── */
@@ -244,12 +249,40 @@ html, body {
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--rom-ink);
-  word-break: break-word;
   line-height: 1.2;
+}
+
+.stat-card__value--word {
+  font-size: 0.9rem;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.stat-card__word-score {
+  font-family: 'Turret Road', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--rom-muted);
+  letter-spacing: 0.06em;
 }
 
 .stat-card--highlight .stat-card__value {
   color: var(--rom-you);
+}
+
+.stat-card--clickable {
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.stat-card--clickable:hover {
+  border-color: var(--rom-you-border);
+  background: var(--rom-you-dim);
+}
+
+.stat-card--selected {
+  border-color: var(--rom-you-border);
+  background: var(--rom-you-dim);
 }
 
 /* ── Achievements Placeholder ─────────────────────────── */
@@ -321,15 +354,6 @@ html, body {
   background: var(--rom-surface);
 }
 
-.player-table .words-cell {
-  max-width: 220px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--rom-ink-dim);
-  font-size: 0.72rem;
-}
-
 /* ── Mode Pills ───────────────────────────────────────── */
 .mode-pill {
   display: inline-block;
@@ -352,6 +376,70 @@ html, body {
   background: var(--rom-them-dim);
   color: var(--rom-them);
   border: 1px solid var(--rom-them-border);
+}
+
+/* ── Selected Game Card ───────────────────────────────── */
+.selected-game-card {
+  background: var(--rom-surface);
+  border: 1px solid var(--rom-border);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.selected-game-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selected-game-date {
+  font-family: 'Turret Road', monospace;
+  font-size: 0.82rem;
+  color: var(--rom-ink-dim);
+  letter-spacing: 0.06em;
+}
+
+.selected-game-stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.selected-game-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.selected-game-stat__label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rom-muted);
+}
+
+.selected-game-stat__value {
+  font-family: 'Turret Road', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--rom-ink);
+  line-height: 1.2;
+}
+
+.selected-game-stat__value.highlight {
+  color: var(--rom-you);
+}
+
+/* ── Words Played Table ───────────────────────────────── */
+.score-cell {
+  color: var(--rom-you);
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 /* ── Loading / Error States ───────────────────────────── */

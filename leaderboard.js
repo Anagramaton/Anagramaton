@@ -11,7 +11,7 @@ export function getPlayerName() {
 export function setPlayerName(name) {
   if (typeof name !== 'string') return null;
   const trimmed = name.trim();
-  if (trimmed.length === 0 || trimmed.length > 30) return null;
+  if (trimmed.length === 0 || trimmed.length > 15) return null;
   localStorage.setItem(PLAYER_NAME_KEY, trimmed);
   return trimmed;
 }
@@ -123,8 +123,8 @@ function ensureNameModal() {
   modal.innerHTML = `
     <div id="lb-name-box">
       <p id="lb-name-title">👤 SET DISPLAY NAME</p>
-      <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.75rem;">Shown on the daily leaderboard (max 30 chars)</p>
-      <input id="lb-name-input" type="text" maxlength="30" placeholder="Enter your name…" autocomplete="off" />
+      <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.75rem;">Shown on the daily leaderboard (max 15 chars)</p>
+      <input id="lb-name-input" type="text" maxlength="15" placeholder="Enter your name…" autocomplete="off" />
       <div class="lb-name-btns">
         <button type="button" id="lb-name-cancel">SKIP</button>
         <button type="button" id="lb-name-ok">SAVE</button>

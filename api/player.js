@@ -1,5 +1,48 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Scoring constants — must match constants.js in the frontend
+const LETTER_POINTS = {
+  A: 1, B: 3, C: 3, D: 2, E: 1,
+  F: 4, G: 2, H: 4, I: 1, J: 8,
+  K: 5, L: 1, M: 3, N: 1, O: 1,
+  P: 3, Q: 10, R: 1, S: 1, T: 1,
+  U: 1, V: 4, W: 4, X: 8, Y: 4, Z: 10,
+};
+const LENGTH_MULTIPLIERS = { 5: 3, 6: 4, 7: 5, 8: 6, 9: 7, 10: 10 };
+const ANAGRAM_MULTIPLIER = 5;
+
+function scoreWord(word) {
+  const upper = String(word).toUpperCase();
+  let base = 0;
+  for (const c of upper) {
+    base += LETTER_POINTS[c] || 1;
+  }
+  let mult = 1;
+  if (upper.length >= 5) {
+    mult *= LENGTH_MULTIPLIERS[Math.min(upper.length, 10)] || 1;
+  }
+  if (upper.length > 1 && upper === upper.split('').reverse().join('')) {
+    mult *= ANAGRAM_MULTIPLIER;
+  }
+  return base * mult;
+}
+
+function rowToGameRef(row) {
+  if (!row) return null;
+  const words = Array.isArray(row.words) ? row.words : [];
+  return {
+    dailyId: row.daily_id,
+    score: Number(row.score) || 0,
+    wordsWithScores: words
+      .filter(w => w && typeof w === 'string')
+      .map(w => ({ word: w.toUpperCase(), score: scoreWord(w) }))
+      .sort((a, b) => b.score - a.score),
+    hintsUsed: Number(row.hints_used) || 0,
+    mode: row.mode || (row.daily_id === 'unlimited' ? 'unlimited' : 'daily'),
+    date: row.created_at || null,
+  };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -95,6 +138,9 @@ function computeStats(rows) {
       topWord: null,
       totalHintsUsed: 0,
       recentGames: [],
+      highestScoreGame: null,
+      longestWordGame: null,
+      topWordGame: null,
     };
   }
 
@@ -107,7 +153,10 @@ function computeStats(rows) {
 
   // Collect all words across all rows
   let longestWord = null;
-  const wordFreq = {};
+  let longestWordRow = null;
+  let topWordEntry = null;
+  let topWordScore = -1;
+  let topWordRow = null;
 
   for (const row of rows) {
     const words = Array.isArray(row.words) ? row.words : [];
@@ -122,22 +171,24 @@ function computeStats(rows) {
         (upper.length === longestWord.length && upper > longestWord)
       ) {
         longestWord = upper;
+        longestWordRow = row;
       }
 
-      // Track word frequency
-      wordFreq[upper] = (wordFreq[upper] || 0) + 1;
+      // Track top word (highest individual score)
+      const ws = scoreWord(upper);
+      if (
+        ws > topWordScore ||
+        (ws === topWordScore && topWordEntry !== null && upper > topWordEntry.word)
+      ) {
+        topWordScore = ws;
+        topWordEntry = { word: upper, score: ws };
+        topWordRow = row;
+      }
     }
   }
 
-  // topWord: most frequently appearing word across all games
-  let topWord = null;
-  let topCount = 0;
-  for (const [word, count] of Object.entries(wordFreq)) {
-    if (count > topCount || (count === topCount && topWord !== null && word > topWord)) {
-      topWord = word;
-      topCount = count;
-    }
-  }
+  // highestScoreGame: most recent row with the highest score (rows already sorted desc)
+  const highestScoreRow = rows.find(r => Number(r.score) === highestScore) || null;
 
   // recentGames: last 20 rows (already sorted by created_at desc)
   const recentGames = rows.slice(0, 20).map(r => ({
@@ -154,8 +205,11 @@ function computeStats(rows) {
     highestScore,
     averageScore,
     longestWord,
-    topWord,
+    topWord: topWordEntry,
     totalHintsUsed,
     recentGames,
+    highestScoreGame: rowToGameRef(highestScoreRow),
+    longestWordGame: rowToGameRef(longestWordRow),
+    topWordGame: rowToGameRef(topWordRow),
   };
 }

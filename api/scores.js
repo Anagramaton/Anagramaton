@@ -41,8 +41,8 @@ export default async function handler(req, res) {
   if (!playerName || typeof playerName !== 'string' || playerName.trim().length === 0) {
     return res.status(400).json({ error: 'playerName must be a non-empty string' });
   }
-  if (playerName.trim().length > 30) {
-    return res.status(400).json({ error: 'playerName must be 30 characters or fewer' });
+  if (playerName.trim().length > 15) {
+    return res.status(400).json({ error: 'playerName must be 15 characters or fewer' });
   }
 
   // Validate score
