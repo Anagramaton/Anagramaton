@@ -1,7 +1,7 @@
 // uiRenderer.js
 export function updateScoreDisplay(score) {
   const el = document.getElementById('score-display');
-  if (el) el.textContent = `SCORE: ${Number(score) || 0}`;
+  if (el) el.textContent = `${Number(score) || 0}`;
 }
 
 export function addWordToList(word, score) {

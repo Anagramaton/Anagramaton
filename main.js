@@ -273,6 +273,27 @@ window.addEventListener('score:delta', (e) => {
   updateScoreDisplay(baseTotal + bonusTotal);
 });
 
+function fitCurrentWord() {
+  const display = document.getElementById('current-word-display');
+  const word = document.getElementById('current-word');
+  if (!display || !word) return;
+  display.style.fontSize = '';
+  if (word.scrollWidth <= display.offsetWidth) return;
+  const maxSize = parseFloat(getComputedStyle(display).fontSize);
+  const minSize = 10;
+  let lo = minSize, hi = maxSize;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) / 2;
+    display.style.fontSize = mid + 'px';
+    if (word.scrollWidth > display.offsetWidth) {
+      hi = mid;
+    } else {
+      lo = mid;
+    }
+  }
+  display.style.fontSize = lo + 'px';
+}
+
 function updateCurrentWordDisplay() {
   const el = document.getElementById('current-word');
   if (!el) return;
@@ -281,6 +302,7 @@ function updateCurrentWordDisplay() {
     .join('')
     .toUpperCase();
   el.textContent = letters;
+  fitCurrentWord();
 }
 
 async function handleSubmitWordClick() {
@@ -376,7 +398,7 @@ async function handleSubmitList() {
   }
 
   const scoreEl        = document.getElementById('score-display');
-  const finalScoreText = scoreEl ? (scoreEl.textContent || 'SCORE: 0') : 'SCORE: 0';
+  const finalScoreText = scoreEl ? (scoreEl.textContent || '0') : '0';
   const finalScore     = (typeof totalScore === 'number') ? totalScore : 0;
 
   resetSelectionState();
@@ -740,6 +762,7 @@ document.getElementById('new-game')?.addEventListener('click', () => {
       resetSelectionState();
       const cw = document.getElementById('current-word');
       if (cw) cw.textContent = '';
+      fitCurrentWord();
     });
 
   window.addEventListener('selection:changed', updateCurrentWordDisplay);
