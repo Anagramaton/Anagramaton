@@ -9,14 +9,14 @@ html[data-theme="dark"] {
   --rom-muted:        #6b7280;
   --rom-ink:          #f1f5f9;
   --rom-ink-dim:      #94a3b8;
-  --rom-you:          #f59e0b;
-  --rom-you-dim:      rgba(245, 158, 11, 0.12);
-  --rom-you-border:   rgba(245, 158, 11, 0.32);
+  --rom-you:          #4cc9f0;
+  --rom-you-dim:      rgba(76, 201, 240, 0.12);
+  --rom-you-border:   rgba(76, 201, 240, 0.32);
   --rom-them:         #38bdf8;
   --rom-them-dim:     rgba(56, 189, 248, 0.1);
   --rom-them-border:  rgba(56, 189, 248, 0.32);
   --rom-win:          #34d399;
-  --rom-gold:         #fbbf24;
+  --rom-gold:         #4cc9f0;
   --rom-chip-bg:      rgba(255, 255, 255, 0.06);
   --rom-surface:      rgba(255, 255, 255, 0.035);
 }
@@ -29,14 +29,14 @@ html[data-theme="light"] {
   --rom-muted:        #6b7280;
   --rom-ink:          #1a1a2e;
   --rom-ink-dim:      #4b5563;
-  --rom-you:          #d97706;
-  --rom-you-dim:      rgba(217, 119, 6, 0.1);
-  --rom-you-border:   rgba(217, 119, 6, 0.3);
+  --rom-you:          #3ab5db;
+  --rom-you-dim:      rgba(58, 181, 219, 0.1);
+  --rom-you-border:   rgba(58, 181, 219, 0.3);
   --rom-them:         #0284c7;
   --rom-them-dim:     rgba(2, 132, 199, 0.1);
   --rom-them-border:  rgba(2, 132, 199, 0.3);
   --rom-win:          #059669;
-  --rom-gold:         #d97706;
+  --rom-gold:         #3ab5db;
   --rom-chip-bg:      rgba(0, 0, 0, 0.05);
   --rom-surface:      rgba(0, 0, 0, 0.03);
 }

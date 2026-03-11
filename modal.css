@@ -11,16 +11,16 @@
   --rom-ink:          #f1f5f9;
   --rom-ink-dim:      #94a3b8;
 
-  --rom-you:          #f59e0b;
-  --rom-you-dim:      rgba(245, 158, 11, 0.12);
-  --rom-you-border:   rgba(245, 158, 11, 0.32);
+  --rom-you:          #4cc9f0;
+  --rom-you-dim:      rgba(76, 201, 240, 0.12);
+  --rom-you-border:   rgba(76, 201, 240, 0.32);
 
   --rom-them:         #38bdf8;
   --rom-them-dim:     rgba(56, 189, 248, 0.1);
   --rom-them-border:  rgba(56, 189, 248, 0.32);
 
   --rom-win:          #34d399;
-  --rom-gold:         #fbbf24;
+  --rom-gold:         #4cc9f0;
   --rom-chip-bg:      rgba(255, 255, 255, 0.06);
   --rom-surface:      rgba(255, 255, 255, 0.035);
 }
@@ -73,7 +73,7 @@
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.04),
     0 32px 80px rgba(0,0,0,0.85),
-    0 0 60px rgba(245,158,11,0.12),
+    0 0 60px rgba(76, 201, 240, 0.12),
     0 0 60px rgba(56,189,248,0.09);
 
   animation: rom-enter 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -101,7 +101,7 @@ body.rom-open { overflow: hidden; }
   border-bottom: 1px solid var(--rom-border);
   background: linear-gradient(
     160deg,
-    rgba(245,158,11,0.07) 0%,
+    rgba(76, 201, 240, 0.07) 0%,
     transparent 45%,
     rgba(56,189,248,0.05) 100%
   );
@@ -145,7 +145,7 @@ body.rom-open { overflow: hidden; }
   font-weight: 800;
   line-height: 1;
   color: var(--rom-you);
-  text-shadow: 0 0 40px rgba(245,158,11,0.5), 0 0 80px rgba(245,158,11,0.18);
+  text-shadow: 0 0 40px rgba(76, 201, 240, 0.5), 0 0 80px rgba(76, 201, 240, 0.18);
   animation: rom-score-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 
@@ -257,7 +257,7 @@ body.rom-open { overflow: hidden; }
   position: absolute;
   inset: 0 auto 0 0;
   width: 0%;
-  background: linear-gradient(90deg, #d97706, #f59e0b, #fbbf24, #f59e0b, #d97706);
+  background: linear-gradient(90deg, #3ab5db, #4cc9f0, #7ee8ff, #4cc9f0, #3ab5db);
   background-size: 300% 100%;
   animation: fill-sweep 2.6s linear infinite;
   border-radius: inherit;
@@ -455,9 +455,9 @@ body.rom-open { overflow: hidden; }
   line-height: 1.5;
 }
 .rom__phrase-status--found {
-  border-color: #f59e0b;
-  color: #f59e0b;
-  background: rgba(245, 158, 11, 0.08);
+  border-color: #4cc9f0;
+  color: #4cc9f0;
+  background: rgba(76, 201, 240, 0.08);
 }
 .rom__summary-grid {
   display: grid;
@@ -521,7 +521,7 @@ body.rom-open { overflow: hidden; }
 }
 .rom__tab:hover { color: var(--rom-ink); background: rgba(255,255,255,0.05); }
 .rom__tab--active {
-  background: rgba(245,158,11,0.14);
+  background: rgba(76, 201, 240, 0.14);
   color: var(--rom-you);
   border-color: var(--rom-you-border);
 }
@@ -637,7 +637,7 @@ body.lb-modal-open { overflow: hidden; }
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.04),
     0 32px 80px rgba(0,0,0,0.85),
-    0 0 60px rgba(245,158,11,0.12);
+    0 0 60px rgba(76, 201, 240, 0.12);
   animation: rom-enter 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
