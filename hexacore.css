@@ -33,7 +33,7 @@
 /* ── Hexacore HUD ──────────────────────────────────────────────── */
 #hx-score-hud {
   position: fixed;
-  bottom: clamp(12px, 3vh, 28px);
+  bottom: clamp(80px, 12vh, 130px);
   left: 50%;
   transform: translateX(-50%);
   color: #4cc9f0;
@@ -203,6 +203,6 @@ body.hx-active #hex-grid {
 
   body.hx-active #hx-score-hud {
     font-size: 0.85rem;
-    bottom: clamp(8px, 2vh, 20px);
+    bottom: clamp(70px, 10vh, 100px);
   }
 }
