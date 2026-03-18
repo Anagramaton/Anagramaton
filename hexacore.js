@@ -21,9 +21,15 @@ import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
 
 /* ── Layout constants ──────────────────────────────────────────── */
-const TILE_SPACING        = 1.25;
-const INTRO_ARC_OFFSET    = 60;  // px: horizontal fan spread during pour-in arc
-const REFILL_STAGGER_MS   = 40;  // ms between each column's spawn delay
+const TILE_SPACING             = 1.25;
+const INTRO_ARC_OFFSET         = 60;   // px: horizontal fan spread during pour-in arc
+const REFILL_STAGGER_MS        = 40;   // ms between each column's spawn delay
+
+/* ── Animation timing constants (easy to tune) ─────────────────── */
+const WORD_TILE_STAGGER_MS      = 55;  // ms stagger between each consumed tile pop-out
+const GRAVITY_STAGGER_MS        = 38;  // ms stagger between tiles in the gravity cascade
+const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
+const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
 
 /* ── Letter pool (vowels + common consonants + rare via letterFrequencies) */
 const HX_LETTER_POOL = [
@@ -190,6 +196,19 @@ async function animateTileMoves(moves) {
     })
   );
 
+  await Promise.all(promises);
+}
+
+/* ── Animate tile moves with a per-tile stagger (chain-reaction) ── */
+async function animateTileMovesStaggered(moves, staggerMs) {
+  if (moves.length === 0) return;
+  const promises = moves.map((move, idx) =>
+    new Promise(resolve => {
+      setTimeout(() => {
+        animateTileMoves([move]).then(resolve);
+      }, idx * staggerMs);
+    })
+  );
   await Promise.all(promises);
 }
 
@@ -422,6 +441,37 @@ function updateHud() {
   if (hud) hud.textContent = `${hxState.score} PTS`;
 }
 
+/* ── Animate the HUD score counting up from oldScore → newScore ── */
+let _scoreRafId = 0; // cancel any in-flight count-up before starting a new one
+function animateScoreHud(oldScore, newScore) {
+  const hud = document.getElementById('hx-score-hud');
+  if (!hud) return;
+
+  // Cancel any in-progress count-up animation
+  if (_scoreRafId) { cancelAnimationFrame(_scoreRafId); _scoreRafId = 0; }
+
+  // Restart pop animation (force reflow so the animation restarts if already running)
+  hud.classList.remove('hx-score-popping');
+  void hud.getBoundingClientRect();
+  hud.classList.add('hx-score-popping');
+  hud.addEventListener('animationend', () => {
+    hud.classList.remove('hx-score-popping');
+  }, { once: true });
+
+  // Ease-out count-up via requestAnimationFrame
+  const startTime = performance.now();
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+  function frame(now) {
+    const elapsed  = now - startTime;
+    const progress = Math.min(elapsed / SCORE_TICK_MS, 1);
+    const current  = Math.round(oldScore + (newScore - oldScore) * easeOut(progress));
+    hud.textContent = `${current} PTS`;
+    if (progress < 1) { _scoreRafId = requestAnimationFrame(frame); }
+    else { _scoreRafId = 0; }
+  }
+  _scoreRafId = requestAnimationFrame(frame);
+}
+
 function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
   const hud = document.createElement('div');
@@ -586,11 +636,12 @@ async function submitHexacoreWord() {
   const wordScore = base * lenMult * (hasPrism ? 2 : 1);
 
   hxWordCount++;
+  const oldScore = hxState.score;
   hxState.score += wordScore;
   hxState.words.push({ word, score: wordScore });
 
   updateScoreDisplay();
-  updateHud();
+  animateScoreHud(oldScore, hxState.score);
 
   const consumed = [...hxSelected];
   clearSelection();
@@ -605,12 +656,20 @@ async function submitHexacoreWord() {
 
 /* ── Consume tiles → gravity → ember → refill ─────────────────── */
 async function consumeAndRefill(tilesToRemove) {
-  // 1. Animate tiles out (fade + scale), then remove
-  tilesToRemove.forEach(tile => {
-    tile.element.classList.add('hx-tile-removing');
+  // 1. Animate tiles out with a tile-by-tile stagger (first selected → last)
+  tilesToRemove.forEach((tile, idx) => {
+    tile.element.style.setProperty('--tile-idx', String(idx));
+    const type = tile.tileType;
+    if (type === 'ember' || type === 'prism' || type === 'rune') {
+      // Consumed-special class replaces hx-tile-removing with combined animation
+      tile.element.classList.add(`hx-consumed-${type}`);
+    } else {
+      tile.element.classList.add('hx-tile-removing');
+    }
     tile.element.style.pointerEvents = 'none';
   });
-  await delay(280);
+  // Wait for all tiles to finish: pop-out duration + stagger * tile count
+  await delay(270 + WORD_TILE_STAGGER_MS * tilesToRemove.length);
 
   tilesToRemove.forEach(tile => {
     tile.element.remove();
@@ -673,7 +732,7 @@ async function applyGravity() {
 
     if (moves.length === 0) break;
 
-    await animateTileMoves(moves);
+    await animateTileMovesStaggered(moves, GRAVITY_STAGGER_MS);
   }
 }
 
@@ -770,7 +829,8 @@ async function refillGrid() {
         new Promise(resolve => {
           setTimeout(async () => {
             colMoves.forEach(m => { m.tile.element.style.opacity = '1'; });
-            await animateTileMoves(colMoves);
+            // Stagger tiles within the column top-to-bottom (colMoves is already r_min→r_max)
+            await animateTileMovesStaggered(colMoves, REFILL_COL_TILE_STAGGER_MS);
             resolve();
           }, colIdx * REFILL_STAGGER_MS);
         }),
@@ -808,6 +868,13 @@ function spawnSpecialInRows(type, rows) {
   else if (type === 'prism') hxState.prismTiles.push(target);
   else if (type === 'rune')  hxState.runeTiles.push(target);
   applyTileType(target);
+
+  // Dramatic entrance animation for the newly spawned special tile
+  const spawnClass = `hx-${type}-spawn`;
+  target.element.classList.add(spawnClass);
+  target.element.addEventListener('animationend', () => {
+    target.element.classList.remove(spawnClass);
+  }, { once: true });
 }
 
 /* ── Game over ─────────────────────────────────────────────────── */
