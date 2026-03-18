@@ -55,7 +55,9 @@ const HX_LETTER_POOL = [
   'K', 'V', 'J', 'X', 'Z', 'Q',
 ];
 
-/* ── Opening board pool — exactly 61 letters for GRID_RADIUS=4 (no J/X/Z, 1 Q) */
+/* ── Opening board pool — exactly 61 letters for GRID_RADIUS=4
+     The last entry ('Q') is replaced at the start of each game with a
+     randomly chosen rare tile from {J, X, Z, Q} — see buildGrid(). */
 const HX_OPENING_POOL = [
   ...Array(8).fill('E'),
   ...Array(6).fill('A'),
@@ -76,6 +78,9 @@ const HX_OPENING_POOL = [
 ];
 // Total: 8+6+5+5+5+5+4+4+3+3+3+2+2+2+2+1+1+1+1+1+1+1+1 = 67 — trim to 61
 // (sliced in buildGrid after shuffling)
+
+/* Rare tiles that rotate as the single "premium" slot on the opening board */
+const HX_OPENING_RARE_TILES = ['J', 'X', 'Z', 'Q'];
 
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
@@ -406,6 +411,12 @@ function buildGrid() {
 
   // Build the shuffled opening pool (slice to exactly 61 tiles for GRID_RADIUS=4)
   const openingPool = [...HX_OPENING_POOL];
+
+  // Rotate the single rare-tile slot: pick J, X, Z, or Q at random each game
+  const rareTile = HX_OPENING_RARE_TILES[Math.floor(Math.random() * HX_OPENING_RARE_TILES.length)];
+  const rareIdx  = openingPool.lastIndexOf('Q');
+  if (rareIdx !== -1) openingPool[rareIdx] = rareTile;
+
   for (let i = openingPool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [openingPool[i], openingPool[j]] = [openingPool[j], openingPool[i]];
