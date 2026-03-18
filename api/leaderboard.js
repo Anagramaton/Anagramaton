@@ -21,8 +21,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const mode = req.query?.mode === 'unlimited' ? 'unlimited' : 'daily';
-  const dailyId = mode === 'unlimited' ? 'unlimited' : (req.query?.dailyId || getTodayId());
+  const validModes = ['daily', 'unlimited', 'hexacore'];
+  const mode = validModes.includes(req.query?.mode) ? req.query.mode : 'daily';
+  const dailyId = (mode === 'unlimited' || mode === 'hexacore') ? mode : (req.query?.dailyId || getTodayId());
 
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
     return res.status(200).json({ configured: false, mode, dailyId, leaderboard: [] });
