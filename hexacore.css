@@ -33,7 +33,7 @@
 /* ── Hexacore HUD ──────────────────────────────────────────────── */
 #hx-score-hud {
   position: fixed;
-  top: 60px;
+  bottom: clamp(80px, 12vh, 130px);
   left: 50%;
   transform: translateX(-50%);
   color: #4cc9f0;
@@ -45,6 +45,13 @@
   z-index: 500;
   white-space: nowrap;
 }
+
+/* ── Hide Anagramaton-specific UI during Hexacore ──────────────── */
+body.hx-active #score-display        { display: none; }
+body.hx-active .side-toggle          { display: none; }
+body.hx-active #current-word-display { display: none; }
+body.hx-active #left-panel-title,
+body.hx-active #right-panel-title    { display: none; }
 
 /* ── Game over overlay ─────────────────────────────────────────── */
 #hx-gameover-overlay {
@@ -173,4 +180,29 @@
 /* ── Disable native scroll/zoom on hex grid during Hexacore ───── */
 body.hx-active #hex-grid {
   touch-action: none;
+}
+
+/* ── Mobile: maximize hex grid tiles without clipping ─────────── */
+@media (max-width: 768px) {
+  body.hx-active #game-container {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    width: 100vw;
+  }
+
+  body.hx-active #hex-grid {
+    width: 100%;
+    height: 100%;
+  }
+
+  body.hx-active #game-title {
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    top: clamp(2px, 1vh, 8px);
+  }
+
+  body.hx-active #hx-score-hud {
+    font-size: 0.85rem;
+    bottom: clamp(70px, 10vh, 100px);
+  }
 }

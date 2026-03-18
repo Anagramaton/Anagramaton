@@ -10,6 +10,7 @@ import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAn
 import { isValidWord } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName, promptSignOut, clearPlayerName } from './leaderboard.js';
 import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+import { stopHexacore } from './hexacore.js';
 
 
 // ============================================================
@@ -618,6 +619,21 @@ window.addEventListener('grid:ready', () => {
       settingsMenu.hidden = true;
       settingsWrap.classList.remove('menu-open');
       window.lbModal?.open();
+    });
+  }
+
+  // ============================
+  // HOME BUTTON
+  // ============================
+  const homeBtn = document.getElementById('home-btn');
+  if (homeBtn) {
+    homeBtn.addEventListener('click', () => {
+      settingsMenu.hidden = true;
+      settingsWrap.classList.remove('menu-open');
+      if (document.body.classList.contains('hx-active')) {
+        stopHexacore();
+      }
+      document.getElementById('splash-screen')?.classList.remove('hidden');
     });
   }
 

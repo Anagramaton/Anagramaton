@@ -404,14 +404,14 @@ function updateScoreDisplay() {
 
 function updateHud() {
   const hud = document.getElementById('hx-score-hud');
-  if (hud) hud.textContent = `HEXACORE · ${hxState.score} PTS`;
+  if (hud) hud.textContent = `${hxState.score} PTS`;
 }
 
 function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
   const hud = document.createElement('div');
   hud.id = 'hx-score-hud';
-  hud.textContent = 'HEXACORE · 0 PTS';
+  hud.textContent = '0 PTS';
   document.body.appendChild(hud);
 }
 
@@ -981,6 +981,26 @@ export function startHexacore() {
   updateScoreDisplay();
 
   setupPointerEvents();
+}
+
+export function stopHexacore() {
+  hxState.gameOver = true;
+  hxState.active   = false;
+
+  if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
+
+  document.getElementById('hx-gameover-overlay')?.remove();
+  removeHud();
+
+  document.body.classList.remove('hx-active');
+
+  const titleEl = document.getElementById('game-title');
+  if (titleEl) titleEl.textContent = 'ANAGRAMATON';
+
+  const submitBtn = document.getElementById('submit-word');
+  const clearBtn  = document.getElementById('clear-word');
+  if (submitBtn) submitBtn.style.removeProperty('display');
+  if (clearBtn)  clearBtn.style.removeProperty('display');
 }
 
 /* ── Splash screen wiring (on module load) ─────────────────────── */
