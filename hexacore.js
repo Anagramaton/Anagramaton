@@ -61,7 +61,6 @@ let hxSvg            = null;
 let hxWordCount      = 0;
 let hxTileMap        = new Map(); // `q,r` → tile object
 let hxPointerCleanup = null;
-let hxButtonCleanup  = null;
 
 /* ── Pure helpers ──────────────────────────────────────────────── */
 function hxKey(q, r) { return `${q},${r}`; }
@@ -204,8 +203,9 @@ function buildGrid() {
         pointValue: letterPoints[letter] || 1,
       });
 
-      tile.tileType   = 'normal';
-      tile.s          = s;
+      tile.tileType    = 'normal';
+      tile.s           = s;
+      tile._transformX = 0;
       tile._transformY = 0;
 
       hxState.tiles.push(tile);
@@ -216,19 +216,8 @@ function buildGrid() {
   hxSvg.appendChild(board);
 }
 
-function spawnInitialEmbers() {
-  const topPool = hxState.tiles.filter(
-    t => t.r === -GRID_RADIUS || t.r === -GRID_RADIUS + 1,
-  );
-  const shuffled = [...topPool].sort(() => Math.random() - 0.5);
-  shuffled.slice(0, 2).forEach(tile => {
-    tile.tileType = 'ember';
-    hxState.emberTiles.push(tile);
-    applyTileType(tile);
-  });
-}
 
-/* ── Score / HUD ───────────────────────────────────────────────── */
+/* ── Rune wildcard resolution ──────────────────────────────────── */
 function updateScoreDisplay() {
   const el = document.getElementById('score-display');
   if (el) el.textContent = String(hxState.score);
@@ -324,10 +313,15 @@ function setupPointerEvents() {
   function onPointerUp(e) {
     if (!hxPointerDown) return;
     hxPointerDown = false;
+    // Auto-submit the word when the drag ends
+    if (hxState.active && !hxState.gameOver && hxSelected.length > 0) {
+      submitHexacoreWord();
+    }
   }
 
   function onPointerCancel() {
     hxPointerDown = false;
+    clearSelection();
   }
 
   svg.addEventListener('pointerdown',   onPointerDown);
@@ -340,22 +334,6 @@ function setupPointerEvents() {
     svg.removeEventListener('pointermove',   onPointerMove);
     svg.removeEventListener('pointerup',     onPointerUp);
     svg.removeEventListener('pointercancel', onPointerCancel);
-  };
-}
-
-function setupButtons() {
-  const submitBtn = document.getElementById('submit-word');
-  const clearBtn  = document.getElementById('clear-word');
-  if (!submitBtn || !clearBtn) return;
-
-  function onSubmit() { if (hxState.active && !hxState.gameOver) submitHexacoreWord(); }
-  function onClear()  { if (hxState.active && !hxState.gameOver) clearSelection(); }
-
-  submitBtn.addEventListener('click', onSubmit);
-  clearBtn.addEventListener('click',  onClear);
-  hxButtonCleanup = () => {
-    submitBtn.removeEventListener('click', onSubmit);
-    clearBtn.removeEventListener('click',  onClear);
   };
 }
 
@@ -392,26 +370,21 @@ function resolveLetters(selectedTiles) {
 
 /* ── Word submission ───────────────────────────────────────────── */
 async function submitHexacoreWord() {
+  // Too few tiles — silently cancel (accidental drag)
   if (hxSelected.length < 4) {
-    showAlert('Select at least 4 tiles!');
-    return;
-  }
-
-  const resolved = resolveLetters(hxSelected);
-  if (!resolved) {
-    showAlert('Invalid word!');
     clearSelection();
     return;
   }
 
-  const word = resolved.join('');
-  if (!isValidWord(word)) {
-    showAlert('Not a valid word!');
+  const resolved = resolveLetters(hxSelected);
+  if (!resolved || !isValidWord(resolved.join(''))) {
+    showAlert('Word not found!');
     clearSelection();
     return;
   }
 
   // Score
+  const word     = resolved.join('');
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
   let base = 0;
   resolved.forEach(l => { base += letterPoints[l] || 1; });
@@ -438,7 +411,13 @@ async function submitHexacoreWord() {
 
 /* ── Consume tiles → gravity → ember → refill ─────────────────── */
 async function consumeAndRefill(tilesToRemove) {
-  // 1. Remove consumed tiles
+  // 1. Animate tiles out (fade + scale), then remove
+  tilesToRemove.forEach(tile => {
+    tile.element.classList.add('hx-tile-removing');
+    tile.element.style.pointerEvents = 'none';
+  });
+  await delay(280);
+
   tilesToRemove.forEach(tile => {
     tile.element.remove();
     removeFrom(hxState.tiles,      tile);
@@ -482,47 +461,73 @@ function applyGravity() {
 
         tile._transformY += deltaR * ROW_HEIGHT;
         tile.element.classList.add('hx-tile-falling');
-        tile.element.style.transform = `translateY(${tile._transformY}px)`;
+        tile.element.style.transform = `translate(${tile._transformX}px, ${tile._transformY}px)`;
       }
       fill--;
     });
   });
 }
 
-/* ── Ember advancement: each ember tile moves one row down ─────── */
+/* ── Ember advancement: each ember moves to a random lower hex neighbour ── */
 function advanceEmberTiles() {
+  const SQRT3 = Math.sqrt(3);
+  const sizeX = HEX_RADIUS * TILE_SPACING;
+
   const embers = [...hxState.emberTiles]; // copy — may modify during iteration
   embers.forEach(tile => {
     if (hxState.gameOver) return;
 
-    const { r_max } = getColumnRange(tile.q);
-    const newR = tile.r + 1;
+    // In a pointy-top grid the two lower neighbours of (q,r) are
+    //   (q, r+1)  — lower-right
+    //   (q-1, r+1) — lower-left
+    const candidates = [
+      { q: tile.q,     r: tile.r + 1 },
+      { q: tile.q - 1, r: tile.r + 1 },
+    ].filter(pos => {
+      const s = -pos.q - pos.r;
+      return (
+        Math.abs(pos.q) <= GRID_RADIUS &&
+        Math.abs(pos.r) <= GRID_RADIUS &&
+        Math.abs(s)     <= GRID_RADIUS
+      );
+    });
 
-    if (newR > r_max) {
+    if (candidates.length === 0) {
+      // Ember is on the bottom edge — game over
       triggerGameOver();
       return;
     }
 
-    // Remove from old map position
+    const target = candidates[Math.floor(Math.random() * candidates.length)];
+
+    // Pixel delta for the chosen move
+    const dQ = target.q - tile.q; // 0 or -1
+    const dR = target.r - tile.r; // always 1
+    const pixelDX = (SQRT3 * dQ + SQRT3 / 2 * dR) * sizeX;
+    const pixelDY = 1.5 * dR * (HEX_RADIUS * TILE_SPACING);
+
+    // Remove from old map slot
     hxTileMap.delete(hxKey(tile.q, tile.r));
 
-    // Displace any tile already at newR
-    const displaced = hxTileMap.get(hxKey(tile.q, newR));
+    // Displace any tile already at the target
+    const displaced = hxTileMap.get(hxKey(target.q, target.r));
     if (displaced && displaced !== tile) {
       displaced.element.remove();
       removeFrom(hxState.tiles,      displaced);
       removeFrom(hxState.emberTiles, displaced);
       removeFrom(hxState.prismTiles, displaced);
       removeFrom(hxState.runeTiles,  displaced);
-      hxTileMap.delete(hxKey(tile.q, newR));
+      hxTileMap.delete(hxKey(target.q, target.r));
     }
 
-    // Animate ember sliding down one row
-    tile._transformY += ROW_HEIGHT;
+    // Animate ember sliding to target
+    tile._transformX += pixelDX;
+    tile._transformY += pixelDY;
     tile.element.classList.add('hx-tile-falling');
-    tile.element.style.transform = `translateY(${tile._transformY}px)`;
+    tile.element.style.transform = `translate(${tile._transformX}px, ${tile._transformY}px)`;
 
-    tile.r = newR;
+    tile.q = target.q;
+    tile.r = target.r;
     tile.s = -tile.q - tile.r;
     hxTileMap.set(hxKey(tile.q, tile.r), tile);
   });
@@ -552,6 +557,7 @@ async function refillGrid() {
       });
       tile.tileType    = 'normal';
       tile.s           = -q - r;
+      tile._transformX = 0;
       tile._transformY = 0;
 
       hxState.tiles.push(tile);
@@ -613,9 +619,19 @@ function triggerGameOver() {
   hxState.active   = false;
 
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
-  if (hxButtonCleanup)  { hxButtonCleanup();  hxButtonCleanup  = null; }
   clearSelection();
   document.body.classList.remove('hx-active');
+
+  // Restore game title
+  const titleEl = document.getElementById('game-title');
+  if (titleEl) titleEl.textContent = 'ANAGRAMATON';
+
+  // Restore SUBMIT/CLEAR buttons for when the player returns to main mode
+  const submitBtn = document.getElementById('submit-word');
+  const clearBtn  = document.getElementById('clear-word');
+  if (submitBtn) submitBtn.style.display = '';
+  if (clearBtn)  clearBtn.style.display  = '';
+
   removeHud();
   showGameOver();
 }
@@ -748,9 +764,8 @@ export function startHexacore() {
   hxWordCount   = 0;
   hxTileMap     = new Map();
 
-  // Clean up previous listeners
+  // Clean up previous pointer listeners
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
-  if (hxButtonCleanup)  { hxButtonCleanup();  hxButtonCleanup  = null; }
 
   // Remove any leftover overlay
   document.getElementById('hx-gameover-overlay')?.remove();
@@ -764,15 +779,25 @@ export function startHexacore() {
 
   injectSvgDefs(hxSvg);
   buildGrid();
-  spawnInitialEmbers();
+  // Ember tiles do NOT spawn at game start — only after milestone words
 
   document.body.classList.add('hx-active');
+
+  // Change title to reflect Hexacore mode
+  const titleEl = document.getElementById('game-title');
+  if (titleEl) titleEl.textContent = 'HEXACORE';
+
+  // Hide SUBMIT/CLEAR — Hexacore auto-submits on drag release
+  const submitBtn = document.getElementById('submit-word');
+  const clearBtn  = document.getElementById('clear-word');
+  if (submitBtn) submitBtn.style.display = 'none';
+  if (clearBtn)  clearBtn.style.display  = 'none';
+
   ensureHud();
   updateHud();
   updateScoreDisplay();
 
   setupPointerEvents();
-  setupButtons();
 }
 
 /* ── Splash screen wiring (on module load) ─────────────────────── */

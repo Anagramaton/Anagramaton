@@ -138,6 +138,17 @@
   transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* ── Tile removal animation (consumed tiles fade + shrink) ─────── */
+@keyframes hx-tile-pop-out {
+  0%   { opacity: 1;   transform: scale(1); }
+  40%  { opacity: 0.6; transform: scale(1.12); }
+  100% { opacity: 0;   transform: scale(0.25); }
+}
+.hx-tile-removing {
+  animation: hx-tile-pop-out 0.27s ease-out forwards;
+  pointer-events: none;
+}
+
 /* ── Disable native scroll/zoom on hex grid during Hexacore ───── */
 body.hx-active #hex-grid {
   touch-action: none;
