@@ -371,7 +371,6 @@ function buildGrid() {
 
       hxState.tiles.push(tile);
       hxTileMap.set(hxKey(q, r), tile);
-      if (letter === 'Q') ensureQHasUNeighbour(tile);
       board.appendChild(tile.element);
 
       // Hide until intro animation reveals the tile
@@ -379,6 +378,12 @@ function buildGrid() {
     }
   }
   hxSvg.appendChild(board);
+
+  // Post-placement pass: enforce Q→U neighbour guarantee now that all
+  // tiles are in hxTileMap and every Q has populated neighbours.
+  for (const tile of hxState.tiles) {
+    if (tile.letter === 'Q') ensureQHasUNeighbour(tile);
+  }
 
   // Tighten viewBox to board bounds on mobile FIRST,
   // then pre-position tiles and kick off the intro animation —
