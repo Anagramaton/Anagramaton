@@ -313,32 +313,35 @@ function buildGrid() {
   }
   hxSvg.appendChild(board);
 
-  // Tighten viewBox to board bounds on mobile (mirrors gridRenderer.js)
+  // Tighten viewBox to board bounds on mobile FIRST,
+  // then pre-position tiles and kick off the intro animation —
+  // all in one rAF so the viewBox is settled before we
+  // convert screen → SVG coordinates.
   requestAnimationFrame(() => {
     if (hxUpdateViewForBoard) hxUpdateViewForBoard(board);
+
+    // Pre-position all tiles at the title element so the pour-in starts there
+    const titleEl = document.getElementById('game-title');
+    const ctm     = hxSvg.getScreenCTM()?.inverse();
+    if (titleEl && ctm) {
+      const rect  = titleEl.getBoundingClientRect();
+      const svgPt = hxSvg.createSVGPoint();
+      svgPt.x     = rect.left + rect.width  / 2;
+      svgPt.y     = rect.top  + rect.height / 2;
+      const origin = svgPt.matrixTransform(ctm);
+
+      hxState.tiles.forEach(tile => {
+        const center = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
+        tile.element.setAttribute(
+          'transform',
+          `translate(${origin.x - center.x},${origin.y - center.y})`,
+        );
+      });
+    }
+
+    // Start the cascade intro (sets hxState.active = true when done)
+    animateGridIntro();
   });
-
-  // Pre-position all tiles at the title element so the pour-in starts there
-  const titleEl = document.getElementById('game-title');
-  const ctm     = hxSvg.getScreenCTM()?.inverse();
-  if (titleEl && ctm) {
-    const rect  = titleEl.getBoundingClientRect();
-    const svgPt = hxSvg.createSVGPoint();
-    svgPt.x     = rect.left + rect.width  / 2;
-    svgPt.y     = rect.top  + rect.height / 2;
-    const origin = svgPt.matrixTransform(ctm);
-
-    hxState.tiles.forEach(tile => {
-      const center = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
-      tile.element.setAttribute(
-        'transform',
-        `translate(${origin.x - center.x},${origin.y - center.y})`,
-      );
-    });
-  }
-
-  // Start the cascade intro (sets hxState.active = true when done)
-  animateGridIntro();
 }
 
 /* ── Intro cascade: tiles pour from the title into their positions ─ */
