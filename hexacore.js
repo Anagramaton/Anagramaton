@@ -18,6 +18,7 @@ import {
 } from './leaderboard.js';
 import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
+import { initSvg }            from './svgKit.js';
 
 /* ── Layout constants ──────────────────────────────────────────── */
 const TILE_SPACING        = 1.25;
@@ -55,13 +56,14 @@ const hxState = {
   active:     false,
 };
 
-let hxSelected       = [];   // tiles in current selection chain
-let hxPointerDown    = false;
-let hxLayout         = null;
-let hxSvg            = null;
-let hxWordCount      = 0;
-let hxTileMap        = new Map(); // `q,r` → tile object
-let hxPointerCleanup = null;
+let hxSelected          = [];   // tiles in current selection chain
+let hxPointerDown       = false;
+let hxLayout            = null;
+let hxSvg               = null;
+let hxWordCount         = 0;
+let hxTileMap           = new Map(); // `q,r` → tile object
+let hxPointerCleanup    = null;
+let hxUpdateViewForBoard = null;
 
 /* ── Pure helpers ──────────────────────────────────────────────── */
 function hxKey(q, r) { return `${q},${r}`; }
@@ -276,8 +278,13 @@ function buildGrid() {
   const board = document.createElementNS(SVG_NS, 'g');
   board.setAttribute('id', 'board');
 
-  hxSvg.setAttribute('viewBox', '0 0 1000 1000');
-  hxSvg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  const { updateViewForBoard } = initSvg(hxSvg, {
+    preserveAspectRatio: 'xMidYMid meet',
+    defaultViewBox: '0 0 1000 1000',
+    mobileBreakpoint: 768,
+    pad: 12,
+  });
+  hxUpdateViewForBoard = updateViewForBoard;
 
   for (let q = -GRID_RADIUS; q <= GRID_RADIUS; q++) {
     for (let r = -GRID_RADIUS; r <= GRID_RADIUS; r++) {
@@ -305,6 +312,11 @@ function buildGrid() {
     }
   }
   hxSvg.appendChild(board);
+
+  // Tighten viewBox to board bounds on mobile (mirrors gridRenderer.js)
+  requestAnimationFrame(() => {
+    if (hxUpdateViewForBoard) hxUpdateViewForBoard(board);
+  });
 
   // Pre-position all tiles at the title element so the pour-in starts there
   const titleEl = document.getElementById('game-title');
@@ -942,10 +954,11 @@ export function startHexacore() {
     gameOver:   false,
     active:     false, // set to true after intro animation completes
   });
-  hxSelected    = [];
-  hxPointerDown = false;
-  hxWordCount   = 0;
-  hxTileMap     = new Map();
+  hxSelected           = [];
+  hxPointerDown        = false;
+  hxWordCount          = 0;
+  hxTileMap            = new Map();
+  hxUpdateViewForBoard = null;
 
   // Clean up previous pointer listeners
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
