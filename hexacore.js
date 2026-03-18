@@ -20,8 +20,9 @@ import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 
 /* ── Layout constants ──────────────────────────────────────────── */
-const TILE_SPACING = 1.25;
-const ROW_HEIGHT   = 1.5 * HEX_RADIUS * TILE_SPACING; // pixel delta per r step
+const TILE_SPACING        = 1.25;
+const INTRO_ARC_OFFSET    = 60;  // px: horizontal fan spread during pour-in arc
+const REFILL_STAGGER_MS   = 40;  // ms between each column's spawn delay
 
 /* ── Letter pool (vowels + common consonants + rare via letterFrequencies) */
 const HX_LETTER_POOL = [
@@ -99,6 +100,95 @@ function escapeHtml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+/* ── Tile geometry repositioning ───────────────────────────────── */
+function repositionTileGeometry(tile) {
+  const hex    = new Hex(tile.q, tile.r);
+  const center = hxLayout.hexToPixel(hex);
+
+  const poly = tile.element.querySelector('polygon');
+  if (poly) {
+    const pts = hxLayout.polygonCorners(hex, HEX_RADIUS).map(p => `${p.x},${p.y}`).join(' ');
+    poly.setAttribute('points', pts);
+  }
+
+  const outline = tile.element.querySelector('path');
+  if (outline) {
+    const outer = hxLayout.polygonCorners(hex, HEX_RADIUS + 5);
+    const inner = hxLayout.polygonCorners(hex, HEX_RADIUS);
+    const d = [
+      'M', outer[0].x, outer[0].y,
+      ...outer.slice(1).map(p => `L ${p.x} ${p.y}`),
+      'Z',
+      'M', inner[0].x, inner[0].y,
+      ...inner.slice(1).map(p => `L ${p.x} ${p.y}`),
+      'Z',
+    ].join(' ');
+    outline.setAttribute('d', d);
+  }
+
+  tile.textLetter.setAttribute('x', center.x);
+  tile.textLetter.setAttribute('y', center.y);
+  tile.textPoint.setAttribute('x', center.x);
+  tile.textPoint.setAttribute('y', center.y + HEX_RADIUS * 0.6);
+
+  const spark = tile.element.querySelector('.spark');
+  if (spark) {
+    spark.setAttribute('cx', center.x + HEX_RADIUS * 0.4);
+    spark.setAttribute('cy', center.y - HEX_RADIUS * 0.4);
+  }
+
+  tile.element.removeAttribute('transform');
+  tile.element.style.transform = '';
+}
+
+/* ── Animate a batch of tile moves simultaneously (arc paths) ───── */
+async function animateTileMoves(moves) {
+  const promises = moves.map(({ tile, fromQ, fromR, toQ, toR }) =>
+    new Promise(resolve => {
+      const start = hxLayout.hexToPixel(new Hex(fromQ, fromR));
+      const end   = hxLayout.hexToPixel(new Hex(toQ,   toR));
+      // Path offsets are relative to the tile's baked polygon position
+      const poly  = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
+
+      const sx = start.x - poly.x;
+      const sy = start.y - poly.y;
+      const ex = end.x   - poly.x;
+      const ey = end.y   - poly.y;
+
+      // Quadratic Bézier control point: 0.25 pulls the arc toward the start row,
+      // creating the "shoulder-slide" where tiles appear to roll off each other
+      const cpx = (sx + ex) / 2;
+      const cpy = sy + (ey - sy) * 0.25;
+
+      const anim = document.createElementNS(SVG_NS, 'animateMotion');
+      anim.setAttribute('path', `M ${sx},${sy} Q ${cpx},${cpy} ${ex},${ey}`);
+      anim.setAttribute('dur', '0.22s');
+      anim.setAttribute('fill', 'freeze');
+
+      anim.addEventListener('endEvent', () => {
+        hxTileMap.delete(hxKey(fromQ, fromR));
+        tile.q = toQ;
+        tile.r = toR;
+        tile.s = -toQ - toR;
+        hxTileMap.set(hxKey(toQ, toR), tile);
+        anim.remove();
+        repositionTileGeometry(tile);
+        tile.element.classList.remove('hx-tile-landing');
+        // Re-adding the same class only re-triggers the animation after a reflow
+        // forces the browser to flush the style change between remove and add.
+        void tile.element.getBoundingClientRect();
+        tile.element.classList.add('hx-tile-landing');
+        resolve();
+      }, { once: true });
+
+      tile.element.appendChild(anim);
+      anim.beginElement();
+    })
+  );
+
+  await Promise.all(promises);
 }
 
 /* ── Tile type styling ─────────────────────────────────────────── */
@@ -203,17 +293,106 @@ function buildGrid() {
         pointValue: letterPoints[letter] || 1,
       });
 
-      tile.tileType    = 'normal';
-      tile.s           = s;
-      tile._transformX = 0;
-      tile._transformY = 0;
+      tile.tileType = 'normal';
+      tile.s        = s;
 
       hxState.tiles.push(tile);
       hxTileMap.set(hxKey(q, r), tile);
       board.appendChild(tile.element);
+
+      // Hide until intro animation reveals the tile
+      tile.element.style.opacity = '0';
     }
   }
   hxSvg.appendChild(board);
+
+  // Pre-position all tiles at the title element so the pour-in starts there
+  const titleEl = document.getElementById('game-title');
+  const ctm     = hxSvg.getScreenCTM()?.inverse();
+  if (titleEl && ctm) {
+    const rect  = titleEl.getBoundingClientRect();
+    const svgPt = hxSvg.createSVGPoint();
+    svgPt.x     = rect.left + rect.width  / 2;
+    svgPt.y     = rect.top  + rect.height / 2;
+    const origin = svgPt.matrixTransform(ctm);
+
+    hxState.tiles.forEach(tile => {
+      const center = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
+      tile.element.setAttribute(
+        'transform',
+        `translate(${origin.x - center.x},${origin.y - center.y})`,
+      );
+    });
+  }
+
+  // Start the cascade intro (sets hxState.active = true when done)
+  animateGridIntro();
+}
+
+/* ── Intro cascade: tiles pour from the title into their positions ─ */
+async function animateGridIntro() {
+  const titleEl = document.getElementById('game-title');
+  const ctm     = hxSvg.getScreenCTM()?.inverse();
+
+  if (!titleEl || !ctm) {
+    // Fallback: no animation — just show everything immediately
+    hxState.tiles.forEach(t => { t.element.style.opacity = '1'; t.element.removeAttribute('transform'); });
+    hxState.active = true;
+    return;
+  }
+
+  const rect  = titleEl.getBoundingClientRect();
+  const svgPt = hxSvg.createSVGPoint();
+  svgPt.x     = rect.left + rect.width  / 2;
+  svgPt.y     = rect.top  + rect.height / 2;
+  const origin = svgPt.matrixTransform(ctm);
+
+  // Process rows top-to-bottom
+  const rValues = [...new Set(hxState.tiles.map(t => t.r))].sort((a, b) => a - b);
+
+  for (const r of rValues) {
+    const rowTiles = hxState.tiles
+      .filter(t => t.r === r)
+      .sort((a, b) => a.q - b.q); // left → right
+
+    const wavePromises = rowTiles.map((tile, idx) =>
+      new Promise(resolve => {
+        setTimeout(() => {
+          const center = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
+          // SVG transform is already translate(origin-center); animateMotion
+          // path M 0,0 → M -(origin-center) cancels it, landing at (0,0)
+          const dx = center.x - origin.x; // = -(origin-center).x
+          const dy = center.y - origin.y;
+
+          // Arc control: left tiles fan SW (-x), right tiles fan SE (+x)
+          const arcDir = tile.q < 0 ? -1 : 1;
+          const cpX    = dx / 2 + arcDir * INTRO_ARC_OFFSET;
+          const cpY    = dy / 2;
+
+          tile.element.style.opacity = '1';
+
+          const anim = document.createElementNS(SVG_NS, 'animateMotion');
+          anim.setAttribute('path', `M 0,0 Q ${cpX},${cpY} ${dx},${dy}`);
+          anim.setAttribute('dur', '0.5s');
+          anim.setAttribute('fill', 'freeze');
+
+          anim.addEventListener('endEvent', () => {
+            anim.remove();
+            tile.element.removeAttribute('transform');
+            tile.element.classList.add('hx-tile-intro-landing');
+            resolve();
+          }, { once: true });
+
+          tile.element.appendChild(anim);
+          anim.beginElement();
+        }, idx * 30);
+      })
+    );
+
+    await Promise.all(wavePromises);
+  }
+
+  hxState.active = true;
 }
 
 
@@ -428,58 +607,74 @@ async function consumeAndRefill(tilesToRemove) {
   });
 
   // 2. Gravity
-  applyGravity();
-  await delay(420);
+  await applyGravity();
   if (hxState.gameOver) return;
 
   // 3. Advance ember tiles
-  advanceEmberTiles();
+  await advanceEmberTiles();
   if (hxState.gameOver) return;
 
   // 4. Refill empty columns
   await refillGrid();
 }
 
-/* ── Gravity: pack each column to the bottom ───────────────────── */
-function applyGravity() {
-  const columns = [...new Set(hxState.tiles.map(t => t.q))];
-  columns.forEach(q => {
-    const { r_max } = getColumnRange(q);
-    // Sort descending by r (process from bottom tile upward)
-    const colTiles = hxState.tiles
-      .filter(t => t.q === q)
-      .sort((a, b) => b.r - a.r);
+/* ── Gravity: Battle Balls-style SE/SW cascade ─────────────────── */
+async function applyGravity() {
+  function inBounds(pos) {
+    const s = -pos.q - pos.r;
+    return (
+      Math.abs(pos.q) <= GRID_RADIUS &&
+      Math.abs(pos.r) <= GRID_RADIUS &&
+      Math.abs(s)     <= GRID_RADIUS
+    );
+  }
 
-    let fill = r_max;
-    colTiles.forEach(tile => {
-      if (tile.r !== fill) {
-        const deltaR = fill - tile.r;  // positive → moving down
-        hxTileMap.delete(hxKey(tile.q, tile.r));
-        tile.r = fill;
-        tile.s = -tile.q - tile.r;
-        hxTileMap.set(hxKey(tile.q, tile.r), tile);
+  let anyMoved = true;
+  while (anyMoved) {
+    anyMoved = false;
+    // Process bottom rows first so lower tiles move before upper ones
+    const sorted = [...hxState.tiles].sort((a, b) => b.r - a.r);
+    const moves  = []; // { tile, fromQ, fromR, toQ, toR }
 
-        tile._transformY += deltaR * ROW_HEIGHT;
-        tile.element.classList.add('hx-tile-falling');
-        tile.element.style.transform = `translate(${tile._transformX}px, ${tile._transformY}px)`;
+    for (const tile of sorted) {
+      const se = { q: tile.q,     r: tile.r + 1 };
+      const sw = { q: tile.q - 1, r: tile.r + 1 };
+
+      const seOk = inBounds(se) &&
+        !hxTileMap.has(hxKey(se.q, se.r)) &&
+        !moves.some(m => m.toQ === se.q && m.toR === se.r);
+      const swOk = inBounds(sw) &&
+        !hxTileMap.has(hxKey(sw.q, sw.r)) &&
+        !moves.some(m => m.toQ === sw.q && m.toR === sw.r);
+
+      if (seOk) {
+        moves.push({ tile, fromQ: tile.q, fromR: tile.r, toQ: se.q, toR: se.r });
+        anyMoved = true;
+      } else if (swOk) {
+        moves.push({ tile, fromQ: tile.q, fromR: tile.r, toQ: sw.q, toR: sw.r });
+        anyMoved = true;
       }
-      fill--;
-    });
-  });
+    }
+
+    if (moves.length === 0) break;
+
+    await animateTileMoves(moves);
+  }
 }
 
 /* ── Ember advancement: each ember moves to a random lower hex neighbour ── */
-function advanceEmberTiles() {
-  const SQRT3 = Math.sqrt(3);
-  const sizeX = HEX_RADIUS * TILE_SPACING;
+async function advanceEmberTiles() {
+  if (hxState.gameOver) return;
 
-  const embers = [...hxState.emberTiles]; // copy — may modify during iteration
-  embers.forEach(tile => {
-    if (hxState.gameOver) return;
+  const embers     = [...hxState.emberTiles];
+  const emberMoves = [];
+
+  for (const tile of embers) {
+    if (hxState.gameOver) break;
 
     // In a pointy-top grid the two lower neighbours of (q,r) are
-    //   (q, r+1)  — lower-right
-    //   (q-1, r+1) — lower-left
+    //   (q, r+1)   — lower-right (SE)
+    //   (q-1, r+1) — lower-left  (SW)
     const candidates = [
       { q: tile.q,     r: tile.r + 1 },
       { q: tile.q - 1, r: tile.r + 1 },
@@ -493,23 +688,13 @@ function advanceEmberTiles() {
     });
 
     if (candidates.length === 0) {
-      // Ember is on the bottom edge — game over
       triggerGameOver();
       return;
     }
 
     const target = candidates[Math.floor(Math.random() * candidates.length)];
 
-    // Pixel delta for the chosen move
-    const dQ = target.q - tile.q; // 0 or -1
-    const dR = target.r - tile.r; // always 1
-    const pixelDX = (SQRT3 * dQ + SQRT3 / 2 * dR) * sizeX;
-    const pixelDY = 1.5 * dR * (HEX_RADIUS * TILE_SPACING);
-
-    // Remove from old map slot
-    hxTileMap.delete(hxKey(tile.q, tile.r));
-
-    // Displace any tile already at the target
+    // Displace any normal tile at the target before moving
     const displaced = hxTileMap.get(hxKey(target.q, target.r));
     if (displaced && displaced !== tile) {
       displaced.element.remove();
@@ -520,32 +705,28 @@ function advanceEmberTiles() {
       hxTileMap.delete(hxKey(target.q, target.r));
     }
 
-    // Animate ember sliding to target
-    tile._transformX += pixelDX;
-    tile._transformY += pixelDY;
-    tile.element.classList.add('hx-tile-falling');
-    tile.element.style.transform = `translate(${tile._transformX}px, ${tile._transformY}px)`;
+    emberMoves.push({ tile, fromQ: tile.q, fromR: tile.r, toQ: target.q, toR: target.r });
+  }
 
-    tile.q = target.q;
-    tile.r = target.r;
-    tile.s = -tile.q - tile.r;
-    hxTileMap.set(hxKey(tile.q, tile.r), tile);
-  });
+  if (emberMoves.length > 0 && !hxState.gameOver) {
+    await animateTileMoves(emberMoves);
+  }
 }
 
-/* ── Refill: spawn new tiles at top of each column with gaps ────── */
+/* ── Refill: spawn new tiles from above the column's top boundary ── */
 async function refillGrid() {
   const board = hxSvg.querySelector('#board');
   if (!board) return;
 
-  const spawnPromises = [];
+  const allPromises = [];
 
   for (let q = -GRID_RADIUS; q <= GRID_RADIUS; q++) {
     const { r_min, r_max } = getColumnRange(q);
-    const colIdx = q + GRID_RADIUS;
+    const colIdx  = q + GRID_RADIUS;
+    const colMoves = [];
 
     for (let r = r_min; r <= r_max; r++) {
-      if (hxTileMap.has(hxKey(q, r))) continue;  // already occupied
+      if (hxTileMap.has(hxKey(q, r))) continue;
 
       const letter = randomLetter();
       const tile   = createTile({
@@ -555,32 +736,34 @@ async function refillGrid() {
         letter,
         pointValue: letterPoints[letter] || 1,
       });
-      tile.tileType    = 'normal';
-      tile.s           = -q - r;
-      tile._transformX = 0;
-      tile._transformY = 0;
+      tile.tileType = 'normal';
+      tile.s        = -q - r;
 
       hxState.tiles.push(tile);
       hxTileMap.set(hxKey(q, r), tile);
       board.appendChild(tile.element);
 
-      // Start the tile above the visible area then drop it in
-      const spawnOffset = (r - r_min + 1) * ROW_HEIGHT + ROW_HEIGHT;
-      tile.element.style.transform = `translateY(-${spawnOffset}px)`;
-      tile.element.style.opacity   = '0';
+      // Hide until the column's stagger delay fires
+      tile.element.style.opacity = '0';
 
-      spawnPromises.push(new Promise(resolve => {
-        setTimeout(() => {
-          tile.element.classList.add('hx-tile-falling');
-          tile.element.style.opacity   = '1';
-          tile.element.style.transform = 'translateY(0)';
-          setTimeout(resolve, 380);
-        }, 50 * colIdx);
-      }));
+      // Spawn from one hex-step above the column's topmost slot
+      colMoves.push({ tile, fromQ: q, fromR: r_min - 1, toQ: q, toR: r });
+    }
+
+    if (colMoves.length > 0) {
+      allPromises.push(
+        new Promise(resolve => {
+          setTimeout(async () => {
+            colMoves.forEach(m => { m.tile.element.style.opacity = '1'; });
+            await animateTileMoves(colMoves);
+            resolve();
+          }, colIdx * REFILL_STAGGER_MS);
+        }),
+      );
     }
   }
 
-  if (spawnPromises.length > 0) await Promise.all(spawnPromises);
+  if (allPromises.length > 0) await Promise.all(allPromises);
 }
 
 /* ── Special tile spawning ─────────────────────────────────────── */
@@ -757,7 +940,7 @@ export function startHexacore() {
     prismTiles: [],
     runeTiles:  [],
     gameOver:   false,
-    active:     true,
+    active:     false, // set to true after intro animation completes
   });
   hxSelected    = [];
   hxPointerDown = false;

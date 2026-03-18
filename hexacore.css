@@ -133,9 +133,30 @@
   margin-bottom: 0;
 }
 
-/* ── Tile fall animation ───────────────────────────────────────── */
-.hx-tile-falling {
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+/* ── Spring landing — elastic overshoot when a tile settles ──────── */
+@keyframes hx-tile-land {
+  0%   { transform: scale(1.0); }
+  40%  { transform: scale(1.14); }
+  65%  { transform: scale(0.94); }
+  82%  { transform: scale(1.04); }
+  100% { transform: scale(1.0); }
+}
+.hx-tile-landing {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-tile-land 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Intro pour animation — tiles fade+scale in after arc completes ── */
+@keyframes hx-tile-intro-land {
+  0%   { opacity: 0.6; transform: scale(0.7); }
+  60%  { opacity: 1;   transform: scale(1.1); }
+  100% { opacity: 1;   transform: scale(1.0); }
+}
+.hx-tile-intro-landing {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-tile-intro-land 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* ── Tile removal animation (consumed tiles fade + shrink) ─────── */
