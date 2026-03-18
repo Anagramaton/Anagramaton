@@ -5,7 +5,6 @@ import {
   HEX_RADIUS,
   letterPoints,
   lengthMultipliers,
-  letterFrequencies,
   SVG_NS,
 } from './constants.js';
 import { isValidWord } from './gameLogic.js';
@@ -31,23 +30,40 @@ const GRAVITY_STAGGER_MS        = 38;  // ms stagger between tiles in the gravit
 const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
 
-/* ── Letter pool (vowels + common consonants + rare via letterFrequencies) */
+/* ── Letter pool — Hexacore-native frequency weighting ─────────── *
+ * Tuned for a 61-tile board; no dependency on constants.letterFrequencies.
+ * Vowels ~40 %, high-freq consonants plentiful, rare letters scarce.   */
 const HX_LETTER_POOL = [
-  ...Array(9).fill('A'),
+  // Vowels
   ...Array(12).fill('E'),
+  ...Array(9).fill('A'),
   ...Array(9).fill('I'),
   ...Array(8).fill('O'),
-  ...Array(4).fill('U'),
+  ...Array(5).fill('U'),
+  // High-frequency consonants
+  ...Array(7).fill('T'),
+  ...Array(7).fill('R'),
   ...Array(6).fill('N'),
-  ...Array(4).fill('S'),
-  ...Array(6).fill('T'),
-  ...Array(6).fill('R'),
+  ...Array(5).fill('S'),
   ...Array(4).fill('L'),
-  ...Array(4).fill('D'),
-  ...Array(2).fill('C'),
-  ...Array(2).fill('M'),
-  ...Array(2).fill('P'),
-  ...letterFrequencies,
+  ...Array(3).fill('D'),
+  // Mid-frequency consonants
+  ...Array(3).fill('C'),
+  ...Array(3).fill('M'),
+  ...Array(3).fill('H'),
+  ...Array(3).fill('P'),
+  ...Array(2).fill('B'),
+  ...Array(2).fill('F'),
+  ...Array(2).fill('G'),
+  ...Array(2).fill('W'),
+  ...Array(2).fill('Y'),
+  // Rare / high-point letters
+  ...Array(1).fill('K'),
+  ...Array(1).fill('V'),
+  ...Array(1).fill('X'),
+  ...Array(1).fill('J'),
+  ...Array(1).fill('Z'),
+  ...Array(2).fill('Q'),  // always exactly 2 — ensureQHasUNeighbour handles the U
 ];
 
 /* ── Module-level state ────────────────────────────────────────── */
@@ -91,6 +107,37 @@ function getColumnRange(q) {
 
 function randomLetter() {
   return HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+}
+
+/* ── Q → U neighbour guarantee ─────────────────────────────────── */
+/**
+ * If `qTile` is a Q and none of its hex neighbours is a U,
+ * pick a random existing neighbour and change it to U.
+ */
+function ensureQHasUNeighbour(qTile) {
+  if (qTile.letter !== 'Q') return;
+
+  // All six pointy-top hex neighbours
+  const neighbourOffsets = [
+    [+1,  0], [-1,  0],
+    [ 0, +1], [ 0, -1],
+    [+1, -1], [-1, +1],
+  ];
+
+  const neighbours = neighbourOffsets
+    .map(([dq, dr]) => hxTileMap.get(hxKey(qTile.q + dq, qTile.r + dr)))
+    .filter(Boolean);
+
+  if (neighbours.length === 0) return; // no neighbours on board yet — skip
+
+  const alreadyHasU = neighbours.some(t => t.letter === 'U');
+  if (alreadyHasU) return;
+
+  // Pick a random existing neighbour and make it a U
+  const target = neighbours[Math.floor(Math.random() * neighbours.length)];
+  target.letter = 'U';
+  target.point  = letterPoints['U'] || 1;
+  target.updateLetter('U', letterPoints['U'] || 1);
 }
 
 function areNeighbors(a, b) {
@@ -324,6 +371,7 @@ function buildGrid() {
 
       hxState.tiles.push(tile);
       hxTileMap.set(hxKey(q, r), tile);
+      if (letter === 'Q') ensureQHasUNeighbour(tile);
       board.appendChild(tile.element);
 
       // Hide until intro animation reveals the tile
@@ -815,6 +863,7 @@ async function refillGrid() {
 
       hxState.tiles.push(tile);
       hxTileMap.set(hxKey(q, r), tile);
+      if (letter === 'Q') ensureQHasUNeighbour(tile);
       board.appendChild(tile.element);
 
       // Hide until the column's stagger delay fires
