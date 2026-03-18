@@ -1087,7 +1087,11 @@ body[data-theme="dark"] .tile-point {
 }
 #score-display {
   position: fixed;
-  top: 100px;
+  /* Sit just below the game title at every viewport width.
+     The title uses font-size: clamp(3.2rem, 6.5vw, 5.6rem) at top: 4px.
+     7.8vw ≈ 1.2 × 6.5vw tracks the title height; clamped so it never
+     drifts too close or too far from the title. */
+  top: clamp(70px, calc(4px + 7.8vw), 104px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 800;
@@ -1110,23 +1114,41 @@ body[data-theme="dark"] .tile-point {
   transition: none;
 }
 
-/* Desktop current word display */
+/* Desktop current word display — styled like the game title but smaller */
 @media (min-width: 901px) {
   #current-word-display {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: min(calc(50% + 290px), calc(100dvh - 112px));
+    /* Between the bottom of the grid and the settings button */
+    bottom: clamp(72px, 9vh, 100px);
     z-index: 800;
     display: block;
     text-align: center;
-    font-size: 2.5rem;
-    font-family: 'Orbitron', sans-serif;
+    white-space: nowrap;
+    pointer-events: none;
+    max-width: 80vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
     font-weight: 900;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color:#0a4a60
+    color: var(--title-stroke);
+    filter:
+      drop-shadow(2px 2px 0px #c0c8d8)
+      drop-shadow(-1px -1px 0px #8090b0)
+      drop-shadow(0 0 14px rgba(76, 201, 240, 0.3));
   }
+}
+
+body[data-theme="dark"] #current-word-display {
+  filter:
+    drop-shadow(2px 2px 0px #1e2a3a)
+    drop-shadow(-1px -1px 0px #4a6080)
+    drop-shadow(0 0 20px rgba(76, 201, 240, 0.5));
 }
 
 /* ═══════════════════════════════════════════════════════════

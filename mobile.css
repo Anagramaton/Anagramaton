@@ -77,7 +77,9 @@
 @media (max-width: 768px) {
   #score-display {
     position: fixed;
-    top: clamp(52px, 8vh, 80px);
+    /* On mobile the title is always 3.2rem ≈ 51px tall at top: 4px,
+       so its bottom is ~55px. Use 64px min to guarantee a clear gap. */
+    top: clamp(64px, 9vh, 84px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 800;
@@ -106,13 +108,23 @@
     z-index: 800;
     display: block;
     text-align: center;
-    font-size: clamp(0.8rem, 5.5vw, 2.4rem);
-    font-family: "Notable";
     max-width: 90vw;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    word-break: keep-all;
+    pointer-events: none;
+
+    /* Styled like the game title, smaller */
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(1.2rem, 5.5vw, 2rem);
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--title-stroke);
+    filter:
+      drop-shadow(2px 2px 0px #c0c8d8)
+      drop-shadow(-1px -1px 0px #8090b0)
+      drop-shadow(0 0 10px rgba(76, 201, 240, 0.25));
   }
 }
 
