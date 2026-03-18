@@ -5,7 +5,6 @@ import {
   HEX_RADIUS,
   letterPoints,
   lengthMultipliers,
-  letterFrequencies,
   SVG_NS,
 } from './constants.js';
 import { isValidWord } from './gameLogic.js';
@@ -31,24 +30,52 @@ const GRAVITY_STAGGER_MS        = 38;  // ms stagger between tiles in the gravit
 const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
 
-/* ── Letter pool (vowels + common consonants + rare via letterFrequencies) */
+/* ── Letter pool (vowels + common consonants + rare; used for refill tiles) */
 const HX_LETTER_POOL = [
-  ...Array(9).fill('A'),
   ...Array(12).fill('E'),
-  ...Array(9).fill('I'),
-  ...Array(8).fill('O'),
-  ...Array(4).fill('U'),
-  ...Array(6).fill('N'),
-  ...Array(4).fill('S'),
-  ...Array(6).fill('T'),
-  ...Array(6).fill('R'),
-  ...Array(4).fill('L'),
-  ...Array(4).fill('D'),
+  ...Array(8).fill('A'),
+  ...Array(7).fill('I'),
+  ...Array(7).fill('T'),
+  ...Array(7).fill('R'),
+  ...Array(6).fill('O'),
+  ...Array(5).fill('N'),
+  ...Array(5).fill('S'),
+  ...Array(3).fill('L'),
+  ...Array(3).fill('U'),
+  ...Array(3).fill('D'),
+  ...Array(2).fill('H'),
   ...Array(2).fill('C'),
   ...Array(2).fill('M'),
   ...Array(2).fill('P'),
-  ...letterFrequencies,
+  ...Array(2).fill('G'),
+  ...Array(2).fill('B'),
+  ...Array(2).fill('F'),
+  ...Array(2).fill('W'),
+  ...Array(2).fill('Y'),
+  'K', 'V', 'J', 'X', 'Z', 'Q',
 ];
+
+/* ── Opening board pool — exactly 61 letters for GRID_RADIUS=4 (no J/X/Z, 1 Q) */
+const HX_OPENING_POOL = [
+  ...Array(8).fill('E'),
+  ...Array(6).fill('A'),
+  ...Array(5).fill('I'),
+  ...Array(5).fill('O'),
+  ...Array(5).fill('R'),
+  ...Array(5).fill('T'),
+  ...Array(4).fill('N'),
+  ...Array(4).fill('S'),
+  ...Array(3).fill('L'),
+  ...Array(3).fill('U'),
+  ...Array(3).fill('D'),
+  ...Array(2).fill('H'),
+  ...Array(2).fill('C'),
+  ...Array(2).fill('M'),
+  ...Array(2).fill('P'),
+  'B', 'F', 'G', 'W', 'Y', 'K', 'V', 'Q',
+];
+// Total: 8+6+5+5+5+5+4+4+3+3+3+2+2+2+2+1+1+1+1+1+1+1+1 = 67 — trim to 61
+// (sliced in buildGrid after shuffling)
 
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
@@ -108,6 +135,78 @@ function escapeHtml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+/* ── Hex neighbour helpers ─────────────────────────────────────── */
+const HEX_DIRECTIONS = [
+  { dq:  1, dr:  0 }, { dq:  1, dr: -1 }, { dq:  0, dr: -1 },
+  { dq: -1, dr:  0 }, { dq: -1, dr:  1 }, { dq:  0, dr:  1 },
+];
+
+function getHexNeighborCoords(q, r) {
+  return HEX_DIRECTIONS.map(d => ({ q: q + d.dq, r: r + d.dr }));
+}
+
+/* ── Q/U adjacency enforcement (post-placement pass on opening board) ── */
+function enforceQUNeighbors(tileMap) {
+  const VOWELS = new Set(['A', 'E', 'I', 'O', 'U']);
+
+  for (const [, qTile] of tileMap) {
+    if (qTile.letter !== 'Q') continue;
+
+    const neighborCoords = getHexNeighborCoords(qTile.q, qTile.r);
+    const hasUNeighbor = neighborCoords.some(n => {
+      const t = tileMap.get(hxKey(n.q, n.r));
+      return t?.letter === 'U';
+    });
+    if (hasUNeighbor) continue;
+
+    // Find a non-vowel neighbor to receive the U
+    const swapTarget = neighborCoords
+      .map(n => tileMap.get(hxKey(n.q, n.r)))
+      .filter(t => t && !VOWELS.has(t.letter))[0];
+    if (!swapTarget) continue;
+
+    // Find a U tile elsewhere on the board not already neighboring another Q
+    const donorU = [...tileMap.values()].find(t => {
+      if (t.letter !== 'U') return false;
+      const qNeighbors = getHexNeighborCoords(t.q, t.r).filter(n => {
+        const neighbor = tileMap.get(hxKey(n.q, n.r));
+        return neighbor?.letter === 'Q';
+      });
+      return qNeighbors.length === 0;
+    });
+
+    if (donorU) {
+      const tmp = swapTarget.letter;
+      swapTarget.letter = 'U';
+      donorU.letter = tmp;
+      swapTarget.updateLetter('U', letterPoints['U']);
+      donorU.updateLetter(tmp, letterPoints[tmp] || 1);
+    } else {
+      // No free U to donate — force the neighbor tile to become U directly
+      swapTarget.letter = 'U';
+      swapTarget.updateLetter('U', letterPoints['U']);
+      // old letter is intentionally lost in this edge case
+    }
+  }
+}
+
+/* ── Q/U-safe letter draw for refill ──────────────────────────── */
+function refillLetter(destQ, destR) {
+  let letter = randomLetter();
+  if (letter === 'Q') {
+    const neighborHasU = getHexNeighborCoords(destQ, destR).some(n => {
+      const t = hxTileMap.get(hxKey(n.q, n.r));
+      return t?.letter === 'U';
+    });
+    if (!neighborHasU) {
+      // Re-draw once; use a safe fallback consonant if still Q
+      letter = randomLetter();
+      if (letter === 'Q') letter = 'R';
+    }
+  }
+  return letter;
 }
 
 /* ── Tile geometry repositioning ───────────────────────────────── */
@@ -305,12 +404,29 @@ function buildGrid() {
   });
   hxUpdateViewForBoard = updateViewForBoard;
 
+  // Build the shuffled opening pool (slice to exactly 61 tiles for GRID_RADIUS=4)
+  const openingPool = [...HX_OPENING_POOL];
+  for (let i = openingPool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [openingPool[i], openingPool[j]] = [openingPool[j], openingPool[i]];
+  }
+  // Count how many hexes this board has (GRID_RADIUS=4 → 61)
+  let boardSize = 0;
+  for (let q = -GRID_RADIUS; q <= GRID_RADIUS; q++) {
+    for (let r = -GRID_RADIUS; r <= GRID_RADIUS; r++) {
+      if (Math.abs(-q - r) <= GRID_RADIUS) boardSize++;
+    }
+  }
+  const trimmedPool = openingPool.slice(0, boardSize);
+  let poolIdx = 0;
+
   for (let q = -GRID_RADIUS; q <= GRID_RADIUS; q++) {
     for (let r = -GRID_RADIUS; r <= GRID_RADIUS; r++) {
       const s = -q - r;
       if (Math.abs(s) > GRID_RADIUS) continue;
 
-      const letter = randomLetter();
+      // Draw from shuffled opening pool; fall back to randomLetter() if pool exhausted
+      const letter = poolIdx < trimmedPool.length ? trimmedPool[poolIdx++] : randomLetter();
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
@@ -330,6 +446,10 @@ function buildGrid() {
       tile.element.style.opacity = '0';
     }
   }
+
+  // Enforce Q/U adjacency on the opening board before it is revealed
+  enforceQUNeighbors(hxTileMap);
+
   hxSvg.appendChild(board);
 
   // Tighten viewBox to board bounds on mobile FIRST,
@@ -802,7 +922,7 @@ async function refillGrid() {
     for (let r = r_min; r <= r_max; r++) {
       if (hxTileMap.has(hxKey(q, r))) continue;
 
-      const letter = randomLetter();
+      const letter = refillLetter(q, r);
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
