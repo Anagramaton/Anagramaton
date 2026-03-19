@@ -199,13 +199,16 @@ async function animateTileMoves(moves) {
     new Promise(resolve => {
       const start = hxLayout.hexToPixel(new Hex(fromQ, fromR));
       const end   = hxLayout.hexToPixel(new Hex(toQ,   toR));
-      // Path offsets are relative to the tile's baked polygon position
-      const poly  = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
+      // Path offsets are relative to the tile's baked (drawn) polygon position.
+      // For existing tiles tile.q/tile.r == fromQ/fromR (pre-move position).
+      // For new refill tiles tile.q/tile.r == toQ/toR (spawned at destination).
+      // In both cases tile.q/tile.r gives the correct SVG geometry reference.
+      const bakedPixel = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
 
-      const sx = start.x - poly.x;
-      const sy = start.y - poly.y;
-      const ex = end.x   - poly.x;
-      const ey = end.y   - poly.y;
+      const sx = start.x - bakedPixel.x;
+      const sy = start.y - bakedPixel.y;
+      const ex = end.x   - bakedPixel.x;
+      const ey = end.y   - bakedPixel.y;
 
       // Quadratic Bézier control point: 0.25 pulls the arc toward the start row,
       // creating the "shoulder-slide" where tiles appear to roll off each other
@@ -217,7 +220,14 @@ async function animateTileMoves(moves) {
       anim.setAttribute('dur', '0.22s');
       anim.setAttribute('fill', 'freeze');
 
-      anim.addEventListener('endEvent', () => {
+      // settled flag prevents double-resolution if both endEvent and the
+      // fallback timer fire (e.g. very fast browser or already-removed element)
+      let settled = false;
+      let fallbackTimer;
+      function finalize() {
+        if (settled) return;
+        settled = true;
+        clearTimeout(fallbackTimer);
         hxTileMap.delete(hxKey(fromQ, fromR));
         tile.q = toQ;
         tile.r = toR;
@@ -231,7 +241,15 @@ async function animateTileMoves(moves) {
         void tile.element.getBoundingClientRect();
         tile.element.classList.add('hx-tile-landing');
         resolve();
-      }, { once: true });
+      }
+
+      anim.addEventListener('endEvent', finalize, { once: true });
+
+      // Fallback: SVG endEvent is not 100% reliable across all browsers.
+      // If it never fires (e.g. element removed from DOM mid-animation) the
+      // promise would hang forever, stalling the gravity/refill chain.
+      // 300 ms gives the 220 ms animation generous time to fire naturally.
+      fallbackTimer = setTimeout(finalize, 300);
 
       tile.element.appendChild(anim);
       anim.beginElement();
@@ -774,7 +792,10 @@ async function applyGravity() {
 
     if (moves.length === 0) break;
 
-    await animateTileMovesStaggered(moves, GRAVITY_STAGGER_MS);
+    // All tiles in a gravity wave fall simultaneously (Battle Balls style).
+    // Each successive pass of the while-loop is one "step" downward, giving
+    // the cascade effect without per-tile stagger within a single step.
+    await animateTileMoves(moves);
   }
 }
 
