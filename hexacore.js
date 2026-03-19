@@ -5,7 +5,6 @@ import {
   HEX_RADIUS,
   letterPoints,
   lengthMultipliers,
-  letterFrequencies,
   SVG_NS,
 } from './constants.js';
 import { isValidWord } from './gameLogic.js';
@@ -31,23 +30,39 @@ const GRAVITY_STAGGER_MS        = 38;  // ms stagger between tiles in the gravit
 const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
 
-/* ── Letter pool (vowels + common consonants + rare via letterFrequencies) */
+/* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
+ * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
+ * High-frequency vowels + consonants ensure dense playable word coverage.      */
 const HX_LETTER_POOL = [
-  ...Array(9).fill('A'),
-  ...Array(12).fill('E'),
-  ...Array(9).fill('I'),
-  ...Array(8).fill('O'),
-  ...Array(4).fill('U'),
-  ...Array(6).fill('N'),
-  ...Array(4).fill('S'),
-  ...Array(6).fill('T'),
-  ...Array(6).fill('R'),
-  ...Array(4).fill('L'),
-  ...Array(4).fill('D'),
-  ...Array(2).fill('C'),
-  ...Array(2).fill('M'),
-  ...Array(2).fill('P'),
-  ...letterFrequencies,
+  // Vowels
+  ...Array(12).fill('E'),  // 12
+  ...Array(9).fill('A'),   //  9
+  ...Array(9).fill('I'),   //  9
+  ...Array(8).fill('O'),   //  8
+  ...Array(4).fill('U'),   //  4
+
+  // High-frequency consonants
+  ...Array(6).fill('N'),   //  6
+  ...Array(6).fill('R'),   //  6
+  ...Array(6).fill('T'),   //  6
+  ...Array(4).fill('L'),   //  4
+  ...Array(4).fill('S'),   //  4
+  ...Array(4).fill('D'),   //  4
+
+  // Mid-frequency consonants
+  ...Array(3).fill('G'),   //  3
+  ...Array(2).fill('B'),   //  2
+  ...Array(2).fill('C'),   //  2
+  ...Array(2).fill('F'),   //  2
+  ...Array(2).fill('H'),   //  2
+  ...Array(2).fill('M'),   //  2
+  ...Array(2).fill('P'),   //  2
+  ...Array(2).fill('V'),   //  2
+  ...Array(2).fill('W'),   //  2
+  ...Array(2).fill('Y'),   //  2
+
+  // Rare letters — 1 each (still possible, not dominant)
+  'J', 'K', 'Q', 'X', 'Z',
 ];
 
 /* ── Module-level state ────────────────────────────────────────── */
@@ -90,6 +105,33 @@ function getColumnRange(q) {
 }
 
 function randomLetter() {
+  return HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+}
+
+const HX_VOWELS = new Set(['A','E','I','O','U']);
+const HX_VOWEL_POOL = ['A','A','A','E','E','E','E','I','I','I','O','O','O','U','U'];
+
+/**
+ * Returns a letter from HX_LETTER_POOL, but if all hex-grid neighbours of
+ * position (q, r) are already consonants, biases strongly toward a vowel
+ * so that isolated consonant islands are broken up.
+ */
+function randomLetterForPos(q, r) {
+  const neighborKeys = [
+    hxKey(q + 1, r),  hxKey(q - 1, r),
+    hxKey(q, r + 1),  hxKey(q, r - 1),
+    hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
+  ];
+  const neighborLetters = neighborKeys
+    .map(k => hxTileMap.get(k)?.letter)
+    .filter(Boolean);
+
+  const hasVowelNeighbor = neighborLetters.some(l => HX_VOWELS.has(l));
+
+  // If surrounded by consonants, 75% chance to force a vowel
+  if (!hasVowelNeighbor && neighborLetters.length >= 2 && Math.random() < 0.75) {
+    return HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)];
+  }
   return HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
 }
 
@@ -310,7 +352,7 @@ function buildGrid() {
       const s = -q - r;
       if (Math.abs(s) > GRID_RADIUS) continue;
 
-      const letter = randomLetter();
+      const letter = randomLetterForPos(q, r);
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
@@ -802,7 +844,7 @@ async function refillGrid() {
     for (let r = r_min; r <= r_max; r++) {
       if (hxTileMap.has(hxKey(q, r))) continue;
 
-      const letter = randomLetter();
+      const letter = randomLetterForPos(q, r);
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
