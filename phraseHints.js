@@ -36,10 +36,10 @@ export default [
     phrases: ["THANK GOD ITS FRIDAY",   "FART SHAKING ODDITY"],
     hints: {
       phrase1: [
-      "A stripped from a divine thunderclouds exhausted office chair thats headed for the weekend. "
+      "A verbal tip jar from the capital letter of existence heading for a three day weekend. "
       ],
       phrase2: [
-        "A whoopie cushions orchestra rumbles in Michael J Foxs hands on his way to Ripleys Believe It Or Not exhibit."
+        "A whoopie cushions orchestra vibrates a glass of nerves all over a Ripleys Believe It Or Not exhibit."
       ]
     }
   },
@@ -58,18 +58,18 @@ export default [
     phrases: ["SLOT MACHINES",   "CHINAS MOTELS"],
     hints: {
       phrase1: [
-        "A daily mailbox mouth hole routine regurgitating mimetic polyalloy into the lap of a T1000.",
+        "A mailbox mouth hole regurgitating dreams from the Matrix.",
       ],
       phrase2: [
-       "A red dragon market huffs smoke down back-road restrooms with numbered nightboxes."
+       "Porcelain pretending to be the geography for back-road bathrooms with numbered nightboxes."
       ]
     }
   },
   {
-    phrases: ["WHAT GOES AROUND",   "UNAWARE HOTDOGS"],
+    phrases: ["A GRAD TOWNHOUSE",   "UNAWARE HOTDOGS"],
     hints: {
       phrase1: [
-        "A lockless key found blowing a seed in the wind into a tangled string of knots .",
+        " .",
       ],
       phrase2: [
         "A blindfolded clipboard listing items on top of crate of franked franks.",
@@ -121,13 +121,13 @@ export default [
     }
   },
   {
-    phrases: ["PARLIAMENT",   "ANAL PERMIT"],
+    phrases: ["ALIEN TRAMP",   "ANAL PERMIT"],
     hints: {
       phrase1: [
-        "A hall of polished chairs erupts in debate while powdered wigs trade insults and pigeons vote from the rafters.",
+        "A passport stamped from another sky wearing a coat that has outlived its address.",
       ],
       phrase2: [
-        "A one-way-out tunnel of judgment rewarding a wax sealed approval upon a successful inspection."
+        "A one-way-out tunnel of judgment looking for a sealed approval upon a successful inspection."
       ]
     }
   },
@@ -171,7 +171,7 @@ export default [
         "Fighting for revenge wearing Leather or Fighting for his rights wearing makeup and a dress."
       ],
       phrase2: [
-        "A villanous apendage with a hard on for Ernst Blofield and trying to solve the mystery of Wheres Waldo.",
+        "A bodys reach department past the point of present",
       ]
     }
   },
@@ -234,7 +234,7 @@ export default [
     phrases: ["BLOW A FUSE",   "WOEFUL ABS"],
     hints: {
       phrase1: [
-        "An exhausted birthday candle attached to a hissing as a string with an expiration date."
+        "An exhausted birthday candle attached to a hissing string with an expiration date."
       ],
       phrase2: [
         "The braying sobs of a pessimistic ass protected by a brick wall of stomach crunches ."
@@ -364,7 +364,7 @@ export default [
     }
   },
   {
-    phrases: ["THUNDER SOCIETY",   "UNTIDY TROCHEES "],
+    phrases: ["THUNDER SOCIETY",   "UNTIDY TROCHEES"],
     hints: {
       phrase1: [
         "Flash and sound traveling and rumbling from a beehive built from opinions.",

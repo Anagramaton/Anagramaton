@@ -32,43 +32,116 @@ function getDailyId() {
 }
 
 function placeDailyPhrasePair(grid, gridRadius, rng, maxTries = 100) {
-  const coords = getAllCoords(gridRadius);
+  const coords   = getAllCoords(gridRadius);
   const maxTiles = coords.length;
-  const pick = (n) => Math.floor(rng() * n);
+  const pick     = (n) => Math.floor(rng() * n);
 
-  for (let i = 0; i < maxTries; i++) {
-    const selected = phraseHints[pick(phraseHints.length)];
+  // How many (pathA, pathB) combinations to evaluate per phrase pair candidate
+  const COMBO_TRIES = 5;
+
+  // Score a candidate (pathA, pathB) pair.
+  // Higher is better. Three components:
+  //   1. Shared tiles       — fewer total tiles consumed, more reuse potential
+  //   2. Average centrality — keeps rim free for Steps 3-6
+  //   3. Spatial spread     — paths that fan out give suffix seeds more attach points
+  function scorePair(pathA, pathB) {
+    const keysA = new Set(pathA.map(p => p.key));
+    const shared = pathB.filter(p => keysA.has(p.key)).length;
+
+    const allTiles      = [...pathA, ...pathB];
+    const avgCentrality = allTiles.reduce(
+      (sum, p) => sum + (gridRadius - Math.max(Math.abs(p.q), Math.abs(p.r), Math.abs(p.q + p.r))), 0
+    ) / allTiles.length;
+
+    const allQ    = allTiles.map(p => p.q);
+    const allR    = allTiles.map(p => p.r);
+    const spreadQ = Math.max(...allQ) - Math.min(...allQ);
+    const spreadR = Math.max(...allR) - Math.min(...allR);
+    const spread  = spreadQ + spreadR;
+
+    return shared * 10 + avgCentrality * 2 + spread * 1.5;
+  }
+
+  for (let attempt = 0; attempt < maxTries; attempt++) {
+    const selected     = phraseHints[pick(phraseHints.length)];
     const [rawA, rawB] = selected.phrases;
-    const { hints } = selected;
+    const { hints }    = selected;
 
-    const A = rawA.toUpperCase().replace(/[^A-Z]/g, "");
-    const B = rawB.toUpperCase().replace(/[^A-Z]/g, "");
+    const A = rawA.toUpperCase().replace(/[^A-Z]/g, '');
+    const B = rawB.toUpperCase().replace(/[^A-Z]/g, '');
 
-    if (A.length === 0 || B.length === 0) continue;
-    if (A.length !== B.length) continue;
-    if (A.length > maxTiles) continue;
+    if (!A.length || !B.length)  continue;
+    if (A.length !== B.length)   continue;
+    if (A.length > maxTiles)     continue;
 
-    const pathA = findPhrasePath(grid, A, gridRadius);
-    if (!pathA) continue;
-    placePhrase(grid, pathA, A);
+    let bestScore = -Infinity;
+    let bestPathA = null;
+    let bestPathB = null;
 
-    const pathB = findPhrasePath(grid, B, gridRadius);
-    if (!pathB) {
-      for (let k = 0; k < pathA.length; k++) {
-        const key = pathA[k].key;
-        if (grid[key] === A[k]) delete grid[key];
+    for (let combo = 0; combo < COMBO_TRIES; combo++) {
+      // Fresh scratch for every combo — prevents ghost letters between attempts
+      const scratch = {};
+
+      const pathA = findPhrasePath(scratch, A, gridRadius);
+      if (!pathA) continue;
+
+      // Write A to scratch so B can overlap with its letters
+      for (let k = 0; k < pathA.length; k++) scratch[pathA[k].key] = A[k];
+
+      // Build preferKeys: A's tile positions + their direct neighbours
+      // Steers B's DFS toward the phrase cluster without imposing fixed geometry —
+      // the shuffle inside findPhrasePath still runs first so randomness is preserved
+      const preferKeys = new Set();
+      for (const { q, r, key } of pathA) {
+        preferKeys.add(key);
+        for (const [dq, dr] of ADJ_DIRS) {
+          preferKeys.add(hexKey(q + dq, r + dr));
+        }
       }
-      continue;
-    }
-    placePhrase(grid, pathB, B);
 
-    gameState.seedPhrase = `${rawA} / ${rawB}`;
-    gameState.seedPaths = { phraseA: pathA, phraseB: pathB };
-    gameState.seedHints = hints;
+      const pathB = findPhrasePath(scratch, B, gridRadius, preferKeys);
+      if (!pathB) continue;
+
+      const score = scorePair(pathA, pathB);
+      if (score > bestScore) {
+        bestScore = score;
+        bestPathA = pathA;
+        bestPathB = pathB;
+      }
+    }
+
+    // Accept the best pair found for this phrase entry even if overlap was low —
+    // never hard-fail on overlap count alone.
+    // Only skip if no valid (pathA, pathB) pair was found at all.
+    if (!bestPathA || !bestPathB) continue;
+
+    // Commit winning pair to the real grid
+    placePhrase(grid, bestPathA, A);
+    placePhrase(grid, bestPathB, B);
+
+    gameState.seedPhrase         = `${rawA} / ${rawB}`;
+    gameState.seedPaths          = { phraseA: bestPathA, phraseB: bestPathB };
+    gameState.seedHints          = hints;
     gameState.phraseCleanLetters = { phrase1: A, phrase2: B };
+
+    // Build phrase tile footprint for Step 2 (suffix seeder)
+    const phraseOccupied = new Set([
+      ...bestPathA.map(p => p.key),
+      ...bestPathB.map(p => p.key),
+    ]);
+    const phraseAdjacent = new Set();
+    for (const { q, r } of [...bestPathA, ...bestPathB]) {
+      for (const [dq, dr] of ADJ_DIRS) {
+        const nk = hexKey(q + dq, r + dr);
+        if (!phraseOccupied.has(nk)) phraseAdjacent.add(nk);
+      }
+    }
+    gameState.phraseOccupiedKeys = phraseOccupied;
+    gameState.phraseAdjacentKeys = phraseAdjacent;
 
     return true;
   }
+
   return false;
 }
 
@@ -112,12 +185,14 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
   }
 
   // Unlimited — clear daily state and generate normally
-  gameState.seedPhrase = undefined;
-  gameState.seedPaths = undefined;
-  gameState.seedHints = undefined;
+  gameState.seedPhrase         = undefined;
+  gameState.seedPaths          = undefined;
+  gameState.seedHints          = undefined;
   gameState.phraseCleanLetters = { phrase1: '', phrase2: '' };
-  gameState.phrasesFound = { phrase1: false, phrase2: false };
-  gameState.dailyRng = undefined;
+  gameState.phrasesFound       = { phrase1: false, phrase2: false };
+  gameState.phraseOccupiedKeys = null;
+  gameState.phraseAdjacentKeys = null;
+  gameState.dailyRng           = undefined;
 
   return _generateBoard(gridRadius, state);
 }
@@ -152,22 +227,27 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
       const placed = placeDailyPhrasePair(grid, gridRadius, rng, 100);
 
       if (!placed) {
-        gameState.seedPhrase = undefined;
-        gameState.seedPaths = undefined;
-        gameState.seedHints = undefined;
+        gameState.seedPhrase         = undefined;
+        gameState.seedPaths          = undefined;
+        gameState.seedHints          = undefined;
         gameState.phraseCleanLetters = { phrase1: '', phrase2: '' };
-        gameState.phrasesFound = { phrase1: false, phrase2: false };
+        gameState.phrasesFound       = { phrase1: false, phrase2: false };
+        gameState.phraseOccupiedKeys = null;
+        gameState.phraseAdjacentKeys = null;
         DEBUG && console.info(`🌟 Daily (${dailyId}): no seed phrase placed`);
       } else {
         DEBUG && console.info(`🌟 Daily (${dailyId}) seed phrase: ${gameState.seedPhrase}`);
         DEBUG && console.info(`✅ Loaded hints:`, gameState.seedHints);
+        DEBUG && console.info(`📐 Phrase footprint: ${gameState.phraseOccupiedKeys?.size} occupied, ${gameState.phraseAdjacentKeys?.size} adjacent`);
       }
     } else {
-      gameState.seedPhrase = undefined;
-      gameState.seedPaths = undefined;
-      gameState.seedHints = undefined;
+      gameState.seedPhrase         = undefined;
+      gameState.seedPaths          = undefined;
+      gameState.seedHints          = undefined;
       gameState.phraseCleanLetters = { phrase1: '', phrase2: '' };
-      gameState.phrasesFound = { phrase1: false, phrase2: false };
+      gameState.phrasesFound       = { phrase1: false, phrase2: false };
+      gameState.phraseOccupiedKeys = null;
+      gameState.phraseAdjacentKeys = null;
       DEBUG && console.info(`(Unlimited) Step 1: phrase pair seeding skipped`);
     }
   }
@@ -289,8 +369,13 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
   // ---------------------------------------------------------------------------
   placedSuffixes = [];
 
-  if (gameState.mode === 'daily') {
-    placedSuffixes = placeOverlappingSuffixes(grid, suffixList, gridRadius);
+    if (gameState.mode === 'daily') {
+    placedSuffixes = placeOverlappingSuffixes(
+      grid,
+      suffixList,
+      gridRadius,
+      gameState.phraseAdjacentKeys ?? new Set()   // steer suffix seeds toward phrase boundary
+    );
 
     if (DEBUG) {
       console.group("🧷 Overlapping suffixes (placed)");

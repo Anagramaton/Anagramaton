@@ -9,24 +9,26 @@ export const gameState = {
   phrasesFound: { phrase1: false, phrase2: false },
   phraseCleanLetters: { phrase1: '', phrase2: '' },
 
+  // Phrase tile footprint — populated after Step 1 placement (daily-only)
+  phraseOccupiedKeys: null,   // Set of hex keys written by phrase A or phrase B
+  phraseAdjacentKeys: null,   // Set of hex keys directly neighbouring the phrase cluster
+
   hintUsage: {
-    wordcount: false,
+    wordCount: false,          // fixed: was 'wordcount' (lowercase c), mismatched phrasePanel.js
     phraseRevealed: {
       phrase1: false,
       phrase2: false
     }
   },
 
-  multiplier: 10,           
-  hintsUsed: 0,             
+  multiplier: 10,
+  hintsUsed: 0,
 
+  score: 0,
+  anagramBonusPaid: false,
 
-  score: 0,                 
-  anagramBonusPaid: false,  
-
-
-  words: [], 
-  boardTop10: [],         
-  boardTop10Total: 0,     // ← added comma here
-  gridReady: false        // ← ADD THIS
+  words: [],
+  boardTop10: [],
+  boardTop10Total: 0,
+  gridReady: false
 };
