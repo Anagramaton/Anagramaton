@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Player — Anagramaton</title>
+
+  <!-- Apply saved theme immediately to prevent flash of wrong theme -->
+  <script>
+    (function() {
+      var theme = localStorage.getItem('theme') || 'dark';
+      var access = localStorage.getItem('accessibility') || 'normal';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('data-accessibility', access);
+    })();
+  </script>
+
+  <!-- Google Fonts (same as index.html) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Turret+Road:wght@200;300;400;500;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./player.css" />
+</head>
+<body>
+
+  <div class="player-page">
+
+    <!-- Header -->
+    <header class="player-header">
+      <a class="player-back-btn" href="/"
+         onclick="if(history.length>1){history.back();return false;}">← BACK</a>
+      <span class="player-site-title">ANAGRAMATON</span>
+      <!-- spacer to balance the back button -->
+      <div style="width:80px"></div>
+    </header>
+
+    <!-- Dynamic content injected by player.js -->
+    <div id="player-root">
+      <div class="player-loading">Loading...</div>
+    </div>
+
+  </div>
+
+  <script type="module" src="./player.js"></script>
+</body>
+</html>

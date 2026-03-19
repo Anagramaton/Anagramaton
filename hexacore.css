@@ -1,0 +1,275 @@
+/* ================================================================
+   hexacore.css — Styles for Hexacore endless mode
+   ================================================================ */
+
+/* ── Ember tile — orange/red glow ──────────────────────────────── */
+.hx-ember {
+  fill: url(#hx-ember-gradient);
+  filter: drop-shadow(0 0 6px rgba(255, 120, 20, 0.9));
+  animation: hx-ember-pulse 1.2s ease-in-out infinite alternate;
+}
+@keyframes hx-ember-pulse {
+  from { filter: drop-shadow(0 0 4px rgba(255, 100, 10, 0.8)); }
+  to   { filter: drop-shadow(0 0 12px rgba(255, 60, 0, 1)); }
+}
+
+/* ── Prism tile — rainbow shimmer ──────────────────────────────── */
+.hx-prism {
+  fill: url(#hx-prism-gradient);
+  animation: hx-prism-shimmer 2s linear infinite;
+}
+@keyframes hx-prism-shimmer {
+  0%   { filter: hue-rotate(0deg)   drop-shadow(0 0 6px rgba(180, 100, 255, 0.7)); }
+  50%  { filter: hue-rotate(180deg) drop-shadow(0 0 10px rgba(100, 200, 255, 0.9)); }
+  100% { filter: hue-rotate(360deg) drop-shadow(0 0 6px rgba(180, 100, 255, 0.7)); }
+}
+
+/* ── Rune tile — dark purple ───────────────────────────────────── */
+.hx-rune {
+  fill: #2d1b69;
+  filter: drop-shadow(0 0 5px rgba(130, 80, 255, 0.8));
+}
+
+/* ── Hexacore HUD ──────────────────────────────────────────────── */
+#hx-score-hud {
+  position: fixed;
+  bottom: clamp(80px, 12vh, 130px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: #4cc9f0;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  z-index: 500;
+  white-space: nowrap;
+}
+
+/* ── Hide Anagramaton-specific UI during Hexacore ──────────────── */
+body.hx-active #score-display        { display: none; }
+body.hx-active .side-toggle          { display: none; }
+body.hx-active #current-word-display { display: none; }
+body.hx-active #left-panel-title,
+body.hx-active #right-panel-title    { display: none; }
+
+/* ── Game over overlay ─────────────────────────────────────────── */
+#hx-gameover-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  overflow-y: auto;
+}
+#hx-gameover-box {
+  background: linear-gradient(135deg, rgba(20,20,35,0.97), rgba(35,10,45,0.97));
+  border: 2px solid rgba(76,201,240,0.7);
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  max-width: 440px;
+  width: 90%;
+  color: #f1f5f9;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(76,201,240,0.4), 0 12px 40px rgba(0,0,0,0.7);
+  margin: auto;
+}
+#hx-gameover-box h2 {
+  font-size: 1.8rem;
+  letter-spacing: 0.15em;
+  color: #ff6b35;
+  margin-bottom: 0.5rem;
+}
+#hx-gameover-box .hx-final-score {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #4cc9f0;
+  line-height: 1;
+  margin: 0.5rem 0;
+}
+#hx-gameover-box .hx-stats {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-bottom: 1.25rem;
+}
+#hx-gameover-box button {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.6rem 1.2rem;
+  border-radius: 7px;
+  border: 1px solid rgba(76,201,240,0.6);
+  background: rgba(76,201,240,0.1);
+  color: #f1f5f9;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#hx-gameover-box button:hover { background: rgba(76,201,240,0.25); }
+#hx-gameover-box button.hx-btn-primary {
+  border-color: #f59e0b;
+  background: rgba(245,158,11,0.15);
+  color: #f59e0b;
+}
+#hx-gameover-box button.hx-btn-primary:hover { background: rgba(245,158,11,0.3); }
+#hx-gameover-box button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ── Splash screen Hexacore button ─────────────────────────────── */
+#splash-hexacore-btn {
+  margin-top: 0.75rem;
+  background: linear-gradient(135deg, rgba(255,80,20,0.2), rgba(255,140,0,0.15));
+  border-color: rgba(255,120,40,0.7);
+  color: #ff8c42;
+}
+#splash-hexacore-btn:hover {
+  background: linear-gradient(135deg, rgba(255,80,20,0.35), rgba(255,140,0,0.3));
+}
+#splash-hexacore-note {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+/* ── Spring landing — elastic overshoot when a tile settles ──────── */
+@keyframes hx-tile-land {
+  0%   { transform: scale(1.0); }
+  40%  { transform: scale(1.14); }
+  65%  { transform: scale(0.94); }
+  82%  { transform: scale(1.04); }
+  100% { transform: scale(1.0); }
+}
+.hx-tile-landing {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-tile-land 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Intro pour animation — tiles fade+scale in after arc completes ── */
+@keyframes hx-tile-intro-land {
+  0%   { opacity: 0.6; transform: scale(0.7); }
+  60%  { opacity: 1;   transform: scale(1.1); }
+  100% { opacity: 1;   transform: scale(1.0); }
+}
+.hx-tile-intro-landing {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-tile-intro-land 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Tile removal animation (consumed tiles fade + shrink) ─────── */
+@keyframes hx-tile-pop-out {
+  0%   { opacity: 1;   transform: scale(1); }
+  40%  { opacity: 0.6; transform: scale(1.12); }
+  100% { opacity: 0;   transform: scale(0.25); }
+}
+.hx-tile-removing {
+  animation: hx-tile-pop-out 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+/* ── Special tile consumed burst — layered over hx-tile-removing ── */
+@keyframes hx-ember-burst {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  30%  { filter: brightness(4.5) drop-shadow(0 0 22px rgba(255, 100, 10, 1)); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+/* Replaces the single animation with pop-out + ember burst running together */
+.hx-consumed-ember {
+  animation:
+    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-ember-burst   0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+@keyframes hx-prism-rainbow {
+  0%   { filter: hue-rotate(0deg)   brightness(1)   drop-shadow(0 0  0px transparent); }
+  50%  { filter: hue-rotate(180deg) brightness(3.5) drop-shadow(0 0 20px rgba(100, 200, 255, 1)); }
+  100% { filter: hue-rotate(360deg) brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+.hx-consumed-prism {
+  animation:
+    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-prism-rainbow 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+@keyframes hx-rune-implosion {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  40%  { filter: brightness(3.5) drop-shadow(0 0 18px rgba(130, 80, 255, 1)); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+.hx-consumed-rune {
+  animation:
+    hx-tile-pop-out    0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-rune-implosion  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+/* ── Score HUD pop animation ───────────────────────────────────── */
+@keyframes hx-score-pop {
+  0%   { transform: translateX(-50%) scale(1);    color: #4cc9f0; }
+  35%  { transform: translateX(-50%) scale(1.35); color: #ffd700; }
+  100% { transform: translateX(-50%) scale(1);    color: #4cc9f0; }
+}
+.hx-score-popping {
+  animation: hx-score-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Special tile spawn animations ────────────────────────────── */
+@keyframes hx-ember-spawn-anim {
+  0%   { opacity: 0.3; transform: scale(0.5);
+         filter: drop-shadow(0 0  0px transparent); }
+  45%  { opacity: 1;   transform: scale(1.2);
+         filter: brightness(2.8) drop-shadow(0 0 20px rgba(255, 120, 20, 1)); }
+  100% { opacity: 1;   transform: scale(1.0);
+         filter: drop-shadow(0 0 6px rgba(255, 120, 20, 0.9)); }
+}
+.hx-ember-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-ember-spawn-anim 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes hx-prism-spawn-anim {
+  0%   { opacity: 0.3; transform: scale(0.5) rotate(0deg);
+         filter: hue-rotate(0deg); }
+  50%  { opacity: 1;   transform: scale(1.2) rotate(30deg);
+         filter: hue-rotate(180deg) brightness(2.5) drop-shadow(0 0 16px rgba(180, 100, 255, 1)); }
+  100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
+         filter: hue-rotate(360deg) drop-shadow(0 0 6px rgba(180, 100, 255, 0.7)); }
+}
+.hx-prism-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-prism-spawn-anim 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes hx-rune-spawn-anim {
+  0%   { opacity: 0;   transform: scale(0.5); filter: brightness(1); }
+  20%  { opacity: 0.8; transform: scale(0.9); filter: brightness(3) drop-shadow(0 0 12px rgba(130, 80, 255, 0.9)); }
+  40%  { opacity: 0.3; transform: scale(0.8); filter: brightness(1); }
+  65%  { opacity: 0.9; transform: scale(1.1); filter: brightness(2.5) drop-shadow(0 0 10px rgba(130, 80, 255, 0.8)); }
+  82%  { opacity: 0.5; transform: scale(1.0); filter: brightness(1); }
+  100% { opacity: 1;   transform: scale(1.0); filter: drop-shadow(0 0 5px rgba(130, 80, 255, 0.8)); }
+}
+.hx-rune-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-rune-spawn-anim 0.65s ease-out forwards;
+}
+
+/* ── Disable native scroll/zoom on hex grid during Hexacore ───── */
+body.hx-active #hex-grid {
+  touch-action: none;
+}
+

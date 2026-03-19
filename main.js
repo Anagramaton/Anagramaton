@@ -3,13 +3,14 @@ import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from '
 import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
 import { gameState } from './gameState.js';
 import { placedWords } from './gridLogic.js';
-import { initPhrasePanelEvents, revealPhrase, getHintMultiplier } from './phrasePanel.js';
+import { initPhrasePanelEvents, revealPhrase, computePhraseBonus } from './phrasePanel.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
-import { submitScore, getPlayerName, promptPlayerName } from './leaderboard.js';
+import { submitScore, getPlayerName, promptPlayerName, promptSignOut, clearPlayerName } from './leaderboard.js';
 import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+import { stopHexacore } from './hexacore.js';
 
 
 // ============================================================
@@ -34,12 +35,16 @@ function applySavedTheme() {
 
   if (themeBtn) {
     themeBtn.setAttribute('aria-pressed', String(theme === 'dark'));
-    themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    const themeIcon = themeBtn.querySelector('.setting-icon');
+    if (themeIcon) themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    else themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
     themeBtn.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
   }
   if (accessBtn) {
     accessBtn.setAttribute('aria-pressed', String(access === 'colorblind'));
-    accessBtn.textContent = access === 'colorblind' ? '🌓' : '🌒';
+    const accessIcon = accessBtn.querySelector('.setting-icon');
+    if (accessIcon) accessIcon.textContent = access === 'colorblind' ? '🌓' : '🌒';
+    else accessBtn.textContent = access === 'colorblind' ? '🌓' : '🌒';
     accessBtn.title = access === 'colorblind' ? 'Disable Colorblind Mode' : 'Enable Colorblind Mode';
   }
 
@@ -58,7 +63,8 @@ function setupThemeControls() {
       document.body.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       themeBtn.setAttribute('aria-pressed', String(next === 'dark'));
-      themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      const themeIcon = themeBtn.querySelector('.setting-icon');
+      if (themeIcon) themeIcon.textContent = next === 'dark' ? '☀️' : '🌙';
       themeBtn.title = next === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
     });
   }
@@ -70,30 +76,25 @@ function setupThemeControls() {
       document.body.setAttribute('data-accessibility', next);
       localStorage.setItem('accessibility', next);
       accessBtn.setAttribute('aria-pressed', String(next === 'colorblind'));
-      accessBtn.textContent = next === 'colorblind' ? '🌓' : '🌒';
+      const accessIcon = accessBtn.querySelector('.setting-icon');
+      if (accessIcon) accessIcon.textContent = next === 'colorblind' ? '🌓' : '🌒';
       accessBtn.title = next === 'colorblind' ? 'Disable Colorblind Mode' : 'Enable Colorblind Mode';
     });
   }
 
   if (modeBtn) {
-    modeBtn.textContent = gameState.mode === 'daily' ? '♾️ UNLIMITED' : '📅 DAILY';
+    const modeIcon = modeBtn.querySelector('.setting-icon');
+    const modeLabel = modeBtn.querySelector('.setting-label');
+    if (modeIcon && modeLabel) {
+      modeIcon.textContent = gameState.mode === 'daily' ? '♾️' : '📅';
+      modeLabel.textContent = gameState.mode === 'daily' ? 'UNLIMITED' : 'DAILY';
+    } else {
+      modeBtn.textContent = gameState.mode === 'daily' ? '♾️ UNLIMITED' : '📅 DAILY';
+    }
     modeBtn.addEventListener('click', () => {
       const next = gameState.mode === 'daily' ? 'unlimited' : 'daily';
       window.location.href = `?mode=${next}`;
     });
-  }
-
-  if (gameState.mode === 'daily') {
-    const resetDailyBtn = document.getElementById('reset-daily-btn');
-    if (resetDailyBtn) {
-      resetDailyBtn.hidden = false;
-      resetDailyBtn.addEventListener('click', () => {
-        if (gameState.dailyId) {
-          localStorage.removeItem(`anagramaton_daily_${gameState.dailyId}`);
-          window.location.href = '?mode=daily';
-        }
-      });
-    }
   }
 }
 
@@ -107,9 +108,35 @@ function preferOsDarkOnFirstVisit() {
     const themeBtn = document.getElementById('toggle-theme');
     if (themeBtn) {
       themeBtn.setAttribute('aria-pressed', 'true');
-      themeBtn.textContent = '☀️';
+      const themeIcon = themeBtn.querySelector('.setting-icon');
+      if (themeIcon) themeIcon.textContent = '☀️';
       themeBtn.title = 'Switch to Light Mode';
     }
+  }
+}
+
+/** Updates the set-name button to show the player name (or fallback label). */
+function updateNameBtnText(btn, name) {
+  if (!btn) return;
+  const label = btn.querySelector('.setting-label');
+  if (label) {
+    label.textContent = name ? name.toUpperCase() : 'SET NAME';
+  } else {
+    btn.textContent = name ? `👤 ${name.toUpperCase()}` : '👤 SET NAME';
+  }
+}
+
+/** Updates the splash sign-up button state based on whether a player name is saved. */
+function updateSplashSignupBtn(btn, name) {
+  if (!btn) return;
+  if (name) {
+    btn.disabled = true;
+    btn.classList.add('splash-signup--signed-in');
+    btn.textContent = `✓ SIGNED IN AS ${name.toUpperCase()}`;
+  } else {
+    btn.disabled = false;
+    btn.classList.remove('splash-signup--signed-in');
+    btn.textContent = '✨ SIGN UP';
   }
 }
 
@@ -168,20 +195,28 @@ function getPhraseRawText(phraseKey) {
   return (parts[idx] || '').trim();
 }
 
-/** Applies the persistent border colour + one-shot celebration animation to found phrase tiles. */
+/** Applies the persistent orange text colour + one-shot celebration animation to found phrase tiles.
+ *  Returns a Promise that resolves when the last tile's animation ends (or immediately if no tiles). */
 function applyPhraseTileStyle(phraseKey, tiles) {
-  const classNum = phraseKey === 'phrase1' ? '1' : '2';
-  tiles.forEach((tile, idx) => {
-    const poly = tile.element?.querySelector('polygon');
-    if (poly) poly.classList.add(`phrase-tile-${classNum}`);
-    if (tile.element) {
-      tile.element.style.setProperty('--celebrate-delay', `${idx * 0.06}s`);
-      tile.element.classList.add('phrase-celebrate');
-      tile.element.addEventListener('animationend', () => {
-        tile.element.classList.remove('phrase-celebrate');
-        tile.element.style.removeProperty('--celebrate-delay');
-      }, { once: true });
-    }
+  return new Promise(resolve => {
+    if (tiles.length === 0) { resolve(); return; }
+    const lastIdx = tiles.length - 1;
+    tiles.forEach((tile, idx) => {
+      // Colour the letter and point value text orange
+      tile.textLetter?.classList.add('phrase-text');
+      tile.textPoint?.classList.add('phrase-text');
+      if (tile.element) {
+        tile.element.style.setProperty('--celebrate-delay', `${idx * 0.06}s`);
+        tile.element.classList.add('phrase-celebrate');
+        tile.element.addEventListener('animationend', () => {
+          tile.element.classList.remove('phrase-celebrate');
+          tile.element.style.removeProperty('--celebrate-delay');
+          if (idx === lastIdx) resolve();
+        }, { once: true });
+      } else if (idx === lastIdx) {
+        resolve();
+      }
+    });
   });
 }
 
@@ -189,7 +224,7 @@ function applyPhraseTileStyle(phraseKey, tiles) {
 async function handlePhraseFound(phraseKey, tiles) {
   gameState.phrasesFound[phraseKey] = true;
 
-  applyPhraseTileStyle(phraseKey, tiles);
+  await applyPhraseTileStyle(phraseKey, tiles);
   playSound('sfxMagic');
   revealPhrase(phraseKey);
 
@@ -239,6 +274,27 @@ window.addEventListener('score:delta', (e) => {
   updateScoreDisplay(baseTotal + bonusTotal);
 });
 
+function fitCurrentWord() {
+  const display = document.getElementById('current-word-display');
+  const word = document.getElementById('current-word');
+  if (!display || !word) return;
+  display.style.fontSize = '';
+  if (word.scrollWidth <= display.offsetWidth) return;
+  const maxSize = parseFloat(getComputedStyle(display).fontSize);
+  const minSize = 10;
+  let lo = minSize, hi = maxSize;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) / 2;
+    display.style.fontSize = mid + 'px';
+    if (word.scrollWidth > display.offsetWidth) {
+      hi = mid;
+    } else {
+      lo = mid;
+    }
+  }
+  display.style.fontSize = lo + 'px';
+}
+
 function updateCurrentWordDisplay() {
   const el = document.getElementById('current-word');
   if (!el) return;
@@ -247,6 +303,7 @@ function updateCurrentWordDisplay() {
     .join('')
     .toUpperCase();
   el.textContent = letters;
+  fitCurrentWord();
 }
 
 async function handleSubmitWordClick() {
@@ -335,14 +392,14 @@ async function handleSubmitList() {
 
   const bothPhrasesFound = areBothPhrasesFound();
   if (gameState.mode === 'daily' && bothPhrasesFound) {
-    const hintMult = getHintMultiplier();
-    bonusTotal += baseTotal * hintMult;
+    const phraseBonus = computePhraseBonus();
+    bonusTotal += phraseBonus;
     totalScore  = baseTotal + bonusTotal;
     updateScoreDisplay(totalScore);
   }
 
   const scoreEl        = document.getElementById('score-display');
-  const finalScoreText = scoreEl ? (scoreEl.textContent || 'SCORE: 0') : 'SCORE: 0';
+  const finalScoreText = scoreEl ? (scoreEl.textContent || '0') : '0';
   const finalScore     = (typeof totalScore === 'number') ? totalScore : 0;
 
   resetSelectionState();
@@ -372,7 +429,14 @@ async function handleSubmitList() {
     solverTimeout
   ]);
 
-  const phraseBonus = bothPhrasesFound ? (baseTotal * getHintMultiplier()) : 0;
+  const phraseBonus = bothPhrasesFound ? computePhraseBonus() : 0;
+
+  // Close both panels so the round-over modal has a clean backdrop
+  const leftPanelEl  = document.getElementById('left-panel');
+  const rightPanelEl = document.getElementById('right-panel');
+  leftPanelEl?.classList.remove('open');
+  rightPanelEl?.classList.remove('open');
+  document.body.classList.remove('left-open', 'right-open', 'panel-open');
 
   requestAnimationFrame(() => {
     const boardTop10      = Array.isArray(gameState.boardTop10) ? gameState.boardTop10 : [];
@@ -391,6 +455,7 @@ async function handleSubmitList() {
         boardTop10,
         boardTop10Total,
         dailyId:        gameState.mode === 'daily' ? (gameState.dailyId || null) : null,
+        mode:           gameState.mode,
         phrasesFound:   { ...gameState.phrasesFound },
         bothPhrasesFound,
         phraseBonus,
@@ -415,12 +480,25 @@ async function handleSubmitList() {
         playerName = getPlayerName();
         // Update set-name-btn text after name is set
         const nameBtn = document.getElementById('set-name-btn');
-        if (nameBtn) {
-          nameBtn.textContent = playerName ? `👤 ${playerName.toUpperCase()}` : '👤 SET NAME';
-        }
+        updateNameBtnText(nameBtn, playerName);
       }
       if (playerName) {
         await submitScore(gameState.dailyId, finalScore, words, gameState.hintsUsed || 0);
+      }
+    })();
+  }
+
+  if (gameState.mode === 'unlimited') {
+    (async () => {
+      let playerName = getPlayerName();
+      if (!playerName) {
+        await promptPlayerName();
+        playerName = getPlayerName();
+        const nameBtn = document.getElementById('set-name-btn');
+        updateNameBtnText(nameBtn, playerName);
+      }
+      if (playerName) {
+        await submitScore('unlimited', finalScore, words, 0, 'unlimited');
       }
     })();
   }
@@ -436,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================
   const splashScreen   = document.getElementById('splash-screen');
   const splashPlayBtn  = document.getElementById('splash-play-btn');
-  const splashHowtoBtn = document.getElementById('splash-howto-btn');
+  const splashSignupBtn = document.getElementById('splash-signup-btn');
 
   const VISITED_KEY = 'anagramaton_visited';
   const isFirstVisit = !localStorage.getItem(VISITED_KEY);
@@ -488,21 +566,28 @@ window.addEventListener('grid:ready', () => {
     }, { once: true });
   }
 
-  // HOW TO PLAY button on splash screen
-  splashHowtoBtn?.addEventListener('click', () => {
-    splashScreen?.classList.add('hidden');
+  // SIGN UP button on splash screen
+  if (splashSignupBtn) {
+    // Reflect current sign-in state immediately
+    updateSplashSignupBtn(splashSignupBtn, getPlayerName());
 
-    // Same pattern — unlock synchronously inside the tap gesture
-    if (!audioUnlocked) {
-      audioUnlocked = true;
-      unlockAudioContext(); // synchronous — still inside the tap
-      audioReadyPromise = preloadBuffers();    // background — fire and forget
-    }
-
-    playSound('sfxUnlock');
-    openHowtoIfFirstVisit(100);
-    if (!isFirstVisit) setTimeout(() => window.howto?.open(), 100);
-  });
+    splashSignupBtn.addEventListener('click', async () => {
+      if (!audioUnlocked) {
+        audioUnlocked = true;
+        unlockAudioContext();
+        audioReadyPromise = preloadBuffers();
+      }
+      playSound('sfxUnlock');
+      await promptPlayerName();
+      const saved = getPlayerName();
+      const nameBtn = document.getElementById('set-name-btn');
+      updateNameBtnText(nameBtn, saved);
+      updateSplashSignupBtn(splashSignupBtn, saved);
+      // Hide splash and open how-to on first visit
+      splashScreen?.classList.add('hidden');
+      openHowtoIfFirstVisit(300);
+    });
+  }
   // ============================
 
   applySavedTheme();
@@ -528,18 +613,57 @@ window.addEventListener('grid:ready', () => {
     }
   });
 
+  const lbBtn = document.getElementById('lb-open-btn');
+  if (lbBtn) {
+    lbBtn.addEventListener('click', () => {
+      settingsMenu.hidden = true;
+      settingsWrap.classList.remove('menu-open');
+      window.lbModal?.open();
+    });
+  }
+
+  // ============================
+  // HOME BUTTON
+  // ============================
+  const homeBtn = document.getElementById('home-btn');
+  if (homeBtn) {
+    homeBtn.addEventListener('click', () => {
+      settingsMenu.hidden = true;
+      settingsWrap.classList.remove('menu-open');
+      if (document.body.classList.contains('hx-active')) {
+        stopHexacore();
+      }
+      document.getElementById('splash-screen')?.classList.remove('hidden');
+    });
+  }
+
   // ============================
   // SET NAME BUTTON
   // ============================
   const setNameBtn = document.getElementById('set-name-btn');
   if (setNameBtn) {
     const existingName = getPlayerName();
-    if (existingName) setNameBtn.textContent = `👤 ${existingName.toUpperCase()}`;
+    updateNameBtnText(setNameBtn, existingName);
 
     setNameBtn.addEventListener('click', async () => {
-      await promptPlayerName();
-      const saved = getPlayerName();
-      setNameBtn.textContent = saved ? `👤 ${saved.toUpperCase()}` : '👤 SET NAME';
+      settingsMenu.hidden = true;
+      settingsWrap.classList.remove('menu-open');
+
+      const currentName = getPlayerName();
+      if (currentName) {
+        // Player already signed in — show sign-out modal
+        const confirmedSignOut = await promptSignOut();
+        if (confirmedSignOut) {
+          updateNameBtnText(setNameBtn, null);
+          updateSplashSignupBtn(document.getElementById('splash-signup-btn'), null);
+        }
+      } else {
+        // No name yet — let player sign up
+        await promptPlayerName();
+        const saved = getPlayerName();
+        updateNameBtnText(setNameBtn, saved);
+        updateSplashSignupBtn(document.getElementById('splash-signup-btn'), saved);
+      }
     });
   }
 
@@ -654,6 +778,7 @@ document.getElementById('new-game')?.addEventListener('click', () => {
       resetSelectionState();
       const cw = document.getElementById('current-word');
       if (cw) cw.textContent = '';
+      fitCurrentWord();
     });
 
   window.addEventListener('selection:changed', updateCurrentWordDisplay);

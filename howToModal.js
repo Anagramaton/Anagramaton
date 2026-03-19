@@ -36,12 +36,12 @@
     if (!dotsWrap) return;
     const dots = dotsWrap.querySelectorAll('.howto-dot');
     dots.forEach((d, i) => {
-      d.style.width = '10px';
-      d.style.height = '10px';
+      d.style.width = '8px';
+      d.style.height = '8px';
       d.style.borderRadius = '50%';
-      d.style.border = '1px solid rgba(255,255,255,.6)';
-      d.style.background = i === page ? '#fff' : 'transparent';
-      d.style.opacity = i === page ? '1' : '.65';
+      d.style.border = `1.5px solid ${i === page ? '#f59e0b' : 'rgba(245,158,11,0.4)'}`;
+      d.style.background = i === page ? '#f59e0b' : 'transparent';
+      d.style.opacity = '1';
       d.style.cursor = 'pointer';
       d.setAttribute('aria-current', i === page ? 'true' : 'false');
       d.tabIndex = 0;
@@ -138,8 +138,6 @@
       // Replace the first paragraph after the h3 (keeps the heading)
       const p = phrase.querySelector('p');
       if (p) p.innerHTML = html;
-      // jump there to preview if you want:
-      // go(4);
     }
   };
 })();

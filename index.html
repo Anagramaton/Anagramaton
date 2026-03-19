@@ -29,12 +29,14 @@
 &family=Bebas+Neue
 &family=Rhajdhani:wght@300;400;500;600;700
 &family=Orbitron:wght@400;500;600;700;800;900
+&family=Black+Han+Sans
 &display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="modal.css" />
   <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)">
   <link rel="stylesheet" href="howtoModal.css">
+  <link rel="stylesheet" href="hexacore.css">
 </head>
 
 <body>
@@ -42,23 +44,27 @@
   <div id="splash-content">
     <h1 id="splash-title">ANAGRAMATON</h1>
     <p id="splash-tagline">BUILD WORDS. CHAIN TILES. BEAT THE BOARD.</p>
-    <button id="splash-play-btn" type="button" autofocus>PLAY</button>
-    <button id="splash-howto-btn" type="button">HOW TO PLAY</button>
+    <button id="splash-signup-btn" type="button">✨ SIGN UP</button>
+    <p id="splash-lb-note">Sign up to track your stats &amp; appear on the Leaderboard</p>
+    <button id="splash-play-btn" type="button">PLAY</button>
+    <button id="splash-hexacore-btn" type="button">⬡ HEXACORE</button>
+    <p id="splash-hexacore-note">ENDLESS MODE · SPELL WORDS · SURVIVE THE EMBER</p>
   </div>
 </div>
   <!-- Settings under the title -->
   <div id="settings-wrap">
 
-    <button id="settings-btn" aria-haspopup="true">⚙️</button>
+    <button id="settings-btn" aria-haspopup="true" aria-label="Settings">?</button>
 
     <div id="settings-menu" hidden>
-      <button id="toggle-theme">🌙</button>
-      <button id="toggle-access">🌓</button>
+      <button id="home-btn" type="button"><span class="setting-icon">🏠</span> <span class="setting-label">HOME</span></button>
+      <button id="toggle-theme"><span class="setting-icon">🌙</span> <span class="setting-label">THEME</span></button>
+      <button id="toggle-access"><span class="setting-icon">🌓</span> <span class="setting-label">COLORBLIND</span></button>
     
-      <button id="howto-open">🎮</button>
-      <button id="toggle-mode">📅 DAILY</button>
-      <button id="set-name-btn">👤 SET NAME</button>
-      <button id="reset-daily-btn" hidden>🔄 RESET DAILY</button>
+      <button id="howto-open"><span class="setting-icon">🎮</span> <span class="setting-label">HOW TO PLAY</span></button>
+      <button id="lb-open-btn" type="button"><span class="setting-icon">🏆</span> <span class="setting-label">LEADERBOARD</span></button>
+      <button id="toggle-mode"><span class="setting-icon">📅</span> <span class="setting-label">DAILY</span></button>
+      <button id="set-name-btn"><span class="setting-icon">👤</span> <span class="setting-label">SET NAME</span></button>
     </div>
   </div>
 
@@ -66,7 +72,7 @@
   <h1 id="game-title">ANAGRAMATON</h1>
 
   <!-- UI MOVED OUTSIDE the game container -->
-  <span id="score-display">SCORE: 0</span>
+  <span id="score-display">0</span>
 
   <button id="toggle-left" class="side-toggle left-toggle" type="button"
     aria-controls="left-panel" aria-expanded="false"
@@ -116,7 +122,7 @@
     <div class="panel-content">
       <h2 id="right-panel-title">PHRASE PANEL</h2>
 
-      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+      <div class="phrase-panel-meta">
         <span id="hints-used">HINTS: 3/3</span>
         <span id="bonus-multi">MULTIPLIER: x3</span>
       </div>
@@ -124,7 +130,7 @@
       <hr />
 
       <!-- Phrase 1 -->
-      <section style="margin-bottom: 15px;">
+      <section class="phrase-section">
         <div>
           HINT 1: <span id="phrase1-hint1">???</span>
           <button id="phrase1-hint1-btn" type="button">HINT 1</button>
@@ -133,20 +139,20 @@
         <div>
           PHRASE 1: <span id="phrase1-text">???</span>
         </div>
-        <div id="phrase1-layout" style="margin-top:5px; font-weight:bold;"></div>
+        <div id="phrase1-layout" class="phrase-layout"></div>
       </section>
 
       <!-- Word Count -->
-      <div style="margin-bottom: 15px; text-align: center;">
+      <div class="phrase-wordcount-wrap">
         <button id="wordcount-hint" type="button">WORD COUNT</button>
       </div>
 
       <!-- Phrase 2 -->
-      <section style="margin-bottom: 15px;">
+      <section class="phrase-section">
         <div>
           PHRASE 2: <span id="phrase2-text">???</span>
         </div>
-        <div id="phrase2-layout" style="margin-top:5px; font-weight:bold;"></div>
+        <div id="phrase2-layout" class="phrase-layout"></div>
         <hr />
         <div>
           HINT 1: <span id="phrase2-hint1">???</span>
@@ -203,20 +209,20 @@
   <div id="howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
     <div class="rom__backdrop"></div>
 
-    <div class="rom__dialog" style="max-width: 640px;">
+    <div class="rom__dialog">
       <h2 id="howto-title">How to Play</h2>
 
       <!-- Pages -->
-      <div id="howto-pagewrap" style="min-height:220px; margin:10px 0 16px;">
+      <div id="howto-pagewrap">
         <!-- PAGE 1 — OBJECTIVE -->
         <section class="howto-page" data-page="0">
-          <h3>PAGE 1 — OBJECTIVE</h3>
+          <h3>OBJECTIVE</h3>
         </p>PLAYERS MUST FIND AND SUBMIT A LIST OF 10 VALID WORDS THAT ACHIEVES THE HIGHEST CUMULATIVE SCORE OF THOSE 10 WORDS. WORDS ARE FORMED BY CHAINING 4+ TILES TOGETHER WITH EACH TILE CONNECTED TO AN ADJACENT NEIGHBOR TILE OF THE ONE THAT CAME BEFORE</p>
         </section>
 
         <!-- PAGE 2 — TILE VALUES -->
         <section class="howto-page" data-page="1" hidden>
-          <h3>PAGE 2 — TILE VALUES</h3>
+          <h3>TILE VALUES</h3>
           <p>EACH TILE STARTS WITH A STANDARD BASE POINT VALUE</p>
           <ul>
             <li><strong>1 point:</strong> A, E, I, O, U, L, N, R, S, T</li>
@@ -231,7 +237,7 @@
 
         <!-- PAGE 3 — TILE REUSE MULTIPLIER -->
         <section class="howto-page" data-page="2" hidden>
-          <h3>PAGE 3 — TILE REUSE MULTIPLIER</h3>
+          <h3>TILE REUSE MULTIPLIER</h3>
           <p>THIS BONUS APPLIES TO A TILES BASE POINT VALUE EACH TIME ITS BEEN REUSED</p>
           <ul>
             <li><strong>1st REUSE:</strong> TILES BASE VALUE IS DOUBLED (×2).</li>
@@ -243,7 +249,7 @@
 
         <!-- PAGE 4 — WORD LENGTH MULTIPLIER -->
         <section class="howto-page" data-page="3" hidden>
-          <h3>PAGE 4 — WORD LENGTH MULTIPLIER</h3>
+          <h3>WORD LENGTH MULTIPLIER</h3>
           <p>WHEN THE LENGTH OF A WORD CONTAINS 5+ LETTERS</p>
           <ul>
             <li>5 LETTERS: ×3</li>
@@ -255,22 +261,57 @@
           </ul>
         </section>
 
-        <!-- PAGE 5 — PHRASE PANEL / ANAGRAM BONUS -->
+        <!-- PAGE 5 — THE PHRASE PANEL -->
         <section class="howto-page" data-page="4" hidden>
-          <h3>PAGE 5 — PHRASE PANEL &amp; PHRASE BONUS</h3>
-          <p>In <strong>DAILY MODE</strong> two secret anagram phrases are hidden in the grid.</p>
+          <h3>THE PHRASE PANEL</h3>
+          <p>Tap the <strong>PHRASE</strong> tab on the right side of the board to open the Phrase Panel.</p>
+          <p>In <strong>DAILY MODE</strong>, two secret anagram phrases are hidden across the letter grid. Both phrases share the exact same pool of letters — they are perfect anagrams of each other.</p>
           <ul>
-            <li><strong>FIND A PHRASE:</strong> Swipe all the letters of a phrase in order and press SUBMIT. No need to use the exact same tiles the board placed — just spell the letters in sequence.</li>
-            <li><strong>AUTO-REVEAL:</strong> When you find a phrase it is revealed in the Phrase Panel and the hint button is disabled (you no longer need it).</li>
-            <li><strong>PHRASE BONUS:</strong> Find <em>both</em> phrases before submitting your list to earn a bonus multiplier on your base score.</li>
-            <li><strong>BONUS MULTIPLIER:</strong> ×3 (0 hints used) · ×2 (1 hint) · ×1 (2 hints) · ×0 (3 hints). Uses only count if a hint was spent <em>before</em> finding the phrase.</li>
-            <li><strong>BONUS FORMULA:</strong> Bonus = Base Score × Multiplier</li>
+            <li><strong>FIND A PHRASE:</strong> Swipe the letters of a phrase in sequence and press SUBMIT. You don't need to use the exact tiles the board placed — just spell the letters in the correct order.</li>
+            <li><strong>AUTO-REVEAL:</strong> When you find a phrase, it lights up in the Phrase Panel and its hint button is disabled — you no longer need it.</li>
+            <li><strong>PHRASE BONUS:</strong> Find BOTH phrases before submitting your word list to unlock the Phrase Bonus — a pool of up to 2000 bonus points added directly to your final score.</li>
           </ul>
         </section>
 
-        <!-- PAGE 6 — STRATEGY TIPS -->
+        <!-- PAGE 6 — THE HINTS -->
         <section class="howto-page" data-page="5" hidden>
-          <h3>PAGE 6 — STRATEGY TIPS</h3>
+          <h3>THE HINTS</h3>
+          <p>Each daily board comes with 3 hints — but they are not created equal.</p>
+          <p><strong>PHRASE HINTS (×2)</strong></p>
+          <p>Each phrase has its own written clue — a composite metaphor where every element maps back to an individual word in the phrase. Your job is to deconstruct the metaphor: break apart the imagery, identify what each piece represents, and reconstruct the hidden words.</p>
+          <p><em>Example: "A skin-suited briefcase carrying an alarm clock set for sunrise."</em><br>
+          → skin-suited briefcase = MAN &nbsp;&nbsp; → alarm clock set for sunrise = ROOSTER<br>
+          → Phrase: MAN ROOSTER</p>
+          <p><strong>COMMUNAL LAYOUT HINT (×1)</strong></p>
+          <p>Reveals the word-count and letter-by-letter structure for BOTH phrases simultaneously, using dashes:</p>
+          <p><code>---- --- ------</code> &nbsp;&amp;&nbsp; <code>-- ---- ------</code></p>
+          <p>This tells you exactly how many words each phrase contains and how long each word is — but not the letters themselves. Because it unlocks structural information about both phrases at once, it carries the heaviest bonus deduction of all three hints.</p>
+          <p><strong>USE HINTS SPARINGLY</strong> — each one chips into your Phrase Bonus pool.</p>
+        </section>
+
+        <!-- PAGE 7 — THE PHRASE BONUS -->
+        <section class="howto-page" data-page="6" hidden>
+          <h3>THE PHRASE BONUS</h3>
+          <p>Find BOTH phrases to unlock a bonus pool of up to <strong>2000 points</strong> added directly to your final score.</p>
+          <p>The bonus starts at its maximum. Each hint you spend deducts from it:</p>
+          <ul>
+            <li><strong>PHRASE 1 HINT:</strong> &minus;500 pts</li>
+            <li><strong>PHRASE 2 HINT:</strong> &minus;500 pts</li>
+            <li><strong>LAYOUT HINT:</strong> &minus;800 pts</li>
+          </ul>
+          <p><strong>ORDER MATTERS</strong> — the earlier a hint is used, the larger the deduction (1st ×1.5, 2nd ×1.2, 3rd ×1.0).</p>
+          <ul>
+            <li>No hints used → <strong>+2000 pts</strong></li>
+            <li>Layout hint (1st): 2000 &minus; (800×1.5) = <strong>+800 pts</strong></li>
+            <li>Phrase 1 (1st): 2000 &minus; (500×1.5) = <strong>+1250 pts</strong></li>
+            <li>All 3 hints → bonus reduced to <strong>0</strong></li>
+          </ul>
+          <p>The live bonus preview is shown in the Phrase Panel at all times — check it before spending a hint.</p>
+        </section>
+
+        <!-- PAGE 8 — STRATEGY TIPS -->
+        <section class="howto-page" data-page="7" hidden>
+          <h3>STRATEGY TIPS</h3>
           <ul>
             <li><strong>PRIORITIZE LONG WORDS:</strong> THE LENGTH MULTIPLIER GIVES A HEFTY BOOST TO WORDS OF 5 LETTERS OR MORE</li>
             <li><strong>LOOK FOR REUSE OPPORTUNITIES:</strong> TAKE ADVANTAGE OF REUSING AND MAXING OUT TILES TO REAP THE FULL REWARDS </li>
@@ -278,9 +319,9 @@
           </ul>
         </section>
 
-        <!-- PAGE 7 — EXAMPLE CALCULATION -->
-        <section class="howto-page" data-page="6" hidden>
-          <h3>PAGE 7 — EXAMPLE CALCULATION</h3>
+        <!-- PAGE 9 — EXAMPLE CALCULATION -->
+        <section class="howto-page" data-page="8" hidden>
+          <h3>EXAMPLE CALCULATION</h3>
           <p>HERE IS AN EXAMPLE USING QUIZ:</p>
           <ul>
             <li><strong>BASE VALUE:</strong> (Q=10) + (U=1) + (I=1) + (Z=10) = 22 Pts</li>
@@ -348,6 +389,8 @@
   <script type="module" src="./main.js"></script>
   <script type="module" src="./roundOverModal.js"></script>
   <script type="module" src="./howToModal.js"></script>
+  <script type="module" src="./leaderboardModal.js"></script>
+  <script type="module" src="./hexacore.js"></script>
   <!-- ===== AUDIO ===== -->
    <audio id="sfxUnlock" src="./audio/zapsplat_musical_piano_insides_strings_strum_002_101394.mp3" preload="auto" aria-hidden="true"></audio>
 <audio id="sfxAlert"   src="./audio/alert.mp3"                                          preload="auto" aria-hidden="true"></audio>
