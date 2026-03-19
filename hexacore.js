@@ -18,6 +18,10 @@ import {
 import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
+import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+
+/* ── Audio state ───────────────────────────────────────────────── */
+let _hxAudioReady = false;
 
 /* ── Layout constants ──────────────────────────────────────────── */
 const TILE_SPACING             = 1.25;
@@ -576,6 +580,11 @@ function setupPointerEvents() {
   const svg = hxSvg;
 
   function onPointerDown(e) {
+    unlockAudioContext();
+    if (!_hxAudioReady) {
+      _hxAudioReady = true;
+      preloadBuffers();
+    }
     if (!hxState.active || hxState.gameOver) return;
     e.preventDefault();
     const tile = tileFromElement(document.elementFromPoint(e.clientX, e.clientY));
@@ -611,6 +620,8 @@ function setupPointerEvents() {
 
     hxSelected.push(tile);
     tile.setSelected(true);
+    const swipeIndex = Math.max(1, Math.min(25, hxSelected.length));
+    playSound('sfxSwipe' + swipeIndex);
     updateWordDisplay();
   }
 
@@ -682,6 +693,7 @@ async function submitHexacoreWord() {
 
   const resolved = resolveLetters(hxSelected);
   if (!resolved || !isValidWord(resolved.join(''))) {
+    playSound('sfxAlert');
     showAlert('Word not found!');
     clearSelection();
     return;
@@ -706,6 +718,7 @@ async function submitHexacoreWord() {
   const consumed = [...hxSelected];
   clearSelection();
 
+  playSound('sfxSuccess');
   // Consume tiles → gravity → ember advance → refill → special spawns
   await consumeAndRefill(consumed);
 
@@ -931,6 +944,7 @@ function spawnSpecialInRows(type, rows) {
   else if (type === 'prism') hxState.prismTiles.push(target);
   else if (type === 'rune')  hxState.runeTiles.push(target);
   applyTileType(target);
+  playSound('sfxMagic');
 
   // Dramatic entrance animation for the newly spawned special tile
   const spawnClass = `hx-${type}-spawn`;
@@ -1127,6 +1141,7 @@ export function startHexacore() {
   updateScoreDisplay();
 
   setupPointerEvents();
+  playSound('sfxUnlock');
 }
 
 export function stopHexacore() {
@@ -1156,3 +1171,25 @@ document.addEventListener('DOMContentLoaded', () => {
     startHexacore();
   });
 });
+
+/* ── TODO: Hexacore events still missing a dedicated sound ─────────
+ *
+ * The following game events have no audio feedback yet. New audio
+ * assets will need to be recorded or sourced and wired in.
+ *
+ * Event                          | Notes                                                        | Recommended length
+ * -------------------------------|--------------------------------------------------------------|--------------------
+ * Tile deselected / backtrack    | Player drags back to deselect last tile in chain             | ~0.05 s (very short tick/click)
+ * Tile consumed / pop-out        | Each tile popping out during word consumption                | ~0.1 s per tile (light pop or burst; could stagger with --tile-idx)
+ * Ember tile advancing           | Ember moves toward the bottom — danger cue                   | ~0.3 s (low rumble or crackle)
+ * Ember tile spawning            | Distinct from sfxMagic; ember has its own CSS spawn animation | ~0.4 s (fire whoosh)
+ * Prism tile spawning            | Currently shares sfxMagic — could be a distinct sparkle      | ~0.4 s (crystal chime)
+ * Rune tile spawning             | Currently shares sfxMagic — could be a distinct mystical hum | ~0.4 s (arcane hum)
+ * Gravity cascade                | Tiles falling after words are consumed                       | ~0.2 s (soft cascade whoosh)
+ * Refill tiles dropping in       | New tiles appearing per-column from above                    | ~0.15 s (light tile-drop thud)
+ * Game over                      | triggerGameOver() / showGameOver() called                    | ~1.5–2 s (dramatic sting or thud)
+ * Score milestone / high word    | Optional feedback for scoring above a threshold             | ~0.5 s (ascending chime)
+ * Leaderboard score submitted    | handleSubmitScore() success path                             | ~0.5 s (fanfare or confirmation chime)
+ * Intro animation completes      | End of animateGridIntro() when hxState.active = true         | ~0.3 s (soft ready ding)
+ *
+ * ───────────────────────────────────────────────────────────────── */
