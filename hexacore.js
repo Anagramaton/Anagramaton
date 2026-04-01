@@ -565,10 +565,15 @@ function ensureHud() {
   hud.id = 'hx-score-hud';
   hud.textContent = '0 PTS';
   document.body.appendChild(hud);
+
+  const wordHud = document.createElement('div');
+  wordHud.id = 'hx-word-score-hud';
+  document.body.appendChild(wordHud);
 }
 
 function removeHud() {
   document.getElementById('hx-score-hud')?.remove();
+  document.getElementById('hx-word-score-hud')?.remove();
 }
 
 /* ── Word display / selection ──────────────────────────────────── */
@@ -578,6 +583,46 @@ function updateWordDisplay() {
   el.textContent = hxSelected
     .map(t => t.tileType === 'rune' ? '?' : t.letter)
     .join('');
+  updateWordScorePreview();
+}
+
+/**
+ * Calculates and shows a live score preview for the current selection.
+ * Uses the same formula as submitHexacoreWord so the player always sees
+ * exactly what the word is worth before committing.
+ */
+function updateWordScorePreview() {
+  const el = document.getElementById('hx-word-score-hud');
+  if (!el) return;
+
+  if (hxSelected.length < 4) {
+    el.textContent = '';
+    return;
+  }
+
+  // Resolve rune wildcards optimistically (use '?' placeholder for display
+  // if they haven't been resolved yet — we mirror resolveLetters' alphabet
+  // scan but only need the letters we know for a rough score estimate).
+  const knownLetters = hxSelected.map(t => (t.tileType === 'rune' ? null : t.letter));
+  const runeCount = knownLetters.filter(l => l === null).length;
+
+  // For a meaningful preview even with runes, estimate using known letters
+  // and count rune placeholders as 1 pt each (minimum).
+  const wordLength = hxSelected.length;
+  let base = 0;
+  knownLetters.forEach(l => { base += l ? (letterPoints[l] || 1) : 1; });
+  const lenMult = lengthMultipliers[wordLength] || 1;
+
+  const hasPrism = hxSelected.some(t => t.tileType === 'prism');
+  const GEM_MULTIPLIERS = { gemGreen: 2, gemGold: 3, gemSapphire: 4, gemDiamond: 5 };
+  let gemMult = 1;
+  hxSelected.forEach(t => {
+    if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
+  });
+
+  const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
+  const runeNote = runeCount > 0 ? '~' : '';
+  el.textContent = `${runeNote}+${preview}`;
 }
 
 function clearSelection() {
@@ -1021,9 +1066,10 @@ function transformTileToGem(tile, gemType) {
 /**
  * Spawns a gem reward tile based on word length:
  *   4 → gemGreen  (direct transform of a random normal tile)
- *   5 → gemGold   (transform random normal tile after refill)
- *   6 → gemSapphire
- *   7+ → gemDiamond
+ *   5 → gemGold   (transform random normal tile after refill) + gemGreen bonus
+ *   6 → gemSapphire + gemGreen bonus
+ *   7+ → gemDiamond + gemGreen bonus
+ * Words of 5+ letters always earn an additional green gem.
  */
 function spawnGemRewardForWord(wordLength) {
   let gemType;
@@ -1035,6 +1081,12 @@ function spawnGemRewardForWord(wordLength) {
 
   const target = getRandomNormalTile();
   if (target) transformTileToGem(target, gemType);
+
+  // 5+ letter words always earn an extra green gem
+  if (wordLength >= 5) {
+    const greenTarget = getRandomNormalTile();
+    if (greenTarget) transformTileToGem(greenTarget, 'gemGreen');
+  }
 }
 
 /**

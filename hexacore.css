@@ -52,6 +52,23 @@
   white-space: nowrap;
 }
 
+/* ── Live word-score preview (shown above total score while selecting) */
+#hx-word-score-hud {
+  position: fixed;
+  bottom: clamp(104px, 15vh, 158px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffd700;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  z-index: 500;
+  white-space: nowrap;
+  transition: opacity 0.1s;
+}
+
 /* ── Hide Anagramaton-specific UI during Hexacore ──────────────── */
 body.hx-active #score-display        { display: none; }
 body.hx-active .side-toggle          { display: none; }
