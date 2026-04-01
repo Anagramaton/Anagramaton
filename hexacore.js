@@ -71,14 +71,18 @@ const HX_LETTER_POOL = [
 
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
-  score:      0,
-  words:      [],
-  tiles:      [],
-  emberTiles: [],
-  prismTiles: [],
-  runeTiles:  [],
-  gameOver:   false,
-  active:     false,
+  score:           0,
+  words:           [],
+  tiles:           [],
+  emberTiles:      [],
+  prismTiles:      [],
+  runeTiles:       [],
+  gemGreenTiles:   [],
+  gemGoldTiles:    [],
+  gemSapphireTiles:[],
+  gemDiamondTiles: [],
+  gameOver:        false,
+  active:          false,
 };
 
 let hxSelected          = [];   // tiles in current selection chain
@@ -293,7 +297,10 @@ function addTypeIcon(tile, glyph, fontSize, fill) {
 
 function applyTileType(tile) {
   const poly = tile.element.querySelector('polygon');
-  poly.classList.remove('hx-ember', 'hx-prism', 'hx-rune');
+  poly.classList.remove(
+    'hx-ember', 'hx-prism', 'hx-rune',
+    'hx-gem-green', 'hx-gem-gold', 'hx-gem-sapphire', 'hx-gem-diamond',
+  );
   tile.element.querySelector('.hx-type-icon')?.remove();
 
   if (tile.tileType === 'ember') {
@@ -307,6 +314,18 @@ function applyTileType(tile) {
     tile.textLetter.textContent = '?';
     tile.textPoint.textContent  = '?';
     addTypeIcon(tile, '✦', 12, '#ffffff');
+  } else if (tile.tileType === 'gemGreen') {
+    poly.classList.add('hx-gem-green');
+    addTypeIcon(tile, '◆', 12, '#22c55e');
+  } else if (tile.tileType === 'gemGold') {
+    poly.classList.add('hx-gem-gold');
+    addTypeIcon(tile, '◆', 12, '#f59e0b');
+  } else if (tile.tileType === 'gemSapphire') {
+    poly.classList.add('hx-gem-sapphire');
+    addTypeIcon(tile, '◆', 12, '#60a5fa');
+  } else if (tile.tileType === 'gemDiamond') {
+    poly.classList.add('hx-gem-diamond');
+    addTypeIcon(tile, '◆', 12, '#e0f2fe');
   }
 }
 
@@ -352,8 +371,12 @@ function injectSvgDefs(svg) {
   }
 
   ensureFilter('hoverGlow');
-  ensureLinearGradient('hx-ember-gradient', '#ff6b00', '#ff2d00');
-  ensureLinearGradient('hx-prism-gradient', '#a855f7', '#06b6d4');
+  ensureLinearGradient('hx-ember-gradient',    '#ff6b00', '#ff2d00');
+  ensureLinearGradient('hx-prism-gradient',    '#a855f7', '#06b6d4');
+  ensureLinearGradient('hx-gem-green-gradient',    '#16a34a', '#4ade80');
+  ensureLinearGradient('hx-gem-gold-gradient',     '#d97706', '#fcd34d');
+  ensureLinearGradient('hx-gem-sapphire-gradient', '#1d4ed8', '#93c5fd');
+  ensureLinearGradient('hx-gem-diamond-gradient',  '#a5f3fc', '#ffffff');
 }
 
 /* ── Grid construction ─────────────────────────────────────────── */
@@ -542,10 +565,15 @@ function ensureHud() {
   hud.id = 'hx-score-hud';
   hud.textContent = '0 PTS';
   document.body.appendChild(hud);
+
+  const wordHud = document.createElement('div');
+  wordHud.id = 'hx-word-score-hud';
+  document.body.appendChild(wordHud);
 }
 
 function removeHud() {
   document.getElementById('hx-score-hud')?.remove();
+  document.getElementById('hx-word-score-hud')?.remove();
 }
 
 /* ── Word display / selection ──────────────────────────────────── */
@@ -555,6 +583,46 @@ function updateWordDisplay() {
   el.textContent = hxSelected
     .map(t => t.tileType === 'rune' ? '?' : t.letter)
     .join('');
+  updateWordScorePreview();
+}
+
+/**
+ * Calculates and shows a live score preview for the current selection.
+ * Uses the same formula as submitHexacoreWord so the player always sees
+ * exactly what the word is worth before committing.
+ */
+function updateWordScorePreview() {
+  const el = document.getElementById('hx-word-score-hud');
+  if (!el) return;
+
+  if (hxSelected.length < 4) {
+    el.textContent = '';
+    return;
+  }
+
+  // Resolve rune wildcards optimistically (use '?' placeholder for display
+  // if they haven't been resolved yet — we mirror resolveLetters' alphabet
+  // scan but only need the letters we know for a rough score estimate).
+  const knownLetters = hxSelected.map(t => (t.tileType === 'rune' ? null : t.letter));
+  const runeCount = knownLetters.filter(l => l === null).length;
+
+  // For a meaningful preview even with runes, estimate using known letters
+  // and count rune placeholders as 1 pt each (minimum).
+  const wordLength = hxSelected.length;
+  let base = 0;
+  knownLetters.forEach(l => { base += l ? (letterPoints[l] || 1) : 1; });
+  const lenMult = lengthMultipliers[wordLength] || 1;
+
+  const hasPrism = hxSelected.some(t => t.tileType === 'prism');
+  const GEM_MULTIPLIERS = { gemGreen: 2, gemGold: 3, gemSapphire: 4, gemDiamond: 5 };
+  let gemMult = 1;
+  hxSelected.forEach(t => {
+    if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
+  });
+
+  const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
+  const runeNote = runeCount > 0 ? '~' : '';
+  el.textContent = `${runeNote}+${preview}`;
 }
 
 function clearSelection() {
@@ -702,10 +770,19 @@ async function submitHexacoreWord() {
   // Score
   const word     = resolved.join('');
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
+  const hasEmber = hxSelected.some(t => t.tileType === 'ember');
   let base = 0;
   resolved.forEach(l => { base += letterPoints[l] || 1; });
-  const lenMult   = lengthMultipliers[word.length] || 1;
-  const wordScore = base * lenMult * (hasPrism ? 2 : 1);
+  const lenMult = lengthMultipliers[word.length] || 1;
+
+  // Gem multipliers stack multiplicatively
+  let gemMult = 1;
+  const GEM_MULTIPLIERS = { gemGreen: 2, gemGold: 3, gemSapphire: 4, gemDiamond: 5 };
+  hxSelected.forEach(t => {
+    if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
+  });
+
+  const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
 
   hxWordCount++;
   const oldScore = hxState.score;
@@ -723,6 +800,10 @@ async function submitHexacoreWord() {
   await consumeAndRefill(consumed);
 
   if (!hxState.gameOver) {
+    // Spawn gem reward based on word length
+    spawnGemRewardForWord(word.length);
+    // Spawn fire bonus if any ember was consumed
+    if (hasEmber) spawnFireBonus(word.length);
     spawnSpecialTiles();
   }
 }
@@ -730,11 +811,14 @@ async function submitHexacoreWord() {
 /* ── Consume tiles → gravity → ember → refill ─────────────────── */
 async function consumeAndRefill(tilesToRemove) {
   // 1. Animate tiles out with a tile-by-tile stagger (first selected → last)
+  const GEM_TYPES = new Set(['gemGreen', 'gemGold', 'gemSapphire', 'gemDiamond']);
   tilesToRemove.forEach((tile, idx) => {
     tile.element.style.setProperty('--tile-idx', String(idx));
     const type = tile.tileType;
     if (type === 'ember' || type === 'prism' || type === 'rune') {
       // Consumed-special class replaces hx-tile-removing with combined animation
+      tile.element.classList.add(`hx-consumed-${type}`);
+    } else if (GEM_TYPES.has(type)) {
       tile.element.classList.add(`hx-consumed-${type}`);
     } else {
       tile.element.classList.add('hx-tile-removing');
@@ -746,10 +830,14 @@ async function consumeAndRefill(tilesToRemove) {
 
   tilesToRemove.forEach(tile => {
     tile.element.remove();
-    removeFrom(hxState.tiles,      tile);
-    removeFrom(hxState.emberTiles, tile);
-    removeFrom(hxState.prismTiles, tile);
-    removeFrom(hxState.runeTiles,  tile);
+    removeFrom(hxState.tiles,           tile);
+    removeFrom(hxState.emberTiles,      tile);
+    removeFrom(hxState.prismTiles,      tile);
+    removeFrom(hxState.runeTiles,       tile);
+    removeFrom(hxState.gemGreenTiles,   tile);
+    removeFrom(hxState.gemGoldTiles,    tile);
+    removeFrom(hxState.gemSapphireTiles,tile);
+    removeFrom(hxState.gemDiamondTiles, tile);
     hxTileMap.delete(hxKey(tile.q, tile.r));
   });
 
@@ -848,10 +936,14 @@ async function advanceEmberTiles() {
     const displaced = hxTileMap.get(hxKey(target.q, target.r));
     if (displaced && displaced !== tile) {
       displaced.element.remove();
-      removeFrom(hxState.tiles,      displaced);
-      removeFrom(hxState.emberTiles, displaced);
-      removeFrom(hxState.prismTiles, displaced);
-      removeFrom(hxState.runeTiles,  displaced);
+      removeFrom(hxState.tiles,           displaced);
+      removeFrom(hxState.emberTiles,      displaced);
+      removeFrom(hxState.prismTiles,      displaced);
+      removeFrom(hxState.runeTiles,       displaced);
+      removeFrom(hxState.gemGreenTiles,   displaced);
+      removeFrom(hxState.gemGoldTiles,    displaced);
+      removeFrom(hxState.gemSapphireTiles,displaced);
+      removeFrom(hxState.gemDiamondTiles, displaced);
       hxTileMap.delete(hxKey(target.q, target.r));
     }
 
@@ -915,6 +1007,108 @@ async function refillGrid() {
   }
 
   if (allPromises.length > 0) await Promise.all(allPromises);
+}
+
+/* ── Gem tile helpers ──────────────────────────────────────────── */
+
+/** Returns a random normal tile from anywhere on the board (not ember/prism/rune/gem). */
+function getRandomNormalTile() {
+  const eligible = hxState.tiles.filter(t => t.tileType === 'normal');
+  if (eligible.length === 0) return null;
+  return eligible[Math.floor(Math.random() * eligible.length)];
+}
+
+/** Returns multiple distinct random normal tiles (up to `count`). */
+function getRandomNormalTiles(count) {
+  const eligible = hxState.tiles.filter(t => t.tileType === 'normal');
+  const result = [];
+  const used = new Set();
+  while (result.length < count && result.length < eligible.length) {
+    const idx = Math.floor(Math.random() * eligible.length);
+    if (!used.has(idx)) { used.add(idx); result.push(eligible[idx]); }
+  }
+  return result;
+}
+
+/** The gem-type → state-array mapping. */
+const GEM_STATE_KEY = {
+  gemGreen:    'gemGreenTiles',
+  gemGold:     'gemGoldTiles',
+  gemSapphire: 'gemSapphireTiles',
+  gemDiamond:  'gemDiamondTiles',
+};
+
+/** The gem-type → spawn CSS class mapping. */
+const GEM_SPAWN_CLASS = {
+  gemGreen:    'hx-gem-green-spawn',
+  gemGold:     'hx-gem-gold-spawn',
+  gemSapphire: 'hx-gem-sapphire-spawn',
+  gemDiamond:  'hx-gem-diamond-spawn',
+};
+
+/**
+ * Transforms an existing normal tile in-place into the given gem type.
+ * Updates state, applies styling, and plays the spawn animation.
+ */
+function transformTileToGem(tile, gemType) {
+  if (!tile || tile.tileType !== 'normal') return;
+  tile.tileType = gemType;
+  hxState[GEM_STATE_KEY[gemType]].push(tile);
+  applyTileType(tile);
+  playSound('sfxMagic');
+  const spawnClass = GEM_SPAWN_CLASS[gemType];
+  tile.element.classList.add(spawnClass);
+  tile.element.addEventListener('animationend', () => {
+    tile.element.classList.remove(spawnClass);
+  }, { once: true });
+}
+
+/**
+ * Spawns a gem reward tile based on word length:
+ *   4 → gemGreen  (direct transform of a random normal tile)
+ *   5 → gemGold   (transform random normal tile after refill) + gemGreen bonus
+ *   6 → gemSapphire + gemGreen bonus
+ *   7+ → gemDiamond + gemGreen bonus
+ * Words of 5+ letters always earn an additional green gem.
+ */
+function spawnGemRewardForWord(wordLength) {
+  let gemType;
+  if (wordLength >= 7)      gemType = 'gemDiamond';
+  else if (wordLength === 6) gemType = 'gemSapphire';
+  else if (wordLength === 5) gemType = 'gemGold';
+  else if (wordLength === 4) gemType = 'gemGreen';
+  else return; // < 4 letters — no gem reward
+
+  const target = getRandomNormalTile();
+  if (target) transformTileToGem(target, gemType);
+
+  // 5+ letter words always earn an extra green gem
+  if (wordLength >= 5) {
+    const greenTarget = getRandomNormalTile();
+    if (greenTarget) transformTileToGem(greenTarget, 'gemGreen');
+  }
+}
+
+/**
+ * Spawns additional gem bonuses when an ember tile is part of the cleared word.
+ *   5 letters → 1 green gem
+ *   6 letters → 1 sapphire + 1 green gem
+ *   7+ letters → 1 diamond + 2 green gems
+ */
+function spawnFireBonus(wordLength) {
+  if (wordLength >= 7) {
+    const diamondTarget = getRandomNormalTile();
+    if (diamondTarget) transformTileToGem(diamondTarget, 'gemDiamond');
+    const greenTargets = getRandomNormalTiles(2);
+    greenTargets.forEach(t => transformTileToGem(t, 'gemGreen'));
+  } else if (wordLength === 6) {
+    const [sapphireTarget, greenTarget] = getRandomNormalTiles(2);
+    if (sapphireTarget) transformTileToGem(sapphireTarget, 'gemSapphire');
+    if (greenTarget)    transformTileToGem(greenTarget,    'gemGreen');
+  } else if (wordLength === 5) {
+    const greenTarget = getRandomNormalTile();
+    if (greenTarget) transformTileToGem(greenTarget, 'gemGreen');
+  }
 }
 
 /* ── Special tile spawning ─────────────────────────────────────── */
@@ -1092,14 +1286,18 @@ function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 export function startHexacore() {
   // Reset state
   Object.assign(hxState, {
-    score:      0,
-    words:      [],
-    tiles:      [],
-    emberTiles: [],
-    prismTiles: [],
-    runeTiles:  [],
-    gameOver:   false,
-    active:     false, // set to true after intro animation completes
+    score:           0,
+    words:           [],
+    tiles:           [],
+    emberTiles:      [],
+    prismTiles:      [],
+    runeTiles:       [],
+    gemGreenTiles:   [],
+    gemGoldTiles:    [],
+    gemSapphireTiles:[],
+    gemDiamondTiles: [],
+    gameOver:        false,
+    active:          false, // set to true after intro animation completes
   });
   hxSelected           = [];
   hxPointerDown        = false;
