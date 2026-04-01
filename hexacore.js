@@ -371,7 +371,19 @@ function injectSvgDefs(svg) {
   }
 
   ensureFilter('hoverGlow');
-  ensureLinearGradient('hx-ember-gradient',    '#ff6b00', '#ff2d00');
+  if (!document.getElementById('hx-ember-gradient')) {
+    const emberGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    emberGrad.setAttribute('id', 'hx-ember-gradient');
+    emberGrad.setAttribute('x1', '0%'); emberGrad.setAttribute('y1', '100%');
+    emberGrad.setAttribute('x2', '0%'); emberGrad.setAttribute('y2', '0%');
+    [['0%', '#ff0000'], ['50%', '#ff6a00'], ['100%', '#ffe400']].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      emberGrad.appendChild(s);
+    });
+    defs.appendChild(emberGrad);
+  }
   ensureLinearGradient('hx-prism-gradient',    '#a855f7', '#06b6d4');
   ensureLinearGradient('hx-gem-green-gradient',    '#16a34a', '#4ade80');
   ensureLinearGradient('hx-gem-gold-gradient',     '#d97706', '#fcd34d');
