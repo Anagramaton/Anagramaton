@@ -69,6 +69,19 @@ const HX_LETTER_POOL = [
   'J', 'K', 'Q', 'X', 'Z',
 ];
 
+/* ── Digraph pool — double-letter bonus tiles ───────────────────── */
+const DIGRAPH_POOL = [
+  'TH', 'HE', 'IN', 'ER', 'RE', 'ST', 'AN', 'ON', 'EE', 'TT',
+  'SS', 'OO', 'LL', 'QU', 'CK', 'CH', 'EN', 'AN', 'AS', 'CO',
+  'LY', 'AL', 'LE', 'ED', 'ES',
+];
+
+function randomDigraph() {
+  const dg  = DIGRAPH_POOL[Math.floor(Math.random() * DIGRAPH_POOL.length)];
+  const pts = (letterPoints[dg[0]] || 1) + (letterPoints[dg[1]] || 1);
+  return { digraph: dg, points: pts };
+}
+
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
   score:           0,
@@ -77,6 +90,7 @@ const hxState = {
   emberTiles:      [],
   prismTiles:      [],
   runeTiles:       [],
+  digraphTiles:    [],
   gemEmeraldTiles:   [],
   gemGoldTiles:      [],
   gemSapphireTiles:  [],
@@ -301,13 +315,21 @@ function addTypeIcon(tile, glyph, fontSize, fill) {
 function applyTileType(tile) {
   const poly = tile.element.querySelector('polygon');
   poly.classList.remove(
-    'hx-ember', 'hx-prism', 'hx-rune',
+    'hx-ember', 'hx-prism', 'hx-rune', 'hx-digraph',
     'hx-gem-emerald', 'hx-gem-gold', 'hx-gem-sapphire',
     'hx-gem-pearl', 'hx-gem-tanzanite', 'hx-gem-ruby', 'hx-gem-diamond',
   );
   tile.element.querySelector('.hx-type-icon')?.remove();
+  // Reset letter font size (may have been reduced for digraph)
+  tile.textLetter.setAttribute('font-size', '28');
 
-  if (tile.tileType === 'ember') {
+  if (tile.tileType === 'digraph') {
+    poly.classList.add('hx-digraph');
+    tile.textLetter.textContent = tile.letter;
+    tile.textPoint.textContent  = String(tile.point);
+    tile.textLetter.setAttribute('font-size', '17');
+    addTypeIcon(tile, '❋', 11, '#2dd4bf');
+  } else if (tile.tileType === 'ember') {
     poly.classList.add('hx-ember');
     addTypeIcon(tile, '🔥', 14, null);
   } else if (tile.tileType === 'prism') {
@@ -398,6 +420,7 @@ function injectSvgDefs(svg) {
     defs.appendChild(emberGrad);
   }
   ensureLinearGradient('hx-prism-gradient',    '#a855f7', '#06b6d4');
+  ensureLinearGradient('hx-digraph-gradient',  '#0d9488', '#2dd4bf');
   ensureLinearGradient('hx-gem-emerald-gradient',   '#16a34a', '#4ade80');
   ensureLinearGradient('hx-gem-gold-gradient',       '#d97706', '#fcd34d');
   ensureLinearGradient('hx-gem-sapphire-gradient',   '#1d4ed8', '#93c5fd');
@@ -623,7 +646,10 @@ function updateWordScorePreview() {
   const el = document.getElementById('hx-word-score-hud');
   if (!el) return;
 
-  if (hxSelected.length < 4) {
+  // Compute assembled letter count (digraph tiles contribute 2 letters, runes contribute 1)
+  const letterCount = hxSelected.reduce((sum, t) => sum + (t.tileType === 'rune' ? 1 : t.letter.length), 0);
+
+  if (letterCount < 4) {
     el.textContent = '';
     return;
   }
@@ -636,9 +662,13 @@ function updateWordScorePreview() {
 
   // For a meaningful preview even with runes, estimate using known letters
   // and count rune placeholders as 1 pt each (minimum).
-  const wordLength = hxSelected.length;
+  // For multi-char letters (digraphs), sum each character's point value.
+  const wordLength = letterCount;
   let base = 0;
-  knownLetters.forEach(l => { base += l ? (letterPoints[l] || 1) : 1; });
+  knownLetters.forEach(l => {
+    if (l) { for (const ch of l) base += letterPoints[ch] || 1; }
+    else base += 1;
+  });
   const lenMult = lengthMultipliers[wordLength] || 1;
 
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
@@ -789,8 +819,10 @@ function resolveLetters(selectedTiles) {
 
 /* ── Word submission ───────────────────────────────────────────── */
 async function submitHexacoreWord() {
-  // Too few tiles — silently cancel (accidental drag)
-  if (hxSelected.length < 4) {
+  // Too few letters — silently cancel (accidental drag).
+  // Use assembled letter count so digraph tiles (2 letters each) are counted correctly.
+  const assembledLength = hxSelected.reduce((sum, t) => sum + (t.tileType === 'rune' ? 1 : t.letter.length), 0);
+  if (assembledLength < 4) {
     clearSelection();
     return;
   }
@@ -808,7 +840,9 @@ async function submitHexacoreWord() {
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
   const hasEmber = hxSelected.some(t => t.tileType === 'ember');
   let base = 0;
-  resolved.forEach(l => { base += letterPoints[l] || 1; });
+  // Each element in resolved may be a multi-char string (digraph) or single char;
+  // iterate over individual characters so each letter contributes its own point value.
+  resolved.forEach(l => { for (const ch of l) base += letterPoints[ch] || 1; });
   const lenMult = lengthMultipliers[word.length] || 1;
 
   // Gem multipliers stack multiplicatively
@@ -881,6 +915,7 @@ async function consumeAndRefill(tilesToRemove) {
     removeFrom(hxState.emberTiles,         tile);
     removeFrom(hxState.prismTiles,         tile);
     removeFrom(hxState.runeTiles,          tile);
+    removeFrom(hxState.digraphTiles,       tile);
     removeFrom(hxState.gemEmeraldTiles,    tile);
     removeFrom(hxState.gemGoldTiles,       tile);
     removeFrom(hxState.gemSapphireTiles,   tile);
@@ -990,6 +1025,7 @@ async function advanceEmberTiles() {
       removeFrom(hxState.emberTiles,        displaced);
       removeFrom(hxState.prismTiles,        displaced);
       removeFrom(hxState.runeTiles,         displaced);
+      removeFrom(hxState.digraphTiles,      displaced);
       removeFrom(hxState.gemEmeraldTiles,   displaced);
       removeFrom(hxState.gemGoldTiles,      displaced);
       removeFrom(hxState.gemSapphireTiles,  displaced);
@@ -1066,14 +1102,14 @@ async function refillGrid() {
 
 /** Returns a random normal tile from anywhere on the board (not ember/prism/rune/gem). */
 function getRandomNormalTile() {
-  const eligible = hxState.tiles.filter(t => t.tileType === 'normal');
+  const eligible = hxState.tiles.filter(t => t.tileType === 'normal' || t.tileType === 'digraph');
   if (eligible.length === 0) return null;
   return eligible[Math.floor(Math.random() * eligible.length)];
 }
 
 /** Returns multiple distinct random normal tiles (up to `count`). */
 function getRandomNormalTiles(count) {
-  const eligible = hxState.tiles.filter(t => t.tileType === 'normal');
+  const eligible = hxState.tiles.filter(t => t.tileType === 'normal' || t.tileType === 'digraph');
   const result = [];
   const used = new Set();
   while (result.length < count && result.length < eligible.length) {
@@ -1110,7 +1146,8 @@ const GEM_SPAWN_CLASS = {
  * Updates state, applies styling, and plays the spawn animation.
  */
 function transformTileToGem(tile, gemType) {
-  if (!tile || tile.tileType !== 'normal') return;
+  if (!tile || (tile.tileType !== 'normal' && tile.tileType !== 'digraph')) return;
+  if (tile.tileType === 'digraph') removeFrom(hxState.digraphTiles, tile);
   tile.tileType = gemType;
   hxState[GEM_STATE_KEY[gemType]].push(tile);
   applyTileType(tile);
@@ -1186,6 +1223,10 @@ function spawnSpecialTiles() {
   if (hxWordCount % 5 === 0) {
     spawnSpecialInRows('prism', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
   }
+  // Every 6 words → 1 new digraph in top 3 rows
+  if (hxWordCount % 6 === 0) {
+    spawnSpecialInRows('digraph', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+  }
   // Every 7 words → 1 new rune in top 3 rows
   if (hxWordCount % 7 === 0) {
     spawnSpecialInRows('rune', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
@@ -1194,14 +1235,24 @@ function spawnSpecialTiles() {
 
 function spawnSpecialInRows(type, rows) {
   const eligible = hxState.tiles.filter(
-    t => t.tileType === 'normal' && rows.includes(t.r),
+    t => (t.tileType === 'normal' || t.tileType === 'digraph') && rows.includes(t.r),
   );
   if (eligible.length === 0) return;
   const target = eligible[Math.floor(Math.random() * eligible.length)];
+
+  // If overwriting a digraph tile, remove it from the digraph state array first
+  if (target.tileType === 'digraph') removeFrom(hxState.digraphTiles, target);
+
   target.tileType = type;
   if (type === 'ember') hxState.emberTiles.push(target);
   else if (type === 'prism') hxState.prismTiles.push(target);
   else if (type === 'rune')  hxState.runeTiles.push(target);
+  else if (type === 'digraph') {
+    const { digraph, points } = randomDigraph();
+    target.letter = digraph;
+    target.point  = points;
+    hxState.digraphTiles.push(target);
+  }
   applyTileType(target);
   playSound('sfxMagic');
 
@@ -1357,6 +1408,7 @@ export function startHexacore() {
     emberTiles:      [],
     prismTiles:      [],
     runeTiles:       [],
+    digraphTiles:    [],
     gemEmeraldTiles:   [],
     gemGoldTiles:      [],
     gemSapphireTiles:  [],
