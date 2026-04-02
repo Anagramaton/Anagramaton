@@ -225,7 +225,6 @@ async function handlePhraseFound(phraseKey, tiles) {
   gameState.phrasesFound[phraseKey] = true;
 
   await applyPhraseTileStyle(phraseKey, tiles);
-  playSound('sfxMagic');
   revealPhrase(phraseKey);
 
   const phraseNum = phraseKey === 'phrase1' ? 1 : 2;
@@ -377,8 +376,6 @@ async function handleSubmitList() {
   if (gameState.listLocked) return;
   const count = (gameState.words || []).length;
   if (count !== 10) return;
-
-  playSound('sfxMagic');
 
   const words = (gameState.words || []).map(w => String(w.word || '').toUpperCase());
   gameState.listLocked = true;

@@ -11,7 +11,6 @@ for (let i = 1; i <= 25; i++) {
 }
 _audioFiles['sfxAlert']   = './audio/alert.mp3';
 _audioFiles['sfxSuccess'] = './audio/ohyeahh.mp3';
-_audioFiles['sfxMagic']   = './audio/zapsplat_magic_wand_ascend_spell_beeps_12528.mp3';
 _audioFiles['sfxUnlock']  = './audio/zapsplat_musical_piano_insides_strings_strum_002_101394.mp3';
 _audioFiles['sfxFunk'] = './audio/prettyjohn1-funk-funky-music_32sec-483398.mp3';
 _audioFiles['sfxGemCollect'] = './audio/zapsplat_multimedia_game_sound_collect_twinkle_sparkle_glissando_gem_stone_award_109027.mp3';
