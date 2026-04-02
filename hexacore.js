@@ -18,7 +18,7 @@ import {
 import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
-import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audioEngine.js';
 
 /* ── Audio state ───────────────────────────────────────────────── */
 let _hxAudioReady = false;
@@ -897,10 +897,13 @@ async function submitHexacoreWord() {
   clearSelection();
 
   playSound('sfxSuccess');
+  playSound('sfxFunk');
   // Consume tiles → gravity → ember advance → refill → special spawns
   await consumeAndRefill(consumed);
+  stopSound('sfxFunk');
 
   if (!hxState.gameOver) {
+    playSound('sfxGemCollect');
     // Spawn gem reward based on word length
     spawnGemRewardForWord(word.length);
     // Fire bonus mirrors word reward
