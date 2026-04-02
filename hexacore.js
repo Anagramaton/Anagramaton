@@ -1001,10 +1001,9 @@ async function applyGravity() {
 
     if (moves.length === 0) break;
 
-    // All tiles in a gravity wave fall simultaneously (Battle Balls style).
-    // Each successive pass of the while-loop is one "step" downward, giving
-    // the cascade effect without per-tile stagger within a single step.
-    await animateTileMoves(moves);
+    // Stagger tiles so each falls individually in a ripple/cascade effect,
+    // rather than all tiles in a gravity wave dropping in lock-step unison.
+    await animateTileMovesStaggered(moves, GRAVITY_STAGGER_MS);
   }
 }
 
