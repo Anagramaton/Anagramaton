@@ -30,7 +30,7 @@ Click the **HOW TO PLAY** button on the start screen (or the 🎮 icon in the se
 | `api/daily.js` | `GET /api/daily` — returns today's `dailyId` |
 | `api/leaderboard.js` | `GET /api/leaderboard` — fetches top scores from Supabase |
 | `api/scores.js` | `POST /api/scores` — saves a player's score to Supabase |
-| `scripts/` | Local dev scripts (`npm run generate`, `npm run extract`) |
+| `scripts/` | Local dev scripts (`npm run generate`) |
 
 ---
 
@@ -133,5 +133,6 @@ Once redeployed the **Leaderboard** tab in the round-over screen will be live.
 
 ```bash
 npm run generate   # Regenerates prebuiltBoards.json
-npm run extract    # Regenerates bootstrapWords.js from wordList.js
 ```
+
+The bootstrap word pool is derived at runtime from `wordList.js` — no separate `bootstrapWords.js` file is needed.

@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "generate": "node scripts/generateBoards.mjs",
-    "extract": "node scripts/extractBootstrapWords.mjs"
+    "generate": "node scripts/generateBoards.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0"
