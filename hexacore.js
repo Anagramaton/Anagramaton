@@ -18,7 +18,7 @@ import {
 import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
-import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audioEngine.js';
 
 /* ── Audio state ───────────────────────────────────────────────── */
 let _hxAudioReady = false;
@@ -897,10 +897,13 @@ async function submitHexacoreWord() {
   clearSelection();
 
   playSound('sfxSuccess');
+  playSound('sfxFunk');
   // Consume tiles → gravity → ember advance → refill → special spawns
   await consumeAndRefill(consumed);
+  stopSound('sfxFunk');
 
   if (!hxState.gameOver) {
+    playSound('sfxGemCollect');
     // Spawn gem reward based on word length
     spawnGemRewardForWord(word.length);
     // Fire bonus mirrors word reward
@@ -1180,7 +1183,6 @@ function transformTileToGem(tile, gemType) {
   tile.tileType = gemType;
   hxState[GEM_STATE_KEY[gemType]].push(tile);
   applyTileType(tile);
-  playSound('sfxMagic');
   const spawnClass = GEM_SPAWN_CLASS[gemType];
   tile.element.classList.add(spawnClass);
   tile.element.addEventListener('animationend', () => {
@@ -1279,7 +1281,6 @@ function spawnSpecialInRows(type, rows) {
     hxState.digraphTiles.push(target);
   }
   applyTileType(target);
-  playSound('sfxMagic');
 
   // Dramatic entrance animation for the newly spawned special tile
   const spawnClass = `hx-${type}-spawn`;
@@ -1525,9 +1526,9 @@ document.addEventListener('DOMContentLoaded', () => {
  * Tile deselected / backtrack    | Player drags back to deselect last tile in chain             | ~0.05 s (very short tick/click)
  * Tile consumed / pop-out        | Each tile popping out during word consumption                | ~0.1 s per tile (light pop or burst; could stagger with --tile-idx)
  * Ember tile advancing           | Ember moves toward the bottom — danger cue                   | ~0.3 s (low rumble or crackle)
- * Ember tile spawning            | Distinct from sfxMagic; ember has its own CSS spawn animation | ~0.4 s (fire whoosh)
- * Prism tile spawning            | Currently shares sfxMagic — could be a distinct sparkle      | ~0.4 s (crystal chime)
- * Rune tile spawning             | Currently shares sfxMagic — could be a distinct mystical hum | ~0.4 s (arcane hum)
+ * Ember tile spawning            | Ember has its own CSS spawn animation                        | ~0.4 s (fire whoosh)
+ * Prism tile spawning            | Could be a distinct sparkle                                  | ~0.4 s (crystal chime)
+ * Rune tile spawning             | Could be a distinct mystical hum                             | ~0.4 s (arcane hum)
  * Gravity cascade                | Tiles falling after words are consumed                       | ~0.2 s (soft cascade whoosh)
  * Refill tiles dropping in       | New tiles appearing per-column from above                    | ~0.15 s (light tile-drop thud)
  * Game over                      | triggerGameOver() / showGameOver() called                    | ~1.5–2 s (dramatic sting or thud)
