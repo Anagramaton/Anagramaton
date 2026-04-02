@@ -1188,6 +1188,7 @@ function transformTileToGem(tile, gemType) {
   tile.element.classList.add(spawnClass);
   tile.element.addEventListener('animationend', () => {
     tile.element.classList.remove(spawnClass);
+    stopSound('sfxMagic');
   }, { once: true });
 }
 
@@ -1289,6 +1290,7 @@ function spawnSpecialInRows(type, rows) {
   target.element.classList.add(spawnClass);
   target.element.addEventListener('animationend', () => {
     target.element.classList.remove(spawnClass);
+    stopSound('sfxMagic');
   }, { once: true });
 }
 
