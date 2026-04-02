@@ -18,6 +18,10 @@ import {
 import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
+import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+
+/* ── Audio state ───────────────────────────────────────────────── */
+let _hxAudioReady = false;
 
 /* ── Layout constants ──────────────────────────────────────────── */
 const TILE_SPACING             = 1.25;
@@ -32,25 +36,26 @@ const SCORE_TICK_MS             = 700; // ms duration for score count-up animati
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
- * High-frequency vowels + consonants ensure dense playable word coverage.      */
+ * High-frequency vowels + consonants ensure dense playable word coverage.
+ * Digraph slots (~15%) are drawn from DIGRAPH_POOL at tile-creation time.      */
 const HX_LETTER_POOL = [
-  // Vowels
-  ...Array(12).fill('E'),  // 12
-  ...Array(9).fill('A'),   //  9
-  ...Array(9).fill('I'),   //  9
-  ...Array(8).fill('O'),   //  8
+  // Vowels (~35 total, reduced from 42 to accommodate digraph slots)
+  ...Array(10).fill('E'),  // 10
+  ...Array(7).fill('A'),   //  7
+  ...Array(7).fill('I'),   //  7
+  ...Array(7).fill('O'),   //  7
   ...Array(4).fill('U'),   //  4
 
-  // High-frequency consonants
-  ...Array(6).fill('N'),   //  6
-  ...Array(6).fill('R'),   //  6
-  ...Array(6).fill('T'),   //  6
-  ...Array(4).fill('L'),   //  4
-  ...Array(4).fill('S'),   //  4
-  ...Array(4).fill('D'),   //  4
+  // High-frequency consonants (~48 total, reduced from 56)
+  ...Array(5).fill('N'),   //  5
+  ...Array(5).fill('R'),   //  5
+  ...Array(5).fill('T'),   //  5
+  ...Array(3).fill('L'),   //  3
+  ...Array(3).fill('S'),   //  3
+  ...Array(3).fill('D'),   //  3
 
   // Mid-frequency consonants
-  ...Array(3).fill('G'),   //  3
+  ...Array(2).fill('G'),   //  2
   ...Array(2).fill('B'),   //  2
   ...Array(2).fill('C'),   //  2
   ...Array(2).fill('F'),   //  2
@@ -59,22 +64,46 @@ const HX_LETTER_POOL = [
   ...Array(2).fill('P'),   //  2
   ...Array(2).fill('V'),   //  2
   ...Array(2).fill('W'),   //  2
-  ...Array(2).fill('Y'),   //  2
+  'Y',                     //  1
 
   // Rare letters — 1 each (still possible, not dominant)
   'J', 'K', 'Q', 'X', 'Z',
+
+  // Digraph slots — sentinel value; resolved to a random digraph at draw time
+  ...Array(15).fill('__DIGRAPH__'),  // 15
 ];
+
+/* ── Digraph pool — double-letter bonus tiles ───────────────────── */
+const DIGRAPH_POOL = [
+  'TH', 'HE', 'IN', 'ER', 'RE', 'ST', 'AN', 'ON', 'EE', 'TT',
+  'SS', 'OO', 'LL', 'QU', 'CK', 'CH', 'EN', 'AN', 'AS', 'CO',
+  'LY', 'AL', 'LE', 'ED', 'ES',
+];
+
+function randomDigraph() {
+  const dg  = DIGRAPH_POOL[Math.floor(Math.random() * DIGRAPH_POOL.length)];
+  const pts = (letterPoints[dg[0]] || 1) + (letterPoints[dg[1]] || 1);
+  return { digraph: dg, points: pts };
+}
 
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
-  score:      0,
-  words:      [],
-  tiles:      [],
-  emberTiles: [],
-  prismTiles: [],
-  runeTiles:  [],
-  gameOver:   false,
-  active:     false,
+  score:           0,
+  words:           [],
+  tiles:           [],
+  emberTiles:      [],
+  prismTiles:      [],
+  runeTiles:       [],
+  digraphTiles:    [],
+  gemEmeraldTiles:   [],
+  gemGoldTiles:      [],
+  gemSapphireTiles:  [],
+  gemPearlTiles:     [],
+  gemTanzaniteTiles: [],
+  gemRubyTiles:      [],
+  gemDiamondTiles:   [],
+  gameOver:        false,
+  active:          false,
 };
 
 let hxSelected          = [];   // tiles in current selection chain
@@ -112,27 +141,39 @@ const HX_VOWELS = new Set(['A','E','I','O','U']);
 const HX_VOWEL_POOL = ['A','A','A','E','E','E','E','I','I','I','O','O','O','U','U'];
 
 /**
- * Returns a letter from HX_LETTER_POOL, but if all hex-grid neighbours of
- * position (q, r) are already consonants, biases strongly toward a vowel
- * so that isolated consonant islands are broken up.
+ * Samples HX_LETTER_POOL and resolves any digraph sentinel.
+ * Returns { isDigraph: false, letter } or { isDigraph: true, digraph, points }.
+ * Applies vowel-bias correction: if all neighbours are consonants (and none
+ * are digraph tiles), 75% chance to force a vowel instead.
  */
-function randomLetterForPos(q, r) {
+function randomLetterOrDigraphForPos(q, r) {
   const neighborKeys = [
     hxKey(q + 1, r),  hxKey(q - 1, r),
     hxKey(q, r + 1),  hxKey(q, r - 1),
     hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
   ];
-  const neighborLetters = neighborKeys
-    .map(k => hxTileMap.get(k)?.letter)
-    .filter(Boolean);
 
-  const hasVowelNeighbor = neighborLetters.some(l => HX_VOWELS.has(l));
+  // A digraph neighbour counts as a vowel neighbour (most digraphs contain vowels)
+  const hasVowelNeighbor = neighborKeys.some(k => {
+    const t = hxTileMap.get(k);
+    if (!t) return false;
+    if (t.tileType === 'digraph') return true;
+    return HX_VOWELS.has(t.letter);
+  });
 
-  // If surrounded by consonants, 75% chance to force a vowel
-  if (!hasVowelNeighbor && neighborLetters.length >= 2 && Math.random() < 0.75) {
-    return HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)];
+  const neighborCount = neighborKeys.filter(k => hxTileMap.has(k)).length;
+
+  // If surrounded by consonants, 75% chance to force a vowel (never force a digraph here)
+  if (!hasVowelNeighbor && neighborCount >= 2 && Math.random() < 0.75) {
+    return { isDigraph: false, letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)] };
   }
-  return HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+
+  const drawn = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+  if (drawn === '__DIGRAPH__') {
+    const { digraph, points } = randomDigraph();
+    return { isDigraph: true, digraph, points };
+  }
+  return { isDigraph: false, letter: drawn };
 }
 
 function areNeighbors(a, b) {
@@ -199,13 +240,16 @@ async function animateTileMoves(moves) {
     new Promise(resolve => {
       const start = hxLayout.hexToPixel(new Hex(fromQ, fromR));
       const end   = hxLayout.hexToPixel(new Hex(toQ,   toR));
-      // Path offsets are relative to the tile's baked polygon position
-      const poly  = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
+      // Path offsets are relative to the tile's baked (drawn) polygon position.
+      // For existing tiles tile.q/tile.r == fromQ/fromR (pre-move position).
+      // For new refill tiles tile.q/tile.r == toQ/toR (spawned at destination).
+      // In both cases tile.q/tile.r gives the correct SVG geometry reference.
+      const bakedPixel = hxLayout.hexToPixel(new Hex(tile.q, tile.r));
 
-      const sx = start.x - poly.x;
-      const sy = start.y - poly.y;
-      const ex = end.x   - poly.x;
-      const ey = end.y   - poly.y;
+      const sx = start.x - bakedPixel.x;
+      const sy = start.y - bakedPixel.y;
+      const ex = end.x   - bakedPixel.x;
+      const ey = end.y   - bakedPixel.y;
 
       // Quadratic Bézier control point: 0.25 pulls the arc toward the start row,
       // creating the "shoulder-slide" where tiles appear to roll off each other
@@ -217,7 +261,14 @@ async function animateTileMoves(moves) {
       anim.setAttribute('dur', '0.22s');
       anim.setAttribute('fill', 'freeze');
 
-      anim.addEventListener('endEvent', () => {
+      // settled flag prevents double-resolution if both endEvent and the
+      // fallback timer fire (e.g. very fast browser or already-removed element)
+      let settled = false;
+      let fallbackTimer;
+      function finalize() {
+        if (settled) return;
+        settled = true;
+        clearTimeout(fallbackTimer);
         hxTileMap.delete(hxKey(fromQ, fromR));
         tile.q = toQ;
         tile.r = toR;
@@ -231,7 +282,15 @@ async function animateTileMoves(moves) {
         void tile.element.getBoundingClientRect();
         tile.element.classList.add('hx-tile-landing');
         resolve();
-      }, { once: true });
+      }
+
+      anim.addEventListener('endEvent', finalize, { once: true });
+
+      // Fallback: SVG endEvent is not 100% reliable across all browsers.
+      // If it never fires (e.g. element removed from DOM mid-animation) the
+      // promise would hang forever, stalling the gravity/refill chain.
+      // 300 ms gives the 220 ms animation generous time to fire naturally.
+      fallbackTimer = setTimeout(finalize, 300);
 
       tile.element.appendChild(anim);
       anim.beginElement();
@@ -271,10 +330,22 @@ function addTypeIcon(tile, glyph, fontSize, fill) {
 
 function applyTileType(tile) {
   const poly = tile.element.querySelector('polygon');
-  poly.classList.remove('hx-ember', 'hx-prism', 'hx-rune');
+  poly.classList.remove(
+    'hx-ember', 'hx-prism', 'hx-rune', 'hx-digraph',
+    'hx-gem-emerald', 'hx-gem-gold', 'hx-gem-sapphire',
+    'hx-gem-pearl', 'hx-gem-tanzanite', 'hx-gem-ruby', 'hx-gem-diamond',
+  );
   tile.element.querySelector('.hx-type-icon')?.remove();
+  // Reset letter font size (may have been reduced for digraph)
+  tile.textLetter.setAttribute('font-size', '28');
 
-  if (tile.tileType === 'ember') {
+  if (tile.tileType === 'digraph') {
+    poly.classList.add('hx-digraph');
+    tile.textLetter.textContent = tile.letter;
+    tile.textPoint.textContent  = String(tile.point);
+    tile.textLetter.setAttribute('font-size', '21');
+    addTypeIcon(tile, '❋', 11, '#2dd4bf');
+  } else if (tile.tileType === 'ember') {
     poly.classList.add('hx-ember');
     addTypeIcon(tile, '🔥', 14, null);
   } else if (tile.tileType === 'prism') {
@@ -285,6 +356,27 @@ function applyTileType(tile) {
     tile.textLetter.textContent = '?';
     tile.textPoint.textContent  = '?';
     addTypeIcon(tile, '✦', 12, '#ffffff');
+  } else if (tile.tileType === 'gemEmerald') {
+    poly.classList.add('hx-gem-emerald');
+    addTypeIcon(tile, '◆', 12, '#22c55e');
+  } else if (tile.tileType === 'gemGold') {
+    poly.classList.add('hx-gem-gold');
+    addTypeIcon(tile, '◆', 12, '#f59e0b');
+  } else if (tile.tileType === 'gemSapphire') {
+    poly.classList.add('hx-gem-sapphire');
+    addTypeIcon(tile, '◆', 12, '#60a5fa');
+  } else if (tile.tileType === 'gemPearl') {
+    poly.classList.add('hx-gem-pearl');
+    addTypeIcon(tile, '◆', 12, '#f5f0e8');
+  } else if (tile.tileType === 'gemTanzanite') {
+    poly.classList.add('hx-gem-tanzanite');
+    addTypeIcon(tile, '◆', 12, '#7c3aed');
+  } else if (tile.tileType === 'gemRuby') {
+    poly.classList.add('hx-gem-ruby');
+    addTypeIcon(tile, '◆', 12, '#ef4444');
+  } else if (tile.tileType === 'gemDiamond') {
+    poly.classList.add('hx-gem-diamond');
+    addTypeIcon(tile, '◆', 12, '#e0f2fe');
   }
 }
 
@@ -330,8 +422,28 @@ function injectSvgDefs(svg) {
   }
 
   ensureFilter('hoverGlow');
-  ensureLinearGradient('hx-ember-gradient', '#ff6b00', '#ff2d00');
-  ensureLinearGradient('hx-prism-gradient', '#a855f7', '#06b6d4');
+  if (!document.getElementById('hx-ember-gradient')) {
+    const emberGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    emberGrad.setAttribute('id', 'hx-ember-gradient');
+    emberGrad.setAttribute('x1', '0%'); emberGrad.setAttribute('y1', '100%');
+    emberGrad.setAttribute('x2', '0%'); emberGrad.setAttribute('y2', '0%');
+    [['0%', '#ff0000'], ['50%', '#ff6a00'], ['100%', '#ffe400']].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      emberGrad.appendChild(s);
+    });
+    defs.appendChild(emberGrad);
+  }
+  ensureLinearGradient('hx-prism-gradient',    '#a855f7', '#06b6d4');
+  ensureLinearGradient('hx-digraph-gradient',  '#0d9488', '#2dd4bf');
+  ensureLinearGradient('hx-gem-emerald-gradient',   '#16a34a', '#4ade80');
+  ensureLinearGradient('hx-gem-gold-gradient',       '#d97706', '#fcd34d');
+  ensureLinearGradient('hx-gem-sapphire-gradient',   '#1d4ed8', '#93c5fd');
+  ensureLinearGradient('hx-gem-pearl-gradient',      '#d4c5a9', '#ffffff');
+  ensureLinearGradient('hx-gem-tanzanite-gradient',  '#1e0a5e', '#7c3aed');
+  ensureLinearGradient('hx-gem-ruby-gradient',       '#7f1d1d', '#ef4444');
+  ensureLinearGradient('hx-gem-diamond-gradient',    '#a5f3fc', '#ffffff');
 }
 
 /* ── Grid construction ─────────────────────────────────────────── */
@@ -352,16 +464,23 @@ function buildGrid() {
       const s = -q - r;
       if (Math.abs(s) > GRID_RADIUS) continue;
 
-      const letter = randomLetterForPos(q, r);
+      const result = randomLetterOrDigraphForPos(q, r);
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
         key:        hxKey(q, r),
-        letter,
-        pointValue: letterPoints[letter] || 1,
+        letter:     result.isDigraph ? result.digraph : result.letter,
+        pointValue: result.isDigraph ? result.points : (letterPoints[result.letter] || 1),
       });
 
-      tile.tileType = 'normal';
+      if (result.isDigraph) {
+        tile.tileType = 'digraph';
+        tile.point    = result.points;
+        hxState.digraphTiles.push(tile);
+        applyTileType(tile);
+      } else {
+        tile.tileType = 'normal';
+      }
       tile.s        = s;
 
       hxState.tiles.push(tile);
@@ -520,10 +639,15 @@ function ensureHud() {
   hud.id = 'hx-score-hud';
   hud.textContent = '0 PTS';
   document.body.appendChild(hud);
+
+  const wordHud = document.createElement('div');
+  wordHud.id = 'hx-word-score-hud';
+  document.body.appendChild(wordHud);
 }
 
 function removeHud() {
   document.getElementById('hx-score-hud')?.remove();
+  document.getElementById('hx-word-score-hud')?.remove();
 }
 
 /* ── Word display / selection ──────────────────────────────────── */
@@ -533,6 +657,61 @@ function updateWordDisplay() {
   el.textContent = hxSelected
     .map(t => t.tileType === 'rune' ? '?' : t.letter)
     .join('');
+  updateWordScorePreview();
+}
+
+/**
+ * Calculates and shows a live score preview for the current selection.
+ * Uses the same formula as submitHexacoreWord so the player always sees
+ * exactly what the word is worth before committing.
+ */
+function updateWordScorePreview() {
+  const el = document.getElementById('hx-word-score-hud');
+  if (!el) return;
+
+  // Compute assembled letter count (digraph tiles contribute 2 letters, runes contribute 1)
+  const letterCount = hxSelected.reduce((sum, t) => sum + (t.tileType === 'rune' ? 1 : t.letter.length), 0);
+
+  if (letterCount < 4) {
+    el.textContent = '';
+    return;
+  }
+
+  // Resolve rune wildcards optimistically (use '?' placeholder for display
+  // if they haven't been resolved yet — we mirror resolveLetters' alphabet
+  // scan but only need the letters we know for a rough score estimate).
+  const knownLetters = hxSelected.map(t => (t.tileType === 'rune' ? null : t.letter));
+  const runeCount = knownLetters.filter(l => l === null).length;
+
+  // For a meaningful preview even with runes, estimate using known letters
+  // and count rune placeholders as 1 pt each (minimum).
+  // For multi-char letters (digraphs), sum each character's point value.
+  const wordLength = letterCount;
+  let base = 0;
+  knownLetters.forEach(l => {
+    if (l) { for (const ch of l) base += letterPoints[ch] || 1; }
+    else base += 1;
+  });
+  const lenMult = lengthMultipliers[wordLength] || 1;
+
+  const hasPrism = hxSelected.some(t => t.tileType === 'prism');
+  const GEM_MULTIPLIERS = {
+    gemEmerald:   2,
+    gemGold:      3,
+    gemSapphire:  4,
+    gemPearl:     5,
+    gemTanzanite: 6,
+    gemRuby:      7,
+  };
+  let gemMult = 1;
+  hxSelected.forEach(t => {
+    if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
+    else if (t.tileType === 'gemDiamond') gemMult *= wordLength;
+  });
+
+  const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
+  const runeNote = runeCount > 0 ? '~' : '';
+  el.textContent = `${runeNote}+${preview}`;
 }
 
 function clearSelection() {
@@ -558,6 +737,11 @@ function setupPointerEvents() {
   const svg = hxSvg;
 
   function onPointerDown(e) {
+    unlockAudioContext();
+    if (!_hxAudioReady) {
+      _hxAudioReady = true;
+      preloadBuffers();
+    }
     if (!hxState.active || hxState.gameOver) return;
     e.preventDefault();
     const tile = tileFromElement(document.elementFromPoint(e.clientX, e.clientY));
@@ -593,6 +777,8 @@ function setupPointerEvents() {
 
     hxSelected.push(tile);
     tile.setSelected(true);
+    const swipeIndex = Math.max(1, Math.min(25, hxSelected.length));
+    playSound('sfxSwipe' + swipeIndex);
     updateWordDisplay();
   }
 
@@ -656,14 +842,17 @@ function resolveLetters(selectedTiles) {
 
 /* ── Word submission ───────────────────────────────────────────── */
 async function submitHexacoreWord() {
-  // Too few tiles — silently cancel (accidental drag)
-  if (hxSelected.length < 4) {
+  // Too few letters — silently cancel (accidental drag).
+  // Use assembled letter count so digraph tiles (2 letters each) are counted correctly.
+  const assembledLength = hxSelected.reduce((sum, t) => sum + (t.tileType === 'rune' ? 1 : t.letter.length), 0);
+  if (assembledLength < 4) {
     clearSelection();
     return;
   }
 
   const resolved = resolveLetters(hxSelected);
   if (!resolved || !isValidWord(resolved.join(''))) {
+    playSound('sfxAlert');
     showAlert('Word not found!');
     clearSelection();
     return;
@@ -672,10 +861,29 @@ async function submitHexacoreWord() {
   // Score
   const word     = resolved.join('');
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
+  const hasEmber = hxSelected.some(t => t.tileType === 'ember');
   let base = 0;
-  resolved.forEach(l => { base += letterPoints[l] || 1; });
-  const lenMult   = lengthMultipliers[word.length] || 1;
-  const wordScore = base * lenMult * (hasPrism ? 2 : 1);
+  // Each element in resolved may be a multi-char string (digraph) or single char;
+  // iterate over individual characters so each letter contributes its own point value.
+  resolved.forEach(l => { for (const ch of l) base += letterPoints[ch] || 1; });
+  const lenMult = lengthMultipliers[word.length] || 1;
+
+  // Gem multipliers stack multiplicatively
+  let gemMult = 1;
+  const GEM_MULTIPLIERS = {
+    gemEmerald:   2,
+    gemGold:      3,
+    gemSapphire:  4,
+    gemPearl:     5,
+    gemTanzanite: 6,
+    gemRuby:      7,
+  };
+  hxSelected.forEach(t => {
+    if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
+    else if (t.tileType === 'gemDiamond') gemMult *= word.length;
+  });
+
+  const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
 
   hxWordCount++;
   const oldScore = hxState.score;
@@ -688,10 +896,15 @@ async function submitHexacoreWord() {
   const consumed = [...hxSelected];
   clearSelection();
 
+  playSound('sfxSuccess');
   // Consume tiles → gravity → ember advance → refill → special spawns
   await consumeAndRefill(consumed);
 
   if (!hxState.gameOver) {
+    // Spawn gem reward based on word length
+    spawnGemRewardForWord(word.length);
+    // Fire bonus mirrors word reward
+    if (hasEmber) spawnGemRewardForWord(word.length);
     spawnSpecialTiles();
   }
 }
@@ -699,11 +912,17 @@ async function submitHexacoreWord() {
 /* ── Consume tiles → gravity → ember → refill ─────────────────── */
 async function consumeAndRefill(tilesToRemove) {
   // 1. Animate tiles out with a tile-by-tile stagger (first selected → last)
+  const GEM_TYPES = new Set([
+    'gemEmerald', 'gemGold', 'gemSapphire',
+    'gemPearl', 'gemTanzanite', 'gemRuby', 'gemDiamond',
+  ]);
   tilesToRemove.forEach((tile, idx) => {
     tile.element.style.setProperty('--tile-idx', String(idx));
     const type = tile.tileType;
     if (type === 'ember' || type === 'prism' || type === 'rune') {
       // Consumed-special class replaces hx-tile-removing with combined animation
+      tile.element.classList.add(`hx-consumed-${type}`);
+    } else if (GEM_TYPES.has(type)) {
       tile.element.classList.add(`hx-consumed-${type}`);
     } else {
       tile.element.classList.add('hx-tile-removing');
@@ -715,10 +934,18 @@ async function consumeAndRefill(tilesToRemove) {
 
   tilesToRemove.forEach(tile => {
     tile.element.remove();
-    removeFrom(hxState.tiles,      tile);
-    removeFrom(hxState.emberTiles, tile);
-    removeFrom(hxState.prismTiles, tile);
-    removeFrom(hxState.runeTiles,  tile);
+    removeFrom(hxState.tiles,              tile);
+    removeFrom(hxState.emberTiles,         tile);
+    removeFrom(hxState.prismTiles,         tile);
+    removeFrom(hxState.runeTiles,          tile);
+    removeFrom(hxState.digraphTiles,       tile);
+    removeFrom(hxState.gemEmeraldTiles,    tile);
+    removeFrom(hxState.gemGoldTiles,       tile);
+    removeFrom(hxState.gemSapphireTiles,   tile);
+    removeFrom(hxState.gemPearlTiles,      tile);
+    removeFrom(hxState.gemTanzaniteTiles,  tile);
+    removeFrom(hxState.gemRubyTiles,       tile);
+    removeFrom(hxState.gemDiamondTiles,    tile);
     hxTileMap.delete(hxKey(tile.q, tile.r));
   });
 
@@ -774,6 +1001,8 @@ async function applyGravity() {
 
     if (moves.length === 0) break;
 
+    // Stagger tiles so each falls individually in a ripple/cascade effect,
+    // rather than all tiles in a gravity wave dropping in lock-step unison.
     await animateTileMovesStaggered(moves, GRAVITY_STAGGER_MS);
   }
 }
@@ -814,10 +1043,18 @@ async function advanceEmberTiles() {
     const displaced = hxTileMap.get(hxKey(target.q, target.r));
     if (displaced && displaced !== tile) {
       displaced.element.remove();
-      removeFrom(hxState.tiles,      displaced);
-      removeFrom(hxState.emberTiles, displaced);
-      removeFrom(hxState.prismTiles, displaced);
-      removeFrom(hxState.runeTiles,  displaced);
+      removeFrom(hxState.tiles,             displaced);
+      removeFrom(hxState.emberTiles,        displaced);
+      removeFrom(hxState.prismTiles,        displaced);
+      removeFrom(hxState.runeTiles,         displaced);
+      removeFrom(hxState.digraphTiles,      displaced);
+      removeFrom(hxState.gemEmeraldTiles,   displaced);
+      removeFrom(hxState.gemGoldTiles,      displaced);
+      removeFrom(hxState.gemSapphireTiles,  displaced);
+      removeFrom(hxState.gemPearlTiles,     displaced);
+      removeFrom(hxState.gemTanzaniteTiles, displaced);
+      removeFrom(hxState.gemRubyTiles,      displaced);
+      removeFrom(hxState.gemDiamondTiles,   displaced);
       hxTileMap.delete(hxKey(target.q, target.r));
     }
 
@@ -844,15 +1081,22 @@ async function refillGrid() {
     for (let r = r_min; r <= r_max; r++) {
       if (hxTileMap.has(hxKey(q, r))) continue;
 
-      const letter = randomLetterForPos(q, r);
+      const result = randomLetterOrDigraphForPos(q, r);
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
         key:        hxKey(q, r),
-        letter,
-        pointValue: letterPoints[letter] || 1,
+        letter:     result.isDigraph ? result.digraph : result.letter,
+        pointValue: result.isDigraph ? result.points : (letterPoints[result.letter] || 1),
       });
-      tile.tileType = 'normal';
+      if (result.isDigraph) {
+        tile.tileType = 'digraph';
+        tile.point    = result.points;
+        hxState.digraphTiles.push(tile);
+        applyTileType(tile);
+      } else {
+        tile.tileType = 'normal';
+      }
       tile.s        = -q - r;
 
       hxState.tiles.push(tile);
@@ -883,6 +1127,121 @@ async function refillGrid() {
   if (allPromises.length > 0) await Promise.all(allPromises);
 }
 
+/* ── Gem tile helpers ──────────────────────────────────────────── */
+
+/** Returns a random normal tile from anywhere on the board (not ember/prism/rune/gem). */
+function getRandomNormalTile() {
+  const eligible = hxState.tiles.filter(t => t.tileType === 'normal' || t.tileType === 'digraph');
+  if (eligible.length === 0) return null;
+  return eligible[Math.floor(Math.random() * eligible.length)];
+}
+
+/** Returns multiple distinct random normal tiles (up to `count`). */
+function getRandomNormalTiles(count) {
+  const eligible = hxState.tiles.filter(t => t.tileType === 'normal' || t.tileType === 'digraph');
+  const result = [];
+  const used = new Set();
+  while (result.length < count && result.length < eligible.length) {
+    const idx = Math.floor(Math.random() * eligible.length);
+    if (!used.has(idx)) { used.add(idx); result.push(eligible[idx]); }
+  }
+  return result;
+}
+
+/** The gem-type → state-array mapping. */
+const GEM_STATE_KEY = {
+  gemEmerald:   'gemEmeraldTiles',
+  gemGold:      'gemGoldTiles',
+  gemSapphire:  'gemSapphireTiles',
+  gemPearl:     'gemPearlTiles',
+  gemTanzanite: 'gemTanzaniteTiles',
+  gemRuby:      'gemRubyTiles',
+  gemDiamond:   'gemDiamondTiles',
+};
+
+/** The gem-type → spawn CSS class mapping. */
+const GEM_SPAWN_CLASS = {
+  gemEmerald:   'hx-gem-emerald-spawn',
+  gemGold:      'hx-gem-gold-spawn',
+  gemSapphire:  'hx-gem-sapphire-spawn',
+  gemPearl:     'hx-gem-pearl-spawn',
+  gemTanzanite: 'hx-gem-tanzanite-spawn',
+  gemRuby:      'hx-gem-ruby-spawn',
+  gemDiamond:   'hx-gem-diamond-spawn',
+};
+
+/**
+ * Transforms an existing normal tile in-place into the given gem type.
+ * Updates state, applies styling, and plays the spawn animation.
+ */
+function transformTileToGem(tile, gemType) {
+  if (!tile || (tile.tileType !== 'normal' && tile.tileType !== 'digraph')) return;
+  if (tile.tileType === 'digraph') removeFrom(hxState.digraphTiles, tile);
+  tile.tileType = gemType;
+  hxState[GEM_STATE_KEY[gemType]].push(tile);
+  applyTileType(tile);
+  playSound('sfxMagic');
+  const spawnClass = GEM_SPAWN_CLASS[gemType];
+  tile.element.classList.add(spawnClass);
+  tile.element.addEventListener('animationend', () => {
+    tile.element.classList.remove(spawnClass);
+  }, { once: true });
+}
+
+/**
+ * Gem spawn table — spawns are applied to random normal tiles AFTER
+ * consumeAndRefill has fully resolved (gravity + ember + refill all done).
+ *
+ *  4 letters: 1 emerald
+ *  5 letters: 2 emerald
+ *  6 letters: 3 emerald, 1 gold
+ *  7 letters: 3 emerald, 2 gold, 1 sapphire
+ *  8 letters: 4 emerald, 3 gold, 2 sapphire, 1 pearl
+ *  9 letters: 5 emerald, 4 gold, 3 sapphire, 2 pearl, 1 tanzanite
+ * 10+ letters: 6 emerald, 5 gold, 4 sapphire, 3 pearl, 2 tanzanite, 1 ruby
+ */
+function spawnGemRewardForWord(wordLength) {
+  const plan = [];
+  if (wordLength >= 10) {
+    plan.push(...Array(6).fill('gemEmerald'));
+    plan.push(...Array(5).fill('gemGold'));
+    plan.push(...Array(4).fill('gemSapphire'));
+    plan.push(...Array(3).fill('gemPearl'));
+    plan.push(...Array(2).fill('gemTanzanite'));
+    plan.push('gemRuby');
+  } else if (wordLength === 9) {
+    plan.push(...Array(5).fill('gemEmerald'));
+    plan.push(...Array(4).fill('gemGold'));
+    plan.push(...Array(3).fill('gemSapphire'));
+    plan.push(...Array(2).fill('gemPearl'));
+    plan.push('gemTanzanite');
+  } else if (wordLength === 8) {
+    plan.push(...Array(4).fill('gemEmerald'));
+    plan.push(...Array(3).fill('gemGold'));
+    plan.push(...Array(2).fill('gemSapphire'));
+    plan.push('gemPearl');
+  } else if (wordLength === 7) {
+    plan.push(...Array(3).fill('gemEmerald'));
+    plan.push(...Array(2).fill('gemGold'));
+    plan.push('gemSapphire');
+  } else if (wordLength === 6) {
+    plan.push(...Array(3).fill('gemEmerald'));
+    plan.push('gemGold');
+  } else if (wordLength === 5) {
+    plan.push(...Array(2).fill('gemEmerald'));
+  } else if (wordLength === 4) {
+    plan.push('gemEmerald');
+  } else {
+    return; // < 4 letters — no gem reward
+  }
+
+  // Spawn each gem on a distinct random normal tile
+  for (const gemType of plan) {
+    const target = getRandomNormalTile();
+    if (target) transformTileToGem(target, gemType);
+  }
+}
+
 /* ── Special tile spawning ─────────────────────────────────────── */
 function spawnSpecialTiles() {
   // Every 3 words → 1 new ember in top row
@@ -901,15 +1260,26 @@ function spawnSpecialTiles() {
 
 function spawnSpecialInRows(type, rows) {
   const eligible = hxState.tiles.filter(
-    t => t.tileType === 'normal' && rows.includes(t.r),
+    t => (t.tileType === 'normal' || t.tileType === 'digraph') && rows.includes(t.r),
   );
   if (eligible.length === 0) return;
   const target = eligible[Math.floor(Math.random() * eligible.length)];
+
+  // If overwriting a digraph tile, remove it from the digraph state array first
+  if (target.tileType === 'digraph') removeFrom(hxState.digraphTiles, target);
+
   target.tileType = type;
   if (type === 'ember') hxState.emberTiles.push(target);
   else if (type === 'prism') hxState.prismTiles.push(target);
   else if (type === 'rune')  hxState.runeTiles.push(target);
+  else if (type === 'digraph') {
+    const { digraph, points } = randomDigraph();
+    target.letter = digraph;
+    target.point  = points;
+    hxState.digraphTiles.push(target);
+  }
   applyTileType(target);
+  playSound('sfxMagic');
 
   // Dramatic entrance animation for the newly spawned special tile
   const spawnClass = `hx-${type}-spawn`;
@@ -1057,14 +1427,22 @@ function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 export function startHexacore() {
   // Reset state
   Object.assign(hxState, {
-    score:      0,
-    words:      [],
-    tiles:      [],
-    emberTiles: [],
-    prismTiles: [],
-    runeTiles:  [],
-    gameOver:   false,
-    active:     false, // set to true after intro animation completes
+    score:           0,
+    words:           [],
+    tiles:           [],
+    emberTiles:      [],
+    prismTiles:      [],
+    runeTiles:       [],
+    digraphTiles:    [],
+    gemEmeraldTiles:   [],
+    gemGoldTiles:      [],
+    gemSapphireTiles:  [],
+    gemPearlTiles:     [],
+    gemTanzaniteTiles: [],
+    gemRubyTiles:      [],
+    gemDiamondTiles:   [],
+    gameOver:        false,
+    active:          false, // set to true after intro animation completes
   });
   hxSelected           = [];
   hxPointerDown        = false;
@@ -1106,6 +1484,7 @@ export function startHexacore() {
   updateScoreDisplay();
 
   setupPointerEvents();
+  playSound('sfxUnlock');
 }
 
 export function stopHexacore() {
@@ -1135,3 +1514,25 @@ document.addEventListener('DOMContentLoaded', () => {
     startHexacore();
   });
 });
+
+/* ── TODO: Hexacore events still missing a dedicated sound ─────────
+ *
+ * The following game events have no audio feedback yet. New audio
+ * assets will need to be recorded or sourced and wired in.
+ *
+ * Event                          | Notes                                                        | Recommended length
+ * -------------------------------|--------------------------------------------------------------|--------------------
+ * Tile deselected / backtrack    | Player drags back to deselect last tile in chain             | ~0.05 s (very short tick/click)
+ * Tile consumed / pop-out        | Each tile popping out during word consumption                | ~0.1 s per tile (light pop or burst; could stagger with --tile-idx)
+ * Ember tile advancing           | Ember moves toward the bottom — danger cue                   | ~0.3 s (low rumble or crackle)
+ * Ember tile spawning            | Distinct from sfxMagic; ember has its own CSS spawn animation | ~0.4 s (fire whoosh)
+ * Prism tile spawning            | Currently shares sfxMagic — could be a distinct sparkle      | ~0.4 s (crystal chime)
+ * Rune tile spawning             | Currently shares sfxMagic — could be a distinct mystical hum | ~0.4 s (arcane hum)
+ * Gravity cascade                | Tiles falling after words are consumed                       | ~0.2 s (soft cascade whoosh)
+ * Refill tiles dropping in       | New tiles appearing per-column from above                    | ~0.15 s (light tile-drop thud)
+ * Game over                      | triggerGameOver() / showGameOver() called                    | ~1.5–2 s (dramatic sting or thud)
+ * Score milestone / high word    | Optional feedback for scoring above a threshold             | ~0.5 s (ascending chime)
+ * Leaderboard score submitted    | handleSubmitScore() success path                             | ~0.5 s (fanfare or confirmation chime)
+ * Intro animation completes      | End of animateGridIntro() when hxState.active = true         | ~0.3 s (soft ready ding)
+ *
+ * ───────────────────────────────────────────────────────────────── */
