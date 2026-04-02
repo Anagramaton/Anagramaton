@@ -65,6 +65,31 @@
   100% { filter: hue-rotate(360deg) drop-shadow(0 0 6px rgba(180, 100, 255, 0.7)); }
 }
 
+/* ── Digraph tile — teal double-letter bonus ───────────────────── */
+.hx-digraph {
+  fill: url(#hx-digraph-gradient);
+  filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.8));
+  animation: hx-digraph-pulse 2s ease-in-out infinite alternate;
+}
+@keyframes hx-digraph-pulse {
+  from { filter: drop-shadow(0 0 4px rgba(13, 148, 136, 0.7)); }
+  to   { filter: drop-shadow(0 0 12px rgba(45, 212, 191, 1)); }
+}
+
+@keyframes hx-digraph-spawn-anim {
+  0%   { opacity: 0.2; transform: scale(0.4);
+         filter: drop-shadow(0 0 0px transparent); }
+  50%  { opacity: 1;   transform: scale(1.25);
+         filter: brightness(2.5) drop-shadow(0 0 20px rgba(45, 212, 191, 1)); }
+  100% { opacity: 1;   transform: scale(1.0);
+         filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.8)); }
+}
+.hx-digraph-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-digraph-spawn-anim 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
 /* ── Rune tile — dark purple ───────────────────────────────────── */
 .hx-rune {
   fill: #2d1b69;
