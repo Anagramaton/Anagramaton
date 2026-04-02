@@ -33,6 +33,10 @@ const WORD_TILE_STAGGER_MS      = 55;  // ms stagger between each consumed tile 
 const GRAVITY_STAGGER_MS        = 38;  // ms stagger between tiles in the gravity cascade
 const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
+const RUNE_REVEAL_DURATION_MS   = 400; // ms total for the hx-rune-reveal CSS animation
+const RUNE_REVEAL_MIDPOINT_MS   = Math.round(RUNE_REVEAL_DURATION_MS * 0.4); // ~40% = scale-zero point
+const TAP_MOVEMENT_THRESHOLD_PX = 8;  // px: max pointer movement to still count as a tap (not drag)
+const DIGRAPH_AWARD_INTERVAL    = 10; // words between each digraph tile award
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -69,6 +73,24 @@ const HX_LETTER_POOL = [
   'J', 'K', 'Q', 'X', 'Z',
 ];
 
+/* ── Digraph bonus tile pool ───────────────────────────────────── */
+const DIGRAPH_TILES = [
+  { digraph: 'TH', points: letterPoints.T + letterPoints.H },   //  5
+  { digraph: 'HE', points: letterPoints.H + letterPoints.E },   //  5
+  { digraph: 'IN', points: letterPoints.I + letterPoints.N },   //  2
+  { digraph: 'ER', points: letterPoints.E + letterPoints.R },   //  2
+  { digraph: 'RE', points: letterPoints.R + letterPoints.E },   //  2
+  { digraph: 'ST', points: letterPoints.S + letterPoints.T },   //  2
+  { digraph: 'AN', points: letterPoints.A + letterPoints.N },   //  2
+  { digraph: 'ON', points: letterPoints.O + letterPoints.N },   //  2
+  { digraph: 'EE', points: letterPoints.E + letterPoints.E },   //  2
+  { digraph: 'TT', points: letterPoints.T + letterPoints.T },   //  2
+  { digraph: 'SS', points: letterPoints.S + letterPoints.S },   //  2
+  { digraph: 'OO', points: letterPoints.O + letterPoints.O },   //  2
+  { digraph: 'QU', points: letterPoints.Q + letterPoints.U },   // 11
+  { digraph: 'CK', points: letterPoints.C + letterPoints.K },   //  8
+];
+
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
   score:           0,
@@ -84,11 +106,13 @@ const hxState = {
   gemTanzaniteTiles: [],
   gemRubyTiles:      [],
   gemDiamondTiles:   [],
+  digraphHand:       [],
   gameOver:        false,
   active:          false,
 };
 
 let hxSelected          = [];   // tiles in current selection chain
+let hxDigraphSelected   = [];   // digraph tiles staged for current word
 let hxPointerDown       = false;
 let hxLayout            = null;
 let hxSvg               = null;
@@ -96,6 +120,8 @@ let hxWordCount         = 0;
 let hxTileMap           = new Map(); // `q,r` → tile object
 let hxPointerCleanup    = null;
 let hxUpdateViewForBoard = null;
+let pendingRuneTile     = null;   // rune tile awaiting tap-or-drag decision
+let pendingRuneStartPos = null;   // pointer coords at pending rune pointerdown
 
 /* ── Pure helpers ──────────────────────────────────────────────── */
 function hxKey(q, r) { return `${q},${r}`; }
@@ -608,9 +634,14 @@ function removeHud() {
 function updateWordDisplay() {
   const el = document.getElementById('current-word');
   if (!el) return;
-  el.textContent = hxSelected
-    .map(t => t.tileType === 'rune' ? '?' : t.letter)
+  const gridPart = hxSelected
+    .map(t => {
+      if (t.tileType === 'rune') return t.chosenLetter || '?';
+      return t.letter;
+    })
     .join('');
+  const digraphPart = hxDigraphSelected.map(d => d.digraph).join('');
+  el.textContent = gridPart + digraphPart;
   updateWordScorePreview();
 }
 
@@ -623,7 +654,8 @@ function updateWordScorePreview() {
   const el = document.getElementById('hx-word-score-hud');
   if (!el) return;
 
-  if (hxSelected.length < 4) {
+  const digraphLetterCount = hxDigraphSelected.reduce((n, d) => n + d.digraph.length, 0);
+  if (hxSelected.length + digraphLetterCount < 4) {
     el.textContent = '';
     return;
   }
@@ -631,14 +663,19 @@ function updateWordScorePreview() {
   // Resolve rune wildcards optimistically (use '?' placeholder for display
   // if they haven't been resolved yet — we mirror resolveLetters' alphabet
   // scan but only need the letters we know for a rough score estimate).
-  const knownLetters = hxSelected.map(t => (t.tileType === 'rune' ? null : t.letter));
+  const knownLetters = hxSelected.map(t => {
+    if (t.tileType !== 'rune') return t.letter;
+    return t.chosenLetter || null;
+  });
   const runeCount = knownLetters.filter(l => l === null).length;
 
   // For a meaningful preview even with runes, estimate using known letters
   // and count rune placeholders as 1 pt each (minimum).
-  const wordLength = hxSelected.length;
+  // Digraph letters add to both the total letter count and base score.
+  const wordLength = hxSelected.length + digraphLetterCount;
   let base = 0;
   knownLetters.forEach(l => { base += l ? (letterPoints[l] || 1) : 1; });
+  hxDigraphSelected.forEach(d => { base += d.points; });
   const lenMult = lengthMultipliers[wordLength] || 1;
 
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
@@ -679,6 +716,99 @@ function tileFromElement(el) {
   return null;
 }
 
+/* ── Rune letter-picker modal ──────────────────────────────────── */
+function openRunePicker(tile) {
+  document.getElementById('hx-rune-picker')?.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'hx-rune-picker';
+
+  const btnHtml = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l =>
+    `<button class="hx-rune-letter-btn" data-letter="${l}">${l}</button>`
+  ).join('');
+
+  overlay.innerHTML = `
+    <div id="hx-rune-picker-box">
+      <h3>CHOOSE A LETTER</h3>
+      <div class="hx-rune-letter-grid">${btnHtml}</div>
+      <button id="hx-rune-picker-cancel">CANCEL</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  overlay.querySelectorAll('.hx-rune-letter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const letter = btn.dataset.letter;
+      overlay.remove();
+      assignRuneLetter(tile, letter);
+    });
+  });
+
+  document.getElementById('hx-rune-picker-cancel')?.addEventListener('click', () => {
+    overlay.remove();
+  });
+}
+
+function assignRuneLetter(tile, letter) {
+  tile.chosenLetter = letter;
+
+  tile.element.classList.add('hx-rune-revealing');
+
+  // At the scale-zero midpoint, swap text content so the change is invisible
+  setTimeout(() => {
+    tile.textLetter.textContent = letter;
+    tile.textPoint.textContent  = String(letterPoints[letter] || 1);
+  }, RUNE_REVEAL_MIDPOINT_MS);
+
+  tile.element.addEventListener('animationend', () => {
+    tile.element.classList.remove('hx-rune-revealing');
+  }, { once: true });
+}
+
+/* ── Digraph bonus tray ────────────────────────────────────────── */
+function renderDigraphTray() {
+  let tray = document.getElementById('hx-digraph-tray');
+  if (!tray) {
+    tray = document.createElement('div');
+    tray.id = 'hx-digraph-tray';
+    document.body.appendChild(tray);
+  }
+  tray.innerHTML = '';
+
+  hxState.digraphHand.forEach(dTile => {
+    const btn = document.createElement('button');
+    btn.className = 'hx-digraph-tile';
+    if (hxDigraphSelected.includes(dTile)) btn.classList.add('selected');
+    btn.innerHTML =
+      `<span class="hx-dg-letters">${dTile.digraph}</span>` +
+      `<span class="hx-dg-pts">${dTile.points}pt</span>`;
+    btn.addEventListener('click', () => toggleDigraphSelection(dTile));
+    tray.appendChild(btn);
+  });
+}
+
+function removeDigraphTray() {
+  document.getElementById('hx-digraph-tray')?.remove();
+}
+
+function toggleDigraphSelection(dTile) {
+  const idx = hxDigraphSelected.indexOf(dTile);
+  if (idx !== -1) {
+    hxDigraphSelected.splice(idx, 1);
+  } else {
+    hxDigraphSelected.push(dTile);
+  }
+  renderDigraphTray();
+  updateWordDisplay();
+}
+
+function awardDigraphTile() {
+  if (hxState.digraphHand.length >= 5) return;
+  const template = DIGRAPH_TILES[Math.floor(Math.random() * DIGRAPH_TILES.length)];
+  hxState.digraphHand.push({ ...template });
+  renderDigraphTray();
+}
+
 /* ── Pointer events ────────────────────────────────────────────── */
 function setupPointerEvents() {
   const svg = hxSvg;
@@ -693,8 +823,17 @@ function setupPointerEvents() {
     e.preventDefault();
     const tile = tileFromElement(document.elementFromPoint(e.clientX, e.clientY));
     if (!tile) return;
+
     hxPointerDown = true;
     svg.setPointerCapture(e.pointerId);
+
+    // Intercept rune tile: wait to see if it's a tap (open picker) or drag (normal select)
+    if (tile.tileType === 'rune') {
+      pendingRuneTile    = tile;
+      pendingRuneStartPos = { x: e.clientX, y: e.clientY };
+      return;
+    }
+
     clearSelection();
     hxSelected = [tile];
     tile.setSelected(true);
@@ -704,6 +843,26 @@ function setupPointerEvents() {
   function onPointerMove(e) {
     if (!hxState.active || hxState.gameOver || !hxPointerDown) return;
     e.preventDefault();
+
+    // If a rune tile is pending, check whether pointer has moved (drag) or not
+    if (pendingRuneTile) {
+      const dx = e.clientX - pendingRuneStartPos.x;
+      const dy = e.clientY - pendingRuneStartPos.y;
+      if (Math.sqrt(dx * dx + dy * dy) > TAP_MOVEMENT_THRESHOLD_PX) {
+        // Treat as drag — promote rune tile into the selection chain
+        const runeTile      = pendingRuneTile;
+        pendingRuneTile     = null;
+        pendingRuneStartPos = null;
+        clearSelection();
+        hxSelected = [runeTile];
+        runeTile.setSelected(true);
+        updateWordDisplay();
+        // Fall through to normal move logic below
+      } else {
+        return; // Still within tap threshold — wait
+      }
+    }
+
     const tile = tileFromElement(document.elementFromPoint(e.clientX, e.clientY));
     if (!tile) return;
 
@@ -732,6 +891,16 @@ function setupPointerEvents() {
   function onPointerUp(e) {
     if (!hxPointerDown) return;
     hxPointerDown = false;
+
+    // If pending rune and pointer barely moved → it's a tap: open letter picker
+    if (pendingRuneTile) {
+      const tile          = pendingRuneTile;
+      pendingRuneTile     = null;
+      pendingRuneStartPos = null;
+      openRunePicker(tile);
+      return;
+    }
+
     // Auto-submit the word when the drag ends
     if (hxState.active && !hxState.gameOver && hxSelected.length > 0) {
       submitHexacoreWord();
@@ -739,7 +908,9 @@ function setupPointerEvents() {
   }
 
   function onPointerCancel() {
-    hxPointerDown = false;
+    hxPointerDown       = false;
+    pendingRuneTile     = null;
+    pendingRuneStartPos = null;
     clearSelection();
   }
 
@@ -758,7 +929,11 @@ function setupPointerEvents() {
 
 /* ── Rune wildcard resolution ──────────────────────────────────── */
 function resolveLetters(selectedTiles) {
-  const letters = selectedTiles.map(t => (t.tileType === 'rune' ? null : t.letter));
+  // Prefer player-chosen letters for rune tiles; fall back to brute-force scan
+  const letters = selectedTiles.map(t => {
+    if (t.tileType !== 'rune') return t.letter;
+    return t.chosenLetter || null;
+  });
   const runeIdxs = letters.map((l, i) => l === null ? i : -1).filter(i => i !== -1);
   if (runeIdxs.length === 0) return letters;
 
@@ -790,25 +965,39 @@ function resolveLetters(selectedTiles) {
 /* ── Word submission ───────────────────────────────────────────── */
 async function submitHexacoreWord() {
   // Too few tiles — silently cancel (accidental drag)
-  if (hxSelected.length < 4) {
+  // (Digraph letters count toward minimum, but we need at least 1 grid tile selected)
+  const digraphLetterCount = hxDigraphSelected.reduce((n, d) => n + d.digraph.length, 0);
+  if (hxSelected.length + digraphLetterCount < 4) {
     clearSelection();
     return;
   }
 
   const resolved = resolveLetters(hxSelected);
-  if (!resolved || !isValidWord(resolved.join(''))) {
+  if (!resolved) {
     playSound('sfxAlert');
     showAlert('Word not found!');
     clearSelection();
     return;
   }
 
-  // Score
-  const word     = resolved.join('');
+  // Build the full word including any staged digraph letters at the end
+  const digraphLetters = hxDigraphSelected.flatMap(d => d.digraph.split(''));
+  const allLetters     = [...resolved, ...digraphLetters];
+  const word           = allLetters.join('');
+
+  if (!isValidWord(word)) {
+    playSound('sfxAlert');
+    showAlert('Word not found!');
+    clearSelection();
+    return;
+  }
+
+  // Score — total letter count drives the length multiplier
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
   const hasEmber = hxSelected.some(t => t.tileType === 'ember');
   let base = 0;
   resolved.forEach(l => { base += letterPoints[l] || 1; });
+  hxDigraphSelected.forEach(d => { base += d.points; });
   const lenMult = lengthMultipliers[word.length] || 1;
 
   // Gem multipliers stack multiplicatively
@@ -829,12 +1018,25 @@ async function submitHexacoreWord() {
   const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
 
   hxWordCount++;
+
+  // Award a digraph tile every 10 words (max hand size 5)
+  if (hxWordCount % DIGRAPH_AWARD_INTERVAL === 0) awardDigraphTile();
+
   const oldScore = hxState.score;
   hxState.score += wordScore;
   hxState.words.push({ word, score: wordScore });
 
   updateScoreDisplay();
   animateScoreHud(oldScore, hxState.score);
+
+  // Consume staged digraph tiles from hand
+  const usedDigraphs = [...hxDigraphSelected];
+  hxDigraphSelected = [];
+  usedDigraphs.forEach(d => {
+    const idx = hxState.digraphHand.indexOf(d);
+    if (idx !== -1) hxState.digraphHand.splice(idx, 1);
+  });
+  renderDigraphTray();
 
   const consumed = [...hxSelected];
   clearSelection();
@@ -1234,6 +1436,8 @@ function triggerGameOver() {
   if (clearBtn)  clearBtn.style.display  = '';
 
   removeHud();
+  removeDigraphTray();
+  document.getElementById('hx-rune-picker')?.remove();
   showGameOver();
 }
 
@@ -1364,11 +1568,15 @@ export function startHexacore() {
     gemTanzaniteTiles: [],
     gemRubyTiles:      [],
     gemDiamondTiles:   [],
+    digraphHand:       [],
     gameOver:        false,
     active:          false, // set to true after intro animation completes
   });
   hxSelected           = [];
+  hxDigraphSelected    = [];
   hxPointerDown        = false;
+  pendingRuneTile      = null;
+  pendingRuneStartPos  = null;
   hxWordCount          = 0;
   hxTileMap            = new Map();
   hxUpdateViewForBoard = null;
@@ -1405,6 +1613,7 @@ export function startHexacore() {
   ensureHud();
   updateHud();
   updateScoreDisplay();
+  renderDigraphTray();
 
   setupPointerEvents();
   playSound('sfxUnlock');
@@ -1417,7 +1626,9 @@ export function stopHexacore() {
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
 
   document.getElementById('hx-gameover-overlay')?.remove();
+  document.getElementById('hx-rune-picker')?.remove();
   removeHud();
+  removeDigraphTray();
 
   document.body.classList.remove('hx-active');
 
