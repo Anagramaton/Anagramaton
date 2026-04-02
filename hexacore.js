@@ -111,8 +111,22 @@ const hxState = {
   active:          false,
 };
 
-let hxSelected          = [];   // tiles in current selection chain
-let hxDigraphSelected   = [];   // digraph tiles staged for current word
+/**
+ * Unified word-chain. Each element is one of:
+ *   { kind: 'grid',    tile  }  — a hex-board tile
+ *   { kind: 'digraph', dTile }  — a bonus digraph tile
+ *
+ * Grid tiles must form an adjacent chain (each consecutive grid tile
+ * must be a hex-neighbour of the previous grid tile; digraph items
+ * between them act as a connecting bridge and do not break the
+ * adjacency requirement between the flanking grid tiles).
+ *
+ * Digraph tiles can be pre-staged in the tray BEFORE starting a drag
+ * (they go to the front of the chain) or appended mid-chain by tapping
+ * the tray while building a selection.  Staged digraphs persist through
+ * a fresh pointerdown so a player can tap TH → drag A-T → submit "THAT".
+ */
+let hxChain             = [];
 let hxPointerDown       = false;
 let hxLayout            = null;
 let hxSvg               = null;
@@ -122,6 +136,22 @@ let hxPointerCleanup    = null;
 let hxUpdateViewForBoard = null;
 let pendingRuneTile     = null;   // rune tile awaiting tap-or-drag decision
 let pendingRuneStartPos = null;   // pointer coords at pending rune pointerdown
+
+/** Grid tiles currently in the chain (preserves chain order). */
+function chainGridTiles() {
+  return hxChain.filter(i => i.kind === 'grid').map(i => i.tile);
+}
+/** Digraph tiles currently in the chain (preserves chain order). */
+function chainDigraphItems() {
+  return hxChain.filter(i => i.kind === 'digraph').map(i => i.dTile);
+}
+/** Last grid tile in the chain, or null. */
+function lastGridTileInChain() {
+  for (let i = hxChain.length - 1; i >= 0; i--) {
+    if (hxChain[i].kind === 'grid') return hxChain[i].tile;
+  }
+  return null;
+}
 
 /* ── Pure helpers ──────────────────────────────────────────────── */
 function hxKey(q, r) { return `${q},${r}`; }
@@ -139,6 +169,31 @@ function getColumnRange(q) {
     r_min: Math.max(-GRID_RADIUS, -GRID_RADIUS - q),
     r_max: Math.min(GRID_RADIUS,   GRID_RADIUS - q),
   };
+}
+
+/** Per-type score multipliers for gem tiles (stack multiplicatively). */
+const GEM_MULTIPLIERS = {
+  gemEmerald:   2,
+  gemGold:      3,
+  gemSapphire:  4,
+  gemPearl:     5,
+  gemTanzanite: 6,
+  gemRuby:      7,
+};
+
+/**
+ * Calculate the combined gem multiplier for the given set of grid tiles.
+ * Diamond tiles multiply by tileCount (total tiles in the chain).
+ * All other gem types multiply by their fixed GEM_MULTIPLIERS value.
+ * Results from multiple gem tiles stack multiplicatively.
+ */
+function calcGemMult(gridTiles, tileCount) {
+  let gemMult = 1;
+  gridTiles.forEach(t => {
+    if (GEM_MULTIPLIERS[t.tileType])    gemMult *= GEM_MULTIPLIERS[t.tileType];
+    else if (t.tileType === 'gemDiamond') gemMult *= tileCount;
+  });
+  return gemMult;
 }
 
 function randomLetter() {
@@ -634,14 +689,12 @@ function removeHud() {
 function updateWordDisplay() {
   const el = document.getElementById('current-word');
   if (!el) return;
-  const gridPart = hxSelected
-    .map(t => {
-      if (t.tileType === 'rune') return t.chosenLetter || '?';
-      return t.letter;
-    })
-    .join('');
-  const digraphPart = hxDigraphSelected.map(d => d.digraph).join('');
-  el.textContent = gridPart + digraphPart;
+  el.textContent = hxChain.map(item => {
+    if (item.kind === 'grid') {
+      return item.tile.tileType === 'rune' ? (item.tile.chosenLetter || '?') : item.tile.letter;
+    }
+    return item.dTile.digraph;
+  }).join('');
   updateWordScorePreview();
 }
 
@@ -654,8 +707,12 @@ function updateWordScorePreview() {
   const el = document.getElementById('hx-word-score-hud');
   if (!el) return;
 
-  const digraphLetterCount = hxDigraphSelected.reduce((n, d) => n + d.digraph.length, 0);
-  if (hxSelected.length + digraphLetterCount < 4) {
+  // Each chain item (grid tile OR digraph tile) counts as 1 unit.
+  // Minimum display threshold: need at least 4 actual letters in the word.
+  const actualLetterCount = hxChain.reduce((n, item) => {
+    return n + (item.kind === 'grid' ? 1 : item.dTile.digraph.length);
+  }, 0);
+  if (actualLetterCount < 4) {
     el.textContent = '';
     return;
   }
@@ -663,35 +720,22 @@ function updateWordScorePreview() {
   // Resolve rune wildcards optimistically (use '?' placeholder for display
   // if they haven't been resolved yet — we mirror resolveLetters' alphabet
   // scan but only need the letters we know for a rough score estimate).
-  const knownLetters = hxSelected.map(t => {
+  const gridTiles = chainGridTiles();
+  const knownLetters = gridTiles.map(t => {
     if (t.tileType !== 'rune') return t.letter;
     return t.chosenLetter || null;
   });
   const runeCount = knownLetters.filter(l => l === null).length;
 
-  // For a meaningful preview even with runes, estimate using known letters
-  // and count rune placeholders as 1 pt each (minimum).
-  // Digraph letters add to both the total letter count and base score.
-  const wordLength = hxSelected.length + digraphLetterCount;
+  // tileCount drives lengthMultipliers (each tile — grid or digraph — counts as 1)
+  const tileCount = hxChain.length;
   let base = 0;
   knownLetters.forEach(l => { base += l ? (letterPoints[l] || 1) : 1; });
-  hxDigraphSelected.forEach(d => { base += d.points; });
-  const lenMult = lengthMultipliers[wordLength] || 1;
+  chainDigraphItems().forEach(d => { base += d.points; });
+  const lenMult = lengthMultipliers[tileCount] || 1;
 
-  const hasPrism = hxSelected.some(t => t.tileType === 'prism');
-  const GEM_MULTIPLIERS = {
-    gemEmerald:   2,
-    gemGold:      3,
-    gemSapphire:  4,
-    gemPearl:     5,
-    gemTanzanite: 6,
-    gemRuby:      7,
-  };
-  let gemMult = 1;
-  hxSelected.forEach(t => {
-    if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
-    else if (t.tileType === 'gemDiamond') gemMult *= wordLength;
-  });
+  const hasPrism = gridTiles.some(t => t.tileType === 'prism');
+  const gemMult  = calcGemMult(gridTiles, tileCount);
 
   const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
   const runeNote = runeCount > 0 ? '~' : '';
@@ -699,8 +743,9 @@ function updateWordScorePreview() {
 }
 
 function clearSelection() {
-  hxSelected.forEach(t => t.setSelected(false));
-  hxSelected = [];
+  hxChain.forEach(item => { if (item.kind === 'grid') item.tile.setSelected(false); });
+  hxChain = [];
+  renderDigraphTray();
   updateWordDisplay();
 }
 
@@ -778,7 +823,7 @@ function renderDigraphTray() {
   hxState.digraphHand.forEach(dTile => {
     const btn = document.createElement('button');
     btn.className = 'hx-digraph-tile';
-    if (hxDigraphSelected.includes(dTile)) btn.classList.add('selected');
+    if (hxChain.some(i => i.kind === 'digraph' && i.dTile === dTile)) btn.classList.add('selected');
     btn.innerHTML =
       `<span class="hx-dg-letters">${dTile.digraph}</span>` +
       `<span class="hx-dg-pts">${dTile.points}pt</span>`;
@@ -791,12 +836,19 @@ function removeDigraphTray() {
   document.getElementById('hx-digraph-tray')?.remove();
 }
 
+/**
+ * Tap a digraph tile to add it to the chain at the current end position
+ * (after all currently staged items), or remove it if already staged.
+ * Because the chain preserves insertion order, a player can pre-stage
+ * digraphs BEFORE starting a grid drag — they naturally become the
+ * prefix of the word (e.g., tap TH → drag A-T → "THAT").
+ */
 function toggleDigraphSelection(dTile) {
-  const idx = hxDigraphSelected.indexOf(dTile);
-  if (idx !== -1) {
-    hxDigraphSelected.splice(idx, 1);
+  const chainIdx = hxChain.findIndex(i => i.kind === 'digraph' && i.dTile === dTile);
+  if (chainIdx !== -1) {
+    hxChain.splice(chainIdx, 1);
   } else {
-    hxDigraphSelected.push(dTile);
+    hxChain.push({ kind: 'digraph', dTile });
   }
   renderDigraphTray();
   updateWordDisplay();
@@ -834,9 +886,14 @@ function setupPointerEvents() {
       return;
     }
 
-    clearSelection();
-    hxSelected = [tile];
+    // Preserve any digraphs that are already staged in the chain
+    // (allows pre-staging: e.g. tap TH → drag A-T → submit "THAT").
+    // Only clear previously selected GRID tiles; digraph items stay.
+    const stagedDigraphs = hxChain.filter(i => i.kind === 'digraph');
+    hxChain.filter(i => i.kind === 'grid').forEach(i => i.tile.setSelected(false));
+    hxChain = [...stagedDigraphs, { kind: 'grid', tile }];
     tile.setSelected(true);
+    renderDigraphTray();
     updateWordDisplay();
   }
 
@@ -849,13 +906,15 @@ function setupPointerEvents() {
       const dx = e.clientX - pendingRuneStartPos.x;
       const dy = e.clientY - pendingRuneStartPos.y;
       if (Math.sqrt(dx * dx + dy * dy) > TAP_MOVEMENT_THRESHOLD_PX) {
-        // Treat as drag — promote rune tile into the selection chain
+        // Treat as drag — promote rune tile into the chain (after any staged digraphs)
         const runeTile      = pendingRuneTile;
         pendingRuneTile     = null;
         pendingRuneStartPos = null;
-        clearSelection();
-        hxSelected = [runeTile];
+        const stagedDigraphs = hxChain.filter(i => i.kind === 'digraph');
+        hxChain.filter(i => i.kind === 'grid').forEach(i => i.tile.setSelected(false));
+        hxChain = [...stagedDigraphs, { kind: 'grid', tile: runeTile }];
         runeTile.setSelected(true);
+        renderDigraphTray();
         updateWordDisplay();
         // Fall through to normal move logic below
       } else {
@@ -866,24 +925,33 @@ function setupPointerEvents() {
     const tile = tileFromElement(document.elementFromPoint(e.clientX, e.clientY));
     if (!tile) return;
 
-    // Allow backtracking to the previous tile
-    if (hxSelected.length >= 2 && tile === hxSelected[hxSelected.length - 2]) {
-      const removed = hxSelected.pop();
-      removed.setSelected(false);
+    // Current grid tiles in chain (for adjacency checks and backtracking)
+    const gridTiles = chainGridTiles();
+
+    // Allow backtracking to the second-to-last GRID tile.
+    // Remove the last grid tile AND any digraphs appended after it.
+    if (gridTiles.length >= 2 && tile === gridTiles[gridTiles.length - 2]) {
+      const lastGridChainIdx = hxChain.reduce(
+        (acc, item, idx) => item.kind === 'grid' ? idx : acc, -1,
+      );
+      const removed = hxChain.splice(lastGridChainIdx);
+      removed.forEach(item => { if (item.kind === 'grid') item.tile.setSelected(false); });
+      renderDigraphTray();
       updateWordDisplay();
       return;
     }
 
-    // Don't re-add already selected tile
-    if (hxSelected.includes(tile)) return;
+    // Don't re-add already selected grid tile
+    if (gridTiles.includes(tile)) return;
 
-    // Must be adjacent to the last tile
-    const last = hxSelected[hxSelected.length - 1];
-    if (!last || !areNeighbors(last, tile)) return;
+    // Must be adjacent to the last GRID tile in the chain (digraphs don't affect adjacency)
+    const lastGrid = gridTiles[gridTiles.length - 1];
+    if (!lastGrid || !areNeighbors(lastGrid, tile)) return;
 
-    hxSelected.push(tile);
+    hxChain.push({ kind: 'grid', tile });
     tile.setSelected(true);
-    const swipeIndex = Math.max(1, Math.min(25, hxSelected.length));
+    // +1 because gridTiles was captured before this push, so its length is one behind
+    const swipeIndex = Math.max(1, Math.min(25, gridTiles.length + 1));
     playSound('sfxSwipe' + swipeIndex);
     updateWordDisplay();
   }
@@ -901,8 +969,8 @@ function setupPointerEvents() {
       return;
     }
 
-    // Auto-submit the word when the drag ends
-    if (hxState.active && !hxState.gameOver && hxSelected.length > 0) {
+    // Auto-submit when the drag ends — requires at least one grid tile in chain
+    if (hxState.active && !hxState.gameOver && chainGridTiles().length > 0) {
       submitHexacoreWord();
     }
   }
@@ -964,15 +1032,20 @@ function resolveLetters(selectedTiles) {
 
 /* ── Word submission ───────────────────────────────────────────── */
 async function submitHexacoreWord() {
-  // Too few tiles — silently cancel (accidental drag)
-  // (Digraph letters count toward minimum, but we need at least 1 grid tile selected)
-  const digraphLetterCount = hxDigraphSelected.reduce((n, d) => n + d.digraph.length, 0);
-  if (hxSelected.length + digraphLetterCount < 4) {
+  // Separate grid tiles and digraph tiles from the chain (preserving order)
+  const gridTiles    = chainGridTiles();
+  const usedDigraphs = chainDigraphItems();
+
+  // Minimum: need at least 4 actual letters for a valid word
+  // (each grid tile = 1 letter, each digraph = its 2-letter string)
+  const actualLetterCount = gridTiles.length +
+    usedDigraphs.reduce((n, d) => n + d.digraph.length, 0);
+  if (actualLetterCount < 4) {
     clearSelection();
     return;
   }
 
-  const resolved = resolveLetters(hxSelected);
+  const resolved = resolveLetters(gridTiles);
   if (!resolved) {
     playSound('sfxAlert');
     showAlert('Word not found!');
@@ -980,10 +1053,12 @@ async function submitHexacoreWord() {
     return;
   }
 
-  // Build the full word including any staged digraph letters at the end
-  const digraphLetters = hxDigraphSelected.flatMap(d => d.digraph.split(''));
-  const allLetters     = [...resolved, ...digraphLetters];
-  const word           = allLetters.join('');
+  // Build the word string in chain order (grid letters resolved, digraph strings inline)
+  const resolvedMap = new Map(gridTiles.map((t, i) => [t, resolved[i]]));
+  const word = hxChain.map(item => {
+    if (item.kind === 'grid')    return resolvedMap.get(item.tile);
+    return item.dTile.digraph;
+  }).join('');
 
   if (!isValidWord(word)) {
     playSound('sfxAlert');
@@ -992,34 +1067,25 @@ async function submitHexacoreWord() {
     return;
   }
 
-  // Score — total letter count drives the length multiplier
-  const hasPrism = hxSelected.some(t => t.tileType === 'prism');
-  const hasEmber = hxSelected.some(t => t.tileType === 'ember');
+  // ── Scoring ────────────────────────────────────────────────────
+  // Each chain item (grid tile OR digraph tile) counts as 1 tile.
+  // tileCount drives lengthMultipliers; base score sums all letter pts.
+  const tileCount = hxChain.length;
+  const hasPrism  = gridTiles.some(t => t.tileType === 'prism');
+  const hasEmber  = gridTiles.some(t => t.tileType === 'ember');
   let base = 0;
   resolved.forEach(l => { base += letterPoints[l] || 1; });
-  hxDigraphSelected.forEach(d => { base += d.points; });
-  const lenMult = lengthMultipliers[word.length] || 1;
+  usedDigraphs.forEach(d => { base += d.points; });
+  const lenMult = lengthMultipliers[tileCount] || 1;
 
   // Gem multipliers stack multiplicatively
-  let gemMult = 1;
-  const GEM_MULTIPLIERS = {
-    gemEmerald:   2,
-    gemGold:      3,
-    gemSapphire:  4,
-    gemPearl:     5,
-    gemTanzanite: 6,
-    gemRuby:      7,
-  };
-  hxSelected.forEach(t => {
-    if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
-    else if (t.tileType === 'gemDiamond') gemMult *= word.length;
-  });
+  const gemMult   = calcGemMult(gridTiles, tileCount);
 
   const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
 
   hxWordCount++;
 
-  // Award a digraph tile every 10 words (max hand size 5)
+  // Award a digraph tile every DIGRAPH_AWARD_INTERVAL words (max hand size 5)
   if (hxWordCount % DIGRAPH_AWARD_INTERVAL === 0) awardDigraphTile();
 
   const oldScore = hxState.score;
@@ -1029,24 +1095,21 @@ async function submitHexacoreWord() {
   updateScoreDisplay();
   animateScoreHud(oldScore, hxState.score);
 
-  // Consume staged digraph tiles from hand
-  const usedDigraphs = [...hxDigraphSelected];
-  hxDigraphSelected = [];
+  // Consume used digraph tiles from the hand (clearSelection clears the chain)
+  const consumed = [...gridTiles];
+  clearSelection();
   usedDigraphs.forEach(d => {
     const idx = hxState.digraphHand.indexOf(d);
     if (idx !== -1) hxState.digraphHand.splice(idx, 1);
   });
   renderDigraphTray();
 
-  const consumed = [...hxSelected];
-  clearSelection();
-
   playSound('sfxSuccess');
   // Consume tiles → gravity → ember advance → refill → special spawns
   await consumeAndRefill(consumed);
 
   if (!hxState.gameOver) {
-    // Spawn gem reward based on word length
+    // Gem reward based on actual word letter count (impressiveness of the word)
     spawnGemRewardForWord(word.length);
     // Fire bonus mirrors word reward
     if (hasEmber) spawnGemRewardForWord(word.length);
@@ -1572,8 +1635,7 @@ export function startHexacore() {
     gameOver:        false,
     active:          false, // set to true after intro animation completes
   });
-  hxSelected           = [];
-  hxDigraphSelected    = [];
+  hxChain              = [];
   hxPointerDown        = false;
   pendingRuneTile      = null;
   pendingRuneStartPos  = null;
