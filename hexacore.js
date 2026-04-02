@@ -36,25 +36,26 @@ const SCORE_TICK_MS             = 700; // ms duration for score count-up animati
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
- * High-frequency vowels + consonants ensure dense playable word coverage.      */
+ * High-frequency vowels + consonants ensure dense playable word coverage.
+ * Digraph slots (~15%) are drawn from DIGRAPH_POOL at tile-creation time.      */
 const HX_LETTER_POOL = [
-  // Vowels
-  ...Array(12).fill('E'),  // 12
-  ...Array(9).fill('A'),   //  9
-  ...Array(9).fill('I'),   //  9
-  ...Array(8).fill('O'),   //  8
+  // Vowels (~35 total, reduced from 42 to accommodate digraph slots)
+  ...Array(10).fill('E'),  // 10
+  ...Array(7).fill('A'),   //  7
+  ...Array(7).fill('I'),   //  7
+  ...Array(7).fill('O'),   //  7
   ...Array(4).fill('U'),   //  4
 
-  // High-frequency consonants
-  ...Array(6).fill('N'),   //  6
-  ...Array(6).fill('R'),   //  6
-  ...Array(6).fill('T'),   //  6
-  ...Array(4).fill('L'),   //  4
-  ...Array(4).fill('S'),   //  4
-  ...Array(4).fill('D'),   //  4
+  // High-frequency consonants (~48 total, reduced from 56)
+  ...Array(5).fill('N'),   //  5
+  ...Array(5).fill('R'),   //  5
+  ...Array(5).fill('T'),   //  5
+  ...Array(3).fill('L'),   //  3
+  ...Array(3).fill('S'),   //  3
+  ...Array(3).fill('D'),   //  3
 
   // Mid-frequency consonants
-  ...Array(3).fill('G'),   //  3
+  ...Array(2).fill('G'),   //  2
   ...Array(2).fill('B'),   //  2
   ...Array(2).fill('C'),   //  2
   ...Array(2).fill('F'),   //  2
@@ -63,10 +64,13 @@ const HX_LETTER_POOL = [
   ...Array(2).fill('P'),   //  2
   ...Array(2).fill('V'),   //  2
   ...Array(2).fill('W'),   //  2
-  ...Array(2).fill('Y'),   //  2
+  'Y',                     //  1
 
   // Rare letters — 1 each (still possible, not dominant)
   'J', 'K', 'Q', 'X', 'Z',
+
+  // Digraph slots — sentinel value; resolved to a random digraph at draw time
+  ...Array(15).fill('__DIGRAPH__'),  // 15
 ];
 
 /* ── Digraph pool — double-letter bonus tiles ───────────────────── */
@@ -137,27 +141,39 @@ const HX_VOWELS = new Set(['A','E','I','O','U']);
 const HX_VOWEL_POOL = ['A','A','A','E','E','E','E','I','I','I','O','O','O','U','U'];
 
 /**
- * Returns a letter from HX_LETTER_POOL, but if all hex-grid neighbours of
- * position (q, r) are already consonants, biases strongly toward a vowel
- * so that isolated consonant islands are broken up.
+ * Samples HX_LETTER_POOL and resolves any digraph sentinel.
+ * Returns { isDigraph: false, letter } or { isDigraph: true, digraph, points }.
+ * Applies vowel-bias correction: if all neighbours are consonants (and none
+ * are digraph tiles), 75% chance to force a vowel instead.
  */
-function randomLetterForPos(q, r) {
+function randomLetterOrDigraphForPos(q, r) {
   const neighborKeys = [
     hxKey(q + 1, r),  hxKey(q - 1, r),
     hxKey(q, r + 1),  hxKey(q, r - 1),
     hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
   ];
-  const neighborLetters = neighborKeys
-    .map(k => hxTileMap.get(k)?.letter)
-    .filter(Boolean);
 
-  const hasVowelNeighbor = neighborLetters.some(l => HX_VOWELS.has(l));
+  // A digraph neighbour counts as a vowel neighbour (most digraphs contain vowels)
+  const hasVowelNeighbor = neighborKeys.some(k => {
+    const t = hxTileMap.get(k);
+    if (!t) return false;
+    if (t.tileType === 'digraph') return true;
+    return HX_VOWELS.has(t.letter);
+  });
 
-  // If surrounded by consonants, 75% chance to force a vowel
-  if (!hasVowelNeighbor && neighborLetters.length >= 2 && Math.random() < 0.75) {
-    return HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)];
+  const neighborCount = neighborKeys.filter(k => hxTileMap.has(k)).length;
+
+  // If surrounded by consonants, 75% chance to force a vowel (never force a digraph here)
+  if (!hasVowelNeighbor && neighborCount >= 2 && Math.random() < 0.75) {
+    return { isDigraph: false, letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)] };
   }
-  return HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+
+  const drawn = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+  if (drawn === '__DIGRAPH__') {
+    const { digraph, points } = randomDigraph();
+    return { isDigraph: true, digraph, points };
+  }
+  return { isDigraph: false, letter: drawn };
 }
 
 function areNeighbors(a, b) {
@@ -327,7 +343,7 @@ function applyTileType(tile) {
     poly.classList.add('hx-digraph');
     tile.textLetter.textContent = tile.letter;
     tile.textPoint.textContent  = String(tile.point);
-    tile.textLetter.setAttribute('font-size', '17');
+    tile.textLetter.setAttribute('font-size', '21');
     addTypeIcon(tile, '❋', 11, '#2dd4bf');
   } else if (tile.tileType === 'ember') {
     poly.classList.add('hx-ember');
@@ -448,16 +464,23 @@ function buildGrid() {
       const s = -q - r;
       if (Math.abs(s) > GRID_RADIUS) continue;
 
-      const letter = randomLetterForPos(q, r);
+      const result = randomLetterOrDigraphForPos(q, r);
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
         key:        hxKey(q, r),
-        letter,
-        pointValue: letterPoints[letter] || 1,
+        letter:     result.isDigraph ? result.digraph : result.letter,
+        pointValue: result.isDigraph ? result.points : (letterPoints[result.letter] || 1),
       });
 
-      tile.tileType = 'normal';
+      if (result.isDigraph) {
+        tile.tileType = 'digraph';
+        tile.point    = result.points;
+        hxState.digraphTiles.push(tile);
+        applyTileType(tile);
+      } else {
+        tile.tileType = 'normal';
+      }
       tile.s        = s;
 
       hxState.tiles.push(tile);
@@ -1059,15 +1082,22 @@ async function refillGrid() {
     for (let r = r_min; r <= r_max; r++) {
       if (hxTileMap.has(hxKey(q, r))) continue;
 
-      const letter = randomLetterForPos(q, r);
+      const result = randomLetterOrDigraphForPos(q, r);
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
         key:        hxKey(q, r),
-        letter,
-        pointValue: letterPoints[letter] || 1,
+        letter:     result.isDigraph ? result.digraph : result.letter,
+        pointValue: result.isDigraph ? result.points : (letterPoints[result.letter] || 1),
       });
-      tile.tileType = 'normal';
+      if (result.isDigraph) {
+        tile.tileType = 'digraph';
+        tile.point    = result.points;
+        hxState.digraphTiles.push(tile);
+        applyTileType(tile);
+      } else {
+        tile.tileType = 'normal';
+      }
       tile.s        = -q - r;
 
       hxState.tiles.push(tile);
@@ -1222,10 +1252,6 @@ function spawnSpecialTiles() {
   // Every 5 words → 1 new prism in top 3 rows
   if (hxWordCount % 5 === 0) {
     spawnSpecialInRows('prism', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-  }
-  // Every 6 words → 1 new digraph in top 3 rows
-  if (hxWordCount % 6 === 0) {
-    spawnSpecialInRows('digraph', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
   }
   // Every 7 words → 1 new rune in top 3 rows
   if (hxWordCount % 7 === 0) {
