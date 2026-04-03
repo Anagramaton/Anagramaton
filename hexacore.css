@@ -761,3 +761,28 @@ body.hx-active #hex-grid {
   white-space: nowrap;
 }
 
+/* ── Portal opened notification — prominent centered banner ─────── */
+.hx-portal-notif {
+  position: fixed;
+  top: 28%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #e9d5ff;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  pointer-events: none;
+  z-index: 600;
+  white-space: nowrap;
+  text-shadow:
+    0 0 16px rgba(192, 84, 252, 1),
+    0 0 36px rgba(139, 92, 246, 0.7);
+  animation: hx-portal-notif-anim 2.2s ease-out forwards;
+}
+@keyframes hx-portal-notif-anim {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.88); }
+  18%  { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1.06); }
+  55%  { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1.0);  }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.94); }
+}

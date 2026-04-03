@@ -391,6 +391,11 @@ function applyTileType(tile) {
     addTypeIcon(tile, '◆', 12, '#e0f2fe');
   } else if (tile.tileType === 'portal') {
     poly.classList.add('hx-portal');
+    // Restore actual letter/point display (may have been overwritten if tile was a rune showing '?')
+    if (tile.letter) tile.textLetter.textContent = tile.letter;
+    tile.textPoint.textContent = String(
+      tile.point !== undefined ? tile.point : (letterPoints[tile.letter?.[0]] || 1)
+    );
     addTypeIcon(tile, '⬡', 16, '#c084fc');
   }
 }
@@ -1332,6 +1337,22 @@ function spawnSpecialInRows(type, rows) {
 
 /* ── Portal system ─────────────────────────────────────────────── */
 
+/** Remove a tile from whichever type-specific state array it currently belongs to. */
+function removeTileFromTypeState(tile) {
+  const type = tile.tileType;
+  if      (type === 'digraph')      removeFrom(hxState.digraphTiles,       tile);
+  else if (type === 'ember')        removeFrom(hxState.emberTiles,         tile);
+  else if (type === 'prism')        removeFrom(hxState.prismTiles,         tile);
+  else if (type === 'rune')         removeFrom(hxState.runeTiles,          tile);
+  else if (type === 'gemEmerald')   removeFrom(hxState.gemEmeraldTiles,    tile);
+  else if (type === 'gemGold')      removeFrom(hxState.gemGoldTiles,       tile);
+  else if (type === 'gemSapphire')  removeFrom(hxState.gemSapphireTiles,   tile);
+  else if (type === 'gemPearl')     removeFrom(hxState.gemPearlTiles,      tile);
+  else if (type === 'gemTanzanite') removeFrom(hxState.gemTanzaniteTiles,  tile);
+  else if (type === 'gemRuby')      removeFrom(hxState.gemRubyTiles,       tile);
+  else if (type === 'gemDiamond')   removeFrom(hxState.gemDiamondTiles,    tile);
+}
+
 function updatePortalHud() {
   const hud = document.getElementById('hx-portal-hud');
   if (!hud) return;
@@ -1343,19 +1364,32 @@ function updatePortalHud() {
   }
 }
 
+/** Show a brief centered banner so the player never misses a portal opening. */
+function showPortalNotification() {
+  const notif = document.createElement('div');
+  notif.className = 'hx-portal-notif';
+  notif.textContent = '⬡ PORTAL OPENED';
+  document.body.appendChild(notif);
+  notif.addEventListener('animationend', () => notif.remove(), { once: true });
+}
+
 function spawnPortalPair() {
-  // Try each pair in random order
-  const shuffled = [...PORTAL_CORNER_PAIRS].sort(() => Math.random() - 0.5);
+  // Try each pair in random order (Fisher-Yates shuffle)
+  const shuffled = [...PORTAL_CORNER_PAIRS];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
   for (const pair of shuffled) {
     const tileA = hxTileMap.get(hxKey(pair.a.q, pair.a.r));
     const tileB = hxTileMap.get(hxKey(pair.b.q, pair.b.r));
     if (!tileA || !tileB) continue;
-    // Only transform normal/digraph tiles
-    if ((tileA.tileType !== 'normal' && tileA.tileType !== 'digraph') ||
-        (tileB.tileType !== 'normal' && tileB.tileType !== 'digraph')) continue;
+    // Skip only if a corner is already a portal — any other tile type can be overwritten
+    if (tileA.tileType === 'portal' || tileB.tileType === 'portal') continue;
 
-    if (tileA.tileType === 'digraph') removeFrom(hxState.digraphTiles, tileA);
-    if (tileB.tileType === 'digraph') removeFrom(hxState.digraphTiles, tileB);
+    // Remove both tiles from their current type-specific state arrays before transforming
+    removeTileFromTypeState(tileA);
+    removeTileFromTypeState(tileB);
 
     tileA.tileType = 'portal';
     tileB.tileType = 'portal';
@@ -1412,6 +1446,7 @@ function spawnPortalPair() {
       arcId,
     });
 
+    showPortalNotification();
     updatePortalHud();
     return;
   }
