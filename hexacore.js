@@ -668,21 +668,33 @@ function ensureHud() {
   const portalHud = document.createElement('div');
   portalHud.id = 'hx-portal-hud';
   document.body.appendChild(portalHud);
+
+  const currentWordHud = document.createElement('div');
+  currentWordHud.id = 'hx-current-word';
+  document.body.appendChild(currentWordHud);
 }
 
 function removeHud() {
   document.getElementById('hx-score-hud')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-portal-hud')?.remove();
+  document.getElementById('hx-current-word')?.remove();
 }
 
 /* ── Word display / selection ──────────────────────────────────── */
 function updateWordDisplay() {
-  const el = document.getElementById('current-word');
-  if (!el) return;
-  el.textContent = hxSelected
+  const word = hxSelected
     .map(t => t.tileType === 'rune' ? '?' : t.letter)
     .join('');
+
+  // Regular game word display (hidden during hexacore by CSS, but kept in sync)
+  const el = document.getElementById('current-word');
+  if (el) el.textContent = word;
+
+  // Hexacore live word HUD — always visible during play
+  const hxEl = document.getElementById('hx-current-word');
+  if (hxEl) hxEl.textContent = word;
+
   updateWordScorePreview();
 }
 

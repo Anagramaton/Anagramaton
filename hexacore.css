@@ -761,6 +761,28 @@ body.hx-active #hex-grid {
   white-space: nowrap;
 }
 
+/* ── Live word being built ──────────────────────────────────────── */
+#hx-current-word {
+  position: fixed;
+  bottom: clamp(155px, 22vh, 220px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 1.6em;
+  color: #f1f5f9;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  pointer-events: none;
+  z-index: 500;
+  white-space: nowrap;
+  text-shadow: 0 0 12px rgba(76, 201, 240, 0.7);
+  transition: opacity 0.08s;
+}
+#hx-current-word:empty {
+  opacity: 0;
+}
+
 /* ── Portal opened notification — prominent centered banner ─────── */
 .hx-portal-notif {
   position: fixed;
