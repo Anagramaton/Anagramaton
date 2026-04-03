@@ -660,3 +660,104 @@ body.hx-active #hex-grid {
   pointer-events: none;
 }
 
+/* ── Portal tile — slow vortex hue-spin with layered shadow sweep ── */
+.hx-portal {
+  fill: url(#hx-portal-gradient);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-portal-vortex 2.4s linear infinite;
+}
+@keyframes hx-portal-vortex {
+  0%   {
+    filter: hue-rotate(0deg)
+            drop-shadow(0 0  8px rgba(192,  84, 252, 0.9))
+            drop-shadow(0 0 18px rgba(139,  92, 246, 0.5));
+    transform: rotate(0deg) scale(1.0);
+  }
+  25%  {
+    filter: hue-rotate(90deg)
+            drop-shadow(0 0 14px rgba(96,  165, 250, 1))
+            drop-shadow(0 0 28px rgba(59,  130, 246, 0.6));
+    transform: rotate(3deg) scale(1.03);
+  }
+  50%  {
+    filter: hue-rotate(180deg)
+            drop-shadow(0 0  8px rgba(52,  211, 153, 0.9))
+            drop-shadow(0 0 20px rgba(16,  185, 129, 0.5));
+    transform: rotate(0deg) scale(1.0);
+  }
+  75%  {
+    filter: hue-rotate(270deg)
+            drop-shadow(0 0 14px rgba(251, 113,  133, 1))
+            drop-shadow(0 0 28px rgba(239,  68,  68, 0.6));
+    transform: rotate(-3deg) scale(1.03);
+  }
+  100% {
+    filter: hue-rotate(360deg)
+            drop-shadow(0 0  8px rgba(192,  84, 252, 0.9))
+            drop-shadow(0 0 18px rgba(139,  92, 246, 0.5));
+    transform: rotate(0deg) scale(1.0);
+  }
+}
+
+/* ── Portal connecting arc ─────────────────────────────────────── */
+.hx-portal-arc {
+  fill: none;
+  stroke: rgba(192, 84, 252, 0.55);
+  stroke-width: 2;
+  stroke-dasharray: 8 5;
+  pointer-events: none;
+  animation: hx-portal-arc-march 1s linear infinite;
+}
+@keyframes hx-portal-arc-march {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -26; }
+}
+
+/* ── Portal spawn animation ────────────────────────────────────── */
+@keyframes hx-portal-spawn-anim {
+  0%   { opacity: 0;   transform: scale(0.3) rotate(-30deg);
+         filter: hue-rotate(0deg) brightness(0.5) drop-shadow(0 0 0px transparent); }
+  30%  { opacity: 1;   transform: scale(1.3) rotate(10deg);
+         filter: hue-rotate(120deg) brightness(3.5) drop-shadow(0 0 28px rgba(192, 84, 252, 1)); }
+  65%  { opacity: 1;   transform: scale(0.95) rotate(-4deg);
+         filter: hue-rotate(240deg) brightness(1.6) drop-shadow(0 0 14px rgba(139, 92, 246, 0.9)); }
+  100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
+         filter: hue-rotate(360deg) drop-shadow(0 0 8px rgba(192, 84, 252, 0.9)); }
+}
+.hx-portal-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-portal-spawn-anim 0.68s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Portal consumed animation ─────────────────────────────────── */
+@keyframes hx-portal-burst {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  25%  { filter: hue-rotate(90deg) brightness(5) drop-shadow(0 0 30px rgba(192, 84, 252, 1))
+                                   drop-shadow(0 0 14px rgba(139, 92, 246, 0.9)); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+.hx-consumed-portal {
+  animation:
+    hx-tile-pop-out   0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-portal-burst   0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+/* ── Portal HUD element ─────────────────────────────────────────── */
+#hx-portal-hud {
+  position: fixed;
+  bottom: clamp(128px, 18vh, 186px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: #c084fc;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  z-index: 500;
+  white-space: nowrap;
+}
+

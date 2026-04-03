@@ -86,6 +86,15 @@ function randomDigraph() {
   return { digraph: dg, points: pts };
 }
 
+/* ── Portal corner pairs (opposite corners on the radius-4 hex grid) ── */
+const PORTAL_CORNER_PAIRS = [
+  { a: { q:  0, r: -4 }, b: { q:  0, r:  4 } },  // top ↔ bottom
+  { a: { q:  4, r: -4 }, b: { q: -4, r:  4 } },  // top-right ↔ bottom-left
+  { a: { q:  4, r:  0 }, b: { q: -4, r:  0 } },  // right ↔ left
+];
+const PORTAL_DURATION_WORDS = 3;  // words a portal pair stays open
+const PORTAL_ARC_BULGE      = 120; // px: how far the connecting arc bows outward from the grid center
+
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
   score:           0,
@@ -102,6 +111,7 @@ const hxState = {
   gemTanzaniteTiles: [],
   gemRubyTiles:      [],
   gemDiamondTiles:   [],
+  portalTiles:     [],
   gameOver:        false,
   active:          false,
 };
@@ -114,6 +124,8 @@ let hxWordCount         = 0;
 let hxTileMap           = new Map(); // `q,r` → tile object
 let hxPointerCleanup    = null;
 let hxUpdateViewForBoard = null;
+let hxPortalPairs       = [];   // active portal pairs { entryQ, entryR, exitQ, exitR, wordsRemaining, arcId }
+let _hxPortalArcIndex   = 0;   // counter for unique arc IDs
 
 /* ── Pure helpers ──────────────────────────────────────────────── */
 function hxKey(q, r) { return `${q},${r}`; }
@@ -331,7 +343,7 @@ function addTypeIcon(tile, glyph, fontSize, fill) {
 function applyTileType(tile) {
   const poly = tile.element.querySelector('polygon');
   poly.classList.remove(
-    'hx-ember', 'hx-prism', 'hx-rune', 'hx-digraph',
+    'hx-ember', 'hx-prism', 'hx-rune', 'hx-digraph', 'hx-portal',
     'hx-gem-emerald', 'hx-gem-gold', 'hx-gem-sapphire',
     'hx-gem-pearl', 'hx-gem-tanzanite', 'hx-gem-ruby', 'hx-gem-diamond',
   );
@@ -377,6 +389,9 @@ function applyTileType(tile) {
   } else if (tile.tileType === 'gemDiamond') {
     poly.classList.add('hx-gem-diamond');
     addTypeIcon(tile, '◆', 12, '#e0f2fe');
+  } else if (tile.tileType === 'portal') {
+    poly.classList.add('hx-portal');
+    addTypeIcon(tile, '⬡', 16, '#c084fc');
   }
 }
 
@@ -437,6 +452,7 @@ function injectSvgDefs(svg) {
   }
   ensureLinearGradient('hx-prism-gradient',    '#a855f7', '#06b6d4');
   ensureLinearGradient('hx-digraph-gradient',  '#0d9488', '#2dd4bf');
+  ensureLinearGradient('hx-portal-gradient',   '#581c87', '#c084fc');
   ensureLinearGradient('hx-gem-emerald-gradient',   '#16a34a', '#4ade80');
   ensureLinearGradient('hx-gem-gold-gradient',       '#d97706', '#fcd34d');
   ensureLinearGradient('hx-gem-sapphire-gradient',   '#1d4ed8', '#93c5fd');
@@ -643,11 +659,16 @@ function ensureHud() {
   const wordHud = document.createElement('div');
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
+
+  const portalHud = document.createElement('div');
+  portalHud.id = 'hx-portal-hud';
+  document.body.appendChild(portalHud);
 }
 
 function removeHud() {
   document.getElementById('hx-score-hud')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();
+  document.getElementById('hx-portal-hud')?.remove();
 }
 
 /* ── Word display / selection ──────────────────────────────────── */
@@ -903,6 +924,7 @@ async function submitHexacoreWord() {
   stopSound('sfxFunk');
 
   if (!hxState.gameOver) {
+    tickPortals();
     playSound('sfxGemCollect');
     // Spawn gem reward based on word length
     spawnGemRewardForWord(word.length);
@@ -922,7 +944,7 @@ async function consumeAndRefill(tilesToRemove) {
   tilesToRemove.forEach((tile, idx) => {
     tile.element.style.setProperty('--tile-idx', String(idx));
     const type = tile.tileType;
-    if (type === 'ember' || type === 'prism' || type === 'rune') {
+    if (type === 'ember' || type === 'prism' || type === 'rune' || type === 'portal') {
       // Consumed-special class replaces hx-tile-removing with combined animation
       tile.element.classList.add(`hx-consumed-${type}`);
     } else if (GEM_TYPES.has(type)) {
@@ -949,6 +971,14 @@ async function consumeAndRefill(tilesToRemove) {
     removeFrom(hxState.gemTanzaniteTiles,  tile);
     removeFrom(hxState.gemRubyTiles,       tile);
     removeFrom(hxState.gemDiamondTiles,    tile);
+    removeFrom(hxState.portalTiles,        tile);
+    // Close any portal pair that referenced this tile
+    for (const pair of [...hxPortalPairs]) {
+      if ((pair.entryQ === tile.q && pair.entryR === tile.r) ||
+          (pair.exitQ  === tile.q && pair.exitR  === tile.r)) {
+        closePortal(pair);
+      }
+    }
     hxTileMap.delete(hxKey(tile.q, tile.r));
   });
 
@@ -1058,6 +1088,7 @@ async function advanceEmberTiles() {
       removeFrom(hxState.gemTanzaniteTiles, displaced);
       removeFrom(hxState.gemRubyTiles,      displaced);
       removeFrom(hxState.gemDiamondTiles,   displaced);
+      removeFrom(hxState.portalTiles,       displaced);
       hxTileMap.delete(hxKey(target.q, target.r));
     }
 
@@ -1109,8 +1140,13 @@ async function refillGrid() {
       // Hide until the column's stagger delay fires
       tile.element.style.opacity = '0';
 
-      // Spawn from one hex-step above the column's topmost slot
-      colMoves.push({ tile, fromQ: q, fromR: r_min - 1, toQ: q, toR: r });
+      // Spawn from one hex-step above the column's topmost slot,
+      // unless the bottom of this column is a portal entry — in that case
+      // seed tiles from the exit corner's position to simulate teleportation.
+      const portalEntry = hxPortalPairs.find(p => p.entryQ === q && p.entryR === r_max);
+      const spawnFromQ  = portalEntry ? portalEntry.exitQ : q;
+      const spawnFromR  = portalEntry ? portalEntry.exitR : r_min - 1;
+      colMoves.push({ tile, fromQ: spawnFromQ, fromR: spawnFromR, toQ: q, toR: r });
     }
 
     if (colMoves.length > 0) {
@@ -1258,6 +1294,10 @@ function spawnSpecialTiles() {
   if (hxWordCount % 7 === 0) {
     spawnSpecialInRows('rune', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
   }
+  // Every 10 words → open one portal pair
+  if (hxWordCount % 10 === 0) {
+    spawnPortalPair();
+  }
 }
 
 function spawnSpecialInRows(type, rows) {
@@ -1288,6 +1328,121 @@ function spawnSpecialInRows(type, rows) {
   target.element.addEventListener('animationend', () => {
     target.element.classList.remove(spawnClass);
   }, { once: true });
+}
+
+/* ── Portal system ─────────────────────────────────────────────── */
+
+function updatePortalHud() {
+  const hud = document.getElementById('hx-portal-hud');
+  if (!hud) return;
+  if (hxPortalPairs.length === 0) {
+    hud.textContent = '';
+  } else {
+    const minRemaining = Math.min(...hxPortalPairs.map(p => p.wordsRemaining));
+    hud.textContent = `⬡ PORTAL · ${minRemaining}`;
+  }
+}
+
+function spawnPortalPair() {
+  // Try each pair in random order
+  const shuffled = [...PORTAL_CORNER_PAIRS].sort(() => Math.random() - 0.5);
+  for (const pair of shuffled) {
+    const tileA = hxTileMap.get(hxKey(pair.a.q, pair.a.r));
+    const tileB = hxTileMap.get(hxKey(pair.b.q, pair.b.r));
+    if (!tileA || !tileB) continue;
+    // Only transform normal/digraph tiles
+    if ((tileA.tileType !== 'normal' && tileA.tileType !== 'digraph') ||
+        (tileB.tileType !== 'normal' && tileB.tileType !== 'digraph')) continue;
+
+    if (tileA.tileType === 'digraph') removeFrom(hxState.digraphTiles, tileA);
+    if (tileB.tileType === 'digraph') removeFrom(hxState.digraphTiles, tileB);
+
+    tileA.tileType = 'portal';
+    tileB.tileType = 'portal';
+    hxState.portalTiles.push(tileA, tileB);
+    applyTileType(tileA);
+    applyTileType(tileB);
+
+    // Draw SVG arc connecting the two corner tile centers
+    const arcId = `hx-portal-arc-${_hxPortalArcIndex++}`;
+    const pxA   = hxLayout.hexToPixel(new Hex(pair.a.q, pair.a.r));
+    const pxB   = hxLayout.hexToPixel(new Hex(pair.b.q, pair.b.r));
+    const midX  = (pxA.x + pxB.x) / 2;
+    const midY  = (pxA.y + pxB.y) / 2;
+    // Control point bends away from the grid center (500,500)
+    let vx = midX - 500;
+    let vy = midY - 500;
+    const vLen = Math.sqrt(vx * vx + vy * vy);
+    if (vLen < 1) {
+      // Midpoint is at center (symmetric pair) — use right-hand perpendicular
+      const dx   = pxB.x - pxA.x;
+      const dy   = pxB.y - pxA.y;
+      const dLen = Math.sqrt(dx * dx + dy * dy) || 1;
+      vx = dy / dLen;
+      vy = -dx / dLen;
+    } else {
+      vx /= vLen;
+      vy /= vLen;
+    }
+    const cpx = midX + vx * PORTAL_ARC_BULGE;
+    const cpy = midY + vy * PORTAL_ARC_BULGE;
+
+    const arc = document.createElementNS(SVG_NS, 'path');
+    arc.setAttribute('id', arcId);
+    arc.setAttribute('class', 'hx-portal-arc');
+    arc.setAttribute('d', `M ${pxA.x},${pxA.y} Q ${cpx},${cpy} ${pxB.x},${pxB.y}`);
+    arc.setAttribute('pointer-events', 'none');
+    const board = hxSvg?.querySelector('#board');
+    if (board) board.appendChild(arc);
+
+    // Spawn entrance animations
+    tileA.element.classList.add('hx-portal-spawn');
+    tileB.element.classList.add('hx-portal-spawn');
+    tileA.element.addEventListener('animationend', () => {
+      tileA.element.classList.remove('hx-portal-spawn');
+    }, { once: true });
+    tileB.element.addEventListener('animationend', () => {
+      tileB.element.classList.remove('hx-portal-spawn');
+    }, { once: true });
+
+    hxPortalPairs.push({
+      entryQ: pair.a.q, entryR: pair.a.r,
+      exitQ:  pair.b.q, exitR:  pair.b.r,
+      wordsRemaining: PORTAL_DURATION_WORDS,
+      arcId,
+    });
+
+    updatePortalHud();
+    return;
+  }
+}
+
+function closePortal(entry) {
+  const entryTile = hxTileMap.get(hxKey(entry.entryQ, entry.entryR));
+  if (entryTile && entryTile.tileType === 'portal') {
+    entryTile.tileType = 'normal';
+    removeFrom(hxState.portalTiles, entryTile);
+    if (entryTile.element.isConnected) applyTileType(entryTile);
+  }
+  const exitTile = hxTileMap.get(hxKey(entry.exitQ, entry.exitR));
+  if (exitTile && exitTile.tileType === 'portal') {
+    exitTile.tileType = 'normal';
+    removeFrom(hxState.portalTiles, exitTile);
+    if (exitTile.element.isConnected) applyTileType(exitTile);
+  }
+  hxSvg?.querySelector(`#${entry.arcId}`)?.remove();
+  removeFrom(hxPortalPairs, entry);
+  updatePortalHud();
+}
+
+function tickPortals() {
+  for (const entry of [...hxPortalPairs]) {
+    entry.wordsRemaining--;
+    if (entry.wordsRemaining <= 0) {
+      closePortal(entry);
+    }
+  }
+  updatePortalHud();
 }
 
 /* ── Game over ─────────────────────────────────────────────────── */
@@ -1442,6 +1597,7 @@ export function startHexacore() {
     gemTanzaniteTiles: [],
     gemRubyTiles:      [],
     gemDiamondTiles:   [],
+    portalTiles:     [],
     gameOver:        false,
     active:          false, // set to true after intro animation completes
   });
@@ -1450,6 +1606,8 @@ export function startHexacore() {
   hxWordCount          = 0;
   hxTileMap            = new Map();
   hxUpdateViewForBoard = null;
+  hxPortalPairs        = [];
+  _hxPortalArcIndex    = 0;
 
   // Clean up previous pointer listeners
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
