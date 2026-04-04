@@ -28,6 +28,17 @@ const TILE_SPACING             = 1.25;
 const INTRO_ARC_OFFSET         = 60;   // px: horizontal fan spread during pour-in arc
 const REFILL_STAGGER_MS        = 40;   // ms between each column's spawn delay
 
+/* ── Level thresholds ──────────────────────────────────────────── */
+const HX_LEVEL_THRESHOLDS = [0, 200, 500, 1000, 2000, 3500, 5500, 8000, 11000, 15000];
+// Level 1 starts at 0, Level 2 at 200, Level 3 at 500, etc.
+// Beyond index 9, each additional level requires +5000 pts from the previous threshold.
+
+function hxLevelThreshold(level) {
+  if (level <= HX_LEVEL_THRESHOLDS.length) return HX_LEVEL_THRESHOLDS[level - 1];
+  // Beyond defined thresholds: extrapolate +5000 per level
+  return HX_LEVEL_THRESHOLDS[HX_LEVEL_THRESHOLDS.length - 1] + (level - HX_LEVEL_THRESHOLDS.length) * 5000;
+}
+
 /* ── Animation timing constants (easy to tune) ─────────────────── */
 const WORD_TILE_STAGGER_MS      = 55;  // ms stagger between each consumed tile pop-out
 const GRAVITY_STAGGER_MS        = 38;  // ms stagger between tiles in the gravity cascade
@@ -100,6 +111,7 @@ const HX_PORTAL_CORNERS = [
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
   score:           0,
+  level:           1,
   words:           [],
   tiles:           [],
   emberTiles:      [],
@@ -772,6 +784,36 @@ function animateScoreHud(oldScore, newScore) {
   _scoreRafId = requestAnimationFrame(frame);
 }
 
+function updateLevelHud() {
+  const el = document.getElementById('hx-level-hud');
+  if (el) el.textContent = `LVL ${hxState.level}`;
+}
+
+function checkLevelUp(oldScore, newScore) {
+  let leveled = false;
+  while (newScore >= hxLevelThreshold(hxState.level + 1)) {
+    hxState.level++;
+    leveled = true;
+  }
+  if (leveled) {
+    updateLevelHud();
+    showLevelUpBanner(hxState.level);
+  }
+}
+
+function showLevelUpBanner(level) {
+  // Remove any existing banner first
+  document.getElementById('hx-levelup-banner')?.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'hx-levelup-banner';
+  banner.innerHTML = `<span class="hx-levelup-title">LEVEL UP!</span><span class="hx-levelup-num">LEVEL ${level}</span>`;
+  document.body.appendChild(banner);
+
+  // Auto-remove after animation completes (~2s)
+  banner.addEventListener('animationend', () => banner.remove(), { once: true });
+}
+
 function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
   const hud = document.createElement('div');
@@ -786,12 +828,18 @@ function ensureHud() {
   const liveWordEl = document.createElement('div');
   liveWordEl.id = 'hx-live-word';
   document.body.appendChild(liveWordEl);
+
+  const levelHud = document.createElement('div');
+  levelHud.id = 'hx-level-hud';
+  levelHud.textContent = 'LVL 1';
+  document.body.appendChild(levelHud);
 }
 
 function removeHud() {
   document.getElementById('hx-score-hud')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
+  document.getElementById('hx-level-hud')?.remove();
 }
 
 /* ── Word display / selection ──────────────────────────────────── */
@@ -1044,6 +1092,7 @@ async function submitHexacoreWord() {
 
   updateScoreDisplay();
   animateScoreHud(oldScore, hxState.score);
+  checkLevelUp(oldScore, hxState.score);
 
   const consumed = [...hxSelected];
 
@@ -1509,6 +1558,7 @@ async function showGameOver() {
       <h2>HEXACORE OVER</h2>
       <div class="hx-final-score">${hxState.score}</div>
       <div class="hx-stats">
+        LEVEL ${hxState.level} &nbsp;&middot;&nbsp;
         ${hxState.words.length} WORD${hxState.words.length !== 1 ? 'S' : ''} FOUND
         ${best ? `&nbsp;&middot;&nbsp; BEST: ${escapeHtml(best.word)} (${best.score} pts)` : ''}
       </div>
@@ -1610,6 +1660,7 @@ export function startHexacore() {
   // Reset state
   Object.assign(hxState, {
     score:           0,
+    level:           1,
     words:           [],
     tiles:           [],
     emberTiles:      [],
@@ -1670,6 +1721,7 @@ export function startHexacore() {
 
   ensureHud();
   updateHud();
+  updateLevelHud();
   updateScoreDisplay();
 
   setupPointerEvents();
