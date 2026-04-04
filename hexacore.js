@@ -804,17 +804,38 @@ function checkLevelUp(oldScore, newScore) {
   }
 }
 
+function getLevelUpMessage(level) {
+  const msgs = [
+    'KEEP GOING!',
+    'WORD WIZARD!',
+    'ON FIRE!',
+    'UNSTOPPABLE!',
+    'LEGEND!',
+    'BEYOND LIMITS!',
+    'HEXACORE MASTER!',
+  ];
+  return msgs[Math.max(0, Math.min(level - 2, msgs.length - 1))] ?? 'INCREDIBLE!';
+}
+
 function showLevelUpBanner(level) {
   // Remove any existing banner first
   document.getElementById('hx-levelup-banner')?.remove();
 
   const banner = document.createElement('div');
   banner.id = 'hx-levelup-banner';
-  banner.innerHTML = `<span class="hx-levelup-title">LEVEL UP!</span><span class="hx-levelup-num">LEVEL ${level}</span>`;
+  banner.innerHTML = `
+    <div class="hx-levelup-ring"></div>
+    <div class="hx-levelup-backdrop">
+      <span class="hx-levelup-title">LEVEL UP!</span>
+      <span class="hx-levelup-num">${level}</span>
+      <span class="hx-levelup-sub">${getLevelUpMessage(level)}</span>
+    </div>
+  `;
   document.body.appendChild(banner);
 
-  // Auto-remove after animation completes (~2s)
+  // Auto-remove after animation completes (~3s)
   banner.addEventListener('animationend', () => banner.remove(), { once: true });
+  setTimeout(() => banner.remove(), 3200);
 }
 
 function showRestoredBanner(level, score) {

@@ -987,6 +987,34 @@ body[data-theme="dark"] .tile-point {
 /* =========================================
    Hover states — desktop pointer only
    ========================================= */
+
+@keyframes hx-tile-hover-glow {
+  from {
+    filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.6));
+  }
+  to {
+    filter: drop-shadow(0 0 18px rgba(167, 139, 250, 1)) drop-shadow(0 0 6px rgba(180, 100, 255, 0.8));
+  }
+}
+
+@keyframes hx-tile-hover-breathe {
+  from {
+    transform: scale(1.0);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes hx-tile-hover-fill {
+  from {
+    fill: #bdadfb;
+  }
+  to {
+    fill: #c8b8fc;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
 
   .tile {
@@ -994,9 +1022,8 @@ body[data-theme="dark"] .tile-point {
   }
 
   .tile:hover {
-    /* Lift the whole tile group */
-    filter: drop-shadow(0 4px 8px rgba(76, 201, 240, 0.45));
-    transition: filter 90ms ease;
+    /* Pulsing arcane glow — asynchronous with the scale breathe */
+    animation: hx-tile-hover-glow 0.9s ease-in-out infinite alternate;
   }
 
   .tile:hover .hex-tile {
@@ -1005,16 +1032,18 @@ body[data-theme="dark"] .tile-point {
     stroke-width: 2.2px;
     transform-box: fill-box;
     transform-origin: center;
-    transform: scale(1.07);
-    transition: fill 160ms ease, stroke 160ms ease, transform 160ms ease;
+    /* Scale breathe slightly out of phase with the glow */
+    animation:
+      hx-tile-hover-breathe 1.3s ease-in-out infinite alternate,
+      hx-tile-hover-fill    0.9s ease-in-out infinite alternate;
   }
 
   .tile:hover .tile-letter {
     fill: var(--hover-letter);
     transform-box: fill-box;
     transform-origin: center;
-    transform: scale(1.08);
-    transition: fill 140ms ease, transform 160ms ease;
+    filter: brightness(1.15);
+    transition: fill 140ms ease, filter 140ms ease;
   }
 
   .tile:hover .tile-point {
