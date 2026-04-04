@@ -1705,8 +1705,12 @@ async function showGameOver() {
     window.location.reload();
   });
 
-  // Load leaderboard in background
-  loadLeaderboard();
+  // Auto-submit if player already has a name, otherwise load leaderboard in background
+  if (getPlayerName()) {
+    handleSubmitScore();
+  } else {
+    loadLeaderboard();
+  }
 }
 
 async function handleSubmitScore() {
@@ -1724,12 +1728,13 @@ async function handleSubmitScore() {
   }
 
   // dailyId = 'hexacore' is how the API key-partitions the hexacore leaderboard
-  await submitScore('hexacore', hxState.score, hxState.words.map(w => w.word), 0, 'hexacore');
+  const result = await submitScore('hexacore', hxState.score, hxState.words.map(w => w.word), 0, 'hexacore');
   btn.textContent = '✓ SUBMITTED';
-  await loadLeaderboard();
+
+  await loadLeaderboard(result);
 }
 
-async function loadLeaderboard() {
+async function loadLeaderboard(submitResult) {
   const area = document.getElementById('hx-lb-area');
   if (!area) return;
   area.textContent = 'Loading…';
@@ -1742,12 +1747,37 @@ async function loadLeaderboard() {
     return;
   }
 
-  const rows = result.entries.slice(0, 10).map((e, i) => `
-    <tr>
+  const currentPlayer = getPlayerName();
+  const entries = result.entries.slice(0, 20);
+  let playerRank = -1;
+
+  const rows = entries.map((e, i) => {
+    const isCurrentPlayer = currentPlayer && e.player_name === currentPlayer;
+    if (isCurrentPlayer) playerRank = i + 1;
+    const rowStyle = isCurrentPlayer
+      ? 'color:#f59e0b;font-weight:bold'
+      : '';
+    return `
+    <tr style="${rowStyle}">
       <td style="padding:0.15rem 0.5rem;opacity:0.5">${i + 1}</td>
       <td style="padding:0.15rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}</td>
-      <td style="padding:0.15rem 0.5rem;color:#4cc9f0;font-weight:700">${e.score}</td>
-    </tr>`).join('');
+      <td style="padding:0.15rem 0.5rem;color:${isCurrentPlayer ? '#f59e0b' : '#4cc9f0'};font-weight:700">${e.score}</td>
+    </tr>`;
+  }).join('');
+
+  // New-best feedback (shown after leaderboard so it persists)
+  let newBestMsg = '';
+  if (submitResult) {
+    newBestMsg = submitResult.newBest === false
+      ? `<div style="margin-top:0.5rem;font-size:0.78rem;color:#94a3b8">Not a new high score — your best stands.</div>`
+      : `<div style="margin-top:0.5rem;font-size:0.78rem;color:#f59e0b;font-weight:bold">🏆 New personal best!</div>`;
+  }
+
+  const rankMsg = currentPlayer
+    ? (playerRank > 0
+        ? `<div style="margin-top:0.5rem;font-size:0.78rem;color:#f59e0b;font-weight:bold">You are ranked #${playerRank} all-time</div>`
+        : `<div style="margin-top:0.5rem;font-size:0.78rem;color:#94a3b8">Keep playing to reach the top 20!</div>`)
+    : '';
 
   area.innerHTML = `
     <table style="width:100%;border-collapse:collapse;margin-top:0.4rem">
@@ -1759,7 +1789,7 @@ async function loadLeaderboard() {
         </tr>
       </thead>
       <tbody>${rows}</tbody>
-    </table>`;
+    </table>${newBestMsg}${rankMsg}`;
 }
 
 /* ── Alert helper (reuse existing modal) ───────────────────────── */

@@ -27,8 +27,8 @@ export default async function handler(req, res) {
     return res.status(503).json({ configured: false, error: 'Leaderboard not configured' });
   }
 
-  if (mode === 'unlimited') {
-    // No date validation for unlimited mode; use fixed partition key
+  if (mode === 'unlimited' || mode === 'hexacore') {
+    // No date validation for unlimited/hexacore modes; use fixed partition key
   } else {
     // Validate dailyId matches today
     const todayId = getTodayId();
@@ -50,9 +50,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'score must be a positive number' });
   }
 
-  // Validate words
-  if (!Array.isArray(words) || words.length > 10) {
-    return res.status(400).json({ error: 'words must be an array of up to 10 strings' });
+  // Validate words — hexacore is endless so allow up to 500 words
+  const maxWords = mode === 'hexacore' ? 500 : 10;
+  if (!Array.isArray(words) || words.length > maxWords) {
+    return res.status(400).json({ error: `words must be an array of up to ${maxWords} strings` });
   }
 
   const supabase = createClient(
@@ -60,7 +61,22 @@ export default async function handler(req, res) {
     process.env.SUPABASE_SERVICE_KEY
   );
 
-  const partitionId = mode === 'unlimited' ? 'unlimited' : dailyId;
+  if (mode === 'hexacore') {
+    // Only update if new score beats the existing personal best
+    const { data: existing } = await supabase
+      .from('scores')
+      .select('score')
+      .eq('daily_id', 'hexacore')
+      .eq('player_name', playerName.trim())
+      .maybeSingle();
+
+    if (existing && existing.score >= Math.round(score)) {
+      return res.status(200).json({ ok: true, newBest: false });
+    }
+  }
+
+  const partitionId = (mode === 'unlimited' || mode === 'hexacore') ? mode : dailyId;
+  const modeValue   = mode === 'unlimited' ? 'unlimited' : mode === 'hexacore' ? 'hexacore' : 'daily';
 
   const { error } = await supabase
     .from('scores')
@@ -71,7 +87,7 @@ export default async function handler(req, res) {
         score:       Math.round(score),
         words:       words.map(String),
         hints_used:  Number(hintsUsed) || 0,
-        mode:        mode === 'unlimited' ? 'unlimited' : 'daily',
+        mode:        modeValue,
       },
       { onConflict: 'daily_id,player_name', ignoreDuplicates: false }
     );
@@ -81,5 +97,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to save score' });
   }
 
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ ok: true, newBest: true });
 }
