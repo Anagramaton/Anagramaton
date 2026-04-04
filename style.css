@@ -1021,17 +1021,19 @@ body[data-theme="dark"] .tile-point {
     cursor: pointer;
   }
 
+  .tile:hover {
+    /* Pulsing arcane glow — asynchronous with the scale breathe */
+    animation: hx-tile-hover-glow 0.9s ease-in-out infinite alternate;
+  }
+
   .tile:hover .hex-tile {
     fill: var(--hover-hex-fill);
     stroke: var(--hover-hex-stroke);
     stroke-width: 2.2px;
     transform-box: fill-box;
     transform-origin: center;
-    /* pointer-events: none keeps the scaled/glowing polygon from expanding the hit area */
-    pointer-events: none;
-    /* Glow, scale-breathe, and fill all run on the child so the hover-target group is stable */
+    /* Scale breathe slightly out of phase with the glow */
     animation:
-      hx-tile-hover-glow    0.9s ease-in-out infinite alternate,
       hx-tile-hover-breathe 1.3s ease-in-out infinite alternate,
       hx-tile-hover-fill    0.9s ease-in-out infinite alternate;
   }
