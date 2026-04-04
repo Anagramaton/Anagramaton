@@ -613,37 +613,107 @@ function buildGrid(onReady) {
   });
   hxUpdateViewForBoard = updateViewForBoard;
 
+  // ── Phase 1: build vowel slot set ──────────────────────────────
+
+  // Collect all valid hex coordinates for this grid
+  const allCoords = [];
   for (let q = -GRID_RADIUS; q <= GRID_RADIUS; q++) {
     for (let r = -GRID_RADIUS; r <= GRID_RADIUS; r++) {
-      const s = -q - r;
-      if (Math.abs(s) > GRID_RADIUS) continue;
-
-      const result = randomLetterOrDigraphForPos(q, r);
-      const tile   = createTile({
-        hex:        new Hex(q, r),
-        layout:     hxLayout,
-        key:        hxKey(q, r),
-        letter:     result.isDigraph ? result.digraph : result.letter,
-        pointValue: result.isDigraph ? result.points : (letterPoints[result.letter] || 1),
-      });
-
-      if (result.isDigraph) {
-        tile.tileType = 'digraph';
-        tile.point    = result.points;
-        hxState.digraphTiles.push(tile);
-        applyTileType(tile);
-      } else {
-        tile.tileType = 'normal';
-      }
-      tile.s        = s;
-
-      hxState.tiles.push(tile);
-      hxTileMap.set(hxKey(q, r), tile);
-      board.appendChild(tile.element);
-
-      // Hide until intro animation reveals the tile
-      tile.element.style.opacity = '0';
+      if (Math.abs(-q - r) <= GRID_RADIUS) allCoords.push({ q, r });
     }
+  }
+
+  // Group coords by ring distance from centre (rings 0–4)
+  const byRing = [[], [], [], [], []];
+  allCoords.forEach(({ q, r }) => {
+    const ring = Math.max(Math.abs(q), Math.abs(r), Math.abs(-q - r));
+    if (ring <= 4) byRing[ring].push({ q, r });
+  });
+
+  // Pre-designate vowel slots:
+  //   • Ring 0 (centre): always a vowel
+  //   • Ring 1: 3 of 6 tiles are vowels (random half)
+  //   • Rings 2–4: fill remaining quota so total ≈ 35% of the board
+  const vowelTargets = new Set();
+  const VOWEL_DENSITY = 0.35;
+
+  byRing[0].forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
+  byRing[1]
+    .slice().sort(() => Math.random() - 0.5)
+    .slice(0, 3)
+    .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
+
+  const outerCoords = [...byRing[2], ...byRing[3], ...byRing[4]]
+    .slice().sort(() => Math.random() - 0.5);
+  const totalVowels = Math.round(allCoords.length * VOWEL_DENSITY);
+  outerCoords
+    .slice(0, Math.max(0, totalVowels - vowelTargets.size))
+    .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
+
+  // Track which keys already have an adjacent digraph
+  const digraphUsed = new Set();
+
+  // ── Phase 2: place tiles ────────────────────────────────────────
+
+  for (const { q, r } of allCoords) {
+    const key = hxKey(q, r);
+    const s   = -q - r;
+    const isVowelSlot = vowelTargets.has(key);
+
+    let result;
+    if (isVowelSlot) {
+      // Force a vowel — never a digraph in a vowel slot
+      result = {
+        isDigraph: false,
+        letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)],
+      };
+    } else {
+      // Check whether any neighbour already holds a digraph
+      const neighborKeys = [
+        hxKey(q + 1, r),  hxKey(q - 1, r),
+        hxKey(q, r + 1),  hxKey(q, r - 1),
+        hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
+      ];
+      const digraphBlocked = neighborKeys.some(k => digraphUsed.has(k));
+
+      result = randomLetterOrDigraphForPos(q, r);
+
+      if (result.isDigraph && digraphBlocked) {
+        // Redraw as a plain consonant (not a vowel, not a digraph sentinel)
+        let letter;
+        do {
+          letter = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+        } while (letter === '__DIGRAPH__' || HX_VOWELS.has(letter));
+        result = { isDigraph: false, letter };
+      }
+
+      if (result.isDigraph) digraphUsed.add(key);
+    }
+
+    const tile = createTile({
+      hex:        new Hex(q, r),
+      layout:     hxLayout,
+      key,
+      letter:     result.isDigraph ? result.digraph : result.letter,
+      pointValue: result.isDigraph ? result.points  : (letterPoints[result.letter] || 1),
+    });
+
+    if (result.isDigraph) {
+      tile.tileType = 'digraph';
+      tile.point    = result.points;
+      hxState.digraphTiles.push(tile);
+      applyTileType(tile);
+    } else {
+      tile.tileType = 'normal';
+    }
+    tile.s = s;
+
+    hxState.tiles.push(tile);
+    hxTileMap.set(key, tile);
+    board.appendChild(tile.element);
+
+    // Hide until intro animation reveals the tile
+    tile.element.style.opacity = '0';
   }
   hxSvg.appendChild(board);
 
