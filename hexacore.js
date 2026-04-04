@@ -1983,6 +1983,10 @@ export function startHexacore() {
   window.addEventListener('beforeunload', saveHexacoreProgress);
 }
 
+export function getHexacoreScore() {
+  return hxState.score;
+}
+
 export function stopHexacore() {
   hxState.gameOver = true;
   hxState.active   = false;
