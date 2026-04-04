@@ -115,7 +115,7 @@
 /* ── Live word-score preview (shown above total score while selecting) */
 #hx-word-score-hud {
   position: fixed;
-  bottom: clamp(104px, 15vh, 158px);
+  top: clamp(116px, 18vh, 175px);
   left: 50%;
   transform: translateX(-50%);
   color: #ffd700;

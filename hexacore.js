@@ -843,13 +843,13 @@ function ensureHud() {
   hud.textContent = '0 PTS';
   document.body.appendChild(hud);
 
-  const wordHud = document.createElement('div');
-  wordHud.id = 'hx-word-score-hud';
-  document.body.appendChild(wordHud);
-
   const liveWordEl = document.createElement('div');
   liveWordEl.id = 'hx-live-word';
   document.body.appendChild(liveWordEl);
+
+  const wordHud = document.createElement('div');
+  wordHud.id = 'hx-word-score-hud';
+  document.body.appendChild(wordHud);
 
   const levelHud = document.createElement('div');
   levelHud.id = 'hx-level-hud';
@@ -892,6 +892,12 @@ function updateWordScorePreview() {
   const letterCount = hxSelected.reduce((sum, t) => sum + (t.tileType === 'rune' ? 1 : t.letter.length), 0);
 
   if (letterCount < 4) {
+    el.textContent = '';
+    return;
+  }
+
+  const resolved = resolveLetters(hxSelected);
+  if (!resolved || !isValidWord(resolved.join(''))) {
     el.textContent = '';
     return;
   }
@@ -1073,8 +1079,6 @@ async function submitHexacoreWord() {
 
   const resolved = resolveLetters(hxSelected);
   if (!resolved || !isValidWord(resolved.join(''))) {
-    playSound('sfxAlert');
-    showAlert('Word not found!');
     clearSelection();
     return;
   }
