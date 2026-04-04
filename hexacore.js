@@ -1781,38 +1781,34 @@ export function startHexacore() {
       hxWordCount            = save.wordCount      ?? 0;
 
       // Rebuild tile board from saved tile list
+      // Map of tileType → corresponding hxState array (covers all special tile types)
+      const tileTypeArrays = {
+        ember:        hxState.emberTiles,
+        prism:        hxState.prismTiles,
+        rune:         hxState.runeTiles,
+        digraph:      hxState.digraphTiles,
+        gemEmerald:   hxState.gemEmeraldTiles,
+        gemGold:      hxState.gemGoldTiles,
+        gemSapphire:  hxState.gemSapphireTiles,
+        gemPearl:     hxState.gemPearlTiles,
+        gemTanzanite: hxState.gemTanzaniteTiles,
+        gemRuby:      hxState.gemRubyTiles,
+        gemDiamond:   hxState.gemDiamondTiles,
+      };
+
       (save.tiles ?? []).forEach(saved => {
         const tile = hxTileMap.get(hxKey(saved.q, saved.r));
         if (!tile) return;
 
         // Remove from all type arrays before re-assigning
-        removeFrom(hxState.digraphTiles,      tile);
-        removeFrom(hxState.emberTiles,         tile);
-        removeFrom(hxState.prismTiles,         tile);
-        removeFrom(hxState.runeTiles,          tile);
-        removeFrom(hxState.gemEmeraldTiles,    tile);
-        removeFrom(hxState.gemGoldTiles,       tile);
-        removeFrom(hxState.gemSapphireTiles,   tile);
-        removeFrom(hxState.gemPearlTiles,      tile);
-        removeFrom(hxState.gemTanzaniteTiles,  tile);
-        removeFrom(hxState.gemRubyTiles,       tile);
-        removeFrom(hxState.gemDiamondTiles,    tile);
+        Object.values(tileTypeArrays).forEach(arr => removeFrom(arr, tile));
 
         tile.letter   = saved.letter;
         tile.point    = saved.point;
         tile.tileType = saved.tileType;
 
-        if (saved.tileType === 'ember')        hxState.emberTiles.push(tile);
-        else if (saved.tileType === 'prism')   hxState.prismTiles.push(tile);
-        else if (saved.tileType === 'rune')    hxState.runeTiles.push(tile);
-        else if (saved.tileType === 'digraph') hxState.digraphTiles.push(tile);
-        else if (saved.tileType === 'gemEmerald')   hxState.gemEmeraldTiles.push(tile);
-        else if (saved.tileType === 'gemGold')      hxState.gemGoldTiles.push(tile);
-        else if (saved.tileType === 'gemSapphire')  hxState.gemSapphireTiles.push(tile);
-        else if (saved.tileType === 'gemPearl')     hxState.gemPearlTiles.push(tile);
-        else if (saved.tileType === 'gemTanzanite') hxState.gemTanzaniteTiles.push(tile);
-        else if (saved.tileType === 'gemRuby')      hxState.gemRubyTiles.push(tile);
-        else if (saved.tileType === 'gemDiamond')   hxState.gemDiamondTiles.push(tile);
+        // Add to the appropriate type array
+        tileTypeArrays[saved.tileType]?.push(tile);
 
         applyTileType(tile);
       });
