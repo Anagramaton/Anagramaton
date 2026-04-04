@@ -2004,10 +2004,130 @@ export function stopHexacore() {
   if (clearBtn)  clearBtn.style.removeProperty('display');
 }
 
+/* ── Standalone Hexacore Leaderboard Modal (window.hxLbModal) ───── */
+(function () {
+  let modal = null;
+
+  function buildModal() {
+    modal = document.createElement('div');
+    modal.id = 'hx-lb-standalone-modal';
+    modal.style.cssText = `
+      position:fixed;inset:0;z-index:9998;display:flex;align-items:center;
+      justify-content:center;background:rgba(0,0,0,0.75);
+    `;
+    modal.innerHTML = `
+      <div id="hx-lb-standalone-box" style="
+        position:relative;min-width:280px;max-width:400px;width:90%;max-height:80vh;
+        overflow-y:auto;padding:1.75rem 1.5rem 1.5rem;border-radius:14px;
+        background:linear-gradient(135deg,rgba(10,10,25,0.97),rgba(20,5,35,0.97));
+        border:2px solid rgba(76,201,240,0.6);
+        box-shadow:0 0 30px rgba(76,201,240,0.4),0 12px 30px rgba(0,0,0,0.7);
+        color:#f1f5f9;font-family:'Turret Road','Orbitron',monospace;text-align:center;
+      ">
+        <button id="hx-lb-standalone-close" style="
+          position:absolute;top:0.6rem;right:0.75rem;background:none;border:none;
+          color:#94a3b8;font-size:1.2rem;cursor:pointer;line-height:1;
+        " aria-label="Close">✕</button>
+        <p style="margin:0 0 0.25rem;font-size:1rem;letter-spacing:0.08em;color:#4cc9f0;">
+          🏆 HEXACORE LEADERBOARD
+        </p>
+        <div id="hx-lb-standalone-area" style="margin-top:0.75rem;font-size:0.85rem;">Loading…</div>
+        <p style="margin:0.75rem 0 0;font-size:0.6rem;opacity:0.4;letter-spacing:0.05em;">
+          CLICK OUTSIDE OR ✕ TO CLOSE
+        </p>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById('hx-lb-standalone-close').addEventListener('click', close);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) close();
+    });
+  }
+
+  // Register Escape handler once, not inside buildModal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && modal.style.display !== 'none') close();
+  });
+
+  async function open() {
+    if (!modal) buildModal();
+    modal.style.display = 'flex';
+    document.getElementById('hx-lb-standalone-area').textContent = 'Loading…';
+
+    const result = await fetchLeaderboard('hexacore', 'hexacore');
+    const area = document.getElementById('hx-lb-standalone-area');
+    if (!area) return;
+
+    if (!result.configured || result.entries.length === 0) {
+      area.textContent = 'No leaderboard entries yet.';
+      return;
+    }
+
+    const currentPlayer = getPlayerName();
+    const entries = result.entries.slice(0, 20);
+    let playerRank = -1;
+
+    const rows = entries.map((e, i) => {
+      const isCurrentPlayer = currentPlayer && e.player_name === currentPlayer;
+      if (isCurrentPlayer) playerRank = i + 1;
+      const rowStyle = isCurrentPlayer ? 'color:#f59e0b;font-weight:bold' : '';
+      return `
+        <tr style="${rowStyle}">
+          <td style="padding:0.15rem 0.5rem;opacity:0.5">${i + 1}</td>
+          <td style="padding:0.15rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}</td>
+          <td style="padding:0.15rem 0.5rem;color:${isCurrentPlayer ? '#f59e0b' : '#4cc9f0'};font-weight:700">${e.score}</td>
+        </tr>`;
+    }).join('');
+
+    const rankMsg = currentPlayer
+      ? (playerRank > 0
+          ? `<div style="margin-top:0.5rem;font-size:0.78rem;color:#f59e0b;font-weight:bold">You are ranked #${playerRank} all-time</div>`
+          : `<div style="margin-top:0.5rem;font-size:0.78rem;color:#94a3b8">Keep playing to reach the top 20!</div>`)
+      : '';
+
+    area.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;margin-top:0.4rem">
+        <thead>
+          <tr style="font-size:0.72rem;opacity:0.5;text-transform:uppercase">
+            <th style="padding:0.15rem 0.5rem">#</th>
+            <th style="padding:0.15rem 0.5rem">Player</th>
+            <th style="padding:0.15rem 0.5rem">Score</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>${rankMsg}`;
+  }
+
+  function close() {
+    if (modal) modal.style.display = 'none';
+  }
+
+  window.hxLbModal = { open, close };
+})();
+
 /* ── Splash screen wiring (on module load) ─────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('splash-hexacore-btn')?.addEventListener('click', () => {
+  document.getElementById('splash-hexacore-btn')?.addEventListener('click', async () => {
     document.getElementById('splash-screen')?.classList.add('hidden');
+
+    // Require sign-up before playing
+    if (!getPlayerName()) {
+      await promptPlayerName();
+      const saved = getPlayerName();
+      const nameBtn = document.getElementById('set-name-btn');
+      if (nameBtn) {
+        const label = nameBtn.querySelector('.setting-label');
+        if (label) label.textContent = saved ? saved.toUpperCase() : 'SET NAME';
+      }
+      const splashSignupBtn = document.getElementById('splash-signup-btn');
+      if (splashSignupBtn) {
+        if (saved) {
+          splashSignupBtn.disabled = true;
+          splashSignupBtn.textContent = `✓ SIGNED IN AS ${saved.toUpperCase()}`;
+        }
+      }
+    }
 
     if (loadHexacoreProgress()) {
       if (confirm('Continue your saved Hexacore session?')) {
