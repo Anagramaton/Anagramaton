@@ -19,6 +19,7 @@ import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
 import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audioEngine.js';
+import suffixList from './suffixList.js';
 
 /* ── Audio state ───────────────────────────────────────────────── */
 let _hxAudioReady = false;
@@ -98,6 +99,33 @@ function randomDigraph() {
   const dg  = DIGRAPH_POOL[Math.floor(Math.random() * DIGRAPH_POOL.length)];
   const pts = (letterPoints[dg[0]] || 1) + (letterPoints[dg[1]] || 1);
   return { digraph: dg, points: pts };
+}
+
+/**
+ * Returns a suffix-fit score for placing `digraph` at hex (q, r).
+ * Looks at already-placed neighbours; for each neighbour letter,
+ * checks how many suffixes contain the sequence (neighbourLetter + digraph)
+ * or (digraph + neighbourLetter). Higher = better fit.
+ */
+function digraphSuffixScore(q, r, digraph, suffixes) {
+  const neighborKeys = [
+    hxKey(q + 1, r),  hxKey(q - 1, r),
+    hxKey(q, r + 1),  hxKey(q, r - 1),
+    hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
+  ];
+  let score = 0;
+  for (const k of neighborKeys) {
+    const t = hxTileMap.get(k);
+    if (!t) continue;
+    const neighborStr = t.tileType === 'digraph' ? t.letter : (t.letter || '');
+    if (!neighborStr) continue;
+    const before = neighborStr + digraph;
+    const after  = digraph + neighborStr;
+    for (const suffix of suffixes) {
+      if (suffix.includes(before) || suffix.includes(after)) score++;
+    }
+  }
+  return score;
 }
 
 /* ── Portal system ─────────────────────────────────────────────── */
@@ -180,7 +208,7 @@ const HX_VOWEL_POOL = ['A','A','A','E','E','E','E','I','I','I','O','O','O','U','
  * Applies vowel-bias correction: if all neighbours are consonants (and none
  * are digraph tiles), 75% chance to force a vowel instead.
  */
-function randomLetterOrDigraphForPos(q, r) {
+function randomLetterOrDigraphForPos(q, r, usedDigraphs) {
   const neighborKeys = [
     hxKey(q + 1, r),  hxKey(q - 1, r),
     hxKey(q, r + 1),  hxKey(q, r - 1),
@@ -204,6 +232,33 @@ function randomLetterOrDigraphForPos(q, r) {
 
   const drawn = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
   if (drawn === '__DIGRAPH__') {
+    if (usedDigraphs) {
+      // Build candidate pool: prefer unused digraphs, fall back to full pool
+      const available = DIGRAPH_POOL.filter(d => !usedDigraphs.has(d));
+      const pool = available.length > 0 ? available : DIGRAPH_POOL;
+
+      // Fisher-Yates shuffle, then pick a small candidate set
+      const shuffled = pool.slice();
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      const CANDIDATE_COUNT = 5;
+      const candidates = shuffled.slice(0, Math.min(CANDIDATE_COUNT, shuffled.length));
+
+      // Choose the candidate(s) with the highest suffix-fit score; break ties randomly
+      let bestScore = -1;
+      for (const dg of candidates) {
+        const s = digraphSuffixScore(q, r, dg, suffixList);
+        if (s > bestScore) bestScore = s;
+      }
+      const best = candidates.filter(dg => digraphSuffixScore(q, r, dg, suffixList) === bestScore);
+      const bestDigraph = best[Math.floor(Math.random() * best.length)];
+
+      usedDigraphs.add(bestDigraph);
+      const pts = (letterPoints[bestDigraph[0]] || 1) + (letterPoints[bestDigraph[1]] || 1);
+      return { isDigraph: true, digraph: bestDigraph, points: pts };
+    }
     const { digraph, points } = randomDigraph();
     return { isDigraph: true, digraph, points };
   }
@@ -613,12 +668,14 @@ function buildGrid(onReady) {
   });
   hxUpdateViewForBoard = updateViewForBoard;
 
+  const usedDigraphs = new Set();
+
   for (let q = -GRID_RADIUS; q <= GRID_RADIUS; q++) {
     for (let r = -GRID_RADIUS; r <= GRID_RADIUS; r++) {
       const s = -q - r;
       if (Math.abs(s) > GRID_RADIUS) continue;
 
-      const result = randomLetterOrDigraphForPos(q, r);
+      const result = randomLetterOrDigraphForPos(q, r, usedDigraphs);
       const tile   = createTile({
         hex:        new Hex(q, r),
         layout:     hxLayout,
