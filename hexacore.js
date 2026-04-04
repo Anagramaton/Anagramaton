@@ -1700,7 +1700,9 @@ export function stopHexacore() {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('splash-hexacore-btn')?.addEventListener('click', () => {
     document.getElementById('splash-screen')?.classList.add('hidden');
-    startHexacore();
+    // Defer grid construction so the browser can paint the splash-hide
+    // transition before the 61-tile SVG build (the INP source) runs.
+    setTimeout(() => startHexacore(), 0);
   });
 });
 
