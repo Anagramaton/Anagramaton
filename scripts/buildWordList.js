@@ -43,6 +43,10 @@ const JARGON_SUFFIXES = [
   'optera', 'iformes', 'oidea', 'aceae', 'phyta', 'mycota', 'zoa',
   // Computing
   'algorithmic', 'polymorphism', 'encapsulation',
+  // Medical discharge / flow conditions
+  'rhoea', 'rrhoea', 'rrhoeas', 'rrhea', 'rrheas',
+  // Anatomical joint/structural states
+  'throsis', 'throses',
 ];
 
 // Prefixes almost exclusively found in scientific terms.
@@ -163,6 +167,28 @@ const BLOCKLIST = new Set([
   'magnetometer', 'magnetometers',
   'oscilloscope', 'oscilloscopes',
   'voltmeter', 'voltmeters', 'ammeter', 'ammeters',
+  // Diarrhoea forms
+  'diarrhoea', 'diarrhoeic', 'diarrheal', 'diarrheas', 'diarrheic',
+  // Anatomical / medical
+  'diastema', 'diastemata',
+  'diarthrosis', 'diarthroses',
+  'diastasis', 'diastases',
+  'diplegia', 'diplegias',
+  'diphylla',
+  'diencephalon', 'diencephalons', 'diencephala',
+  'diasterism', 'diasterisms',
+  // Taxonomy / biology
+  'dibranchiata', 'dibranchiate', 'dibranchiates',
+  'dictyopteran', 'dictyopterans',
+  'dictyosome', 'dictyosomes',
+  'dicynodont', 'dicynodonts',
+  'diplococci', 'diplococcus',
+  'diplodocus', 'diplodocuses', 'diplodoci',
+  'dimorphotheca', 'dimorphothecas',
+  // Chemistry compounds
+  'dihydrostreptomycin',
+  'diethylmalonylurea',
+  'diethylstilbestrol', 'diethylstilboestrol',
 ]);
 
 // Substrings that, when found anywhere in a word, mark it as jargon.
@@ -185,6 +211,9 @@ const JARGON_SUBSTRINGS = [
   'spliceosom',
   // Taxonomic fragments
   'optera', 'iformes', 'oidea', 'aceae', 'phyta', 'mycota',
+  'encephalon',  // diencephalon, telencephalon, mesencephalon
+  'diplococ',    // diplococcus, diplococci
+  'diplodoc',    // diplodocus, diplodoci
 ];
 
 // ---------------------------------------------------------------------------
@@ -212,7 +241,7 @@ function isJargon(word) {
 // Main
 // ---------------------------------------------------------------------------
 const inputPath = resolve(ROOT, 'words.js', 'words.txt');
-const outputPath = resolve(ROOT, 'wordList.js');
+const outputPath = resolve(ROOT, 'wordList.json');
 
 const raw = readFileSync(inputPath, 'utf8');
 const lines = raw.split('\n');
@@ -243,8 +272,7 @@ for (const raw of lines) {
 kept.sort();
 
 // Build output
-const lines_out = kept.map(w => `  "${w}",`).join('\n');
-const output = `export default [\n${lines_out}\n];\n`;
+const output = JSON.stringify(kept) + '\n';
 
 writeFileSync(outputPath, output, 'utf8');
 console.log(`Wrote ${kept.length} words to ${outputPath}`);
