@@ -86,6 +86,45 @@ function randomDigraph() {
   return { digraph: dg, points: pts };
 }
 
+/**
+ * Like randomDigraph(), but biases selection toward digraphs whose characters
+ * match the letters already neighbouring position (q, r).
+ * Scoring: +1 for each of the two digraph characters found among neighbor letters.
+ * Weights: score 2 → 4, score 1 → 2, score 0 → 1.
+ * Falls back to randomDigraph() when no neighbors exist yet.
+ */
+function randomDigraphForPos(q, r) {
+  const neighborKeys = [
+    hxKey(q + 1, r),  hxKey(q - 1, r),
+    hxKey(q, r + 1),  hxKey(q, r - 1),
+    hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
+  ];
+
+  const neighborLetters = new Set();
+  for (const k of neighborKeys) {
+    const t = hxTileMap.get(k);
+    if (!t) continue;
+    // For digraph tiles, letter is a two-char string — add both characters
+    for (const ch of t.letter) {
+      neighborLetters.add(ch);
+    }
+  }
+
+  if (neighborLetters.size === 0) return randomDigraph();
+
+  const WEIGHTS = [1, 2, 4]; // index = score (0, 1, 2)
+  const weighted = [];
+  for (const dg of DIGRAPH_POOL) {
+    const score = (neighborLetters.has(dg[0]) ? 1 : 0) + (neighborLetters.has(dg[1]) ? 1 : 0);
+    const weight = WEIGHTS[score];
+    for (let i = 0; i < weight; i++) weighted.push(dg);
+  }
+
+  const dg  = weighted[Math.floor(Math.random() * weighted.length)];
+  const pts = (letterPoints[dg[0]] || 1) + (letterPoints[dg[1]] || 1);
+  return { digraph: dg, points: pts };
+}
+
 /* ── Portal system ─────────────────────────────────────────────── */
 /** The 6 corner tiles of the radius-4 hex grid that may become portals. */
 const HX_PORTAL_CORNERS = [
@@ -189,7 +228,7 @@ function randomLetterOrDigraphForPos(q, r) {
 
   const drawn = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
   if (drawn === '__DIGRAPH__') {
-    const { digraph, points } = randomDigraph();
+    const { digraph, points } = randomDigraphForPos(q, r);
     return { isDigraph: true, digraph, points };
   }
   return { isDigraph: false, letter: drawn };
