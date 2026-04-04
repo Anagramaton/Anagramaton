@@ -30,6 +30,9 @@ const REFILL_STAGGER_MS        = 40;   // ms between each column's spawn delay
 
 /* ── Level thresholds ──────────────────────────────────────────── */
 const HX_LEVEL_THRESHOLDS = [0, 200, 500, 1000, 2000, 3500, 5500, 8000, 11000, 15000];
+
+/* ── localStorage save key ─────────────────────────────────────── */
+const HX_SAVE_KEY = 'hexacore_save';
 // Level 1 starts at 0, Level 2 at 200, Level 3 at 500, etc.
 // Beyond index 9, each additional level requires +5000 pts from the previous threshold.
 
@@ -598,7 +601,7 @@ function injectSvgDefs(svg) {
 }
 
 /* ── Grid construction ─────────────────────────────────────────── */
-function buildGrid() {
+function buildGrid(onReady) {
   const board = document.createElementNS(SVG_NS, 'g');
   board.setAttribute('id', 'board');
 
@@ -671,7 +674,7 @@ function buildGrid() {
     }
 
     // Start the cascade intro (sets hxState.active = true when done)
-    animateGridIntro();
+    animateGridIntro().then(() => { if (onReady) onReady(); });
   });
 }
 
@@ -811,6 +814,25 @@ function showLevelUpBanner(level) {
   document.body.appendChild(banner);
 
   // Auto-remove after animation completes (~2s)
+  banner.addEventListener('animationend', () => banner.remove(), { once: true });
+}
+
+function showRestoredBanner(level, score) {
+  document.getElementById('hx-restored-banner')?.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'hx-restored-banner';
+  banner.style.cssText = [
+    'position:fixed', 'top:50%', 'left:50%',
+    'transform:translate(-50%,-50%)',
+    'z-index:1100',
+    'display:flex', 'flex-direction:column', 'align-items:center', 'gap:4px',
+    'animation:hx-levelup-pop 2s cubic-bezier(0.22,1,0.36,1) forwards',
+    'pointer-events:none',
+  ].join(';');
+  banner.innerHTML = `<span class="hx-levelup-title" style="color:#4cc9f0">GAME RESTORED</span><span class="hx-levelup-num">LEVEL ${level} &middot; SCORE ${score}</span>`;
+  document.body.appendChild(banner);
+
   banner.addEventListener('animationend', () => banner.remove(), { once: true });
 }
 
@@ -1136,6 +1158,8 @@ async function submitHexacoreWord() {
       closePortal(); // close any existing portal first
       openPortal();
     }
+
+    saveHexacoreProgress();
   }
 }
 
@@ -1526,6 +1550,8 @@ function triggerGameOver() {
   hxState.gameOver = true;
   hxState.active   = false;
 
+  window.removeEventListener('beforeunload', saveHexacoreProgress);
+  clearHexacoreSave();
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
   clearSelection();
   document.body.classList.remove('hx-active');
@@ -1577,6 +1603,7 @@ async function showGameOver() {
   document.getElementById('hx-btn-submit')?.addEventListener('click', handleSubmitScore);
   document.getElementById('hx-btn-again')?.addEventListener('click', () => {
     overlay.remove();
+    clearHexacoreSave();
     startHexacore();
   });
   document.getElementById('hx-btn-menu')?.addEventListener('click', () => {
@@ -1655,6 +1682,45 @@ function showAlert(msg) {
 /* ── Misc ──────────────────────────────────────────────────────── */
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+/* ── Progress persistence ──────────────────────────────────────── */
+function saveHexacoreProgress() {
+  const tiles = [];
+  hxTileMap.forEach(tile => {
+    tiles.push({
+      q: tile.q, r: tile.r, s: tile.s,
+      letter: tile.letter, point: tile.point, tileType: tile.tileType,
+    });
+  });
+
+  const save = {
+    score:               hxState.score,
+    level:               hxState.level,
+    words:               hxState.words,
+    wordsSubmitted:      hxState.wordsSubmitted,
+    wordCount:           hxWordCount,
+    tiles,
+    portalOpen:          hxState.portalOpen,
+    portalUsed:          hxState.portalUsed,
+    portalEntry:         hxState.portalEntry,
+    portalExit:          hxState.portalExit,
+    portalWordsRemaining: hxState.portalWordsRemaining,
+  };
+
+  try { localStorage.setItem(HX_SAVE_KEY, JSON.stringify(save)); } catch (_) { /* quota / private */ }
+}
+
+function loadHexacoreProgress() {
+  try {
+    const json = localStorage.getItem(HX_SAVE_KEY);
+    if (!json) return null;
+    return JSON.parse(json);
+  } catch (_) { return null; }
+}
+
+function clearHexacoreSave() {
+  try { localStorage.removeItem(HX_SAVE_KEY); } catch (_) { /* ignore */ }
+}
+
 /* ── Public entry point ────────────────────────────────────────── */
 export function startHexacore() {
   // Reset state
@@ -1704,7 +1770,69 @@ export function startHexacore() {
   hxLayout = makeLayout();
 
   injectSvgDefs(hxSvg);
-  buildGrid();
+  buildGrid(() => {
+    // Restore a saved session (if any) after the intro animation completes
+    const save = loadHexacoreProgress();
+    if (save) {
+      hxState.score          = save.score          ?? 0;
+      hxState.level          = save.level          ?? 1;
+      hxState.words          = save.words          ?? [];
+      hxState.wordsSubmitted = save.wordsSubmitted ?? 0;
+      hxWordCount            = save.wordCount      ?? 0;
+
+      // Rebuild tile board from saved tile list
+      (save.tiles ?? []).forEach(saved => {
+        const tile = hxTileMap.get(hxKey(saved.q, saved.r));
+        if (!tile) return;
+
+        // Remove from all type arrays before re-assigning
+        removeFrom(hxState.digraphTiles,      tile);
+        removeFrom(hxState.emberTiles,         tile);
+        removeFrom(hxState.prismTiles,         tile);
+        removeFrom(hxState.runeTiles,          tile);
+        removeFrom(hxState.gemEmeraldTiles,    tile);
+        removeFrom(hxState.gemGoldTiles,       tile);
+        removeFrom(hxState.gemSapphireTiles,   tile);
+        removeFrom(hxState.gemPearlTiles,      tile);
+        removeFrom(hxState.gemTanzaniteTiles,  tile);
+        removeFrom(hxState.gemRubyTiles,       tile);
+        removeFrom(hxState.gemDiamondTiles,    tile);
+
+        tile.letter   = saved.letter;
+        tile.point    = saved.point;
+        tile.tileType = saved.tileType;
+
+        if (saved.tileType === 'ember')        hxState.emberTiles.push(tile);
+        else if (saved.tileType === 'prism')   hxState.prismTiles.push(tile);
+        else if (saved.tileType === 'rune')    hxState.runeTiles.push(tile);
+        else if (saved.tileType === 'digraph') hxState.digraphTiles.push(tile);
+        else if (saved.tileType === 'gemEmerald')   hxState.gemEmeraldTiles.push(tile);
+        else if (saved.tileType === 'gemGold')      hxState.gemGoldTiles.push(tile);
+        else if (saved.tileType === 'gemSapphire')  hxState.gemSapphireTiles.push(tile);
+        else if (saved.tileType === 'gemPearl')     hxState.gemPearlTiles.push(tile);
+        else if (saved.tileType === 'gemTanzanite') hxState.gemTanzaniteTiles.push(tile);
+        else if (saved.tileType === 'gemRuby')      hxState.gemRubyTiles.push(tile);
+        else if (saved.tileType === 'gemDiamond')   hxState.gemDiamondTiles.push(tile);
+
+        applyTileType(tile);
+      });
+
+      // Restore portal state
+      hxState.portalOpen           = save.portalOpen           ?? false;
+      hxState.portalUsed           = save.portalUsed           ?? false;
+      hxState.portalEntry          = save.portalEntry          ?? null;
+      hxState.portalExit           = save.portalExit           ?? null;
+      hxState.portalWordsRemaining = save.portalWordsRemaining ?? 0;
+      if (hxState.portalOpen) applyPortalVisuals();
+
+      // Sync HUD to restored values
+      updateHud();
+      updateLevelHud();
+      updateScoreDisplay();
+
+      showRestoredBanner(hxState.level, hxState.score);
+    }
+  });
   // Ember tiles do NOT spawn at game start — only after milestone words
 
   document.body.classList.add('hx-active');
@@ -1726,12 +1854,14 @@ export function startHexacore() {
 
   setupPointerEvents();
   playSound('sfxUnlock');
+  window.addEventListener('beforeunload', saveHexacoreProgress);
 }
 
 export function stopHexacore() {
   hxState.gameOver = true;
   hxState.active   = false;
 
+  window.removeEventListener('beforeunload', saveHexacoreProgress);
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
 
   document.getElementById('hx-gameover-overlay')?.remove();
@@ -1752,7 +1882,17 @@ export function stopHexacore() {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('splash-hexacore-btn')?.addEventListener('click', () => {
     document.getElementById('splash-screen')?.classList.add('hidden');
-    startHexacore();
+
+    if (loadHexacoreProgress()) {
+      if (confirm('Continue your saved Hexacore session?')) {
+        startHexacore();
+      } else {
+        clearHexacoreSave();
+        startHexacore();
+      }
+    } else {
+      startHexacore();
+    }
   });
 });
 
