@@ -89,9 +89,9 @@ const HX_LETTER_POOL = [
 
 /* ── Digraph pool — double-letter bonus tiles ───────────────────── */
 const DIGRAPH_POOL = [
-  'TH', 'HE', 'IN', 'ER', 'RE', 'ST', 'AN', 'ON', 'EE', 'TT',
-  'SS', 'OO', 'LL', 'QU', 'CK', 'CH', 'EN', 'AN', 'AS', 'CO',
-  'LY', 'AL', 'LE', 'ED', 'ES',
+  'TH', 'HE', 'IN', 'ER', 'RE', 'ST', 'AN', 'ON', 'EA', 'TT',
+  'SS', 'IO', 'LL', 'QU', 'CK', 'CH', 'EN', 'AN', 'AS', 'CO',
+  'LY', 'AL', 'LE', 'ED', 'ES', 'UN', 'GH', 'CR', 'WH', 'NT', 'NC',
 ];
 
 function randomDigraph() {
@@ -580,7 +580,13 @@ function injectSvgDefs(svg) {
     emberGrad.setAttribute('id', 'hx-ember-gradient');
     emberGrad.setAttribute('x1', '0%'); emberGrad.setAttribute('y1', '100%');
     emberGrad.setAttribute('x2', '0%'); emberGrad.setAttribute('y2', '0%');
-    [['0%', '#ff0000'], ['50%', '#ff6a00'], ['100%', '#ffe400']].forEach(([offset, color]) => {
+    [
+      ['0%',   '#1a0000'],  // deep black-red at base
+      ['25%',  '#cc1100'],  // dark crimson
+      ['55%',  '#ff4500'],  // vivid red-orange
+      ['80%',  '#ff9900'],  // bright amber
+      ['100%', '#ffee00'],  // blazing yellow tip
+    ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
       s.setAttribute('stop-color', color);
