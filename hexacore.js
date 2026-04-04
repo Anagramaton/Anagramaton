@@ -925,6 +925,7 @@ function showRestoredBanner(level, score) {
   document.body.appendChild(banner);
 
   banner.addEventListener('animationend', () => banner.remove(), { once: true });
+  setTimeout(() => banner.remove(), 2500);
 }
 
 function ensureHud() {
