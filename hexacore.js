@@ -977,6 +977,47 @@ function updateWordDisplay() {
   updateWordScorePreview();
 }
 
+/* ── Gem scoring constants ─────────────────────────────────────── */
+const GEM_MULTIPLIERS = {
+  gemEmerald:   2,
+  gemGold:      3,
+  gemSapphire:  4,
+  gemPearl:     5,
+  gemTanzanite: 6,
+  gemRuby:      7,
+};
+// Tanzanite, Ruby, and Diamond use exponential count bonus (value^count);
+// all other gems use linear count bonus (count × value).
+const OPTION_B_GEMS = new Set(['gemTanzanite', 'gemRuby', 'gemDiamond']);
+
+/**
+ * Calculates the count bonus multiplier for the given selected tiles.
+ * For each gem type present, counts how many were used and applies:
+ *   - Option A (linear):      count × gemValue  — for Emerald, Gold, Sapphire, Pearl
+ *     e.g. 3 Emeralds → 3 × 2 = ×6
+ *   - Option B (exponential): gemValue ^ count  — for Tanzanite, Ruby, Diamond
+ *     e.g. 3 Rubies → 7³ = ×343; 2 Diamonds on a 6-letter word → 6² = ×36
+ * Diamond's "value" is wordLength (not a fixed number), so it is excluded from
+ * GEM_MULTIPLIERS above and handled as a special case inside this function.
+ * @param {Array} selectedTiles - array of tile objects from hxSelected
+ * @param {number} wordLength   - assembled letter count (used as Diamond's value)
+ * @returns {number} combined count bonus multiplier (≥1)
+ */
+function calcGemCountBonus(selectedTiles, wordLength) {
+  const gemCounts = {};
+  selectedTiles.forEach(t => {
+    if (GEM_MULTIPLIERS[t.tileType] || t.tileType === 'gemDiamond') {
+      gemCounts[t.tileType] = (gemCounts[t.tileType] || 0) + 1;
+    }
+  });
+  let countBonus = 1;
+  for (const [gemType, count] of Object.entries(gemCounts)) {
+    const value = gemType === 'gemDiamond' ? wordLength : GEM_MULTIPLIERS[gemType];
+    countBonus *= OPTION_B_GEMS.has(gemType) ? value ** count : count * value;
+  }
+  return countBonus;
+}
+
 /**
  * Calculates and shows a live score preview for the current selection.
  * Uses the same formula as submitHexacoreWord so the player always sees
@@ -1018,21 +1059,15 @@ function updateWordScorePreview() {
   const lenMult = lengthMultipliers[wordLength] || 1;
 
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
-  const GEM_MULTIPLIERS = {
-    gemEmerald:   2,
-    gemGold:      3,
-    gemSapphire:  4,
-    gemPearl:     5,
-    gemTanzanite: 6,
-    gemRuby:      7,
-  };
   let gemMult = 1;
   hxSelected.forEach(t => {
     if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
     else if (t.tileType === 'gemDiamond') gemMult *= wordLength;
   });
 
-  const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
+  const countBonus = calcGemCountBonus(hxSelected, wordLength);
+
+  const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
   const runeNote = runeCount > 0 ? '~' : '';
   el.textContent = `${runeNote}+${preview}`;
 }
@@ -1193,20 +1228,14 @@ async function submitHexacoreWord() {
 
   // Gem multipliers stack multiplicatively
   let gemMult = 1;
-  const GEM_MULTIPLIERS = {
-    gemEmerald:   2,
-    gemGold:      3,
-    gemSapphire:  4,
-    gemPearl:     5,
-    gemTanzanite: 6,
-    gemRuby:      7,
-  };
   hxSelected.forEach(t => {
     if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
     else if (t.tileType === 'gemDiamond') gemMult *= word.length;
   });
 
-  const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
+  const countBonus = calcGemCountBonus(hxSelected, word.length);
+
+  const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
 
   hxWordCount++;
   hxState.wordsSubmitted++;
