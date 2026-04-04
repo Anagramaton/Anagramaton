@@ -701,12 +701,21 @@ body.hx-active #hex-grid {
 
 /* Portal spawn flash when a new portal pair opens */
 @keyframes hx-portal-spawn-anim {
-  0%   { opacity: 0.2; transform: scale(0.4);
-         filter: drop-shadow(0 0  0px transparent); }
-  50%  { opacity: 1;   transform: scale(1.3);
-         filter: brightness(3) drop-shadow(0 0 24px rgba(224, 64, 251, 1)); }
-  100% { opacity: 1;   transform: scale(1.0);
-         filter: drop-shadow(0 0 8px rgba(224, 64, 251, 0.8)); }
+  0% {
+    opacity: 0.2;
+    transform: scale(0.4);
+    filter: drop-shadow(0 0  0px transparent);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+    filter: brightness(3) drop-shadow(0 0 24px rgba(224, 64, 251, 1));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.0);
+    filter: drop-shadow(0 0 8px rgba(224, 64, 251, 0.8));
+  }
 }
 .hx-portal-spawn {
   transform-box: fill-box;

@@ -312,7 +312,7 @@ function openPortal() {
 
 /** Closes the portal: removes visuals and resets state. */
 function closePortal() {
-  if (!hxState.portalOpen && !hxState.portalEntry && !hxState.portalExit) return;
+  if (!hxState.portalOpen) return;
   clearPortalVisuals();
   hxState.portalOpen  = false;
   hxState.portalUsed  = false;
@@ -1061,7 +1061,7 @@ async function submitHexacoreWord() {
     spawnSpecialTiles();
 
     // Portal milestone: open a new portal after every 10th word submitted
-    if (hxState.wordsSubmitted % 10 === 0) {
+    if (hxState.wordsSubmitted > 0 && hxState.wordsSubmitted % 10 === 0) {
       closePortal(); // close any existing portal first
       openPortal();
     }
