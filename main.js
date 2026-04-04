@@ -10,7 +10,7 @@ import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAn
 import { isValidWord } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName, promptSignOut, clearPlayerName } from './leaderboard.js';
 import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
-import { stopHexacore } from './hexacore.js';
+import { stopHexacore, getHexacoreScore } from './hexacore.js';
 
 
 // ============================================================
@@ -654,6 +654,12 @@ window.addEventListener('grid:ready', () => {
       settingsMenu.hidden = true;
       settingsWrap.classList.remove('menu-open');
       if (document.body.classList.contains('hx-active')) {
+        // Submit current score to leaderboard on intentional exit (fire-and-forget)
+        const playerName = getPlayerName();
+        const currentScore = getHexacoreScore();
+        if (playerName && currentScore > 0) {
+          submitScore('hexacore', currentScore, [], 0, 'hexacore').catch(() => {});
+        }
         stopHexacore();
       }
       document.getElementById('splash-screen')?.classList.remove('hidden');
