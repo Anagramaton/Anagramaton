@@ -3,7 +3,7 @@
 // Used by scripts/generateBoards.mjs to pre-generate boards offline.
 
 import { GRID_RADIUS as DEFAULT_RADIUS, letterFrequencies, letterPoints, lengthMultipliers, anagramMultiplier, reuseMultipliers } from './constants.js';
-import wordList from './wordList.js';
+import { getDictionarySet } from './gameLogic.js';
 import suffixList from './suffixList.js';
 import phraseHints from './phraseHints.js';
 import { ADJ_DIRS, hexKey, getAllCoords, isValidCoord } from './gridCoords.js';
@@ -195,7 +195,7 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state) {
   }
 
   const candidates = seededShuffle(
-    wordList.map((w) => w.toUpperCase()).filter(isFriendlyWord),
+    Array.from(getDictionarySet()).filter(isFriendlyWord),
     state
   ).sort((a, b) => b.length - a.length);
 

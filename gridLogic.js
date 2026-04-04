@@ -1,5 +1,5 @@
 import { GRID_RADIUS as DEFAULT_RADIUS, letterFrequencies, letterPoints, lengthMultipliers, anagramMultiplier, reuseMultipliers } from './constants.js';
-import wordList from './wordList.js';
+import { getDictionarySet } from './gameLogic.js';
 import suffixList from './suffixList.js';
 import phraseHints from './phraseHints.js';
 import { gameState } from './gameState.js';
@@ -293,7 +293,7 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
     return true;
   }
   const candidates = seededShuffle(
-    wordList.map((w) => w.toUpperCase()).filter(isFriendlyWord)
+    Array.from(getDictionarySet()).filter(isFriendlyWord)
   ).sort((a, b) => b.length - a.length);
 
   const LONG_MIN = 9;

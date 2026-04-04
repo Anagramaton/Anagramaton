@@ -7,11 +7,13 @@ import { initPhrasePanelEvents, revealPhrase, computePhraseBonus } from './phras
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
-import { isValidWord } from './gameLogic.js';
+import { isValidWord, preloadDictionary } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName, promptSignOut, clearPlayerName } from './leaderboard.js';
 import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
 import { stopHexacore } from './hexacore.js';
 
+// Start loading the dictionary immediately — runs in background while splash renders
+const dictReady = preloadDictionary();
 
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
@@ -673,9 +675,17 @@ window.addEventListener('grid:ready', () => {
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
-  initializeGrid();
+  // Wait for dictionary, then init grid (board generation needs it)
+  dictReady.then(() => {
+    initializeGrid();
+  }).catch(err => {
+    console.error('Failed to load dictionary:', err);
+    if (splashPlayBtn) {
+      splashPlayBtn.textContent = 'ERROR — RELOAD';
+      splashPlayBtn.removeAttribute('disabled');
+    }
+  });
 
-  // --- Right panel visibility based on mode ---
   if (gameState.mode === 'daily') {
     initPhrasePanelEvents();
   } else {
