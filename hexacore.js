@@ -122,6 +122,7 @@ const hxState = {
   portalUsed:     false,  // whether the portal was traversed (closed on next word)
   portalEntry:    null,   // { q, r, s } coordinate of the entry portal tile
   portalExit:     null,   // { q, r, s } coordinate of the exit portal tile
+  portalWordsRemaining: 0, // words left before portal auto-closes (3 when opened)
 };
 
 let hxSelected          = [];   // tiles in current selection chain
@@ -297,6 +298,7 @@ function openPortal() {
   hxState.portalUsed  = false;
   hxState.portalEntry = { q: ep.q, r: ep.r, s: -ep.q - ep.r };
   hxState.portalExit  = { q: xp.q, r: xp.r, s: -xp.q - xp.r };
+  hxState.portalWordsRemaining = 3;
   applyPortalVisuals();
 
   // Play spawn flash on both portal tiles
@@ -318,6 +320,7 @@ function closePortal() {
   hxState.portalUsed  = false;
   hxState.portalEntry = null;
   hxState.portalExit  = null;
+  hxState.portalWordsRemaining = 0;
 }
 
 function escapeHtml(str) {
@@ -779,20 +782,30 @@ function ensureHud() {
   const wordHud = document.createElement('div');
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
+
+  const liveWordEl = document.createElement('div');
+  liveWordEl.id = 'hx-live-word';
+  document.body.appendChild(liveWordEl);
 }
 
 function removeHud() {
   document.getElementById('hx-score-hud')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();
+  document.getElementById('hx-live-word')?.remove();
 }
 
 /* ── Word display / selection ──────────────────────────────────── */
 function updateWordDisplay() {
   const el = document.getElementById('current-word');
-  if (!el) return;
-  el.textContent = hxSelected
-    .map(t => t.tileType === 'rune' ? '?' : t.letter)
-    .join('');
+  if (el) {
+    el.textContent = hxSelected
+      .map(t => t.tileType === 'rune' ? '?' : t.letter)
+      .join('');
+  }
+  const liveEl = document.getElementById('hx-live-word');
+  if (liveEl) {
+    liveEl.textContent = hxSelected.map(t => t.tileType === 'rune' ? '?' : t.letter).join('');
+  }
   updateWordScorePreview();
 }
 
@@ -1044,6 +1057,15 @@ async function submitHexacoreWord() {
     }
   }
 
+  // Decrement portal countdown; auto-close if it reaches 0 (and portal wasn't
+  // already closed above because a portal tile was consumed this word).
+  if (hxState.portalOpen) {
+    hxState.portalWordsRemaining--;
+    if (hxState.portalWordsRemaining <= 0) {
+      closePortal();
+    }
+  }
+
   clearSelection();
 
   playSound('sfxSuccess');
@@ -1139,6 +1161,7 @@ async function applyGravity() {
     const moves  = []; // { tile, fromQ, fromR, toQ, toR }
 
     for (const tile of sorted) {
+      if (isPortalTile(tile)) continue; // portal tiles never fall
       const se = { q: tile.q,     r: tile.r + 1 };
       const sw = { q: tile.q - 1, r: tile.r + 1 };
 
@@ -1608,6 +1631,7 @@ export function startHexacore() {
     portalUsed:     false,
     portalEntry:    null,
     portalExit:     null,
+    portalWordsRemaining: 0,
   });
   hxSelected           = [];
   hxPointerDown        = false;
