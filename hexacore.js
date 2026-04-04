@@ -1959,6 +1959,10 @@ export function startHexacore() {
 
   document.body.classList.add('hx-active');
 
+  // Clear the shared word display so no stale main-board letters show
+  const currentWordEl = document.getElementById('current-word');
+  if (currentWordEl) currentWordEl.textContent = '';
+
   // Change title to reflect Hexacore mode
   const titleEl = document.getElementById('game-title');
   if (titleEl) titleEl.textContent = 'HEXACORE';

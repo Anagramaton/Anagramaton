@@ -295,6 +295,9 @@ function fitCurrentWord() {
 }
 
 function updateCurrentWordDisplay() {
+  // Don't interfere with Hexacore's own word display
+  if (document.body.classList.contains('hx-active')) return;
+
   const el = document.getElementById('current-word');
   if (!el) return;
   const letters = (gameState.selectedTiles || [])
