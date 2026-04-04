@@ -220,16 +220,19 @@ export function promptSignOut() {
 
 export async function submitScore(dailyId, score, words, hintsUsed, mode = 'daily') {
   const playerName = getPlayerName();
-  if (!playerName) return;
+  if (!playerName) return null;
   try {
-    await fetch('/api/scores', {
+    const res = await fetch('/api/scores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ dailyId, playerName, score, words, hintsUsed, mode }),
     });
+    if (!res.ok) return null;
+    return await res.json();
   } catch (err) {
     // Silently fail — offline or server error should not affect gameplay
     console.warn('[leaderboard] submitScore failed:', err);
+    return null;
   }
 }
 
