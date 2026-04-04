@@ -539,7 +539,14 @@ window.addEventListener('grid:ready', () => {
   if (playerClickedPlay) {
     // Wait for buffers, but cap at 1.5s so slow connections never block the transition
     const bufferTimeout = new Promise(resolve => setTimeout(resolve, 1500));
-    Promise.race([audioReadyPromise, bufferTimeout]).then(() => {
+    Promise.race([audioReadyPromise, bufferTimeout]).then(async () => {
+      // Require sign-up before playing
+      if (!getPlayerName()) {
+        await promptPlayerName();
+        const saved = getPlayerName();
+        updateNameBtnText(document.getElementById('set-name-btn'), saved);
+        updateSplashSignupBtn(splashSignupBtn, saved);
+      }
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
       openHowtoIfFirstVisit(300);
@@ -547,7 +554,9 @@ window.addEventListener('grid:ready', () => {
   }
 }, { once: true });
 
-    splashPlayBtn.addEventListener('click', () => {
+    let signUpInProgress = false;
+    splashPlayBtn.addEventListener('click', async () => {
+      if (signUpInProgress) return;
       playerClickedPlay = true;
 
 
@@ -560,10 +569,20 @@ window.addEventListener('grid:ready', () => {
 
       if (!gameState.gridReady) return;
 
+      // Require sign-up before playing
+      if (!getPlayerName()) {
+        signUpInProgress = true;
+        await promptPlayerName();
+        signUpInProgress = false;
+        const saved = getPlayerName();
+        updateNameBtnText(document.getElementById('set-name-btn'), saved);
+        updateSplashSignupBtn(splashSignupBtn, saved);
+      }
+
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
       openHowtoIfFirstVisit(300);
-    }, { once: true });
+    });
   }
 
   // SIGN UP button on splash screen
@@ -618,7 +637,11 @@ window.addEventListener('grid:ready', () => {
     lbBtn.addEventListener('click', () => {
       settingsMenu.hidden = true;
       settingsWrap.classList.remove('menu-open');
-      window.lbModal?.open();
+      if (document.body.classList.contains('hx-active')) {
+        window.hxLbModal?.open();
+      } else {
+        window.lbModal?.open();
+      }
     });
   }
 

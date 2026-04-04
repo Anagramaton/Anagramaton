@@ -2,6 +2,18 @@
 
 const PLAYER_NAME_KEY = 'anagramaton_player_name';
 
+/* ── Random name generator ─────────────────────────────────────── */
+
+const ADJECTIVES = ['SWIFT','BOLD','LUNAR','COSMIC','NEON','SONIC','JADE','IRON','STORM','BLAZE','PIXEL','TURBO','HYPER','ULTRA','OMEGA'];
+const NOUNS      = ['FOX','WOLF','HAWK','LYNX','BEAR','ROOK','SAGE','VOLT','WREN','APEX','ECHO','FLUX','GLYPH','NODE','ZEAL'];
+
+function generateRandomName() {
+  const adj  = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
+  const noun = NOUNS[Math.floor(Math.random() * NOUNS.length)];
+  const num  = Math.floor(Math.random() * 900) + 100; // 100–999
+  return `${adj}${noun}${num}`;
+}
+
 /* ── Player Name helpers ───────────────────────────────────────── */
 
 export function getPlayerName() {
@@ -123,10 +135,10 @@ function ensureNameModal() {
   modal.innerHTML = `
     <div id="lb-name-box">
       <p id="lb-name-title">👤 SET DISPLAY NAME</p>
-      <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.75rem;">Shown on the daily leaderboard (max 30 chars)</p>
+      <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.75rem;">Enter your name or tap PICK FOR ME — we'll choose one for you!</p>
       <input id="lb-name-input" type="text" maxlength="30" placeholder="Enter your name…" autocomplete="off" />
       <div class="lb-name-btns">
-        <button type="button" id="lb-name-cancel">SKIP</button>
+        <button type="button" id="lb-name-cancel">PICK FOR ME</button>
         <button type="button" id="lb-name-ok">SAVE</button>
       </div>
     </div>
@@ -163,7 +175,12 @@ export function promptPlayerName() {
     }
 
     function handleCancel() {
-      finish(getPlayerName());
+      let name = getPlayerName();
+      if (!name) {
+        name = generateRandomName();
+        setPlayerName(name);
+      }
+      finish(name);
     }
 
     okBtn.addEventListener('click', handleOk, { signal });
