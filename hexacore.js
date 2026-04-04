@@ -86,6 +86,17 @@ function randomDigraph() {
   return { digraph: dg, points: pts };
 }
 
+/* ── Portal system ─────────────────────────────────────────────── */
+/** The 6 corner tiles of the radius-4 hex grid that may become portals. */
+const HX_PORTAL_CORNERS = [
+  { q: -2, r:  4 },
+  { q:  2, r:  4 },
+  { q:  4, r:  0 },
+  { q:  2, r: -4 },
+  { q: -2, r: -4 },
+  { q: -4, r:  0 },
+];
+
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
   score:           0,
@@ -104,6 +115,13 @@ const hxState = {
   gemDiamondTiles:   [],
   gameOver:        false,
   active:          false,
+
+  // Portal system
+  wordsSubmitted: 0,      // total words successfully submitted this session
+  portalOpen:     false,  // whether a portal pair is currently active
+  portalUsed:     false,  // whether the portal was traversed (closed on next word)
+  portalEntry:    null,   // { q, r, s } coordinate of the entry portal tile
+  portalExit:     null,   // { q, r, s } coordinate of the exit portal tile
 };
 
 let hxSelected          = [];   // tiles in current selection chain
@@ -177,12 +195,129 @@ function randomLetterOrDigraphForPos(q, r) {
 }
 
 function areNeighbors(a, b) {
-  return (Math.abs(a.q - b.q) + Math.abs(a.r - b.r) + Math.abs(a.s - b.s)) === 2;
+  if ((Math.abs(a.q - b.q) + Math.abs(a.r - b.r) + Math.abs(a.s - b.s)) === 2) return true;
+  // Portal adjacency override: treat entry and exit as neighbors when portal is open
+  if (hxState.portalOpen && !hxState.portalUsed && hxState.portalEntry && hxState.portalExit) {
+    const aKey     = hxKey(a.q, a.r);
+    const bKey     = hxKey(b.q, b.r);
+    const entryKey = hxKey(hxState.portalEntry.q, hxState.portalEntry.r);
+    const exitKey  = hxKey(hxState.portalExit.q,  hxState.portalExit.r);
+    if ((aKey === entryKey && bKey === exitKey) || (aKey === exitKey && bKey === entryKey)) return true;
+  }
+  return false;
 }
 
 function removeFrom(arr, item) {
   const i = arr.indexOf(item);
   if (i !== -1) arr.splice(i, 1);
+}
+
+/* ── Portal helpers ────────────────────────────────────────────── */
+
+/** Returns true when `tile` is one of the active portal tiles. */
+function isPortalTile(tile) {
+  if (!hxState.portalOpen || !hxState.portalEntry || !hxState.portalExit) return false;
+  const key = hxKey(tile.q, tile.r);
+  return key === hxKey(hxState.portalEntry.q, hxState.portalEntry.r) ||
+         key === hxKey(hxState.portalExit.q,  hxState.portalExit.r);
+}
+
+/** Applies portal CSS classes and icons to the two portal tiles. */
+function applyPortalVisuals() {
+  if (!hxState.portalEntry || !hxState.portalExit) return;
+  const entryTile = hxTileMap.get(hxKey(hxState.portalEntry.q, hxState.portalEntry.r));
+  const exitTile  = hxTileMap.get(hxKey(hxState.portalExit.q,  hxState.portalExit.r));
+  if (entryTile) {
+    entryTile.element.querySelector('polygon')?.classList.add('hx-portal');
+    _addPortalIcon(entryTile, '◈');
+  }
+  if (exitTile) {
+    exitTile.element.querySelector('polygon')?.classList.add('hx-portal');
+    _addPortalIcon(exitTile, '◉');
+  }
+}
+
+function _addPortalIcon(tile, glyph) {
+  tile.element.querySelector('.hx-portal-icon')?.remove();
+  const cx   = parseFloat(tile.textLetter.getAttribute('x'));
+  const cy   = parseFloat(tile.textLetter.getAttribute('y'));
+  const icon = document.createElementNS(SVG_NS, 'text');
+  icon.setAttribute('x', cx - HEX_RADIUS * 0.5);
+  icon.setAttribute('y', cy - HEX_RADIUS * 0.45);
+  icon.setAttribute('font-size', '11');
+  icon.setAttribute('pointer-events', 'none');
+  icon.setAttribute('class', 'hx-portal-icon');
+  icon.setAttribute('fill', '#e040fb');
+  icon.textContent = glyph;
+  tile.element.appendChild(icon);
+}
+
+/** Removes portal CSS classes and icons from the two portal tiles. */
+function clearPortalVisuals() {
+  [hxState.portalEntry, hxState.portalExit].forEach(pos => {
+    if (!pos) return;
+    const tile = hxTileMap.get(hxKey(pos.q, pos.r));
+    if (!tile) return;
+    tile.element.querySelector('polygon')?.classList.remove('hx-portal', 'hx-portal-active');
+    tile.element.querySelector('.hx-portal-icon')?.remove();
+  });
+}
+
+/**
+ * Highlights both portal tiles when they are both present in the current
+ * selection (i.e., the portal is actively being traversed in this drag).
+ */
+function updatePortalActiveState() {
+  if (!hxState.portalOpen || !hxState.portalEntry || !hxState.portalExit) return;
+  const entryKey = hxKey(hxState.portalEntry.q, hxState.portalEntry.r);
+  const exitKey  = hxKey(hxState.portalExit.q,  hxState.portalExit.r);
+  const keys     = new Set(hxSelected.map(t => hxKey(t.q, t.r)));
+  const bothActive = keys.has(entryKey) && keys.has(exitKey);
+
+  [hxState.portalEntry, hxState.portalExit].forEach(pos => {
+    const tile = hxTileMap.get(hxKey(pos.q, pos.r));
+    if (!tile) return;
+    const poly = tile.element.querySelector('polygon');
+    if (!poly) return;
+    poly.classList.toggle('hx-portal-active', bothActive);
+  });
+}
+
+/**
+ * Randomly selects 2 of the 6 corner tiles and opens them as a portal pair.
+ * Does nothing if fewer than 2 corner tiles exist on the board.
+ */
+function openPortal() {
+  if (hxState.gameOver) return;
+  const available = HX_PORTAL_CORNERS.filter(pos => hxTileMap.has(hxKey(pos.q, pos.r)));
+  if (available.length < 2) return;
+  const shuffled = [...available].sort(() => Math.random() - 0.5);
+  const [ep, xp]  = shuffled;
+  hxState.portalOpen  = true;
+  hxState.portalUsed  = false;
+  hxState.portalEntry = { q: ep.q, r: ep.r, s: -ep.q - ep.r };
+  hxState.portalExit  = { q: xp.q, r: xp.r, s: -xp.q - xp.r };
+  applyPortalVisuals();
+
+  // Play spawn flash on both portal tiles
+  [hxState.portalEntry, hxState.portalExit].forEach(pos => {
+    const tile = hxTileMap.get(hxKey(pos.q, pos.r));
+    if (!tile) return;
+    tile.element.classList.add('hx-portal-spawn');
+    tile.element.addEventListener('animationend', () => {
+      tile.element.classList.remove('hx-portal-spawn');
+    }, { once: true });
+  });
+}
+
+/** Closes the portal: removes visuals and resets state. */
+function closePortal() {
+  if (!hxState.portalOpen && !hxState.portalEntry && !hxState.portalExit) return;
+  clearPortalVisuals();
+  hxState.portalOpen  = false;
+  hxState.portalUsed  = false;
+  hxState.portalEntry = null;
+  hxState.portalExit  = null;
 }
 
 function escapeHtml(str) {
@@ -437,6 +572,7 @@ function injectSvgDefs(svg) {
   }
   ensureLinearGradient('hx-prism-gradient',    '#a855f7', '#06b6d4');
   ensureLinearGradient('hx-digraph-gradient',  '#0d9488', '#2dd4bf');
+  ensureLinearGradient('hx-portal-gradient',   '#7b2ff7', '#e040fb');
   ensureLinearGradient('hx-gem-emerald-gradient',   '#16a34a', '#4ade80');
   ensureLinearGradient('hx-gem-gold-gradient',       '#d97706', '#fcd34d');
   ensureLinearGradient('hx-gem-sapphire-gradient',   '#1d4ed8', '#93c5fd');
@@ -765,6 +901,7 @@ function setupPointerEvents() {
       const removed = hxSelected.pop();
       removed.setSelected(false);
       updateWordDisplay();
+      updatePortalActiveState();
       return;
     }
 
@@ -780,6 +917,7 @@ function setupPointerEvents() {
     const swipeIndex = Math.max(1, Math.min(25, hxSelected.length));
     playSound('sfxSwipe' + swipeIndex);
     updateWordDisplay();
+    updatePortalActiveState();
   }
 
   function onPointerUp(e) {
@@ -886,6 +1024,7 @@ async function submitHexacoreWord() {
   const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult;
 
   hxWordCount++;
+  hxState.wordsSubmitted++;
   const oldScore = hxState.score;
   hxState.score += wordScore;
   hxState.words.push({ word, score: wordScore });
@@ -894,6 +1033,17 @@ async function submitHexacoreWord() {
   animateScoreHud(oldScore, hxState.score);
 
   const consumed = [...hxSelected];
+
+  // If any portal tile is in the consumed set, close the portal now (before
+  // tile animations start) so the glowing style doesn't play during pop-out.
+  if (hxState.portalOpen && hxState.portalEntry && hxState.portalExit) {
+    const entryKey = hxKey(hxState.portalEntry.q, hxState.portalEntry.r);
+    const exitKey  = hxKey(hxState.portalExit.q,  hxState.portalExit.r);
+    if (consumed.some(t => hxKey(t.q, t.r) === entryKey || hxKey(t.q, t.r) === exitKey)) {
+      closePortal();
+    }
+  }
+
   clearSelection();
 
   playSound('sfxSuccess');
@@ -909,6 +1059,12 @@ async function submitHexacoreWord() {
     // Fire bonus mirrors word reward
     if (hasEmber) spawnGemRewardForWord(word.length);
     spawnSpecialTiles();
+
+    // Portal milestone: open a new portal after every 10th word submitted
+    if (hxState.wordsSubmitted % 10 === 0) {
+      closePortal(); // close any existing portal first
+      openPortal();
+    }
   }
 }
 
@@ -1045,6 +1201,8 @@ async function advanceEmberTiles() {
     // Displace any normal tile at the target before moving
     const displaced = hxTileMap.get(hxKey(target.q, target.r));
     if (displaced && displaced !== tile) {
+      // If the displaced tile is a portal tile, close the portal first
+      if (isPortalTile(displaced)) closePortal();
       displaced.element.remove();
       removeFrom(hxState.tiles,             displaced);
       removeFrom(hxState.emberTiles,        displaced);
@@ -1132,16 +1290,16 @@ async function refillGrid() {
 
 /* ── Gem tile helpers ──────────────────────────────────────────── */
 
-/** Returns a random normal tile from anywhere on the board (not ember/prism/rune/gem). */
+/** Returns a random normal tile from anywhere on the board (not ember/prism/rune/gem/portal). */
 function getRandomNormalTile() {
-  const eligible = hxState.tiles.filter(t => t.tileType === 'normal' || t.tileType === 'digraph');
+  const eligible = hxState.tiles.filter(t => (t.tileType === 'normal' || t.tileType === 'digraph') && !isPortalTile(t));
   if (eligible.length === 0) return null;
   return eligible[Math.floor(Math.random() * eligible.length)];
 }
 
 /** Returns multiple distinct random normal tiles (up to `count`). */
 function getRandomNormalTiles(count) {
-  const eligible = hxState.tiles.filter(t => t.tileType === 'normal' || t.tileType === 'digraph');
+  const eligible = hxState.tiles.filter(t => (t.tileType === 'normal' || t.tileType === 'digraph') && !isPortalTile(t));
   const result = [];
   const used = new Set();
   while (result.length < count && result.length < eligible.length) {
@@ -1262,7 +1420,7 @@ function spawnSpecialTiles() {
 
 function spawnSpecialInRows(type, rows) {
   const eligible = hxState.tiles.filter(
-    t => (t.tileType === 'normal' || t.tileType === 'digraph') && rows.includes(t.r),
+    t => (t.tileType === 'normal' || t.tileType === 'digraph') && rows.includes(t.r) && !isPortalTile(t),
   );
   if (eligible.length === 0) return;
   const target = eligible[Math.floor(Math.random() * eligible.length)];
@@ -1444,6 +1602,12 @@ export function startHexacore() {
     gemDiamondTiles:   [],
     gameOver:        false,
     active:          false, // set to true after intro animation completes
+    // Portal system reset
+    wordsSubmitted: 0,
+    portalOpen:     false,
+    portalUsed:     false,
+    portalEntry:    null,
+    portalExit:     null,
   });
   hxSelected           = [];
   hxPointerDown        = false;
