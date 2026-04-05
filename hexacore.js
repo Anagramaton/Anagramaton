@@ -960,13 +960,13 @@ function ensureHud() {
   const levelHud = document.createElement('div');
   levelHud.id = 'hx-level-hud';
   levelHud.textContent = 'LVL 1';
+  levelHud.setAttribute('role', 'button');
+  levelHud.setAttribute('tabindex', '0');
+  levelHud.addEventListener('click', openChallengesModal);
+  levelHud.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
+  });
   document.body.appendChild(levelHud);
-
-  const challengesBtn = document.createElement('button');
-  challengesBtn.id = 'hx-challenges-btn';
-  challengesBtn.textContent = '📋 CHALLENGES';
-  challengesBtn.addEventListener('click', openChallengesModal);
-  document.body.appendChild(challengesBtn);
 }
 
 function removeHud() {
@@ -974,7 +974,6 @@ function removeHud() {
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
   document.getElementById('hx-level-hud')?.remove();
-  document.getElementById('hx-challenges-btn')?.remove();
 }
 
 /* ── Requirements persistence ──────────────────────────────────── */
@@ -1156,14 +1155,14 @@ const HX_LEVEL_REQUIREMENTS = [
   // ── 5 Letters ────────────────────────────────────────────────
   {
     id: '5L_gem1', section: '5 Letters', wordLength: 5,
-    description: 'Find a 5-letter word that includes at least 1 Gem tile',
+    description: 'INCLUDES AT LEAST 1 GEM TILE',
     check(word, tiles) {
       return word.length === 5 && tiles.some(t => HX_GEM_TYPES.has(t.tileType));
     },
   },
   {
     id: '5L_plain', section: '5 Letters', wordLength: 5,
-    description: 'Find a 5-letter word with no Gem tiles and no Digraph tiles',
+    description: 'NO GEM TILES AND NO DIGRAPH TILES',
     check(word, tiles) {
       return word.length === 5 &&
         !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
@@ -1171,14 +1170,14 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '5L_ember1', section: '5 Letters', wordLength: 5,
-    description: 'Find a 5-letter word that includes 1 Fire (Ember) tile',
+    description: 'INCLUDES 1 FIRE (EMBER) TILE',
     check(word, tiles) {
       return word.length === 5 && tiles.some(t => t.tileType === 'ember');
     },
   },
   {
     id: '5L_score500', section: '5 Letters', wordLength: 5,
-    description: 'Find a 5-letter word worth at least 500 points',
+    description: 'WORTH AT LEAST 500 POINTS',
     check(word, tiles, state, score) {
       return word.length === 5 && score >= 500;
     },
@@ -1187,21 +1186,21 @@ const HX_LEVEL_REQUIREMENTS = [
   // ── 6 Letters ────────────────────────────────────────────────
   {
     id: '6L_gem2', section: '6 Letters', wordLength: 6,
-    description: 'Find a 6-letter word that includes at least 2 Gem tiles',
+    description: 'INCLUDES AT LEAST 2 GEM TILES',
     check(word, tiles) {
       return word.length === 6 && tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
     },
   },
   {
     id: '6L_digraph1', section: '6 Letters', wordLength: 6,
-    description: 'Find a 6-letter word that includes 1 Digraph tile',
+    description: 'INCLUDES 1 DIGRAPH TILE',
     check(word, tiles) {
       return word.length === 6 && tiles.some(t => t.tileType === 'digraph');
     },
   },
   {
     id: '6L_plain', section: '6 Letters', wordLength: 6,
-    description: 'Find a 6-letter word with no Gem tiles and no Digraph tiles',
+    description: 'NO GEM TILES AND NO DIGRAPH TILES',
     check(word, tiles) {
       return word.length === 6 &&
         !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
@@ -1209,7 +1208,7 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '6L_score1500', section: '6 Letters', wordLength: 6,
-    description: 'Find a 6-letter word worth at least 1,500 points',
+    description: 'WORTH AT LEAST 1,500 POINTS',
     check(word, tiles, state, score) {
       return word.length === 6 && score >= 1500;
     },
@@ -1218,14 +1217,14 @@ const HX_LEVEL_REQUIREMENTS = [
   // ── 7 Letters ────────────────────────────────────────────────
   {
     id: '7L_gem3', section: '7 Letters', wordLength: 7,
-    description: 'Find a 7-letter word that includes at least 3 Gem tiles',
+    description: 'INCLUDES AT LEAST 3 GEM TILES',
     check(word, tiles) {
       return word.length === 7 && tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 3;
     },
   },
   {
     id: '7L_ember1_digraph2', section: '7 Letters', wordLength: 7,
-    description: 'Find a 7-letter word that includes 1 Fire tile and 2 Digraph tiles',
+    description: 'INCLUDES 1 FIRE TILE AND 2 DIGRAPH TILES',
     check(word, tiles) {
       return word.length === 7 &&
         tiles.some(t => t.tileType === 'ember') &&
@@ -1234,7 +1233,7 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '7L_allGems', section: '7 Letters', wordLength: 7,
-    description: 'Find a 7-letter word that uses all Gem tiles on the board',
+    description: 'USES ALL GEM TILES ON THE BOARD',
     check(word, tiles, state) {
       if (word.length !== 7) return false;
       const boardGems = [
@@ -1249,14 +1248,14 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '7L_score10k', section: '7 Letters', wordLength: 7,
-    description: 'Find a 7-letter word worth at least 10,000 points',
+    description: 'WORTH AT LEAST 10,000 POINTS',
     check(word, tiles, state, score) {
       return word.length === 7 && score >= 10000;
     },
   },
   {
     id: '7L_3gemTypes', section: '7 Letters', wordLength: 7,
-    description: 'Find a 7-letter word that uses 3 different Gem tile types',
+    description: 'USES 3 DIFFERENT GEM TILE TYPES',
     check(word, tiles) {
       return word.length === 7 &&
         new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 3;
@@ -1266,7 +1265,7 @@ const HX_LEVEL_REQUIREMENTS = [
   // ── 8 Letters ────────────────────────────────────────────────
   {
     id: '8L_plain', section: '8 Letters', wordLength: 8,
-    description: 'Find an 8-letter word with no Gem tiles and no Digraph tiles',
+    description: 'NO GEM TILES AND NO DIGRAPH TILES',
     check(word, tiles) {
       return word.length === 8 &&
         !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
@@ -1274,7 +1273,7 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '8L_allDigraphs', section: '8 Letters', wordLength: 8,
-    description: 'Find an 8-letter word that uses all Digraph tiles on the board',
+    description: 'USES ALL DIGRAPH TILES ON THE BOARD',
     check(word, tiles, state) {
       if (word.length !== 8) return false;
       if (state.digraphTiles.length === 0) return false;
@@ -1284,7 +1283,7 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '8L_ember1_gem2', section: '8 Letters', wordLength: 8,
-    description: 'Find an 8-letter word that includes a Fire tile and 2 Gem tiles',
+    description: 'INCLUDES A FIRE TILE AND 2 GEM TILES',
     check(word, tiles) {
       return word.length === 8 &&
         tiles.some(t => t.tileType === 'ember') &&
@@ -1293,14 +1292,14 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '8L_ember2', section: '8 Letters', wordLength: 8,
-    description: 'Find an 8-letter word with 2 Fire tiles',
+    description: '2 FIRE TILES',
     check(word, tiles) {
       return word.length === 8 && tiles.filter(t => t.tileType === 'ember').length >= 2;
     },
   },
   {
     id: '8L_score25k', section: '8 Letters', wordLength: 8,
-    description: 'Find an 8-letter word worth at least 25,000 points',
+    description: 'WORTH AT LEAST 25,000 POINTS',
     check(word, tiles, state, score) {
       return word.length === 8 && score >= 25000;
     },
@@ -1309,7 +1308,7 @@ const HX_LEVEL_REQUIREMENTS = [
   // ── 9 Letters ────────────────────────────────────────────────
   {
     id: '9L_diamond_portal', section: '9 Letters', wordLength: 9,
-    description: 'Find a 9-letter word that uses a Diamond tile and the Portal',
+    description: 'USES A DIAMOND TILE AND THE PORTAL',
     check(word, tiles, state) {
       if (word.length !== 9) return false;
       if (!tiles.some(t => t.tileType === 'gemDiamond')) return false;
@@ -1321,14 +1320,14 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '9L_ember2', section: '9 Letters', wordLength: 9,
-    description: 'Find a 9-letter word with 2 Fire tiles',
+    description: '2 FIRE TILES',
     check(word, tiles) {
       return word.length === 9 && tiles.filter(t => t.tileType === 'ember').length >= 2;
     },
   },
   {
     id: '9L_3gemTypes', section: '9 Letters', wordLength: 9,
-    description: 'Find a 9-letter word that uses 3 different Gem tile types',
+    description: 'USES 3 DIFFERENT GEM TILE TYPES',
     check(word, tiles) {
       return word.length === 9 &&
         new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 3;
@@ -1336,14 +1335,14 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '9L_score50k', section: '9 Letters', wordLength: 9,
-    description: 'Find a 9-letter word worth at least 50,000 points',
+    description: 'WORTH AT LEAST 50,000 POINTS',
     check(word, tiles, state, score) {
       return word.length === 9 && score >= 50000;
     },
   },
   {
     id: '9L_portal_ember1_gem2', section: '9 Letters', wordLength: 9,
-    description: 'Find a 9-letter word that includes a Portal, a Fire tile, and 2 Gem tiles',
+    description: 'INCLUDES A PORTAL, A FIRE TILE, AND 2 GEM TILES',
     check(word, tiles, state) {
       if (word.length !== 9) return false;
       if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
@@ -1358,7 +1357,7 @@ const HX_LEVEL_REQUIREMENTS = [
   // ── 10 Letters ───────────────────────────────────────────────
   {
     id: '10L_diamond_portal', section: '10 Letters', wordLength: 10,
-    description: 'Find a 10-letter word that uses a Diamond tile and the Portal',
+    description: 'USES A DIAMOND TILE AND THE PORTAL',
     check(word, tiles, state) {
       if (word.length !== 10) return false;
       if (!tiles.some(t => t.tileType === 'gemDiamond')) return false;
@@ -1370,7 +1369,7 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '10L_allDigraphs', section: '10 Letters', wordLength: 10,
-    description: 'Find a 10-letter word that uses all Digraph tiles on the board',
+    description: 'USES ALL DIGRAPH TILES ON THE BOARD',
     check(word, tiles, state) {
       if (word.length !== 10) return false;
       if (state.digraphTiles.length === 0) return false;
@@ -1380,14 +1379,14 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '10L_score100k', section: '10 Letters', wordLength: 10,
-    description: 'Find a 10-letter word worth at least 100,000 points',
+    description: 'WORTH AT LEAST 100,000 POINTS',
     check(word, tiles, state, score) {
       return word.length === 10 && score >= 100000;
     },
   },
   {
     id: '10L_ember2_gem3', section: '10 Letters', wordLength: 10,
-    description: 'Find a 10-letter word with 2 Fire tiles and at least 3 Gem tiles',
+    description: '2 FIRE TILES AND AT LEAST 3 GEM TILES',
     check(word, tiles) {
       return word.length === 10 &&
         tiles.filter(t => t.tileType === 'ember').length >= 2 &&
@@ -1396,7 +1395,7 @@ const HX_LEVEL_REQUIREMENTS = [
   },
   {
     id: '10L_5gemTypes', section: '10 Letters', wordLength: 10,
-    description: 'Find a 10-letter word that uses 5 different Gem tile types',
+    description: 'USES 5 DIFFERENT GEM TILE TYPES',
     check(word, tiles) {
       return word.length === 10 &&
         new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 5;

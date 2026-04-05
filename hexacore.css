@@ -190,16 +190,28 @@
 /* ── Level HUD ───────────────────────────────────────────────── */
 #hx-level-hud {
   position: fixed;
-  top: 12px;
+  top: 10px;
   right: 16px;
   z-index: 900;
   font-family: 'Turret Road', system-ui, sans-serif;
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
   color: #a78bfa;
-  text-shadow: 0 0 8px rgba(167, 139, 250, 0.6);
-  pointer-events: none;
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.7);
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transition: color 0.18s, text-shadow 0.18s, transform 0.18s;
+}
+#hx-level-hud:hover,
+#hx-level-hud:focus {
+  color: #c4b5fd;
+  text-shadow:
+    0 0 14px rgba(167, 139, 250, 1),
+    0 0 30px rgba(130, 80, 255, 0.7);
+  transform: scale(1.12);
+  outline: none;
 }
 
 /* ── Level-up banner ─────────────────────────────────────────── */
@@ -1027,36 +1039,8 @@ body.hx-active #hex-grid {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Challenges (Requirements Checklist) — button, modal, toast
+   Challenges (Requirements Checklist) — modal, toast
    ═══════════════════════════════════════════════════════════════ */
-
-/* ── HUD challenges button ─────────────────────────────────────── */
-#hx-challenges-btn {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 900;
-  background: rgba(10, 10, 25, 0.88);
-  border: 1px solid rgba(76, 201, 240, 0.55);
-  border-radius: 8px;
-  color: #4cc9f0;
-  font-family: 'Turret Road', 'Orbitron', monospace;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  padding: 0.45rem 0.85rem;
-  cursor: pointer;
-  text-transform: uppercase;
-  box-shadow: 0 0 10px rgba(76, 201, 240, 0.2);
-  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
-}
-#hx-challenges-btn:hover,
-#hx-challenges-btn:focus {
-  background: rgba(76, 201, 240, 0.15);
-  border-color: rgba(76, 201, 240, 0.85);
-  box-shadow: 0 0 16px rgba(76, 201, 240, 0.45);
-  outline: none;
-}
 
 /* ── Challenges modal backdrop ─────────────────────────────────── */
 #hx-challenges-modal {
