@@ -15,6 +15,14 @@ Click the **HOW TO PLAY** button on the start screen (or the 🎮 icon in the se
 
 ---
 
+## Hexacore Mode
+
+Hexacore is an endless word-building mode with a living gem economy. Build long words to spawn gem tiles, then use gem tiles to multiply your scores and level up.
+
+📖 **[Full Hexacore How to Play Guide →](./HEXACORE_GUIDE.md)**
+
+---
+
 ## Project structure
 
 | File / folder | What it does |
