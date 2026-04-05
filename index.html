@@ -349,6 +349,314 @@
     </div>
   </div>
 
+  <!-- HEXACORE HOW TO PLAY MODAL -->
+  <div id="hx-howto-modal" class="rom rom--hidden" role="dialog" aria-modal="true" aria-labelledby="hx-howto-title">
+    <div class="rom__backdrop"></div>
+
+    <div class="rom__dialog">
+      <h2 id="hx-howto-title">How to Play — Hexacore</h2>
+
+      <!-- Pages -->
+      <div id="hx-howto-pagewrap">
+
+        <!-- PAGE 0 — OBJECTIVE -->
+        <section class="howto-page" data-page="0">
+          <h3>OBJECTIVE</h3>
+          <p>HEXACORE IS AN ENDLESS SURVIVAL MODE. CHAIN LETTER TILES TO SPELL VALID WORDS AND EARN POINTS. WORDS ARE AUTO-SUBMITTED WHEN YOU RELEASE YOUR DRAG. THE GAME ENDS WHEN AN EMBER TILE REACHES THE BOTTOM OF THE GRID.</p>
+        </section>
+
+        <!-- PAGE 1 — HOW TO SPELL A WORD -->
+        <section class="howto-page" data-page="1" hidden>
+          <h3>HOW TO SPELL A WORD</h3>
+          <p>DRAG across adjacent hex tiles to chain letters into a word. You must chain at least 4 letters. Release to auto-submit. You can backtrack by dragging back to the previous tile to deselect it.</p>
+          <p>Digraph tiles (two-letter tiles like <strong>HE</strong>, <strong>EN</strong>, <strong>TH</strong>) count as 2 letters each toward your word length.</p>
+        </section>
+
+        <!-- PAGE 2 — SCORING -->
+        <section class="howto-page" data-page="2" hidden>
+          <h3>SCORING</h3>
+          <p>Each tile has a base point value:</p>
+          <ul>
+            <li><strong>1 pt:</strong> A, E, I, O, U, L, N, R, S, T</li>
+            <li><strong>2 pts:</strong> D, G</li>
+            <li><strong>3 pts:</strong> B, C, M, P</li>
+            <li><strong>4 pts:</strong> F, H, V, W, Y</li>
+            <li><strong>5 pts:</strong> K</li>
+            <li><strong>8 pts:</strong> J, X</li>
+            <li><strong>10 pts:</strong> Q, Z</li>
+          </ul>
+          <p>Plus word length multipliers for 5+ letters:</p>
+          <ul>
+            <li>5 letters: ×3</li>
+            <li>6 letters: ×4</li>
+            <li>7 letters: ×5</li>
+            <li>8 letters: ×6</li>
+            <li>9 letters: ×7</li>
+            <li>10+ letters: ×10</li>
+          </ul>
+        </section>
+
+        <!-- PAGE 3 — SPECIAL TILES -->
+        <section class="howto-page" data-page="3" hidden>
+          <h3>SPECIAL TILES</h3>
+          <div class="hx-howto-tile-row">
+            <!-- EMBER -->
+            <div class="hx-howto-tile-item hx-howto-tile-item--ember">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-ember" x1="0" y1="1" x2="0" y2="0">
+                    <stop offset="0%"   stop-color="#1a0000"/>
+                    <stop offset="30%"  stop-color="#cc1100"/>
+                    <stop offset="60%"  stop-color="#ff4500"/>
+                    <stop offset="80%"  stop-color="#ff9900"/>
+                    <stop offset="100%" stop-color="#ffee00"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-ember)" stroke="#ff4500" stroke-width="1.5"/>
+                <text x="30" y="35" text-anchor="middle" font-size="20" fill="#ffee00">🔥</text>
+              </svg>
+              <span class="hx-howto-tile-label">EMBER</span>
+            </div>
+            <!-- PRISM -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-prism" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%"   stop-color="#a855f7"/>
+                    <stop offset="100%" stop-color="#06b6d4"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-prism)" stroke="#a855f7" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#fbbf24" font-weight="bold">✦</text>
+              </svg>
+              <span class="hx-howto-tile-label">PRISM</span>
+            </div>
+            <!-- RUNE -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="#2d1b69" stroke="#7c3aed" stroke-width="1.5"/>
+                <text x="30" y="37" text-anchor="middle" font-size="22" fill="#c4b5fd" font-weight="bold" font-family="monospace">?</text>
+              </svg>
+              <span class="hx-howto-tile-label">RUNE</span>
+            </div>
+            <!-- DIGRAPH -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-digraph" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#0d9488"/>
+                    <stop offset="100%" stop-color="#2dd4bf"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-digraph)" stroke="#0d9488" stroke-width="1.5"/>
+                <text x="30" y="31" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="bold" font-family="monospace">HE</text>
+                <text x="30" y="43" text-anchor="middle" font-size="9" fill="#2dd4bf">❋</text>
+              </svg>
+              <span class="hx-howto-tile-label">DIGRAPH</span>
+            </div>
+          </div>
+          <ul>
+            <li><strong>🔥 EMBER</strong> — Spawns every 3 words in the top row. Advances downward after each word. If it reaches the bottom — game over. Consume it in a word to destroy it. Using an Ember also rewards bonus gems equal to the word length bonus.</li>
+            <li><strong>✦ PRISM</strong> — Doubles the word score (×2). Spawns every 5 words.</li>
+            <li><strong>✦ RUNE</strong> — A wildcard. Tap it first to choose any letter, then chain it in your word. Spawns every 7 words.</li>
+            <li><strong>❋ DIGRAPH</strong> — A double-letter tile. Both letters contribute their point values. Counts as 2 letters toward word length.</li>
+          </ul>
+        </section>
+
+        <!-- PAGE 4 — GEM TILES -->
+        <section class="howto-page" data-page="4" hidden>
+          <h3>GEM TILES</h3>
+          <p>Longer words reward rarer gems that multiply your score. Gems stack multiplicatively.</p>
+          <div class="hx-howto-tile-row">
+            <!-- EMERALD -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-emerald" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#16a34a"/>
+                    <stop offset="100%" stop-color="#4ade80"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-emerald)" stroke="#16a34a" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#22c55e">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×2 EMERALD</span>
+            </div>
+            <!-- GOLD -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-gold" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#d97706"/>
+                    <stop offset="100%" stop-color="#fcd34d"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-gold)" stroke="#d97706" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#f59e0b">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×3 GOLD</span>
+            </div>
+            <!-- SAPPHIRE -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-sapphire" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#1d4ed8"/>
+                    <stop offset="100%" stop-color="#93c5fd"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-sapphire)" stroke="#1d4ed8" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#60a5fa">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×4 SAPPHIRE</span>
+            </div>
+            <!-- PEARL -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-pearl" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#d4c5a9"/>
+                    <stop offset="100%" stop-color="#ffffff"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-pearl)" stroke="#d4c5a9" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#f5f0e8">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×5 PEARL</span>
+            </div>
+            <!-- TANZANITE -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-tanzanite" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#1e0a5e"/>
+                    <stop offset="100%" stop-color="#7c3aed"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-tanzanite)" stroke="#7c3aed" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#7c3aed">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×6 TANZANITE</span>
+            </div>
+            <!-- RUBY -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-ruby" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#7f1d1d"/>
+                    <stop offset="100%" stop-color="#ef4444"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-ruby)" stroke="#7f1d1d" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#ef4444">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×7 RUBY</span>
+            </div>
+            <!-- DIAMOND -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-diamond" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#a5f3fc"/>
+                    <stop offset="100%" stop-color="#ffffff"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-diamond)" stroke="#a5f3fc" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#e0f2fe">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×LEN DIAMOND</span>
+            </div>
+          </div>
+          <ul>
+            <li><strong>◆ EMERALD</strong> (×2) — 4-letter words</li>
+            <li><strong>◆ GOLD</strong> (×3) — 6-letter words</li>
+            <li><strong>◆ SAPPHIRE</strong> (×4) — 7-letter words</li>
+            <li><strong>◆ PEARL</strong> (×5) — 8-letter words</li>
+            <li><strong>◆ TANZANITE</strong> (×6) — 9-letter words</li>
+            <li><strong>◆ RUBY</strong> (×7) — 10+ letter words</li>
+            <li><strong>◆ DIAMOND</strong> (×word length) — rare, extremely powerful</li>
+          </ul>
+          <p>Using multiple gems of the same type gives a count bonus (e.g. 3 Emeralds → ×6 instead of ×2).</p>
+        </section>
+
+        <!-- PAGE 5 — PORTALS -->
+        <section class="howto-page" data-page="5" hidden>
+          <h3>PORTALS</h3>
+          <div class="hx-howto-tile-row">
+            <!-- PORTAL ENTRY -->
+            <div class="hx-howto-tile-item hx-howto-tile-item--portal">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-portal-a" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%"   stop-color="#7b2ff7"/>
+                    <stop offset="100%" stop-color="#e040fb"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-portal-a)" stroke="#e040fb" stroke-width="1.5"/>
+                <text x="30" y="37" text-anchor="middle" font-size="20" fill="#e040fb">◈</text>
+              </svg>
+              <span class="hx-howto-tile-label">ENTRY ◈</span>
+            </div>
+            <!-- PORTAL EXIT -->
+            <div class="hx-howto-tile-item hx-howto-tile-item--portal">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-portal-b" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%"   stop-color="#7b2ff7"/>
+                    <stop offset="100%" stop-color="#e040fb"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-portal-b)" stroke="#e040fb" stroke-width="1.5"/>
+                <text x="30" y="37" text-anchor="middle" font-size="20" fill="#e040fb">◉</text>
+              </svg>
+              <span class="hx-howto-tile-label">EXIT ◉</span>
+            </div>
+          </div>
+          <p>After every <strong>10 words</strong> submitted, two corner tiles transform into a portal pair — one entry (◈) and one exit (◉). Chain through both in the same word to link non-adjacent tiles. The portal closes after 3 words or when a portal tile is consumed.</p>
+        </section>
+
+        <!-- PAGE 6 — LEVELS -->
+        <section class="howto-page" data-page="6" hidden>
+          <h3>LEVELS</h3>
+          <p>Score milestones unlock levels. Your level is shown top-right. Level-up banners appear with a dramatic animation.</p>
+          <ul>
+            <li><strong>Level 1:</strong> 200 pts</li>
+            <li><strong>Level 2:</strong> 500 pts</li>
+            <li><strong>Level 3:</strong> 1,000 pts</li>
+            <li><strong>Level 4:</strong> 2,000 pts</li>
+            <li><strong>Level 5:</strong> 3,500 pts</li>
+            <li><strong>Level 6:</strong> 5,500 pts</li>
+            <li><strong>Level 7:</strong> 8,000 pts</li>
+            <li><strong>Level 8:</strong> 11,000 pts</li>
+            <li><strong>Level 9:</strong> 15,000 pts</li>
+            <li><strong>Level 10+:</strong> +5,000 per level beyond that</li>
+          </ul>
+        </section>
+
+        <!-- PAGE 7 — STRATEGY TIPS -->
+        <section class="howto-page" data-page="7" hidden>
+          <h3>STRATEGY TIPS</h3>
+          <ul>
+            <li><strong>🔥 DESTROY EMBERS EARLY</strong> — Consume ember tiles in words before they reach the bottom.</li>
+            <li><strong>💎 LONG WORDS = MORE GEMS</strong> — 7+ letter words spawn powerful high-tier gems.</li>
+            <li><strong>✦ CHAIN GEMS TOGETHER</strong> — Using multiple gems of the same type in one word triggers count bonuses.</li>
+            <li><strong>◈ USE PORTALS</strong> — Portal pairs let you chain tiles across the board.</li>
+            <li><strong>✦ PRISM + LONG WORD</strong> — Combining a Prism tile with a 7+ letter word creates massive scores.</li>
+          </ul>
+        </section>
+
+      </div><!-- /hx-howto-pagewrap -->
+
+      <!-- Controls -->
+      <div class="howto-controls">
+        <button id="hx-howto-prev" type="button" aria-label="Previous page">Back</button>
+        <div id="hx-howto-dots" class="howto-dots" aria-label="Hexacore how to page navigation"></div>
+        <button id="hx-howto-next" type="button" aria-label="Next page">Next</button>
+        <button id="hx-howto-close" type="button" aria-label="Close how to">Close</button>
+      </div>
+    </div><!-- /rom__dialog -->
+  </div><!-- /#hx-howto-modal -->
+
   <!-- CUSTOM ALERT MODAL -->
   <div id="alert-modal" class="alert-modal hidden">
     <div class="alert-box">
@@ -388,6 +696,7 @@
 
   <script type="module" src="./main.js"></script>
   <script type="module" src="./roundOverModal.js"></script>
+  <script type="module" src="./hexacoreHowTo.js"></script>
   <script type="module" src="./howToModal.js"></script>
   <script type="module" src="./leaderboardModal.js"></script>
   <script type="module" src="./hexacore.js"></script>
