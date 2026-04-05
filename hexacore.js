@@ -2031,6 +2031,10 @@ export function startHexacore() {
         // Add to the appropriate type array
         tileTypeArrays[saved.tileType]?.push(tile);
 
+        // Sync SVG letter/point text for all tile types
+        // (applyTileType only handles special types; normal tiles need explicit sync)
+        tile.updateLetter(saved.letter, saved.point);
+
         applyTileType(tile);
       });
 
