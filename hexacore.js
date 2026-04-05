@@ -1028,8 +1028,11 @@ function showRequirementToast(description) {
   requestAnimationFrame(() => toast.classList.add('hx-req-toast-visible'));
   setTimeout(() => {
     toast.classList.remove('hx-req-toast-visible');
-    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
-    setTimeout(() => toast.remove(), 500);
+    // Remove once the fade-out transition ends, with a max-wait fallback
+    let removed = false;
+    const doRemove = () => { if (!removed) { removed = true; toast.remove(); } };
+    toast.addEventListener('transitionend', doRemove, { once: true });
+    setTimeout(doRemove, 600);
   }, 2500);
 }
 
@@ -1357,7 +1360,7 @@ const HX_LEVEL_REQUIREMENTS = [
     id: '10L_diamond_portal', section: '10 Letters', wordLength: 10,
     description: 'Find a 10-letter word that uses a Diamond tile and the Portal',
     check(word, tiles, state) {
-      if (word.length < 10) return false;
+      if (word.length !== 10) return false;
       if (!tiles.some(t => t.tileType === 'gemDiamond')) return false;
       if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
       const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
@@ -1369,7 +1372,7 @@ const HX_LEVEL_REQUIREMENTS = [
     id: '10L_allDigraphs', section: '10 Letters', wordLength: 10,
     description: 'Find a 10-letter word that uses all Digraph tiles on the board',
     check(word, tiles, state) {
-      if (word.length < 10) return false;
+      if (word.length !== 10) return false;
       if (state.digraphTiles.length === 0) return false;
       const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
       return state.digraphTiles.every(d => selKeys.has(hxKey(d.q, d.r)));
@@ -1379,14 +1382,14 @@ const HX_LEVEL_REQUIREMENTS = [
     id: '10L_score100k', section: '10 Letters', wordLength: 10,
     description: 'Find a 10-letter word worth at least 100,000 points',
     check(word, tiles, state, score) {
-      return word.length >= 10 && score >= 100000;
+      return word.length === 10 && score >= 100000;
     },
   },
   {
     id: '10L_ember2_gem3', section: '10 Letters', wordLength: 10,
     description: 'Find a 10-letter word with 2 Fire tiles and at least 3 Gem tiles',
     check(word, tiles) {
-      return word.length >= 10 &&
+      return word.length === 10 &&
         tiles.filter(t => t.tileType === 'ember').length >= 2 &&
         tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 3;
     },
@@ -1395,7 +1398,7 @@ const HX_LEVEL_REQUIREMENTS = [
     id: '10L_5gemTypes', section: '10 Letters', wordLength: 10,
     description: 'Find a 10-letter word that uses 5 different Gem tile types',
     check(word, tiles) {
-      return word.length >= 10 &&
+      return word.length === 10 &&
         new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 5;
     },
   },
