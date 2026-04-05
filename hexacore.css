@@ -906,3 +906,82 @@ body.hx-active #hex-grid {
   text-shadow: 0 0 12px rgba(76, 201, 240, 0.9), 0 0 4px rgba(76, 201, 240, 0.5);
   min-height: 2.5rem;
 }
+
+/* ── Rune letter picker modal ──────────────────────────────────── */
+#hx-rune-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+#hx-rune-picker-box {
+  background: linear-gradient(135deg, rgba(20, 10, 45, 0.97), rgba(10, 5, 25, 0.97));
+  border: 2px solid rgba(130, 80, 255, 0.8);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem 1.5rem;
+  max-width: 340px;
+  width: 92%;
+  box-shadow:
+    0 0 30px rgba(130, 80, 255, 0.5),
+    0 12px 40px rgba(0, 0, 0, 0.8);
+  text-align: center;
+}
+
+#hx-rune-picker-title {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: #a78bfa;
+  text-shadow: 0 0 12px rgba(167, 139, 250, 0.7);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+#hx-rune-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+#hx-rune-picker-grid button {
+  background: rgba(130, 80, 255, 0.12);
+  border: 1px solid rgba(130, 80, 255, 0.4);
+  border-radius: 6px;
+  color: #e2d9ff;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.45rem 0;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, transform 0.1s;
+  line-height: 1;
+}
+
+#hx-rune-picker-grid button:hover,
+#hx-rune-picker-grid button:focus {
+  background: rgba(167, 139, 250, 0.35);
+  border-color: rgba(167, 139, 250, 0.9);
+  color: #ffffff;
+  transform: scale(1.12);
+  outline: none;
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.6);
+}
+
+/* ── Rune tile letter-reveal flip animation ─────────────────────── */
+@keyframes hx-rune-flip {
+  0%   { transform: scaleX(1);   filter: brightness(1); }
+  30%  { transform: scaleX(0);   filter: brightness(3) drop-shadow(0 0 16px rgba(167, 139, 250, 1)); }
+  60%  { transform: scaleX(1.1); filter: brightness(2) drop-shadow(0 0 10px rgba(167, 139, 250, 0.8)); }
+  100% { transform: scaleX(1);   filter: brightness(1); }
+}
+
+.hx-rune-flip {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-rune-flip 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
