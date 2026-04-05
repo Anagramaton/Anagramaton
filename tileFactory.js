@@ -105,10 +105,10 @@ g.append(outline, poly, spark, tLetter, tPoint);
       g.classList.toggle('disabled', !on);
     },
     updateLetter(newLetter, newPoint = null) {
-      poly.letter = newLetter.toUpperCase();
-      tLetter.textContent = tile.letter;
+      tile.letter = newLetter.toUpperCase();
+      tLetter.textContent = newLetter.toUpperCase();
       if (newPoint != null) {
-        poly.point = newPoint;
+        tile.point = newPoint;
         tPoint.textContent = newPoint;
       }
     }
