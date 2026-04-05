@@ -1090,6 +1090,62 @@ function tileFromElement(el) {
   return null;
 }
 
+/* ── Rune letter picker modal ──────────────────────────────────── */
+function showRuneLetterPicker(tile) {
+  const overlay = document.createElement('div');
+  overlay.id = 'hx-rune-picker';
+
+  const box = document.createElement('div');
+  box.id = 'hx-rune-picker-box';
+
+  const title = document.createElement('div');
+  title.id = 'hx-rune-picker-title';
+  title.textContent = '✦ CHOOSE A LETTER';
+
+  const grid = document.createElement('div');
+  grid.id = 'hx-rune-picker-grid';
+
+  function closeModal() {
+    overlay.remove();
+    document.removeEventListener('keydown', onKeyDown);
+  }
+
+  function onKeyDown(e) {
+    if (e.key === 'Escape') closeModal();
+  }
+  document.addEventListener('keydown', onKeyDown);
+
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+    const btn = document.createElement('button');
+    btn.textContent = letter;
+    btn.addEventListener('click', () => {
+      tile.chosenRuneLetter = letter;
+      tile.letter           = letter;
+      tile.tileType         = 'normal';
+      tile.textLetter.textContent = letter;
+      tile.textPoint.textContent  = letterPoints[letter] || 1;
+      applyTileType(tile);
+      tile.element.classList.add('hx-rune-flip');
+      tile.element.addEventListener('animationend', () => {
+        tile.element.classList.remove('hx-rune-flip');
+      }, { once: true });
+      removeFrom(hxState.runeTiles, tile);
+      closeModal();
+    });
+    grid.appendChild(btn);
+  });
+
+  box.appendChild(title);
+  box.appendChild(grid);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  // Clicking the backdrop (outside the box) dismisses without choosing
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeModal();
+  });
+}
+
 /* ── Pointer events ────────────────────────────────────────────── */
 function setupPointerEvents() {
   const svg = hxSvg;
@@ -1101,9 +1157,13 @@ function setupPointerEvents() {
       preloadBuffers();
     }
     if (!hxState.active || hxState.gameOver) return;
-    e.preventDefault();
     const tile = tileFromElement(document.elementFromPoint(e.clientX, e.clientY));
     if (!tile) return;
+    e.preventDefault();
+    if (tile.tileType === 'rune') {
+      showRuneLetterPicker(tile);
+      return;
+    }
     hxPointerDown = true;
     svg.setPointerCapture(e.pointerId);
     clearSelection();
