@@ -1025,3 +1025,227 @@ body.hx-active #hex-grid {
 .hx-howto-tile-item--portal svg {
   filter: drop-shadow(0 0 8px rgba(224, 64, 251, 0.7));
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Challenges (Requirements Checklist) — button, modal, toast
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── HUD challenges button ─────────────────────────────────────── */
+#hx-challenges-btn {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 900;
+  background: rgba(10, 10, 25, 0.88);
+  border: 1px solid rgba(76, 201, 240, 0.55);
+  border-radius: 8px;
+  color: #4cc9f0;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px rgba(76, 201, 240, 0.2);
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+#hx-challenges-btn:hover,
+#hx-challenges-btn:focus {
+  background: rgba(76, 201, 240, 0.15);
+  border-color: rgba(76, 201, 240, 0.85);
+  box-shadow: 0 0 16px rgba(76, 201, 240, 0.45);
+  outline: none;
+}
+
+/* ── Challenges modal backdrop ─────────────────────────────────── */
+#hx-challenges-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 8500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.78);
+  padding: 1rem;
+}
+
+/* ── Challenges modal box ──────────────────────────────────────── */
+#hx-challenges-box {
+  background: linear-gradient(135deg, rgba(10, 10, 25, 0.97), rgba(20, 10, 35, 0.97));
+  border: 2px solid rgba(76, 201, 240, 0.6);
+  border-radius: 14px;
+  box-shadow: 0 0 30px rgba(76, 201, 240, 0.4), 0 12px 40px rgba(0, 0, 0, 0.8);
+  color: #f1f5f9;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  display: flex;
+  flex-direction: column;
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow: hidden;
+}
+
+/* ── Challenges header ─────────────────────────────────────────── */
+#hx-challenges-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0.85rem;
+  border-bottom: 1px solid rgba(76, 201, 240, 0.3);
+  flex-shrink: 0;
+}
+.hx-challenges-title {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #4cc9f0;
+  text-shadow: 0 0 10px rgba(76, 201, 240, 0.6);
+  flex: 1;
+}
+.hx-challenges-progress {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #22c55e;
+  text-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+  white-space: nowrap;
+}
+#hx-challenges-close {
+  background: none;
+  border: 1px solid rgba(76, 201, 240, 0.4);
+  border-radius: 6px;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0.3rem 0.55rem;
+  transition: background 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+#hx-challenges-close:hover {
+  background: rgba(76, 201, 240, 0.15);
+  color: #f1f5f9;
+}
+
+/* ── Challenges scrollable body ────────────────────────────────── */
+#hx-challenges-body {
+  overflow-y: auto;
+  padding: 0.75rem 1.25rem 1.25rem;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(76, 201, 240, 0.3) transparent;
+}
+#hx-challenges-body::-webkit-scrollbar {
+  width: 5px;
+}
+#hx-challenges-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+#hx-challenges-body::-webkit-scrollbar-thumb {
+  background: rgba(76, 201, 240, 0.3);
+  border-radius: 3px;
+}
+
+/* ── Section header ────────────────────────────────────────────── */
+.hx-challenges-section {
+  margin-bottom: 1.1rem;
+}
+.hx-challenges-section-title {
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: #4cc9f0;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(76, 201, 240, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.hx-challenges-section-count {
+  font-size: 0.68rem;
+  opacity: 0.7;
+  letter-spacing: 0.05em;
+}
+
+/* ── Challenge row ─────────────────────────────────────────────── */
+.hx-challenge-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.35rem 0.25rem;
+  border-radius: 5px;
+  transition: background 0.1s;
+}
+.hx-challenge-row:hover {
+  background: rgba(76, 201, 240, 0.07);
+}
+.hx-challenge-check {
+  font-size: 0.85rem;
+  min-width: 1.1rem;
+  color: #64748b;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+.hx-challenge-desc {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  color: #cbd5e1;
+}
+
+/* Completed challenge */
+.hx-challenge-done .hx-challenge-check {
+  color: #22c55e;
+  text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}
+.hx-challenge-done .hx-challenge-desc {
+  color: #4b5563;
+  text-decoration: line-through;
+}
+
+/* ── Challenge complete toast ──────────────────────────────────── */
+#hx-req-toast {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 9500;
+  background: rgba(10, 10, 25, 0.97);
+  border: 2px solid rgba(34, 197, 94, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.4), 0 6px 20px rgba(0, 0, 0, 0.7);
+  color: #f1f5f9;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  padding: 0.7rem 1.25rem;
+  text-align: center;
+  min-width: 260px;
+  max-width: 90vw;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+#hx-req-toast.hx-req-toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.hx-req-toast-title {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: #22c55e;
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+  margin-bottom: 0.3rem;
+}
+.hx-req-toast-desc {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  line-height: 1.4;
+}
