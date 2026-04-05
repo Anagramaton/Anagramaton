@@ -31,8 +31,15 @@ const REFILL_STAGGER_MS        = 40;   // ms between each column's spawn delay
 /* ── Level thresholds ──────────────────────────────────────────── */
 const HX_LEVEL_THRESHOLDS = [0, 200, 500, 1000, 2000, 3500, 5500, 8000, 11000, 15000];
 
-/* ── localStorage save key ─────────────────────────────────────── */
+/* ── localStorage save keys ────────────────────────────────────── */
 const HX_SAVE_KEY = 'hexacore_save';
+const HX_REQ_SAVE_KEY = 'hexacore_requirements';
+
+/* ── Gem tile type set (module-level for shared use) ───────────── */
+const HX_GEM_TYPES = new Set([
+  'gemEmerald', 'gemGold', 'gemSapphire',
+  'gemPearl', 'gemTanzanite', 'gemRuby', 'gemDiamond',
+]);
 // Level 1 starts at 0, Level 2 at 200, Level 3 at 500, etc.
 // Beyond index 9, each additional level requires +5000 pts from the previous threshold.
 
@@ -148,6 +155,7 @@ let hxWordCount         = 0;
 let hxTileMap           = new Map(); // `q,r` → tile object
 let hxPointerCleanup    = null;
 let hxUpdateViewForBoard = null;
+let hxCompletedReqs     = new Set(); // IDs of completed requirements (persists across games)
 
 /* ── Pure helpers ──────────────────────────────────────────────── */
 function hxKey(q, r) { return `${q},${r}`; }
@@ -952,6 +960,12 @@ function ensureHud() {
   const levelHud = document.createElement('div');
   levelHud.id = 'hx-level-hud';
   levelHud.textContent = 'LVL 1';
+  levelHud.setAttribute('role', 'button');
+  levelHud.setAttribute('tabindex', '0');
+  levelHud.addEventListener('click', openChallengesModal);
+  levelHud.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
+  });
   document.body.appendChild(levelHud);
 }
 
@@ -960,6 +974,145 @@ function removeHud() {
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
   document.getElementById('hx-level-hud')?.remove();
+}
+
+/* ── Requirements persistence ──────────────────────────────────── */
+function saveHexacoreRequirements() {
+  try {
+    localStorage.setItem(HX_REQ_SAVE_KEY, JSON.stringify([...hxCompletedReqs]));
+  } catch (_) { /* quota / private */ }
+}
+
+function loadHexacoreRequirements() {
+  try {
+    const json = localStorage.getItem(HX_REQ_SAVE_KEY);
+    if (!json) return [];
+    const parsed = JSON.parse(json);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) { return []; }
+}
+
+/* ── Auto-check requirements after word submission ─────────────── */
+function checkHexacoreRequirements(word, tiles, score) {
+  const newlyCompleted = [];
+  for (const req of HX_LEVEL_REQUIREMENTS) {
+    if (hxCompletedReqs.has(req.id)) continue;
+    try {
+      if (req.check(word, tiles, hxState, score)) {
+        hxCompletedReqs.add(req.id);
+        newlyCompleted.push(req.description);
+      }
+    } catch (_) { /* skip malformed checks */ }
+  }
+  if (newlyCompleted.length > 0) {
+    saveHexacoreRequirements();
+    newlyCompleted.forEach((desc, i) => {
+      setTimeout(() => showRequirementToast(desc), i * 700);
+    });
+    // Refresh modal if it's open
+    if (document.getElementById('hx-challenges-modal')) {
+      renderChallengesModal();
+    }
+  }
+}
+
+/* ── Requirement completion toast ──────────────────────────────── */
+function showRequirementToast(description) {
+  document.getElementById('hx-req-toast')?.remove();
+  const toast = document.createElement('div');
+  toast.id = 'hx-req-toast';
+  toast.innerHTML = `<span class="hx-req-toast-title">✓ CHALLENGE COMPLETE</span><span class="hx-req-toast-desc">${escapeHtml(description)}</span>`;
+  document.body.appendChild(toast);
+  // Trigger enter animation after paint
+  requestAnimationFrame(() => toast.classList.add('hx-req-toast-visible'));
+  setTimeout(() => {
+    toast.classList.remove('hx-req-toast-visible');
+    // Remove once the fade-out transition ends, with a max-wait fallback
+    let removed = false;
+    const doRemove = () => { if (!removed) { removed = true; toast.remove(); } };
+    toast.addEventListener('transitionend', doRemove, { once: true });
+    setTimeout(doRemove, 600);
+  }, 2500);
+}
+
+/* ── Challenges modal ──────────────────────────────────────────── */
+function openChallengesModal() {
+  document.getElementById('hx-challenges-modal')?.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'hx-challenges-modal';
+
+  const box = document.createElement('div');
+  box.id = 'hx-challenges-box';
+  modal.appendChild(box);
+
+  // Header
+  const header = document.createElement('div');
+  header.id = 'hx-challenges-header';
+  const completed = hxCompletedReqs.size;
+  const total     = HX_LEVEL_REQUIREMENTS.length;
+  header.innerHTML = `
+    <span class="hx-challenges-title">📋 CHALLENGES</span>
+    <span class="hx-challenges-progress">${completed} / ${total} COMPLETE</span>
+    <button id="hx-challenges-close" aria-label="Close challenges">✕</button>
+  `;
+  box.appendChild(header);
+
+  // Body
+  const body = document.createElement('div');
+  body.id = 'hx-challenges-body';
+  box.appendChild(body);
+
+  modal.appendChild(box);
+  document.body.appendChild(modal);
+
+  renderChallengesModal();
+
+  // Close on button or backdrop click
+  document.getElementById('hx-challenges-close')
+    ?.addEventListener('click', () => modal.remove());
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+}
+
+function renderChallengesModal() {
+  const body = document.getElementById('hx-challenges-body');
+  if (!body) return;
+
+  const completed = hxCompletedReqs.size;
+  const total     = HX_LEVEL_REQUIREMENTS.length;
+
+  // Update progress in header
+  const progress = document.querySelector('#hx-challenges-header .hx-challenges-progress');
+  if (progress) progress.textContent = `${completed} / ${total} COMPLETE`;
+
+  // Group requirements by section
+  const sections = new Map();
+  for (const req of HX_LEVEL_REQUIREMENTS) {
+    if (!sections.has(req.section)) sections.set(req.section, []);
+    sections.get(req.section).push(req);
+  }
+
+  body.innerHTML = '';
+  for (const [sectionName, reqs] of sections) {
+    const section = document.createElement('div');
+    section.className = 'hx-challenges-section';
+
+    const sectionTitle = document.createElement('div');
+    sectionTitle.className = 'hx-challenges-section-title';
+    const doneCount = reqs.filter(r => hxCompletedReqs.has(r.id)).length;
+    sectionTitle.innerHTML = `${sectionName.toUpperCase()} <span class="hx-challenges-section-count">${doneCount}/${reqs.length}</span>`;
+    section.appendChild(sectionTitle);
+
+    for (const req of reqs) {
+      const isDone = hxCompletedReqs.has(req.id);
+      const row = document.createElement('div');
+      row.className = 'hx-challenge-row' + (isDone ? ' hx-challenge-done' : '');
+      row.innerHTML = `<span class="hx-challenge-check">${isDone ? '✓' : '☐'}</span><span class="hx-challenge-desc">${escapeHtml(req.description)}</span>`;
+      section.appendChild(row);
+    }
+
+    body.appendChild(section);
+  }
 }
 
 /* ── Word display / selection ──────────────────────────────────── */
@@ -989,6 +1142,266 @@ const GEM_MULTIPLIERS = {
 // Tanzanite, Ruby, and Diamond use exponential count bonus (value^count);
 // all other gems use linear count bonus (count × value).
 const OPTION_B_GEMS = new Set(['gemTanzanite', 'gemRuby', 'gemDiamond']);
+
+/* ── Level requirements checklist ─────────────────────────────── */
+/**
+ * Each entry: { id, section, wordLength, description, check(word, tiles, state, score) }
+ * `word`  — the fully resolved word string (length === assembled letter count)
+ * `tiles` — the array of tile objects that were selected
+ * `state` — hxState (portal info, board gem/digraph arrays, etc.)
+ * `score` — the final wordScore for this submission
+ */
+const HX_LEVEL_REQUIREMENTS = [
+  // ── 5 Letters ────────────────────────────────────────────────
+  {
+    id: '5L_gem1', section: '5 Letters', wordLength: 5,
+    description: 'INCLUDES AT LEAST 1 GEM TILE',
+    check(word, tiles) {
+      return word.length === 5 && tiles.some(t => HX_GEM_TYPES.has(t.tileType));
+    },
+  },
+  {
+    id: '5L_plain', section: '5 Letters', wordLength: 5,
+    description: 'NO GEM TILES AND NO DIGRAPH TILES',
+    check(word, tiles) {
+      return word.length === 5 &&
+        !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
+    },
+  },
+  {
+    id: '5L_ember1', section: '5 Letters', wordLength: 5,
+    description: 'INCLUDES 1 FIRE (EMBER) TILE',
+    check(word, tiles) {
+      return word.length === 5 && tiles.some(t => t.tileType === 'ember');
+    },
+  },
+  {
+    id: '5L_score500', section: '5 Letters', wordLength: 5,
+    description: 'WORTH AT LEAST 500 POINTS',
+    check(word, tiles, state, score) {
+      return word.length === 5 && score >= 500;
+    },
+  },
+
+  // ── 6 Letters ────────────────────────────────────────────────
+  {
+    id: '6L_gem2', section: '6 Letters', wordLength: 6,
+    description: 'INCLUDES AT LEAST 2 GEM TILES',
+    check(word, tiles) {
+      return word.length === 6 && tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
+    },
+  },
+  {
+    id: '6L_digraph1', section: '6 Letters', wordLength: 6,
+    description: 'INCLUDES 1 DIGRAPH TILE',
+    check(word, tiles) {
+      return word.length === 6 && tiles.some(t => t.tileType === 'digraph');
+    },
+  },
+  {
+    id: '6L_plain', section: '6 Letters', wordLength: 6,
+    description: 'NO GEM TILES AND NO DIGRAPH TILES',
+    check(word, tiles) {
+      return word.length === 6 &&
+        !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
+    },
+  },
+  {
+    id: '6L_score1500', section: '6 Letters', wordLength: 6,
+    description: 'WORTH AT LEAST 1,500 POINTS',
+    check(word, tiles, state, score) {
+      return word.length === 6 && score >= 1500;
+    },
+  },
+
+  // ── 7 Letters ────────────────────────────────────────────────
+  {
+    id: '7L_gem3', section: '7 Letters', wordLength: 7,
+    description: 'INCLUDES AT LEAST 3 GEM TILES',
+    check(word, tiles) {
+      return word.length === 7 && tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 3;
+    },
+  },
+  {
+    id: '7L_ember1_digraph2', section: '7 Letters', wordLength: 7,
+    description: 'INCLUDES 1 FIRE TILE AND 2 DIGRAPH TILES',
+    check(word, tiles) {
+      return word.length === 7 &&
+        tiles.some(t => t.tileType === 'ember') &&
+        tiles.filter(t => t.tileType === 'digraph').length >= 2;
+    },
+  },
+  {
+    id: '7L_allGems', section: '7 Letters', wordLength: 7,
+    description: 'USES ALL GEM TILES ON THE BOARD',
+    check(word, tiles, state) {
+      if (word.length !== 7) return false;
+      const boardGems = [
+        ...state.gemEmeraldTiles, ...state.gemGoldTiles, ...state.gemSapphireTiles,
+        ...state.gemPearlTiles,   ...state.gemTanzaniteTiles, ...state.gemRubyTiles,
+        ...state.gemDiamondTiles,
+      ];
+      if (boardGems.length === 0) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return boardGems.every(g => selKeys.has(hxKey(g.q, g.r)));
+    },
+  },
+  {
+    id: '7L_score10k', section: '7 Letters', wordLength: 7,
+    description: 'WORTH AT LEAST 10,000 POINTS',
+    check(word, tiles, state, score) {
+      return word.length === 7 && score >= 10000;
+    },
+  },
+  {
+    id: '7L_3gemTypes', section: '7 Letters', wordLength: 7,
+    description: 'USES 3 DIFFERENT GEM TILE TYPES',
+    check(word, tiles) {
+      return word.length === 7 &&
+        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 3;
+    },
+  },
+
+  // ── 8 Letters ────────────────────────────────────────────────
+  {
+    id: '8L_plain', section: '8 Letters', wordLength: 8,
+    description: 'NO GEM TILES AND NO DIGRAPH TILES',
+    check(word, tiles) {
+      return word.length === 8 &&
+        !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
+    },
+  },
+  {
+    id: '8L_allDigraphs', section: '8 Letters', wordLength: 8,
+    description: 'USES ALL DIGRAPH TILES ON THE BOARD',
+    check(word, tiles, state) {
+      if (word.length !== 8) return false;
+      if (state.digraphTiles.length === 0) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return state.digraphTiles.every(d => selKeys.has(hxKey(d.q, d.r)));
+    },
+  },
+  {
+    id: '8L_ember1_gem2', section: '8 Letters', wordLength: 8,
+    description: 'INCLUDES A FIRE TILE AND 2 GEM TILES',
+    check(word, tiles) {
+      return word.length === 8 &&
+        tiles.some(t => t.tileType === 'ember') &&
+        tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
+    },
+  },
+  {
+    id: '8L_ember2', section: '8 Letters', wordLength: 8,
+    description: '2 FIRE TILES',
+    check(word, tiles) {
+      return word.length === 8 && tiles.filter(t => t.tileType === 'ember').length >= 2;
+    },
+  },
+  {
+    id: '8L_score25k', section: '8 Letters', wordLength: 8,
+    description: 'WORTH AT LEAST 25,000 POINTS',
+    check(word, tiles, state, score) {
+      return word.length === 8 && score >= 25000;
+    },
+  },
+
+  // ── 9 Letters ────────────────────────────────────────────────
+  {
+    id: '9L_diamond_portal', section: '9 Letters', wordLength: 9,
+    description: 'USES A DIAMOND TILE AND THE PORTAL',
+    check(word, tiles, state) {
+      if (word.length !== 9) return false;
+      if (!tiles.some(t => t.tileType === 'gemDiamond')) return false;
+      if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
+             selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r));
+    },
+  },
+  {
+    id: '9L_ember2', section: '9 Letters', wordLength: 9,
+    description: '2 FIRE TILES',
+    check(word, tiles) {
+      return word.length === 9 && tiles.filter(t => t.tileType === 'ember').length >= 2;
+    },
+  },
+  {
+    id: '9L_3gemTypes', section: '9 Letters', wordLength: 9,
+    description: 'USES 3 DIFFERENT GEM TILE TYPES',
+    check(word, tiles) {
+      return word.length === 9 &&
+        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 3;
+    },
+  },
+  {
+    id: '9L_score50k', section: '9 Letters', wordLength: 9,
+    description: 'WORTH AT LEAST 50,000 POINTS',
+    check(word, tiles, state, score) {
+      return word.length === 9 && score >= 50000;
+    },
+  },
+  {
+    id: '9L_portal_ember1_gem2', section: '9 Letters', wordLength: 9,
+    description: 'INCLUDES A PORTAL, A FIRE TILE, AND 2 GEM TILES',
+    check(word, tiles, state) {
+      if (word.length !== 9) return false;
+      if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
+             selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r)) &&
+             tiles.some(t => t.tileType === 'ember') &&
+             tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
+    },
+  },
+
+  // ── 10 Letters ───────────────────────────────────────────────
+  {
+    id: '10L_diamond_portal', section: '10 Letters', wordLength: 10,
+    description: 'USES A DIAMOND TILE AND THE PORTAL',
+    check(word, tiles, state) {
+      if (word.length !== 10) return false;
+      if (!tiles.some(t => t.tileType === 'gemDiamond')) return false;
+      if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
+             selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r));
+    },
+  },
+  {
+    id: '10L_allDigraphs', section: '10 Letters', wordLength: 10,
+    description: 'USES ALL DIGRAPH TILES ON THE BOARD',
+    check(word, tiles, state) {
+      if (word.length !== 10) return false;
+      if (state.digraphTiles.length === 0) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return state.digraphTiles.every(d => selKeys.has(hxKey(d.q, d.r)));
+    },
+  },
+  {
+    id: '10L_score100k', section: '10 Letters', wordLength: 10,
+    description: 'WORTH AT LEAST 100,000 POINTS',
+    check(word, tiles, state, score) {
+      return word.length === 10 && score >= 100000;
+    },
+  },
+  {
+    id: '10L_ember2_gem3', section: '10 Letters', wordLength: 10,
+    description: '2 FIRE TILES AND AT LEAST 3 GEM TILES',
+    check(word, tiles) {
+      return word.length === 10 &&
+        tiles.filter(t => t.tileType === 'ember').length >= 2 &&
+        tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 3;
+    },
+  },
+  {
+    id: '10L_5gemTypes', section: '10 Letters', wordLength: 10,
+    description: 'USES 5 DIFFERENT GEM TILE TYPES',
+    check(word, tiles) {
+      return word.length === 10 &&
+        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 5;
+    },
+  },
+];
 
 /**
  * Calculates the count bonus multiplier for the given selected tiles.
@@ -1307,6 +1720,9 @@ async function submitHexacoreWord() {
   animateScoreHud(oldScore, hxState.score);
   checkLevelUp(oldScore, hxState.score);
 
+  // Check requirements before the selection is cleared and portal state changes
+  checkHexacoreRequirements(word, [...hxSelected], wordScore);
+
   const consumed = [...hxSelected];
 
   // If any portal tile is in the consumed set, close the portal now (before
@@ -1357,17 +1773,13 @@ async function submitHexacoreWord() {
 /* ── Consume tiles → gravity → ember → refill ─────────────────── */
 async function consumeAndRefill(tilesToRemove) {
   // 1. Animate tiles out with a tile-by-tile stagger (first selected → last)
-  const GEM_TYPES = new Set([
-    'gemEmerald', 'gemGold', 'gemSapphire',
-    'gemPearl', 'gemTanzanite', 'gemRuby', 'gemDiamond',
-  ]);
   tilesToRemove.forEach((tile, idx) => {
     tile.element.style.setProperty('--tile-idx', String(idx));
     const type = tile.tileType;
     if (type === 'ember' || type === 'prism' || type === 'rune') {
       // Consumed-special class replaces hx-tile-removing with combined animation
       tile.element.classList.add(`hx-consumed-${type}`);
-    } else if (GEM_TYPES.has(type)) {
+    } else if (HX_GEM_TYPES.has(type)) {
       tile.element.classList.add(`hx-consumed-${type}`);
     } else {
       tile.element.classList.add('hx-tile-removing');
@@ -1944,6 +2356,9 @@ function clearHexacoreSave() {
 
 /* ── Public entry point ────────────────────────────────────────── */
 export function startHexacore() {
+  // Load persisted requirements (persist across sessions and new games)
+  hxCompletedReqs = new Set(loadHexacoreRequirements());
+
   // Reset state
   Object.assign(hxState, {
     score:           0,
@@ -2094,6 +2509,8 @@ export function stopHexacore() {
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
 
   document.getElementById('hx-gameover-overlay')?.remove();
+  document.getElementById('hx-challenges-modal')?.remove();
+  document.getElementById('hx-req-toast')?.remove();
   removeHud();
 
   document.body.classList.remove('hx-active');
