@@ -1898,7 +1898,7 @@ function cancelSeleniteTargeting() {
   document.getElementById('hx-powerup-indicator')?.remove();
 }
 
-function handleSelenieTileTap(tile) {
+function handleSeleniteTileTap(tile) {
   if (!hxSeleniteTargeting) return false;
 
   // Portal tiles cannot be swapped
@@ -1970,7 +1970,7 @@ function setupPointerEvents() {
       return;
     }
     if (hxSeleniteTargeting) {
-      handleSelenieTileTap(tile);
+      handleSeleniteTileTap(tile);
       return;
     }
 
