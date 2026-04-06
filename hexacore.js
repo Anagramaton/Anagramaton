@@ -902,7 +902,9 @@ function animateScoreHud(oldScore, newScore) {
 
 function updateLevelHud() {
   const el = document.getElementById('hx-level-hud');
-  if (el) el.textContent = `LVL ${hxState.level}`;
+  if (!el) return;
+  el.textContent = `LVL ${hxState.level}`;
+  el.title = 'View Challenges';
 }
 
 function checkLevelUp(oldScore, newScore) {
@@ -989,6 +991,7 @@ function ensureHud() {
   const levelHud = document.createElement('div');
   levelHud.id = 'hx-level-hud';
   levelHud.textContent = 'LVL 1';
+  levelHud.title = 'View Challenges';
   levelHud.setAttribute('role', 'button');
   levelHud.setAttribute('tabindex', '0');
   levelHud.addEventListener('click', openChallengesModal);
