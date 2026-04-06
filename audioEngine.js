@@ -1,5 +1,20 @@
 // audioEngine.js — Web Audio API pre-decoded buffer playback
 
+let _muted = false;
+try { _muted = localStorage.getItem('anagramaton_muted') === '1'; } catch(_) {}
+
+export function isMuted() { return _muted; }
+
+export function setMuted(val) {
+  _muted = val;
+  try { localStorage.setItem('anagramaton_muted', val ? '1' : '0'); } catch(_) {}
+}
+
+export function toggleMute() {
+  setMuted(!_muted);
+  return _muted;
+}
+
 let _ctx = null;
 const _buffers = new Map();
 const _activeSources = new Map();
@@ -56,6 +71,7 @@ export async function preloadBuffers() {
 
 /** Play a pre-decoded buffer — near-zero latency */
 export function playSound(id) {
+  if (_muted) return;
   const ctx = getCtx();
 
   const buf = _buffers.get(id);

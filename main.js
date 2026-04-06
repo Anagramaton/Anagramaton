@@ -9,7 +9,7 @@ import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } 
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 import { isValidWord } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName, promptSignOut, clearPlayerName } from './leaderboard.js';
-import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
+import { unlockAudioContext, preloadBuffers, playSound, toggleMute, isMuted } from './audioEngine.js';
 import { stopHexacore, getHexacoreScore } from './hexacore.js';
 
 
@@ -642,6 +642,25 @@ window.addEventListener('grid:ready', () => {
       } else {
         window.lbModal?.open();
       }
+    });
+  }
+
+  // ============================
+  // MUTE BUTTON
+  // ============================
+  const muteBtn = document.getElementById('toggle-mute');
+  if (muteBtn) {
+    function updateMuteBtnUI() {
+      const muted = isMuted();
+      const icon  = muteBtn.querySelector('.setting-icon');
+      const label = muteBtn.querySelector('.setting-label');
+      if (icon)  icon.textContent  = muted ? '🔇' : '🔊';
+      if (label) label.textContent = muted ? 'SOUND OFF' : 'SOUND ON';
+    }
+    updateMuteBtnUI();
+    muteBtn.addEventListener('click', () => {
+      toggleMute();
+      updateMuteBtnUI();
     });
   }
 
