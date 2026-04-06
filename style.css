@@ -1278,8 +1278,7 @@ body[data-theme="dark"] .tile-point {
 #settings-wrap {
   position: fixed;
   bottom: clamp(10px, calc(env(safe-area-inset-bottom) + 1.5vh), 22px);
-  left: 50%;
-  transform: translateX(-50%);
+  right: clamp(12px, 2vw, 24px);
   z-index: 1100;
 }
 #settings-btn {
