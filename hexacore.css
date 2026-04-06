@@ -190,7 +190,7 @@
 /* ── Level HUD ───────────────────────────────────────────────── */
 #hx-level-hud {
   position: fixed;
-  bottom: clamp(50px, 8vh, 85px);
+  bottom: clamp(10px, 3vh, 28px);
   left: 50%;
   transform: translateX(-50%) scale(1);
   z-index: 900;
@@ -1389,19 +1389,30 @@ body.hx-active #hex-grid {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Power-Up Inventory Bar
+   Power-Up Inventory Bars (flanking the score HUD)
    ═══════════════════════════════════════════════════════════════ */
 
-#hx-powerup-bar {
+#hx-powerup-bar-left {
   position: fixed;
-  bottom: clamp(145px, 20vh, 200px);
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: clamp(80px, 12vh, 130px);
+  right: calc(50% + 80px);
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-end;
+  z-index: 600;
+  min-height: 36px;
+  pointer-events: auto;
+}
+
+#hx-powerup-bar-right {
+  position: fixed;
+  bottom: clamp(80px, 12vh, 130px);
+  left: calc(50% + 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
   z-index: 600;
   min-height: 36px;
   pointer-events: auto;

@@ -1126,9 +1126,13 @@ function ensureHud() {
   });
   document.body.appendChild(levelHud);
 
-  const powerUpBar = document.createElement('div');
-  powerUpBar.id = 'hx-powerup-bar';
-  document.body.appendChild(powerUpBar);
+  const powerUpBarLeft = document.createElement('div');
+  powerUpBarLeft.id = 'hx-powerup-bar-left';
+  document.body.appendChild(powerUpBarLeft);
+
+  const powerUpBarRight = document.createElement('div');
+  powerUpBarRight.id = 'hx-powerup-bar-right';
+  document.body.appendChild(powerUpBarRight);
 }
 
 function removeHud() {
@@ -1136,7 +1140,8 @@ function removeHud() {
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
   document.getElementById('hx-level-hud')?.remove();
-  document.getElementById('hx-powerup-bar')?.remove();
+  document.getElementById('hx-powerup-bar-left')?.remove();
+  document.getElementById('hx-powerup-bar-right')?.remove();
   document.getElementById('hx-powerup-toast')?.remove();
   document.getElementById('hx-powerup-indicator')?.remove();
 }
@@ -1726,9 +1731,11 @@ function showRuneLetterPicker(tile) {
 
 /* ── Power-up: HUD bar ─────────────────────────────────────────── */
 function updatePowerUpBar() {
-  const bar = document.getElementById('hx-powerup-bar');
-  if (!bar) return;
-  bar.innerHTML = '';
+  const barLeft  = document.getElementById('hx-powerup-bar-left');
+  const barRight = document.getElementById('hx-powerup-bar-right');
+  if (!barLeft || !barRight) return;
+  barLeft.innerHTML  = '';
+  barRight.innerHTML = '';
 
   for (let i = 0; i < hxState.amethystCount; i++) {
     const btn = document.createElement('button');
@@ -1736,7 +1743,7 @@ function updatePowerUpBar() {
     btn.textContent = '🔮 AMETHYST';
     btn.title = 'Transmute: change any tile\'s letter';
     btn.addEventListener('click', () => activateAmethyst());
-    bar.appendChild(btn);
+    barLeft.appendChild(btn);
   }
 
   for (let i = 0; i < hxState.seleniteCount; i++) {
@@ -1745,7 +1752,7 @@ function updatePowerUpBar() {
     btn.textContent = '🌙 SELENITE';
     btn.title = 'Phase Swap: swap any two tiles';
     btn.addEventListener('click', () => activateSelenite());
-    bar.appendChild(btn);
+    barRight.appendChild(btn);
   }
 }
 
@@ -2119,7 +2126,6 @@ async function submitHexacoreWord() {
 
   updateScoreDisplay();
   animateScoreHud(oldScore, hxState.score);
-  checkLevelUp(oldScore, hxState.score);
 
   // Check requirements before the selection is cleared and portal state changes
   checkHexacoreRequirements(word, [...hxSelected], wordScore);
@@ -2170,6 +2176,7 @@ async function submitHexacoreWord() {
   stopSound('sfxFunk');
 
   if (!hxState.gameOver) {
+    checkLevelUp(oldScore, hxState.score);
     playSound('sfxGemCollect');
     // Spawn gem reward based on word length
     spawnGemRewardForWord(word.length);
