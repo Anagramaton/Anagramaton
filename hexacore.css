@@ -1619,3 +1619,30 @@ body.hx-active #hex-grid {
   color: #e879f9 !important;
   text-shadow: 0 0 12px rgba(232, 121, 249, 0.8) !important;
 }
+
+/* ── Game title in Hexacore mode ─────────────────────────────── */
+body.hx-active #game-title {
+  filter:
+    drop-shadow(3px 3px 0px #c0c8d8)
+    drop-shadow(-1px -1px 0px #8090b0)
+    drop-shadow(0 0 18px rgba(76, 201, 240, 0.22));
+}
+body[data-theme="dark"].hx-active #game-title {
+  filter:
+    drop-shadow(3px 3px 0px #1e2a3a)
+    drop-shadow(-1px -1px 0px #4a6080)
+    drop-shadow(0 0 28px rgba(76, 201, 240, 0.45));
+}
+
+/* ── Mobile HUD adjustments ──────────────────────────────────── */
+@media (max-width: 768px) {
+  #hx-score-hud {
+    bottom: clamp(60px, 10vh, 90px);
+    font-size: 0.95rem;
+  }
+  #hx-level-hud {
+    bottom: clamp(8px, 2vh, 18px);
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+}

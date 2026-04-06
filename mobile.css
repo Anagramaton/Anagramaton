@@ -197,7 +197,7 @@
     font-size: clamp(2.6rem, 7vw, 3.6rem);
     font-family: 'Black Han Sans', sans-serif;
     font-weight: 900;
-    color: #000000;
+    color: var(--title-stroke);
     -webkit-text-stroke: 0;
     letter-spacing: 0.04em;
   }
