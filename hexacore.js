@@ -2404,7 +2404,19 @@ async function advanceFireTiles() {
       }
     }
 
-    const target = candidates[Math.floor(Math.random() * candidates.length)];
+    // For ember tiles, exclude positions occupied by protected tile types
+    let validCandidates = candidates;
+    if (type === 'ember') {
+      const EMBER_BLOCKED_TYPES = ['ember', 'amethyst', 'selenite'];
+      validCandidates = candidates.filter(pos => {
+        const occupant = hxTileMap.get(hxKey(pos.q, pos.r));
+        return !occupant
+          || (!EMBER_BLOCKED_TYPES.includes(occupant.tileType) && !isPortalTile(occupant));
+      });
+      if (validCandidates.length === 0) continue; // blocked — ember stays put this turn
+    }
+
+    const target = validCandidates[Math.floor(Math.random() * validCandidates.length)];
 
     // Displace any tile at the target before moving
     const displaced = hxTileMap.get(hxKey(target.q, target.r));
