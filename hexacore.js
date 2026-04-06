@@ -182,10 +182,72 @@ const HX_VOWELS = new Set(['A','E','I','O','U']);
 const HX_VOWEL_POOL = ['E','E','E','A','A','I','I','O','O','O','U'];
 
 /**
+ * Returns the "vowel weight" of a tile letter string (plain letter or digraph).
+ * Plain vowel = 1.0, plain consonant = 0.0.
+ * For multi-char digraphs each vowel letter counts as 0.5.
+ */
+function vowelWeightOf(letter) {
+  const VOWELS = new Set(['A','E','I','O','U']);
+  let v = 0;
+  for (const ch of letter) {
+    if (VOWELS.has(ch)) v += 1;
+  }
+  return letter.length > 1 ? v * 0.5 : v;
+}
+
+/**
+ * Preferred neighbor letters for each digraph, based on common English suffixes
+ * (-ING, -TION, -NESS, -MENT, -LESS, -ABLE, -STER, -ATED, -WARD).
+ */
+const DIGRAPH_COMPLEMENT = {
+  'TH': ['E','R','A','I','O','N','S','G'],
+  'HE': ['R','S','N','D','L','A','T'],
+  'IN': ['G','S','T','K','D','E','L'],
+  'ER': ['S','T','N','D','G','L','A','M'],
+  'RE': ['S','T','N','D','A','L','C','M'],
+  'ST': ['A','E','I','O','R','L','N','S'],
+  'AN': ['S','T','D','G','E','C','I','L'],
+  'ON': ['S','E','T','G','L','D','C'],
+  'EA': ['R','S','T','D','N','L','M'],
+  'TT': ['E','A','I','O','R','L','N'],
+  'SS': ['E','I','A','O','N','T','L'],
+  'IO': ['N','S','T','R','L'],
+  'LL': ['E','A','I','O','S','Y','N'],
+  'QU': ['I','E','A','O','T','R','N'],
+  'CK': ['E','I','A','S','L','N'],
+  'CH': ['E','A','I','O','R','S','N'],
+  'EN': ['S','T','D','G','C','L','E'],
+  'CO': ['N','M','R','L','S','T','D'],
+  'ES': ['T','S','L','N','D'],
+  'UN': ['D','S','T','E','I','A','G'],
+  'LY': ['I','E','N','S','T'],
+  'ED': ['S','T','L','N','G','A','I'],
+};
+
+/** High-utility consonants (weighted toward most common) used when forcing a consonant. */
+const HX_HIGH_UTILITY_CONSONANTS = [
+  'S','S','S','T','T','T','R','R','R','N','N','N',
+  'L','L','D','D','H','C','M','G','B','F','P','W',
+];
+
+/**
+ * Pending digraph complement hints set during buildGrid spiral placement.
+ * Maps hxKey → string[] (preferred letter pool from a neighboring digraph).
+ */
+const pendingDigraphComplements = new Map();
+
+/**
  * Samples HX_LETTER_POOL and resolves any digraph sentinel.
  * Returns { isDigraph: false, letter } or { isDigraph: true, digraph, points }.
- * Applies vowel-bias correction: if all neighbours are consonants (and none
- * are digraph tiles), 75% chance to force a vowel instead.
+ *
+ * Placement logic:
+ *  1. Compute vowel score of filled neighbors using vowelWeightOf().
+ *  2. If neighborCount >= 2:
+ *     a. vowelScore >= 1.5 → 70% chance force high-utility consonant
+ *     b. vowelScore === 0  → 75% chance force vowel
+ *  3. If a digraph neighbor exists, use its DIGRAPH_COMPLEMENT pool at 60%.
+ *     Also checks pendingDigraphComplements for pre-marked positions.
+ *  4. Otherwise draw normally from HX_LETTER_POOL.
  */
 function randomLetterOrDigraphForPos(q, r) {
   const neighborKeys = [
@@ -194,21 +256,41 @@ function randomLetterOrDigraphForPos(q, r) {
     hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
   ];
 
-  // A digraph neighbour counts as a vowel neighbour (most digraphs contain vowels)
-  const hasVowelNeighbor = neighborKeys.some(k => {
-    const t = hxTileMap.get(k);
-    if (!t) return false;
-    if (t.tileType === 'digraph') return true;
-    return HX_VOWELS.has(t.letter);
-  });
+  const filledNeighbors = neighborKeys.map(k => hxTileMap.get(k)).filter(Boolean);
+  const neighborCount = filledNeighbors.length;
 
-  const neighborCount = neighborKeys.filter(k => hxTileMap.has(k)).length;
+  // Step 1: compute vowel score using vowelWeightOf
+  const neighborVowelScore = filledNeighbors.reduce((sum, t) => sum + vowelWeightOf(t.letter), 0);
 
-  // If surrounded by consonants, 75% chance to force a vowel (never force a digraph here)
-  if (!hasVowelNeighbor && neighborCount >= 2 && Math.random() < 0.75) {
+  // Step 2a: too many vowels → bias toward consonant
+  if (neighborCount >= 2 && neighborVowelScore >= 1.5 && Math.random() < 0.70) {
+    const letter = HX_HIGH_UTILITY_CONSONANTS[Math.floor(Math.random() * HX_HIGH_UTILITY_CONSONANTS.length)];
+    return { isDigraph: false, letter };
+  }
+
+  // Step 2b: all consonants → bias toward vowel
+  if (neighborCount >= 2 && neighborVowelScore === 0 && Math.random() < 0.75) {
     return { isDigraph: false, letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)] };
   }
 
+  // Step 3: check for digraph neighbors and build complement pool
+  const key = hxKey(q, r);
+  let complementPool = [];
+  for (const t of filledNeighbors) {
+    if (t.tileType === 'digraph' && DIGRAPH_COMPLEMENT[t.letter]) {
+      complementPool = complementPool.concat(DIGRAPH_COMPLEMENT[t.letter]);
+    }
+  }
+  // Also apply any pending complement hint from buildGrid spiral pre-marking
+  if (pendingDigraphComplements.has(key)) {
+    complementPool = complementPool.concat(pendingDigraphComplements.get(key));
+    pendingDigraphComplements.delete(key);
+  }
+  if (complementPool.length > 0 && Math.random() < 0.60) {
+    return { isDigraph: false, letter: complementPool[Math.floor(Math.random() * complementPool.length)] };
+  }
+
+  // Step 4: normal draw from HX_LETTER_POOL
   const drawn = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
   if (drawn === '__DIGRAPH__') {
     const { digraph, points } = randomDigraph();
@@ -676,7 +758,7 @@ function buildGrid(onReady) {
   // Pre-designate vowel slots:
   //   • Ring 0 (centre): always a vowel
   //   • Ring 1: 3 of 6 tiles are vowels (random half)
-  //   • Rings 2–4: fill remaining quota so total ≈ 35% of the board
+  //   • Rings 2–4: fill remaining quota so total ≈ 28% of the board
   const vowelTargets = new Set();
   const VOWEL_DENSITY = 0.28;
 
@@ -693,12 +775,15 @@ function buildGrid(onReady) {
     .slice(0, Math.max(0, totalVowels - vowelTargets.size))
     .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
 
-  // Track which keys already have an adjacent digraph
-  const digraphUsed = new Set();
+  // ── Phase 2: place tiles in spiral order (ring 0 → 1 → 2 → 3 → 4) ──
+  // Spiral order ensures each tile has maximum neighbor awareness.
 
-  // ── Phase 2: place tiles ────────────────────────────────────────
+  // Reset pending complement hints from any prior game
+  pendingDigraphComplements.clear();
 
-  for (const { q, r } of allCoords) {
+  const spiralCoords = [...byRing[0], ...byRing[1], ...byRing[2], ...byRing[3], ...byRing[4]];
+
+  for (const { q, r } of spiralCoords) {
     const key = hxKey(q, r);
     const s   = -q - r;
     const isVowelSlot = vowelTargets.has(key);
@@ -711,26 +796,7 @@ function buildGrid(onReady) {
         letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)],
       };
     } else {
-      // Check whether any neighbour already holds a digraph
-      const neighborKeys = [
-        hxKey(q + 1, r),  hxKey(q - 1, r),
-        hxKey(q, r + 1),  hxKey(q, r - 1),
-        hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
-      ];
-      const digraphBlocked = neighborKeys.some(k => digraphUsed.has(k));
-
       result = randomLetterOrDigraphForPos(q, r);
-
-      if (result.isDigraph && digraphBlocked) {
-        // Redraw as a plain consonant (not a vowel, not a digraph sentinel)
-        let letter;
-        do {
-          letter = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
-        } while (letter === '__DIGRAPH__' || HX_VOWELS.has(letter));
-        result = { isDigraph: false, letter };
-      }
-
-      if (result.isDigraph) digraphUsed.add(key);
     }
 
     const tile = createTile({
@@ -746,6 +812,23 @@ function buildGrid(onReady) {
       tile.point    = result.points;
       hxState.digraphTiles.push(tile);
       applyTileType(tile);
+
+      // Post-placement neighbor nudge: mark unfilled neighbors of this digraph
+      // so randomLetterOrDigraphForPos prefers complement letters for them.
+      const complement = DIGRAPH_COMPLEMENT[result.digraph];
+      if (complement) {
+        const nudgeNeighborKeys = [
+          hxKey(q + 1, r),  hxKey(q - 1, r),
+          hxKey(q, r + 1),  hxKey(q, r - 1),
+          hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
+        ];
+        for (const nk of nudgeNeighborKeys) {
+          if (!hxTileMap.has(nk)) {
+            const existing = pendingDigraphComplements.get(nk) || [];
+            pendingDigraphComplements.set(nk, existing.concat(complement));
+          }
+        }
+      }
     } else {
       tile.tileType = 'normal';
     }
