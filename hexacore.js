@@ -59,12 +59,12 @@ const SCORE_TICK_MS             = 700; // ms duration for score count-up animati
  * High-frequency vowels + consonants ensure dense playable word coverage.
  * Digraph slots (~15%) are drawn from DIGRAPH_POOL at tile-creation time.      */
 const HX_LETTER_POOL = [
-  // Vowels (~35 total, reduced from 42 to accommodate digraph slots)
-  ...Array(10).fill('E'),  // 10
-  ...Array(7).fill('A'),   //  7
-  ...Array(7).fill('I'),   //  7
-  ...Array(7).fill('O'),   //  7
-  ...Array(4).fill('U'),   //  4
+  // Vowels (~29 total, reduced from 42 to accommodate digraph slots)
+  ...Array(8).fill('E'),   //  8
+  ...Array(6).fill('A'),   //  6
+  ...Array(6).fill('I'),   //  6
+  ...Array(6).fill('O'),   //  6
+  ...Array(3).fill('U'),   //  3
 
   // High-frequency consonants (~48 total, reduced from 56)
   ...Array(5).fill('N'),   //  5
@@ -75,12 +75,12 @@ const HX_LETTER_POOL = [
   ...Array(3).fill('D'),   //  3
 
   // Mid-frequency consonants
-  ...Array(2).fill('G'),   //  2
-  ...Array(2).fill('B'),   //  2
-  ...Array(2).fill('C'),   //  2
-  ...Array(2).fill('F'),   //  2
-  ...Array(2).fill('H'),   //  2
-  ...Array(2).fill('M'),   //  2
+  ...Array(3).fill('G'),   //  3
+  ...Array(3).fill('B'),   //  3
+  ...Array(3).fill('C'),   //  3
+  ...Array(3).fill('F'),   //  3
+  ...Array(3).fill('H'),   //  3
+  ...Array(3).fill('M'),   //  3
   ...Array(2).fill('P'),   //  2
   ...Array(2).fill('V'),   //  2
   ...Array(2).fill('W'),   //  2
@@ -98,7 +98,46 @@ const DIGRAPH_POOL = [
   'TH', 'HE', 'IN', 'ER', 'RE', 'ST', 'AN', 'ON', 'EA', 'TT',
   'SS', 'IO', 'LL', 'QU', 'CK', 'CH', 'EN', 'AN', 'AS', 'CO',
   'LY', 'AL', 'LE', 'ED', 'ES', 'UN', 'GH', 'CR', 'WH', 'NT', 'NC',
+  'NG', 'TY', 'RY',
 ];
+
+/** Preferred neighbor letters for each digraph — tuned for common 6–10 letter
+ *  English suffixes: -ING, -TION, -NESS, -MENT, -LESS, -ABLE, -STER, -ATED */
+const DIGRAPH_COMPLEMENT = {
+  TH: ['E','R','A','I','O','N','S','G'],
+  HE: ['R','S','N','D','L','A','T'],
+  IN: ['G','S','T','K','D','E','L'],
+  ER: ['S','T','N','D','G','L','A','M'],
+  RE: ['S','T','N','D','A','L','C','M'],
+  ST: ['A','E','I','O','R','L','N','S'],
+  AN: ['S','T','D','G','E','C','I','L'],
+  ON: ['S','E','T','G','L','D','C'],
+  EA: ['R','S','T','D','N','L','M'],
+  TT: ['E','A','I','O','R','L','N'],
+  SS: ['E','I','A','O','N','T','L'],
+  IO: ['N','S','T','R','L'],
+  LL: ['E','A','I','O','S','Y','N'],
+  QU: ['I','E','A','O','T','R','N'],
+  CK: ['E','I','A','S','L','N'],
+  CH: ['E','A','I','O','R','S','N'],
+  EN: ['S','T','D','G','C','L','E'],
+  AS: ['T','S','E','H','K','P'],
+  CO: ['N','M','R','L','S','T','D'],
+  ES: ['T','L','N','D','S'],
+  UN: ['D','S','T','E','I','A','G'],
+  LY: ['I','E','N','S','T','B','F','H'],
+  AL: ['L','S','T','E','I','D'],
+  LE: ['S','T','D','N','A','R'],
+  ED: ['S','T','L','N','G','A','I'],
+  GH: ['T','S','E','A','O'],
+  CR: ['A','E','I','O','S','T'],
+  WH: ['A','E','I','O','N','T'],
+  NT: ['S','E','I','A','O','L','R'],
+  NC: ['E','I','A','H','L'],
+  NG: ['S','T','E','I','A','L','R'],
+  TY: ['P','S','R','L','E','A'],
+  RY: ['S','T','E','I','A','L'],
+};
 
 function randomDigraph() {
   const dg  = DIGRAPH_POOL[Math.floor(Math.random() * DIGRAPH_POOL.length)];
@@ -152,6 +191,8 @@ let hxLayout            = null;
 let hxSvg               = null;
 let hxWordCount         = 0;
 let hxTileMap           = new Map(); // `q,r` → tile object
+/** Keyed by `q,r` — letters preferred for that position due to an adjacent digraph placed earlier */
+let pendingDigraphComplements = new Map();
 let hxPointerCleanup    = null;
 let hxUpdateViewForBoard = null;
 let hxCompletedReqs     = new Set(); // IDs of completed requirements (persists across games)
@@ -179,36 +220,72 @@ function randomLetter() {
 }
 
 const HX_VOWELS = new Set(['A','E','I','O','U']);
-const HX_VOWEL_POOL = ['A','A','A','E','E','E','E','I','I','I','O','O','O','U','U'];
+const HX_VOWEL_POOL = ['E','E','E','A','A','I','I','O','O','O','U'];
+
+/** Returns vowel weight of a letter string.
+ *  Plain vowel = 1.0, plain consonant = 0.0.
+ *  Digraph = 0.5 per vowel character (e.g. ER→0.5, EA→1.0, TH→0.0). */
+function vowelWeightOf(letter) {
+  const v = [...letter].filter(ch => HX_VOWELS.has(ch)).length;
+  return letter.length > 1 ? v * 0.5 : v;
+}
+
+/** High-utility consonants for forcing when vowel-heavy neighborhood detected */
+const HX_UTILITY_CONSONANTS = [
+  'S','S','S','T','T','T','R','R','R','N','N','N',
+  'L','L','D','D','H','C','M','G','B','F','P','W',
+];
 
 /**
- * Samples HX_LETTER_POOL and resolves any digraph sentinel.
- * Returns { isDigraph: false, letter } or { isDigraph: true, digraph, points }.
- * Applies vowel-bias correction: if all neighbours are consonants (and none
- * are digraph tiles), 75% chance to force a vowel instead.
+ * Picks a letter/digraph for position (q, r) with full neighbor awareness:
+ *  1. Vowel-heavy neighbors (score ≥ 1.5) → 70% chance force high-utility consonant
+ *  2. All-consonant neighbors (score = 0, count ≥ 2) → 75% chance force vowel
+ *  3. Has digraph neighbors → 60% chance draw from merged complement pool
+ *  4. Has a pending digraph complement hint → 60% chance draw from hint pool
+ *  5. Otherwise draw from HX_LETTER_POOL normally (digraphs fully eligible)
  */
 function randomLetterOrDigraphForPos(q, r) {
   const neighborKeys = [
-    hxKey(q + 1, r),  hxKey(q - 1, r),
-    hxKey(q, r + 1),  hxKey(q, r - 1),
+    hxKey(q + 1, r),   hxKey(q - 1, r),
+    hxKey(q,     r + 1), hxKey(q,     r - 1),
     hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
   ];
 
-  // A digraph neighbour counts as a vowel neighbour (most digraphs contain vowels)
-  const hasVowelNeighbor = neighborKeys.some(k => {
-    const t = hxTileMap.get(k);
-    if (!t) return false;
-    if (t.tileType === 'digraph') return true;
-    return HX_VOWELS.has(t.letter);
-  });
+  const neighbors = neighborKeys.map(k => hxTileMap.get(k)).filter(Boolean);
+  const neighborCount = neighbors.length;
 
-  const neighborCount = neighborKeys.filter(k => hxTileMap.has(k)).length;
+  // ── Vowel score ────────────────────────────────────────────────
+  const neighborVowelScore = neighbors.reduce((sum, t) => sum + vowelWeightOf(t.letter), 0);
 
-  // If surrounded by consonants, 75% chance to force a vowel (never force a digraph here)
-  if (!hasVowelNeighbor && neighborCount >= 2 && Math.random() < 0.75) {
+  // ── 1. Vowel-heavy → force consonant ───────────────────────────
+  if (neighborCount >= 2 && neighborVowelScore >= 1.5 && Math.random() < 0.70) {
+    const letter = HX_UTILITY_CONSONANTS[Math.floor(Math.random() * HX_UTILITY_CONSONANTS.length)];
+    return { isDigraph: false, letter };
+  }
+
+  // ── 2. All-consonant → force vowel ─────────────────────────────
+  if (neighborCount >= 2 && neighborVowelScore === 0 && Math.random() < 0.75) {
     return { isDigraph: false, letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)] };
   }
 
+  // ── 3. Digraph neighbor complement ─────────────────────────────
+  const digraphNeighbors = neighbors.filter(t => t.tileType === 'digraph');
+  if (digraphNeighbors.length > 0 && Math.random() < 0.60) {
+    const merged = digraphNeighbors.flatMap(t => DIGRAPH_COMPLEMENT[t.letter] || []);
+    if (merged.length > 0) {
+      const letter = merged[Math.floor(Math.random() * merged.length)];
+      return { isDigraph: false, letter };
+    }
+  }
+
+  // ── 4. Pending digraph complement hint (set during buildGrid) ───
+  const hint = pendingDigraphComplements.get(hxKey(q, r));
+  if (hint && hint.length > 0 && Math.random() < 0.60) {
+    const letter = hint[Math.floor(Math.random() * hint.length)];
+    return { isDigraph: false, letter };
+  }
+
+  // ── 5. Normal pool draw ─────────────────────────────────────────
   const drawn = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
   if (drawn === '__DIGRAPH__') {
     const { digraph, points } = randomDigraph();
@@ -656,9 +733,7 @@ function buildGrid(onReady) {
   });
   hxUpdateViewForBoard = updateViewForBoard;
 
-  // ── Phase 1: build vowel slot set ──────────────────────────────
-
-  // Collect all valid hex coordinates for this grid
+  // ── Phase 1: collect coords grouped by ring ─────────────────────
   const allCoords = [];
   for (let q = -GRID_RADIUS; q <= GRID_RADIUS; q++) {
     for (let r = -GRID_RADIUS; r <= GRID_RADIUS; r++) {
@@ -666,24 +741,23 @@ function buildGrid(onReady) {
     }
   }
 
-  // Group coords by ring distance from centre (rings 0–4)
   const byRing = [[], [], [], [], []];
   allCoords.forEach(({ q, r }) => {
     const ring = Math.max(Math.abs(q), Math.abs(r), Math.abs(-q - r));
     if (ring <= 4) byRing[ring].push({ q, r });
   });
 
-  // Pre-designate vowel slots:
+  // Pre-designate vowel slots (density-based, ring-aware):
   //   • Ring 0 (centre): always a vowel
-  //   • Ring 1: 3 of 6 tiles are vowels (random half)
-  //   • Rings 2–4: fill remaining quota so total ≈ 35% of the board
+  //   • Ring 1: 2 of 6 tiles are vowels
+  //   • Rings 2–4: random fill until VOWEL_DENSITY reached
   const vowelTargets = new Set();
-  const VOWEL_DENSITY = 0.35;
+  const VOWEL_DENSITY = 0.28;
 
   byRing[0].forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
   byRing[1]
     .slice().sort(() => Math.random() - 0.5)
-    .slice(0, 3)
+    .slice(0, 2)
     .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
 
   const outerCoords = [...byRing[2], ...byRing[3], ...byRing[4]]
@@ -693,44 +767,27 @@ function buildGrid(onReady) {
     .slice(0, Math.max(0, totalVowels - vowelTargets.size))
     .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
 
-  // Track which keys already have an adjacent digraph
-  const digraphUsed = new Set();
+  // Reset complement hints for fresh board
+  pendingDigraphComplements = new Map();
 
-  // ── Phase 2: place tiles ────────────────────────────────────────
+  // ── Phase 2: place tiles ring-by-ring (0 → 4) ───────────────────
+  // Processing ring by ring ensures each tile sees already-placed neighbors.
 
-  for (const { q, r } of allCoords) {
+  const spiralCoords = [...byRing[0], ...byRing[1], ...byRing[2], ...byRing[3], ...byRing[4]];
+
+  for (const { q, r } of spiralCoords) {
     const key = hxKey(q, r);
     const s   = -q - r;
     const isVowelSlot = vowelTargets.has(key);
 
     let result;
     if (isVowelSlot) {
-      // Force a vowel — never a digraph in a vowel slot
       result = {
         isDigraph: false,
         letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)],
       };
     } else {
-      // Check whether any neighbour already holds a digraph
-      const neighborKeys = [
-        hxKey(q + 1, r),  hxKey(q - 1, r),
-        hxKey(q, r + 1),  hxKey(q, r - 1),
-        hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
-      ];
-      const digraphBlocked = neighborKeys.some(k => digraphUsed.has(k));
-
       result = randomLetterOrDigraphForPos(q, r);
-
-      if (result.isDigraph && digraphBlocked) {
-        // Redraw as a plain consonant (not a vowel, not a digraph sentinel)
-        let letter;
-        do {
-          letter = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
-        } while (letter === '__DIGRAPH__' || HX_VOWELS.has(letter));
-        result = { isDigraph: false, letter };
-      }
-
-      if (result.isDigraph) digraphUsed.add(key);
     }
 
     const tile = createTile({
@@ -746,13 +803,26 @@ function buildGrid(onReady) {
       tile.point    = result.points;
       hxState.digraphTiles.push(tile);
       applyTileType(tile);
+      // Post-placement: mark unplaced neighbors with complement hints
+      const nKeys = [
+        hxKey(q + 1, r),   hxKey(q - 1, r),
+        hxKey(q,     r + 1), hxKey(q,     r - 1),
+        hxKey(q + 1, r - 1), hxKey(q - 1, r + 1),
+      ];
+      const complement = DIGRAPH_COMPLEMENT[result.digraph] || [];
+      nKeys.forEach(nk => {
+        if (!hxTileMap.has(nk) && complement.length > 0) {
+          const existing = pendingDigraphComplements.get(nk) || [];
+          pendingDigraphComplements.set(nk, [...existing, ...complement]);
+        }
+      });
     } else {
       tile.tileType = 'normal';
     }
-    tile.s = s;
 
-    hxState.tiles.push(tile);
     hxTileMap.set(key, tile);
+    tile.q = q; tile.r = r; tile.s = s;
+    hxState.tiles.push(tile);
     board.appendChild(tile.element);
 
     // Hide until intro animation reveals the tile
@@ -2422,6 +2492,7 @@ export function startHexacore() {
   hxPointerDown        = false;
   hxWordCount          = 0;
   hxTileMap            = new Map();
+  pendingDigraphComplements = new Map();
   hxUpdateViewForBoard = null;
 
   // Clean up previous pointer listeners
