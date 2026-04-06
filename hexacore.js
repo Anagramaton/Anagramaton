@@ -3089,6 +3089,10 @@ export function stopHexacore() {
 
 /* ── Splash screen wiring (on module load) ─────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('splash-hexacore-play-btn')?.addEventListener('click', () => {
+    document.getElementById('splash-hexacore-btn')?.click();
+  });
+
   document.getElementById('splash-hexacore-btn')?.addEventListener('click', async () => {
     document.getElementById('splash-screen')?.classList.add('hidden');
 
