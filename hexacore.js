@@ -173,6 +173,10 @@ const hxState = {
   gemTanzaniteTiles: [],
   gemRubyTiles:      [],
   gemDiamondTiles:   [],
+  amethystTiles:   [],
+  seleniteTiles:   [],
+  amethystCount:   0,
+  seleniteCount:   0,
   gameOver:        false,
   active:          false,
 
@@ -196,6 +200,11 @@ let pendingDigraphComplements = new Map();
 let hxPointerCleanup    = null;
 let hxUpdateViewForBoard = null;
 let hxCompletedReqs     = new Set(); // IDs of completed requirements (persists across games)
+
+// Power-up targeting mode state
+let hxAmethystTargeting  = false; // true when waiting for tile tap to transmute
+let hxSeleniteTargeting  = false; // true when waiting for 2 tile taps to swap
+let hxSeleniteFirstTile  = null;  // first tile selected in selenite swap
 
 /* ── Pure helpers ──────────────────────────────────────────────── */
 function hxKey(q, r) { return `${q},${r}`; }
@@ -601,6 +610,7 @@ function applyTileType(tile) {
     'hx-ember', 'hx-prism', 'hx-rune', 'hx-digraph',
     'hx-gem-emerald', 'hx-gem-gold', 'hx-gem-sapphire',
     'hx-gem-pearl', 'hx-gem-tanzanite', 'hx-gem-ruby', 'hx-gem-diamond',
+    'hx-amethyst', 'hx-selenite',
   );
   tile.element.querySelector('.hx-type-icon')?.remove();
   // Reset letter font size (may have been reduced for digraph)
@@ -644,6 +654,12 @@ function applyTileType(tile) {
   } else if (tile.tileType === 'gemDiamond') {
     poly.classList.add('hx-gem-diamond');
     addTypeIcon(tile, '◆', 12, '#e0f2fe');
+  } else if (tile.tileType === 'amethyst') {
+    poly.classList.add('hx-amethyst');
+    addTypeIcon(tile, '◈', 13, '#e879f9');
+  } else if (tile.tileType === 'selenite') {
+    poly.classList.add('hx-selenite');
+    addTypeIcon(tile, '⇌', 13, '#caf0f8');
   }
 }
 
@@ -718,6 +734,46 @@ function injectSvgDefs(svg) {
   ensureLinearGradient('hx-gem-tanzanite-gradient',  '#1e0a5e', '#7c3aed');
   ensureLinearGradient('hx-gem-ruby-gradient',       '#7f1d1d', '#ef4444');
   ensureLinearGradient('hx-gem-diamond-gradient',    '#a5f3fc', '#ffffff');
+
+  // Amethyst — deep purple to violet gradient
+  if (!document.getElementById('hx-amethyst-gradient')) {
+    const amethystGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    amethystGrad.setAttribute('id', 'hx-amethyst-gradient');
+    amethystGrad.setAttribute('x1', '0%'); amethystGrad.setAttribute('y1', '100%');
+    amethystGrad.setAttribute('x2', '100%'); amethystGrad.setAttribute('y2', '0%');
+    [
+      ['0%',   '#4c0070'],
+      ['50%',  '#a855f7'],
+      ['100%', '#e879f9'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      amethystGrad.appendChild(s);
+    });
+    defs.appendChild(amethystGrad);
+  }
+
+  // Selenite — dark navy to brilliant white-blue moonstone gradient
+  if (!document.getElementById('hx-selenite-gradient')) {
+    const seleniteGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    seleniteGrad.setAttribute('id', 'hx-selenite-gradient');
+    seleniteGrad.setAttribute('x1', '0%'); seleniteGrad.setAttribute('y1', '100%');
+    seleniteGrad.setAttribute('x2', '0%'); seleniteGrad.setAttribute('y2', '0%');
+    [
+      ['0%',   '#0a0a1a'],
+      ['25%',  '#1a3a6e'],
+      ['60%',  '#8ecae6'],
+      ['85%',  '#caf0f8'],
+      ['100%', '#ffffff'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      seleniteGrad.appendChild(s);
+    });
+    defs.appendChild(seleniteGrad);
+  }
 }
 
 /* ── Grid construction ─────────────────────────────────────────── */
@@ -1069,6 +1125,10 @@ function ensureHud() {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
   });
   document.body.appendChild(levelHud);
+
+  const powerUpBar = document.createElement('div');
+  powerUpBar.id = 'hx-powerup-bar';
+  document.body.appendChild(powerUpBar);
 }
 
 function removeHud() {
@@ -1076,6 +1136,9 @@ function removeHud() {
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
   document.getElementById('hx-level-hud')?.remove();
+  document.getElementById('hx-powerup-bar')?.remove();
+  document.getElementById('hx-powerup-toast')?.remove();
+  document.getElementById('hx-powerup-indicator')?.remove();
 }
 
 /* ── Requirements persistence ──────────────────────────────────── */
@@ -1661,6 +1724,231 @@ function showRuneLetterPicker(tile) {
   });
 }
 
+/* ── Power-up: HUD bar ─────────────────────────────────────────── */
+function updatePowerUpBar() {
+  const bar = document.getElementById('hx-powerup-bar');
+  if (!bar) return;
+  bar.innerHTML = '';
+
+  for (let i = 0; i < hxState.amethystCount; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'hx-powerup-btn hx-powerup-btn--amethyst';
+    btn.textContent = '🔮 AMETHYST';
+    btn.title = 'Transmute: change any tile\'s letter';
+    btn.addEventListener('click', () => activateAmethyst());
+    bar.appendChild(btn);
+  }
+
+  for (let i = 0; i < hxState.seleniteCount; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'hx-powerup-btn hx-powerup-btn--selenite';
+    btn.textContent = '🌙 SELENITE';
+    btn.title = 'Phase Swap: swap any two tiles';
+    btn.addEventListener('click', () => activateSelenite());
+    bar.appendChild(btn);
+  }
+}
+
+/* ── Power-up toast notification ──────────────────────────────── */
+function showPowerUpCollectToast(type) {
+  const existing = document.getElementById('hx-powerup-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'hx-powerup-toast';
+  toast.className = `hx-powerup-toast hx-powerup-toast--${type}`;
+
+  if (type === 'amethyst') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">✨ AMETHYST COLLECTED</span><span class="hx-powerup-toast-desc">Tap to change a tile\'s letter!</span>';
+  } else {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">✨ SELENITE COLLECTED</span><span class="hx-powerup-toast-desc">Tap to swap two tiles!</span>';
+  }
+
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+function showPowerUpUsedToast(type) {
+  const existing = document.getElementById('hx-powerup-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'hx-powerup-toast';
+  toast.className = `hx-powerup-toast hx-powerup-toast--${type}`;
+
+  if (type === 'amethyst') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">🔮 AMETHYST USED</span>';
+  } else {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">🌙 SELENITE USED</span>';
+  }
+
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+/* ── Power-up: Amethyst (Transmute) ───────────────────────────── */
+function activateAmethyst() {
+  if (hxState.amethystCount <= 0 || !hxState.active || hxState.gameOver) return;
+  // Cancel selenite targeting if active
+  cancelSeleniteTargeting();
+
+  hxAmethystTargeting = true;
+  document.body.classList.add('hx-amethyst-targeting');
+
+  const indicator = document.createElement('div');
+  indicator.id = 'hx-powerup-indicator';
+  indicator.className = 'hx-powerup-indicator hx-powerup-indicator--amethyst';
+  indicator.textContent = '🔮 TAP A TILE TO CHANGE ITS LETTER';
+  document.body.appendChild(indicator);
+}
+
+function cancelAmethystTargeting() {
+  hxAmethystTargeting = false;
+  document.body.classList.remove('hx-amethyst-targeting');
+  document.getElementById('hx-powerup-indicator')?.remove();
+}
+
+function handleAmethystTileTap(tile) {
+  if (!hxAmethystTargeting) return false;
+  cancelAmethystTargeting();
+  showAmethystLetterPicker(tile);
+  return true;
+}
+
+function showAmethystLetterPicker(tile) {
+  const overlay = document.createElement('div');
+  overlay.id = 'hx-rune-picker';
+
+  const box = document.createElement('div');
+  box.id = 'hx-rune-picker-box';
+  box.classList.add('hx-amethyst-picker');
+
+  const title = document.createElement('div');
+  title.id = 'hx-rune-picker-title';
+  title.textContent = '◈ CHOOSE A NEW LETTER';
+
+  const grid = document.createElement('div');
+  grid.id = 'hx-rune-picker-grid';
+
+  function closeModal() {
+    overlay.remove();
+    document.removeEventListener('keydown', onKeyDown);
+  }
+
+  function onKeyDown(e) {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  }
+  document.addEventListener('keydown', onKeyDown);
+
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+    const btn = document.createElement('button');
+    btn.textContent = letter;
+    btn.addEventListener('click', () => {
+      // Apply the new letter to the tile
+      tile.letter   = letter;
+      tile.tileType = 'normal';
+      tile.updateLetter(letter, letterPoints[letter] || 1);
+      applyTileType(tile);
+      // Remove from amethyst tiles list if it was an amethyst
+      removeFrom(hxState.amethystTiles, tile);
+      hxState.amethystCount--;
+      updatePowerUpBar();
+      showPowerUpUsedToast('amethyst');
+      closeModal();
+    });
+    grid.appendChild(btn);
+  });
+
+  box.appendChild(title);
+  box.appendChild(grid);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeModal();
+  });
+}
+
+/* ── Power-up: Selenite (Phase Swap) ──────────────────────────── */
+function activateSelenite() {
+  if (hxState.seleniteCount <= 0 || !hxState.active || hxState.gameOver) return;
+  // Cancel amethyst targeting if active
+  cancelAmethystTargeting();
+
+  hxSeleniteTargeting = true;
+  hxSeleniteFirstTile = null;
+  document.body.classList.add('hx-selenite-targeting');
+
+  const indicator = document.createElement('div');
+  indicator.id = 'hx-powerup-indicator';
+  indicator.className = 'hx-powerup-indicator hx-powerup-indicator--selenite';
+  indicator.textContent = '🌙 SWAP MODE — TAP FIRST TILE';
+  document.body.appendChild(indicator);
+}
+
+function cancelSeleniteTargeting() {
+  if (hxSeleniteFirstTile) {
+    hxSeleniteFirstTile.element.classList.remove('hx-swap-mode-highlight');
+  }
+  hxSeleniteTargeting = false;
+  hxSeleniteFirstTile = null;
+  document.body.classList.remove('hx-selenite-targeting');
+  document.getElementById('hx-powerup-indicator')?.remove();
+}
+
+function handleSelenieTileTap(tile) {
+  if (!hxSeleniteTargeting) return false;
+
+  // Portal tiles cannot be swapped
+  if (isPortalTile(tile)) return true;
+
+  if (!hxSeleniteFirstTile) {
+    // First tile selected
+    hxSeleniteFirstTile = tile;
+    tile.element.classList.add('hx-swap-mode-highlight');
+    const indicator = document.getElementById('hx-powerup-indicator');
+    if (indicator) indicator.textContent = '🌙 SWAP MODE — TAP SECOND TILE';
+    return true;
+  }
+
+  // Second tile selected
+  const tileA = hxSeleniteFirstTile;
+  const tileB = tile;
+
+  // Cannot swap a tile with itself
+  if (tileA === tileB) {
+    cancelSeleniteTargeting();
+    return true;
+  }
+
+  // Perform the swap
+  tileA.element.classList.remove('hx-swap-mode-highlight');
+  cancelSeleniteTargeting();
+
+  // Swap q, r, s, key coordinates and hxTileMap entries
+  const aQ = tileA.q, aR = tileA.r, aS = tileA.s;
+  const bQ = tileB.q, bR = tileB.r, bS = tileB.s;
+
+  tileA.q = bQ; tileA.r = bR; tileA.s = bS;
+  tileB.q = aQ; tileB.r = aR; tileB.s = aS;
+
+  hxTileMap.set(hxKey(tileA.q, tileA.r), tileA);
+  hxTileMap.set(hxKey(tileB.q, tileB.r), tileB);
+
+  // Animate both tiles gliding to their new positions
+  animateTileMoves([
+    { tile: tileA, fromQ: aQ, fromR: aR, toQ: bQ, toR: bR },
+    { tile: tileB, fromQ: bQ, fromR: bR, toQ: aQ, toR: aR },
+  ]);
+
+  hxState.seleniteCount--;
+  updatePowerUpBar();
+  showPowerUpUsedToast('selenite');
+  return true;
+}
+
 /* ── Pointer events ────────────────────────────────────────────── */
 function setupPointerEvents() {
   const svg = hxSvg;
@@ -1675,6 +1963,17 @@ function setupPointerEvents() {
     const tile = tileFromElement(document.elementFromPoint(e.clientX, e.clientY));
     if (!tile) return;
     e.preventDefault();
+
+    // Handle power-up targeting modes first
+    if (hxAmethystTargeting) {
+      handleAmethystTileTap(tile);
+      return;
+    }
+    if (hxSeleniteTargeting) {
+      handleSelenieTileTap(tile);
+      return;
+    }
+
     if (tile.tileType === 'rune') {
       showRuneLetterPicker(tile);
       return;
@@ -1827,6 +2126,22 @@ async function submitHexacoreWord() {
 
   const consumed = [...hxSelected];
 
+  // Detect amethyst/selenite power-up collection (5+ letter word)
+  if (assembledLength >= 5) {
+    const hasAmethystTile  = consumed.some(t => t.tileType === 'amethyst');
+    const hasSelenieTile   = consumed.some(t => t.tileType === 'selenite');
+    if (hasAmethystTile) {
+      hxState.amethystCount++;
+      updatePowerUpBar();
+      showPowerUpCollectToast('amethyst');
+    }
+    if (hasSelenieTile) {
+      hxState.seleniteCount++;
+      updatePowerUpBar();
+      showPowerUpCollectToast('selenite');
+    }
+  }
+
   // If any portal tile is in the consumed set, close the portal now (before
   // tile animations start) so the glowing style doesn't play during pop-out.
   if (hxState.portalOpen && hxState.portalEntry && hxState.portalExit) {
@@ -1878,7 +2193,7 @@ async function consumeAndRefill(tilesToRemove) {
   tilesToRemove.forEach((tile, idx) => {
     tile.element.style.setProperty('--tile-idx', String(idx));
     const type = tile.tileType;
-    if (type === 'ember' || type === 'prism' || type === 'rune') {
+    if (type === 'ember' || type === 'prism' || type === 'rune' || type === 'amethyst' || type === 'selenite') {
       // Consumed-special class replaces hx-tile-removing with combined animation
       tile.element.classList.add(`hx-consumed-${type}`);
     } else if (HX_GEM_TYPES.has(type)) {
@@ -1905,6 +2220,8 @@ async function consumeAndRefill(tilesToRemove) {
     removeFrom(hxState.gemTanzaniteTiles,  tile);
     removeFrom(hxState.gemRubyTiles,       tile);
     removeFrom(hxState.gemDiamondTiles,    tile);
+    removeFrom(hxState.amethystTiles,      tile);
+    removeFrom(hxState.seleniteTiles,      tile);
     hxTileMap.delete(hxKey(tile.q, tile.r));
   });
 
@@ -2017,6 +2334,8 @@ async function advanceEmberTiles() {
       removeFrom(hxState.gemTanzaniteTiles, displaced);
       removeFrom(hxState.gemRubyTiles,      displaced);
       removeFrom(hxState.gemDiamondTiles,   displaced);
+      removeFrom(hxState.amethystTiles,     displaced);
+      removeFrom(hxState.seleniteTiles,     displaced);
       hxTileMap.delete(hxKey(target.q, target.r));
     }
 
@@ -2217,6 +2536,14 @@ function spawnSpecialTiles() {
   if (hxWordCount % 7 === 0) {
     spawnSpecialInRows('rune', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
   }
+  // Every 12 words → 1 new amethyst in top 3 rows
+  if (hxWordCount % 12 === 0) {
+    spawnSpecialInRows('amethyst', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+  }
+  // Every 15 words → 1 new selenite in top 3 rows
+  if (hxWordCount % 15 === 0) {
+    spawnSpecialInRows('selenite', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+  }
 }
 
 function spawnSpecialInRows(type, rows) {
@@ -2233,6 +2560,8 @@ function spawnSpecialInRows(type, rows) {
   if (type === 'ember') hxState.emberTiles.push(target);
   else if (type === 'prism') hxState.prismTiles.push(target);
   else if (type === 'rune')  hxState.runeTiles.push(target);
+  else if (type === 'amethyst') hxState.amethystTiles.push(target);
+  else if (type === 'selenite') hxState.seleniteTiles.push(target);
   else if (type === 'digraph') {
     const { digraph, points } = randomDigraph();
     target.letter = digraph;
@@ -2258,6 +2587,8 @@ function triggerGameOver() {
   window.removeEventListener('beforeunload', saveHexacoreProgress);
   clearHexacoreSave();
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
+  cancelAmethystTargeting();
+  cancelSeleniteTargeting();
   clearSelection();
   document.body.classList.remove('hx-active');
 
@@ -2439,6 +2770,8 @@ function saveHexacoreProgress() {
     portalEntry:         hxState.portalEntry,
     portalExit:          hxState.portalExit,
     portalWordsRemaining: hxState.portalWordsRemaining,
+    amethystCount:       hxState.amethystCount,
+    seleniteCount:       hxState.seleniteCount,
   };
 
   try { localStorage.setItem(HX_SAVE_KEY, JSON.stringify(save)); } catch (_) { /* quota / private */ }
@@ -2478,6 +2811,10 @@ export function startHexacore() {
     gemTanzaniteTiles: [],
     gemRubyTiles:      [],
     gemDiamondTiles:   [],
+    amethystTiles:   [],
+    seleniteTiles:   [],
+    amethystCount:   0,
+    seleniteCount:   0,
     gameOver:        false,
     active:          false, // set to true after intro animation completes
     // Portal system reset
@@ -2494,6 +2831,9 @@ export function startHexacore() {
   hxTileMap            = new Map();
   pendingDigraphComplements = new Map();
   hxUpdateViewForBoard = null;
+  hxAmethystTargeting  = false;
+  hxSeleniteTargeting  = false;
+  hxSeleniteFirstTile  = null;
 
   // Clean up previous pointer listeners
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
@@ -2533,6 +2873,8 @@ export function startHexacore() {
         gemTanzanite: hxState.gemTanzaniteTiles,
         gemRuby:      hxState.gemRubyTiles,
         gemDiamond:   hxState.gemDiamondTiles,
+        amethyst:     hxState.amethystTiles,
+        selenite:     hxState.seleniteTiles,
       };
 
       (save.tiles ?? []).forEach(saved => {
@@ -2564,10 +2906,15 @@ export function startHexacore() {
       hxState.portalWordsRemaining = save.portalWordsRemaining ?? 0;
       if (hxState.portalOpen) applyPortalVisuals();
 
+      // Restore power-up counts
+      hxState.amethystCount = save.amethystCount ?? 0;
+      hxState.seleniteCount = save.seleniteCount ?? 0;
+
       // Sync HUD to restored values
       updateHud();
       updateLevelHud();
       updateScoreDisplay();
+      updatePowerUpBar();
 
       showRestoredBanner(hxState.level, hxState.score);
     }
@@ -2594,6 +2941,7 @@ export function startHexacore() {
   updateHud();
   updateLevelHud();
   updateScoreDisplay();
+  updatePowerUpBar();
 
   setupPointerEvents();
   playSound('sfxUnlock');
@@ -2610,6 +2958,9 @@ export function stopHexacore() {
 
   window.removeEventListener('beforeunload', saveHexacoreProgress);
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
+
+  cancelAmethystTargeting();
+  cancelSeleniteTargeting();
 
   document.getElementById('hx-gameover-overlay')?.remove();
   document.getElementById('hx-challenges-modal')?.remove();

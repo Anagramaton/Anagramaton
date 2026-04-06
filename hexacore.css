@@ -1245,3 +1245,331 @@ body.hx-active #hex-grid {
   color: #94a3b8;
   line-height: 1.4;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Amethyst tile — deep purple crystalline power-up
+   ═══════════════════════════════════════════════════════════════ */
+
+.hx-amethyst {
+  fill: url(#hx-amethyst-gradient);
+  stroke: #a855f7;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-amethyst-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes hx-amethyst-shimmer {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0  8px rgba(168,  85, 247, 0.8))
+      drop-shadow(0 0  3px rgba(232, 121, 249, 0.5));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 18px rgba(168,  85, 247, 1))
+      drop-shadow(0 0  8px rgba(232, 121, 249, 0.9))
+      brightness(1.15);
+  }
+}
+
+@keyframes hx-amethyst-spawn-anim {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.35);
+    filter: brightness(3) drop-shadow(0 0 28px rgba(168, 85, 247, 1))
+            drop-shadow(0 0 12px rgba(232, 121, 249, 1));
+  }
+  70% {
+    transform: scale(0.92);
+    filter: brightness(1.5) drop-shadow(0 0 14px rgba(168, 85, 247, 0.9));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.0);
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.8));
+  }
+}
+.hx-amethyst-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-amethyst-spawn-anim 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes hx-amethyst-burst {
+  0%   { opacity: 1;   transform: scale(1);    filter: brightness(1); }
+  40%  { opacity: 0.9; transform: scale(1.3);  filter: brightness(3) drop-shadow(0 0 20px rgba(168, 85, 247, 1)); }
+  100% { opacity: 0;   transform: scale(0.1) translateY(-30px); filter: brightness(0.5); }
+}
+.hx-consumed-amethyst {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation:
+    hx-amethyst-burst 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Selenite tile — ethereal moonstone with iridescent shimmer
+   ═══════════════════════════════════════════════════════════════ */
+
+.hx-selenite {
+  fill: url(#hx-selenite-gradient);
+  stroke: #8ecae6;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-selenite-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes hx-selenite-pulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0  6px rgba(202, 240, 248, 0.6))
+      drop-shadow(0 0  2px rgba(142, 202, 230, 0.4));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 16px rgba(202, 240, 248, 1))
+      drop-shadow(0 0  8px rgba(142, 202, 230, 0.9))
+      drop-shadow(0 0 28px rgba(255, 255, 255, 0.4))
+      brightness(1.2);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes hx-selenite-spawn-anim {
+  0% {
+    opacity: 0;
+    transform: scale(0.1);
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  30% {
+    opacity: 0.7;
+    transform: scale(1.5);
+    filter: brightness(4) drop-shadow(0 0 40px rgba(202, 240, 248, 1))
+            drop-shadow(0 0 20px rgba(255, 255, 255, 1));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.88);
+    filter: brightness(1.8) drop-shadow(0 0 18px rgba(142, 202, 230, 1));
+  }
+  80% {
+    transform: scale(1.06);
+    filter: brightness(1.3) drop-shadow(0 0 12px rgba(202, 240, 248, 0.9));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.0);
+    filter: drop-shadow(0 0 6px rgba(202, 240, 248, 0.6));
+  }
+}
+.hx-selenite-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-selenite-spawn-anim 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes hx-selenite-shatter {
+  0%   { opacity: 1; transform: scale(1);    filter: brightness(1); }
+  20%  { opacity: 1; transform: scale(1.15); filter: brightness(3) drop-shadow(0 0 24px rgba(202, 240, 248, 1)); }
+  60%  { opacity: 0.6; transform: scale(1.4) rotate(8deg); filter: brightness(2); }
+  100% { opacity: 0; transform: scale(0.05) rotate(20deg) translateY(-20px); filter: brightness(0.3); }
+}
+.hx-consumed-selenite {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation:
+    hx-selenite-shatter 0.3s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Power-Up Inventory Bar
+   ═══════════════════════════════════════════════════════════════ */
+
+#hx-powerup-bar {
+  position: fixed;
+  bottom: clamp(145px, 20vh, 200px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  z-index: 600;
+  min-height: 36px;
+  pointer-events: auto;
+}
+
+.hx-powerup-btn {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.hx-powerup-btn:hover {
+  transform: scale(1.08);
+}
+.hx-powerup-btn:active {
+  transform: scale(0.96);
+}
+
+.hx-powerup-btn--amethyst {
+  background: linear-gradient(135deg, #4c0070, #a855f7);
+  color: #f3e8ff;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.7);
+}
+.hx-powerup-btn--amethyst:hover {
+  box-shadow: 0 0 18px rgba(168, 85, 247, 1), 0 0 6px rgba(232, 121, 249, 0.9);
+}
+
+.hx-powerup-btn--selenite {
+  background: linear-gradient(135deg, #1a3a6e, #caf0f8);
+  color: #0a0a1a;
+  box-shadow: 0 0 10px rgba(142, 202, 230, 0.7);
+}
+.hx-powerup-btn--selenite:hover {
+  box-shadow: 0 0 18px rgba(202, 240, 248, 1), 0 0 6px rgba(255, 255, 255, 0.9);
+}
+
+/* ── Power-up targeting indicators ─────────────────────────────── */
+.hx-powerup-indicator {
+  position: fixed;
+  top: clamp(130px, 18vh, 175px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 8px;
+  z-index: 700;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: hx-powerup-indicator-pulse 1s ease-in-out infinite;
+}
+@keyframes hx-powerup-indicator-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+
+.hx-powerup-indicator--amethyst {
+  background: rgba(76, 0, 112, 0.88);
+  color: #e879f9;
+  border: 1px solid #a855f7;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.7);
+}
+.hx-powerup-indicator--selenite {
+  background: rgba(10, 10, 26, 0.88);
+  color: #caf0f8;
+  border: 1px solid #8ecae6;
+  box-shadow: 0 0 14px rgba(202, 240, 248, 0.7);
+}
+
+/* ── Swap mode highlight on first selected selenite-swap tile ──── */
+.hx-swap-mode-highlight {
+  animation: hx-swap-highlight-pulse 0.6s ease-in-out infinite !important;
+}
+@keyframes hx-swap-highlight-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(0, 220, 255, 1))
+            drop-shadow(0 0  4px rgba(0, 220, 255, 0.8));
+    stroke: #00dcff;
+    stroke-width: 3;
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(0, 220, 255, 1))
+            drop-shadow(0 0 10px rgba(202, 240, 248, 0.9));
+    stroke: #ffffff;
+    stroke-width: 4;
+  }
+}
+
+/* ── Power-up toast notification ──────────────────────────────── */
+.hx-powerup-toast {
+  position: fixed;
+  top: clamp(160px, 22vh, 210px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 800;
+  pointer-events: none;
+  animation: hx-powerup-toast-enter 0.35s ease-out forwards,
+             hx-powerup-toast-exit  0.4s ease-in 2.6s forwards;
+  white-space: nowrap;
+}
+@keyframes hx-powerup-toast-enter {
+  from { opacity: 0; transform: translateX(-50%) translateY(-18px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes hx-powerup-toast-exit {
+  from { opacity: 1; transform: translateX(-50%) translateY(0); }
+  to   { opacity: 0; transform: translateX(-50%) translateY(-14px); }
+}
+
+.hx-powerup-toast--amethyst {
+  background: rgba(76, 0, 112, 0.92);
+  border: 1px solid #a855f7;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.7);
+}
+.hx-powerup-toast--selenite {
+  background: rgba(10, 10, 26, 0.92);
+  border: 1px solid #8ecae6;
+  box-shadow: 0 0 20px rgba(202, 240, 248, 0.7);
+}
+
+.hx-powerup-toast-title {
+  display: block;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hx-powerup-toast--amethyst .hx-powerup-toast-title {
+  color: #e879f9;
+  text-shadow: 0 0 10px rgba(232, 121, 249, 0.7);
+}
+.hx-powerup-toast--selenite .hx-powerup-toast-title {
+  color: #caf0f8;
+  text-shadow: 0 0 10px rgba(202, 240, 248, 0.7);
+}
+
+.hx-powerup-toast-desc {
+  display: block;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Amethyst picker box accent */
+.hx-amethyst-picker {
+  border-color: #a855f7 !important;
+  box-shadow: 0 0 0 1px #a855f7, 0 0 30px rgba(168, 85, 247, 0.4) !important;
+}
+.hx-amethyst-picker #hx-rune-picker-title {
+  color: #e879f9 !important;
+  text-shadow: 0 0 12px rgba(232, 121, 249, 0.8) !important;
+}
