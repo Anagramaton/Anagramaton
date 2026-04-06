@@ -6,6 +6,7 @@ const _worker = new Worker(new URL('./dictionaryWorker.js', import.meta.url), { 
 // Pending requests keyed by incrementing ID.
 const _pending = new Map();
 let _nextId = 0;
+let _workerDead = false;
 
 // Resolves when the worker has finished building the Set.
 export const workerReady = new Promise((resolve, reject) => {
@@ -38,18 +39,25 @@ _worker.onmessage = function (e) {
 };
 
 _worker.onerror = function (err) {
-  // Reject all pending requests on worker error.
-  for (const [key, p] of _pending) {
+  _workerDead = true;
+  // Reject all pending requests (including the __ready__ sentinel) on worker error.
+  for (const [, p] of _pending) {
     p.reject(err);
   }
   _pending.clear();
   console.error('[dictionaryClient] Worker error:', err);
 };
 
+/** Throws if the worker has crashed so callers get an immediate rejection. */
+function _assertAlive() {
+  if (_workerDead) throw new Error('[dictionaryClient] Worker has crashed and cannot process requests.');
+}
+
 /**
  * Returns a Promise<boolean> indicating whether `word` is in the dictionary.
  */
 export function isValidWordAsync(word) {
+  _assertAlive();
   return new Promise((resolve, reject) => {
     const id = _nextId++;
     _pending.set(id, { resolve, reject });
@@ -62,6 +70,7 @@ export function isValidWordAsync(word) {
  * that exist in the dictionary.
  */
 export function filterValidWordsAsync(words) {
+  _assertAlive();
   return new Promise((resolve, reject) => {
     const id = _nextId++;
     _pending.set(id, {
@@ -77,6 +86,7 @@ export function filterValidWordsAsync(words) {
  * Used by gridLogic to build the candidates list without importing wordList.js.
  */
 export function getAllWordsAsync() {
+  _assertAlive();
   return new Promise((resolve, reject) => {
     const id = _nextId++;
     _pending.set(id, { resolve, reject });

@@ -21,9 +21,13 @@ export function warmDictionary() {
 
 /**
  * Returns the Set once warmed (for callers that need the raw Set).
+ * Returns null if called before warmDictionary() has resolved.
  * @deprecated Prefer isValidWord() or isValidWordAsync().
  */
 export function getDictionarySet() {
+  if (!_dictionarySet) {
+    console.warn('[dict] getDictionarySet() called before warmDictionary() resolved — returning null.');
+  }
   return _dictionarySet;
 }
 
