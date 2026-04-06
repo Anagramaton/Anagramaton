@@ -29,7 +29,7 @@ const INTRO_ARC_OFFSET         = 60;   // px: horizontal fan spread during pour-
 const REFILL_STAGGER_MS        = 40;   // ms between each column's spawn delay
 
 /* ── Level thresholds ──────────────────────────────────────────── */
-const HX_LEVEL_THRESHOLDS = [0, 200, 500, 1000, 2000, 3500, 5500, 8000, 11000, 15000];
+const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000, 250000, 330000, 420000];
 
 /* ── localStorage save keys ────────────────────────────────────── */
 const HX_SAVE_KEY = 'hexacore_save';
@@ -40,13 +40,13 @@ const HX_GEM_TYPES = new Set([
   'gemEmerald', 'gemGold', 'gemSapphire',
   'gemPearl', 'gemTanzanite', 'gemRuby', 'gemDiamond',
 ]);
-// Level 1 starts at 0, Level 2 at 200, Level 3 at 500, etc.
-// Beyond index 9, each additional level requires +5000 pts from the previous threshold.
+// Level 1 starts at 0, Level 2 at 1,000, Level 3 at 5,000, etc.
+// Beyond index 10 (Level 11), each additional level requires +100,000 pts from the previous threshold.
 
 function hxLevelThreshold(level) {
   if (level <= HX_LEVEL_THRESHOLDS.length) return HX_LEVEL_THRESHOLDS[level - 1];
-  // Beyond defined thresholds: extrapolate +5000 per level
-  return HX_LEVEL_THRESHOLDS[HX_LEVEL_THRESHOLDS.length - 1] + (level - HX_LEVEL_THRESHOLDS.length) * 5000;
+  // Beyond defined thresholds: extrapolate +100000 per level
+  return HX_LEVEL_THRESHOLDS[HX_LEVEL_THRESHOLDS.length - 1] + (level - HX_LEVEL_THRESHOLDS.length) * 100000;
 }
 
 /* ── Animation timing constants (easy to tune) ─────────────────── */
