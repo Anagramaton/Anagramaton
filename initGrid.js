@@ -158,7 +158,7 @@ function handlePointerUp(e) {
 // Initialization
 // ============================================================================
 
-export function initializeGrid() {
+export async function initializeGrid() {
   gameState.totalScore = 0;
   gameState.gridReady = false;
 
@@ -168,7 +168,7 @@ export function initializeGrid() {
 
   tileElements.length = 0;
 
-  grid = generateSeededBoard(GRID_RADIUS, gameState);
+  grid = await generateSeededBoard(GRID_RADIUS, gameState);
   gameState.grid = grid;
 
   renderGrid(grid, DOM.svg, tileElements, GRID_RADIUS);

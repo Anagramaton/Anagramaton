@@ -2,16 +2,20 @@ import { initializeGrid } from './initGrid.js';
 import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';
 import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
 import { gameState } from './gameState.js';
-import { placedWords } from './gridLogic.js';
+import { placedWords, warmCandidates } from './gridLogic.js';
 import { initPhrasePanelEvents, revealPhrase, computePhraseBonus } from './phrasePanel.js';
 import { initMergedListPanel } from './mergedListPanel.js';
 import { reuseMultipliers, letterPoints, lengthMultipliers, anagramMultiplier } from './constants.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
-import { isValidWord } from './gameLogic.js';
+import { isValidWord, warmDictionary } from './gameLogic.js';
 import { submitScore, getPlayerName, promptPlayerName, promptSignOut, clearPlayerName } from './leaderboard.js';
 import { unlockAudioContext, preloadBuffers, playSound } from './audioEngine.js';
 import { stopHexacore, getHexacoreScore } from './hexacore.js';
 
+// Kick off dictionary and candidate warming immediately — before DOMContentLoaded —
+// so the worker has maximum time to build the Set in the background.
+warmDictionary();
+warmCandidates();
 
 // ============================================================
 // AUDIO — simple <audio> tag system (no Web Audio API needed)
@@ -731,7 +735,7 @@ window.addEventListener('grid:ready', () => {
       ?.addEventListener('click', handleSubmitList);
     syncSubmitListButton();
 
-document.getElementById('new-game')?.addEventListener('click', () => {
+document.getElementById('new-game')?.addEventListener('click', async () => {
   baseTotal  = 0;
   bonusTotal = 0;
   totalScore = 0;
@@ -777,7 +781,7 @@ document.getElementById('new-game')?.addEventListener('click', () => {
       }
       syncSubmitListButton();
 
-      initializeGrid();
+      await initializeGrid();
 
       window.dispatchEvent(new Event('game:new'));
     });

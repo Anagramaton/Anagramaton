@@ -1,5 +1,5 @@
 import { GRID_RADIUS as DEFAULT_RADIUS, letterFrequencies, letterPoints, lengthMultipliers, anagramMultiplier, reuseMultipliers } from './constants.js';
-import wordList from './wordList.js';
+import { getAllWordsAsync } from './dictionaryClient.js';
 import suffixList from './suffixList.js';
 import phraseHints from './phraseHints.js';
 import { gameState } from './gameState.js';
@@ -15,6 +15,62 @@ import { shuffledArray } from './utils.js';
 export const placedWords = [];
 
 const MAX_ATTEMPTS = 150;
+
+// ─── Candidate word filtering (extracted from _generateBoard so warmCandidates can use them) ───
+
+const _TECHY_RE = new RegExp(
+  '(ENCEPHAL|NEURO|EAE|DAE|SULF|PHEN|CHEM|BLASTU|PHYL|CYTE|PHAGE|INASE|AMIDE|IMIDE|' +
+  // Biology / medicine
+  'ADENYL|ADREN|AMIN(?:O|E)|ANGIO|ANTIB|BACILL|BACTER|BENZEN|BENZ(?:OA|OY)|BIOPS|' +
+  'CARBOX|CARCI|CATALY|CELLUL|CHOLIN|CHROM(?:AT|OS)|COENZ|CORTIS|CYTOS|DEOXYRIB|' +
+  'DIPLOC|DIPHTHERI|DISACCH|DIURET|EMBRYO|ENDOCR|ENZYM|EPIGLOTT|EPITHE|ERYTHR|' +
+  'ESTROG|FERMENT|FIBRIN|FILAMENT|FLAGELL|GAMET|GASTRO|GLOBIN|GLUCOS|GLYCO|' +
+  'GONAD|HAEMAT|HAEMO|HEMAT|HEMO|HEPAT|HISTOL|HORMON|HYDR(?:OX|OG)|HYPOTH|' +
+  'IMMUN|INSULIN|INTESTI|ISOMER|KERAT|KINASE|LACTOS|LEUKOCYT|LIGAMENT|LIPASE|' +
+  'LYMPHOC|LYSOSOM|MACROPHAG|MALIGN|MEMBRAN|METABOL|METASTA|MICROB|MITOCH|MOLEC|' +
+  'MONOCYT|MUCOS|MYELIN|MYOSIN|NEPHRO|NUCLE(?:IC|OT|US)|ONCOL|ORGANELL|OSMOS|' +
+  'OSTEOB|PANCREA|PARAMET|PATHOG|PEPTID|PERITON|PHAGOC|PHOSPH|PHOTOSYN|PITUITAR|' +
+  'PLASM(?:ID|A)|PLATELET|POLYMER|POLYPEPT|PROKAR|PROTE(?:IN|AS)|PROT(?:OZ|ON)|' +
+  'PULMON|RECEPTOR|RIBOSOM|SEROTON|SERUM|SIGNALING|STEROID|SYMBIOSI|SYNAPS|' +
+  'TELOMER|THROMBOC|THYROID|TOXICOL|TRANSCRI|TRANSLAT|TRYPSIN|TUBULIN|VACUOL|' +
+  'VALENC|VASODIL|VASOCONSTRI|VENTRICL|VESICL|VIRAL|VIROL|ZYMO|' +
+  // Chemistry / physics
+  'ACETYL|ALDEHYD|ALKALOID|ALKYLT|ALLOTROP|ANION|ANTIMAT|AROMAT|ATOM(?:IC)|' +
+  'BIOLUM|CALORI|CARBIN|CARBONATE|CATALYS|CATHOD|CATION|CHROMAT|COAGUL|COHES|' +
+  'COLLOID|COMBUS|COMPOUND|CONDENS|COVALENT|CRYSTAL|DECOMPOS|DIFFRACT|DILUT|' +
+  'DISTILL|ELECTRO|EMULSIF|ENDOTHERM|EQUIMOL|EXOTHERM|FLOCCUL|FLUORESC|FRACT|' +
+  'FULVAT|GALVAN|HALOGEN|HYDROLYSI|HYGROSCOP|INORGANIC|ION(?:IC)|ISOBAR|ISOTOP|' +
+  'KINETIC|LATENT|LITMUS|MAGNETI|MOLAL|MOLAR|MOLECULE|NEUTRON|NITRAT|NITRIF|' +
+  'NUCLEOPHIL|ORBITAL|OXIDAT|OXIDIZ|OZONOL|PEPTIDYL|PERIODI|PHOSPHOR|PHOTOLYS|' +
+  'PHOTON|PRECIPIT|PROTON|QUANT(?:UM|IZ)|RADIOACT|REACT(?:ANT|ION)|REDOX|' +
+  'REFRACT|RENORMALI|RESONANC|SALINITY|SATURATE|SOLUBIL|SOLVENT|SPECTRO|STOICHI|' +
+  'SUBLIM|SUPERCOND|SURFACT|THERMO|TITRAT|VALENCE|VISCOSIT|VOLATIL|WAVEFORM)',
+  'i'
+);
+
+function _isFriendlyWord(w, minLen, maxLen) {
+  if (w.length < minLen || w.length > maxLen) return false;
+  if (!/^[A-Za-z]+$/.test(w)) return false;
+  if (_TECHY_RE.test(w)) return false;
+  return true;
+}
+
+// Module-level promise for the pre-filtered word candidates (no shuffle — that's done per-game).
+let _candidatesPromise = null;
+
+/**
+ * Pre-loads the full word list from the dictionary worker and applies the
+ * friendly-word filter.  Returns a Promise<string[]> of uppercase candidates.
+ * Safe to call multiple times — only one fetch is ever made.
+ */
+export function warmCandidates(maxLen = 14) {
+  if (!_candidatesPromise) {
+    _candidatesPromise = getAllWordsAsync().then(allWords =>
+      allWords.filter(w => _isFriendlyWord(w, 4, maxLen))
+    );
+  }
+  return _candidatesPromise;
+}
 
 // ─── Moved outside so both generateSeededBoard and _generateBoard can use them ───
 
@@ -163,7 +219,12 @@ function seededShuffle(arr) {
 // daily mode so that EVERY call inside (findPath, shuffledArray, etc.)
 // is deterministic. Math.random is always restored in the finally block.
 // ======================================================================
-export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
+export async function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
+  // Await candidate words before touching Math.random so there are no await
+  // points inside the seeded-RNG section (keeps determinism intact).
+  const maxLen = Math.min(14, Math.floor(3.5 * gridRadius + 1));
+  const allFriendlyWords = await warmCandidates(maxLen);
+
   if (gameState.mode === 'daily') {
     const dailyId = getDailyId();
     gameState.dailyId = dailyId;
@@ -178,7 +239,7 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
     Math.random = rng;
 
     try {
-      return _generateBoard(gridRadius, state);
+      return _generateBoard(gridRadius, state, allFriendlyWords);
     } finally {
       Math.random = originalRandom;
     }
@@ -194,12 +255,12 @@ export function generateSeededBoard(gridRadius = DEFAULT_RADIUS, state = gameSta
   gameState.phraseAdjacentKeys = null;
   gameState.dailyRng           = undefined;
 
-  return _generateBoard(gridRadius, state);
+  return _generateBoard(gridRadius, state, allFriendlyWords);
 }
 // ======================================================================
 // INTERNAL: all existing generation logic, unchanged
 // ======================================================================
-function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
+function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState, allFriendlyWords = []) {
   const DEBUG = true;
 
   const isDaily = gameState.mode === 'daily';
@@ -253,48 +314,9 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
   }
 
   // ---------------------------------------------------------------------------
-  // Candidate prep
+  // Candidate prep — allFriendlyWords was filtered and passed in by generateSeededBoard
   // ---------------------------------------------------------------------------
-  const MAX_FRIENDLY_LEN = Math.min(14, Math.floor(3.5 * gridRadius + 1));
-  const MIN_FRIENDLY_LEN = 4;
-  const TECHY_RE = new RegExp(
-    '(ENCEPHAL|NEURO|EAE|DAE|SULF|PHEN|CHEM|BLASTU|PHYL|CYTE|PHAGE|INASE|AMIDE|IMIDE|' +
-    // Biology / medicine
-    'ADENYL|ADREN|AMIN(?:O|E)|ANGIO|ANTIB|BACILL|BACTER|BENZEN|BENZ(?:OA|OY)|BIOPS|' +
-    'CARBOX|CARCI|CATALY|CELLUL|CHOLIN|CHROM(?:AT|OS)|COENZ|CORTIS|CYTOS|DEOXYRIB|' +
-    'DIPLOC|DIPHTHERI|DISACCH|DIURET|EMBRYO|ENDOCR|ENZYM|EPIGLOTT|EPITHE|ERYTHR|' +
-    'ESTROG|FERMENT|FIBRIN|FILAMENT|FLAGELL|GAMET|GASTRO|GLOBIN|GLUCOS|GLYCO|' +
-    'GONAD|HAEMAT|HAEMO|HEMAT|HEMO|HEPAT|HISTOL|HORMON|HYDR(?:OX|OG)|HYPOTH|' +
-    'IMMUN|INSULIN|INTESTI|ISOMER|KERAT|KINASE|LACTOS|LEUKOCYT|LIGAMENT|LIPASE|' +
-    'LYMPHOC|LYSOSOM|MACROPHAG|MALIGN|MEMBRAN|METABOL|METASTA|MICROB|MITOCH|MOLEC|' +
-    'MONOCYT|MUCOS|MYELIN|MYOSIN|NEPHRO|NUCLE(?:IC|OT|US)|ONCOL|ORGANELL|OSMOS|' +
-    'OSTEOB|PANCREA|PARAMET|PATHOG|PEPTID|PERITON|PHAGOC|PHOSPH|PHOTOSYN|PITUITAR|' +
-    'PLASM(?:ID|A)|PLATELET|POLYMER|POLYPEPT|PROKAR|PROTE(?:IN|AS)|PROT(?:OZ|ON)|' +
-    'PULMON|RECEPTOR|RIBOSOM|SEROTON|SERUM|SIGNALING|STEROID|SYMBIOSI|SYNAPS|' +
-    'TELOMER|THROMBOC|THYROID|TOXICOL|TRANSCRI|TRANSLAT|TRYPSIN|TUBULIN|VACUOL|' +
-    'VALENC|VASODIL|VASOCONSTRI|VENTRICL|VESICL|VIRAL|VIROL|ZYMO|' +
-    // Chemistry / physics
-    'ACETYL|ALDEHYD|ALKALOID|ALKYLT|ALLOTROP|ANION|ANTIMAT|AROMAT|ATOM(?:IC)|' +
-    'BIOLUM|CALORI|CARBIN|CARBONATE|CATALYS|CATHOD|CATION|CHROMAT|COAGUL|COHES|' +
-    'COLLOID|COMBUS|COMPOUND|CONDENS|COVALENT|CRYSTAL|DECOMPOS|DIFFRACT|DILUT|' +
-    'DISTILL|ELECTRO|EMULSIF|ENDOTHERM|EQUIMOL|EXOTHERM|FLOCCUL|FLUORESC|FRACT|' +
-    'FULVAT|GALVAN|HALOGEN|HYDROLYSI|HYGROSCOP|INORGANIC|ION(?:IC)|ISOBAR|ISOTOP|' +
-    'KINETIC|LATENT|LITMUS|MAGNETI|MOLAL|MOLAR|MOLECULE|NEUTRON|NITRAT|NITRIF|' +
-    'NUCLEOPHIL|ORBITAL|OXIDAT|OXIDIZ|OZONOL|PEPTIDYL|PERIODI|PHOSPHOR|PHOTOLYS|' +
-    'PHOTON|PRECIPIT|PROTON|QUANT(?:UM|IZ)|RADIOACT|REACT(?:ANT|ION)|REDOX|' +
-    'REFRACT|RENORMALI|RESONANC|SALINITY|SATURATE|SOLUBIL|SOLVENT|SPECTRO|STOICHI|' +
-    'SUBLIM|SUPERCOND|SURFACT|THERMO|TITRAT|VALENCE|VISCOSIT|VOLATIL|WAVEFORM)',
-    'i'
-  );
-  function isFriendlyWord(w) {
-    if (w.length < MIN_FRIENDLY_LEN || w.length > MAX_FRIENDLY_LEN) return false;
-    if (!/^[A-Za-z]+$/.test(w)) return false;
-    if (TECHY_RE.test(w)) return false;
-    return true;
-  }
-  const candidates = seededShuffle(
-    wordList.map((w) => w.toUpperCase()).filter(isFriendlyWord)
-  ).sort((a, b) => b.length - a.length);
+  const candidates = seededShuffle(allFriendlyWords).sort((a, b) => b.length - a.length);
 
   const LONG_MIN = 9;
   const LONG_MAX = 14;
