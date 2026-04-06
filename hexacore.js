@@ -59,12 +59,12 @@ const SCORE_TICK_MS             = 700; // ms duration for score count-up animati
  * High-frequency vowels + consonants ensure dense playable word coverage.
  * Digraph slots (~15%) are drawn from DIGRAPH_POOL at tile-creation time.      */
 const HX_LETTER_POOL = [
-  // Vowels (~35 total, reduced from 42 to accommodate digraph slots)
-  ...Array(10).fill('E'),  // 10
-  ...Array(7).fill('A'),   //  7
-  ...Array(7).fill('I'),   //  7
-  ...Array(7).fill('O'),   //  7
-  ...Array(4).fill('U'),   //  4
+  // Vowels (~29 total, reduced from 42 to accommodate digraph slots)
+  ...Array(8).fill('E'),   //  8
+  ...Array(6).fill('A'),   //  6
+  ...Array(6).fill('I'),   //  6
+  ...Array(6).fill('O'),   //  6
+  ...Array(3).fill('U'),   //  3
 
   // High-frequency consonants (~48 total, reduced from 56)
   ...Array(5).fill('N'),   //  5
@@ -75,12 +75,12 @@ const HX_LETTER_POOL = [
   ...Array(3).fill('D'),   //  3
 
   // Mid-frequency consonants
-  ...Array(2).fill('G'),   //  2
-  ...Array(2).fill('B'),   //  2
-  ...Array(2).fill('C'),   //  2
-  ...Array(2).fill('F'),   //  2
-  ...Array(2).fill('H'),   //  2
-  ...Array(2).fill('M'),   //  2
+  ...Array(3).fill('G'),   //  3
+  ...Array(3).fill('B'),   //  3
+  ...Array(3).fill('C'),   //  3
+  ...Array(3).fill('F'),   //  3
+  ...Array(3).fill('H'),   //  3
+  ...Array(3).fill('M'),   //  3
   ...Array(2).fill('P'),   //  2
   ...Array(2).fill('V'),   //  2
   ...Array(2).fill('W'),   //  2
@@ -179,7 +179,7 @@ function randomLetter() {
 }
 
 const HX_VOWELS = new Set(['A','E','I','O','U']);
-const HX_VOWEL_POOL = ['A','A','A','E','E','E','E','I','I','I','O','O','O','U','U'];
+const HX_VOWEL_POOL = ['E','E','E','A','A','I','I','O','O','O','U'];
 
 /**
  * Samples HX_LETTER_POOL and resolves any digraph sentinel.
@@ -678,7 +678,7 @@ function buildGrid(onReady) {
   //   • Ring 1: 3 of 6 tiles are vowels (random half)
   //   • Rings 2–4: fill remaining quota so total ≈ 35% of the board
   const vowelTargets = new Set();
-  const VOWEL_DENSITY = 0.35;
+  const VOWEL_DENSITY = 0.28;
 
   byRing[0].forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
   byRing[1]
