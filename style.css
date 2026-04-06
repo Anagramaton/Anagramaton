@@ -1610,3 +1610,95 @@ body.rom-open #settings-wrap,
 body.lb-modal-open #settings-wrap {
   z-index: 100;
 }
+
+/* =========================================
+   SPLASH LOADER ANIMATION
+   ========================================= */
+#splash-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 18px 0 10px;
+  gap: 8px;
+}
+
+#splash-hex-cluster {
+  width: 160px;
+  height: 160px;
+}
+
+.splash-hex polygon {
+  fill: transparent;
+  stroke: #4cc9f0;
+  stroke-width: 2;
+  transition: fill 0.3s ease;
+}
+
+.splash-hex text {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 18px;
+  fill: #4cc9f0;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  user-select: none;
+}
+
+.splash-hex {
+  opacity: 0;
+}
+
+@keyframes splash-hex-dropin {
+  0%   { opacity: 0; transform: translate(var(--tx), calc(var(--ty) - 18px)) scale(0.6); }
+  60%  { opacity: 1; transform: translate(var(--tx), calc(var(--ty) + 3px))  scale(1.05); }
+  80%  { transform: translate(var(--tx), calc(var(--ty) - 2px)) scale(0.98); }
+  100% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1); }
+}
+
+@keyframes splash-hex-pulse {
+  0%   { filter: drop-shadow(0 0 0px #4cc9f0); }
+  50%  { filter: drop-shadow(0 0 14px #4cc9f0) drop-shadow(0 0 5px #fff); }
+  100% { filter: drop-shadow(0 0 4px #4cc9f0); }
+}
+
+.splash-hex.is-dropped {
+  animation: splash-hex-dropin 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.splash-hex.is-shuffling polygon {
+  fill: rgba(76, 201, 240, 0.08);
+}
+
+.splash-hex.is-locked polygon {
+  fill: rgba(76, 201, 240, 0.18) !important;
+  stroke: #ffffff;
+}
+.splash-hex.is-locked {
+  animation: splash-hex-pulse 0.7s ease-out forwards;
+}
+
+#splash-loading-text {
+  font-family: 'Turret Road', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: #4cc9f0;
+  text-transform: uppercase;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+  height: 1.2em;
+  margin: 0;
+}
+
+#splash-loading-text.is-done {
+  opacity: 0;
+}
+
+#splash-dots::after {
+  content: '';
+  animation: splash-dots-anim 1.2s steps(4, end) infinite;
+}
+@keyframes splash-dots-anim {
+  0%   { content: '';    }
+  25%  { content: '.';   }
+  50%  { content: '..';  }
+  75%  { content: '...'; }
+}

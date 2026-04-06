@@ -533,6 +533,85 @@ document.addEventListener('DOMContentLoaded', () => {
       splashPlayBtn.setAttribute('disabled', 'disabled');
     }
 
+// ============================
+// ★ SPLASH HEX LOADER
+// ============================
+(function initSplashLoader() {
+  const LETTERS = 'ABCDEFGHIJKLMNOPRSTW';
+  const hexEls = Array.from(document.querySelectorAll('.splash-hex'));
+  const loadingText = document.getElementById('splash-loading-text');
+  if (!hexEls.length) return;
+
+  // Tile positions: center first, then 6 ring tiles
+  const positions = [
+    { tx: 0,   ty: 0   },
+    { tx: 0,   ty: -38 },
+    { tx: 33,  ty: -19 },
+    { tx: 33,  ty: 19  },
+    { tx: 0,   ty: 38  },
+    { tx: -33, ty: 19  },
+    { tx: -33, ty: -19 },
+  ];
+
+  // Set initial CSS custom properties and transform for each tile
+  hexEls.forEach((g, i) => {
+    const { tx, ty } = positions[i];
+    g.style.setProperty('--tx', tx + 'px');
+    g.style.setProperty('--ty', ty + 'px');
+    g.style.transform = `translate(${tx}px, ${ty}px)`;
+  });
+
+  function randomLetter(g) {
+    const t = g.querySelector('text');
+    if (t) t.textContent = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+  }
+
+  // Stagger drop-in, 90ms apart
+  hexEls.forEach((g, i) => {
+    randomLetter(g);
+    setTimeout(() => {
+      g.classList.add('is-dropped');
+      g.addEventListener('animationend', () => {
+        g.classList.add('is-shuffling');
+      }, { once: true });
+    }, 180 + i * 90);
+  });
+
+  // Start letter shuffle after all tiles are in
+  let shuffleInterval = null;
+  const shuffleStart = 180 + hexEls.length * 90 + 250;
+  setTimeout(() => {
+    shuffleInterval = setInterval(() => {
+      hexEls.forEach(g => {
+        if (g.classList.contains('is-shuffling') && Math.random() < 0.35) {
+          randomLetter(g);
+        }
+      });
+    }, 130);
+  }, shuffleStart);
+
+  // Lock in when grid is ready
+  window.addEventListener('grid:ready', () => {
+    if (shuffleInterval) clearInterval(shuffleInterval);
+
+    // Set final letters: ★ P L A Y and fill rest
+    const finalLetters = ['★', 'P', 'L', 'A', 'Y', '!', '★'];
+    hexEls.forEach((g, i) => {
+      const t = g.querySelector('text');
+      if (t) t.textContent = finalLetters[i] || LETTERS[Math.floor(Math.random() * LETTERS.length)];
+    });
+
+    hexEls.forEach((g, i) => {
+      setTimeout(() => {
+        g.classList.remove('is-shuffling');
+        g.classList.add('is-locked');
+      }, i * 55);
+    });
+
+    if (loadingText) loadingText.classList.add('is-done');
+  }, { once: true });
+})();
+
 window.addEventListener('grid:ready', () => {
   splashPlayBtn.textContent = 'PLAY';
   splashPlayBtn.removeAttribute('disabled');
