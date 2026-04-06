@@ -393,20 +393,55 @@ body.hx-active #settings-btn {
 
 /* ── Splash screen Hexacore button ─────────────────────────────── */
 #splash-hexacore-btn {
-  margin-top: 0.75rem;
-  background: linear-gradient(135deg, rgba(255,80,20,0.2), rgba(255,140,0,0.15));
-  border-color: rgba(255,120,40,0.7);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  letter-spacing: 0.18em;
   color: #ff8c42;
+  -webkit-text-stroke: 4px #ff8c42;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(4px 4px 0px #3a1a00) drop-shadow(0 0 40px rgba(255, 120, 40, 0.6));
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  line-height: 1;
 }
 #splash-hexacore-btn:hover {
-  background: linear-gradient(135deg, rgba(255,80,20,0.35), rgba(255,140,0,0.3));
+  filter: drop-shadow(4px 4px 0px #3a1a00) drop-shadow(0 0 60px rgba(255, 120, 40, 0.85));
 }
 #splash-hexacore-note {
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  opacity: 0.6;
-  margin-top: 0.25rem;
-  margin-bottom: 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  color: #ff8c42;
+  letter-spacing: 0.22em;
+  text-shadow: 0 0 12px rgba(255, 140, 40, 0.5);
+  margin: 0;
+  text-transform: uppercase;
+}
+#splash-hexacore-play-btn {
+  margin-top: 20px;
+  padding: 10px 36px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ff8c42;
+  background: transparent;
+  border: 2px solid rgba(255, 140, 40, 0.5);
+  border-radius: 0;
+  cursor: pointer;
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+#splash-hexacore-play-btn:hover {
+  background: rgba(255, 140, 40, 0.12);
+  border-color: rgba(255, 140, 40, 0.85);
+}
+#splash-hexacore-play-btn:active {
+  transform: translateY(1px) scale(0.97);
 }
 
 /* ── Spring landing — elastic overshoot when a tile settles ──────── */
