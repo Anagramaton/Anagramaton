@@ -2395,7 +2395,7 @@ async function advanceFireTiles() {
           type === 'amethyst' ? hxState.amethystTiles : hxState.seleniteTiles,
           tile,
         );
-        const letter = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+        const letter = randomLetter();
         const points = letterPoints[letter] || 1;
         tile.tileType = 'normal';
         tile.updateLetter(letter, points);
