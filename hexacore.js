@@ -548,7 +548,7 @@ async function animateTileMoves(moves) {
 
       const anim = document.createElementNS(SVG_NS, 'animateMotion');
       anim.setAttribute('path', `M ${sx},${sy} Q ${cpx},${cpy} ${ex},${ey}`);
-      anim.setAttribute('dur', '0.22s');
+      anim.setAttribute('dur', '0.35s');
       anim.setAttribute('fill', 'freeze');
 
       // settled flag prevents double-resolution if both endEvent and the
@@ -579,8 +579,8 @@ async function animateTileMoves(moves) {
       // Fallback: SVG endEvent is not 100% reliable across all browsers.
       // If it never fires (e.g. element removed from DOM mid-animation) the
       // promise would hang forever, stalling the gravity/refill chain.
-      // 300 ms gives the 220 ms animation generous time to fire naturally.
-      fallbackTimer = setTimeout(finalize, 300);
+      // 450 ms gives the 350 ms animation generous time to fire naturally.
+      fallbackTimer = setTimeout(finalize, 450);
 
       tile.element.appendChild(anim);
       anim.beginElement();
@@ -610,6 +610,8 @@ async function animateTileMovesStaggered(moves) {
     resolvers.set(key, res);
   }
 
+  let prevLeaderlessDestKey = null;
+
   const allDone = moves.map(move => {
     const fromKey = hxKey(move.fromQ, move.fromR);
     // Wait for whatever tile was previously falling INTO our fromQ,fromR to land first
@@ -625,7 +627,18 @@ async function animateTileMovesStaggered(moves) {
       if (waitFor) {
         waitFor.then(launch);
       } else {
-        launch(); // nothing below us — fall immediately
+        // No chain dependency — thread leaderless tiles into a mini-chain so
+        // each one waits for the previous leaderless tile to land rather than
+        // all launching simultaneously at t=0.
+        const leaderlessWait = prevLeaderlessDestKey
+          ? landedPromises.get(prevLeaderlessDestKey)
+          : null;
+        prevLeaderlessDestKey = hxKey(move.toQ, move.toR);
+        if (leaderlessWait) {
+          leaderlessWait.then(launch);
+        } else {
+          launch(); // first leaderless tile — fall immediately as the leader
+        }
       }
     });
   });
