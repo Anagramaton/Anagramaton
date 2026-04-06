@@ -51,7 +51,6 @@ function hxLevelThreshold(level) {
 
 /* ── Animation timing constants (easy to tune) ─────────────────── */
 const WORD_TILE_STAGGER_MS      = 55;  // ms stagger between each consumed tile pop-out
-const GRAVITY_STAGGER_MS        = 38;  // ms stagger between tiles in the gravity cascade
 const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
 
@@ -461,17 +460,47 @@ async function animateTileMoves(moves) {
   await Promise.all(promises);
 }
 
-/* ── Animate tile moves with a per-tile stagger (chain-reaction) ── */
-async function animateTileMovesStaggered(moves, staggerMs) {
+/* ── Animate tile moves with a chain-reaction drop ─────────────── */
+// Each tile waits for the tile directly below it (in the same wave)
+// to finish landing before it starts falling, creating organic
+// chain-reaction gravity instead of a metronomic fixed stagger.
+async function animateTileMovesStaggered(moves) {
   if (moves.length === 0) return;
-  const promises = moves.map((move, idx) =>
-    new Promise(resolve => {
-      setTimeout(() => {
-        animateTileMoves([move]).then(resolve);
-      }, idx * staggerMs);
-    })
-  );
-  await Promise.all(promises);
+
+  // Build a map from destination key → promise that resolves when that tile lands.
+  // A tile can only start falling once the slot it's heading into is clear —
+  // i.e. once the tile that was previously occupying that slot has itself landed.
+  const landedPromises = new Map(); // `toQ,toR` → Promise<void>
+  const resolvers      = new Map(); // `toQ,toR` → resolve fn
+
+  for (const move of moves) {
+    const key = hxKey(move.toQ, move.toR);
+    let res;
+    landedPromises.set(key, new Promise(r => { res = r; }));
+    resolvers.set(key, res);
+  }
+
+  const allDone = moves.map(move => {
+    const fromKey = hxKey(move.fromQ, move.fromR);
+    // Wait for whatever tile was previously falling INTO our fromQ,fromR to land first
+    const waitFor = landedPromises.get(fromKey);
+    return new Promise(resolve => {
+      const launch = () => {
+        animateTileMoves([move]).then(() => {
+          // Signal that our destination slot is now occupied (tile has landed)
+          resolvers.get(hxKey(move.toQ, move.toR))?.();
+          resolve();
+        });
+      };
+      if (waitFor) {
+        waitFor.then(launch);
+      } else {
+        launch(); // nothing below us — fall immediately
+      }
+    });
+  });
+
+  await Promise.all(allDone);
 }
 
 /* ── Tile type styling ─────────────────────────────────────────── */
@@ -1861,7 +1890,7 @@ async function applyGravity() {
 
     // Stagger tiles so each falls individually in a ripple/cascade effect,
     // rather than all tiles in a gravity wave dropping in lock-step unison.
-    await animateTileMovesStaggered(moves, GRAVITY_STAGGER_MS);
+    await animateTileMovesStaggered(moves);
   }
 }
 
