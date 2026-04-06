@@ -406,7 +406,7 @@ function openPortal() {
   hxState.portalUsed  = false;
   hxState.portalEntry = { q: ep.q, r: ep.r, s: -ep.q - ep.r };
   hxState.portalExit  = { q: xp.q, r: xp.r, s: -xp.q - xp.r };
-  hxState.portalWordsRemaining = 3;
+  hxState.portalWordsRemaining = 5;
   applyPortalVisuals();
 
   // Play spawn flash on both portal tiles
@@ -429,6 +429,50 @@ function closePortal() {
   hxState.portalEntry = null;
   hxState.portalExit  = null;
   hxState.portalWordsRemaining = 0;
+}
+
+/**
+ * After gravity runs, if a portal tile has moved (fallen), transfers the portal
+ * identity to whichever tile now occupies the old portal position.  If nothing
+ * occupies the old position the portal tracks the tile to its new location.
+ * Accepts the tile object references captured before gravity ran.
+ */
+function transferPortalIfMoved(preGravityEntryTile, preGravityExitTile) {
+  if (!hxState.portalOpen) return;
+  let changed = false;
+
+  function transferOne(preGravityTile, portalCoord, updateCoord) {
+    if (!preGravityTile || !portalCoord) return;
+    if (preGravityTile.q === portalCoord.q && preGravityTile.r === portalCoord.r) return;
+
+    // The portal tile has moved — remove its portal visuals
+    preGravityTile.element.querySelector('polygon')
+      ?.classList.remove('hx-portal', 'hx-portal-active');
+    preGravityTile.element.querySelector('.hx-portal-icon')?.remove();
+
+    const tileAtOldPos = hxTileMap.get(hxKey(portalCoord.q, portalCoord.r));
+    if (tileAtOldPos && tileAtOldPos !== preGravityTile) {
+      // A different tile landed in the old portal position — it becomes the new portal
+      updateCoord({ q: tileAtOldPos.q, r: tileAtOldPos.r, s: tileAtOldPos.s });
+    } else {
+      // Old position is empty — follow the portal tile to its new position
+      updateCoord({ q: preGravityTile.q, r: preGravityTile.r, s: preGravityTile.s });
+    }
+    changed = true;
+  }
+
+  transferOne(
+    preGravityEntryTile,
+    hxState.portalEntry,
+    coord => { hxState.portalEntry = coord; },
+  );
+  transferOne(
+    preGravityExitTile,
+    hxState.portalExit,
+    coord => { hxState.portalExit = coord; },
+  );
+
+  if (changed) applyPortalVisuals();
 }
 
 function escapeHtml(str) {
@@ -1042,6 +1086,9 @@ function checkLevelUp(oldScore, newScore) {
   if (leveled) {
     updateLevelHud();
     showLevelUpBanner(hxState.level);
+    // Spawn 2 embers as a level-up hazard surge
+    spawnSpecialInRows('ember', [-GRID_RADIUS]);
+    spawnSpecialInRows('ember', [-GRID_RADIUS]);
   }
 }
 
@@ -2183,6 +2230,10 @@ async function submitHexacoreWord() {
     // Fire bonus mirrors word reward
     if (hasEmber) spawnGemRewardForWord(word.length);
     spawnSpecialTiles();
+    // Also spawn an ember on any 6+ letter word
+    if (word.length >= 6) {
+      spawnSpecialInRows('ember', [-GRID_RADIUS]);
+    }
 
     // Portal milestone: open a new portal after every 10th word submitted
     if (hxState.wordsSubmitted > 0 && hxState.wordsSubmitted % 10 === 0) {
@@ -2232,15 +2283,29 @@ async function consumeAndRefill(tilesToRemove) {
     hxTileMap.delete(hxKey(tile.q, tile.r));
   });
 
-  // 2. Gravity
+  // 2. Capture portal tile references before gravity so we can detect movement
+  const preGravityEntryTile = hxState.portalOpen && hxState.portalEntry
+    ? hxTileMap.get(hxKey(hxState.portalEntry.q, hxState.portalEntry.r))
+    : null;
+  const preGravityExitTile = hxState.portalOpen && hxState.portalExit
+    ? hxTileMap.get(hxKey(hxState.portalExit.q, hxState.portalExit.r))
+    : null;
+
+  // 3. Gravity
   await applyGravity();
   if (hxState.gameOver) return;
 
-  // 3. Advance ember tiles
-  await advanceEmberTiles();
+  // If the portal is open and one of the portal tiles has moved (fallen),
+  // transfer the portal identity to whatever tile now occupies the old portal position.
+  if (hxState.portalOpen) {
+    transferPortalIfMoved(preGravityEntryTile, preGravityExitTile);
+  }
+
+  // 4. Advance fire tiles (ember, amethyst, selenite)
+  await advanceFireTiles();
   if (hxState.gameOver) return;
 
-  // 4. Refill empty columns
+  // 5. Refill empty columns
   await refillGrid();
 }
 
@@ -2263,7 +2328,6 @@ async function applyGravity() {
     const moves  = []; // { tile, fromQ, fromR, toQ, toR }
 
     for (const tile of sorted) {
-      if (isPortalTile(tile)) continue; // portal tiles never fall
       const se = { q: tile.q,     r: tile.r + 1 };
       const sw = { q: tile.q - 1, r: tile.r + 1 };
 
@@ -2291,14 +2355,19 @@ async function applyGravity() {
   }
 }
 
-/* ── Ember advancement: each ember moves to a random lower hex neighbour ── */
-async function advanceEmberTiles() {
+/* ── Fire tile advancement: embers, amethysts, and selenites advance downward ── */
+async function advanceFireTiles() {
   if (hxState.gameOver) return;
 
-  const embers     = [...hxState.emberTiles];
-  const emberMoves = [];
+  const allFireTiles = [
+    ...hxState.emberTiles.map(t => ({ tile: t, type: 'ember' })),
+    ...hxState.amethystTiles.map(t => ({ tile: t, type: 'amethyst' })),
+    ...hxState.seleniteTiles.map(t => ({ tile: t, type: 'selenite' })),
+  ];
 
-  for (const tile of embers) {
+  const allMoves = [];
+
+  for (const { tile, type } of allFireTiles) {
     if (hxState.gameOver) break;
 
     // In a pointy-top grid the two lower neighbours of (q,r) are
@@ -2317,13 +2386,27 @@ async function advanceEmberTiles() {
     });
 
     if (candidates.length === 0) {
-      triggerGameOver();
-      return;
+      if (type === 'ember') {
+        triggerGameOver();
+        return;
+      } else {
+        // Amethyst or Selenite hits bottom — convert to a random normal tile
+        removeFrom(
+          type === 'amethyst' ? hxState.amethystTiles : hxState.seleniteTiles,
+          tile,
+        );
+        const letter = randomLetter();
+        const points = letterPoints[letter] || 1;
+        tile.tileType = 'normal';
+        tile.updateLetter(letter, points);
+        applyTileType(tile);
+        continue;
+      }
     }
 
     const target = candidates[Math.floor(Math.random() * candidates.length)];
 
-    // Displace any normal tile at the target before moving
+    // Displace any tile at the target before moving
     const displaced = hxTileMap.get(hxKey(target.q, target.r));
     if (displaced && displaced !== tile) {
       // If the displaced tile is a portal tile, close the portal first
@@ -2346,11 +2429,11 @@ async function advanceEmberTiles() {
       hxTileMap.delete(hxKey(target.q, target.r));
     }
 
-    emberMoves.push({ tile, fromQ: tile.q, fromR: tile.r, toQ: target.q, toR: target.r });
+    allMoves.push({ tile, fromQ: tile.q, fromR: tile.r, toQ: target.q, toR: target.r });
   }
 
-  if (emberMoves.length > 0 && !hxState.gameOver) {
-    await animateTileMoves(emberMoves);
+  if (allMoves.length > 0 && !hxState.gameOver) {
+    await animateTileMoves(allMoves);
   }
 }
 
