@@ -460,47 +460,23 @@ async function animateTileMoves(moves) {
   await Promise.all(promises);
 }
 
-/* ── Animate tile moves with a chain-reaction drop ─────────────── */
-// Each tile waits for the tile directly below it (in the same wave)
-// to finish landing before it starts falling, creating organic
-// chain-reaction gravity instead of a metronomic fixed stagger.
+/* ── Animate tile moves with random delay (Option C: loose tumble) ── */
+// Each tile launches after a random delay within a fixed window,
+// creating a loose, tumbling feel where tiles fall unpredictably
+// rather than in a fixed sequence or chain reaction.
+const GRAVITY_RANDOM_MAX_MS = 120; // max random delay window in ms
+
 async function animateTileMovesStaggered(moves) {
   if (moves.length === 0) return;
-
-  // Build a map from destination key → promise that resolves when that tile lands.
-  // A tile can only start falling once the slot it's heading into is clear —
-  // i.e. once the tile that was previously occupying that slot has itself landed.
-  const landedPromises = new Map(); // `toQ,toR` → Promise<void>
-  const resolvers      = new Map(); // `toQ,toR` → resolve fn
-
-  for (const move of moves) {
-    const key = hxKey(move.toQ, move.toR);
-    let res;
-    landedPromises.set(key, new Promise(r => { res = r; }));
-    resolvers.set(key, res);
-  }
-
-  const allDone = moves.map(move => {
-    const fromKey = hxKey(move.fromQ, move.fromR);
-    // Wait for whatever tile was previously falling INTO our fromQ,fromR to land first
-    const waitFor = landedPromises.get(fromKey);
-    return new Promise(resolve => {
-      const launch = () => {
-        animateTileMoves([move]).then(() => {
-          // Signal that our destination slot is now occupied (tile has landed)
-          resolvers.get(hxKey(move.toQ, move.toR))?.();
-          resolve();
-        });
-      };
-      if (waitFor) {
-        waitFor.then(launch);
-      } else {
-        launch(); // nothing below us — fall immediately
-      }
-    });
-  });
-
-  await Promise.all(allDone);
+  const promises = moves.map(move =>
+    new Promise(resolve => {
+      const delay = Math.random() * GRAVITY_RANDOM_MAX_MS;
+      setTimeout(() => {
+        animateTileMoves([move]).then(resolve);
+      }, delay);
+    })
+  );
+  await Promise.all(promises);
 }
 
 /* ── Tile type styling ─────────────────────────────────────────── */
