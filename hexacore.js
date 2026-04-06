@@ -758,7 +758,7 @@ function buildGrid(onReady) {
   // Pre-designate vowel slots:
   //   • Ring 0 (centre): always a vowel
   //   • Ring 1: 3 of 6 tiles are vowels (random half)
-  //   • Rings 2–4: fill remaining quota so total ≈ 28% of the board
+  //   • Rings 2–4: fill remaining quota so total = 28% of the board
   const vowelTargets = new Set();
   const VOWEL_DENSITY = 0.28;
 
