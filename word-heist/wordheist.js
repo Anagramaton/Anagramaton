@@ -9,6 +9,12 @@ import { wordPool } from './heistWords.js';
 
 const THEMES = ['noir', 'neon', 'gold', 'chalk', 'blueprint', 'sunrise'];
 
+// Max Fisher-Yates iterations to guarantee scrambled ≠ original before giving up
+const MAX_SCRAMBLE_ATTEMPTS = 20;
+
+/** Return a random integer in [0, n). */
+function randInt(n) { return Math.floor(Math.random() * n); }
+
 const THEME_LABELS = {
   noir:      '🌑 Noir',
   neon:      '⚡ Neon',
@@ -167,12 +173,12 @@ function scramble(word) {
   let attempts = 0;
   do {
     for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = randInt(i + 1);
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     result = arr.join('');
     attempts++;
-  } while (result === word && attempts < 20);
+  } while (result === word && attempts < MAX_SCRAMBLE_ATTEMPTS);
   return result;
 }
 
@@ -191,15 +197,16 @@ function initPool() {
 
 function shufflePool() {
   for (let i = state.pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = randInt(i + 1);
     [state.pool[i], state.pool[j]] = [state.pool[j], state.pool[i]];
   }
 }
 
 /** Pick the next word that hasn't been used this session. */
 function pickNextWord() {
-  // Try to find one not yet used this session
-  const unused = state.pool.filter(w => !state.sessionWords.includes(w.word));
+  // Use a Set for O(1) membership checks against session history
+  const usedSet = new Set(state.sessionWords);
+  const unused = state.pool.filter(w => !usedSet.has(w.word));
   if (unused.length === 0) {
     // Pool exhausted — reset session word history and reshuffle
     state.sessionWords = [];
@@ -211,7 +218,7 @@ function pickNextWord() {
   while (state.poolIndex < state.pool.length) {
     const candidate = state.pool[state.poolIndex];
     state.poolIndex++;
-    if (!state.sessionWords.includes(candidate.word)) {
+    if (!usedSet.has(candidate.word)) {
       return candidate;
     }
   }
@@ -330,8 +337,9 @@ function checkWord() {
 function wrongInput() {
   // Trigger shake animation on dashes
   dom.dashesEl.classList.remove('shake');
-  // Force reflow so animation re-triggers if already shaking
-  void dom.dashesEl.offsetWidth;
+  // Force a browser reflow so the CSS animation re-triggers even if
+  // the shake class was already present from a previous wrong input.
+  void dom.dashesEl.offsetWidth; // eslint-disable-line no-void
   dom.dashesEl.classList.add('shake');
 
   // Remove shake class after animation ends
@@ -768,7 +776,7 @@ function init() {
   cacheDom();
 
   // Pick random starting theme
-  const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
+  const randomTheme = THEMES[randInt(THEMES.length)];
   applyTheme(randomTheme);
 
   // Build UI pieces
