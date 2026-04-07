@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORD HEIST</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Turret+Road:wght@200;400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="wordheist.css">
+</head>
+<body data-wh-theme="noir">
+
+  <!-- ══════════════════════════════════════════
+       THEME PICKER (shared overlay, sits above all screens)
+       ══════════════════════════════════════════ -->
+  <div id="wh-theme-picker" class="wh-theme-picker" role="menu" aria-label="Choose theme"></div>
+
+  <!-- ══════════════════════════════════════════
+       START / MODE SELECT SCREEN
+       ══════════════════════════════════════════ -->
+  <div id="wh-start-screen" class="wh-screen active" role="main">
+    <div class="wh-screen-inner">
+
+      <!-- Header -->
+      <header class="wh-header">
+        <div class="wh-logo">Word<span>Heist</span></div>
+        <div class="wh-header-actions">
+          <button class="wh-icon-btn wh-theme-btn" title="Change theme" aria-label="Change theme">🎨</button>
+        </div>
+      </header>
+
+      <!-- Hero title -->
+      <div class="wh-start-title">
+        <h1>WORD<br>HEIST</h1>
+        <p>Crack the code. Beat the clock.</p>
+      </div>
+
+      <!-- Mode selection cards -->
+      <div class="wh-mode-row">
+        <div class="wh-mode-card" id="wh-classic-card" role="button" tabindex="0" aria-pressed="true">
+          <div class="wh-mode-icon">🕵️</div>
+          <h3>Classic</h3>
+          <p>Rounds of words at your own pace. Solve them all.</p>
+        </div>
+        <div class="wh-mode-card" id="wh-blitz-card" role="button" tabindex="0" aria-pressed="false">
+          <div class="wh-mode-icon">⚡</div>
+          <h3>Blitz</h3>
+          <p>Race the clock. Solve as many as you can.</p>
+        </div>
+      </div>
+
+      <!-- Classic settings panel -->
+      <div class="wh-settings-panel active" id="wh-classic-panel">
+        <div>
+          <div class="wh-settings-label">Words per round</div>
+          <div class="wh-option-group">
+            <button class="wh-option-btn" data-value="5">5</button>
+            <button class="wh-option-btn" data-value="10" data-default="true">10</button>
+            <button class="wh-option-btn" data-value="15">15</button>
+          </div>
+        </div>
+        <div>
+          <div class="wh-settings-label">Number of rounds</div>
+          <div class="wh-option-group">
+            <button class="wh-option-btn" data-value="3" data-default="true">3</button>
+            <button class="wh-option-btn" data-value="5">5</button>
+            <button class="wh-option-btn" data-value="10">10</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blitz settings panel -->
+      <div class="wh-settings-panel" id="wh-blitz-panel">
+        <div>
+          <div class="wh-settings-label">Time limit</div>
+          <div class="wh-option-group">
+            <button class="wh-option-btn" data-value="60">1 min</button>
+            <button class="wh-option-btn" data-value="120" data-default="true">2 min</button>
+            <button class="wh-option-btn" data-value="180">3 min</button>
+            <button class="wh-option-btn" data-value="300">5 min</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start button -->
+      <div class="wh-start-actions">
+        <button id="wh-start-btn" class="wh-btn wh-btn--primary">
+          🔓 Start Heist
+        </button>
+        <a href="../index.html" class="wh-back-link">← Back to Anagramaton</a>
+      </div>
+
+    </div><!-- /.wh-screen-inner -->
+  </div><!-- /#wh-start-screen -->
+
+
+  <!-- ══════════════════════════════════════════
+       GAME SCREEN
+       ══════════════════════════════════════════ -->
+  <div id="wh-game-screen" class="wh-screen" role="main">
+    <div class="wh-screen-inner">
+
+      <!-- Header -->
+      <header class="wh-header">
+        <div class="wh-logo">Word<span>Heist</span></div>
+        <div class="wh-header-actions">
+          <button class="wh-icon-btn wh-theme-btn" title="Change theme" aria-label="Change theme">🎨</button>
+        </div>
+      </header>
+
+      <!-- Classic mode status bar -->
+      <div id="wh-classic-status" class="wh-status">
+        <div class="wh-status-item">
+          <div class="wh-status-val">
+            <span id="wh-word-num">1</span><span style="opacity:.4">/</span><span id="wh-word-total">10</span>
+          </div>
+          <div class="wh-status-lbl">Words</div>
+        </div>
+        <div class="wh-status-item">
+          <div class="wh-status-val">
+            <span id="wh-round-num">1</span><span style="opacity:.4">/</span><span id="wh-round-total">3</span>
+          </div>
+          <div class="wh-status-lbl">Rounds</div>
+        </div>
+      </div>
+
+      <!-- Blitz mode status bar (timer) -->
+      <div id="wh-blitz-status" class="wh-status" style="display:none; justify-content:center;">
+        <div class="wh-status-item">
+          <div id="wh-timer" class="wh-timer">2:00</div>
+          <div class="wh-status-lbl">Time Remaining</div>
+        </div>
+      </div>
+
+      <!-- Progress bar (classic mode) -->
+      <div class="wh-progress-bar">
+        <div id="wh-progress-fill" class="wh-progress-fill" style="width:0%"></div>
+      </div>
+
+      <!-- Scrambled word display -->
+      <div class="wh-scramble-wrapper">
+        <div class="wh-scramble-label">Unscramble the word</div>
+        <div id="wh-scramble" class="wh-scramble" aria-live="polite" aria-label="Scrambled word">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Dash letter slots -->
+      <div id="wh-dashes" class="wh-dashes" role="group" aria-label="Your answer">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Hint area -->
+      <div class="wh-hint-area">
+        <button id="wh-hint-btn" class="wh-btn wh-btn--secondary" style="font-size:0.9rem; padding:7px 16px; min-width:0;">
+          💡 Show Hint
+        </button>
+        <div id="wh-hint-text" class="wh-hint-text" aria-live="polite">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- On-screen keyboard -->
+      <div id="wh-keyboard" class="wh-keyboard" role="group" aria-label="Letter keyboard">
+        <!-- Built by JS -->
+      </div>
+
+      <!-- Skip button (Blitz only) -->
+      <div style="text-align:center; margin-top: -4px;">
+        <button id="wh-skip-btn" class="wh-btn wh-btn--skip" style="display:none;">
+          ⏭ Skip Word
+        </button>
+      </div>
+
+    </div><!-- /.wh-screen-inner -->
+  </div><!-- /#wh-game-screen -->
+
+
+  <!-- ══════════════════════════════════════════
+       STATS SCREEN
+       ══════════════════════════════════════════ -->
+  <div id="wh-stats-screen" class="wh-screen" role="main">
+    <div class="wh-screen-inner">
+
+      <!-- Header -->
+      <header class="wh-header">
+        <div class="wh-logo">Word<span>Heist</span></div>
+        <div class="wh-header-actions">
+          <button class="wh-icon-btn wh-theme-btn" title="Change theme" aria-label="Change theme">🎨</button>
+        </div>
+      </header>
+
+      <!-- Title -->
+      <div id="wh-stats-title" class="wh-stats-title">CASE CLOSED</div>
+      <div class="wh-stats-subtitle">Here's your briefing</div>
+
+      <!-- Score display -->
+      <div class="wh-score-display">
+        <div class="wh-score-label">Final Score</div>
+        <div id="wh-stats-score" class="wh-score-num">0</div>
+      </div>
+
+      <!-- Stat cards grid -->
+      <div class="wh-stats-grid">
+        <div class="wh-stat-card highlight">
+          <div id="wh-stats-solved" class="wh-stat-val">0</div>
+          <div class="wh-stat-lbl">Words Cracked</div>
+        </div>
+        <div class="wh-stat-card">
+          <div id="wh-stats-avg-time" class="wh-stat-val">0s</div>
+          <div class="wh-stat-lbl">Avg Time / Word</div>
+        </div>
+        <div class="wh-stat-card">
+          <div id="wh-stats-hints" class="wh-stat-val">0</div>
+          <div class="wh-stat-lbl">Hints Used</div>
+        </div>
+        <div class="wh-stat-card">
+          <div id="wh-stats-skipped" class="wh-stat-val">0</div>
+          <div class="wh-stat-lbl">Words Skipped</div>
+        </div>
+      </div>
+
+      <!-- Fastest word callout -->
+      <p id="wh-stats-fastest" class="wh-fastest-word">No words cracked</p>
+
+      <!-- Action buttons -->
+      <div class="wh-stats-actions">
+        <button id="wh-play-again-btn" class="wh-btn wh-btn--primary">
+          🔁 Play Again
+        </button>
+        <button id="wh-menu-btn" class="wh-btn wh-btn--secondary">
+          🏠 Main Menu
+        </button>
+        <a href="../index.html" class="wh-back-link">← Back to Anagramaton</a>
+      </div>
+
+    </div><!-- /.wh-screen-inner -->
+  </div><!-- /#wh-stats-screen -->
+
+  <script type="module" src="wordheist.js"></script>
+</body>
+</html>
