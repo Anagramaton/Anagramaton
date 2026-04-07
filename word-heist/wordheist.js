@@ -239,8 +239,9 @@ function loadWord() {
   // Build dashes
   renderDashes();
 
-  // Reset hint area
-  dom.hintBtn.style.display = '';
+  // Reset hint area — hide button if this word has no hint data
+  const hasHint = Array.isArray(entry.hint) && entry.hint.length > 0;
+  dom.hintBtn.style.display = hasHint ? '' : 'none';
   dom.hintText.classList.remove('visible');
   dom.hintText.innerHTML = '';
 
@@ -626,8 +627,9 @@ function setupStartScreen() {
   // Start button
   dom.startBtn.addEventListener('click', () => {
     if (state.mode === 'classic') {
-      const wprBtn = document.querySelector('#wh-classic-panel .wh-option-group:nth-child(2) .wh-option-btn.selected');
-      const rdBtn  = document.querySelector('#wh-classic-panel .wh-option-group:nth-child(4) .wh-option-btn.selected');
+      const groups = document.querySelectorAll('#wh-classic-panel .wh-option-group');
+      const wprBtn = groups[0] ? groups[0].querySelector('.wh-option-btn.selected') : null;
+      const rdBtn  = groups[1] ? groups[1].querySelector('.wh-option-btn.selected') : null;
       const wpr = wprBtn ? parseInt(wprBtn.dataset.value) : 10;
       const rd  = rdBtn  ? parseInt(rdBtn.dataset.value)  : 3;
       initPool();
