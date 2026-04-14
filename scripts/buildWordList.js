@@ -3,7 +3,7 @@
  * buildWordList.js
  *
  * Reads words.js/words.txt, applies filtering rules, and writes one JS module
- * per word length: wordList_4.js, wordList_5.js … wordList_10.js, wordList_11plus.js.
+ * per word length: wordList_4.js, wordList_5.js … wordList_15.js, wordList_16plus.js.
  * Words shorter than 4 letters are dropped (they are never valid in-game).
  *
  * Filtering rules:
@@ -244,7 +244,7 @@ function isJargon(word) {
 // ---------------------------------------------------------------------------
 // Note: the old monolithic wordList.js / wordList.json is no longer generated
 // here. Words are now written to per-length chunk files (wordList_4.js …
-// wordList_10.js, wordList_11plus.js) so that callers can import only what they
+// wordList_15.js, wordList_16plus.js) so that callers can import only what they
 // need. wordList.js can be safely deleted once all imports reference the chunks.
 const inputPath = resolve(ROOT, 'words.js', 'words.txt');
 
@@ -254,8 +254,8 @@ const lines = raw.split('\n');
 const seen = new Set();
 // Map from bucket key → word array
 const buckets = {};
-for (let len = 4; len <= 10; len++) buckets[String(len)] = [];
-buckets['11plus'] = [];
+for (let len = 4; len <= 15; len++) buckets[String(len)] = [];
+buckets['16plus'] = [];
 
 for (const raw of lines) {
   const word = raw.trim();
@@ -275,7 +275,7 @@ for (const raw of lines) {
   seen.add(word);
 
   // Bucket by length
-  const key = word.length <= 10 ? String(word.length) : '11plus';
+  const key = word.length <= 15 ? String(word.length) : '16plus';
   buckets[key].push(word);
 }
 
@@ -283,7 +283,7 @@ for (const raw of lines) {
 let total = 0;
 for (const [key, words] of Object.entries(buckets)) {
   words.sort();
-  const fileName = key === '11plus' ? 'wordList_11plus.js' : `wordList_${key}.js`;
+  const fileName = key === '16plus' ? 'wordList_16plus.js' : `wordList_${key}.js`;
   const outputPath = resolve(ROOT, fileName);
   const output = `export default ${JSON.stringify(words)};\n`;
   writeFileSync(outputPath, output, 'utf8');
