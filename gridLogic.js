@@ -1,5 +1,15 @@
 import { GRID_RADIUS as DEFAULT_RADIUS, letterFrequencies, letterPoints, lengthMultipliers, anagramMultiplier, reuseMultipliers } from './constants.js';
-import wordList from './wordList.js';
+import wordList_4 from './wordList_4.js';
+import wordList_5 from './wordList_5.js';
+import wordList_6 from './wordList_6.js';
+import wordList_7 from './wordList_7.js';
+import wordList_8 from './wordList_8.js';
+import wordList_9 from './wordList_9.js';
+import wordList_10 from './wordList_10.js';
+import wordList_11plus from './wordList_11plus.js';
+
+const wordList = [...wordList_4, ...wordList_5, ...wordList_6, ...wordList_7,
+  ...wordList_8, ...wordList_9, ...wordList_10, ...wordList_11plus];
 import suffixList from './suffixList.js';
 import phraseHints from './phraseHints.js';
 import { gameState } from './gameState.js';

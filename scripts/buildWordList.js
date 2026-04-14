@@ -2,10 +2,12 @@
 /**
  * buildWordList.js
  *
- * Reads words.js/words.txt, applies filtering rules, and writes wordList.js.
+ * Reads words.js/words.txt, applies filtering rules, and writes one JS module
+ * per word length: wordList_4.js, wordList_5.js … wordList_10.js, wordList_11plus.js.
+ * Words shorter than 4 letters are dropped (they are never valid in-game).
  *
  * Filtering rules:
- * 1. Length 4–19 characters (inclusive)
+ * 1. Minimum length 4 characters
  * 2. Only lowercase a–z letters (no hyphens, digits, spaces, etc.)
  * 3. Not science/tech jargon
  */
@@ -240,21 +242,27 @@ function isJargon(word) {
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
+// Note: the old monolithic wordList.js / wordList.json is no longer generated
+// here. Words are now written to per-length chunk files (wordList_4.js …
+// wordList_10.js, wordList_11plus.js) so that callers can import only what they
+// need. wordList.js can be safely deleted once all imports reference the chunks.
 const inputPath = resolve(ROOT, 'words.js', 'words.txt');
-const outputPath = resolve(ROOT, 'wordList.json');
 
 const raw = readFileSync(inputPath, 'utf8');
 const lines = raw.split('\n');
 
 const seen = new Set();
-const kept = [];
+// Map from bucket key → word array
+const buckets = {};
+for (let len = 4; len <= 10; len++) buckets[String(len)] = [];
+buckets['11plus'] = [];
 
 for (const raw of lines) {
   const word = raw.trim();
   if (!word) continue;
 
-  // Rule 1: length 4–19
-  if (word.length < 4 || word.length > 19) continue;
+  // Rule 1: minimum length 4 (words shorter than 4 are never valid in-game)
+  if (word.length < 4) continue;
 
   // Rule 2: only lowercase a–z
   if (!/^[a-z]+$/.test(word)) continue;
@@ -265,14 +273,21 @@ for (const raw of lines) {
   // Deduplicate
   if (seen.has(word)) continue;
   seen.add(word);
-  kept.push(word);
+
+  // Bucket by length
+  const key = word.length <= 10 ? String(word.length) : '11plus';
+  buckets[key].push(word);
 }
 
-// Sort alphabetically
-kept.sort();
-
-// Build output
-const output = JSON.stringify(kept) + '\n';
-
-writeFileSync(outputPath, output, 'utf8');
-console.log(`Wrote ${kept.length} words to ${outputPath}`);
+// Write one JS module per bucket
+let total = 0;
+for (const [key, words] of Object.entries(buckets)) {
+  words.sort();
+  const fileName = key === '11plus' ? 'wordList_11plus.js' : `wordList_${key}.js`;
+  const outputPath = resolve(ROOT, fileName);
+  const output = `export default ${JSON.stringify(words)};\n`;
+  writeFileSync(outputPath, output, 'utf8');
+  console.log(`Wrote ${words.length} words to ${fileName}`);
+  total += words.length;
+}
+console.log(`Total: ${total} words across all chunks.`);
