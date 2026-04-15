@@ -828,7 +828,7 @@ function buildGrid(onReady) {
   const { updateViewForBoard } = initSvg(hxSvg, {
     preserveAspectRatio: 'xMidYMid meet',
     defaultViewBox: '0 0 1000 1000',
-    mobileBreakpoint: 768,
+    mobileBreakpoint: 900,
     pad: 12,
   });
   hxUpdateViewForBoard = updateViewForBoard;

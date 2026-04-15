@@ -1645,4 +1645,39 @@ body[data-theme="dark"].hx-active #game-title {
     font-size: 0.85rem;
     padding: 6px 10px;
   }
+  #hx-word-score-hud {
+    top: max(116px, calc(env(safe-area-inset-top, 0px) + 100px));
+    font-size: clamp(0.9rem, 3vw, 1.4rem);
+  }
+  #hx-powerup-bar-left {
+    bottom: clamp(60px, 10vh, 90px);
+    right: calc(50% + 56px);
+  }
+  #hx-powerup-bar-right {
+    bottom: clamp(60px, 10vh, 90px);
+    left: calc(50% + 56px);
+  }
+  .hx-powerup-btn {
+    font-size: 0.68rem;
+    padding: 5px 8px;
+  }
+}
+
+/* ── Tablet HUD adjustments (641px–900px) ────────────────────── */
+@media (min-width: 641px) and (max-width: 900px) {
+  #hx-score-hud {
+    bottom: clamp(70px, 11vh, 110px);
+    font-size: 1rem;
+  }
+  #hx-level-hud {
+    bottom: clamp(10px, 3vh, 26px);
+  }
+  #hx-powerup-bar-left {
+    bottom: clamp(70px, 11vh, 110px);
+    right: calc(50% + 70px);
+  }
+  #hx-powerup-bar-right {
+    bottom: clamp(70px, 11vh, 110px);
+    left: calc(50% + 70px);
+  }
 }

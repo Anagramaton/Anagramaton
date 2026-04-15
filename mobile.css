@@ -7,7 +7,7 @@
     height: auto;
     padding: 8px 10px;
     border-radius: 4px;
-    top: clamp(40px, 10vh, 80px);
+    top: clamp(64px, 12vh, 88px);
     letter-spacing: 0.02em;
     transition: all 0.15s ease;
     background: var(--side-toggle-bg);
@@ -184,6 +184,14 @@
   touch-action: none; 
 }
 
+/* ── Game container — push grid below fixed title ─────────────── */
+@media (max-width: 640px) {
+  #game-container {
+    padding-top: clamp(50px, 8vh, 72px);
+    box-sizing: border-box;
+  }
+}
+
 /* ── Round-over modal — mobile tweaks ────────────────────────── */
 @media (max-width: 640px) {
   .rom__dismiss-hint {
@@ -299,5 +307,18 @@
     color: var(--submit-fg);
     padding: 0;
     margin: 0;
+  }
+
+  /* Side toggles — scaled for tablet */
+  .side-toggle {
+    top: clamp(80px, 10vh, 110px);
+    height: 140px;
+    width: 46px;
+  }
+
+  /* Game container — push grid below fixed title */
+  #game-container {
+    padding-top: clamp(52px, 8vh, 80px);
+    box-sizing: border-box;
   }
 }

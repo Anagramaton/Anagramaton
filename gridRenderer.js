@@ -43,7 +43,7 @@ tileElements.length = 0;
   const { updateViewForBoard } = initSvg(svg, {
     preserveAspectRatio: 'xMidYMid meet',
     defaultViewBox,
-    mobileBreakpoint: 768,
+    mobileBreakpoint: 900,
     pad: 12,
   });
 
