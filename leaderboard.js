@@ -42,7 +42,7 @@ function injectModalStyles() {
     #lb-name-modal {
       position: fixed;
       inset: 0;
-      z-index: 9999;
+      z-index: 99999;
       display: flex;
       align-items: center;
       justify-content: center;
