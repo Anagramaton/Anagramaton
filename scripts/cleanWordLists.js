@@ -169,6 +169,12 @@ const BLOCKLIST = new Set([
   'dihydrostreptomycin',
   'diethylmalonylurea',
   'diethylstilbestrol', 'diethylstilboestrol',
+  // Missing plurals / forms not caught by existing patterns
+  'basophilias',
+  // Synthetic element names
+  'kurchatovium', 'kurchatoviums',
+  // Marsupials
+  'phascogale', 'phascogales',
 ]);
 
 const JARGON_SUBSTRINGS = [
@@ -192,6 +198,24 @@ const JARGON_SUBSTRINGS = [
   'encephalon',  // diencephalon, telencephalon, mesencephalon
   'diplococ',    // diplococcus, diplococci
   'diplodoc',    // diplodocus, diplodoci
+  // Medical / anatomical (additional)
+  'poikilo',     // poikilocyte, poikilotherm (irregular temperature / cell shape)
+  'pharyngi',    // pharyngitis, pharyngitic, pharyngitides
+  'pharyngea',   // pharyngeal
+  'zygapoph',    // zygapophysis, zygapophyseal (vertebral anatomy)
+  // Botany
+  'phello',      // phelloderm, phellogen, phellogenic (cork tissue)
+  // Marine / symbiotic biology
+  'zooxanth',    // zooxanthella(e)
+  // Mood-disorder psychiatry
+  'cyclothymi',  // cyclothymia, cyclothymic
+  // Niche / rare terminology
+  'cynophil',    // cynophilia, cynophilist (dog-lover jargon)
+  'phenac',      // phenacaine, phenacetin (pharmacological)
+  'cyprinodont', // cyprinodont(s) (freshwater fish family)
+  // Religious-historical sect
+  'pharisa',     // pharisaic, pharisaism
+  'pharisee',    // pharisee, phariseeism
 ];
 
 function isJargon(word) {
@@ -215,7 +239,7 @@ function isJargon(word) {
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
-const files = readdirSync(ROOT).filter(f => /^wordList_\d+\.js$/.test(f)).sort();
+const files = readdirSync(ROOT).filter(f => /^wordList_\w+\.js$/.test(f)).sort();
 
 if (files.length === 0) {
   console.error('No wordList_N.js files found in repo root!');
