@@ -43,6 +43,12 @@ const JARGON_SUFFIXES = [
   'rhoea', 'rrhoea', 'rrhoeas', 'rrhea', 'rrheas',
   // Anatomical joint/structural states
   'throsis', 'throses',
+  // Botany — petal structure
+  'petalous',
+  // Anatomy — digit/finger/toe
+  'dactyl', 'dactylic', 'dactyly',
+  // Anatomy — sheath/covering
+  'thecal',
 ];
 
 const SAFE_JARGON_PREFIXES = [
@@ -50,6 +56,12 @@ const SAFE_JARGON_PREFIXES = [
   'hemato', 'haemato', 'leuko', 'lympho', 'thrombo', 'erythro',
   'hepato', 'nephro', 'chondro', 'myelo',
   'cyto', 'adeno', 'cholecysto', 'lapar',
+  // Paleontological / archaic
+  'palae', 'paleo',
+  // Sandy-soil ecology
+  'psamm',
+  // False / pseudo-science catch-all
+  'pseudo',
 ];
 
 const BLOCKLIST = new Set([
@@ -175,6 +187,32 @@ const BLOCKLIST = new Set([
   'kurchatovium', 'kurchatoviums',
   // Marsupials
   'phascogale', 'phascogales',
+  // Measurement / units system
+  'avoirdupois', 'avoirdupoises',
+  // Historical Venetian title
+  'avvogadores',
+  // Vitamin A derivative (obsolete name)
+  'axerophthol', 'axerophthols',
+  // Spinal / pharmacological
+  'intrathecal',
+  // Botany — pseudobulb orchid structures
+  'pseudobulb', 'pseudobulbs',
+  // Sandy-habitat ecology
+  'psammophile', 'psammophiles',
+  // Ecclesiastical title
+  'chorepiscopal',
+  // Eye inflammation plural
+  'choroiditises',
+  // Anatomy — five-fingered
+  'pentadactylic',
+  // Botany — flower genus
+  'helianthemum', 'helianthemums',
+  // Botany — free-petalled
+  'dialypetalous',
+  // Obscure form of diaphanous
+  'diaphaneities', 'diaphaniety',
+  // Biology — cellular totipotency
+  'totipotent', 'totipotency', 'totipotencies',
 ]);
 
 const JARGON_SUBSTRINGS = [
@@ -216,6 +254,18 @@ const JARGON_SUBSTRINGS = [
   // Religious-historical sect
   'pharisa',     // pharisaic, pharisaism
   'pharisee',    // pharisee, phariseeism
+  // Anatomy — digit/finger/toe
+  'dacty',       // dactyl, pentadactylic, polydactyly
+  // Ecclesiastical
+  'episc',       // episcopal, chorepiscopal
+  // Biology — cellular totipotency
+  'totipot',     // totipotent, totipotencies
+  // Botany — flower genus
+  'helianthemum',
+  // Sandy-soil ecology
+  'psamm',       // psammophile, psammophytes
+  // Anatomy — sheath/covering
+  'thecal',      // intrathecal, epithecal
 ];
 
 function isJargon(word) {
