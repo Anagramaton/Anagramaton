@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "generate": "node scripts/generateBoards.mjs"
+    "generate": "node scripts/generateBoards.mjs",
+    "clean-words": "node scripts/cleanWordLists.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0"

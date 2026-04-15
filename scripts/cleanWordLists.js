@@ -1,18 +1,14 @@
 #!/usr/bin/env node
 /**
- * buildWordList.js
+ * cleanWordLists.js
  *
- * Reads words.js/words.txt, applies filtering rules, and writes one JS module
- * per word length: wordList_4.js, wordList_5.js … wordList_15.js, wordList_16plus.js.
- * Words shorter than 4 letters are dropped (they are never valid in-game).
+ * Reads all wordList_N.js files in the repo root, applies the jargon filter,
+ * and writes the cleaned arrays back in-place.
  *
- * Filtering rules:
- * 1. Minimum length 4 characters
- * 2. Only lowercase a–z letters (no hyphens, digits, spaces, etc.)
- * 3. Not science/tech jargon
+ * Run with: npm run clean-words
  */
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -20,11 +16,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 
 // ---------------------------------------------------------------------------
-// Jargon filter helpers
+// Jargon filter — copied verbatim from scripts/buildWordList.js
 // ---------------------------------------------------------------------------
 
-// Suffixes that almost exclusively appear on scientific/technical jargon.
-// Carefully chosen to avoid false positives on common English words.
 const JARGON_SUFFIXES = [
   // Medical / surgical procedures
   'ectomy', 'otomy', 'ostomy', 'plasty', 'rrhaphy', 'desis', 'pexy',
@@ -51,19 +45,6 @@ const JARGON_SUFFIXES = [
   'throsis', 'throses',
 ];
 
-// Prefixes almost exclusively found in scientific terms.
-const JARGON_PREFIXES = [
-  'glyco', 'phospho', 'nucleo', 'ribonucleo', 'deoxyribonucleo',
-  'hemato', 'haemato', 'leuko', 'lympho', 'thrombo', 'erythro',
-  'hepato', 'nephro', 'osteo', 'chondro', 'neuro', 'dermo',
-  'myelo', 'cardio',        // too broad — removed; kept here just for reference
-  'cyto',                   // cytochrome, cytoplasm, etc.
-  'adeno', 'cholecysto', 'lapar',
-  'hydro',                  // also used in everyday: removed below
-  'xeno', 'iso',            // also everyday words — keep out of prefix list
-];
-
-// Safer prefix set (only prefixes that very rarely appear in everyday words):
 const SAFE_JARGON_PREFIXES = [
   'glyco', 'phospho', 'nucleo', 'ribonucleo', 'deoxyribonucleo',
   'hemato', 'haemato', 'leuko', 'lympho', 'thrombo', 'erythro',
@@ -71,8 +52,6 @@ const SAFE_JARGON_PREFIXES = [
   'cyto', 'adeno', 'cholecysto', 'lapar',
 ];
 
-// Specific blocklisted words / stems — known jargon that doesn't match
-// the suffix / prefix patterns above.
 const BLOCKLIST = new Set([
   // Amino acids
   'alanine', 'arginine', 'asparagine', 'aspartate', 'aspartic',
@@ -99,7 +78,6 @@ const BLOCKLIST = new Set([
   'centromere', 'centromeres', 'telomere', 'telomeres',
   'nucleosome', 'nucleosomes',
   'transcription', 'translation', 'replication',
-  'promoter', // keep? common English too, keep it
   'splicing', 'spliceosome', 'intron', 'introns', 'exon', 'exons',
   'polymerase', 'polymerases', 'topoisomerase', 'topoisomerases',
   'helicase', 'helicases',
@@ -193,8 +171,6 @@ const BLOCKLIST = new Set([
   'diethylstilbestrol', 'diethylstilboestrol',
 ]);
 
-// Substrings that, when found anywhere in a word, mark it as jargon.
-// Only include substrings that do NOT appear in common everyday English words.
 const JARGON_SUBSTRINGS = [
   'glyco', 'phospho', 'nucleo',
   'hemato', 'haemato',
@@ -218,9 +194,6 @@ const JARGON_SUBSTRINGS = [
   'diplodoc',    // diplodocus, diplodoci
 ];
 
-// ---------------------------------------------------------------------------
-// Utility: check if a word is jargon
-// ---------------------------------------------------------------------------
 function isJargon(word) {
   if (BLOCKLIST.has(word)) return true;
 
@@ -242,52 +215,47 @@ function isJargon(word) {
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
-// Note: the old monolithic wordList.js / wordList.json is no longer generated
-// here. Words are now written to per-length chunk files (wordList_4.js …
-// wordList_15.js, wordList_16plus.js) so that callers can import only what they
-// need. wordList.js can be safely deleted once all imports reference the chunks.
-const inputPath = resolve(ROOT, 'words.js', 'words.txt');
+const files = readdirSync(ROOT).filter(f => /^wordList_\d+\.js$/.test(f)).sort();
 
-const raw = readFileSync(inputPath, 'utf8');
-const lines = raw.split('\n');
-
-const seen = new Set();
-// Map from bucket key → word array
-const buckets = {};
-for (let len = 4; len <= 15; len++) buckets[String(len)] = [];
-buckets['16plus'] = [];
-
-for (const raw of lines) {
-  const word = raw.trim();
-  if (!word) continue;
-
-  // Rule 1: minimum length 4 (words shorter than 4 are never valid in-game)
-  if (word.length < 4) continue;
-
-  // Rule 2: only lowercase a–z
-  if (!/^[a-z]+$/.test(word)) continue;
-
-  // Rule 3: not jargon
-  if (isJargon(word)) continue;
-
-  // Deduplicate
-  if (seen.has(word)) continue;
-  seen.add(word);
-
-  // Bucket by length
-  const key = word.length <= 15 ? String(word.length) : '16plus';
-  buckets[key].push(word);
+if (files.length === 0) {
+  console.error('No wordList_N.js files found in repo root!');
+  process.exit(1);
 }
 
-// Write one JS module per bucket
-let total = 0;
-for (const [key, words] of Object.entries(buckets)) {
-  words.sort();
-  const fileName = key === '16plus' ? 'wordList_16plus.js' : `wordList_${key}.js`;
-  const outputPath = resolve(ROOT, fileName);
-  const output = `export default ${JSON.stringify(words)};\n`;
-  writeFileSync(outputPath, output, 'utf8');
-  console.log(`Wrote ${words.length} words to ${fileName}`);
-  total += words.length;
+let grandBefore = 0;
+let grandRemoved = 0;
+
+for (const filename of files) {
+  const filePath = resolve(ROOT, filename);
+  const content = readFileSync(filePath, 'utf8');
+
+  // Extract the JSON array from `export default [...]`
+  const match = content.match(/export default (\[[\s\S]*\])/);
+  if (!match) {
+    console.warn(`⚠️  Skipping ${filename} — could not parse export default array`);
+    continue;
+  }
+
+  const words = JSON.parse(match[1]);
+  const before = words.length;
+
+  const seen = new Set();
+  const cleaned = [];
+  for (const word of words) {
+    if (!/^[a-z]+$/.test(word)) continue;
+    if (isJargon(word)) continue;
+    if (seen.has(word)) continue;
+    seen.add(word);
+    cleaned.push(word);
+  }
+  cleaned.sort();
+
+  const removed = before - cleaned.length;
+  grandBefore += before;
+  grandRemoved += removed;
+
+  writeFileSync(filePath, `export default ${JSON.stringify(cleaned)}\n`, 'utf8');
+  console.log(`✅ ${filename}: ${before} → ${cleaned.length} words (removed ${removed})`);
 }
-console.log(`Total: ${total} words across all chunks.`);
+
+console.log(`\n🎉 Done! Total: ${grandBefore} → ${grandBefore - grandRemoved} words (removed ${grandRemoved})`);
