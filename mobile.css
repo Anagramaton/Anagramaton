@@ -1,4 +1,4 @@
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .side-toggle {
     position: fixed;
     writing-mode: initial;
@@ -19,12 +19,12 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   body:has(#left-panel.open) .right-toggle { display: none; }
   body:has(#right-panel.open) .left-toggle { display: none; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .side-toggle { z-index: 900; }
 }
 
@@ -54,12 +54,12 @@
   bottom: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #howto-modal .rom__dialog { max-height: 92vh; }
 }
 
 /* ── Panels ───────────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #left-panel .panel-content,
   #right-panel .panel-content {
     width: 100%;
@@ -74,10 +74,10 @@
 }
 
 /* ── Score display ────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #score-display {
     position: fixed;
-    top: clamp(52px, 8vh, 80px);
+    bottom: clamp(88px, calc(env(safe-area-inset-bottom) + 13vh), 120px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 800;
@@ -97,7 +97,7 @@
 }
 
 /* ── Current word display ─────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #current-word-display {
     position: fixed;
     left: 50%;
@@ -117,7 +117,7 @@
 }
 
 /* ── Submit / Clear buttons ───────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #submit-word {
     position: fixed;
     bottom: clamp(52px, calc(env(safe-area-inset-bottom) + 8vh), 80px);
@@ -159,8 +159,14 @@
   #clear-word:active { opacity: 0.6; }
 }
 
-/* ── Settings button — mobile: bottom center below submit/clear ── */
-@media (max-width: 768px) {
+/* ── Settings button — mobile: top centre below game title ── */
+@media (max-width: 640px) {
+  #settings-wrap {
+    position: fixed;
+    top: clamp(52px, 8vh, 80px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
   #settings-btn {
     font-size: 1rem;
     min-width: 36px;
@@ -179,14 +185,14 @@
 }
 
 /* ── Round-over modal — mobile tweaks ────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .rom__dismiss-hint {
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }
 }
 
 /* ── Game title ───────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #game-title {
     position: fixed;
     top: clamp(6px, 2vh, 20px);
