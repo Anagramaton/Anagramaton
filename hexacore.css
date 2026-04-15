@@ -1635,7 +1635,7 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 /* ── Mobile HUD adjustments ──────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #hx-score-hud {
     bottom: clamp(60px, 10vh, 90px);
     font-size: 0.95rem;

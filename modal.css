@@ -576,7 +576,7 @@ body.rom-open { overflow: hidden; }
 }
 
 /* ── Mobile ──────────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #round-over-modal .rom__dialog {
     border-radius: 22px;
     max-height: calc(100dvh - 20px);
@@ -593,7 +593,7 @@ body.rom-open { overflow: hidden; }
   .rom__section-label { padding: 14px 16px 6px; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   .rom__grid    { grid-template-columns: 1fr; }
   .rom__track   { height: 16px; }
   .rom__duel-heads { grid-template-columns: 1fr 1fr; }

@@ -34,7 +34,7 @@
 
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="modal.css" />
-  <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)">
+  <link rel="stylesheet" href="mobile.css" media="(max-width: 640px)">
   <link rel="stylesheet" href="howtoModal.css">
   <link rel="stylesheet" href="hexacore.css">
 </head>
@@ -52,6 +52,9 @@
     <button id="splash-hexacore-btn" type="button" role="heading" aria-level="2">HEXACORE</button>
   </div>
 </div>
+  <!-- Game Title -->
+  <h1 id="game-title">ANAGRAMATON</h1>
+
   <!-- Settings under the title -->
   <div id="settings-wrap">
 
@@ -68,12 +71,6 @@
       <button id="set-name-btn"><span class="setting-icon">👤</span> <span class="setting-label">SET NAME</span></button>
     </div>
   </div>
-
-  <!-- Game Title -->
-  <h1 id="game-title">ANAGRAMATON</h1>
-
-  <!-- UI MOVED OUTSIDE the game container -->
-  <span id="score-display">0</span>
 
   <button id="toggle-left" class="side-toggle left-toggle" type="button"
     aria-controls="left-panel" aria-expanded="false"
@@ -92,6 +89,7 @@
   </div>
 
   <button id="submit-word" type="button">SUBMIT</button>
+  <span id="score-display">0</span>
   <button id="clear-word" type="button">CLEAR</button>
 
   <!-- GAME CONTAINER NOW ONLY HOLDS THE GRID -->

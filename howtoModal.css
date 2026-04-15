@@ -191,7 +191,7 @@
 }
 
 /* --- 7. Mobile --- */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #howto-modal .rom__dialog {
     width: 96vw;
     max-height: 90vh;
@@ -256,7 +256,7 @@
   overscroll-behavior: contain;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   #hx-howto-modal .rom__dialog {
     width: 96vw;
     max-height: 90vh;

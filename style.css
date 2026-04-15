@@ -1116,7 +1116,7 @@ body[data-theme="dark"] .tile-point {
 }
 #score-display {
   position: fixed;
-  top: 100px;
+  top: min(calc(50% + 345px), calc(100dvh - 56px));
   left: 50%;
   transform: translateX(-50%);
   z-index: 800;
@@ -1277,8 +1277,9 @@ body[data-theme="dark"] .tile-point {
    ========================================= */
 #settings-wrap {
   position: fixed;
-  bottom: clamp(10px, calc(env(safe-area-inset-bottom) + 1.5vh), 22px);
-  right: clamp(12px, 2vw, 24px);
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1100;
 }
 #settings-btn {
@@ -1342,7 +1343,7 @@ body[data-theme="dark"] .tile-point {
 .setting-icon { font-size: 1.1rem; flex-shrink: 0; }
 .setting-label { flex: 1; }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   #settings-menu { min-width: 180px; }
   #settings-menu button { font-size: 0.75rem; padding: 9px 12px; }
 }
