@@ -61,7 +61,7 @@ export function initSvg(
   {
     preserveAspectRatio = 'xMidYMid meet',
     defaultViewBox      = '0 0 1000 1000',
-    mobileBreakpoint    = 768,
+    mobileBreakpoint    = 900,
     pad                 = 12,
   } = {}
 ) {
@@ -73,8 +73,9 @@ export function initSvg(
   const updateViewForBoard = (boardG) => {
     if (!(boardG instanceof SVGGElement)) return;
 
-    const isMobile = (window.innerWidth || 0) <= mobileBreakpoint;
-    if (isMobile) {
+    const containerWidth = svg.clientWidth || window.innerWidth || 0;
+    const shouldTighten = containerWidth <= mobileBreakpoint;
+    if (shouldTighten) {
       const b = boardG.getBBox();
       const x = b.x - pad;
       const y = b.y - pad;

@@ -1129,7 +1129,7 @@ body[data-theme="dark"] .tile-point {
   background: none;
 
   font-family: 'Limelight', sans-serif;
-  font-size: 1.1rem;
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1155,6 +1155,22 @@ body[data-theme="dark"] .tile-point {
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color:#0a4a60
+  }
+}
+
+/* Intermediate breakpoint — narrow desktop / large tablet */
+@media (max-width: 900px) and (min-width: 769px) {
+  #score-display {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    top: clamp(80px, 10vh, 100px);
+  }
+
+  #current-word-display {
+    font-size: clamp(1.2rem, 3vw, 2rem);
+  }
+
+  .side-toggle {
+    top: clamp(80px, 12vh, 110px);
   }
 }
 

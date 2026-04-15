@@ -102,7 +102,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: clamp(110px, calc(env(safe-area-inset-bottom) + 14vh), 160px);
+    bottom: max(clamp(110px, calc(env(safe-area-inset-bottom) + 14vh), 160px), 100px);
     z-index: 800;
     display: block;
     text-align: center;
@@ -120,8 +120,8 @@
 @media (max-width: 768px) {
   #submit-word {
     position: fixed;
-    bottom: clamp(52px, calc(env(safe-area-inset-bottom) + 8vh), 80px);
-    left: calc(50% - 80px);
+    bottom: max(clamp(52px, calc(env(safe-area-inset-bottom) + 8vh), 80px), 50px);
+    left: calc(50% - clamp(60px, 12vw, 90px));
     transform: translateX(-50%);
     z-index: 800;
     background: none;
@@ -140,8 +140,8 @@
 
   #clear-word {
     position: fixed;
-    bottom: clamp(52px, calc(env(safe-area-inset-bottom) + 8vh), 80px);
-    left: calc(50% + 80px);
+    bottom: max(clamp(52px, calc(env(safe-area-inset-bottom) + 8vh), 80px), 50px);
+    left: calc(50% + clamp(60px, 12vw, 90px));
     transform: translateX(-50%);
     z-index: 800;
     background: none;
