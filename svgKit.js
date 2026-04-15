@@ -74,8 +74,8 @@ export function initSvg(
     if (!(boardG instanceof SVGGElement)) return;
 
     const containerWidth = svg.clientWidth || window.innerWidth || 0;
-    const shouldTighten = containerWidth <= mobileBreakpoint;
-    if (shouldTighten) {
+    const useCompactView = containerWidth <= mobileBreakpoint;
+    if (useCompactView) {
       const b = boardG.getBBox();
       const x = b.x - pad;
       const y = b.y - pad;
