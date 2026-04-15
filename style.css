@@ -1117,6 +1117,8 @@ body[data-theme="dark"] .tile-point {
 #score-display {
   position: fixed;
   top: min(calc(50% + 345px), calc(100dvh - 56px));
+  /* Center between #submit-word (left: 50%-230px, ~160px wide) and
+     #clear-word (left: 50%+60px, ~130px wide): midpoint ≈ 50%-15px */
   left: calc(50% - 15px);
   transform: translateX(-50%);
   z-index: 800;
