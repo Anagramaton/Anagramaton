@@ -1117,7 +1117,7 @@ body[data-theme="dark"] .tile-point {
 #score-display {
   position: fixed;
   top: min(calc(50% + 345px), calc(100dvh - 56px));
-  left: 50%;
+  left: calc(50% - 15px);
   transform: translateX(-50%);
   z-index: 800;
   display: block;
