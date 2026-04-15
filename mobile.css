@@ -102,7 +102,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: clamp(120px, calc(env(safe-area-inset-bottom) + 17vh), 170px);
+    bottom: clamp(150px, calc(env(safe-area-inset-bottom) + 20vh), 190px);
     z-index: 800;
     display: block;
     text-align: center;
@@ -209,8 +209,101 @@
   }
 }
 
-/* ── Tablet breakpoint (641px–900px) ─────────────────────────── */
-@media (min-width: 641px) and (max-width: 900px) {
+/* ── Small tablet breakpoint (641px–768px) ────────────────────── */
+@media (min-width: 641px) and (max-width: 768px) {
+  /* Game title */
+  #game-title {
+    position: fixed;
+    top: clamp(6px, 2vh, 14px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(2.6rem, 4.5vw, 3.6rem);
+    z-index: 800;
+    margin: 0;
+  }
+
+  /* Settings button — below title */
+  #settings-wrap {
+    position: fixed;
+    top: clamp(68px, 10vh, 96px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+  }
+
+  /* Current word display */
+  #current-word-display {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: clamp(140px, 16vh, 180px);
+    z-index: 800;
+    text-align: center;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-family: 'Notable', sans-serif;
+    max-width: 80vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* Score display — between buttons */
+  #score-display {
+    position: fixed;
+    bottom: clamp(90px, 11vh, 120px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 800;
+    text-align: center;
+    font-family: 'Limelight', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    pointer-events: none;
+  }
+
+  /* SUBMIT button */
+  #submit-word {
+    position: fixed;
+    bottom: clamp(52px, 8vh, 80px);
+    left: calc(50% - clamp(80px, 12vw, 150px));
+    transform: translateX(-50%);
+    z-index: 800;
+    background: none;
+    border: none;
+    box-shadow: none;
+    font-family: 'Limelight', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--submit-fg);
+    padding: 0;
+    margin: 0;
+  }
+
+  /* CLEAR button */
+  #clear-word {
+    position: fixed;
+    bottom: clamp(52px, 8vh, 80px);
+    left: calc(50% + clamp(80px, 12vw, 150px));
+    transform: translateX(-50%);
+    z-index: 800;
+    background: none;
+    border: none;
+    box-shadow: none;
+    font-family: 'Limelight', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--submit-fg);
+    padding: 0;
+    margin: 0;
+  }
+}
+
+/* ── Tablet breakpoint (769px–900px) ─────────────────────────── */
+@media (min-width: 769px) and (max-width: 900px) {
   /* Game title */
   #game-title {
     position: fixed;
@@ -236,7 +329,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: clamp(110px, 14vh, 160px);
+    bottom: clamp(140px, 16vh, 180px);
     z-index: 800;
     text-align: center;
     font-size: clamp(1.4rem, 3.5vw, 2.4rem);
@@ -250,7 +343,7 @@
   /* Score display — between buttons */
   #score-display {
     position: fixed;
-    bottom: clamp(60px, 9vh, 90px);
+    bottom: clamp(90px, 11vh, 120px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 800;
@@ -265,7 +358,7 @@
   #submit-word {
     position: fixed;
     bottom: clamp(52px, 8vh, 80px);
-    left: calc(50% - 120px);
+    left: calc(50% - clamp(80px, 12vw, 150px));
     transform: translateX(-50%);
     z-index: 800;
     background: none;
@@ -285,7 +378,7 @@
   #clear-word {
     position: fixed;
     bottom: clamp(52px, 8vh, 80px);
-    left: calc(50% + 120px);
+    left: calc(50% + clamp(80px, 12vw, 150px));
     transform: translateX(-50%);
     z-index: 800;
     background: none;
@@ -299,5 +392,28 @@
     color: var(--submit-fg);
     padding: 0;
     margin: 0;
+  }
+}
+
+/* ── Small mobile overrides (≤480px) ─────────────────────────── */
+@media (max-width: 480px) {
+  /* Current word display — tighter font, increased bottom clearance */
+  #current-word-display {
+    font-size: clamp(0.8rem, 6vw, 1.8rem);
+    bottom: clamp(150px, calc(env(safe-area-inset-bottom) + 22vh), 195px);
+  }
+
+  /* Score display — slightly lower to stay clear of word display */
+  #score-display {
+    bottom: clamp(80px, calc(env(safe-area-inset-bottom) + 11vh), 108px);
+  }
+
+  /* Submit / Clear — tighter horizontal spacing for narrow screens */
+  #submit-word {
+    left: calc(50% - 80px);
+  }
+
+  #clear-word {
+    left: calc(50% + 80px);
   }
 }
