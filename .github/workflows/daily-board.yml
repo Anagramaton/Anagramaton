@@ -2,7 +2,7 @@ name: Generate Daily Board
 
 on:
   schedule:
-    - cron: '0 5 * * *'   # 05:00 UTC = 12:00am Eastern Standard Time
+    - cron: '0 5 * * *'   # 05:00 UTC = 12:00am EST (UTC-5); fixed offset, not DST-adjusted
   workflow_dispatch:        # allow manual runs for testing
 
 permissions:

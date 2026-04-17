@@ -15,6 +15,8 @@ import { GRID_RADIUS as DEFAULT_RADIUS } from '../constants.js';
 import phraseHints from '../phraseHints.js';
 
 // ── Eastern Standard Time date (UTC-5) ──────────────────────────────────────
+// NOTE: This uses a fixed UTC-5 offset (EST). During summer, EST is UTC-4 (EDT),
+// but the workflow cron is also fixed at 05:00 UTC, so both stay in sync.
 const EST_OFFSET_MS = -5 * 60 * 60 * 1000;
 const nowEst = new Date(Date.now() + EST_OFFSET_MS);
 const year  = nowEst.getUTCFullYear();
@@ -23,9 +25,11 @@ const day   = String(nowEst.getUTCDate()).padStart(2, '0');
 const dateStr = `${year}-${month}-${day}`;
 
 // ── Deterministic, no-repeat phrase index ───────────────────────────────────
-// Cycles through all phraseHints entries sequentially, starting from 2025-01-01
-const EPOCH = new Date('2025-01-01T00:00:00Z');
-const daysSinceEpoch = Math.floor((Date.now() + EST_OFFSET_MS - EPOCH.getTime()) / (24 * 60 * 60 * 1000));
+// Epoch is 2025-01-01 midnight EST = 2025-01-01T05:00:00Z.
+// We count full 24-hour periods elapsed since that UTC moment so that
+// day boundaries align with midnight EST regardless of DST.
+const EPOCH_UTC_MS = Date.parse('2025-01-01T05:00:00Z');
+const daysSinceEpoch = Math.floor((Date.now() - EPOCH_UTC_MS) / (24 * 60 * 60 * 1000));
 const phraseIndex = ((daysSinceEpoch % phraseHints.length) + phraseHints.length) % phraseHints.length;
 
 console.log(`\n📅 Generating daily board for ${dateStr}`);
