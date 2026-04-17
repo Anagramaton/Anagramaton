@@ -1,6 +1,6 @@
 // scripts/generateBoards.mjs
 // Run with: npm run generate
-// Outputs:  prebuiltBoards.json  (in the main project folder)
+// Outputs:  prebuiltBoards.json  (a single daily board entry in the main project folder)
 
 import { writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -11,38 +11,55 @@ globalThis.performance ??= { now: () => Date.now() };
 globalThis.requestAnimationFrame = (fn) => setTimeout(fn, 0);
 
 import { generateBoardPure } from '../gridLogicPure.js';
+import { GRID_RADIUS as DEFAULT_RADIUS } from '../constants.js';
+import phraseHints from '../phraseHints.js';
 
-const NUM_BOARDS = 1; // how many unlimited boards to pre-generate
+// ── Eastern Standard Time date (UTC-5) ──────────────────────────────────────
+// NOTE: This uses a fixed UTC-5 offset (EST). During summer, EST is UTC-4 (EDT),
+// but the workflow cron is also fixed at 05:00 UTC, so both stay in sync.
+const EST_OFFSET_MS = -5 * 60 * 60 * 1000;
+const nowEst = new Date(Date.now() + EST_OFFSET_MS);
+const year  = nowEst.getUTCFullYear();
+const month = String(nowEst.getUTCMonth() + 1).padStart(2, '0');
+const day   = String(nowEst.getUTCDate()).padStart(2, '0');
+const dateStr = `${year}-${month}-${day}`;
 
-const boards = [];
+// ── Deterministic, no-repeat phrase index ───────────────────────────────────
+// Epoch is 2025-01-01 midnight EST = 2025-01-01T05:00:00Z.
+// We count full 24-hour periods elapsed since that UTC moment so that
+// day boundaries align with midnight EST regardless of DST.
+const EPOCH_UTC_MS = Date.parse('2025-01-01T05:00:00Z');
+const daysSinceEpoch = Math.floor((Date.now() - EPOCH_UTC_MS) / (24 * 60 * 60 * 1000));
+const phraseIndex = ((daysSinceEpoch % phraseHints.length) + phraseHints.length) % phraseHints.length;
 
-console.log(`\n🎲 Generating ${NUM_BOARDS} boards...\n`);
+console.log(`\n📅 Generating daily board for ${dateStr}`);
+console.log(`   phraseIndex: ${phraseIndex} / ${phraseHints.length - 1}`);
+console.log(`   phrase: "${phraseHints[phraseIndex].phrases[0]}" / "${phraseHints[phraseIndex].phrases[1]}"\n`);
 
-for (let i = 0; i < NUM_BOARDS; i++) {
-  process.stdout.write(`  Board ${i + 1}/${NUM_BOARDS}... `);
-  const startMs = Date.now();
+process.stdout.write('  Generating board... ');
+const startMs = Date.now();
 
-  const { grid, placedWords, anagramList } = generateBoardPure();
+const result = generateBoardPure(DEFAULT_RADIUS, 'daily', phraseIndex);
 
-  const ms = Date.now() - startMs;
-  process.stdout.write(`✓ (${placedWords.length} words, ${ms}ms)\n`);
+const ms = Date.now() - startMs;
+process.stdout.write(`✓ (${result.placedWords.length} words, ${ms}ms)\n`);
 
-  boards.push({
-    id: i,
-    grid,
-    placedWords: placedWords.map(p => ({
-      word: p.word,
-      path: p.path,
-    })),
-    anagramList,
-    generatedAt: new Date().toISOString(),
-  });
-}
+const board = {
+  date:        dateStr,
+  phraseIndex,
+  grid:        result.grid,
+  placedWords: result.placedWords.map(p => ({ word: p.word, path: p.path })),
+  anagramList: result.anagramList,
+  seedPhrase:  result.seedPhrase,
+  seedPaths:   result.seedPaths,
+  seedHints:   result.seedHints,
+  generatedAt: new Date().toISOString(),
+};
 
 const outPath = join(dirname(fileURLToPath(import.meta.url)), '..', 'prebuiltBoards.json');
-writeFileSync(outPath, JSON.stringify(boards), 'utf8');
+writeFileSync(outPath, JSON.stringify(board, null, 2), 'utf8');
 
-const fileSizeKB = Math.round(JSON.stringify(boards).length / 1024);
+const fileSizeKB = Math.round(JSON.stringify(board).length / 1024);
 console.log(`\n✅ Done! Written to prebuiltBoards.json`);
-console.log(`   Boards generated: ${NUM_BOARDS}`);
+console.log(`   Date: ${dateStr}`);
 console.log(`   File size: ~${fileSizeKB}KB`);

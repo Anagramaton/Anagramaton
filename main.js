@@ -507,7 +507,7 @@ async function handleSubmitList() {
 // =============================
 // DOMContentLoaded Bootstrap
 // =============================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
   // ============================
   // ★ SPLASH SCREEN
@@ -705,7 +705,7 @@ window.addEventListener('grid:ready', () => {
   gameState.listLocked = false;
   updateScoreDisplay(0);
 
-  initializeGrid();
+  await initializeGrid();
 
   // --- Right panel visibility based on mode ---
   if (gameState.mode === 'daily') {
@@ -731,7 +731,7 @@ window.addEventListener('grid:ready', () => {
       ?.addEventListener('click', handleSubmitList);
     syncSubmitListButton();
 
-document.getElementById('new-game')?.addEventListener('click', () => {
+document.getElementById('new-game')?.addEventListener('click', async () => {
   baseTotal  = 0;
   bonusTotal = 0;
   totalScore = 0;
@@ -777,7 +777,7 @@ document.getElementById('new-game')?.addEventListener('click', () => {
       }
       syncSubmitListButton();
 
-      initializeGrid();
+      await initializeGrid();
 
       window.dispatchEvent(new Event('game:new'));
     });

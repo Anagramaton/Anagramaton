@@ -1,4 +1,4 @@
-import { generateSeededBoard } from './gridLogic.js';
+import { generateSeededBoard, placedWords } from './gridLogic.js';
 import { playSound } from './audioEngine.js';
 import { renderGrid } from './gridRenderer.js';
 import { gameState } from './gameState.js';
@@ -6,6 +6,7 @@ import { GRID_RADIUS } from './constants.js';
 import { areAxialNeighbors } from './utils.js';
 import { isValidWord } from './gameLogic.js';
 import { recomputeAllWordScores } from './scoreLogic.js';
+import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 
 export const DOM = {
   svg: document.getElementById('hex-grid'),
@@ -155,12 +156,77 @@ function handlePointerUp(e) {
 }
 
 // ============================================================================
+// Prebuilt board helpers (daily mode)
+// ============================================================================
+
+/** Returns today's date string in EST (UTC-5), e.g. "2026-04-17". */
+function getTodayEST() {
+  const EST_OFFSET_MS = -5 * 60 * 60 * 1000;
+  const nowEst = new Date(Date.now() + EST_OFFSET_MS);
+  const y = nowEst.getUTCFullYear();
+  const m = String(nowEst.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(nowEst.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+/** Fetches /prebuiltBoards.json and returns it if the date matches today, else null. */
+async function fetchTodaysPrebuiltBoard() {
+  try {
+    const res = await fetch('/prebuiltBoards.json');
+    if (!res.ok) return null;
+    const board = await res.json();
+    if (board.date !== getTodayEST()) return null;
+    return board;
+  } catch {
+    return null;
+  }
+}
+
+/** Kicks off the background board solver after a prebuilt board is loaded. */
+function runSolverInBackground(boardEntries, POOL) {
+  requestAnimationFrame(() => {
+    setTimeout(async () => {
+      try {
+        const { best10, finalTotal } = await solveExactNonBlocking({
+          POOL,
+          boardEntries,
+          TARGET: 10,
+          timeBudgetMs: 2500,
+          sliceMs: 16,
+          hardNodeCap: 600_000,
+          earlyAcceptRatio: 1.01,
+        });
+        if (best10?.length) {
+          gameState.boardTop10 = best10;
+          gameState.boardTop10Total = Number(finalTotal) || 0;
+          gameState.boardTop10Paths = best10.map(x => {
+            const be = boardEntries.find(b => b.word === x.word);
+            return be ? be.tiles.map(t => t.key) : [];
+          });
+        }
+      } catch (e) {
+        console.error('Exact solver error:', e);
+      } finally {
+        gameState._resolveBoardSolver?.();
+      }
+    }, 0);
+  });
+}
+
+// ============================================================================
 // Initialization
 // ============================================================================
 
-export function initializeGrid() {
+export async function initializeGrid() {
   gameState.totalScore = 0;
   gameState.gridReady = false;
+
+  // Pre-set dailyId synchronously so code that runs immediately after the
+  // (un-awaited) initializeGrid() call has a valid value, e.g. the
+  // already-completed-today localStorage check in main.js.
+  if (gameState.mode === 'daily') {
+    gameState.dailyId = getTodayEST().replace(/-/g, '_');
+  }
 
   gameState.boardSolverReady = new Promise((resolve) => {
     gameState._resolveBoardSolver = resolve;
@@ -168,7 +234,44 @@ export function initializeGrid() {
 
   tileElements.length = 0;
 
-  grid = generateSeededBoard(GRID_RADIUS, gameState);
+  let usedPrebuilt = false;
+
+  if (gameState.mode === 'daily') {
+    const board = await fetchTodaysPrebuiltBoard();
+    if (board) {
+      usedPrebuilt = true;
+      grid = board.grid;
+      gameState.dailyId            = board.date.replace(/-/g, '_');
+      gameState.seedPhrase         = board.seedPhrase;
+      gameState.seedPaths          = board.seedPaths;
+      gameState.seedHints          = board.seedHints;
+      gameState.anagramList        = board.anagramList ?? [];
+      gameState.phrasesFound       = { phrase1: false, phrase2: false };
+      gameState.phraseOccupiedKeys = null;
+      gameState.phraseAdjacentKeys = null;
+
+      const parts = (board.seedPhrase || '').split('/');
+      gameState.phraseCleanLetters = {
+        phrase1: (parts[0] || '').replace(/[^A-Za-z]/g, '').toUpperCase(),
+        phrase2: (parts[1] || '').replace(/[^A-Za-z]/g, '').toUpperCase(),
+      };
+
+      // Populate the shared placedWords array used by scoring/solver
+      placedWords.length = 0;
+      for (const pw of board.placedWords) {
+        placedWords.push({ word: pw.word, path: pw.path });
+      }
+
+      const boardEntries = buildBoardEntries(placedWords);
+      const { POOL } = buildPool(boardEntries);
+      runSolverInBackground(boardEntries, POOL);
+    }
+  }
+
+  if (!usedPrebuilt) {
+    grid = generateSeededBoard(GRID_RADIUS, gameState);
+  }
+
   gameState.grid = grid;
 
   renderGrid(grid, DOM.svg, tileElements, GRID_RADIUS);
