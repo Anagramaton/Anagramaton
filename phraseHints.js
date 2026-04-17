@@ -643,10 +643,10 @@ export default [
     phrases: ["NAPOLEON DYNAMITE",   "EMOTIONAL PENNY AD"],
     hints: {
       phrase1: [
-        "A steptool with empire delusions dropkicks a VHS tape with a lit fuse.",
+        "A steptool with empire delusions dropkicks a stick of gum with a lit fuse.",
       ],
       phrase2: [
-        "A blender of sad kleenex interviews Abe Lincoln for a 3am informercial."
+        "A blender of sad kleenex interviews a stone-cold Abe Lincoln for a 3am informercial."
       ]
     }
   },
@@ -654,10 +654,10 @@ export default [
     phrases: ["BACK AND FORTH",   "HARD KNOB FACT"],
     hints: {
       phrase1: [
-        "A turtle shell from the past races a wind up toy robot to the future.",
+        "A turtle shell from the past races a wind up toy robot from the future.",
       ],
       phrase2: [
-        "A frozen cannonball hammering the door handle into a chalkboard of written randomm truths."
+        "A frozen cannonball jiggling the door handle behind a chalkboard of written randomm truths."
       ]
     }
   }
