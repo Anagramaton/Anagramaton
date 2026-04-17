@@ -53,8 +53,13 @@ function placeDailyPhrasePair(grid, gridRadius, rng, state, maxTries = 100) {
   const maxTiles = coords.length;
   const pick = (n) => Math.floor(rng() * n);
 
+  const fixedIndex = (state.phraseIndex !== null && state.phraseIndex !== undefined)
+    ? state.phraseIndex
+    : null;
+
   for (let i = 0; i < maxTries; i++) {
-    const selected = phraseHints[pick(phraseHints.length)];
+    const idx = fixedIndex !== null ? fixedIndex : pick(phraseHints.length);
+    const selected = phraseHints[idx];
     const [rawA, rawB] = selected.phrases;
     const { hints } = selected;
 
@@ -107,9 +112,10 @@ function seededShuffle(arr, state) {
 // ─────────────────────────────────────────────────────────────────────────���───
 // PUBLIC ENTRY POINT
 // ─────────────────────────────────────────────────────────────────────────────
-export function generateBoardPure(gridRadius = DEFAULT_RADIUS, mode = 'unlimited') {
+export function generateBoardPure(gridRadius = DEFAULT_RADIUS, mode = 'unlimited', phraseIndex = null) {
   const state = {
     mode,
+    phraseIndex,
     seedPhrase: null,
     seedPaths:  null,
     seedHints:  null,
