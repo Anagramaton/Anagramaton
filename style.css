@@ -359,6 +359,8 @@ body[data-theme="dark"] #score-display {
   overflow: hidden;
   position: relative;
   background: transparent;
+  padding-top: clamp(140px, 16vh, 180px);
+  box-sizing: border-box;
 }
 
 /* Backdrop */
@@ -888,7 +890,7 @@ details#merged-words-details > summary {
    ========================================= */
 .side-toggle {
   position: fixed;
-  top: 95px;
+  top: clamp(110px, 15vh, 160px);
   padding: 0;
   border: 2.5px solid var(--side-toggle-border);
   background: var(--side-toggle-bg);
@@ -1116,10 +1118,10 @@ body[data-theme="dark"] .tile-point {
 }
 #score-display {
   position: fixed;
-  top: min(calc(50% + 345px), calc(100dvh - 56px));
+  bottom: clamp(16px, 3vh, 36px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 800;
+  z-index: 900;
   display: block;
   text-align: center;
   white-space: nowrap;
@@ -1129,14 +1131,15 @@ body[data-theme="dark"] .tile-point {
   background: none;
 
   font-family: 'Limelight', sans-serif;
-  font-size: 1.1rem;
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
   font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #000000;
+  letter-spacing: 0.04em;
+  color: var(--text);
 
   filter: none;
   transition: none;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Desktop current word display */
@@ -1315,10 +1318,10 @@ body[data-theme="dark"] .tile-point {
   color: #1a1a2e;
 }
 #settings-menu {
-  position: fixed;
-  bottom: 50%;
+  position: absolute;
+  top: calc(100% + 8px);
   left: 50%;
-  transform: translate(-50%, 50%);
+  transform: translateX(-50%);
   min-width: 200px;
   background: #1a1a2e;
   border: 2px solid #4cc9f0;
