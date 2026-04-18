@@ -1,7 +1,6 @@
 import { isValidWord } from './gameLogic.js';
 import { gameState } from './gameState.js';
 import { letterPoints, reuseMultipliers, anagramMultiplier, lengthMultipliers } from './constants.js';
-import { playAlert } from './main.js';
 
 // Track previous reuse counts so we only touch DOM when something changed
 const _prevReuseCount = new WeakMap();
@@ -16,12 +15,10 @@ export async function submitCurrentWord(tiles) {
   const word = tiles.map(t => t.letter).join('');
 
   if (word.length < 4) {
-    await playAlert('❌ Word must be at least 4 letters long.');
     return null;
   }
 
   if (!isValidWord(word)) {
-    await playAlert(`❌ "${word}" is not a valid word.`);
     return null;
   }
 

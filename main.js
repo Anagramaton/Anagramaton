@@ -308,8 +308,24 @@ function updateCurrentWordDisplay() {
   fitCurrentWord();
 }
 
-async function handleSubmitWordClick() {
+function rejectCurrentWord() {
+  const el = document.getElementById('current-word');
+  if (!el) { resetSelectionState(); return; }
+  el.classList.remove('word-shake');
+  // Force reflow so the animation restarts if called back-to-back
+  void el.offsetWidth;
+  el.classList.add('word-shake');
+  el.addEventListener('animationend', () => {
+    el.classList.remove('word-shake');
+    el.textContent = '';
+    resetSelectionState();
+  }, { once: true });
+}
+
+async function handleAutoSubmitWord() {
   const selectedTiles = gameState.selectedTiles || [];
+  if (selectedTiles.length === 0) return;
+
   const word = selectedTiles.map(t => t.letter).join('').toUpperCase();
 
   // ── Phrase match check (before word validation) ──────────
@@ -321,20 +337,18 @@ async function handleSubmitWordClick() {
   }
 
   if (submittedWords.size >= 10) {
-    await playAlert('❌ You can only keep 10 words in your list at a time.');
-    resetSelectionState();
+    rejectCurrentWord();
     return;
   }
 
   if (submittedWords.has(word)) {
-    await playAlert(`❌ You've already submitted "${word}".`);
-    resetSelectionState();
+    rejectCurrentWord();
     return;
   }
 
   const wordScore = await submitCurrentWord(selectedTiles);
   if (wordScore === null) {
-    resetSelectionState();
+    rejectCurrentWord();
     return;
   }
 
@@ -384,7 +398,6 @@ async function handleSubmitList() {
   gameState.listLocked = true;
 
   document.getElementById('submit-list')?.setAttribute('disabled', 'disabled');
-  document.getElementById('submit-word')?.setAttribute('disabled', 'disabled');
   (gameState.words || []).forEach(w => w?.removeBtn?.setAttribute?.('disabled', 'disabled'));
   syncSubmitListButton();
 
@@ -765,7 +778,6 @@ document.getElementById('new-game')?.addEventListener('click', async () => {
       if (h2) h2.textContent = 'YOUR WORDS';
 
       document.getElementById('submit-list')?.removeAttribute('disabled');
-      document.getElementById('submit-word')?.removeAttribute('disabled');
       document
         .querySelectorAll('#word-list button, #word-list [data-role="remove"]')
         .forEach(btn => btn.removeAttribute('disabled'));
@@ -796,21 +808,8 @@ document.getElementById('new-game')?.addEventListener('click', async () => {
 
   window.dispatchEvent(new Event('selection:changed'));
 
-  // --- General button + word actions ---
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('#submit-word');
-    if (btn) handleSubmitWordClick(e);
-  });
-
-  document.getElementById('clear-word')
-    ?.addEventListener('click', () => {
-      resetSelectionState();
-      const cw = document.getElementById('current-word');
-      if (cw) cw.textContent = '';
-      fitCurrentWord();
-    });
-
   window.addEventListener('selection:changed', updateCurrentWordDisplay);
+  window.addEventListener('word:autosubmit', handleAutoSubmitWord);
 
   // ====================================================
   // PANEL + BACKDROP HANDLING

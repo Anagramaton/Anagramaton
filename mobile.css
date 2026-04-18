@@ -116,49 +116,6 @@
   }
 }
 
-/* ── Submit / Clear buttons ───────────────────────────────────── */
-@media (max-width: 640px) {
-  #submit-word {
-    position: fixed;
-    bottom: clamp(24px, calc(env(safe-area-inset-bottom) + 4vh), 56px);
-    left: calc(50% - 90px);
-    transform: translateX(-50%);
-    z-index: 800;
-    background: none;
-    border: none;
-    box-shadow: none;
-    font-family: 'Limelight', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--submit-fg);
-    padding: 0;
-    margin: 0;
-  }
-  #submit-word:active { opacity: 0.6; }
-
-  #clear-word {
-    position: fixed;
-    bottom: clamp(24px, calc(env(safe-area-inset-bottom) + 4vh), 56px);
-    left: calc(50% + 90px);
-    transform: translateX(-50%);
-    z-index: 800;
-    background: none;
-    border: none;
-    box-shadow: none;
-    font-family: 'Limelight', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--submit-fg);
-    padding: 0;
-    margin: 0;
-  }
-  #clear-word:active { opacity: 0.6; }
-}
-
 /* ── Settings button — mobile: top centre below game title ── */
 @media (max-width: 640px) {
   #settings-wrap {
@@ -259,45 +216,5 @@
     font-size: 1.8rem;
     font-weight: 700;
     pointer-events: none;
-  }
-
-  /* SUBMIT button */
-  #submit-word {
-    position: fixed;
-    bottom: clamp(52px, 8vh, 80px);
-    left: calc(50% - 120px);
-    transform: translateX(-50%);
-    z-index: 800;
-    background: none;
-    border: none;
-    box-shadow: none;
-    font-family: 'Limelight', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--submit-fg);
-    padding: 0;
-    margin: 0;
-  }
-
-  /* CLEAR button */
-  #clear-word {
-    position: fixed;
-    bottom: clamp(52px, 8vh, 80px);
-    left: calc(50% + 120px);
-    transform: translateX(-50%);
-    z-index: 800;
-    background: none;
-    border: none;
-    box-shadow: none;
-    font-family: 'Limelight', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--submit-fg);
-    padding: 0;
-    margin: 0;
   }
 }

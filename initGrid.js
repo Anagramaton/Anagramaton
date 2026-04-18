@@ -153,6 +153,10 @@ function handlePointerUp(e) {
   isDragging = false;
   lastHoverTile = null;
   updateWordPreview();
+  // Auto-submit when drag ends, if any tiles are selected
+  if ((gameState.selectedTiles || []).length > 0) {
+    window.dispatchEvent(new Event('word:autosubmit'));
+  }
 }
 
 // ============================================================================
@@ -290,12 +294,6 @@ export async function initializeGrid() {
     DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
     window.addEventListener('pointerup', handlePointerUp);
     DOM.svg.dataset.swipeListeners = 'true';
-  }
-
-  const clearButton = document.getElementById('clear-word');
-  if (clearButton && !clearButton.dataset.listener) {
-    clearButton.addEventListener('click', clearCurrentSelection);
-    clearButton.dataset.listener = 'true';
   }
 
   requestAnimationFrame(() => {
