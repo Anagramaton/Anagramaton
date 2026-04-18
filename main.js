@@ -20,6 +20,46 @@ let audioUnlocked = false;
 let audioReadyPromise = Promise.resolve();
 // ============================================================
 
+// ============================================================
+// OVERLAY REPOSITIONING — keeps title, score and word display
+// visually anchored to the hex grid at every viewport size.
+// ============================================================
+function repositionOverlays() {
+  const board = document.querySelector('#hex-grid #board');
+  if (!board) return;
+
+  const rect = board.getBoundingClientRect();
+  const vh   = window.innerHeight;
+
+  // Expose grid geometry as CSS custom properties so CSS rules can
+  // use them as fallbacks or fine-tune spacing declaratively.
+  const root = document.documentElement;
+  root.style.setProperty('--grid-top-px',      `${rect.top}px`);
+  root.style.setProperty('--grid-bottom-px',   `${rect.bottom}px`);
+  root.style.setProperty('--grid-below-px',    `${vh - rect.bottom}px`);
+  root.style.setProperty('--grid-center-y-px', `${rect.top + rect.height / 2}px`);
+
+  // Set inline styles so they override every CSS breakpoint rule.
+  const wordDisplay = document.getElementById('current-word-display');
+  if (wordDisplay) {
+    wordDisplay.style.top    = `${Math.min(rect.bottom + 8, vh - 112)}px`;
+    wordDisplay.style.bottom = 'auto';
+  }
+
+  const scoreDisplay = document.getElementById('score-display');
+  if (scoreDisplay) {
+    scoreDisplay.style.bottom = `${Math.max(vh - rect.bottom - 64, 8)}px`;
+    scoreDisplay.style.top    = 'auto';
+  }
+}
+
+// Wire up reposition on every geometry change.
+window.addEventListener('resize',            repositionOverlays);
+window.addEventListener('orientationchange', repositionOverlays);
+// Also reposition whenever a new grid is ready (initial load + new game).
+window.addEventListener('grid:ready', () => requestAnimationFrame(repositionOverlays));
+// ============================================================
+
 function applySavedTheme() {
   const theme = localStorage.getItem('theme') || 'light';
   const access = localStorage.getItem('accessibility') || 'normal';

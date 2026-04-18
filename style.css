@@ -1116,7 +1116,9 @@ body[data-theme="dark"] .tile-point {
 }
 #score-display {
   position: fixed;
-  bottom: clamp(16px, 3vh, 36px);
+  /* JS sets --grid-below-px (space below grid) and overrides this with an
+     inline style; the calc() here is a reasonable fallback before JS runs. */
+  bottom: max(calc(var(--grid-below-px, 80px) - 52px), 8px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 900;
@@ -1146,7 +1148,10 @@ body[data-theme="dark"] .tile-point {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: min(calc(50% + 290px), calc(100dvh - 112px));
+    /* JS sets --grid-bottom-px and overrides with an inline style; the
+       calc() here is a fallback before JS runs (≈ same as old 50% + 290px). */
+    top: min(calc(var(--grid-bottom-px, calc(50% + 282px)) + 8px), calc(100dvh - 112px));
+    bottom: auto;
     z-index: 800;
     display: block;
     text-align: center;

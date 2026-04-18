@@ -77,7 +77,10 @@
 @media (max-width: 640px) {
   #score-display {
     position: fixed;
-    bottom: clamp(80px, calc(env(safe-area-inset-bottom) + 11vh), 110px);
+    /* JS overrides bottom via inline style; fallback keeps it near the
+       lower quarter of the viewport before the first reposition runs. */
+    bottom: max(calc(var(--grid-below-px, 92px) - 52px), 8px);
+    top: auto;
     left: 50%;
     transform: translateX(-50%);
     z-index: 800;
@@ -102,7 +105,9 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: clamp(120px, calc(env(safe-area-inset-bottom) + 17vh), 170px);
+    /* JS sets --grid-bottom-px and overrides with an inline style. */
+    top: min(calc(var(--grid-bottom-px, calc(100dvh - 154px)) + 8px), calc(100dvh - 112px));
+    bottom: auto;
     z-index: 800;
     display: block;
     text-align: center;
@@ -193,7 +198,9 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: clamp(110px, 14vh, 160px);
+    /* JS overrides via inline style; fallback before first reposition. */
+    top: min(calc(var(--grid-bottom-px, calc(100dvh - 152px)) + 8px), calc(100dvh - 112px));
+    bottom: auto;
     z-index: 800;
     text-align: center;
     font-size: clamp(1.4rem, 3.5vw, 2.4rem);
@@ -207,7 +214,9 @@
   /* Score display — between buttons */
   #score-display {
     position: fixed;
-    bottom: clamp(60px, 9vh, 90px);
+    /* JS overrides via inline style; fallback before first reposition. */
+    bottom: max(calc(var(--grid-below-px, 92px) - 52px), 8px);
+    top: auto;
     left: 50%;
     transform: translateX(-50%);
     z-index: 800;
