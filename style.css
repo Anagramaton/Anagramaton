@@ -1117,8 +1117,9 @@ body[data-theme="dark"] .tile-point {
 #score-display {
   position: fixed;
   /* JS sets --grid-below-px (space below grid) and overrides this with an
-     inline style; the calc() here is a reasonable fallback before JS runs. */
-  bottom: max(calc(var(--grid-below-px, 80px) - 52px), 8px);
+     inline style; the calc() here is a reasonable fallback before JS runs.
+     The offset (64px) matches SCORE_DISPLAY_OFFSET_PX in main.js. */
+  bottom: max(calc(var(--grid-below-px, 80px) - 64px), 8px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 900;

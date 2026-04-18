@@ -78,8 +78,9 @@
   #score-display {
     position: fixed;
     /* JS overrides bottom via inline style; fallback keeps it near the
-       lower quarter of the viewport before the first reposition runs. */
-    bottom: max(calc(var(--grid-below-px, 92px) - 52px), 8px);
+       lower quarter of the viewport before the first reposition runs.
+       The offset (64px) matches SCORE_DISPLAY_OFFSET_PX in main.js. */
+    bottom: max(calc(var(--grid-below-px, 92px) - 64px), 8px);
     top: auto;
     left: 50%;
     transform: translateX(-50%);
@@ -214,8 +215,9 @@
   /* Score display — between buttons */
   #score-display {
     position: fixed;
-    /* JS overrides via inline style; fallback before first reposition. */
-    bottom: max(calc(var(--grid-below-px, 92px) - 52px), 8px);
+    /* JS overrides via inline style; fallback before first reposition.
+       The offset (64px) matches SCORE_DISPLAY_OFFSET_PX in main.js. */
+    bottom: max(calc(var(--grid-below-px, 92px) - 64px), 8px);
     top: auto;
     left: 50%;
     transform: translateX(-50%);

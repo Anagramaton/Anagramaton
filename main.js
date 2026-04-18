@@ -24,6 +24,16 @@ let audioReadyPromise = Promise.resolve();
 // OVERLAY REPOSITIONING — keeps title, score and word display
 // visually anchored to the hex grid at every viewport size.
 // ============================================================
+// Pixel gap between the grid bottom and the top of the word display.
+const WORD_DISPLAY_GAP_PX = 8;
+// How far below the grid bottom the score display's bottom edge sits.
+// Larger value = score display appears higher up (closer to word display).
+const SCORE_DISPLAY_OFFSET_PX = 64;
+// Minimum clearance from the viewport bottom edge for either overlay.
+const OVERLAY_MIN_BOTTOM_PX = 8;
+// Maximum distance from the viewport bottom that the word display may reach.
+const WORD_DISPLAY_MAX_FROM_BOTTOM_PX = 112;
+
 function repositionOverlays() {
   const board = document.querySelector('#hex-grid #board');
   if (!board) return;
@@ -42,13 +52,21 @@ function repositionOverlays() {
   // Set inline styles so they override every CSS breakpoint rule.
   const wordDisplay = document.getElementById('current-word-display');
   if (wordDisplay) {
-    wordDisplay.style.top    = `${Math.min(rect.bottom + 8, vh - 112)}px`;
+    const wordDisplayTop = Math.min(
+      rect.bottom + WORD_DISPLAY_GAP_PX,
+      vh - WORD_DISPLAY_MAX_FROM_BOTTOM_PX
+    );
+    wordDisplay.style.top    = `${wordDisplayTop}px`;
     wordDisplay.style.bottom = 'auto';
   }
 
   const scoreDisplay = document.getElementById('score-display');
   if (scoreDisplay) {
-    scoreDisplay.style.bottom = `${Math.max(vh - rect.bottom - 64, 8)}px`;
+    const scoreDisplayBottom = Math.max(
+      vh - rect.bottom - SCORE_DISPLAY_OFFSET_PX,
+      OVERLAY_MIN_BOTTOM_PX
+    );
+    scoreDisplay.style.bottom = `${scoreDisplayBottom}px`;
     scoreDisplay.style.top    = 'auto';
   }
 }
