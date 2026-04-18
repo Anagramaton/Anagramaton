@@ -359,8 +359,6 @@ body[data-theme="dark"] #score-display {
   overflow: hidden;
   position: relative;
   background: transparent;
-  padding-top: clamp(140px, 16vh, 180px);
-  box-sizing: border-box;
 }
 
 /* Backdrop */
