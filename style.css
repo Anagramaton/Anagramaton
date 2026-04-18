@@ -1117,9 +1117,7 @@ body[data-theme="dark"] .tile-point {
 #score-display {
   position: fixed;
   top: min(calc(50% + 345px), calc(100dvh - 56px));
-  /* Center between #submit-word (left: 50%-230px, ~160px wide) and
-     #clear-word (left: 50%+60px, ~130px wide): midpoint ≈ 50%-15px */
-  left: calc(50% - 15px);
+  left: 50%;
   transform: translateX(-50%);
   z-index: 800;
   display: block;
@@ -1191,6 +1189,19 @@ body[data-theme="dark"] .tile-point {
 @keyframes puff-out-hor {
   0%   { transform: scale(4); filter: blur(0px); opacity: 1; }
   100% { transform: scale(5); filter: blur(4px); opacity: 0; }
+}
+
+/* Shake/reject animation for #current-word */
+.word-shake {
+  animation: word-shake 0.4s ease-in-out both;
+}
+@keyframes word-shake {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-8px); }
+  40%  { transform: translateX(8px); }
+  60%  { transform: translateX(-6px); }
+  80%  { transform: translateX(6px); }
+  100% { transform: translateX(0); }
 }
 
 /* =========================================
@@ -1365,95 +1376,6 @@ body[data-theme="dark"] .tile-point {
 }
 
 
-/* =========================================
-   Desktop submit / clear buttons
-   ========================================= */
-@media (min-width: 901px) {
-
-  /* ── Shared hex-stamp base ── */
-  #submit-word,
-  #clear-word {
-    position: fixed;
-    top: min(calc(50% + 345px), calc(100dvh - 56px));
-    z-index: 900;
-    transform: none;
-
-    font-family: 'Limelight', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-
-    clip-path: polygon(
-      14px 0%,
-      calc(100% - 14px) 0%,
-      100% 50%,
-      calc(100% - 14px) 100%,
-      14px 100%,
-      0% 50%
-    );
-
-    padding: 12px 38px 12px 34px;
-    border: none;
-    cursor: pointer;
-    transition:
-      transform 0.12s ease,
-      filter 0.12s ease,
-      letter-spacing 0.15s ease;
-  }
-
-  /* ── SUBMIT — reuse stage 2: cyan fill, navy text ── */
-  #submit-word {
-    left: calc(50% - 230px);
-    background: linear-gradient(160deg, #61bfd8 0%, #3d6470 45%, #4db2d1 100%);
-    color: #fbfbff;
-    filter: drop-shadow(2px 4px 0px #0a5a72)
-            drop-shadow(10px 10px 10px rgba(76, 201, 240, 0.25));
-  }
-  #submit-word:hover {
-    transform: translateY(-3px) scale(1.05);
-    letter-spacing: 0.32em;
-    filter: drop-shadow(2px 6px 0px #0a5a72)
-            drop-shadow(10px 10px 18px rgba(76, 201, 240, 0.55));
-  }
-  #submit-word:active {
-    transform: translateY(2px) scale(0.97);
-    filter: drop-shadow(10px 1px 10px #0a5a72);
-  }
-
-  /* ── CLEAR — reuse stage 3: navy fill, cyan text ── */
-  #clear-word {
-    left: calc(50% + 60px);
-    background: linear-gradient(160deg, #464f79 0%, #1a1a2e 45%, #2d305f 100%);
-    color: #4cc9f0;
-    filter: drop-shadow(2px 4px 0px #050810)
-            drop-shadow(10px 10px 10px rgba(26, 26, 46, 0.6));
-  }
-  #clear-word:hover {
-    transform: translateY(-3px) scale(1.05);
-    letter-spacing: 0.32em;
-    color: #7ee8ff;
-    filter: drop-shadow(2px 6px 0px #050810)
-            drop-shadow(10px 10px 16px rgba(76, 201, 240, 0.4));
-  }
-  #clear-word:active {
-    transform: translateY(2px) scale(0.97);
-    filter: drop-shadow(10px 1px 10px #050810);
-  }
-}
-
-/* ── Dark mode button overrides ── */
-body[data-theme="dark"] #submit-word {
-  background: linear-gradient(160deg, #5dcfed 0%, #3ab8e0 45%, #1a9abf 100%);
-  color: #0a0c12;
-  filter: drop-shadow(2px 4px 0px #0a4a60)
-          drop-shadow(0 0 14px rgba(76, 201, 240, 0.4));
-}
-body[data-theme="dark"] #clear-word {
-  background: linear-gradient(160deg, #1a1f32 0%, #0d1018 45%, #070a12 100%);
-  color: #4cc9f0;
-  filter: drop-shadow(2px 4px 0px #020408)
-          drop-shadow(0 0 12px rgba(76, 201, 240, 0.25));
-}
 
 /* =========================================
    Splash Screen

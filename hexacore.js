@@ -2698,12 +2698,6 @@ function triggerGameOver() {
   const titleEl = document.getElementById('game-title');
   if (titleEl) titleEl.textContent = 'ANAGRAMATON';
 
-  // Restore SUBMIT/CLEAR buttons for when the player returns to main mode
-  const submitBtn = document.getElementById('submit-word');
-  const clearBtn  = document.getElementById('clear-word');
-  if (submitBtn) submitBtn.style.display = '';
-  if (clearBtn)  clearBtn.style.display  = '';
-
   removeHud();
   showGameOver();
 }
@@ -3033,12 +3027,6 @@ export function startHexacore() {
   const titleEl = document.getElementById('game-title');
   if (titleEl) titleEl.textContent = 'HEXACORE';
 
-  // Hide SUBMIT/CLEAR — Hexacore auto-submits on drag release
-  const submitBtn = document.getElementById('submit-word');
-  const clearBtn  = document.getElementById('clear-word');
-  if (submitBtn) submitBtn.style.display = 'none';
-  if (clearBtn)  clearBtn.style.display  = 'none';
-
   ensureHud();
   updateHud();
   updateLevelHud();
@@ -3073,11 +3061,6 @@ export function stopHexacore() {
 
   const titleEl = document.getElementById('game-title');
   if (titleEl) titleEl.textContent = 'ANAGRAMATON';
-
-  const submitBtn = document.getElementById('submit-word');
-  const clearBtn  = document.getElementById('clear-word');
-  if (submitBtn) submitBtn.style.removeProperty('display');
-  if (clearBtn)  clearBtn.style.removeProperty('display');
 }
 
 /* ── Standalone Hexacore Leaderboard Modal (window.hxLbModal) ───── */
