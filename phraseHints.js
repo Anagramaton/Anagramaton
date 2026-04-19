@@ -585,17 +585,6 @@ export default [
     }
   },
   {
-    phrases: ["A LEAGUE OF THEIR OWN",   "WIENER HAUL FOOTAGE"],
-    hints: {
-      phrase1: [
-        "A row of left footed bowling shoes asking for signed autographs from the right shoe.",
-      ],
-      phrase2: [
-        "An exhausted dachshund reviews all purchased items to a picnic basket in the woods where filmed the Blair Witch."
-      ]
-    }
-  },
-  {
     phrases: ["NAPOLEON DYNAMITE",   "NEON PINATA MELODY"],
     hints: {
       phrase1: [
