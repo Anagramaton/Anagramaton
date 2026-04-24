@@ -36,10 +36,10 @@ export default [
     phrases: ["THANK GOD ITS FRIDAY",   "FART SHAKING ODDITY"],
     hints: {
       phrase1: [
-      "A verbal tip jar from the capital letter of existence heading for a three day weekend. "
+      "A verbal tip jar bets a capital letter of existence presents the beginning of a three day weekend."
       ],
       phrase2: [
-        "A whoopie cushions orchestra vibrates a glass of nerves all over a Ripleys Believe It Or Not exhibit."
+        "A whoopie cushion orchestra vibrates a glass of nerves with a Ripleys Believe It Or Not exhibit."
       ]
     }
   },
@@ -47,10 +47,10 @@ export default [
     phrases: ["DWELL ON THE PAST",   "TOWN DEATH SPELL"],
     hints: {
       phrase1: [
-        "An armchair roots itself to the carpet beside a film reel rewinding last summer."
+        "A mind renting space to one idea of memory-owned property."
       ],
       phrase2: [
-        "A cluster of HOAs chained to a crate of crossed out life entries and a runestone engraved Merlin and Morgan le Fay."
+        "A cluster of HOAs chained to a crate of crossed out life entries protected by an engraved runestone featuring Merlin and Morgan le Fay."
       ]
     }
   },
@@ -69,7 +69,7 @@ export default [
     phrases: ["A GRAD TOWNHOUSE",   "UNAWARE HOTDOGS"],
     hints: {
       phrase1: [
-        " .",
+        "A degree of separation from childhood wrestling with a residence with attachment issues.",
       ],
       phrase2: [
         "A blindfolded clipboard listing items on top of crate of franked franks.",
@@ -88,24 +88,24 @@ export default [
     }
   },
   {
-    phrases: ["CHOIRMASTERS FROG",   "GHOSTFACE MIRRORS"],
+    phrases: ["CHOIR MASTERS FROG",   "GHOSTFACE MIRRORS"],
     hints: {
       phrase1: [
         "Leaders who raise the bar(itone) on a leap of faith with legs.",
       ],
       phrase2: [
-        "A mask of missing features that throws voices to a corridor of reflections.",
+        "A mask of missing features and voices thrown into a corridor of reflections.",
       ]
     }
   },
   {
-    phrases: ["SCHOOLMASTER",   "ALMOST CHORES"],
+    phrases: ["SCHOOLMASTER",   "CLAM SHOOTERS"],
     hints: {
       phrase1: [
         "A courtroom of desks obeys the gavel of a ruler with a taste for detention."
       ],
       phrase2: [
-        "A half-stitched flag missing its final stripe beside a laundry basket full of socks on strike.",
+        "A shelled shut secret of fingers turning intention into motion.",
       ]
     }
   },
@@ -116,7 +116,7 @@ export default [
         "A gumshoe-librarian chews through headlines, a zipper of commas clips the middle, and a clothesline of fine-print airs yesterdays alibis.."
       ],
       phrase2: [
-        "A pressure valve kettle steam forces a caged hamsters stationary motion that fuels a jousting red pen warrior.",
+        "A moment pressing too hard on everything at once over a caged hamsters stationary motion that fueled the joust of a red pen warrior.",
       ]
     }
   },
@@ -124,10 +124,10 @@ export default [
     phrases: ["ALIEN TRAMP",   "ANAL PERMIT"],
     hints: {
       phrase1: [
-        "A passport stamped from another sky wearing a coat that has outlived its address.",
+        "A passport stamped from another sky riding a path that erases those who take it.",
       ],
       phrase2: [
-        "A one-way-out tunnel of judgment looking for a sealed approval upon a successful inspection."
+        "A one-way-out tunnel of judgment looking for approval of a successful inspection."
       ]
     }
   },
@@ -149,7 +149,7 @@ export default [
         "He's responsible for turning gangsters into philosophers and New York streets into confessionals.",
       ],
       phrase2: [
-        "A mirror that eats faces whole while drowning in a black tide swallowing rooftops ."
+        "A mirror that eats faces whole while drowning in a black tide swallowing rooftops."
       ]
     }
   },
@@ -234,7 +234,7 @@ export default [
     phrases: ["BLOW A FUSE",   "WOEFUL ABS"],
     hints: {
       phrase1: [
-        "An exhausted birthday candle attached to a hissing string with an expiration date."
+        "An exhausted birthday candle attached to a hissing shoelace with an expiration date."
       ],
       phrase2: [
         "The braying sobs of a pessimistic ass protected by a brick wall of stomach crunches ."
@@ -245,7 +245,7 @@ export default [
     phrases: ["CAUSE AND EFFECT",   "NUDEST FACE CAFE"],
     hints: {
       phrase1: [
-        "A spark struck from flint over the signs constant flicker of a town with power lost.",
+        "A spark struck from flint over a signs constant flicker of a town with power lost.",
       ],
       phrase2: [
         "A sunbathed skeleteon wears a painted mask waiting for a $5 milk shake in a car shaped booth.",
@@ -253,13 +253,13 @@ export default [
     }
   },
   {
-    phrases: ["BEAT AROUND THE BUSH",   "BATHTUB SUNDAE HERO"],
+    phrases: ["HUSBAND THEREABOUT",   "BATHTUB SUNDAE HERO"],
     hints: {
       phrase1: [
-        "A fist pump in BPMs orbits a tangled hedge that waits untouched at the center of the path.",
+        "A personal role turned individuality into coordination located in the static between two radio stations.",
       ],
       phrase2: [
-        "A basin collecting still water in porcelain slides down a mountain of syrup and cream while a cape figure of courage stands ready at the rim."
+        "A basin collecting still water in porcelain slides down a mountain of syrup and cream while cape & courage stands ready at the rim."
       ]
     }
   },
@@ -422,7 +422,7 @@ export default [
     phrases: ["ELECTION RESULTS",   "LIES LETS RECOUNT"],
     hints: {
       phrase1: [
-        "A tuxedoed ballot box argues with a crystal fortune teller inside a glass dome of predictions.",
+        "A tuxedoed ballot box argues with a fortune tellers crystal ball predictions.",
       ],
       phrase2: [
         "A puppet with crossed fingers bargains with a stripper double checking their tips at shifts end."
