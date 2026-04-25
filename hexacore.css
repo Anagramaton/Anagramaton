@@ -2,7 +2,13 @@
    hexacore.css — Styles for Hexacore endless mode
    ================================================================ */
 
-
+/* ── Ember tile — INFERNO (unmistakably unique fire) ── */
+.hx-ember {
+  fill: url(#hx-ember-gradient);
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: hx-ember-inferno 5.9s steps(2, end) infinite;
+}
 
 @keyframes hx-ember-inferno {
   0%   {
