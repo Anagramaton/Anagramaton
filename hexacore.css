@@ -7,7 +7,7 @@
   fill: url(#hx-ember-gradient);
   transform-box: fill-box;
   transform-origin: center bottom;
-  animation: hx-ember-inferno 0.9s steps(1, end) infinite;
+  animation: hx-ember-inferno 4.9s steps(1, end) infinite;
 }
 
 @keyframes hx-ember-inferno {
