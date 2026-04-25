@@ -1292,8 +1292,8 @@ body[data-theme="dark"] .tile-point {
 #settings-wrap {
   position: fixed;
   top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 20%;
+  transform: none;
   z-index: 1100;
 }
 #settings-btn {
