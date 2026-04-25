@@ -7,7 +7,7 @@
   fill: url(#hx-ember-gradient);
   transform-box: fill-box;
   transform-origin: center bottom;
-  animation: hx-ember-inferno 4.9s steps(1, end) infinite;
+  animation: hx-ember-inferno 19.9s steps(1, end) infinite;
 }
 
 @keyframes hx-ember-inferno {
@@ -92,7 +92,7 @@
 /* ── Prism tile — rainbow shimmer ──────────────────────────────── */
 .hx-prism {
   fill: url(#hx-prism-gradient);
-  animation: hx-prism-shimmer 2s linear infinite;
+  animation: hx-prism-shimmer 12s linear infinite;
 }
 @keyframes hx-prism-shimmer {
   0%   { filter: hue-rotate(0deg)   drop-shadow(0 0 6px rgba(180, 100, 255, 0.7)); }
@@ -104,7 +104,7 @@
 .hx-digraph {
   fill: url(#hx-digraph-gradient);
   filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.8));
-  animation: hx-digraph-pulse 2s ease-in-out infinite alternate;
+  animation: hx-digraph-pulse 12s ease-in-out infinite alternate;
 }
 @keyframes hx-digraph-pulse {
   from { filter: drop-shadow(0 0 4px rgba(13, 148, 136, 0.7)); }
@@ -122,7 +122,7 @@
 .hx-digraph-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-digraph-spawn-anim 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-digraph-spawn-anim 10.5s cubic-bezier(10.34, 10.56, 10.64, 1) forwards;
 }
 
 /* ── Rune tile — dark purple ───────────────────────────────────── */
@@ -477,7 +477,7 @@ body.hx-active #settings-btn {
   100% { opacity: 0;   transform: scale(0.25); }
 }
 .hx-tile-removing {
-  animation: hx-tile-pop-out 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  animation: hx-tile-pop-out 4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -495,8 +495,8 @@ body.hx-active #settings-btn {
 /* Replaces the single animation with pop-out + ember burst running together */
 .hx-consumed-ember {
   animation:
-    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-ember-burst   0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+    hx-tile-pop-out  4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-ember-burst   4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -507,8 +507,8 @@ body.hx-active #settings-btn {
 }
 .hx-consumed-prism {
   animation:
-    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-prism-rainbow 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+    hx-tile-pop-out  4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-prism-rainbow 4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -519,8 +519,8 @@ body.hx-active #settings-btn {
 }
 .hx-consumed-rune {
   animation:
-    hx-tile-pop-out    0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-rune-implosion  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+    hx-tile-pop-out    4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-rune-implosion  4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -570,7 +570,7 @@ body.hx-active #settings-btn {
 .hx-prism-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-prism-spawn-anim 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-prism-spawn-anim 0.55s cubic-bezier(10.34, 10.56, 10.64, 1) forwards;
 }
 
 @keyframes hx-rune-spawn-anim {
@@ -600,7 +600,7 @@ body.hx-active #hex-grid {
 .hx-gem-emerald {
   fill: url(#hx-gem-emerald-gradient);
   filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.85));
-  animation: hx-gem-emerald-pulse 1.6s ease-in-out infinite alternate;
+  animation: hx-gem-emerald-pulse 11.6s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-emerald-pulse {
   from { filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.7)); }
@@ -610,7 +610,7 @@ body.hx-active #hex-grid {
 /* ── Gold Gem — warm amber glow, shimmer ───────────────────────── */
 .hx-gem-gold {
   fill: url(#hx-gem-gold-gradient);
-  animation: hx-gem-gold-shimmer 1.4s ease-in-out infinite alternate;
+  animation: hx-gem-gold-shimmer 11.4s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-gold-shimmer {
   0%   { filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.8)); }
@@ -621,7 +621,7 @@ body.hx-active #hex-grid {
 /* ── Sapphire Gem — blue glow shimmer ──────────────────────────── */
 .hx-gem-sapphire {
   fill: url(#hx-gem-sapphire-gradient);
-  animation: hx-gem-sapphire-shimmer 1.5s ease-in-out infinite alternate;
+  animation: hx-gem-sapphire-shimmer 11.5s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-sapphire-shimmer {
   0%   { filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); }
@@ -632,7 +632,7 @@ body.hx-active #hex-grid {
 /* ── Pearl Gem — soft white/cream glow, gentle pulse ───────────── */
 .hx-gem-pearl {
   fill: url(#hx-gem-pearl-gradient);
-  animation: hx-gem-pearl-pulse 1.8s ease-in-out infinite alternate;
+  animation: hx-gem-pearl-pulse 11.8s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-pearl-pulse {
   from { filter: drop-shadow(0 0 4px rgba(255, 245, 230, 0.7)); }
@@ -642,7 +642,7 @@ body.hx-active #hex-grid {
 /* ── Tanzanite Gem — deep violet-blue shimmer ───────────────────── */
 .hx-gem-tanzanite {
   fill: url(#hx-gem-tanzanite-gradient);
-  animation: hx-gem-tanzanite-shimmer 1.3s ease-in-out infinite alternate;
+  animation: hx-gem-tanzanite-shimmer 11.3s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-tanzanite-shimmer {
   0%   { filter: drop-shadow(0 0 5px rgba(67, 20, 180, 0.8)); }
@@ -653,7 +653,7 @@ body.hx-active #hex-grid {
 /* ── Ruby Gem — ruby red pulse ──────────────────────────────────── */
 .hx-gem-ruby {
   fill: url(#hx-gem-ruby-gradient);
-  animation: hx-gem-ruby-pulse 1.1s ease-in-out infinite alternate;
+  animation: hx-gem-ruby-pulse 11.1s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-ruby-pulse {
   0%   { filter: drop-shadow(0 0 6px rgba(185, 28, 28, 0.8)); }
@@ -664,7 +664,7 @@ body.hx-active #hex-grid {
 
 .hx-gem-diamond {
   fill: url(#hx-gem-diamond-gradient);
-  animation: hx-gem-diamond-sparkle 1.2s ease-in-out infinite alternate;
+  animation: hx-gem-diamond-sparkle 11.2s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-diamond-sparkle {
   0%   { filter: drop-shadow(0 0 6px rgba(165, 243, 252, 0.8)); }
@@ -689,7 +689,7 @@ body.hx-active #hex-grid {
 .hx-gem-emerald-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-emerald-spawn-anim 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-emerald-spawn-anim 10.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-gold-spawn-anim {
@@ -703,7 +703,7 @@ body.hx-active #hex-grid {
 .hx-gem-gold-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-gold-spawn-anim 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-gold-spawn-anim 10.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-sapphire-spawn-anim {
@@ -719,7 +719,7 @@ body.hx-active #hex-grid {
 .hx-gem-sapphire-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-sapphire-spawn-anim 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-sapphire-spawn-anim 10.62s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-diamond-spawn-anim {
@@ -740,7 +740,7 @@ body.hx-active #hex-grid {
 .hx-gem-diamond-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-diamond-spawn-anim 0.72s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-diamond-spawn-anim 10.72s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Pearl spawn — soft fade-in float */
@@ -755,7 +755,7 @@ body.hx-active #hex-grid {
 .hx-gem-pearl-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-pearl-spawn-anim 0.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-pearl-spawn-anim 10.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Tanzanite spawn — dramatic violet surge */
@@ -772,7 +772,7 @@ body.hx-active #hex-grid {
 .hx-gem-tanzanite-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-tanzanite-spawn-anim 0.66s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-tanzanite-spawn-anim 10.66s cubic-bezier(10.34, 10.56, 10.64, 1) forwards;
 }
 
 /* Ruby spawn — blazing red flash */
@@ -792,7 +792,7 @@ body.hx-active #hex-grid {
 .hx-gem-ruby-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-ruby-spawn-anim 0.70s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-ruby-spawn-anim 10.70s cubic-bezier(10.34, 10.56, 10.64, 1) forwards;
 }
 
 
