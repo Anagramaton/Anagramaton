@@ -495,8 +495,8 @@ body.hx-active #settings-btn {
 /* Replaces the single animation with pop-out + ember burst running together */
 .hx-consumed-ember {
   animation:
-    hx-tile-pop-out  4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-ember-burst   4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-ember-burst   0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -507,8 +507,8 @@ body.hx-active #settings-btn {
 }
 .hx-consumed-prism {
   animation:
-    hx-tile-pop-out  4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-prism-rainbow 4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-prism-rainbow 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -519,8 +519,8 @@ body.hx-active #settings-btn {
 }
 .hx-consumed-rune {
   animation:
-    hx-tile-pop-out    4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-rune-implosion  4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+    hx-tile-pop-out    0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-rune-implosion  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
