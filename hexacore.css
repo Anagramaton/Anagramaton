@@ -477,7 +477,7 @@ body.hx-active #settings-btn {
   100% { opacity: 0;   transform: scale(0.25); }
 }
 .hx-tile-removing {
-  animation: hx-tile-pop-out 4.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  animation: hx-tile-pop-out .27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -600,7 +600,7 @@ body.hx-active #hex-grid {
 .hx-gem-emerald {
   fill: url(#hx-gem-emerald-gradient);
   filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.85));
-  animation: hx-gem-emerald-pulse 11.6s ease-in-out infinite alternate;
+  animation: hx-gem-emerald-pulse 1.6s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-emerald-pulse {
   from { filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.7)); }
@@ -610,7 +610,7 @@ body.hx-active #hex-grid {
 /* ── Gold Gem — warm amber glow, shimmer ───────────────────────── */
 .hx-gem-gold {
   fill: url(#hx-gem-gold-gradient);
-  animation: hx-gem-gold-shimmer 11.4s ease-in-out infinite alternate;
+  animation: hx-gem-gold-shimmer 1.4s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-gold-shimmer {
   0%   { filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.8)); }
@@ -621,7 +621,7 @@ body.hx-active #hex-grid {
 /* ── Sapphire Gem — blue glow shimmer ──────────────────────────── */
 .hx-gem-sapphire {
   fill: url(#hx-gem-sapphire-gradient);
-  animation: hx-gem-sapphire-shimmer 11.5s ease-in-out infinite alternate;
+  animation: hx-gem-sapphire-shimmer 1.5s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-sapphire-shimmer {
   0%   { filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); }
@@ -664,7 +664,7 @@ body.hx-active #hex-grid {
 
 .hx-gem-diamond {
   fill: url(#hx-gem-diamond-gradient);
-  animation: hx-gem-diamond-sparkle 11.2s ease-in-out infinite alternate;
+  animation: hx-gem-diamond-sparkle 1.2s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-diamond-sparkle {
   0%   { filter: drop-shadow(0 0 6px rgba(165, 243, 252, 0.8)); }
@@ -740,7 +740,7 @@ body.hx-active #hex-grid {
 .hx-gem-diamond-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-diamond-spawn-anim 10.72s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-diamond-spawn-anim 1.72s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Pearl spawn — soft fade-in float */
@@ -755,7 +755,7 @@ body.hx-active #hex-grid {
 .hx-gem-pearl-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-pearl-spawn-anim 10.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-pearl-spawn-anim 1.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Tanzanite spawn — dramatic violet surge */
@@ -772,7 +772,7 @@ body.hx-active #hex-grid {
 .hx-gem-tanzanite-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-tanzanite-spawn-anim 10.66s cubic-bezier(10.34, 10.56, 10.64, 1) forwards;
+  animation: hx-gem-tanzanite-spawn-anim 1.66s cubic-bezier(10.34, 10.56, 10.64, 1) forwards;
 }
 
 /* Ruby spawn — blazing red flash */
@@ -792,7 +792,7 @@ body.hx-active #hex-grid {
 .hx-gem-ruby-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-ruby-spawn-anim 10.70s cubic-bezier(10.34, 10.56, 10.64, 1) forwards;
+  animation: hx-gem-ruby-spawn-anim 1.70s cubic-bezier(1.34, 0.56, 1.64, 1) forwards;
 }
 
 
