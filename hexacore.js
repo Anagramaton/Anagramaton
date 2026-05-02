@@ -454,11 +454,10 @@ function transferPortalIfMoved(preGravityEntryTile, preGravityExitTile) {
     if (tileAtOldPos && tileAtOldPos !== preGravityTile) {
       // A different tile landed in the old portal position — it becomes the new portal
       updateCoord({ q: tileAtOldPos.q, r: tileAtOldPos.r, s: tileAtOldPos.s });
-    } else {
-      // Old position is empty — follow the portal tile to its new position
-      updateCoord({ q: preGravityTile.q, r: preGravityTile.r, s: preGravityTile.s });
+      changed = true;
     }
-    changed = true;
+    // If old position is empty, leave portalEntry/portalExit pointing at the original
+    // coords — applyPortalVisuals will silently skip until a new tile arrives there.
   }
 
   transferOne(
@@ -1905,8 +1904,21 @@ function showAmethystLetterPicker(tile) {
       tile.tileType = 'normal';
       tile.updateLetter(letter, letterPoints[letter] || 1);
       applyTileType(tile);
-      // Remove from amethyst tiles list if it was an amethyst
-      removeFrom(hxState.amethystTiles, tile);
+      // Remove the tile from every special-type array so it no longer
+      // has any lingering properties (e.g. ember advancement, game-over triggers)
+      removeFrom(hxState.emberTiles,        tile);
+      removeFrom(hxState.prismTiles,        tile);
+      removeFrom(hxState.runeTiles,         tile);
+      removeFrom(hxState.digraphTiles,      tile);
+      removeFrom(hxState.gemEmeraldTiles,   tile);
+      removeFrom(hxState.gemGoldTiles,      tile);
+      removeFrom(hxState.gemSapphireTiles,  tile);
+      removeFrom(hxState.gemPearlTiles,     tile);
+      removeFrom(hxState.gemTanzaniteTiles, tile);
+      removeFrom(hxState.gemRubyTiles,      tile);
+      removeFrom(hxState.gemDiamondTiles,   tile);
+      removeFrom(hxState.amethystTiles,     tile);
+      removeFrom(hxState.seleniteTiles,     tile);
       hxState.amethystCount--;
       updatePowerUpBar();
       showPowerUpUsedToast('amethyst');
@@ -1996,6 +2008,8 @@ function handleSeleniteTileTap(tile) {
     { tile: tileA, fromQ: aQ, fromR: aR, toQ: bQ, toR: bR },
     { tile: tileB, fromQ: bQ, fromR: bR, toQ: aQ, toR: aR },
   ]);
+
+  if (hxState.portalOpen) applyPortalVisuals();
 
   hxState.seleniteCount--;
   updatePowerUpBar();
@@ -2301,7 +2315,7 @@ async function consumeAndRefill(tilesToRemove) {
     transferPortalIfMoved(preGravityEntryTile, preGravityExitTile);
   }
 
-  // 4. Advance fire tiles (ember, amethyst, selenite)
+  // 4. Advance ember tiles
   await advanceFireTiles();
   if (hxState.gameOver) return;
 
@@ -2355,14 +2369,12 @@ async function applyGravity() {
   }
 }
 
-/* ── Fire tile advancement: embers, amethysts, and selenites advance downward ── */
+/* ── Fire tile advancement: only ember tiles advance downward ── */
 async function advanceFireTiles() {
   if (hxState.gameOver) return;
 
   const allFireTiles = [
     ...hxState.emberTiles.map(t => ({ tile: t, type: 'ember' })),
-    ...hxState.amethystTiles.map(t => ({ tile: t, type: 'amethyst' })),
-    ...hxState.seleniteTiles.map(t => ({ tile: t, type: 'selenite' })),
   ];
 
   const allMoves = [];
@@ -2389,18 +2401,6 @@ async function advanceFireTiles() {
       if (type === 'ember') {
         triggerGameOver();
         return;
-      } else {
-        // Amethyst or Selenite hits bottom — convert to a random normal tile
-        removeFrom(
-          type === 'amethyst' ? hxState.amethystTiles : hxState.seleniteTiles,
-          tile,
-        );
-        const letter = randomLetter();
-        const points = letterPoints[letter] || 1;
-        tile.tileType = 'normal';
-        tile.updateLetter(letter, points);
-        applyTileType(tile);
-        continue;
       }
     }
 
@@ -2445,7 +2445,10 @@ async function advanceFireTiles() {
   }
 
   if (allMoves.length > 0 && !hxState.gameOver) {
-    await animateTileMoves(allMoves);
+    for (const move of allMoves) {
+      if (hxState.gameOver) break;
+      await animateTileMoves([move]);
+    }
   }
 }
 
