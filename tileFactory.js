@@ -61,19 +61,7 @@ export function createTile({
   tPoint.setAttribute('class', 'tile-point');
   tPoint.textContent = pointValue;
 
-  // --- Optional spark only (keep hoverGlow support) ---
-  const spark = document.createElementNS(SVG_NS, 'circle');
-  spark.setAttribute('cx', center.x + HEX_RADIUS * 0.4);
-  spark.setAttribute('cy', center.y - HEX_RADIUS * 0.4);
-  spark.setAttribute('r', '2.2');
-  spark.setAttribute('fill', '#fff');
-  spark.setAttribute('filter', 'url(#hoverGlow)');
-  spark.setAttribute('opacity', '0.9');
-  spark.setAttribute('class', 'spark');
 
-const g = document.createElementNS(SVG_NS, 'g');
-g.classList.add('tile');
-g.append(outline, poly, spark, tLetter, tPoint);
 
 
 
