@@ -63,6 +63,10 @@ export function createTile({
 
 
 
+const g = document.createElementNS(SVG_NS, 'g');
+g.classList.add('tile');
+g.append(outline, poly, tLetter, tPoint);
+
 
 
   // --- Public tile object & helpers ---
