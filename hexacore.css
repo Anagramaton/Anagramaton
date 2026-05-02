@@ -884,6 +884,197 @@ body.hx-active #hex-grid {
   pointer-events: none;
 }
 
+/* ── Aquamarine Gem — teal-cyan, gentle wave shimmer ───────────── */
+.hx-gem-aquamarine {
+  fill: url(#hx-gem-aquamarine-gradient);
+  animation: hx-gem-aquamarine-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes hx-gem-aquamarine-pulse {
+  from { filter: drop-shadow(0 0 5px rgba(8, 145, 178, 0.8)); }
+  to   { filter: brightness(1.4) drop-shadow(0 0 18px rgba(103, 232, 249, 1)); }
+}
+
+@keyframes hx-gem-aquamarine-spawn-anim {
+  0%   { opacity: 0.2; transform: scale(0.4);
+         filter: drop-shadow(0 0 0px transparent); }
+  50%  { opacity: 1;   transform: scale(1.25);
+         filter: brightness(2.5) drop-shadow(0 0 22px rgba(103, 232, 249, 1)); }
+  100% { opacity: 1;   transform: scale(1.0);
+         filter: drop-shadow(0 0 6px rgba(8, 145, 178, 0.8)); }
+}
+.hx-gem-aquamarine-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-aquamarine-spawn-anim 0.72s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes hx-gem-aquamarine-burst {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  30%  { filter: brightness(5)   drop-shadow(0 0 26px rgba(103, 232, 249, 1)); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+.hx-consumed-gemAquamarine {
+  animation:
+    hx-tile-pop-out            0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-gem-aquamarine-burst    0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+/* ── Topaz Gem — warm amber-gold shimmer ───────────────────────── */
+.hx-gem-topaz {
+  fill: url(#hx-gem-topaz-gradient);
+  animation: hx-gem-topaz-shimmer 1.3s ease-in-out infinite alternate;
+}
+@keyframes hx-gem-topaz-shimmer {
+  0%   { filter: drop-shadow(0 0 5px rgba(180, 83, 9, 0.8)); }
+  50%  { filter: brightness(1.5) drop-shadow(0 0 22px rgba(253, 230, 138, 1)); }
+  100% { filter: drop-shadow(0 0 5px rgba(180, 83, 9, 0.8)); }
+}
+
+@keyframes hx-gem-topaz-spawn-anim {
+  0%   { opacity: 0.2; transform: scale(0.4) rotate(0deg);
+         filter: drop-shadow(0 0 0px transparent); }
+  40%  { opacity: 1;   transform: scale(1.3) rotate(15deg);
+         filter: brightness(3) drop-shadow(0 0 26px rgba(253, 230, 138, 1)); }
+  100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
+         filter: drop-shadow(0 0 5px rgba(180, 83, 9, 0.8)); }
+}
+.hx-gem-topaz-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-topaz-spawn-anim 0.68s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes hx-gem-topaz-burst {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  30%  { filter: brightness(5)   drop-shadow(0 0 28px rgba(253, 230, 138, 1)); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+.hx-consumed-gemTopaz {
+  animation:
+    hx-tile-pop-out        0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-gem-topaz-burst     0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+/* ── Opal Gem — iridescent, slow hue-rotate shimmer ───────────── */
+.hx-gem-opal {
+  fill: url(#hx-gem-opal-gradient);
+  animation: hx-gem-opal-shimmer 2.5s ease-in-out infinite alternate;
+}
+@keyframes hx-gem-opal-shimmer {
+  0%   { filter: hue-rotate(0deg)  drop-shadow(0 0 5px rgba(196, 181, 253, 0.8)); }
+  50%  { filter: hue-rotate(30deg) brightness(1.3) drop-shadow(0 0 16px rgba(255, 255, 255, 1)); }
+  100% { filter: hue-rotate(60deg) drop-shadow(0 0 8px rgba(196, 181, 253, 0.9)); }
+}
+
+@keyframes hx-gem-opal-spawn-anim {
+  0%   { opacity: 0.2; transform: scale(0.4);
+         filter: drop-shadow(0 0 0px transparent); }
+  50%  { opacity: 1;   transform: scale(1.25);
+         filter: brightness(3) drop-shadow(0 0 24px rgba(255, 255, 255, 1)); }
+  100% { opacity: 1;   transform: scale(1.0);
+         filter: hue-rotate(0deg) drop-shadow(0 0 6px rgba(196, 181, 253, 0.8)); }
+}
+.hx-gem-opal-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-opal-spawn-anim 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes hx-gem-opal-burst {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  30%  { filter: hue-rotate(60deg) brightness(4) drop-shadow(0 0 28px rgba(255, 255, 255, 1)); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+.hx-consumed-gemOpal {
+  animation:
+    hx-tile-pop-out       0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-gem-opal-burst     0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+/* ── Imperial Jade Gem — deep forest green, strong pulse ───────── */
+.hx-gem-imperialjade {
+  fill: url(#hx-gem-imperialjade-gradient);
+  animation: hx-gem-imperialjade-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes hx-gem-imperialjade-pulse {
+  from { filter: drop-shadow(0 0 5px rgba(6, 78, 59, 0.9)); }
+  to   { filter: brightness(1.5) drop-shadow(0 0 22px rgba(52, 211, 153, 1)); }
+}
+
+@keyframes hx-gem-imperialjade-spawn-anim {
+  0%   { opacity: 0.1; transform: scale(0.3);
+         filter: drop-shadow(0 0 0px transparent); }
+  30%  { opacity: 1;   transform: scale(1.4);
+         filter: brightness(4) drop-shadow(0 0 30px rgba(52, 211, 153, 1)); }
+  65%  { opacity: 1;   transform: scale(0.93);
+         filter: brightness(1.8) drop-shadow(0 0 18px rgba(6, 78, 59, 0.9)); }
+  100% { opacity: 1;   transform: scale(1.0);
+         filter: drop-shadow(0 0 6px rgba(6, 78, 59, 0.8)); }
+}
+.hx-gem-imperialjade-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-imperialjade-spawn-anim 0.78s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes hx-gem-imperialjade-burst {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  25%  { filter: brightness(5.5) drop-shadow(0 0 30px rgba(52, 211, 153, 1)); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+.hx-consumed-gemImperialJade {
+  animation:
+    hx-tile-pop-out              0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-gem-imperialjade-burst    0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
+/* ── Alexandrite Gem — colour-shifting purple→green ─────────────── */
+.hx-gem-alexandrite {
+  fill: url(#hx-gem-alexandrite-gradient);
+  animation: hx-gem-alexandrite-shift 3s ease-in-out infinite alternate;
+}
+@keyframes hx-gem-alexandrite-shift {
+  0%   { filter: hue-rotate(0deg)   drop-shadow(0 0 6px rgba(76, 29, 149, 0.9)); }
+  50%  { filter: hue-rotate(60deg)  brightness(1.6) drop-shadow(0 0 22px rgba(167, 139, 250, 1)); }
+  100% { filter: hue-rotate(120deg) drop-shadow(0 0 8px rgba(16, 185, 129, 0.9)); }
+}
+
+@keyframes hx-gem-alexandrite-spawn-anim {
+  0%   { opacity: 0;   transform: scale(0.2) rotate(0deg);
+         filter: drop-shadow(0 0 0px transparent); }
+  20%  { opacity: 0.7; transform: scale(0.9) rotate(15deg);
+         filter: hue-rotate(0deg) brightness(2) drop-shadow(0 0 14px rgba(76, 29, 149, 0.8)); }
+  45%  { opacity: 1;   transform: scale(1.5) rotate(-10deg);
+         filter: hue-rotate(60deg) brightness(5) drop-shadow(0 0 38px rgba(167, 139, 250, 1))
+                 drop-shadow(0 0 18px rgba(16, 185, 129, 1)); }
+  70%  { opacity: 1;   transform: scale(0.92) rotate(4deg);
+         filter: hue-rotate(100deg) brightness(2) drop-shadow(0 0 22px rgba(16, 185, 129, 1)); }
+  100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
+         filter: hue-rotate(0deg) drop-shadow(0 0 8px rgba(76, 29, 149, 0.9)); }
+}
+.hx-gem-alexandrite-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-alexandrite-spawn-anim 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes hx-gem-alexandrite-burst {
+  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  25%  { filter: brightness(7)   drop-shadow(0 0 35px rgba(167, 139, 250, 1))
+                                  drop-shadow(0 0 15px rgba(16, 185, 129, 1)); }
+  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+}
+.hx-consumed-gemAlexandrite {
+  animation:
+    hx-tile-pop-out              0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
+    hx-gem-alexandrite-burst     0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  pointer-events: none;
+}
+
 
 /* ── Portal tiles — paired corner teleport system ──────────────── */
 .hx-portal {
