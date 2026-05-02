@@ -39,6 +39,7 @@ const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_GEM_TYPES = new Set([
   'gemEmerald', 'gemGold', 'gemSapphire',
   'gemPearl', 'gemTanzanite', 'gemRuby', 'gemDiamond',
+  'gemAquamarine', 'gemTopaz', 'gemOpal', 'gemImperialJade', 'gemAlexandrite',
 ]);
 // Level 1 starts at 0, Level 2 at 1,000, Level 3 at 5,000, etc.
 // Beyond index 10 (Level 11), each additional level requires +100,000 pts from the previous threshold.
@@ -173,6 +174,11 @@ const hxState = {
   gemTanzaniteTiles: [],
   gemRubyTiles:      [],
   gemDiamondTiles:   [],
+  gemAquamarineTiles:   [],
+  gemTopazTiles:        [],
+  gemOpalTiles:         [],
+  gemImperialJadeTiles: [],
+  gemAlexandriteTiles:  [],
   amethystTiles:   [],
   seleniteTiles:   [],
   amethystCount:   0,
@@ -653,6 +659,8 @@ function applyTileType(tile) {
     'hx-ember', 'hx-prism', 'hx-rune', 'hx-digraph',
     'hx-gem-emerald', 'hx-gem-gold', 'hx-gem-sapphire',
     'hx-gem-pearl', 'hx-gem-tanzanite', 'hx-gem-ruby', 'hx-gem-diamond',
+    'hx-gem-aquamarine', 'hx-gem-topaz', 'hx-gem-opal',
+    'hx-gem-imperialjade', 'hx-gem-alexandrite',
     'hx-amethyst', 'hx-selenite',
   );
   tile.element.querySelector('.hx-type-icon')?.remove();
@@ -697,6 +705,21 @@ function applyTileType(tile) {
   } else if (tile.tileType === 'gemDiamond') {
     poly.classList.add('hx-gem-diamond');
     addTypeIcon(tile, '◆', 12, '#e0f2fe');
+  } else if (tile.tileType === 'gemAquamarine') {
+    poly.classList.add('hx-gem-aquamarine');
+    addTypeIcon(tile, '◆', 12, '#67e8f9');
+  } else if (tile.tileType === 'gemTopaz') {
+    poly.classList.add('hx-gem-topaz');
+    addTypeIcon(tile, '◆', 12, '#fde68a');
+  } else if (tile.tileType === 'gemOpal') {
+    poly.classList.add('hx-gem-opal');
+    addTypeIcon(tile, '◆', 12, '#e9d5ff');
+  } else if (tile.tileType === 'gemImperialJade') {
+    poly.classList.add('hx-gem-imperialjade');
+    addTypeIcon(tile, '◆', 12, '#34d399');
+  } else if (tile.tileType === 'gemAlexandrite') {
+    poly.classList.add('hx-gem-alexandrite');
+    addTypeIcon(tile, '◆', 12, '#a78bfa');
   } else if (tile.tileType === 'amethyst') {
     poly.classList.add('hx-amethyst');
     addTypeIcon(tile, '◈', 13, '#e879f9');
@@ -777,6 +800,11 @@ function injectSvgDefs(svg) {
   ensureLinearGradient('hx-gem-tanzanite-gradient',  '#1e0a5e', '#7c3aed');
   ensureLinearGradient('hx-gem-ruby-gradient',       '#7f1d1d', '#ef4444');
   ensureLinearGradient('hx-gem-diamond-gradient',    '#a5f3fc', '#ffffff');
+  ensureLinearGradient('hx-gem-aquamarine-gradient',  '#0891b2', '#67e8f9');
+  ensureLinearGradient('hx-gem-topaz-gradient',       '#b45309', '#fde68a');
+  ensureLinearGradient('hx-gem-opal-gradient',        '#c4b5fd', '#ffffff');
+  ensureLinearGradient('hx-gem-imperialjade-gradient','#064e3b', '#34d399');
+  ensureLinearGradient('hx-gem-alexandrite-gradient', '#4c1d95', '#10b981');
 
   // Amethyst — deep purple to violet gradient
   if (!document.getElementById('hx-amethyst-gradient')) {
@@ -1348,16 +1376,22 @@ function updateWordDisplay() {
 
 /* ── Gem scoring constants ─────────────────────────────────────── */
 const GEM_MULTIPLIERS = {
-  gemEmerald:   2,
-  gemGold:      3,
-  gemSapphire:  4,
-  gemPearl:     5,
-  gemTanzanite: 6,
-  gemRuby:      7,
+  gemEmerald:      2,
+  gemGold:         3,
+  gemSapphire:     4,
+  gemPearl:        5,
+  gemTanzanite:    6,
+  gemRuby:         7,
+  gemDiamond:      8,
+  gemAquamarine:   9,
+  gemTopaz:        10,
+  gemOpal:         11,
+  gemImperialJade: 12,
+  gemAlexandrite:  13,
 };
-// Tanzanite, Ruby, and Diamond use exponential count bonus (value^count);
+// Tanzanite and Ruby use exponential count bonus (value^count);
 // all other gems use linear count bonus (count × value).
-const OPTION_B_GEMS = new Set(['gemTanzanite', 'gemRuby', 'gemDiamond']);
+const OPTION_B_GEMS = new Set(['gemTanzanite', 'gemRuby']);
 
 /* ── Level requirements checklist ─────────────────────────────── */
 /**
@@ -1455,7 +1489,8 @@ const HX_LEVEL_REQUIREMENTS = [
       const boardGems = [
         ...state.gemEmeraldTiles, ...state.gemGoldTiles, ...state.gemSapphireTiles,
         ...state.gemPearlTiles,   ...state.gemTanzaniteTiles, ...state.gemRubyTiles,
-        ...state.gemDiamondTiles,
+        ...state.gemDiamondTiles, ...state.gemAquamarineTiles, ...state.gemTopazTiles,
+        ...state.gemOpalTiles,    ...state.gemImperialJadeTiles, ...state.gemAlexandriteTiles,
       ];
       if (boardGems.length === 0) return false;
       const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
@@ -1622,26 +1657,23 @@ const HX_LEVEL_REQUIREMENTS = [
 /**
  * Calculates the count bonus multiplier for the given selected tiles.
  * For each gem type present, counts how many were used and applies:
- *   - Option A (linear):      count × gemValue  — for Emerald, Gold, Sapphire, Pearl
+ *   - Option A (linear):      count × gemValue  — for Emerald, Gold, Sapphire, Pearl, Diamond, and all higher tiers
  *     e.g. 3 Emeralds → 3 × 2 = ×6
- *   - Option B (exponential): gemValue ^ count  — for Tanzanite, Ruby, Diamond
- *     e.g. 3 Rubies → 7³ = ×343; 2 Diamonds on a 6-letter word → 6² = ×36
- * Diamond's "value" is wordLength (not a fixed number), so it is excluded from
- * GEM_MULTIPLIERS above and handled as a special case inside this function.
+ *   - Option B (exponential): gemValue ^ count  — for Tanzanite, Ruby
+ *     e.g. 3 Rubies → 7³ = ×343
  * @param {Array} selectedTiles - array of tile objects from hxSelected
- * @param {number} wordLength   - assembled letter count (used as Diamond's value)
  * @returns {number} combined count bonus multiplier (≥1)
  */
-function calcGemCountBonus(selectedTiles, wordLength) {
+function calcGemCountBonus(selectedTiles) {
   const gemCounts = {};
   selectedTiles.forEach(t => {
-    if (GEM_MULTIPLIERS[t.tileType] || t.tileType === 'gemDiamond') {
+    if (GEM_MULTIPLIERS[t.tileType]) {
       gemCounts[t.tileType] = (gemCounts[t.tileType] || 0) + 1;
     }
   });
   let countBonus = 1;
   for (const [gemType, count] of Object.entries(gemCounts)) {
-    const value = gemType === 'gemDiamond' ? wordLength : GEM_MULTIPLIERS[gemType];
+    const value = GEM_MULTIPLIERS[gemType];
     countBonus *= OPTION_B_GEMS.has(gemType) ? value ** count : count * value;
   }
   return countBonus;
@@ -1691,10 +1723,9 @@ function updateWordScorePreview() {
   let gemMult = 1;
   hxSelected.forEach(t => {
     if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
-    else if (t.tileType === 'gemDiamond') gemMult *= wordLength;
   });
 
-  const countBonus = calcGemCountBonus(hxSelected, wordLength);
+  const countBonus = calcGemCountBonus(hxSelected);
 
   const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
   const runeNote = runeCount > 0 ? '~' : '';
@@ -1915,8 +1946,13 @@ function showAmethystLetterPicker(tile) {
       removeFrom(hxState.gemSapphireTiles,  tile);
       removeFrom(hxState.gemPearlTiles,     tile);
       removeFrom(hxState.gemTanzaniteTiles, tile);
-      removeFrom(hxState.gemRubyTiles,      tile);
-      removeFrom(hxState.gemDiamondTiles,   tile);
+      removeFrom(hxState.gemRubyTiles,         tile);
+      removeFrom(hxState.gemDiamondTiles,      tile);
+      removeFrom(hxState.gemAquamarineTiles,   tile);
+      removeFrom(hxState.gemTopazTiles,        tile);
+      removeFrom(hxState.gemOpalTiles,         tile);
+      removeFrom(hxState.gemImperialJadeTiles, tile);
+      removeFrom(hxState.gemAlexandriteTiles,  tile);
       removeFrom(hxState.amethystTiles,     tile);
       removeFrom(hxState.seleniteTiles,     tile);
       hxState.amethystCount--;
@@ -2172,10 +2208,9 @@ async function submitHexacoreWord() {
   let gemMult = 1;
   hxSelected.forEach(t => {
     if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType];
-    else if (t.tileType === 'gemDiamond') gemMult *= word.length;
   });
 
-  const countBonus = calcGemCountBonus(hxSelected, word.length);
+  const countBonus = calcGemCountBonus(hxSelected);
 
   const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
 
@@ -2290,8 +2325,13 @@ async function consumeAndRefill(tilesToRemove) {
     removeFrom(hxState.gemSapphireTiles,   tile);
     removeFrom(hxState.gemPearlTiles,      tile);
     removeFrom(hxState.gemTanzaniteTiles,  tile);
-    removeFrom(hxState.gemRubyTiles,       tile);
-    removeFrom(hxState.gemDiamondTiles,    tile);
+    removeFrom(hxState.gemRubyTiles,        tile);
+    removeFrom(hxState.gemDiamondTiles,     tile);
+    removeFrom(hxState.gemAquamarineTiles,  tile);
+    removeFrom(hxState.gemTopazTiles,       tile);
+    removeFrom(hxState.gemOpalTiles,        tile);
+    removeFrom(hxState.gemImperialJadeTiles,tile);
+    removeFrom(hxState.gemAlexandriteTiles, tile);
     removeFrom(hxState.amethystTiles,      tile);
     removeFrom(hxState.seleniteTiles,      tile);
     hxTileMap.delete(hxKey(tile.q, tile.r));
@@ -2434,8 +2474,13 @@ async function advanceFireTiles() {
       removeFrom(hxState.gemSapphireTiles,  displaced);
       removeFrom(hxState.gemPearlTiles,     displaced);
       removeFrom(hxState.gemTanzaniteTiles, displaced);
-      removeFrom(hxState.gemRubyTiles,      displaced);
-      removeFrom(hxState.gemDiamondTiles,   displaced);
+      removeFrom(hxState.gemRubyTiles,        displaced);
+      removeFrom(hxState.gemDiamondTiles,     displaced);
+      removeFrom(hxState.gemAquamarineTiles,  displaced);
+      removeFrom(hxState.gemTopazTiles,       displaced);
+      removeFrom(hxState.gemOpalTiles,        displaced);
+      removeFrom(hxState.gemImperialJadeTiles,displaced);
+      removeFrom(hxState.gemAlexandriteTiles, displaced);
       removeFrom(hxState.amethystTiles,     displaced);
       removeFrom(hxState.seleniteTiles,     displaced);
       hxTileMap.delete(hxKey(target.q, target.r));
@@ -2536,24 +2581,34 @@ function getRandomNormalTiles(count) {
 
 /** The gem-type → state-array mapping. */
 const GEM_STATE_KEY = {
-  gemEmerald:   'gemEmeraldTiles',
-  gemGold:      'gemGoldTiles',
-  gemSapphire:  'gemSapphireTiles',
-  gemPearl:     'gemPearlTiles',
-  gemTanzanite: 'gemTanzaniteTiles',
-  gemRuby:      'gemRubyTiles',
-  gemDiamond:   'gemDiamondTiles',
+  gemEmerald:      'gemEmeraldTiles',
+  gemGold:         'gemGoldTiles',
+  gemSapphire:     'gemSapphireTiles',
+  gemPearl:        'gemPearlTiles',
+  gemTanzanite:    'gemTanzaniteTiles',
+  gemRuby:         'gemRubyTiles',
+  gemDiamond:      'gemDiamondTiles',
+  gemAquamarine:   'gemAquamarineTiles',
+  gemTopaz:        'gemTopazTiles',
+  gemOpal:         'gemOpalTiles',
+  gemImperialJade: 'gemImperialJadeTiles',
+  gemAlexandrite:  'gemAlexandriteTiles',
 };
 
 /** The gem-type → spawn CSS class mapping. */
 const GEM_SPAWN_CLASS = {
-  gemEmerald:   'hx-gem-emerald-spawn',
-  gemGold:      'hx-gem-gold-spawn',
-  gemSapphire:  'hx-gem-sapphire-spawn',
-  gemPearl:     'hx-gem-pearl-spawn',
-  gemTanzanite: 'hx-gem-tanzanite-spawn',
-  gemRuby:      'hx-gem-ruby-spawn',
-  gemDiamond:   'hx-gem-diamond-spawn',
+  gemEmerald:      'hx-gem-emerald-spawn',
+  gemGold:         'hx-gem-gold-spawn',
+  gemSapphire:     'hx-gem-sapphire-spawn',
+  gemPearl:        'hx-gem-pearl-spawn',
+  gemTanzanite:    'hx-gem-tanzanite-spawn',
+  gemRuby:         'hx-gem-ruby-spawn',
+  gemDiamond:      'hx-gem-diamond-spawn',
+  gemAquamarine:   'hx-gem-aquamarine-spawn',
+  gemTopaz:        'hx-gem-topaz-spawn',
+  gemOpal:         'hx-gem-opal-spawn',
+  gemImperialJade: 'hx-gem-imperialjade-spawn',
+  gemAlexandrite:  'hx-gem-alexandrite-spawn',
 };
 
 /**
@@ -2583,41 +2638,50 @@ function transformTileToGem(tile, gemType) {
  *  7 letters: 3 emerald, 2 gold, 1 sapphire
  *  8 letters: 4 emerald, 3 gold, 2 sapphire, 1 pearl
  *  9 letters: 5 emerald, 4 gold, 3 sapphire, 2 pearl, 1 tanzanite
- * 10+ letters: 6 emerald, 5 gold, 4 sapphire, 3 pearl, 2 tanzanite, 1 ruby
+ * 10 letters: 6 emerald, 5 gold, 4 sapphire, 3 pearl, 2 tanzanite, 1 ruby  (21 total)
+ * 11 letters: base + 1 diamond + 1 aquamarine  (23 total)
+ * 12 letters: base + 1 diamond + 1 aquamarine + 1 topaz  (24 total)
+ * 13 letters: base + 1 diamond + 1 aquamarine + 1 topaz + 1 opal  (25 total)
+ * 14 letters: base + 1 diamond + 1 aquamarine + 1 topaz + 1 opal + 1 imperialJade  (26 total)
+ * 15+ letters: base + 1 diamond + 1 aquamarine + 1 topaz + 1 opal + 1 imperialJade + 1 alexandrite  (27 total)
  */
 function spawnGemRewardForWord(wordLength) {
   const plan = [];
-  if (wordLength >= 10) {
+
+  if (wordLength < 4) return; // < 4 letters — no gem reward
+
+  // Tiers 4–9: each tier is a fixed pyramid (no 10-letter base)
+  const LOW_TIER_PLANS = {
+    4: [['gemEmerald', 1]],
+    5: [['gemEmerald', 2]],
+    6: [['gemEmerald', 3], ['gemGold', 1]],
+    7: [['gemEmerald', 3], ['gemGold', 2], ['gemSapphire', 1]],
+    8: [['gemEmerald', 4], ['gemGold', 3], ['gemSapphire', 2], ['gemPearl', 1]],
+    9: [['gemEmerald', 5], ['gemGold', 4], ['gemSapphire', 3], ['gemPearl', 2], ['gemTanzanite', 1]],
+  };
+
+  if (wordLength <= 9) {
+    for (const [gem, count] of LOW_TIER_PLANS[wordLength]) {
+      plan.push(...Array(count).fill(gem));
+    }
+  } else {
+    // Base 10-letter tier (21 gems) — foundation for all higher tiers
     plan.push(...Array(6).fill('gemEmerald'));
     plan.push(...Array(5).fill('gemGold'));
     plan.push(...Array(4).fill('gemSapphire'));
     plan.push(...Array(3).fill('gemPearl'));
     plan.push(...Array(2).fill('gemTanzanite'));
     plan.push('gemRuby');
-  } else if (wordLength === 9) {
-    plan.push(...Array(5).fill('gemEmerald'));
-    plan.push(...Array(4).fill('gemGold'));
-    plan.push(...Array(3).fill('gemSapphire'));
-    plan.push(...Array(2).fill('gemPearl'));
-    plan.push('gemTanzanite');
-  } else if (wordLength === 8) {
-    plan.push(...Array(4).fill('gemEmerald'));
-    plan.push(...Array(3).fill('gemGold'));
-    plan.push(...Array(2).fill('gemSapphire'));
-    plan.push('gemPearl');
-  } else if (wordLength === 7) {
-    plan.push(...Array(3).fill('gemEmerald'));
-    plan.push(...Array(2).fill('gemGold'));
-    plan.push('gemSapphire');
-  } else if (wordLength === 6) {
-    plan.push(...Array(3).fill('gemEmerald'));
-    plan.push('gemGold');
-  } else if (wordLength === 5) {
-    plan.push(...Array(2).fill('gemEmerald'));
-  } else if (wordLength === 4) {
-    plan.push('gemEmerald');
-  } else {
-    return; // < 4 letters — no gem reward
+
+    // Each letter beyond 10 adds one more high-tier gem
+    const HIGH_TIER_EXTRAS = [
+      'gemDiamond', 'gemAquamarine', 'gemTopaz',
+      'gemOpal', 'gemImperialJade', 'gemAlexandrite',
+    ];
+    const extraCount = Math.min(wordLength - 10, HIGH_TIER_EXTRAS.length);
+    for (let i = 0; i < extraCount; i++) {
+      plan.push(HIGH_TIER_EXTRAS[i]);
+    }
   }
 
   // Spawn each gem on a distinct random normal tile
@@ -2909,7 +2973,12 @@ export function startHexacore() {
     gemPearlTiles:     [],
     gemTanzaniteTiles: [],
     gemRubyTiles:      [],
-    gemDiamondTiles:   [],
+    gemDiamondTiles:      [],
+    gemAquamarineTiles:   [],
+    gemTopazTiles:        [],
+    gemOpalTiles:         [],
+    gemImperialJadeTiles: [],
+    gemAlexandriteTiles:  [],
     amethystTiles:   [],
     seleniteTiles:   [],
     amethystCount:   0,
@@ -2970,8 +3039,13 @@ export function startHexacore() {
         gemSapphire:  hxState.gemSapphireTiles,
         gemPearl:     hxState.gemPearlTiles,
         gemTanzanite: hxState.gemTanzaniteTiles,
-        gemRuby:      hxState.gemRubyTiles,
-        gemDiamond:   hxState.gemDiamondTiles,
+        gemRuby:         hxState.gemRubyTiles,
+        gemDiamond:      hxState.gemDiamondTiles,
+        gemAquamarine:   hxState.gemAquamarineTiles,
+        gemTopaz:        hxState.gemTopazTiles,
+        gemOpal:         hxState.gemOpalTiles,
+        gemImperialJade: hxState.gemImperialJadeTiles,
+        gemAlexandrite:  hxState.gemAlexandriteTiles,
         amethyst:     hxState.amethystTiles,
         selenite:     hxState.seleniteTiles,
       };
