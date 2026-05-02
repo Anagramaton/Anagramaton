@@ -231,7 +231,11 @@ function getColumnRange(q) {
 }
 
 function randomLetter() {
-  return HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+  const drawn = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+  if (drawn === '__DIGRAPH__') {
+    return randomDigraph().digraph;
+  }
+  return drawn;
 }
 
 const HX_VOWELS = new Set(['A','E','I','O','U']);
@@ -639,20 +643,6 @@ async function animateTileMovesStaggered(moves) {
 }
 
 /* ── Tile type styling ─────────────────────────────────────────── */
-function addTypeIcon(tile, glyph, fontSize, fill) {
-  const cx = parseFloat(tile.textLetter.getAttribute('x'));
-  const cy = parseFloat(tile.textLetter.getAttribute('y'));
-  const icon = document.createElementNS(SVG_NS, 'text');
-  icon.setAttribute('x', cx - HEX_RADIUS * 0.5);
-  icon.setAttribute('y', cy - HEX_RADIUS * 0.45);
-  icon.setAttribute('font-size', String(fontSize));
-  icon.setAttribute('pointer-events', 'none');
-  icon.setAttribute('class', 'hx-type-icon');
-  if (fill) icon.setAttribute('fill', fill);
-  icon.textContent = glyph;
-  tile.element.appendChild(icon);
-}
-
 function applyTileType(tile) {
   const poly = tile.element.querySelector('polygon');
   poly.classList.remove(
@@ -672,60 +662,42 @@ function applyTileType(tile) {
     tile.textLetter.textContent = tile.letter;
     tile.textPoint.textContent  = String(tile.point);
     tile.textLetter.setAttribute('font-size', '21');
-    addTypeIcon(tile, '❋', 11, '#2dd4bf');
   } else if (tile.tileType === 'ember') {
     poly.classList.add('hx-ember');
-    addTypeIcon(tile, '🔥', 14, null);
   } else if (tile.tileType === 'prism') {
     poly.classList.add('hx-prism');
-    addTypeIcon(tile, '✦', 12, '#ffd700');
   } else if (tile.tileType === 'rune') {
     poly.classList.add('hx-rune');
     tile.textLetter.textContent = '?';
     tile.textPoint.textContent  = '?';
-    addTypeIcon(tile, '✦', 12, '#ffffff');
   } else if (tile.tileType === 'gemEmerald') {
     poly.classList.add('hx-gem-emerald');
-    addTypeIcon(tile, '◆', 12, '#22c55e');
   } else if (tile.tileType === 'gemGold') {
     poly.classList.add('hx-gem-gold');
-    addTypeIcon(tile, '◆', 12, '#f59e0b');
   } else if (tile.tileType === 'gemSapphire') {
     poly.classList.add('hx-gem-sapphire');
-    addTypeIcon(tile, '◆', 12, '#60a5fa');
   } else if (tile.tileType === 'gemPearl') {
     poly.classList.add('hx-gem-pearl');
-    addTypeIcon(tile, '◆', 12, '#f5f0e8');
   } else if (tile.tileType === 'gemTanzanite') {
     poly.classList.add('hx-gem-tanzanite');
-    addTypeIcon(tile, '◆', 12, '#7c3aed');
   } else if (tile.tileType === 'gemRuby') {
     poly.classList.add('hx-gem-ruby');
-    addTypeIcon(tile, '◆', 12, '#ef4444');
   } else if (tile.tileType === 'gemDiamond') {
     poly.classList.add('hx-gem-diamond');
-    addTypeIcon(tile, '◆', 12, '#e0f2fe');
   } else if (tile.tileType === 'gemAquamarine') {
     poly.classList.add('hx-gem-aquamarine');
-    addTypeIcon(tile, '◆', 12, '#67e8f9');
   } else if (tile.tileType === 'gemTopaz') {
     poly.classList.add('hx-gem-topaz');
-    addTypeIcon(tile, '◆', 12, '#fde68a');
   } else if (tile.tileType === 'gemOpal') {
     poly.classList.add('hx-gem-opal');
-    addTypeIcon(tile, '◆', 12, '#e9d5ff');
   } else if (tile.tileType === 'gemImperialJade') {
     poly.classList.add('hx-gem-imperialjade');
-    addTypeIcon(tile, '◆', 12, '#34d399');
   } else if (tile.tileType === 'gemAlexandrite') {
     poly.classList.add('hx-gem-alexandrite');
-    addTypeIcon(tile, '◆', 12, '#a78bfa');
   } else if (tile.tileType === 'amethyst') {
     poly.classList.add('hx-amethyst');
-    addTypeIcon(tile, '◈', 13, '#e879f9');
   } else if (tile.tileType === 'selenite') {
     poly.classList.add('hx-selenite');
-    addTypeIcon(tile, '⇌', 13, '#caf0f8');
   }
 }
 
@@ -1814,21 +1786,29 @@ function updatePowerUpBar() {
   barLeft.innerHTML  = '';
   barRight.innerHTML = '';
 
-  for (let i = 0; i < hxState.amethystCount; i++) {
+  if (hxState.amethystCount > 0) {
     const btn = document.createElement('button');
     btn.className = 'hx-powerup-btn hx-powerup-btn--amethyst';
-    btn.textContent = '🔮 AMETHYST';
     btn.title = 'Transmute: change any tile\'s letter';
     btn.addEventListener('click', () => activateAmethyst());
+    if (hxState.amethystCount > 1) {
+      btn.innerHTML = `🔮 AMETHYST <span class="hx-powerup-count">×${hxState.amethystCount}</span>`;
+    } else {
+      btn.textContent = '🔮 AMETHYST';
+    }
     barLeft.appendChild(btn);
   }
 
-  for (let i = 0; i < hxState.seleniteCount; i++) {
+  if (hxState.seleniteCount > 0) {
     const btn = document.createElement('button');
     btn.className = 'hx-powerup-btn hx-powerup-btn--selenite';
-    btn.textContent = '🌙 SELENITE';
     btn.title = 'Phase Swap: swap any two tiles';
     btn.addEventListener('click', () => activateSelenite());
+    if (hxState.seleniteCount > 1) {
+      btn.innerHTML = `🌙 SELENITE <span class="hx-powerup-count">×${hxState.seleniteCount}</span>`;
+    } else {
+      btn.textContent = '🌙 SELENITE';
+    }
     barRight.appendChild(btn);
   }
 }
