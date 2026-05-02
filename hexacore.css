@@ -1681,6 +1681,18 @@ body.hx-active #hex-grid {
   box-shadow: 0 0 18px rgba(202, 240, 248, 1), 0 0 6px rgba(255, 255, 255, 0.9);
 }
 
+.hx-powerup-count {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 0.75em;
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.18);
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+}
+
 /* ── Power-up targeting indicators ─────────────────────────────── */
 .hx-powerup-indicator {
   position: fixed;
