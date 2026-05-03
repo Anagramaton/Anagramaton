@@ -1308,16 +1308,20 @@ function renderChallengesModal() {
     sections.get(req.section).push(req);
   }
 
+  const showSectionHeaders = sections.size > 1;
+
   body.innerHTML = '';
   for (const [sectionName, reqs] of sections) {
     const section = document.createElement('div');
     section.className = 'hx-challenges-section';
 
-    const sectionTitle = document.createElement('div');
-    sectionTitle.className = 'hx-challenges-section-title';
-    const doneCount = reqs.filter(r => hxCompletedReqs.has(r.id)).length;
-    sectionTitle.innerHTML = `${sectionName.toUpperCase()} <span class="hx-challenges-section-count">${doneCount}/${reqs.length}</span>`;
-    section.appendChild(sectionTitle);
+    if (showSectionHeaders) {
+      const sectionTitle = document.createElement('div');
+      sectionTitle.className = 'hx-challenges-section-title';
+      const doneCount = reqs.filter(r => hxCompletedReqs.has(r.id)).length;
+      sectionTitle.innerHTML = `${sectionName.toUpperCase()} <span class="hx-challenges-section-count">${doneCount}/${reqs.length}</span>`;
+      section.appendChild(sectionTitle);
+    }
 
     for (const req of reqs) {
       const isDone = hxCompletedReqs.has(req.id);
@@ -1367,136 +1371,319 @@ const OPTION_B_GEMS = new Set(['gemTanzanite', 'gemRuby']);
 
 /* ── Level requirements checklist ─────────────────────────────── */
 /**
- * Each entry: { id, section, wordLength, description, check(word, tiles, state, score) }
- * `word`  — the fully resolved word string (length === assembled letter count)
- * `tiles` — the array of tile objects that were selected
- * `state` — hxState (portal info, board gem/digraph arrays, etc.)
- * `score` — the final wordScore for this submission
+ * Each entry: { id, section, description, check(word, tiles, state, score) }
+ * `word`  — the fully resolved word string (digraph contributes 2 chars)
+ * `tiles` — array of tile objects selected
+ * `state` — hxState snapshot
+ * `score` — final word score for this submission
  */
 const HX_LEVEL_REQUIREMENTS = [
-  // ── 5 Letters ────────────────────────────────────────────────
+
+  // ── ⚡ SPARK: Entry-level ─────────────────────────────────────
   {
-    id: '5L_gem1', section: '5 Letters', wordLength: 5,
-    description: 'INCLUDES AT LEAST 1 GEM TILE',
-    check(word, tiles) {
-      return word.length === 5 && tiles.some(t => HX_GEM_TYPES.has(t.tileType));
-    },
+    id: 'spark_4letter',
+    section: 'CHALLENGES',
+    description: 'SUBMIT A WORD OF 4 OR MORE LETTERS',
+    check(word) { return word.length >= 4; },
   },
   {
-    id: '5L_plain', section: '5 Letters', wordLength: 5,
-    description: 'NO GEM TILES AND NO DIGRAPH TILES',
+    id: 'spark_prism',
+    section: 'CHALLENGES',
+    description: 'USE A PRISM TILE IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'prism'); },
+  },
+  {
+    id: 'spark_rune',
+    section: 'CHALLENGES',
+    description: 'USE A RUNE WILDCARD TILE IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'rune'); },
+  },
+  {
+    id: 'spark_digraph',
+    section: 'CHALLENGES',
+    description: 'USE A DIGRAPH TILE IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'digraph'); },
+  },
+  {
+    id: 'spark_ember',
+    section: 'CHALLENGES',
+    description: 'USE A FIRE TILE IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'ember'); },
+  },
+  {
+    id: 'spark_gem_emerald',
+    section: 'CHALLENGES',
+    description: 'USE AN EMERALD GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemEmerald'); },
+  },
+  {
+    id: 'spark_gem_gold',
+    section: 'CHALLENGES',
+    description: 'USE A GOLD GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemGold'); },
+  },
+  {
+    id: 'spark_gem_sapphire',
+    section: 'CHALLENGES',
+    description: 'USE A SAPPHIRE GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemSapphire'); },
+  },
+  {
+    id: 'spark_gem_pearl',
+    section: 'CHALLENGES',
+    description: 'USE A PEARL GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemPearl'); },
+  },
+  {
+    id: 'spark_5clean',
+    section: 'CHALLENGES',
+    description: 'FORM A 5-LETTER WORD WITH NO GEMS OR DIGRAPHS',
     check(word, tiles) {
       return word.length === 5 &&
         !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
     },
   },
   {
-    id: '5L_ember1', section: '5 Letters', wordLength: 5,
-    description: 'INCLUDES 1 FIRE (EMBER) TILE',
+    id: 'spark_5digraph',
+    section: 'CHALLENGES',
+    description: 'FORM A 5-LETTER WORD USING A DIGRAPH TILE',
+    check(word, tiles) {
+      return word.length === 5 && tiles.some(t => t.tileType === 'digraph');
+    },
+  },
+  {
+    id: 'spark_5ember',
+    section: 'CHALLENGES',
+    description: 'FORM A 5-LETTER WORD WITH A FIRE TILE',
     check(word, tiles) {
       return word.length === 5 && tiles.some(t => t.tileType === 'ember');
     },
   },
   {
-    id: '5L_score500', section: '5 Letters', wordLength: 5,
-    description: 'WORTH AT LEAST 500 POINTS',
+    id: 'spark_5gem',
+    section: 'CHALLENGES',
+    description: 'FORM A 5-LETTER WORD WITH ANY GEM TILE',
+    check(word, tiles) {
+      return word.length === 5 && tiles.some(t => HX_GEM_TYPES.has(t.tileType));
+    },
+  },
+  {
+    id: 'spark_two_digraphs',
+    section: 'CHALLENGES',
+    description: 'USE 2 DIGRAPH TILES IN THE SAME WORD',
+    check(word, tiles) {
+      return tiles.filter(t => t.tileType === 'digraph').length >= 2;
+    },
+  },
+  {
+    id: 'spark_5score500',
+    section: 'CHALLENGES',
+    description: 'SCORE 500+ POINTS ON A SINGLE 5-LETTER WORD',
     check(word, tiles, state, score) {
       return word.length === 5 && score >= 500;
     },
   },
 
-  // ── 6 Letters ────────────────────────────────────────────────
+  // ── 🔥 BLAZE: Intermediate ────────────────────────────────────
   {
-    id: '6L_gem2', section: '6 Letters', wordLength: 6,
-    description: 'INCLUDES AT LEAST 2 GEM TILES',
-    check(word, tiles) {
-      return word.length === 6 && tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
-    },
-  },
-  {
-    id: '6L_digraph1', section: '6 Letters', wordLength: 6,
-    description: 'INCLUDES 1 DIGRAPH TILE',
-    check(word, tiles) {
-      return word.length === 6 && tiles.some(t => t.tileType === 'digraph');
-    },
-  },
-  {
-    id: '6L_plain', section: '6 Letters', wordLength: 6,
-    description: 'NO GEM TILES AND NO DIGRAPH TILES',
+    id: 'blaze_6clean',
+    section: 'CHALLENGES',
+    description: 'FORM A 6-LETTER WORD WITH NO GEMS OR DIGRAPHS',
     check(word, tiles) {
       return word.length === 6 &&
         !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
     },
   },
   {
-    id: '6L_score1500', section: '6 Letters', wordLength: 6,
-    description: 'WORTH AT LEAST 1,500 POINTS',
-    check(word, tiles, state, score) {
-      return word.length === 6 && score >= 1500;
-    },
-  },
-
-  // ── 7 Letters ────────────────────────────────────────────────
-  {
-    id: '7L_gem3', section: '7 Letters', wordLength: 7,
-    description: 'INCLUDES AT LEAST 3 GEM TILES',
+    id: 'blaze_6digraph_gem',
+    section: 'CHALLENGES',
+    description: 'FORM A 6-LETTER WORD WITH A DIGRAPH AND A GEM',
     check(word, tiles) {
-      return word.length === 7 && tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 3;
+      return word.length === 6 &&
+        tiles.some(t => t.tileType === 'digraph') &&
+        tiles.some(t => HX_GEM_TYPES.has(t.tileType));
     },
   },
   {
-    id: '7L_ember1_digraph2', section: '7 Letters', wordLength: 7,
-    description: 'INCLUDES 1 FIRE TILE AND 2 DIGRAPH TILES',
+    id: 'blaze_6ember_gem',
+    section: 'CHALLENGES',
+    description: 'FORM A 6-LETTER WORD WITH A FIRE TILE AND A GEM',
+    check(word, tiles) {
+      return word.length === 6 &&
+        tiles.some(t => t.tileType === 'ember') &&
+        tiles.some(t => HX_GEM_TYPES.has(t.tileType));
+    },
+  },
+  {
+    id: 'blaze_6prism',
+    section: 'CHALLENGES',
+    description: 'FORM A 6-LETTER WORD USING A PRISM TILE',
+    check(word, tiles) {
+      return word.length === 6 && tiles.some(t => t.tileType === 'prism');
+    },
+  },
+  {
+    id: 'blaze_6score2k',
+    section: 'CHALLENGES',
+    description: 'SCORE 2,000+ POINTS ON A SINGLE 6-LETTER WORD',
+    check(word, tiles, state, score) {
+      return word.length === 6 && score >= 2000;
+    },
+  },
+  {
+    id: 'blaze_gem_tanzanite',
+    section: 'CHALLENGES',
+    description: 'USE A TANZANITE GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemTanzanite'); },
+  },
+  {
+    id: 'blaze_gem_ruby',
+    section: 'CHALLENGES',
+    description: 'USE A RUBY GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemRuby'); },
+  },
+  {
+    id: 'blaze_ember_prism',
+    section: 'CHALLENGES',
+    description: 'USE A FIRE TILE AND A PRISM TILE IN THE SAME WORD',
+    check(word, tiles) {
+      return tiles.some(t => t.tileType === 'ember') &&
+             tiles.some(t => t.tileType === 'prism');
+    },
+  },
+  {
+    id: 'blaze_prism_rune',
+    section: 'CHALLENGES',
+    description: 'USE A PRISM TILE AND A RUNE TILE IN THE SAME WORD',
+    check(word, tiles) {
+      return tiles.some(t => t.tileType === 'prism') &&
+             tiles.some(t => t.tileType === 'rune');
+    },
+  },
+  {
+    id: 'blaze_7clean',
+    section: 'CHALLENGES',
+    description: 'FORM A 7-LETTER WORD WITH NO GEMS OR DIGRAPHS',
+    check(word, tiles) {
+      return word.length === 7 &&
+        !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
+    },
+  },
+  {
+    id: 'blaze_7gem2types',
+    section: 'CHALLENGES',
+    description: 'FORM A 7-LETTER WORD WITH 2 DIFFERENT GEM TYPES',
+    check(word, tiles) {
+      return word.length === 7 &&
+        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 2;
+    },
+  },
+  {
+    id: 'blaze_7ember_digraph',
+    section: 'CHALLENGES',
+    description: 'FORM A 7-LETTER WORD WITH A FIRE TILE AND A DIGRAPH',
     check(word, tiles) {
       return word.length === 7 &&
         tiles.some(t => t.tileType === 'ember') &&
-        tiles.filter(t => t.tileType === 'digraph').length >= 2;
+        tiles.some(t => t.tileType === 'digraph');
     },
   },
   {
-    id: '7L_allGems', section: '7 Letters', wordLength: 7,
-    description: 'USES ALL GEM TILES ON THE BOARD',
+    id: 'blaze_7portal',
+    section: 'CHALLENGES',
+    description: 'FORM A 7-LETTER WORD THAT TRAVERSES THE PORTAL',
+    check(word, tiles, state) {
+      if (word.length !== 7) return false;
+      if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
+             selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r));
+    },
+  },
+  {
+    id: 'blaze_gem_aquamarine',
+    section: 'CHALLENGES',
+    description: 'USE AN AQUAMARINE GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemAquamarine'); },
+  },
+  {
+    id: 'blaze_gem_topaz',
+    section: 'CHALLENGES',
+    description: 'USE A TOPAZ GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemTopaz'); },
+  },
+  {
+    id: 'blaze_7score5k',
+    section: 'CHALLENGES',
+    description: 'SCORE 5,000+ POINTS ON A SINGLE 7-LETTER WORD',
+    check(word, tiles, state, score) {
+      return word.length === 7 && score >= 5000;
+    },
+  },
+  {
+    id: 'blaze_7allGems',
+    section: 'CHALLENGES',
+    description: 'FORM A 7-LETTER WORD THAT CLEARS ALL GEM TILES FROM THE BOARD',
     check(word, tiles, state) {
       if (word.length !== 7) return false;
       const boardGems = [
-        ...state.gemEmeraldTiles, ...state.gemGoldTiles, ...state.gemSapphireTiles,
-        ...state.gemPearlTiles,   ...state.gemTanzaniteTiles, ...state.gemRubyTiles,
-        ...state.gemDiamondTiles, ...state.gemAquamarineTiles, ...state.gemTopazTiles,
-        ...state.gemOpalTiles,    ...state.gemImperialJadeTiles, ...state.gemAlexandriteTiles,
+        ...state.gemEmeraldTiles,   ...state.gemGoldTiles,         ...state.gemSapphireTiles,
+        ...state.gemPearlTiles,     ...state.gemTanzaniteTiles,    ...state.gemRubyTiles,
+        ...state.gemDiamondTiles,   ...state.gemAquamarineTiles,   ...state.gemTopazTiles,
+        ...state.gemOpalTiles,      ...state.gemImperialJadeTiles, ...state.gemAlexandriteTiles,
       ];
       if (boardGems.length === 0) return false;
       const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
       return boardGems.every(g => selKeys.has(hxKey(g.q, g.r)));
     },
   },
-  {
-    id: '7L_score10k', section: '7 Letters', wordLength: 7,
-    description: 'WORTH AT LEAST 10,000 POINTS',
-    check(word, tiles, state, score) {
-      return word.length === 7 && score >= 10000;
-    },
-  },
-  {
-    id: '7L_3gemTypes', section: '7 Letters', wordLength: 7,
-    description: 'USES 3 DIFFERENT GEM TILE TYPES',
-    check(word, tiles) {
-      return word.length === 7 &&
-        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 3;
-    },
-  },
 
-  // ── 8 Letters ────────────────────────────────────────────────
+  // ── 💎 INFERNO: Advanced ──────────────────────────────────────
   {
-    id: '8L_plain', section: '8 Letters', wordLength: 8,
-    description: 'NO GEM TILES AND NO DIGRAPH TILES',
+    id: 'inferno_8clean',
+    section: 'CHALLENGES',
+    description: 'FORM AN 8-LETTER WORD WITH NO GEMS OR DIGRAPHS',
     check(word, tiles) {
       return word.length === 8 &&
         !tiles.some(t => HX_GEM_TYPES.has(t.tileType) || t.tileType === 'digraph');
     },
   },
   {
-    id: '8L_allDigraphs', section: '8 Letters', wordLength: 8,
-    description: 'USES ALL DIGRAPH TILES ON THE BOARD',
+    id: 'inferno_8ember_2gems',
+    section: 'CHALLENGES',
+    description: 'FORM AN 8-LETTER WORD WITH A FIRE TILE AND 2+ GEMS',
+    check(word, tiles) {
+      return word.length === 8 &&
+        tiles.some(t => t.tileType === 'ember') &&
+        tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
+    },
+  },
+  {
+    id: 'inferno_8portal_gem',
+    section: 'CHALLENGES',
+    description: 'TRAVERSE THE PORTAL IN AN 8-LETTER WORD CONTAINING A GEM',
+    check(word, tiles, state) {
+      if (word.length !== 8) return false;
+      if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
+             selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r)) &&
+             tiles.some(t => HX_GEM_TYPES.has(t.tileType));
+    },
+  },
+  {
+    id: 'inferno_8_3gemtypes',
+    section: 'CHALLENGES',
+    description: 'FORM AN 8-LETTER WORD WITH 3 DIFFERENT GEM TYPES',
+    check(word, tiles) {
+      return word.length === 8 &&
+        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 3;
+    },
+  },
+  {
+    id: 'inferno_8alldigs',
+    section: 'CHALLENGES',
+    description: 'FORM AN 8-LETTER WORD THAT CLEARS EVERY DIGRAPH TILE FROM THE BOARD',
     check(word, tiles, state) {
       if (word.length !== 8) return false;
       if (state.digraphTiles.length === 0) return false;
@@ -1505,94 +1692,157 @@ const HX_LEVEL_REQUIREMENTS = [
     },
   },
   {
-    id: '8L_ember1_gem2', section: '8 Letters', wordLength: 8,
-    description: 'INCLUDES A FIRE TILE AND 2 GEM TILES',
-    check(word, tiles) {
-      return word.length === 8 &&
-        tiles.some(t => t.tileType === 'ember') &&
-        tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
-    },
+    id: 'inferno_gem_diamond',
+    section: 'CHALLENGES',
+    description: 'USE A DIAMOND GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemDiamond'); },
   },
   {
-    id: '8L_ember2', section: '8 Letters', wordLength: 8,
-    description: '2 FIRE TILES',
-    check(word, tiles) {
-      return word.length === 8 && tiles.filter(t => t.tileType === 'ember').length >= 2;
-    },
-  },
-  {
-    id: '8L_score25k', section: '8 Letters', wordLength: 8,
-    description: 'WORTH AT LEAST 25,000 POINTS',
+    id: 'inferno_8score10k',
+    section: 'CHALLENGES',
+    description: 'SCORE 10,000+ POINTS ON A SINGLE 8-LETTER WORD',
     check(word, tiles, state, score) {
-      return word.length === 8 && score >= 25000;
-    },
-  },
-
-  // ── 9 Letters ────────────────────────────────────────────────
-  {
-    id: '9L_diamond_portal', section: '9 Letters', wordLength: 9,
-    description: 'USES A DIAMOND TILE AND THE PORTAL',
-    check(word, tiles, state) {
-      if (word.length !== 9) return false;
-      if (!tiles.some(t => t.tileType === 'gemDiamond')) return false;
-      if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
-      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
-      return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
-             selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r));
+      return word.length === 8 && score >= 10000;
     },
   },
   {
-    id: '9L_ember2', section: '9 Letters', wordLength: 9,
-    description: '2 FIRE TILES',
-    check(word, tiles) {
-      return word.length === 9 && tiles.filter(t => t.tileType === 'ember').length >= 2;
-    },
+    id: 'inferno_gem_opal',
+    section: 'CHALLENGES',
+    description: 'USE AN OPAL GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemOpal'); },
   },
   {
-    id: '9L_3gemTypes', section: '9 Letters', wordLength: 9,
-    description: 'USES 3 DIFFERENT GEM TILE TYPES',
-    check(word, tiles) {
-      return word.length === 9 &&
-        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 3;
-    },
+    id: 'inferno_9word',
+    section: 'CHALLENGES',
+    description: 'FORM A 9-LETTER WORD',
+    check(word) { return word.length === 9; },
   },
   {
-    id: '9L_score50k', section: '9 Letters', wordLength: 9,
-    description: 'WORTH AT LEAST 50,000 POINTS',
-    check(word, tiles, state, score) {
-      return word.length === 9 && score >= 50000;
-    },
-  },
-  {
-    id: '9L_portal_ember1_gem2', section: '9 Letters', wordLength: 9,
-    description: 'INCLUDES A PORTAL, A FIRE TILE, AND 2 GEM TILES',
+    id: 'inferno_9portal_ember',
+    section: 'CHALLENGES',
+    description: 'FORM A 9-LETTER PORTAL WORD WITH A FIRE TILE',
     check(word, tiles, state) {
       if (word.length !== 9) return false;
       if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
       const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
       return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
              selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r)) &&
+             tiles.some(t => t.tileType === 'ember');
+    },
+  },
+  {
+    id: 'inferno_9_2gems',
+    section: 'CHALLENGES',
+    description: 'FORM A 9-LETTER WORD WITH 2+ GEM TILES',
+    check(word, tiles) {
+      return word.length === 9 &&
+        tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
+    },
+  },
+  {
+    id: 'inferno_9_3gemtypes',
+    section: 'CHALLENGES',
+    description: 'FORM A 9-LETTER WORD WITH 3 DIFFERENT GEM TYPES',
+    check(word, tiles) {
+      return word.length === 9 &&
+        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 3;
+    },
+  },
+  {
+    id: 'inferno_9score25k',
+    section: 'CHALLENGES',
+    description: 'SCORE 25,000+ POINTS ON A SINGLE 9-LETTER WORD',
+    check(word, tiles, state, score) {
+      return word.length === 9 && score >= 25000;
+    },
+  },
+  {
+    id: 'inferno_gem_ijade',
+    section: 'CHALLENGES',
+    description: 'USE AN IMPERIAL JADE GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemImperialJade'); },
+  },
+  {
+    id: 'inferno_gem_alexandrite',
+    section: 'CHALLENGES',
+    description: 'USE AN ALEXANDRITE GEM IN ANY WORD',
+    check(word, tiles) { return tiles.some(t => t.tileType === 'gemAlexandrite'); },
+  },
+  {
+    id: 'inferno_ember_prism_portal',
+    section: 'CHALLENGES',
+    description: 'USE A FIRE TILE, PRISM TILE, AND THE PORTAL IN ONE WORD (7+ LETTERS)',
+    check(word, tiles, state) {
+      if (word.length < 7) return false;
+      if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
+             selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r)) &&
              tiles.some(t => t.tileType === 'ember') &&
-             tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 2;
+             tiles.some(t => t.tileType === 'prism');
     },
   },
 
-  // ── 10 Letters ───────────────────────────────────────────────
+  // ── 🌟 ASCENDANT: Legendary ───────────────────────────────────
   {
-    id: '10L_diamond_portal', section: '10 Letters', wordLength: 10,
-    description: 'USES A DIAMOND TILE AND THE PORTAL',
+    id: 'ascend_10word',
+    section: 'CHALLENGES',
+    description: 'FORM A 10-LETTER WORD',
+    check(word) { return word.length === 10; },
+  },
+  {
+    id: 'ascend_9_4gemtypes',
+    section: 'CHALLENGES',
+    description: 'FORM A 9-LETTER WORD WITH 4 DIFFERENT GEM TYPES',
+    check(word, tiles) {
+      return word.length === 9 &&
+        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 4;
+    },
+  },
+  {
+    id: 'ascend_10portal_diamond',
+    section: 'CHALLENGES',
+    description: 'FORM A 10-LETTER PORTAL WORD WITH A DIAMOND GEM',
     check(word, tiles, state) {
       if (word.length !== 10) return false;
-      if (!tiles.some(t => t.tileType === 'gemDiamond')) return false;
       if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
+      if (!tiles.some(t => t.tileType === 'gemDiamond')) return false;
       const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
       return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
              selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r));
     },
   },
   {
-    id: '10L_allDigraphs', section: '10 Letters', wordLength: 10,
-    description: 'USES ALL DIGRAPH TILES ON THE BOARD',
+    id: 'ascend_10score100k',
+    section: 'CHALLENGES',
+    description: 'SCORE 100,000+ POINTS ON A SINGLE 10-LETTER WORD',
+    check(word, tiles, state, score) {
+      return word.length === 10 && score >= 100000;
+    },
+  },
+  {
+    id: 'ascend_10_5gemtypes',
+    section: 'CHALLENGES',
+    description: 'FORM A 10-LETTER WORD WITH 5 DIFFERENT GEM TYPES',
+    check(word, tiles) {
+      return word.length === 10 &&
+        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 5;
+    },
+  },
+  {
+    id: 'ascend_10ember2_gem3',
+    section: 'CHALLENGES',
+    description: 'FORM A 10-LETTER WORD WITH 2 FIRE TILES AND 3+ GEMS',
+    check(word, tiles) {
+      return word.length === 10 &&
+        tiles.filter(t => t.tileType === 'ember').length >= 2 &&
+        tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 3;
+    },
+  },
+  {
+    id: 'ascend_10alldigs',
+    section: 'CHALLENGES',
+    description: 'FORM A 10-LETTER WORD THAT CLEARS EVERY DIGRAPH TILE FROM THE BOARD',
     check(word, tiles, state) {
       if (word.length !== 10) return false;
       if (state.digraphTiles.length === 0) return false;
@@ -1601,27 +1851,32 @@ const HX_LEVEL_REQUIREMENTS = [
     },
   },
   {
-    id: '10L_score100k', section: '10 Letters', wordLength: 10,
-    description: 'WORTH AT LEAST 100,000 POINTS',
-    check(word, tiles, state, score) {
-      return word.length === 10 && score >= 100000;
+    id: 'ascend_rune_gem_portal',
+    section: 'CHALLENGES',
+    description: 'USE A RUNE TILE, ANY GEM, AND THE PORTAL IN ONE WORD',
+    check(word, tiles, state) {
+      if (!state.portalOpen || !state.portalEntry || !state.portalExit) return false;
+      if (!tiles.some(t => t.tileType === 'rune')) return false;
+      if (!tiles.some(t => HX_GEM_TYPES.has(t.tileType))) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return selKeys.has(hxKey(state.portalEntry.q, state.portalEntry.r)) &&
+             selKeys.has(hxKey(state.portalExit.q,  state.portalExit.r));
     },
   },
   {
-    id: '10L_ember2_gem3', section: '10 Letters', wordLength: 10,
-    description: '2 FIRE TILES AND AT LEAST 3 GEM TILES',
-    check(word, tiles) {
-      return word.length === 10 &&
-        tiles.filter(t => t.tileType === 'ember').length >= 2 &&
-        tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).length >= 3;
-    },
-  },
-  {
-    id: '10L_5gemTypes', section: '10 Letters', wordLength: 10,
-    description: 'USES 5 DIFFERENT GEM TILE TYPES',
-    check(word, tiles) {
-      return word.length === 10 &&
-        new Set(tiles.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType)).size >= 5;
+    id: 'ascend_allgems',
+    section: 'CHALLENGES',
+    description: 'USE EVERY GEM TILE ON THE BOARD IN A SINGLE WORD',
+    check(word, tiles, state) {
+      const boardGems = [
+        ...state.gemEmeraldTiles,   ...state.gemGoldTiles,         ...state.gemSapphireTiles,
+        ...state.gemPearlTiles,     ...state.gemTanzaniteTiles,    ...state.gemRubyTiles,
+        ...state.gemDiamondTiles,   ...state.gemAquamarineTiles,   ...state.gemTopazTiles,
+        ...state.gemOpalTiles,      ...state.gemImperialJadeTiles, ...state.gemAlexandriteTiles,
+      ];
+      if (boardGems.length === 0) return false;
+      const selKeys = new Set(tiles.map(t => hxKey(t.q, t.r)));
+      return boardGems.every(g => selKeys.has(hxKey(g.q, g.r)));
     },
   },
 ];
