@@ -821,17 +821,86 @@ function injectSvgDefs(svg) {
   ensureLinearGradient('hx-digraph-gradient',  '#0d9488', '#2dd4bf');
   ensureLinearGradient('hx-portal-gradient',   '#7b2ff7', '#e040fb');
   ensureLinearGradient('hx-gem-emerald-gradient',   '#16a34a', '#4ade80');
-  ensureLinearGradient('hx-gem-gold-gradient',       '#d97706', '#fcd34d');
+
+  // Gold — bright lemon yellow (separated from Topaz and Ember which are orange)
+  if (!document.getElementById('hx-gem-gold-gradient')) {
+    const goldGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    goldGrad.setAttribute('id', 'hx-gem-gold-gradient');
+    goldGrad.setAttribute('x1', '0%'); goldGrad.setAttribute('y1', '0%');
+    goldGrad.setAttribute('x2', '100%'); goldGrad.setAttribute('y2', '100%');
+    [['0%', '#92400e'], ['50%', '#eab308'], ['100%', '#fef08a']].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset); s.setAttribute('stop-color', color);
+      goldGrad.appendChild(s);
+    });
+    defs.appendChild(goldGrad);
+  }
+
   ensureLinearGradient('hx-gem-sapphire-gradient',   '#1d4ed8', '#93c5fd');
   ensureLinearGradient('hx-gem-pearl-gradient',      '#d4c5a9', '#ffffff');
-  ensureLinearGradient('hx-gem-tanzanite-gradient',  '#1e0a5e', '#7c3aed');
+
+  // Tanzanite — deep navy blue (separated from Rune and Amethyst purples)
+  if (!document.getElementById('hx-gem-tanzanite-gradient')) {
+    const tanzaniteGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    tanzaniteGrad.setAttribute('id', 'hx-gem-tanzanite-gradient');
+    tanzaniteGrad.setAttribute('x1', '0%'); tanzaniteGrad.setAttribute('y1', '0%');
+    tanzaniteGrad.setAttribute('x2', '100%'); tanzaniteGrad.setAttribute('y2', '100%');
+    [['0%', '#020617'], ['50%', '#1e3a8a'], ['100%', '#60a5fa']].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset); s.setAttribute('stop-color', color);
+      tanzaniteGrad.appendChild(s);
+    });
+    defs.appendChild(tanzaniteGrad);
+  }
+
   ensureLinearGradient('hx-gem-ruby-gradient',       '#7f1d1d', '#ef4444');
-  ensureLinearGradient('hx-gem-diamond-gradient',    '#a5f3fc', '#ffffff');
+
+  // Diamond — steel silver (separated from Selenite moonstone blue-white)
+  if (!document.getElementById('hx-gem-diamond-gradient')) {
+    const diamondGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    diamondGrad.setAttribute('id', 'hx-gem-diamond-gradient');
+    diamondGrad.setAttribute('x1', '0%'); diamondGrad.setAttribute('y1', '0%');
+    diamondGrad.setAttribute('x2', '100%'); diamondGrad.setAttribute('y2', '100%');
+    [['0%', '#334155'], ['50%', '#94a3b8'], ['100%', '#f1f5f9']].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset); s.setAttribute('stop-color', color);
+      diamondGrad.appendChild(s);
+    });
+    defs.appendChild(diamondGrad);
+  }
+
   ensureLinearGradient('hx-gem-aquamarine-gradient',  '#0891b2', '#67e8f9');
-  ensureLinearGradient('hx-gem-topaz-gradient',       '#b45309', '#fde68a');
+
+  // Topaz — warm orange (clearly orange, Gold is clearly yellow)
+  if (!document.getElementById('hx-gem-topaz-gradient')) {
+    const topazGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    topazGrad.setAttribute('id', 'hx-gem-topaz-gradient');
+    topazGrad.setAttribute('x1', '0%'); topazGrad.setAttribute('y1', '0%');
+    topazGrad.setAttribute('x2', '100%'); topazGrad.setAttribute('y2', '100%');
+    [['0%', '#7c2d12'], ['50%', '#ea580c'], ['100%', '#fdba74']].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset); s.setAttribute('stop-color', color);
+      topazGrad.appendChild(s);
+    });
+    defs.appendChild(topazGrad);
+  }
+
   ensureLinearGradient('hx-gem-opal-gradient',        '#c4b5fd', '#ffffff');
   ensureLinearGradient('hx-gem-imperialjade-gradient','#064e3b', '#34d399');
-  ensureLinearGradient('hx-gem-alexandrite-gradient', '#4c1d95', '#10b981');
+
+  // Alexandrite — vivid fuchsia (removed green overlap with Imperial Jade)
+  if (!document.getElementById('hx-gem-alexandrite-gradient')) {
+    const alexGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    alexGrad.setAttribute('id', 'hx-gem-alexandrite-gradient');
+    alexGrad.setAttribute('x1', '0%'); alexGrad.setAttribute('y1', '0%');
+    alexGrad.setAttribute('x2', '100%'); alexGrad.setAttribute('y2', '100%');
+    [['0%', '#4a044e'], ['33%', '#a21caf'], ['67%', '#e879f9'], ['100%', '#fce7f3']].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset); s.setAttribute('stop-color', color);
+      alexGrad.appendChild(s);
+    });
+    defs.appendChild(alexGrad);
+  }
 
   // Amethyst — deep purple to violet gradient
   if (!document.getElementById('hx-amethyst-gradient')) {
@@ -3295,8 +3364,9 @@ export function startHexacore() {
         tile.point    = saved.point;
         tile.tileType = saved.tileType;
 
-        // Add to the appropriate type array
-        tileTypeArrays[saved.tileType]?.push(tile);
+        // Add to the appropriate type array AND register in the O(1) registry
+        const typeArr = tileTypeArrays[saved.tileType];
+        if (typeArr) _hxRegisterTile(tile, typeArr);
 
         // Sync SVG letter/point text for all tile types
         // (applyTileType only handles special types; normal tiles need explicit sync)

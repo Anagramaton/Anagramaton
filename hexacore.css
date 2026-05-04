@@ -607,71 +607,74 @@ body.hx-active #hex-grid {
   to   { filter: drop-shadow(0 0 12px rgba(74, 222, 128, 1)); }
 }
 
-/* ── Gold Gem — warm amber glow, shimmer ───────────────────────── */
+/* ── Gold Gem — Tier 1: bright lemon yellow, slow subtle glow ─── */
 .hx-gem-gold {
   fill: url(#hx-gem-gold-gradient);
-  animation: hx-gem-gold-shimmer 1.4s ease-in-out infinite alternate;
+  animation: hx-gem-gold-shimmer 2.2s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-gold-shimmer {
-  0%   { filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.8)); }
-  50%  { filter: brightness(1.3) drop-shadow(0 0 14px rgba(252, 211, 77, 1)); }
-  100% { filter: drop-shadow(0 0 5px rgba(217, 119, 6, 0.8)); }
+  from { filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.8)); }
+  to   { filter: drop-shadow(0 0 12px rgba(254, 240, 138, 1)); }
 }
 
-/* ── Sapphire Gem — blue glow shimmer ──────────────────────────── */
+/* ── Sapphire Gem — Tier 1: blue glow, slow subtle pulse ─────── */
 .hx-gem-sapphire {
   fill: url(#hx-gem-sapphire-gradient);
-  animation: hx-gem-sapphire-shimmer 1.5s ease-in-out infinite alternate;
+  animation: hx-gem-sapphire-shimmer 2.4s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-sapphire-shimmer {
-  0%   { filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); }
-  50%  { filter: brightness(1.3) drop-shadow(0 0 16px rgba(147, 197, 253, 1)); }
-  100% { filter: drop-shadow(0 0 5px rgba(29, 78, 216, 0.9)); }
+  from { filter: drop-shadow(0 0 4px rgba(29, 78, 216, 0.8)); }
+  to   { filter: drop-shadow(0 0 12px rgba(147, 197, 253, 1)); }
 }
 
-/* ── Pearl Gem — soft white/cream glow, gentle pulse ───────────── */
+/* ── Pearl Gem — Tier 2: soft glow + gentle scale ────────────── */
 .hx-gem-pearl {
   fill: url(#hx-gem-pearl-gradient);
-  animation: hx-gem-pearl-pulse 1.8s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-pearl-pulse 2s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-pearl-pulse {
-  from { filter: drop-shadow(0 0 4px rgba(255, 245, 230, 0.7)); }
-  to   { filter: brightness(1.2) drop-shadow(0 0 14px rgba(255, 255, 255, 1)); }
+  from { filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.7)); transform: scale(1); }
+  to   { filter: brightness(1.2) drop-shadow(0 0 14px rgba(253, 246, 228, 1)); transform: scale(1.03); }
 }
 
-/* ── Tanzanite Gem — deep violet-blue shimmer ───────────────────── */
+/* ── Tanzanite Gem — Tier 2: navy blue glow + gentle scale ─────── */
 .hx-gem-tanzanite {
   fill: url(#hx-gem-tanzanite-gradient);
-  animation: hx-gem-tanzanite-shimmer 1.3s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-tanzanite-shimmer 1.8s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-tanzanite-shimmer {
-  0%   { filter: drop-shadow(0 0 5px rgba(67, 20, 180, 0.8)); }
-  50%  { filter: brightness(1.4) drop-shadow(0 0 18px rgba(124, 58, 237, 1)); }
-  100% { filter: drop-shadow(0 0 6px rgba(109, 40, 217, 0.9)); }
+  from { filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.8)); transform: scale(1); }
+  to   { filter: brightness(1.3) drop-shadow(0 0 18px rgba(30, 58, 138, 1)); transform: scale(1.035); }
 }
 
-/* ── Ruby Gem — ruby red pulse ──────────────────────────────────── */
+/* ── Ruby Gem — Tier 2: strong red glow + gentle scale ──────────── */
 .hx-gem-ruby {
   fill: url(#hx-gem-ruby-gradient);
-  animation: hx-gem-ruby-pulse 1.3s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-ruby-pulse 1.6s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-ruby-pulse {
-  0%   { filter: drop-shadow(0 0 6px rgba(185, 28, 28, 0.8)); }
-  50%  { filter: brightness(1.5) drop-shadow(0 0 20px rgba(239, 68, 68, 1)); }
-  100% { filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.9)); }
+  from { filter: drop-shadow(0 0 6px rgba(185, 28, 28, 0.8)); transform: scale(1); }
+  to   { filter: brightness(1.5) drop-shadow(0 0 20px rgba(239, 68, 68, 1)); transform: scale(1.035); }
 }
 
-
+/* ── Diamond Gem — Tier 3: silver aura + brightness flicker + scale */
 .hx-gem-diamond {
   fill: url(#hx-gem-diamond-gradient);
-  animation: hx-gem-diamond-sparkle 1.2s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-diamond-sparkle 1.5s ease-in-out infinite;
 }
 @keyframes hx-gem-diamond-sparkle {
-  0%   { filter: drop-shadow(0 0 6px rgba(165, 243, 252, 0.8)); }
-  33%  { filter: brightness(1.6) drop-shadow(0 0 20px rgba(224, 242, 254, 1))
-                 drop-shadow(0 0 6px rgba(255, 255, 255, 0.9)); }
-  66%  { filter: brightness(1.2) drop-shadow(0 0 14px rgba(103, 232, 249, 1)); }
-  100% { filter: drop-shadow(0 0 8px rgba(165, 243, 252, 0.9)); }
+  0%   { filter: drop-shadow(0 0 6px rgba(248, 250, 252, 0.9)); transform: scale(1); }
+  33%  { filter: brightness(1.3) drop-shadow(0 0 20px rgba(203, 213, 225, 1)); transform: scale(1.055); }
+  66%  { filter: brightness(1.15) drop-shadow(0 0 14px rgba(241, 245, 249, 1)); transform: scale(1.03); }
+  100% { filter: drop-shadow(0 0 8px rgba(203, 213, 225, 1)); transform: scale(1); }
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -689,16 +692,16 @@ body.hx-active #hex-grid {
 .hx-gem-emerald-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-emerald-spawn-anim 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-emerald-spawn-anim 0.50s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-gold-spawn-anim {
   0%   { opacity: 0.2; transform: scale(0.4) rotate(0deg);
          filter: drop-shadow(0 0 0px transparent); }
   40%  { opacity: 1;   transform: scale(1.3) rotate(15deg);
-         filter: brightness(3) drop-shadow(0 0 22px rgba(252, 211, 77, 1)); }
+         filter: brightness(3) drop-shadow(0 0 22px rgba(254, 240, 138, 1)); }
   100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
-         filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.8)); }
+         filter: drop-shadow(0 0 5px rgba(234, 179, 8, 0.8)); }
 }
 .hx-gem-gold-spawn {
   transform-box: fill-box;
@@ -714,28 +717,28 @@ body.hx-active #hex-grid {
   70%  { opacity: 1;   transform: scale(0.95) rotate(5deg);
          filter: brightness(1.5) drop-shadow(0 0 14px rgba(59, 130, 246, 0.9)); }
   100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
-         filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); }
+         filter: drop-shadow(0 0 5px rgba(29, 78, 216, 0.8)); }
 }
 .hx-gem-sapphire-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-sapphire-spawn-anim 0.62s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-sapphire-spawn-anim 0.52s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-diamond-spawn-anim {
   0%   { opacity: 0;   transform: scale(0.2) rotate(0deg);
          filter: drop-shadow(0 0 0px transparent); }
   20%  { opacity: 0.6; transform: scale(0.8) rotate(15deg);
-         filter: brightness(2) drop-shadow(0 0 12px rgba(165, 243, 252, 0.8)); }
+         filter: brightness(2) drop-shadow(0 0 12px rgba(148, 163, 184, 0.8)); }
   40%  { opacity: 1;   transform: scale(1.45) rotate(-10deg);
-         filter: brightness(5) drop-shadow(0 0 35px rgba(255, 255, 255, 1))
-                 drop-shadow(0 0 15px rgba(165, 243, 252, 1)); }
+         filter: brightness(4) drop-shadow(0 0 35px rgba(241, 245, 249, 1))
+                 drop-shadow(0 0 15px rgba(203, 213, 225, 1)); }
   65%  { opacity: 1;   transform: scale(0.92) rotate(4deg);
-         filter: brightness(2) drop-shadow(0 0 20px rgba(103, 232, 249, 1)); }
+         filter: brightness(1.5) drop-shadow(0 0 20px rgba(241, 245, 249, 1)); }
   82%  { opacity: 1;   transform: scale(1.05) rotate(-2deg);
-         filter: brightness(1.6) drop-shadow(0 0 14px rgba(165, 243, 252, 0.9)); }
+         filter: brightness(1.3) drop-shadow(0 0 14px rgba(203, 213, 225, 0.9)); }
   100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
-         filter: drop-shadow(0 0 8px rgba(165, 243, 252, 0.9)); }
+         filter: drop-shadow(0 0 8px rgba(203, 213, 225, 0.9)); }
 }
 .hx-gem-diamond-spawn {
   transform-box: fill-box;
@@ -758,21 +761,21 @@ body.hx-active #hex-grid {
   animation: hx-gem-pearl-spawn-anim 0.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Tanzanite spawn — dramatic violet surge */
+/* Tanzanite spawn — dramatic navy blue surge */
 @keyframes hx-gem-tanzanite-spawn-anim {
   0%   { opacity: 0.1; transform: scale(0.3) rotate(0deg);
          filter: drop-shadow(0 0 0px transparent); }
   30%  { opacity: 1;   transform: scale(1.4) rotate(-25deg);
-         filter: brightness(4) drop-shadow(0 0 30px rgba(124, 58, 237, 1)); }
+         filter: brightness(4) drop-shadow(0 0 30px rgba(96, 165, 250, 1)); }
   65%  { opacity: 1;   transform: scale(0.93) rotate(6deg);
-         filter: brightness(1.6) drop-shadow(0 0 16px rgba(109, 40, 217, 0.9)); }
+         filter: brightness(1.6) drop-shadow(0 0 16px rgba(30, 58, 138, 0.9)); }
   100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
-         filter: drop-shadow(0 0 7px rgba(67, 20, 180, 0.8)); }
+         filter: drop-shadow(0 0 7px rgba(96, 165, 250, 0.8)); }
 }
 .hx-gem-tanzanite-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-tanzanite-spawn-anim 0.66s cubic-bezier(10.34, 10.56, 10.64, 1) forwards;
+  animation: hx-gem-tanzanite-spawn-anim 0.66s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Ruby spawn — blazing red flash */
@@ -792,7 +795,7 @@ body.hx-active #hex-grid {
 .hx-gem-ruby-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-ruby-spawn-anim 1.70s cubic-bezier(1.34, 0.56, 1.64, 1) forwards;
+  animation: hx-gem-ruby-spawn-anim 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 
@@ -811,7 +814,7 @@ body.hx-active #hex-grid {
 
 @keyframes hx-gem-gold-burst {
   0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
-  35%  { filter: brightness(4.5) drop-shadow(0 0 26px rgba(252, 211, 77, 1)); }
+  35%  { filter: brightness(4.5) drop-shadow(0 0 26px rgba(254, 240, 138, 1)); }
   100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
 }
 .hx-consumed-gemGold {
@@ -835,8 +838,8 @@ body.hx-active #hex-grid {
 
 @keyframes hx-gem-diamond-burst {
   0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
-  25%  { filter: brightness(6)   drop-shadow(0 0 35px rgba(255, 255, 255, 1))
-                                  drop-shadow(0 0 15px rgba(165, 243, 252, 1)); }
+  25%  { filter: brightness(5)   drop-shadow(0 0 35px rgba(241, 245, 249, 1))
+                                  drop-shadow(0 0 15px rgba(203, 213, 225, 1)); }
   100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
 }
 .hx-consumed-gemDiamond {
@@ -860,8 +863,8 @@ body.hx-active #hex-grid {
 
 @keyframes hx-gem-tanzanite-burst {
   0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
-  30%  { filter: brightness(5.5) drop-shadow(0 0 30px rgba(124, 58, 237, 1))
-                                  drop-shadow(0 0 12px rgba(167, 139, 250, 0.8)); }
+  30%  { filter: brightness(5.5) drop-shadow(0 0 30px rgba(96, 165, 250, 1))
+                                  drop-shadow(0 0 12px rgba(30, 58, 138, 0.8)); }
   100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
 }
 .hx-consumed-gemTanzanite {
@@ -884,14 +887,16 @@ body.hx-active #hex-grid {
   pointer-events: none;
 }
 
-/* ── Aquamarine Gem — teal-cyan, gentle wave shimmer ───────────── */
+/* ── Aquamarine Gem — Tier 3: vivid cyan aura + brightness + scale */
 .hx-gem-aquamarine {
   fill: url(#hx-gem-aquamarine-gradient);
+  transform-box: fill-box;
+  transform-origin: center;
   animation: hx-gem-aquamarine-pulse 1.4s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-aquamarine-pulse {
-  from { filter: drop-shadow(0 0 5px rgba(8, 145, 178, 0.8)); }
-  to   { filter: brightness(1.4) drop-shadow(0 0 18px rgba(103, 232, 249, 1)); }
+  from { filter: drop-shadow(0 0 5px rgba(8, 145, 178, 0.8)); transform: scale(1); }
+  to   { filter: brightness(1.4) drop-shadow(0 0 20px rgba(103, 232, 249, 1)); transform: scale(1.05); }
 }
 
 @keyframes hx-gem-aquamarine-spawn-anim {
@@ -920,34 +925,35 @@ body.hx-active #hex-grid {
   pointer-events: none;
 }
 
-/* ── Topaz Gem — warm amber-gold shimmer ───────────────────────── */
+/* ── Topaz Gem — Tier 3: warm orange aura + brightness + scale ── */
 .hx-gem-topaz {
   fill: url(#hx-gem-topaz-gradient);
-  animation: hx-gem-topaz-shimmer 1.3s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-topaz-shimmer 1.45s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-topaz-shimmer {
-  0%   { filter: drop-shadow(0 0 5px rgba(180, 83, 9, 0.8)); }
-  50%  { filter: brightness(1.5) drop-shadow(0 0 22px rgba(253, 230, 138, 1)); }
-  100% { filter: drop-shadow(0 0 5px rgba(180, 83, 9, 0.8)); }
+  from { filter: drop-shadow(0 0 5px rgba(251, 146, 60, 0.9)); transform: scale(1); }
+  to   { filter: brightness(1.25) drop-shadow(0 0 22px rgba(251, 146, 60, 1)); transform: scale(1.055); }
 }
 
 @keyframes hx-gem-topaz-spawn-anim {
   0%   { opacity: 0.2; transform: scale(0.4) rotate(0deg);
          filter: drop-shadow(0 0 0px transparent); }
   40%  { opacity: 1;   transform: scale(1.3) rotate(15deg);
-         filter: brightness(3) drop-shadow(0 0 26px rgba(253, 230, 138, 1)); }
+         filter: brightness(3) drop-shadow(0 0 26px rgba(251, 146, 60, 1)); }
   100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
-         filter: drop-shadow(0 0 5px rgba(180, 83, 9, 0.8)); }
+         filter: drop-shadow(0 0 5px rgba(234, 88, 12, 0.8)); }
 }
 .hx-gem-topaz-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-topaz-spawn-anim 0.68s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-topaz-spawn-anim 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-topaz-burst {
   0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
-  30%  { filter: brightness(5)   drop-shadow(0 0 28px rgba(253, 230, 138, 1)); }
+  30%  { filter: brightness(5)   drop-shadow(0 0 28px rgba(251, 146, 60, 1)); }
   100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
 }
 .hx-consumed-gemTopaz {
@@ -957,15 +963,19 @@ body.hx-active #hex-grid {
   pointer-events: none;
 }
 
-/* ── Opal Gem — iridescent, slow hue-rotate shimmer ───────────── */
+/* ── Opal Gem — Tier 4: full hue-rotate rainbow cycle ─────────── */
 .hx-gem-opal {
   fill: url(#hx-gem-opal-gradient);
-  animation: hx-gem-opal-shimmer 2.5s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-opal-idle 3.5s linear infinite;
 }
-@keyframes hx-gem-opal-shimmer {
-  0%   { filter: hue-rotate(0deg)  drop-shadow(0 0 5px rgba(196, 181, 253, 0.8)); }
-  50%  { filter: hue-rotate(30deg) brightness(1.3) drop-shadow(0 0 16px rgba(255, 255, 255, 1)); }
-  100% { filter: hue-rotate(60deg) drop-shadow(0 0 8px rgba(196, 181, 253, 0.9)); }
+@keyframes hx-gem-opal-idle {
+  0%   { filter: hue-rotate(0deg)   drop-shadow(0 0 10px #c4b5fd) brightness(1.1); transform: scale(1); }
+  25%  { filter: hue-rotate(90deg)  drop-shadow(0 0 18px #f0abfc) brightness(1.25); transform: scale(1.05); }
+  50%  { filter: hue-rotate(180deg) drop-shadow(0 0 22px #67e8f9) brightness(1.3); transform: scale(1.07); }
+  75%  { filter: hue-rotate(270deg) drop-shadow(0 0 18px #a78bfa) brightness(1.2); transform: scale(1.05); }
+  100% { filter: hue-rotate(360deg) drop-shadow(0 0 10px #c4b5fd) brightness(1.1); transform: scale(1); }
 }
 
 @keyframes hx-gem-opal-spawn-anim {
@@ -979,7 +989,7 @@ body.hx-active #hex-grid {
 .hx-gem-opal-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-opal-spawn-anim 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-opal-spawn-anim 0.90s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-opal-burst {
@@ -994,14 +1004,17 @@ body.hx-active #hex-grid {
   pointer-events: none;
 }
 
-/* ── Imperial Jade Gem — deep forest green, strong pulse ───────── */
+/* ── Imperial Jade Gem — Tier 4: deep green erupting to golden corona */
 .hx-gem-imperialjade {
   fill: url(#hx-gem-imperialjade-gradient);
-  animation: hx-gem-imperialjade-pulse 1.4s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-imperialjade-pulse 2.2s ease-in-out infinite;
 }
 @keyframes hx-gem-imperialjade-pulse {
-  from { filter: drop-shadow(0 0 5px rgba(6, 78, 59, 0.9)); }
-  to   { filter: brightness(1.5) drop-shadow(0 0 22px rgba(52, 211, 153, 1)); }
+  0%, 100% { filter: drop-shadow(0 0 8px #16a34a) drop-shadow(0 0 20px #064e3b) brightness(1); transform: scale(1); }
+  35%      { filter: drop-shadow(0 0 20px #fbbf24) drop-shadow(0 0 40px #d97706) brightness(1.35); transform: scale(1.07); }
+  60%      { filter: drop-shadow(0 0 14px #34d399) drop-shadow(0 0 28px #059669) brightness(1.15); transform: scale(1.04); }
 }
 
 @keyframes hx-gem-imperialjade-spawn-anim {
@@ -1017,7 +1030,7 @@ body.hx-active #hex-grid {
 .hx-gem-imperialjade-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-imperialjade-spawn-anim 0.78s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-imperialjade-spawn-anim 0.95s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-imperialjade-burst {
@@ -1032,40 +1045,44 @@ body.hx-active #hex-grid {
   pointer-events: none;
 }
 
-/* ── Alexandrite Gem — colour-shifting purple→green ─────────────── */
+/* ── Alexandrite Gem — Tier 4: dramatic fuchsia multi-color cycle ── */
 .hx-gem-alexandrite {
   fill: url(#hx-gem-alexandrite-gradient);
-  animation: hx-gem-alexandrite-shift 3s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-gem-alexandrite-pulse 2.8s ease-in-out infinite;
 }
-@keyframes hx-gem-alexandrite-shift {
-  0%   { filter: hue-rotate(0deg)   drop-shadow(0 0 6px rgba(76, 29, 149, 0.9)); }
-  50%  { filter: hue-rotate(60deg)  brightness(1.6) drop-shadow(0 0 22px rgba(167, 139, 250, 1)); }
-  100% { filter: hue-rotate(120deg) drop-shadow(0 0 8px rgba(16, 185, 129, 0.9)); }
+@keyframes hx-gem-alexandrite-pulse {
+  0%, 100% { filter: drop-shadow(0 0 10px #d946ef) drop-shadow(0 0 28px #701a75) brightness(1.1); transform: scale(1) rotate(0deg); }
+  20%      { filter: drop-shadow(0 0 20px #f43f5e) drop-shadow(0 0 44px #9f1239) brightness(1.5); transform: scale(1.1) rotate(1deg); }
+  40%      { filter: drop-shadow(0 0 8px #fbbf24) drop-shadow(0 0 30px #b45309) brightness(1.3); transform: scale(1.06) rotate(-1deg); }
+  60%      { filter: drop-shadow(0 0 22px #818cf8) drop-shadow(0 0 48px #4338ca) brightness(1.45); transform: scale(1.1) rotate(1deg); }
+  80%      { filter: drop-shadow(0 0 12px #f0abfc) drop-shadow(0 0 36px #a855f7) brightness(1.25); transform: scale(1.05) rotate(0deg); }
 }
 
 @keyframes hx-gem-alexandrite-spawn-anim {
   0%   { opacity: 0;   transform: scale(0.2) rotate(0deg);
          filter: drop-shadow(0 0 0px transparent); }
   20%  { opacity: 0.7; transform: scale(0.9) rotate(15deg);
-         filter: hue-rotate(0deg) brightness(2) drop-shadow(0 0 14px rgba(76, 29, 149, 0.8)); }
+         filter: brightness(2) drop-shadow(0 0 14px rgba(217, 70, 239, 0.8)); }
   45%  { opacity: 1;   transform: scale(1.5) rotate(-10deg);
-         filter: hue-rotate(60deg) brightness(5) drop-shadow(0 0 38px rgba(167, 139, 250, 1))
-                 drop-shadow(0 0 18px rgba(16, 185, 129, 1)); }
+         filter: brightness(5) drop-shadow(0 0 38px rgba(232, 121, 249, 1))
+                 drop-shadow(0 0 18px rgba(162, 28, 175, 1)); }
   70%  { opacity: 1;   transform: scale(0.92) rotate(4deg);
-         filter: hue-rotate(100deg) brightness(2) drop-shadow(0 0 22px rgba(16, 185, 129, 1)); }
+         filter: brightness(2) drop-shadow(0 0 22px rgba(232, 121, 249, 1)); }
   100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
-         filter: hue-rotate(0deg) drop-shadow(0 0 8px rgba(76, 29, 149, 0.9)); }
+         filter: drop-shadow(0 0 10px rgba(217, 70, 239, 0.9)); }
 }
 .hx-gem-alexandrite-spawn {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-gem-alexandrite-spawn-anim 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: hx-gem-alexandrite-spawn-anim 1.05s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes hx-gem-alexandrite-burst {
   0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
-  25%  { filter: brightness(7)   drop-shadow(0 0 35px rgba(167, 139, 250, 1))
-                                  drop-shadow(0 0 15px rgba(16, 185, 129, 1)); }
+  25%  { filter: brightness(7)   drop-shadow(0 0 35px rgba(232, 121, 249, 1))
+                                  drop-shadow(0 0 15px rgba(217, 70, 239, 1)); }
   100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
 }
 .hx-consumed-gemAlexandrite {
