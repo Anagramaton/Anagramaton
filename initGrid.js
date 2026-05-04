@@ -8,6 +8,42 @@ import { isValidWord } from './gameLogic.js';
 import { recomputeAllWordScores } from './scoreLogic.js';
 import { buildBoardEntries, buildPool, solveExactNonBlocking } from './scoringAndSolver.js';
 
+const PLAYED_BOARDS_KEY = 'anagramaton_played_unlimited';
+const POOL_MAX_PLAYED   = 50;
+
+function getPlayedBoards() {
+  try {
+    const raw = localStorage.getItem(PLAYED_BOARDS_KEY);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch { return new Set(); }
+}
+
+function markBoardPlayed(id) {
+  try {
+    const played = [...getPlayedBoards(), id].slice(-POOL_MAX_PLAYED);
+    localStorage.setItem(PLAYED_BOARDS_KEY, JSON.stringify(played));
+  } catch {}
+}
+
+async function fetchUnlimitedBoard() {
+  try {
+    const res = await fetch('/boards/unlimited/manifest.json', { cache: 'no-cache' });
+    if (!res.ok) return null;
+    const manifest = await res.json();
+    const allBoards = manifest.boards ?? [];
+    if (allBoards.length === 0) return null;
+    const played   = getPlayedBoards();
+    const unplayed = allBoards.filter(b => !played.has(b.id));
+    const pool     = unplayed.length > 0 ? unplayed : allBoards;
+    const entry    = pool[Math.floor(Math.random() * pool.length)];
+    const boardRes = await fetch(`/boards/unlimited/${entry.file}`, { cache: 'force-cache' });
+    if (!boardRes.ok) return null;
+    const board = await boardRes.json();
+    markBoardPlayed(entry.id);
+    return board;
+  } catch { return null; }
+}
+
 export const DOM = {
   svg: document.getElementById('hex-grid'),
   wordList: document.getElementById('word-list'),
@@ -269,6 +305,24 @@ export async function initializeGrid() {
       const boardEntries = buildBoardEntries(placedWords);
       const { POOL } = buildPool(boardEntries);
       runSolverInBackground(boardEntries, POOL);
+    }
+  }
+
+  if (!usedPrebuilt && gameState.mode !== 'daily') {
+    const board = await fetchUnlimitedBoard();
+    if (board) {
+      usedPrebuilt = true;
+      grid = board.grid;
+      gameState.anagramList        = board.anagramList     ?? [];
+      gameState.boardTop10         = board.boardTop10      ?? [];
+      gameState.boardTop10Total    = board.boardTop10Total ?? 0;
+      gameState.boardTop10Paths    = board.boardTop10Paths ?? [];
+      placedWords.length = 0;
+      for (const pw of board.placedWords) {
+        placedWords.push({ word: pw.word, path: pw.path });
+      }
+      // Solver already done — resolve immediately
+      gameState._resolveBoardSolver?.();
     }
   }
 

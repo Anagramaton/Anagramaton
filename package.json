@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "generate": "node scripts/generateBoards.mjs",
+    "generate:unlimited": "node scripts/generateUnlimitedBoards.mjs",
+    "generate:all": "npm run generate && npm run generate:unlimited",
     "clean-words": "node scripts/cleanWordLists.js"
   },
   "dependencies": {
