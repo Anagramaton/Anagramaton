@@ -220,6 +220,22 @@ function _hxRegisterTile(tile, typeArray) {
   _hxTileTypeRegistry.set(tile, typeArray);
 }
 
+/**
+ * Removes a tile's type registration without touching hxState.tiles or hxTileMap.
+ * Used when converting a tile to a different type (it stays on the board).
+ */
+function _hxClearTileType(tile) {
+  const typeArr = _hxTileTypeRegistry.get(tile);
+  if (typeArr) {
+    const idx = typeArr.indexOf(tile);
+    if (idx !== -1) typeArr.splice(idx, 1);
+    _hxTileTypeRegistry.delete(tile);
+  } else if (tile.tileType === 'digraph') {
+    // Fallback for tiles created before the registry was in place
+    removeFrom(hxState.digraphTiles, tile);
+  }
+}
+
 function _hxUnregisterTile(tile) {
   // Remove from the master tiles list
   const tilesIdx = hxState.tiles.indexOf(tile);
@@ -2210,12 +2226,7 @@ function showAmethystLetterPicker(tile) {
       applyTileType(tile);
       // Remove the tile from its type array via the registry so it no longer
       // has any lingering properties (e.g. ember advancement, game-over triggers)
-      const _typeArr = _hxTileTypeRegistry.get(tile);
-      if (_typeArr) {
-        const _idx = _typeArr.indexOf(tile);
-        if (_idx !== -1) _typeArr.splice(_idx, 1);
-        _hxTileTypeRegistry.delete(tile);
-      }
+      _hxClearTileType(tile);
       hxState.amethystCount--;
       updatePowerUpBar();
       showPowerUpUsedToast('amethyst');
@@ -2837,16 +2848,7 @@ const GEM_SPAWN_CLASS = {
  */
 function transformTileToGem(tile, gemType) {
   if (!tile || (tile.tileType !== 'normal' && tile.tileType !== 'digraph')) return;
-  if (tile.tileType === 'digraph') {
-    const typeArr = _hxTileTypeRegistry.get(tile);
-    if (typeArr) {
-      const idx = typeArr.indexOf(tile);
-      if (idx !== -1) typeArr.splice(idx, 1);
-      _hxTileTypeRegistry.delete(tile);
-    } else {
-      removeFrom(hxState.digraphTiles, tile);
-    }
-  }
+  if (tile.tileType === 'digraph') _hxClearTileType(tile);
   tile.tileType = gemType;
   _hxRegisterTile(tile, hxState[GEM_STATE_KEY[gemType]]);
   applyTileType(tile);
@@ -2953,17 +2955,8 @@ function spawnSpecialInRows(type, rows) {
   if (eligible.length === 0) return;
   const target = eligible[Math.floor(Math.random() * eligible.length)];
 
-  // If overwriting a digraph tile, remove it from the digraph state array first
-  if (target.tileType === 'digraph') {
-    const typeArr = _hxTileTypeRegistry.get(target);
-    if (typeArr) {
-      const idx = typeArr.indexOf(target);
-      if (idx !== -1) typeArr.splice(idx, 1);
-      _hxTileTypeRegistry.delete(target);
-    } else {
-      removeFrom(hxState.digraphTiles, target);
-    }
-  }
+  // If overwriting a digraph tile, clear its type registration first
+  if (target.tileType === 'digraph') _hxClearTileType(target);
 
   target.tileType = type;
   if (type === 'ember') _hxRegisterTile(target, hxState.emberTiles);

@@ -30,6 +30,8 @@ const KEEP_DAYS = Math.max(1,             parseInt(args['keep-days']  ?? '30', 1
 const DATE_OVERRIDE = args['date'] ?? null;
 
 // ── Eastern Standard Time date (UTC-5) ──────────────────────────────────────
+// NOTE: Uses a fixed UTC-5 offset (EST). During summer, Eastern Time is EDT
+// (UTC-4), but the workflow cron is fixed at 05:10 UTC so both stay in sync.
 const EST_OFFSET_MS = -5 * 60 * 60 * 1000;
 
 function getEstDateStr() {
@@ -59,12 +61,13 @@ function loadManifest() {
 
 // ── Pruning ──────────────────────────────────────────────────────────────────
 function pruneManifest(manifest) {
-  const cutoff = new Date(Date.now() + EST_OFFSET_MS);
-  cutoff.setUTCDate(cutoff.getUTCDate() - KEEP_DAYS);
+  // Compute the cutoff date as an EST date string (UTC-5)
+  const cutoffMs  = Date.now() + EST_OFFSET_MS - KEEP_DAYS * 24 * 60 * 60 * 1000;
+  const cutoffEst = new Date(cutoffMs);
   const cutoffStr = [
-    cutoff.getUTCFullYear(),
-    String(cutoff.getUTCMonth() + 1).padStart(2, '0'),
-    String(cutoff.getUTCDate()).padStart(2, '0'),
+    cutoffEst.getUTCFullYear(),
+    String(cutoffEst.getUTCMonth() + 1).padStart(2, '0'),
+    String(cutoffEst.getUTCDate()).padStart(2, '0'),
   ].join('-');
 
   manifest.boards = manifest.boards.filter(b => b.date >= cutoffStr);
