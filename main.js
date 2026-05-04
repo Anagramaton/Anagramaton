@@ -273,25 +273,41 @@ window.addEventListener('score:delta', (e) => {
   updateScoreDisplay(baseTotal + bonusTotal);
 });
 
+// Created once, reused for all text measurements — never touches the DOM
+const _measureCanvas = document.createElement('canvas');
+const _measureCtx    = _measureCanvas.getContext('2d');
+
+function _measureTextWidth(text, fontSize) {
+  _measureCtx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
+  return _measureCtx.measureText(text).width;
+}
+
 function fitCurrentWord() {
   const display = document.getElementById('current-word-display');
-  const word = document.getElementById('current-word');
+  const word    = document.getElementById('current-word');
   if (!display || !word) return;
-  display.style.fontSize = '';
-  if (word.scrollWidth <= display.offsetWidth) return;
-  const maxSize = parseFloat(getComputedStyle(display).fontSize);
-  const minSize = 10;
+
+  const text           = word.textContent || '';
+  const containerWidth = display.offsetWidth;   // one read
+  const maxSize        = parseFloat(getComputedStyle(display).fontSize); // one read
+  const minSize        = 10;
+
+  if (_measureTextWidth(text, maxSize) <= containerWidth) {
+    display.style.fontSize = '';  // one write — fits at natural size
+    return;
+  }
+
+  // Binary search — zero DOM involvement inside the loop
   let lo = minSize, hi = maxSize;
-  while (hi - lo > 1) {
+  while (hi - lo > 0.5) {
     const mid = (lo + hi) / 2;
-    display.style.fontSize = mid + 'px';
-    if (word.scrollWidth > display.offsetWidth) {
+    if (_measureTextWidth(text, mid) > containerWidth) {
       hi = mid;
     } else {
       lo = mid;
     }
   }
-  display.style.fontSize = lo + 'px';
+  display.style.fontSize = `${lo}px`;  // one write at the end
 }
 
 function updateCurrentWordDisplay() {
@@ -808,7 +824,14 @@ document.getElementById('new-game')?.addEventListener('click', async () => {
 
   window.dispatchEvent(new Event('selection:changed'));
 
-  window.addEventListener('selection:changed', updateCurrentWordDisplay);
+  let _wordDisplayRafId = 0;
+  window.addEventListener('selection:changed', () => {
+    if (_wordDisplayRafId) return;
+    _wordDisplayRafId = requestAnimationFrame(() => {
+      _wordDisplayRafId = 0;
+      updateCurrentWordDisplay();
+    });
+  });
   window.addEventListener('word:autosubmit', handleAutoSubmitWord);
 
   // ====================================================

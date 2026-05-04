@@ -212,6 +212,28 @@ const hxState = {
   portalWordsRemaining: 0, // words left before portal auto-closes (3 when opened)
 };
 
+// Maps each tile object → the hxState type-array it belongs to (single O(1) lookup on removal)
+const _hxTileTypeRegistry = new Map();
+
+function _hxRegisterTile(tile, typeArray) {
+  typeArray.push(tile);
+  _hxTileTypeRegistry.set(tile, typeArray);
+}
+
+function _hxUnregisterTile(tile) {
+  // Remove from the master tiles list
+  const tilesIdx = hxState.tiles.indexOf(tile);
+  if (tilesIdx !== -1) hxState.tiles.splice(tilesIdx, 1);
+  // Remove from its specific type array (one lookup instead of 20 scans)
+  const typeArr = _hxTileTypeRegistry.get(tile);
+  if (typeArr) {
+    const idx = typeArr.indexOf(tile);
+    if (idx !== -1) typeArr.splice(idx, 1);
+    _hxTileTypeRegistry.delete(tile);
+  }
+  hxTileMap.delete(hxKey(tile.q, tile.r));
+}
+
 let hxSelected          = [];   // tiles in current selection chain
 let hxPointerDown       = false;
 let hxLayout            = null;
@@ -918,7 +940,7 @@ function buildGrid(onReady) {
     if (result.isDigraph) {
       tile.tileType = 'digraph';
       tile.point    = result.points;
-      hxState.digraphTiles.push(tile);
+      _hxRegisterTile(tile, hxState.digraphTiles);
       applyTileType(tile);
       // Post-placement: mark unplaced neighbors with complement hints
       const nKeys = [
@@ -2186,26 +2208,14 @@ function showAmethystLetterPicker(tile) {
       tile.tileType = 'normal';
       tile.updateLetter(letter, HX_LETTER_POINTS[letter] || 1);
       applyTileType(tile);
-      // Remove the tile from every special-type array so it no longer
+      // Remove the tile from its type array via the registry so it no longer
       // has any lingering properties (e.g. ember advancement, game-over triggers)
-      removeFrom(hxState.emberTiles,        tile);
-      removeFrom(hxState.prismTiles,        tile);
-      removeFrom(hxState.runeTiles,         tile);
-      removeFrom(hxState.digraphTiles,      tile);
-      removeFrom(hxState.gemEmeraldTiles,   tile);
-      removeFrom(hxState.gemGoldTiles,      tile);
-      removeFrom(hxState.gemSapphireTiles,  tile);
-      removeFrom(hxState.gemPearlTiles,     tile);
-      removeFrom(hxState.gemTanzaniteTiles, tile);
-      removeFrom(hxState.gemRubyTiles,         tile);
-      removeFrom(hxState.gemDiamondTiles,      tile);
-      removeFrom(hxState.gemAquamarineTiles,   tile);
-      removeFrom(hxState.gemTopazTiles,        tile);
-      removeFrom(hxState.gemOpalTiles,         tile);
-      removeFrom(hxState.gemImperialJadeTiles, tile);
-      removeFrom(hxState.gemAlexandriteTiles,  tile);
-      removeFrom(hxState.amethystTiles,     tile);
-      removeFrom(hxState.seleniteTiles,     tile);
+      const _typeArr = _hxTileTypeRegistry.get(tile);
+      if (_typeArr) {
+        const _idx = _typeArr.indexOf(tile);
+        if (_idx !== -1) _typeArr.splice(_idx, 1);
+        _hxTileTypeRegistry.delete(tile);
+      }
       hxState.amethystCount--;
       updatePowerUpBar();
       showPowerUpUsedToast('amethyst');
@@ -2566,26 +2576,7 @@ async function consumeAndRefill(tilesToRemove) {
 
   tilesToRemove.forEach(tile => {
     tile.element.remove();
-    removeFrom(hxState.tiles,              tile);
-    removeFrom(hxState.emberTiles,         tile);
-    removeFrom(hxState.prismTiles,         tile);
-    removeFrom(hxState.runeTiles,          tile);
-    removeFrom(hxState.digraphTiles,       tile);
-    removeFrom(hxState.gemEmeraldTiles,    tile);
-    removeFrom(hxState.gemGoldTiles,       tile);
-    removeFrom(hxState.gemSapphireTiles,   tile);
-    removeFrom(hxState.gemPearlTiles,      tile);
-    removeFrom(hxState.gemTanzaniteTiles,  tile);
-    removeFrom(hxState.gemRubyTiles,        tile);
-    removeFrom(hxState.gemDiamondTiles,     tile);
-    removeFrom(hxState.gemAquamarineTiles,  tile);
-    removeFrom(hxState.gemTopazTiles,       tile);
-    removeFrom(hxState.gemOpalTiles,        tile);
-    removeFrom(hxState.gemImperialJadeTiles,tile);
-    removeFrom(hxState.gemAlexandriteTiles, tile);
-    removeFrom(hxState.amethystTiles,      tile);
-    removeFrom(hxState.seleniteTiles,      tile);
-    hxTileMap.delete(hxKey(tile.q, tile.r));
+    _hxUnregisterTile(tile);
   });
 
   // 2. Capture portal tile references before gravity so we can detect movement
@@ -2628,34 +2619,31 @@ async function applyGravity() {
   let anyMoved = true;
   while (anyMoved) {
     anyMoved = false;
-    // Process bottom rows first so lower tiles move before upper ones
-    const sorted = [...hxState.tiles].sort((a, b) => b.r - a.r);
-    const moves  = []; // { tile, fromQ, fromR, toQ, toR }
+    const sorted       = [...hxState.tiles].sort((a, b) => b.r - a.r);
+    const moves        = [];
+    const plannedDests = new Set(); // O(1) lookup replaces moves.some() O(n) scan
 
     for (const tile of sorted) {
-      const se = { q: tile.q,     r: tile.r + 1 };
-      const sw = { q: tile.q - 1, r: tile.r + 1 };
+      const seKey = hxKey(tile.q,     tile.r + 1);
+      const swKey = hxKey(tile.q - 1, tile.r + 1);
+      const se    = { q: tile.q,     r: tile.r + 1 };
+      const sw    = { q: tile.q - 1, r: tile.r + 1 };
 
-      const seOk = inBounds(se) &&
-        !hxTileMap.has(hxKey(se.q, se.r)) &&
-        !moves.some(m => m.toQ === se.q && m.toR === se.r);
-      const swOk = inBounds(sw) &&
-        !hxTileMap.has(hxKey(sw.q, sw.r)) &&
-        !moves.some(m => m.toQ === sw.q && m.toR === sw.r);
+      const seOk = inBounds(se) && !hxTileMap.has(seKey) && !plannedDests.has(seKey);
+      const swOk = inBounds(sw) && !hxTileMap.has(swKey) && !plannedDests.has(swKey);
 
       if (seOk) {
         moves.push({ tile, fromQ: tile.q, fromR: tile.r, toQ: se.q, toR: se.r });
+        plannedDests.add(seKey);
         anyMoved = true;
       } else if (swOk) {
         moves.push({ tile, fromQ: tile.q, fromR: tile.r, toQ: sw.q, toR: sw.r });
+        plannedDests.add(swKey);
         anyMoved = true;
       }
     }
 
     if (moves.length === 0) break;
-
-    // Stagger tiles so each falls individually in a ripple/cascade effect,
-    // rather than all tiles in a gravity wave dropping in lock-step unison.
     await animateTileMovesStaggered(moves);
   }
 }
@@ -2715,26 +2703,7 @@ async function advanceFireTiles() {
       // If the displaced tile is a portal tile, close the portal first
       if (isPortalTile(displaced)) closePortal();
       displaced.element.remove();
-      removeFrom(hxState.tiles,             displaced);
-      removeFrom(hxState.emberTiles,        displaced);
-      removeFrom(hxState.prismTiles,        displaced);
-      removeFrom(hxState.runeTiles,         displaced);
-      removeFrom(hxState.digraphTiles,      displaced);
-      removeFrom(hxState.gemEmeraldTiles,   displaced);
-      removeFrom(hxState.gemGoldTiles,      displaced);
-      removeFrom(hxState.gemSapphireTiles,  displaced);
-      removeFrom(hxState.gemPearlTiles,     displaced);
-      removeFrom(hxState.gemTanzaniteTiles, displaced);
-      removeFrom(hxState.gemRubyTiles,        displaced);
-      removeFrom(hxState.gemDiamondTiles,     displaced);
-      removeFrom(hxState.gemAquamarineTiles,  displaced);
-      removeFrom(hxState.gemTopazTiles,       displaced);
-      removeFrom(hxState.gemOpalTiles,        displaced);
-      removeFrom(hxState.gemImperialJadeTiles,displaced);
-      removeFrom(hxState.gemAlexandriteTiles, displaced);
-      removeFrom(hxState.amethystTiles,     displaced);
-      removeFrom(hxState.seleniteTiles,     displaced);
-      hxTileMap.delete(hxKey(target.q, target.r));
+      _hxUnregisterTile(displaced);
     }
 
     allMoves.push({ tile, fromQ: tile.q, fromR: tile.r, toQ: target.q, toR: target.r });
@@ -2774,7 +2743,7 @@ async function refillGrid() {
       if (result.isDigraph) {
         tile.tileType = 'digraph';
         tile.point    = result.points;
-        hxState.digraphTiles.push(tile);
+        _hxRegisterTile(tile, hxState.digraphTiles);
         applyTileType(tile);
       } else {
         tile.tileType = 'normal';
@@ -2868,9 +2837,18 @@ const GEM_SPAWN_CLASS = {
  */
 function transformTileToGem(tile, gemType) {
   if (!tile || (tile.tileType !== 'normal' && tile.tileType !== 'digraph')) return;
-  if (tile.tileType === 'digraph') removeFrom(hxState.digraphTiles, tile);
+  if (tile.tileType === 'digraph') {
+    const typeArr = _hxTileTypeRegistry.get(tile);
+    if (typeArr) {
+      const idx = typeArr.indexOf(tile);
+      if (idx !== -1) typeArr.splice(idx, 1);
+      _hxTileTypeRegistry.delete(tile);
+    } else {
+      removeFrom(hxState.digraphTiles, tile);
+    }
+  }
   tile.tileType = gemType;
-  hxState[GEM_STATE_KEY[gemType]].push(tile);
+  _hxRegisterTile(tile, hxState[GEM_STATE_KEY[gemType]]);
   applyTileType(tile);
   const spawnClass = GEM_SPAWN_CLASS[gemType];
   tile.element.classList.add(spawnClass);
@@ -2976,19 +2954,28 @@ function spawnSpecialInRows(type, rows) {
   const target = eligible[Math.floor(Math.random() * eligible.length)];
 
   // If overwriting a digraph tile, remove it from the digraph state array first
-  if (target.tileType === 'digraph') removeFrom(hxState.digraphTiles, target);
+  if (target.tileType === 'digraph') {
+    const typeArr = _hxTileTypeRegistry.get(target);
+    if (typeArr) {
+      const idx = typeArr.indexOf(target);
+      if (idx !== -1) typeArr.splice(idx, 1);
+      _hxTileTypeRegistry.delete(target);
+    } else {
+      removeFrom(hxState.digraphTiles, target);
+    }
+  }
 
   target.tileType = type;
-  if (type === 'ember') hxState.emberTiles.push(target);
-  else if (type === 'prism') hxState.prismTiles.push(target);
-  else if (type === 'rune')  hxState.runeTiles.push(target);
-  else if (type === 'amethyst') hxState.amethystTiles.push(target);
-  else if (type === 'selenite') hxState.seleniteTiles.push(target);
+  if (type === 'ember') _hxRegisterTile(target, hxState.emberTiles);
+  else if (type === 'prism') _hxRegisterTile(target, hxState.prismTiles);
+  else if (type === 'rune')  _hxRegisterTile(target, hxState.runeTiles);
+  else if (type === 'amethyst') _hxRegisterTile(target, hxState.amethystTiles);
+  else if (type === 'selenite') _hxRegisterTile(target, hxState.seleniteTiles);
   else if (type === 'digraph') {
     const { digraph, points } = randomDigraph();
     target.letter = digraph;
     target.point  = points;
-    hxState.digraphTiles.push(target);
+    _hxRegisterTile(target, hxState.digraphTiles);
   }
   applyTileType(target);
 
@@ -3251,6 +3238,7 @@ export function startHexacore() {
   hxWordCount          = 0;
   hxNextPrismSpawn     = Math.floor(Math.random() * 3) + 4;
   hxTileMap            = new Map();
+  _hxTileTypeRegistry.clear();
   pendingDigraphComplements = new Map();
   hxUpdateViewForBoard = null;
   hxAmethystTargeting  = false;
