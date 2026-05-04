@@ -223,6 +223,8 @@ function _hxRegisterTile(tile, typeArray) {
 /**
  * Removes a tile's type registration without touching hxState.tiles or hxTileMap.
  * Used when converting a tile to a different type (it stays on the board).
+ * All tiles that carry a type are guaranteed to be in the registry (registered
+ * via _hxRegisterTile at creation time), so no fallback is needed.
  */
 function _hxClearTileType(tile) {
   const typeArr = _hxTileTypeRegistry.get(tile);
@@ -230,9 +232,6 @@ function _hxClearTileType(tile) {
     const idx = typeArr.indexOf(tile);
     if (idx !== -1) typeArr.splice(idx, 1);
     _hxTileTypeRegistry.delete(tile);
-  } else if (tile.tileType === 'digraph') {
-    // Fallback for tiles created before the registry was in place
-    removeFrom(hxState.digraphTiles, tile);
   }
 }
 

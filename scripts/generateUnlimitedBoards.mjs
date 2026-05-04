@@ -25,6 +25,7 @@ const args = Object.fromEntries(
     })
 );
 
+// max 50 per run — caps solver time to a reasonable CI budget (~5 min for 50 boards)
 const COUNT     = Math.min(50, Math.max(1, parseInt(args['count']     ?? '10', 10)));
 const KEEP_DAYS = Math.max(1,             parseInt(args['keep-days']  ?? '30', 10));
 const DATE_OVERRIDE = args['date'] ?? null;
