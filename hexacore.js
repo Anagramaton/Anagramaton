@@ -3,8 +3,6 @@
 import {
   GRID_RADIUS,
   HEX_RADIUS,
-  letterPoints,
-  lengthMultipliers,
   SVG_NS,
 } from './constants.js';
 import { isValidWord } from './gameLogic.js';
@@ -19,6 +17,25 @@ import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
 import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audioEngine.js';
+
+/* ── Hexacore-specific letter point values ─────────────────────── */
+const HX_LETTER_POINTS = {
+  A: 2, E: 2, I: 2, O: 2,
+  U: 3, R: 3, S: 3, T: 3, L: 3, N: 3,
+  D: 4, H: 4, Y: 4, G: 4,
+  C: 5, M: 5, P: 5,
+  K: 6,
+  B: 7, F: 7,
+  V: 8,
+  W: 9, J: 9,
+  Q: 10, X: 10, Z: 10,
+};
+
+/* ── Hexacore-specific word length multipliers ──────────────────── */
+const HX_LENGTH_MULTIPLIERS = {
+  4: 2, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9,
+  10: 10, 11: 11, 12: 12, 13: 13, 14: 14, 15: 15,
+};
 
 /* ── Audio state ───────────────────────────────────────────────── */
 let _hxAudioReady = false;
@@ -142,7 +159,7 @@ const DIGRAPH_COMPLEMENT = {
 
 function randomDigraph() {
   const dg  = DIGRAPH_POOL[Math.floor(Math.random() * DIGRAPH_POOL.length)];
-  const pts = (letterPoints[dg[0]] || 1) + (letterPoints[dg[1]] || 1);
+  const pts = (HX_LETTER_POINTS[dg[0]] || 1) + (HX_LETTER_POINTS[dg[1]] || 1);
   return { digraph: dg, points: pts };
 }
 
@@ -200,6 +217,7 @@ let hxPointerDown       = false;
 let hxLayout            = null;
 let hxSvg               = null;
 let hxWordCount         = 0;
+let hxNextPrismSpawn    = Math.floor(Math.random() * 3) + 4; // random 4–6
 let hxTileMap           = new Map(); // `q,r` → tile object
 /** Keyed by `q,r` — letters preferred for that position due to an adjacent digraph placed earlier */
 let pendingDigraphComplements = new Map();
@@ -894,7 +912,7 @@ function buildGrid(onReady) {
       layout:     hxLayout,
       key,
       letter:     result.isDigraph ? result.digraph : result.letter,
-      pointValue: result.isDigraph ? result.points  : (letterPoints[result.letter] || 1),
+      pointValue: result.isDigraph ? result.points  : (HX_LETTER_POINTS[result.letter] || 1),
     });
 
     if (result.isDigraph) {
@@ -1365,9 +1383,9 @@ const GEM_MULTIPLIERS = {
   gemImperialJade: 12,
   gemAlexandrite:  13,
 };
-// Tanzanite and Ruby use exponential count bonus (value^count);
-// all other gems use linear count bonus (count × value).
-const OPTION_B_GEMS = new Set(['gemTanzanite', 'gemRuby']);
+// All gems use linear count bonus (count × gemValue).
+// e.g. 3 Emeralds → 3 × 2 = ×6
+const OPTION_B_GEMS = new Set(); // all gems use linear count bonus (count × value)
 
 /* ── Level requirements checklist ─────────────────────────────── */
 /**
@@ -1884,10 +1902,8 @@ const HX_LEVEL_REQUIREMENTS = [
 /**
  * Calculates the count bonus multiplier for the given selected tiles.
  * For each gem type present, counts how many were used and applies:
- *   - Option A (linear):      count × gemValue  — for Emerald, Gold, Sapphire, Pearl, Diamond, and all higher tiers
+ *   - Linear count bonus: count × gemValue  — for all gem types
  *     e.g. 3 Emeralds → 3 × 2 = ×6
- *   - Option B (exponential): gemValue ^ count  — for Tanzanite, Ruby
- *     e.g. 3 Rubies → 7³ = ×343
  * @param {Array} selectedTiles - array of tile objects from hxSelected
  * @returns {number} combined count bonus multiplier (≥1)
  */
@@ -1941,10 +1957,10 @@ function updateWordScorePreview() {
   const wordLength = letterCount;
   let base = 0;
   knownLetters.forEach(l => {
-    if (l) { for (const ch of l) base += letterPoints[ch] || 1; }
+    if (l) { for (const ch of l) base += HX_LETTER_POINTS[ch] || 1; }
     else base += 1;
   });
-  const lenMult = lengthMultipliers[wordLength] || 1;
+  const lenMult = HX_LENGTH_MULTIPLIERS[wordLength] || wordLength;
 
   const hasPrism = hxSelected.some(t => t.tileType === 'prism');
   let gemMult = 1;
@@ -2010,7 +2026,7 @@ function showRuneLetterPicker(tile) {
       tile.letter           = letter;
       tile.tileType         = 'normal';
       tile.textLetter.textContent = letter;
-      tile.textPoint.textContent  = letterPoints[letter] || 1;
+      tile.textPoint.textContent  = HX_LETTER_POINTS[letter] || 1;
       applyTileType(tile);
       tile.element.classList.add('hx-rune-flip');
       tile.element.addEventListener('animationend', () => {
@@ -2168,7 +2184,7 @@ function showAmethystLetterPicker(tile) {
       // Apply the new letter to the tile
       tile.letter   = letter;
       tile.tileType = 'normal';
-      tile.updateLetter(letter, letterPoints[letter] || 1);
+      tile.updateLetter(letter, HX_LETTER_POINTS[letter] || 1);
       applyTileType(tile);
       // Remove the tile from every special-type array so it no longer
       // has any lingering properties (e.g. ember advancement, game-over triggers)
@@ -2436,8 +2452,8 @@ async function submitHexacoreWord() {
   let base = 0;
   // Each element in resolved may be a multi-char string (digraph) or single char;
   // iterate over individual characters so each letter contributes its own point value.
-  resolved.forEach(l => { for (const ch of l) base += letterPoints[ch] || 1; });
-  const lenMult = lengthMultipliers[word.length] || 1;
+  resolved.forEach(l => { for (const ch of l) base += HX_LETTER_POINTS[ch] || 1; });
+  const lenMult = HX_LENGTH_MULTIPLIERS[word.length] || word.length;
 
   // Gem multipliers stack multiplicatively
   let gemMult = 1;
@@ -2753,7 +2769,7 @@ async function refillGrid() {
         layout:     hxLayout,
         key:        hxKey(q, r),
         letter:     result.isDigraph ? result.digraph : result.letter,
-        pointValue: result.isDigraph ? result.points : (letterPoints[result.letter] || 1),
+        pointValue: result.isDigraph ? result.points : (HX_LETTER_POINTS[result.letter] || 1),
       });
       if (result.isDigraph) {
         tile.tileType = 'digraph';
@@ -2868,17 +2884,17 @@ function transformTileToGem(tile, gemType) {
  * consumeAndRefill has fully resolved (gravity + ember + refill all done).
  *
  *  4 letters: 1 emerald
- *  5 letters: 2 emerald
- *  6 letters: 3 emerald, 1 gold
- *  7 letters: 3 emerald, 2 gold, 1 sapphire
- *  8 letters: 4 emerald, 3 gold, 2 sapphire, 1 pearl
- *  9 letters: 5 emerald, 4 gold, 3 sapphire, 2 pearl, 1 tanzanite
- * 10 letters: 6 emerald, 5 gold, 4 sapphire, 3 pearl, 2 tanzanite, 1 ruby  (21 total)
- * 11 letters: base + 1 diamond + 1 aquamarine  (23 total)
- * 12 letters: base + 1 diamond + 1 aquamarine + 1 topaz  (24 total)
- * 13 letters: base + 1 diamond + 1 aquamarine + 1 topaz + 1 opal  (25 total)
- * 14 letters: base + 1 diamond + 1 aquamarine + 1 topaz + 1 opal + 1 imperialJade  (26 total)
- * 15+ letters: base + 1 diamond + 1 aquamarine + 1 topaz + 1 opal + 1 imperialJade + 1 alexandrite  (27 total)
+ *  5 letters: 2 emerald, 1 gold
+ *  6 letters: 3 emerald, 2 gold, 1 sapphire
+ *  7 letters: 4 emerald, 3 gold, 2 sapphire, 1 pearl
+ *  8 letters: 5 emerald, 4 gold, 3 sapphire, 2 pearl, 1 tanzanite
+ *  9 letters: 6 emerald, 5 gold, 4 sapphire, 3 pearl, 2 tanzanite, 1 ruby
+ * 10 letters: base (23 gems) — includes 1 diamond
+ * 11 letters: base + 1 aquamarine
+ * 12 letters: base + 1 aquamarine + 1 topaz
+ * 13 letters: base + ... + 1 opal
+ * 14 letters: base + ... + 1 imperialJade
+ * 15+ letters: base + ... + 1 alexandrite
  */
 function spawnGemRewardForWord(wordLength) {
   const plan = [];
@@ -2888,11 +2904,11 @@ function spawnGemRewardForWord(wordLength) {
   // Tiers 4–9: each tier is a fixed pyramid (no 10-letter base)
   const LOW_TIER_PLANS = {
     4: [['gemEmerald', 1]],
-    5: [['gemEmerald', 2]],
-    6: [['gemEmerald', 3], ['gemGold', 1]],
-    7: [['gemEmerald', 3], ['gemGold', 2], ['gemSapphire', 1]],
-    8: [['gemEmerald', 4], ['gemGold', 3], ['gemSapphire', 2], ['gemPearl', 1]],
-    9: [['gemEmerald', 5], ['gemGold', 4], ['gemSapphire', 3], ['gemPearl', 2], ['gemTanzanite', 1]],
+    5: [['gemEmerald', 2], ['gemGold', 1]],
+    6: [['gemEmerald', 3], ['gemGold', 2], ['gemSapphire', 1]],
+    7: [['gemEmerald', 4], ['gemGold', 3], ['gemSapphire', 2], ['gemPearl', 1]],
+    8: [['gemEmerald', 5], ['gemGold', 4], ['gemSapphire', 3], ['gemPearl', 2], ['gemTanzanite', 1]],
+    9: [['gemEmerald', 6], ['gemGold', 5], ['gemSapphire', 4], ['gemPearl', 3], ['gemTanzanite', 2], ['gemRuby', 1]],
   };
 
   if (wordLength <= 9) {
@@ -2900,18 +2916,19 @@ function spawnGemRewardForWord(wordLength) {
       plan.push(...Array(count).fill(gem));
     }
   } else {
-    // Base 10-letter tier (21 gems) — foundation for all higher tiers
+    // Base 10-letter tier — Diamond first appears here
     plan.push(...Array(6).fill('gemEmerald'));
     plan.push(...Array(5).fill('gemGold'));
     plan.push(...Array(4).fill('gemSapphire'));
     plan.push(...Array(3).fill('gemPearl'));
     plan.push(...Array(2).fill('gemTanzanite'));
-    plan.push('gemRuby');
+    plan.push(...Array(2).fill('gemRuby'));
+    plan.push('gemDiamond');
 
-    // Each letter beyond 10 adds one more high-tier gem
+    // Each letter beyond 10 adds one more ultra-tier gem
     const HIGH_TIER_EXTRAS = [
-      'gemDiamond', 'gemAquamarine', 'gemTopaz',
-      'gemOpal', 'gemImperialJade', 'gemAlexandrite',
+      'gemAquamarine', 'gemTopaz', 'gemOpal',
+      'gemImperialJade', 'gemAlexandrite',
     ];
     const extraCount = Math.min(wordLength - 10, HIGH_TIER_EXTRAS.length);
     for (let i = 0; i < extraCount; i++) {
@@ -2932,9 +2949,10 @@ function spawnSpecialTiles() {
   if (hxWordCount % 3 === 0) {
     spawnSpecialInRows('ember', [-GRID_RADIUS]);
   }
-  // Every 5 words → 1 new prism in top 3 rows
-  if (hxWordCount % 5 === 0) {
+  // Random interval (4–6 words) → 1 new prism in top 3 rows
+  if (hxWordCount >= hxNextPrismSpawn) {
     spawnSpecialInRows('prism', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+    hxNextPrismSpawn = hxWordCount + Math.floor(Math.random() * 3) + 4;
   }
   // Every 7 words → 1 new rune in top 3 rows
   if (hxWordCount % 7 === 0) {
@@ -3231,6 +3249,7 @@ export function startHexacore() {
   hxSelected           = [];
   hxPointerDown        = false;
   hxWordCount          = 0;
+  hxNextPrismSpawn     = Math.floor(Math.random() * 3) + 4;
   hxTileMap            = new Map();
   pendingDigraphComplements = new Map();
   hxUpdateViewForBoard = null;

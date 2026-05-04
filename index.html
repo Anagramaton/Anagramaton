@@ -356,45 +356,8 @@
       <!-- Pages -->
       <div id="hx-howto-pagewrap">
 
-        <!-- PAGE 0 — OBJECTIVE -->
+        <!-- PAGE 0 — SPECIAL TILES -->
         <section class="howto-page" data-page="0">
-          <h3>OBJECTIVE</h3>
-          <p>HEXACORE IS AN ENDLESS SURVIVAL MODE. CHAIN LETTER TILES TO SPELL VALID WORDS AND EARN POINTS. WORDS ARE AUTO-SUBMITTED WHEN YOU RELEASE YOUR DRAG. THE GAME ENDS WHEN AN EMBER TILE REACHES THE BOTTOM OF THE GRID.</p>
-        </section>
-
-        <!-- PAGE 1 — HOW TO SPELL A WORD -->
-        <section class="howto-page" data-page="1" hidden>
-          <h3>HOW TO SPELL A WORD</h3>
-          <p>DRAG across adjacent hex tiles to chain letters into a word. You must chain at least 4 letters. Release to auto-submit. You can backtrack by dragging back to the previous tile to deselect it.</p>
-          <p>Digraph tiles (two-letter tiles like <strong>HE</strong>, <strong>EN</strong>, <strong>TH</strong>) count as 2 letters each toward your word length.</p>
-        </section>
-
-        <!-- PAGE 2 — SCORING -->
-        <section class="howto-page" data-page="2" hidden>
-          <h3>SCORING</h3>
-          <p>Each tile has a base point value:</p>
-          <ul>
-            <li><strong>1 pt:</strong> A, E, I, O, U, L, N, R, S, T</li>
-            <li><strong>2 pts:</strong> D, G</li>
-            <li><strong>3 pts:</strong> B, C, M, P</li>
-            <li><strong>4 pts:</strong> F, H, V, W, Y</li>
-            <li><strong>5 pts:</strong> K</li>
-            <li><strong>8 pts:</strong> J, X</li>
-            <li><strong>10 pts:</strong> Q, Z</li>
-          </ul>
-          <p>Plus word length multipliers for 5+ letters:</p>
-          <ul>
-            <li>5 letters: ×3</li>
-            <li>6 letters: ×4</li>
-            <li>7 letters: ×5</li>
-            <li>8 letters: ×6</li>
-            <li>9 letters: ×7</li>
-            <li>10+ letters: ×10</li>
-          </ul>
-        </section>
-
-        <!-- PAGE 3 — SPECIAL TILES -->
-        <section class="howto-page" data-page="3" hidden>
           <h3>SPECIAL TILES</h3>
           <div class="hx-howto-tile-row">
             <!-- EMBER -->
@@ -486,7 +449,7 @@
           </div>
           <ul>
             <li><strong>🔥 EMBER</strong> — Spawns every 3 words in the top row, and also spawns whenever you submit a 6+ letter word. Two extra embers spawn each time you level up. Advances downward after each word. If it reaches the bottom — game over. Consume it in a word to destroy it. Using an Ember also rewards bonus gems equal to the word length bonus.</li>
-            <li><strong>✦ PRISM</strong> — Doubles the word score (×2). Spawns every 5 words.</li>
+            <li><strong>✦ PRISM</strong> — Doubles the word score (×2). Spawns randomly every 4–6 words.</li>
             <li><strong>✦ RUNE</strong> — A wildcard. Tap it first to choose any letter, then chain it in your word. Spawns every 7 words.</li>
             <li><strong>❋ DIGRAPH</strong> — A double-letter tile. Both letters contribute their point values. Counts as 2 letters toward word length.</li>
             <li><strong>◈ AMETHYST</strong> — 🔮 A rare crystalline tile. Use it in a 5+ letter word to collect an Amethyst. Spend it to change any tile's letter on the board. Spawns every 12 words. Also advances downward each turn like an Ember — but if it reaches the bottom it converts to a random letter tile instead of ending the game.</li>
@@ -494,8 +457,8 @@
           </ul>
         </section>
 
-        <!-- PAGE 4 — GEM TILES -->
-        <section class="howto-page" data-page="4" hidden>
+        <!-- PAGE 1 — GEM TILES -->
+        <section class="howto-page" data-page="1" hidden>
           <h3>GEM TILES</h3>
           <p>Longer words reward rarer gems that multiply your score. Gems stack multiplicatively.</p>
           <div class="hx-howto-tile-row">
@@ -595,23 +558,84 @@
                 <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-diamond)" stroke="#a5f3fc" stroke-width="1.5"/>
                 <text x="30" y="36" text-anchor="middle" font-size="18" fill="#e0f2fe">◆</text>
               </svg>
-              <span class="hx-howto-tile-label">×LEN DIAMOND</span>
+              <span class="hx-howto-tile-label">×8 DIAMOND</span>
+            </div>
+            <!-- AQUAMARINE -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-aquamarine" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#0891b2"/>
+                    <stop offset="100%" stop-color="#67e8f9"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-aquamarine)" stroke="#0891b2" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#67e8f9">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×9 AQUAMARINE</span>
+            </div>
+            <!-- TOPAZ -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-topaz" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#b45309"/>
+                    <stop offset="100%" stop-color="#fde68a"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-topaz)" stroke="#b45309" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#fde68a">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×10 TOPAZ</span>
+            </div>
+            <!-- OPAL -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-opal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#c4b5fd"/>
+                    <stop offset="100%" stop-color="#ffffff"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-opal)" stroke="#c4b5fd" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#c4b5fd">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×11 OPAL</span>
+            </div>
+            <!-- IMPERIAL JADE -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-imperialjade" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#064e3b"/>
+                    <stop offset="100%" stop-color="#34d399"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-imperialjade)" stroke="#064e3b" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#34d399">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×12 IMP. JADE</span>
+            </div>
+            <!-- ALEXANDRITE -->
+            <div class="hx-howto-tile-item">
+              <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hx-ht-alexandrite" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#4c1d95"/>
+                    <stop offset="100%" stop-color="#10b981"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-alexandrite)" stroke="#4c1d95" stroke-width="1.5"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#10b981">◆</text>
+              </svg>
+              <span class="hx-howto-tile-label">×13 ALEXANDRITE</span>
             </div>
           </div>
-          <ul>
-            <li><strong>◆ EMERALD</strong> (×2) — 4-letter words</li>
-            <li><strong>◆ GOLD</strong> (×3) — 6-letter words</li>
-            <li><strong>◆ SAPPHIRE</strong> (×4) — 7-letter words</li>
-            <li><strong>◆ PEARL</strong> (×5) — 8-letter words</li>
-            <li><strong>◆ TANZANITE</strong> (×6) — 9-letter words</li>
-            <li><strong>◆ RUBY</strong> (×7) — 10+ letter words</li>
-            <li><strong>◆ DIAMOND</strong> (×word length) — rare, extremely powerful</li>
-          </ul>
           <p>Using multiple gems of the same type gives a count bonus (e.g. 3 Emeralds → ×6 instead of ×2).</p>
         </section>
 
-        <!-- PAGE 5 — PORTALS -->
-        <section class="howto-page" data-page="5" hidden>
+        <!-- PAGE 2 — PORTALS -->
+        <section class="howto-page" data-page="2" hidden>
           <h3>PORTALS</h3>
           <div class="hx-howto-tile-row">
             <!-- PORTAL ENTRY -->
@@ -643,39 +667,7 @@
               <span class="hx-howto-tile-label">EXIT ◉</span>
             </div>
           </div>
-          <p>After every <strong>10 words</strong> submitted, two corner tiles transform into a portal pair — one entry (◈) and one exit (◉). Chain through both in the same word to link non-adjacent tiles. The portal closes after 5 words or when a portal tile is consumed. Portal tiles fall normally with gravity — whenever a tile lands in a portal tile's old spot, that tile becomes the new portal.</p>
-        </section>
-
-        <!-- PAGE 6 — LEVELS -->
-        <section class="howto-page" data-page="6" hidden>
-          <h3>LEVELS</h3>
-          <p>Score milestones unlock levels. Your level is shown top-right. Level-up banners appear with a dramatic animation.</p>
-          <ul>
-            <li><strong>Level 1:</strong> 0 pts</li>
-            <li><strong>Level 2:</strong> 1,000 pts</li>
-            <li><strong>Level 3:</strong> 5,000 pts</li>
-            <li><strong>Level 4:</strong> 15,000 pts</li>
-            <li><strong>Level 5:</strong> 35,000 pts</li>
-            <li><strong>Level 6:</strong> 70,000 pts</li>
-            <li><strong>Level 7:</strong> 120,000 pts</li>
-            <li><strong>Level 8:</strong> 180,000 pts</li>
-            <li><strong>Level 9:</strong> 250,000 pts</li>
-            <li><strong>Level 10:</strong> 330,000 pts</li>
-            <li><strong>Level 11:</strong> 420,000 pts</li>
-            <li><strong>Level 12+:</strong> +100,000 per level beyond that</li>
-          </ul>
-        </section>
-
-        <!-- PAGE 7 — STRATEGY TIPS -->
-        <section class="howto-page" data-page="7" hidden>
-          <h3>STRATEGY TIPS</h3>
-          <ul>
-            <li><strong>🔥 DESTROY EMBERS EARLY</strong> — Consume ember tiles in words before they reach the bottom.</li>
-            <li><strong>💎 LONG WORDS = MORE GEMS</strong> — 7+ letter words spawn powerful high-tier gems.</li>
-            <li><strong>✦ CHAIN GEMS TOGETHER</strong> — Using multiple gems of the same type in one word triggers count bonuses.</li>
-            <li><strong>◈ USE PORTALS</strong> — Portal pairs let you chain tiles across the board.</li>
-            <li><strong>✦ PRISM + LONG WORD</strong> — Combining a Prism tile with a 7+ letter word creates massive scores.</li>
-          </ul>
+          <p>After every <strong>10 words</strong> submitted, two corner tiles transform into a portal pair — one entry (◈) and one exit (◉). Chain through both in the same word to link non-adjacent tiles. The portal closes after 5 words or when a portal tile is consumed.</p>
         </section>
 
       </div><!-- /hx-howto-pagewrap -->
