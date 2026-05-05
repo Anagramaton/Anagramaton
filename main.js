@@ -315,43 +315,13 @@ function updateCurrentWordDisplay() {
   if (document.body.classList.contains('hx-active')) return;
 
   const el = document.getElementById('current-word');
-  const tiles = gameState.selectedTiles || [];
-  const letters = tiles.map(t => String(t.letter || '')).join('').toUpperCase();
-
-  if (el) {
-    el.textContent = letters;
-    fitCurrentWord();
-  }
-
-  // Update new word builder
-  const wbWord    = document.querySelector('#hx-word-builder .wb-word');
-  const wbScore   = document.querySelector('#hx-word-builder .wb-score');
-  const wbBuilder = document.getElementById('hx-word-builder');
-  const badge     = document.querySelector('#hx-word-score-badge .badge-val');
-
-  if (wbWord) wbWord.textContent = letters;
-
-  if (wbBuilder) {
-    const isValid = letters.length >= 4 && isValidWord(letters);
-    wbBuilder.classList.toggle('valid', isValid);
-    if (isValid) {
-      // Compute score preview using letterPoints and lengthMultipliers
-      let base = 0;
-      for (const tile of tiles) {
-        const ltr = String(tile.letter || '').toUpperCase();
-        base += letterPoints[ltr] || 1;
-      }
-      const lengthKey = Math.min(letters.length, 10);
-      const mult = letters.length >= 5 ? (lengthMultipliers[lengthKey] || 1) : 1;
-      const preview = Math.round(base * mult);
-      const scoreText = `+${preview}`;
-      if (wbScore) wbScore.textContent = scoreText;
-      if (badge) badge.textContent = scoreText;
-    } else {
-      if (wbScore) wbScore.textContent = '';
-      if (badge) badge.textContent = '';
-    }
-  }
+  if (!el) return;
+  const letters = (gameState.selectedTiles || [])
+    .map(t => String(t.letter || ''))
+    .join('')
+    .toUpperCase();
+  el.textContent = letters;
+  fitCurrentWord();
 }
 
 function rejectCurrentWord() {

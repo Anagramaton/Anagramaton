@@ -1,11 +1,7 @@
 // uiRenderer.js
 export function updateScoreDisplay(score) {
-  const val = Number(score) || 0;
   const el = document.getElementById('score-display');
-  if (el) el.textContent = `${val}`;
-  // Also update the new score bar
-  const osVal = document.querySelector('#hx-score-bar .os-val');
-  if (osVal) osVal.textContent = String(val);
+  if (el) el.textContent = `${Number(score) || 0}`;
 }
 
 export function addWordToList(word, score) {

@@ -55,23 +55,22 @@
   <!-- Game Title -->
   <h1 id="game-title">ANAGRAMATON</h1>
 
-  <!-- Fixed corner buttons — completely out of document flow -->
+  <!-- Settings under the title -->
   <div id="settings-wrap">
-    <button id="settings-btn" aria-haspopup="true" aria-label="Menu">MENU</button>
+
+    <button id="settings-btn" aria-haspopup="true" aria-label="Settings">?</button>
 
     <div id="settings-menu" hidden>
       <button id="home-btn" type="button"><span class="setting-icon">🏠</span> <span class="setting-label">HOME</span></button>
       <button id="toggle-theme"><span class="setting-icon">🌙</span> <span class="setting-label">THEME</span></button>
       <button id="toggle-access"><span class="setting-icon">🌓</span> <span class="setting-label">COLORBLIND</span></button>
-
+    
       <button id="howto-open"><span class="setting-icon">🎮</span> <span class="setting-label">HOW TO PLAY</span></button>
       <button id="lb-open-btn" type="button"><span class="setting-icon">🏆</span> <span class="setting-label">LEADERBOARD</span></button>
       <button id="toggle-mode"><span class="setting-icon">📅</span> <span class="setting-label">DAILY</span></button>
       <button id="set-name-btn"><span class="setting-icon">👤</span> <span class="setting-label">SET NAME</span></button>
     </div>
   </div>
-
-  <button id="hx-lvl-btn" type="button" title="View Challenges">LVL 1</button>
 
   <button id="toggle-left" class="side-toggle left-toggle" type="button"
     aria-controls="left-panel" aria-expanded="false"
@@ -85,33 +84,18 @@
     <span class="vword">PHRASE</span>
   </button>
 
+  <div id="current-word-display">
+    <span id="current-word"></span>
+  </div>
+
+  <span id="score-display">0</span>
+
   <!-- GAME CONTAINER NOW ONLY HOLDS THE GRID -->
   <main id="game-container">
     <svg id="hex-grid" width="100%" height="100%" viewBox="0 0 1000 1000"
       aria-label="Letter hex grid">
     </svg>
   </main>
-
-  <!-- Bottom HUD: word builder + score bar -->
-  <div id="hx-bottom-hud">
-    <div id="hx-word-builder">
-      <div id="hx-word-score-badge">
-        <span class="badge-val">0</span>
-      </div>
-      <span class="wb-word"></span>
-      <span class="wb-score"></span>
-    </div>
-    <div id="hx-score-bar">
-      <span class="os-val">0</span>
-      <span class="os-pts">PTS</span>
-    </div>
-  </div>
-
-  <!-- Hidden legacy score/word elements kept for JS compatibility -->
-  <div id="current-word-display" style="display:none">
-    <span id="current-word"></span>
-  </div>
-  <span id="score-display" style="display:none">0</span>
 
   <!-- Backdrop for panels -->
   <div id="backdrop" class="backdrop"></div>
