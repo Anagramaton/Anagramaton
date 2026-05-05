@@ -476,6 +476,11 @@ body.hx-active #hx-lvl-btn {
 /* =========================================
    Bottom HUD
    ========================================= */
+/* Shared frosted-glass backdrop filter value */
+:root {
+  --glass-backdrop: blur(12px) saturate(1.4);
+}
+
 #hx-bottom-hud {
   flex-shrink: 0;
   display: flex;
@@ -499,8 +504,8 @@ body.hx-active #hx-lvl-btn {
   padding: 8px 20px;
   border-radius: 14px;
   background: rgba(76, 201, 240, 0.07);
-  backdrop-filter: blur(12px) saturate(1.4);
-  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid rgba(76, 201, 240, 0.25);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
@@ -568,8 +573,8 @@ body.hx-active #hx-lvl-btn {
   align-items: center;
   justify-content: center;
   background: rgba(167, 139, 250, 0.1);
-  backdrop-filter: blur(12px) saturate(1.4);
-  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid rgba(167, 139, 250, 0.35);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),

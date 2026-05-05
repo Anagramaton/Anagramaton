@@ -3426,10 +3426,13 @@ export function startHexacore() {
   // Wire LVL button click → challenges modal
   const lvlBtn = document.getElementById('hx-lvl-btn');
   if (lvlBtn) {
-    lvlBtn.addEventListener('click', openChallengesModal);
-    lvlBtn.addEventListener('keydown', e => {
+    // Named handler so it can be removed in stopHexacore
+    lvlBtn.__hxClickHandler = openChallengesModal;
+    lvlBtn.__hxKeyHandler = e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
-    });
+    };
+    lvlBtn.addEventListener('click', lvlBtn.__hxClickHandler);
+    lvlBtn.addEventListener('keydown', lvlBtn.__hxKeyHandler);
   }
 
   ensureHud();
@@ -3461,6 +3464,15 @@ export function stopHexacore() {
   document.getElementById('hx-challenges-modal')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
+
+  // Remove LVL button event listeners
+  const lvlBtn = document.getElementById('hx-lvl-btn');
+  if (lvlBtn) {
+    if (lvlBtn.__hxClickHandler) lvlBtn.removeEventListener('click', lvlBtn.__hxClickHandler);
+    if (lvlBtn.__hxKeyHandler)   lvlBtn.removeEventListener('keydown', lvlBtn.__hxKeyHandler);
+    delete lvlBtn.__hxClickHandler;
+    delete lvlBtn.__hxKeyHandler;
+  }
 
   document.body.classList.remove('hx-active');
 
