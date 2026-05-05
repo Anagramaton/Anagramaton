@@ -131,51 +131,23 @@
   filter: drop-shadow(0 0 5px rgba(130, 80, 255, 0.8));
 }
 
-/* ── Hexacore HUD ──────────────────────────────────────────────── */
+/* ── Hexacore HUD — legacy elements hidden, replaced by #hx-score-bar ── */
 #hx-score-hud {
-  position: fixed;
-  bottom: clamp(80px, 12vh, 130px);
-  left: 50%;
-  transform: translateX(-50%);
-  color: #4cc9f0;
-  font-family: 'Orbitron', monospace;
-  font-size: 3.1rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  pointer-events: none;
-  z-index: 500;
-  white-space: nowrap;
+  display: none !important;
 }
 
-/* ── Live word-score preview (shown above total score while selecting) */
+/* ── Live word-score preview — hidden, replaced by #hx-word-builder ── */
 #hx-word-score-hud {
-  position: fixed;
-  top: clamp(116px, 18vh, 175px);
-  left: 50%;
-  transform: translateX(-50%);
-  color: #ffd700;
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(1.1rem, 3.5vw, 1.8rem);
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  pointer-events: none;
-  z-index: 500;
-  white-space: nowrap;
-  text-shadow:
-    0 0 10px rgba(255, 215, 0, 0.9),
-    0 0 22px rgba(255, 180, 0, 0.6),
-    0 2px 6px rgba(0, 0, 0, 0.7);
-  transition: opacity 0.1s;
-  animation: hx-word-score-breathe 1s ease-in-out infinite alternate;
+  display: none !important;
 }
 
+/* animation keyframe kept in case referenced elsewhere */
 @keyframes hx-word-score-breathe {
   from {
     text-shadow:
       0 0  8px rgba(255, 215,   0, 0.8),
       0 0 18px rgba(255, 160,   0, 0.5),
       0 2px  6px rgba(0, 0, 0, 0.6);
-    transform: translateX(-50%) scale(1.00);
   }
   to {
     text-shadow:
@@ -183,40 +155,12 @@
       0 0 34px rgba(255, 200,   0, 0.75),
       0 0 50px rgba(255, 140,   0, 0.35),
       0 2px  6px rgba(0, 0, 0, 0.7);
-    transform: translateX(-50%) scale(1.06);
   }
 }
 
-/* ── Level HUD ───────────────────────────────────────────────── */
+/* ── Level HUD — legacy element hidden, replaced by #hx-lvl-btn ── */
 #hx-level-hud {
-  position: fixed;
-  bottom: clamp(10px, 3vh, 28px);
-  left: 50%;
-  transform: translateX(-50%) scale(1);
-  z-index: 900;
-  font-family: 'Turret Road', system-ui, sans-serif;
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.14em;
-  color: #a78bfa;
-  background: #1a1a2e;
-  border: 2px solid #a78bfa;
-  border-radius: 0;
-  padding: 8px 14px;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  cursor: pointer;
-  pointer-events: auto;
-  user-select: none;
-  white-space: nowrap;
-  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
-}
-#hx-level-hud:hover,
-#hx-level-hud:focus {
-  background: #a78bfa;
-  color: #1a1a2e;
-  box-shadow: 0 0 14px rgba(167, 139, 250, 1), 0 0 30px rgba(130, 80, 255, 0.7);
-  transform: translateX(-50%) scale(1.08);
-  outline: none;
+  display: none !important;
 }
 
 /* ── Level-up banner ─────────────────────────────────────────── */
@@ -309,18 +253,11 @@
 }
 
 /* ── Hide Anagramaton-specific UI during Hexacore ──────────────── */
-body.hx-active #score-display        { display: none; }
 body.hx-active .side-toggle          { display: none; }
-body.hx-active #current-word-display { display: none; }
 body.hx-active #left-panel-title,
 body.hx-active #right-panel-title    { display: none; }
 
-body.hx-active #settings-btn {
-  min-width: 40px;
-  min-height: 40px;
-  font-size: 1.1rem;
-  padding: 4px 8px;
-}
+/* Keep settings-btn styled the same in hx-active (no size override needed) */
 
 /* ── Game over overlay ─────────────────────────────────────────── */
 #hx-gameover-overlay {
@@ -1840,29 +1777,9 @@ body.hx-active #hex-grid {
   text-shadow: 0 0 12px rgba(232, 121, 249, 0.8) !important;
 }
 
-/* ── Game title in Hexacore mode ─────────────────────────────── */
-body.hx-active #game-title {
-  filter:
-    drop-shadow(3px 3px 0px #c0c8d8)
-    drop-shadow(-1px -1px 0px #8090b0)
-    drop-shadow(0 0 18px rgba(76, 201, 240, 0.22));
-}
-body[data-theme="dark"].hx-active #game-title {
-  filter:
-    drop-shadow(3px 3px 0px #1e2a3a)
-    drop-shadow(-1px -1px 0px #4a6080)
-    drop-shadow(0 0 28px rgba(76, 201, 240, 0.45));
-}
+/* ── Game title in Hexacore mode — no additional overrides needed (watermark) ─── */
 
 /* ── Mobile HUD adjustments ──────────────────────────────────── */
 @media (max-width: 640px) {
-  #hx-score-hud {
-    bottom: clamp(60px, 10vh, 90px);
-    font-size: 0.95rem;
-  }
-  #hx-level-hud {
-    bottom: clamp(8px, 2vh, 18px);
-    font-size: 0.85rem;
-    padding: 6px 10px;
-  }
+  /* old #hx-score-hud and #hx-level-hud are hidden; no adjustments needed */
 }

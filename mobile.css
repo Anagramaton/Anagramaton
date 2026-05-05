@@ -73,62 +73,20 @@
   #left-panel .panel-content * { max-width: 100%; }
 }
 
-/* ── Score display ────────────────────────────────────────────── */
+/* ── Score display — now handled by #hx-score-bar, hidden ─────── */
 @media (max-width: 640px) {
-  #score-display {
-    position: fixed;
-    bottom: clamp(80px, calc(env(safe-area-inset-bottom) + 11vh), 110px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 800;
-    display: block;
-    text-align: center;
-    width: max-content;
-    pointer-events: none;
-    background: none;
-    clip-path: none;
-    filter: none;
-    padding: 0;
-    font-family: 'Limelight', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-  }
+  #score-display { display: none !important; }
 }
 
-/* ── Current word display ─────────────────────────────────────── */
+/* ── Current word display — now handled by #hx-word-builder ───── */
 @media (max-width: 640px) {
-  #current-word-display {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: clamp(120px, calc(env(safe-area-inset-bottom) + 17vh), 170px);
-    z-index: 800;
-    display: block;
-    text-align: center;
-    font-size: clamp(0.8rem, 5.5vw, 2.4rem);
-    font-family: "Notable";
-    max-width: 90vw;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    word-break: keep-all;
-  }
+  #current-word-display { display: none !important; }
 }
 
-/* ── Settings button — mobile: top centre below game title ── */
+/* ── Controls row — mobile adjustments ──────────────────────────── */
 @media (max-width: 640px) {
-  #settings-wrap {
-    position: fixed;
-    top: clamp(68px, 11vh, 90px);
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  #settings-btn {
-    font-size: 1rem;
-    min-width: 36px;
-    min-height: 36px;
-    padding: 4px 8px;
+  #settings-btn, #hx-lvl-btn {
+    padding: 5px 12px;
   }
   #settings-menu {
     min-width: 180px;
@@ -148,73 +106,9 @@
   }
 }
 
-/* ── Game title ───────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  #game-title {
-    position: fixed;
-    top: clamp(6px, 2vh, 20px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 800;
-    margin: 0;
-    font-size: clamp(2.6rem, 7vw, 3.6rem);
-    font-family: 'Black Han Sans', sans-serif;
-    font-weight: 900;
-    color: var(--title-stroke);
-    -webkit-text-stroke: 0;
-    letter-spacing: 0.04em;
-  }
-}
-
 /* ── Tablet breakpoint (641px–900px) ─────────────────────────── */
 @media (min-width: 641px) and (max-width: 900px) {
-  /* Game title */
-  #game-title {
-    position: fixed;
-    top: clamp(6px, 2vh, 16px);
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: clamp(2.8rem, 5vw, 4rem);
-    z-index: 800;
-    margin: 0;
-  }
-
-  /* Settings button — below title */
-  #settings-wrap {
-    position: fixed;
-    top: clamp(70px, 10vh, 96px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1100;
-  }
-
-  /* Current word display */
-  #current-word-display {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: clamp(110px, 14vh, 160px);
-    z-index: 800;
-    text-align: center;
-    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
-    font-family: 'Notable', sans-serif;
-    max-width: 80vw;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  /* Score display — between buttons */
-  #score-display {
-    position: fixed;
-    bottom: clamp(60px, 9vh, 90px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 800;
-    text-align: center;
-    font-family: 'Limelight', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    pointer-events: none;
-  }
+  /* Current word and score — hidden, handled by new HUD */
+  #current-word-display { display: none !important; }
+  #score-display        { display: none !important; }
 }
