@@ -1160,30 +1160,24 @@ function updateScoreDisplay() {
 function updateHud() {
   const hud = document.getElementById('hx-score-hud');
   if (hud) hud.textContent = `${hxState.score} PTS`;
-  const scoreBar = document.querySelector('#hx-score-bar .os-val');
-  if (scoreBar) scoreBar.textContent = String(hxState.score);
 }
 
 /* ── Animate the HUD score counting up from oldScore → newScore ── */
 let _scoreRafId = 0; // cancel any in-flight count-up before starting a new one
 function animateScoreHud(oldScore, newScore) {
   const hud = document.getElementById('hx-score-hud');
-  const scoreBar = document.querySelector('#hx-score-bar .os-val');
-
-  if (!hud && !scoreBar) return;
+  if (!hud) return;
 
   // Cancel any in-progress count-up animation
   if (_scoreRafId) { cancelAnimationFrame(_scoreRafId); _scoreRafId = 0; }
 
-  if (hud) {
-    // Restart pop animation (force reflow so the animation restarts if already running)
+  // Restart pop animation (force reflow so the animation restarts if already running)
+  hud.classList.remove('hx-score-popping');
+  void hud.getBoundingClientRect();
+  hud.classList.add('hx-score-popping');
+  hud.addEventListener('animationend', () => {
     hud.classList.remove('hx-score-popping');
-    void hud.getBoundingClientRect();
-    hud.classList.add('hx-score-popping');
-    hud.addEventListener('animationend', () => {
-      hud.classList.remove('hx-score-popping');
-    }, { once: true });
-  }
+  }, { once: true });
 
   // Ease-out count-up via requestAnimationFrame
   const startTime = performance.now();
@@ -1192,8 +1186,7 @@ function animateScoreHud(oldScore, newScore) {
     const elapsed  = now - startTime;
     const progress = Math.min(elapsed / SCORE_TICK_MS, 1);
     const current  = Math.round(oldScore + (newScore - oldScore) * easeOut(progress));
-    if (hud) hud.textContent = `${current} PTS`;
-    if (scoreBar) scoreBar.textContent = String(current);
+    hud.textContent = `${current} PTS`;
     if (progress < 1) { _scoreRafId = requestAnimationFrame(frame); }
     else { _scoreRafId = 0; }
   }
@@ -1202,12 +1195,9 @@ function animateScoreHud(oldScore, newScore) {
 
 function updateLevelHud() {
   const el = document.getElementById('hx-level-hud');
-  if (el) {
-    el.textContent = `LVL ${hxState.level}`;
-    el.title = 'View Challenges';
-  }
-  const btn = document.getElementById('hx-lvl-btn');
-  if (btn) btn.textContent = `LVL ${hxState.level}`;
+  if (!el) return;
+  el.textContent = `LVL ${hxState.level}`;
+  el.title = 'View Challenges';
 }
 
 function checkLevelUp(oldScore, newScore) {
@@ -1471,18 +1461,16 @@ function renderChallengesModal() {
 
 /* ── Word display / selection ──────────────────────────────────── */
 function updateWordDisplay() {
-  const wordText = hxSelected.map(t => t.tileType === 'rune' ? '?' : t.letter).join('');
-
   const el = document.getElementById('current-word');
-  if (el) el.textContent = wordText;
-
+  if (el) {
+    el.textContent = hxSelected
+      .map(t => t.tileType === 'rune' ? '?' : t.letter)
+      .join('');
+  }
   const liveEl = document.getElementById('hx-live-word');
-  if (liveEl) liveEl.textContent = wordText;
-
-  // Update new word builder
-  const wbWord = document.querySelector('#hx-word-builder .wb-word');
-  if (wbWord) wbWord.textContent = wordText;
-
+  if (liveEl) {
+    liveEl.textContent = hxSelected.map(t => t.tileType === 'rune' ? '?' : t.letter).join('');
+  }
   updateWordScorePreview();
 }
 
@@ -2047,29 +2035,31 @@ function calcGemCountBonus(selectedTiles) {
  */
 function updateWordScorePreview() {
   const el = document.getElementById('hx-word-score-hud');
-  const wbBuilder = document.getElementById('hx-word-builder');
-  const wbScore   = document.querySelector('#hx-word-builder .wb-score');
-  const badge     = document.querySelector('#hx-word-score-badge .badge-val');
+  if (!el) return;
 
   // Compute assembled letter count (digraph tiles contribute 2 letters, runes contribute 1)
   const letterCount = hxSelected.reduce((sum, t) => sum + (t.tileType === 'rune' ? 1 : t.letter.length), 0);
 
-  function clearValid() {
-    if (el) el.textContent = '';
-    if (wbBuilder) wbBuilder.classList.remove('valid');
-    if (wbScore) wbScore.textContent = '';
-    if (badge) badge.textContent = '';
+  if (letterCount < 4) {
+    el.textContent = '';
+    return;
   }
 
-  if (letterCount < 4) { clearValid(); return; }
-
   const resolved = resolveLetters(hxSelected);
-  if (!resolved || !isValidWord(resolved.join(''))) { clearValid(); return; }
+  if (!resolved || !isValidWord(resolved.join(''))) {
+    el.textContent = '';
+    return;
+  }
 
-  // Resolve rune wildcards optimistically
+  // Resolve rune wildcards optimistically (use '?' placeholder for display
+  // if they haven't been resolved yet — we mirror resolveLetters' alphabet
+  // scan but only need the letters we know for a rough score estimate).
   const knownLetters = hxSelected.map(t => (t.tileType === 'rune' ? null : t.letter));
   const runeCount = knownLetters.filter(l => l === null).length;
 
+  // For a meaningful preview even with runes, estimate using known letters
+  // and count rune placeholders as 1 pt each (minimum).
+  // For multi-char letters (digraphs), sum each character's point value.
   const wordLength = letterCount;
   let base = 0;
   knownLetters.forEach(l => {
@@ -2088,12 +2078,7 @@ function updateWordScorePreview() {
 
   const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
   const runeNote = runeCount > 0 ? '~' : '';
-  const displayText = `${runeNote}+${preview}`;
-
-  if (el) el.textContent = displayText;
-  if (wbBuilder) wbBuilder.classList.add('valid');
-  if (wbScore) wbScore.textContent = displayText;
-  if (badge) badge.textContent = displayText;
+  el.textContent = `${runeNote}+${preview}`;
 }
 
 function clearSelection() {
@@ -3423,18 +3408,6 @@ export function startHexacore() {
   const titleEl = document.getElementById('game-title');
   if (titleEl) titleEl.textContent = 'HEXACORE';
 
-  // Wire LVL button click → challenges modal
-  const lvlBtn = document.getElementById('hx-lvl-btn');
-  if (lvlBtn) {
-    // Named handler so it can be removed in stopHexacore
-    lvlBtn.__hxClickHandler = openChallengesModal;
-    lvlBtn.__hxKeyHandler = e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
-    };
-    lvlBtn.addEventListener('click', lvlBtn.__hxClickHandler);
-    lvlBtn.addEventListener('keydown', lvlBtn.__hxKeyHandler);
-  }
-
   ensureHud();
   updateHud();
   updateLevelHud();
@@ -3465,31 +3438,10 @@ export function stopHexacore() {
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
 
-  // Remove LVL button event listeners
-  const lvlBtn = document.getElementById('hx-lvl-btn');
-  if (lvlBtn) {
-    if (lvlBtn.__hxClickHandler) lvlBtn.removeEventListener('click', lvlBtn.__hxClickHandler);
-    if (lvlBtn.__hxKeyHandler)   lvlBtn.removeEventListener('keydown', lvlBtn.__hxKeyHandler);
-    delete lvlBtn.__hxClickHandler;
-    delete lvlBtn.__hxKeyHandler;
-  }
-
   document.body.classList.remove('hx-active');
 
   const titleEl = document.getElementById('game-title');
   if (titleEl) titleEl.textContent = 'ANAGRAMATON';
-
-  // Reset shared UI elements for Anagramaton mode
-  const wbBuilder = document.getElementById('hx-word-builder');
-  if (wbBuilder) wbBuilder.classList.remove('valid');
-  const wbWord = document.querySelector('#hx-word-builder .wb-word');
-  if (wbWord) wbWord.textContent = '';
-  const wbScore = document.querySelector('#hx-word-builder .wb-score');
-  if (wbScore) wbScore.textContent = '';
-  const badge = document.querySelector('#hx-word-score-badge .badge-val');
-  if (badge) badge.textContent = '';
-  const osVal = document.querySelector('#hx-score-bar .os-val');
-  if (osVal) osVal.textContent = '0';
 }
 
 /* ── Standalone Hexacore Leaderboard Modal (window.hxLbModal) ───── */
