@@ -294,6 +294,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100dvh;
+  max-height: 100dvh;
   min-height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -303,8 +304,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 100dvh;
+  justify-content: center;
+  height: 100dvh;
   background-color: #ffffff;
   background-image: radial-gradient(circle, #c8cfd8 1px, transparent 1px);
   background-size: 28px 28px;
@@ -318,48 +319,38 @@ body[data-theme="dark"] {
   background-size: 28px 28px;
 }
 
-/* Title */
+/* Title — fixed background watermark, completely out of layout flow */
 #game-title {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  text-align: center;
   font-family: 'Black Han Sans', sans-serif;
-  font-size: clamp(2.4rem, 5.5vw, 4.8rem);
-  letter-spacing: 0.04em;
+  font-size: clamp(5rem, 18vw, 22vw);
   font-weight: 900;
+  letter-spacing: 0.04em;
   color: var(--title-stroke);
-  -webkit-text-stroke: 0;
-  text-shadow: none;
-  filter:
-    drop-shadow(3px 3px 0px #c0c8d8)
-    drop-shadow(-1px -1px 0px #8090b0)
-    drop-shadow(0 0 18px rgba(76, 201, 240, 0.22));
-  user-select: none;
+  opacity: 0.045;
   pointer-events: none;
-  margin: 6px 0 0;
-  flex-shrink: 0;
+  z-index: 0;
+  white-space: nowrap;
+  user-select: none;
   line-height: 1;
 }
 
 body[data-theme="dark"] #game-title {
-  filter:
-    drop-shadow(3px 3px 0px #1e2a3a)
-    drop-shadow(-1px -1px 0px #4a6080)
-    drop-shadow(0 0 28px rgba(76, 201, 240, 0.45));
+  opacity: 0.055;
 }
 
-/* Controls row (MENU + LVL side by side under title) */
-#hx-controls-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-shrink: 0;
-  margin: 4px 0 2px;
-  position: relative;
-  z-index: 1100;
-}
-
-/* Settings wrap stays as a relative container for the dropdown */
+/* Settings wrap — fixed top-left corner button */
 #settings-wrap {
-  position: relative;
+  position: fixed;
+  top: 12px;
+  left: 14px;
+  right: auto;
+  z-index: 1100;
 }
 
 /* MENU button — styled rectangle, no clip-path */
@@ -395,8 +386,8 @@ body[data-theme="dark"] #game-title {
 #settings-menu {
   position: absolute;
   top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  transform: none;
   min-width: 200px;
   background: #1a1a2e;
   border: 2px solid #4cc9f0;
@@ -440,8 +431,12 @@ body[data-theme="dark"] #game-title {
   #settings-menu button { font-size: 0.75rem; padding: 9px 12px; }
 }
 
-/* LVL button — purple accent, rectangle, hidden outside hexacore */
+/* LVL button — purple accent, rectangle, fixed top-right corner, hidden outside hexacore */
 #hx-lvl-btn {
+  position: fixed;
+  top: 12px;
+  right: 14px;
+  z-index: 1100;
   font-family: 'Turret Road', system-ui, sans-serif;
   font-size: clamp(0.58rem, 1.3vw, 0.74rem);
   font-weight: 900;
@@ -487,7 +482,7 @@ body.hx-active #hx-lvl-btn {
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  padding: 4px 12px 10px;
+  padding: 4px 12px 8px;
   width: 100%;
   z-index: 1;
 }
@@ -633,7 +628,13 @@ body.hx-active #hx-lvl-btn {
 }
 
 /* Grid Container */
-#hex-grid { touch-action: none; }
+#hex-grid {
+  touch-action: none;
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+}
 #game-container {
   flex: 1 1 auto;
   min-height: 0;
@@ -1173,7 +1174,7 @@ details#merged-words-details > summary {
    ========================================= */
 .side-toggle {
   position: fixed;
-  top: clamp(110px, 15vh, 160px);
+  top: clamp(50px, 8vh, 80px);
   padding: 0;
   border: 2.5px solid var(--side-toggle-border);
   background: var(--side-toggle-bg);

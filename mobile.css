@@ -85,9 +85,6 @@
 
 /* ── Controls row — mobile adjustments ──────────────────────────── */
 @media (max-width: 640px) {
-  #hx-controls-row {
-    margin: 2px 0 1px;
-  }
   #settings-btn, #hx-lvl-btn {
     padding: 5px 12px;
   }
@@ -109,21 +106,8 @@
   }
 }
 
-/* ── Game title — in-flow, font size tweak for small screens ──── */
-@media (max-width: 640px) {
-  #game-title {
-    font-size: clamp(2rem, 6.5vw, 3rem);
-    margin: 4px 0 0;
-  }
-}
-
 /* ── Tablet breakpoint (641px–900px) ─────────────────────────── */
 @media (min-width: 641px) and (max-width: 900px) {
-  /* Game title */
-  #game-title {
-    font-size: clamp(2.2rem, 4.5vw, 3.5rem);
-  }
-
   /* Current word and score — hidden, handled by new HUD */
   #current-word-display { display: none !important; }
   #score-display        { display: none !important; }
