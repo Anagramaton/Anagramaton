@@ -349,7 +349,6 @@ body[data-theme="dark"] #game-title {
   position: fixed;
   top: 12px;
   left: 14px;
-  right: auto;
   z-index: 1100;
 }
 
