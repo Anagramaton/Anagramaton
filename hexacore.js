@@ -1355,44 +1355,11 @@ function ensureHud() {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
   });
 
-  // Action buttons bar (quests, leaderboard, profile)
-  const actionBar = document.createElement('div');
-  actionBar.id = 'hx-action-bar';
-
-  const questsBtn = document.createElement('button');
-  questsBtn.id = 'hx-quests-btn';
-  questsBtn.type = 'button';
-  questsBtn.title = 'Daily Quests';
-  questsBtn.setAttribute('aria-label', 'Daily Quests');
-  questsBtn.textContent = '📋';
-  questsBtn.addEventListener('click', openQuestsModal);
-
-  const lbBtn = document.createElement('button');
-  lbBtn.id = 'hx-lb-btn';
-  lbBtn.type = 'button';
-  lbBtn.title = 'Leaderboards';
-  lbBtn.setAttribute('aria-label', 'Leaderboards');
-  lbBtn.textContent = '🏅';
-  lbBtn.addEventListener('click', openLeaderboardsModal);
-
-  const profileBtn = document.createElement('button');
-  profileBtn.id = 'hx-profile-btn';
-  profileBtn.type = 'button';
-  profileBtn.title = 'Profile';
-  profileBtn.setAttribute('aria-label', 'Profile');
-  profileBtn.textContent = '👤';
-  profileBtn.addEventListener('click', openProfileModal);
-
-  actionBar.appendChild(questsBtn);
-  actionBar.appendChild(lbBtn);
-  actionBar.appendChild(profileBtn);
-
   // Move settings-wrap out of #top-btn-bar and into #hx-top-bar
   const settingsWrap = document.getElementById('settings-wrap');
   if (settingsWrap) {
     hxTopBar.appendChild(settingsWrap);
   }
-  hxTopBar.appendChild(actionBar);
   hxTopBar.appendChild(levelHud);
   document.body.appendChild(hxTopBar);
 
@@ -3789,6 +3756,12 @@ function startHexacoreMode(mode) {
     startHexacore(mode);
   }
 }
+
+/* ── hx:start-mode custom event (dispatched by hexacoreSettings.js) */
+document.addEventListener('hx:start-mode', e => {
+  const mode = e.detail?.mode || 'endless';
+  startHexacoreMode(mode);
+});
 
 /* ── TODO: Hexacore events still missing a dedicated sound ─────────
  *

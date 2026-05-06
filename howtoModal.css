@@ -265,3 +265,37 @@
   #hx-howto-title { font-size: 1.3rem; padding: 16px 18px 12px; }
   #hx-howto-pagewrap { padding: 12px 16px; }
 }
+
+/* ── Scoring & XP page — table layout ────────────────────────────── */
+.hx-howto-table-wrap {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.hx-howto-table {
+  flex: 1;
+  min-width: 120px;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  color: #c4b5fd;
+}
+
+.hx-howto-table th {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(76, 201, 240, 0.7);
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(76, 201, 240, 0.2);
+  text-align: left;
+}
+
+.hx-howto-table td {
+  padding: 3px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.hx-howto-table tr:last-child td { border-bottom: none; }

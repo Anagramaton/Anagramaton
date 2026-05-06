@@ -680,6 +680,62 @@
           <p>After every <strong>10 words</strong> submitted, two corner tiles transform into a portal pair — one entry (◈) and one exit (◉). Chain through both in the same word to link non-adjacent tiles. The portal closes after 5 words or when a portal tile is consumed.</p>
         </section>
 
+        <!-- PAGE 3 — SCORING & XP -->
+        <section class="howto-page" data-page="3" hidden>
+          <h3>SCORING &amp; XP</h3>
+          <p><strong>Word score</strong> = (sum of letter points) × length multiplier × gem multipliers × Prism bonus.</p>
+          <div class="hx-howto-table-wrap">
+            <table class="hx-howto-table">
+              <thead><tr><th>Length</th><th>Multiplier</th></tr></thead>
+              <tbody>
+                <tr><td>4</td><td>×2</td></tr>
+                <tr><td>5</td><td>×5</td></tr>
+                <tr><td>6</td><td>×6</td></tr>
+                <tr><td>7</td><td>×7</td></tr>
+                <tr><td>8+</td><td>×(length)</td></tr>
+              </tbody>
+            </table>
+            <table class="hx-howto-table">
+              <thead><tr><th>Letter</th><th>Pts</th></tr></thead>
+              <tbody>
+                <tr><td>A E I O</td><td>2</td></tr>
+                <tr><td>U R S T L N</td><td>3</td></tr>
+                <tr><td>D H Y G</td><td>4</td></tr>
+                <tr><td>C M P</td><td>5</td></tr>
+                <tr><td>K</td><td>6</td></tr>
+                <tr><td>B F</td><td>7</td></tr>
+                <tr><td>V</td><td>8</td></tr>
+                <tr><td>W J</td><td>9</td></tr>
+                <tr><td>Q X Z</td><td>10</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul>
+            <li><strong>✨ XP</strong> — Every word earns XP equal to its word score ÷ 10 (min 1). XP accumulates across all sessions and never resets.</li>
+            <li><strong>⚡ Player Level</strong> — Levels 1–11 have fixed thresholds; beyond Level 11 each level requires +100,000 XP. Your level is shown in the top bar.</li>
+            <li><strong>💎 Tier Challenges</strong> — Tap your level badge to view SPARK → BLAZE → INFERNO → ASCENDANT challenges. Complete them for bonus XP.</li>
+            <li><strong>✦ Prism bonus</strong> — Prism tile doubles the final word score.</li>
+            <li><strong>◆ Gem stacking</strong> — Multiple gems of the same type are additive (3 Emeralds = ×6). Different gem types multiply together.</li>
+          </ul>
+        </section>
+
+        <!-- PAGE 4 — QUESTS & POWER-UPS -->
+        <section class="howto-page" data-page="4" hidden>
+          <h3>QUESTS &amp; POWER-UPS</h3>
+          <p>Open the <strong>📋 Quests</strong> button to see today's challenges and this week's quest. Completing them earns bonus XP that is added to your total immediately.</p>
+          <ul>
+            <li><strong>📅 Daily Quests</strong> — Three new quests each day (midnight UTC). Examples: submit 10 words, use 5 Ember tiles, score 10,000+ points.</li>
+            <li><strong>🗓 Weekly Quest</strong> — One harder quest per week (resets Monday UTC). Rewards up to 1,000 XP.</li>
+            <li><strong>🎁 Claiming rewards</strong> — Tap a completed quest item to claim its XP reward. Unclaimed rewards persist until you collect them.</li>
+          </ul>
+          <p style="margin-top:0.6rem"><strong>Power-Up tiles</strong> give you active abilities:</p>
+          <ul>
+            <li><strong>◈ Amethyst</strong> — Use it in a 5+ letter word to collect one. Then tap the <em>Amethyst</em> power-up button (top-left) and tap any tile on the board to change its letter. Spawns every 12 words.</li>
+            <li><strong>⇌ Selenite</strong> — Use it in a 5+ letter word to collect one. Then tap the <em>Selenite</em> power-up button (top-right) and tap two tiles to swap their positions. Spawns every 15 words.</li>
+            <li>Both power-up tiles also advance downward each turn like Embers — but reaching the bottom converts them to a regular letter tile instead of ending the game.</li>
+          </ul>
+        </section>
+
       </div><!-- /hx-howto-pagewrap -->
 
       <!-- Controls -->
@@ -735,6 +791,7 @@
   <script type="module" src="./howToModal.js"></script>
   <script type="module" src="./leaderboardModal.js"></script>
   <script type="module" src="./hexacore.js"></script>
+  <script type="module" src="./hexacoreSettings.js"></script>
   <!-- ===== AUDIO ===== -->
    <audio id="sfxUnlock" src="./audio/zapsplat_musical_piano_insides_strings_strum_002_101394.mp3" preload="auto" aria-hidden="true"></audio>
 <audio id="sfxAlert"   src="./audio/alert.mp3"                                          preload="auto" aria-hidden="true"></audio>
