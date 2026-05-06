@@ -179,6 +179,7 @@ export function updateQuestProgress(eventType, data) {
         case 'sevenPlusWords':    if (word.length >= 7) q.progress += 1; break;
         case 'eightPlusWords':    if (word.length >= 8) q.progress += 1; break;
         case 'ninePlusWords':     if (word.length >= 9) q.progress += 1; break;
+        case 'tenPlusWords':      if (word.length >= 10) q.progress += 1; break;
         case 'prismUsed':         q.progress += (tiles || []).filter(t => t.tileType === 'prism').length; break;
         case 'emberUsed':         q.progress += (tiles || []).filter(t => t.tileType === 'ember').length; break;
         case 'runeUsed':          q.progress += (tiles || []).filter(t => t.tileType === 'rune').length; break;
@@ -212,17 +213,22 @@ export function updateQuestProgress(eventType, data) {
     if (completed && document.getElementById('hx-quests-modal')) renderQuestsModal();
   }
 
-  // Update weekly (subset of keys that apply to weekly)
-  const weekKey   = { weeklyTotalWords: 'totalWords', weeklyBestScore: 'sessionScore',
-                      weeklyNinePlusWords: 'ninePlusWords', weeklyGemsCollected: 'gemsCollected',
-                      weeklyMaxLevel: 'maxLevel', weeklyPortalUses: 'portalUses',
-                      weeklyTenPlusWords: 'tenPlusWords' };
+  // Update weekly (maps weekly-specific track keys to equivalent daily track keys)
+  const weeklyKeyToBasicKeyMap = {
+    weeklyTotalWords:    'totalWords',
+    weeklyBestScore:     'sessionScore',
+    weeklyNinePlusWords: 'ninePlusWords',
+    weeklyGemsCollected: 'gemsCollected',
+    weeklyMaxLevel:      'maxLevel',
+    weeklyPortalUses:    'portalUses',
+    weeklyTenPlusWords:  'tenPlusWords',
+  };
   const weekState = loadWeeklyState();
   const week      = getWeekString();
   if (weekState && weekState.week === week) {
     const q = weekState.quest;
     if (!q.completed) {
-      const mapped = weekKey[q.trackKey];
+      const mapped = weeklyKeyToBasicKeyMap[q.trackKey];
       // Re-use updater with a synthetic temp trackKey aligned to daily keys
       const tempQ = { ...q, trackKey: mapped || q.trackKey };
       updater([tempQ]);

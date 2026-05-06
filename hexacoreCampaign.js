@@ -229,7 +229,9 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
 }
 
 function completeCampaignLevel(level, state) {
-  // Calculate stars
+  // Calculate stars based on the first (primary) objective's final value.
+  // For multi-objective levels, star thresholds are always keyed to the primary
+  // objective since they use the same metric (e.g. total score, word count).
   const mainObj = level.objectives[0];
   const val     = _levelProgress[mainObj.type] ?? 0;
   const thresholds = level.stars;
