@@ -17,6 +17,12 @@ import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
 import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audioEngine.js';
+import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn } from './hexacoreXP.js';
+import { getDailyQuests, getWeeklyQuest, updateQuestProgress, openQuestsModal, initQuests, showQuestCompleteToast } from './hexacoreQuests.js';
+import { openLeaderboardsModal } from './hexacoreLeaderboards.js';
+import { openModeSelectModal } from './hexacoreModeSelect.js';
+import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampaignProgress } from './hexacoreCampaign.js';
+import { getProfile, updateProfile, openProfileModal } from './hexacoreProfile.js';
 
 /* ── Hexacore-specific letter point values ─────────────────────── */
 const HX_LETTER_POINTS = {
@@ -51,6 +57,9 @@ const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000,
 /* ── localStorage save keys ────────────────────────────────────── */
 const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
+
+/* ── Game mode flag (set by startHexacore) ─────────────────────── */
+let hxGameMode = 'endless'; // 'endless' | 'zen' | 'daily' | 'campaign'
 
 /* ── Gem tile type set (module-level for shared use) ───────────── */
 const HX_GEM_TYPES = new Set([
@@ -1162,6 +1171,7 @@ function updateScoreDisplay() {
 function updateHud() {
   const numEl = document.getElementById('hx-score-num');
   if (numEl) numEl.textContent = hxState.score;
+  updateXPBarFn();
 }
 
 /* ── Animate the HUD score counting up from oldScore → newScore ── */
@@ -1212,9 +1222,11 @@ function checkLevelUp(oldScore, newScore) {
   if (leveled) {
     updateLevelHud();
     showLevelUpBanner(hxState.level);
-    // Spawn 2 embers as a level-up hazard surge
-    spawnSpecialInRows('ember', [-GRID_RADIUS]);
-    spawnSpecialInRows('ember', [-GRID_RADIUS]);
+    // Spawn 2 embers as a level-up hazard surge (not in zen mode)
+    if (hxGameMode !== 'zen') {
+      spawnSpecialInRows('ember', [-GRID_RADIUS]);
+      spawnSpecialInRows('ember', [-GRID_RADIUS]);
+    }
   }
 }
 
@@ -1272,6 +1284,39 @@ function showRestoredBanner(level, score) {
   setTimeout(() => banner.remove(), 2500);
 }
 
+/* ── XP toast and player level-up banner ───────────────────────── */
+function showXPGainToast(xp) {
+  const toast = document.createElement('div');
+  toast.className = 'hx-xp-toast';
+  toast.textContent = `+${xp} XP`;
+  document.body.appendChild(toast);
+
+  requestAnimationFrame(() => toast.classList.add('hx-xp-toast-visible'));
+  setTimeout(() => {
+    toast.classList.remove('hx-xp-toast-visible');
+    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+    setTimeout(() => toast.remove(), 600);
+  }, 1200);
+}
+
+function showPlayerLevelUpBanner(newLevel) {
+  document.getElementById('hx-player-levelup-banner')?.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'hx-player-levelup-banner';
+  banner.innerHTML = `
+    <div class="hx-levelup-backdrop" style="background:rgba(168,85,247,0.2);border-color:#a855f7">
+      <span class="hx-levelup-title" style="color:#c084fc">✨ PLAYER LEVEL UP!</span>
+      <span class="hx-levelup-num" style="color:#e9d5ff">${newLevel}</span>
+      <span class="hx-levelup-sub" style="color:#c084fc">RANK INCREASED</span>
+    </div>
+  `;
+  document.body.appendChild(banner);
+
+  banner.addEventListener('animationend', () => banner.remove(), { once: true });
+  setTimeout(() => banner.remove(), 3200);
+}
+
 function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
@@ -1281,6 +1326,12 @@ function ensureHud() {
   hud.innerHTML = '<span id="hx-score-num">0</span><span id="hx-score-label"> PTS</span>';
   document.body.appendChild(hud);
 
+  // XP bar below score HUD
+  const xpBar = document.createElement('div');
+  xpBar.id = 'hx-xp-bar-container';
+  xpBar.innerHTML = '<div id="hx-xp-bar-fill"></div><span id="hx-xp-label">LV 1 · 0/80 XP</span>';
+  document.body.appendChild(xpBar);
+
   const liveWordEl = document.createElement('div');
   liveWordEl.id = 'hx-live-word';
   document.body.appendChild(liveWordEl);
@@ -1289,7 +1340,7 @@ function ensureHud() {
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
 
-  // Top bar: MENU (settings-wrap) on left, LVL on right, centered
+  // Top bar: MENU (settings-wrap) on left, action buttons + LVL on right
   const hxTopBar = document.createElement('div');
   hxTopBar.id = 'hx-top-bar';
 
@@ -1304,11 +1355,44 @@ function ensureHud() {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
   });
 
+  // Action buttons bar (quests, leaderboard, profile)
+  const actionBar = document.createElement('div');
+  actionBar.id = 'hx-action-bar';
+
+  const questsBtn = document.createElement('button');
+  questsBtn.id = 'hx-quests-btn';
+  questsBtn.type = 'button';
+  questsBtn.title = 'Daily Quests';
+  questsBtn.setAttribute('aria-label', 'Daily Quests');
+  questsBtn.textContent = '📋';
+  questsBtn.addEventListener('click', openQuestsModal);
+
+  const lbBtn = document.createElement('button');
+  lbBtn.id = 'hx-lb-btn';
+  lbBtn.type = 'button';
+  lbBtn.title = 'Leaderboards';
+  lbBtn.setAttribute('aria-label', 'Leaderboards');
+  lbBtn.textContent = '🏅';
+  lbBtn.addEventListener('click', openLeaderboardsModal);
+
+  const profileBtn = document.createElement('button');
+  profileBtn.id = 'hx-profile-btn';
+  profileBtn.type = 'button';
+  profileBtn.title = 'Profile';
+  profileBtn.setAttribute('aria-label', 'Profile');
+  profileBtn.textContent = '👤';
+  profileBtn.addEventListener('click', openProfileModal);
+
+  actionBar.appendChild(questsBtn);
+  actionBar.appendChild(lbBtn);
+  actionBar.appendChild(profileBtn);
+
   // Move settings-wrap out of #top-btn-bar and into #hx-top-bar
   const settingsWrap = document.getElementById('settings-wrap');
   if (settingsWrap) {
     hxTopBar.appendChild(settingsWrap);
   }
+  hxTopBar.appendChild(actionBar);
   hxTopBar.appendChild(levelHud);
   document.body.appendChild(hxTopBar);
 
@@ -1319,6 +1403,8 @@ function ensureHud() {
   const powerUpBarRight = document.createElement('div');
   powerUpBarRight.id = 'hx-powerup-bar-right';
   document.body.appendChild(powerUpBarRight);
+
+  updateXPBarFn();
 }
 
 function removeHud() {
@@ -1331,6 +1417,7 @@ function removeHud() {
   }
 
   document.getElementById('hx-score-hud')?.remove();
+  document.getElementById('hx-xp-bar-container')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
   document.getElementById('hx-top-bar')?.remove();
@@ -1400,6 +1487,21 @@ function showRequirementToast(description) {
 }
 
 /* ── Challenges modal ──────────────────────────────────────────── */
+
+const HX_TIER_CONFIG = {
+  spark:   { label: '⚡ SPARK',     color: '#fbbf24', className: 'hx-tier-spark' },
+  blaze:   { label: '🔥 BLAZE',     color: '#f97316', className: 'hx-tier-blaze' },
+  inferno: { label: '💎 INFERNO',   color: '#ef4444', className: 'hx-tier-inferno' },
+  ascend:  { label: '🌟 ASCENDANT', color: '#a855f7', className: 'hx-tier-ascendant' },
+};
+
+function getTierFromId(id) {
+  for (const key of Object.keys(HX_TIER_CONFIG)) {
+    if (id.startsWith(key + '_') || id === key) return key;
+  }
+  return 'spark';
+}
+
 function openChallengesModal() {
   document.getElementById('hx-challenges-modal')?.remove();
 
@@ -1432,7 +1534,6 @@ function openChallengesModal() {
 
   renderChallengesModal();
 
-  // Close on button or backdrop click
   document.getElementById('hx-challenges-close')
     ?.addEventListener('click', () => modal.remove());
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
@@ -1445,31 +1546,43 @@ function renderChallengesModal() {
   const completed = hxCompletedReqs.size;
   const total     = HX_LEVEL_REQUIREMENTS.length;
 
-  // Update progress in header
-  const progress = document.querySelector('#hx-challenges-header .hx-challenges-progress');
-  if (progress) progress.textContent = `${completed} / ${total} COMPLETE`;
+  const progressEl = document.querySelector('#hx-challenges-header .hx-challenges-progress');
+  if (progressEl) progressEl.textContent = `${completed} / ${total} COMPLETE`;
 
-  // Group requirements by section
-  const sections = new Map();
+  // Group requirements by tier prefix
+  const tierMap = new Map([
+    ['spark',   []],
+    ['blaze',   []],
+    ['inferno', []],
+    ['ascend',  []],
+  ]);
+
   for (const req of HX_LEVEL_REQUIREMENTS) {
-    if (!sections.has(req.section)) sections.set(req.section, []);
-    sections.get(req.section).push(req);
+    const tier = getTierFromId(req.id);
+    if (!tierMap.has(tier)) tierMap.set(tier, []);
+    tierMap.get(tier).push(req);
   }
 
-  const showSectionHeaders = sections.size > 1;
-
   body.innerHTML = '';
-  for (const [sectionName, reqs] of sections) {
-    const section = document.createElement('div');
-    section.className = 'hx-challenges-section';
 
-    if (showSectionHeaders) {
-      const sectionTitle = document.createElement('div');
-      sectionTitle.className = 'hx-challenges-section-title';
-      const doneCount = reqs.filter(r => hxCompletedReqs.has(r.id)).length;
-      sectionTitle.innerHTML = `${sectionName.toUpperCase()} <span class="hx-challenges-section-count">${doneCount}/${reqs.length}</span>`;
-      section.appendChild(sectionTitle);
-    }
+  for (const [tierKey, reqs] of tierMap) {
+    if (reqs.length === 0) continue;
+    const cfg        = HX_TIER_CONFIG[tierKey] ?? HX_TIER_CONFIG.spark;
+    const doneCount  = reqs.filter(r => hxCompletedReqs.has(r.id)).length;
+    const pct        = Math.round((doneCount / reqs.length) * 100);
+
+    const section = document.createElement('div');
+    section.className = `hx-challenges-section ${cfg.className}`;
+
+    section.innerHTML = `
+      <div class="hx-challenges-tier-header">
+        <span class="hx-challenges-tier-label">${cfg.label}</span>
+        <span class="hx-challenges-section-count">${doneCount}/${reqs.length}</span>
+      </div>
+      <div class="hx-challenges-tier-bar">
+        <div class="hx-challenges-tier-bar-fill" style="width:${pct}%;background:${cfg.color}"></div>
+      </div>
+    `;
 
     for (const req of reqs) {
       const isDone = hxCompletedReqs.has(req.id);
@@ -2585,6 +2698,34 @@ async function submitHexacoreWord() {
   // Check requirements before the selection is cleared and portal state changes
   checkHexacoreRequirements(word, [...hxSelected], wordScore);
 
+  // XP gain
+  const xpGain = calcWordXP(word, [...hxSelected]);
+  const { newLevel, leveledUp } = addXP(xpGain);
+  showXPGainToast(xpGain);
+  if (leveledUp) showPlayerLevelUpBanner(newLevel);
+  updateXPBarFn();
+
+  // Quest tracking
+  const gemsUsedInWord   = hxSelected.filter(t => t.tileType && t.tileType.startsWith('gem')).length;
+  const portalUsedInWord = hxState.portalOpen && hxState.portalEntry && hxState.portalExit &&
+    hxSelected.some(t => hxKey(t.q, t.r) === hxKey(hxState.portalEntry.q, hxState.portalEntry.r) ||
+                         hxKey(t.q, t.r) === hxKey(hxState.portalExit.q,  hxState.portalExit.r));
+  updateQuestProgress('wordSubmitted', {
+    word,
+    tiles:               [...hxSelected],
+    score:               hxState.score,
+    gemsUsed:            gemsUsedInWord,
+    portalUsed:          portalUsedInWord,
+    gameLevel:           hxState.level,
+    amethystCollected:   false,
+    seleniteCollected:   false,
+  });
+
+  // Campaign progress tracking
+  if (hxGameMode === 'campaign') {
+    updateCampaignProgress(word, [...hxSelected], wordScore, hxState);
+  }
+
   const consumed = [...hxSelected];
 
   // Detect amethyst/selenite power-up collection (5+ letter word)
@@ -2638,8 +2779,8 @@ async function submitHexacoreWord() {
     // Fire bonus mirrors word reward
     if (hasEmber) spawnGemRewardForWord(word.length);
     spawnSpecialTiles();
-    // Also spawn an ember on any 6+ letter word
-    if (word.length >= 6) {
+    // Also spawn an ember on any 6+ letter word (not in zen mode)
+    if (word.length >= 6 && hxGameMode !== 'zen') {
       spawnSpecialInRows('ember', [-GRID_RADIUS]);
     }
 
@@ -3012,9 +3153,12 @@ function spawnGemRewardForWord(wordLength) {
 
 /* ── Special tile spawning ─────────────────────────────────────── */
 function spawnSpecialTiles() {
-  // Every 3 words → 1 new ember in top row
-  if (hxWordCount % 3 === 0) {
-    spawnSpecialInRows('ember', [-GRID_RADIUS]);
+  // Zen mode: skip all ember spawns
+  if (hxGameMode !== 'zen') {
+    // Every 3 words → 1 new ember in top row
+    if (hxWordCount % 3 === 0) {
+      spawnSpecialInRows('ember', [-GRID_RADIUS]);
+    }
   }
   // Random interval (4–6 words) → 1 new prism in top 3 rows
   if (hxWordCount >= hxNextPrismSpawn) {
@@ -3086,6 +3230,16 @@ function triggerGameOver() {
   if (titleEl) titleEl.textContent = 'ANAGRAMATON';
 
   removeHud();
+
+  // Update player profile stats
+  const { xp: xpNow } = getXPData();
+  updateProfile({
+    words:     hxState.words,
+    score:     hxState.score,
+    xpEarned:  0, // XP was already added incrementally
+    level:     hxState.level,
+  });
+
   showGameOver();
 }
 
@@ -3273,9 +3427,14 @@ function clearHexacoreSave() {
 }
 
 /* ── Public entry point ────────────────────────────────────────── */
-export function startHexacore() {
+export function startHexacore(mode = 'endless') {
+  hxGameMode = mode;
+
   // Load persisted requirements (persist across sessions and new games)
   hxCompletedReqs = new Set(loadHexacoreRequirements());
+
+  // Initialise quest system
+  initQuests();
 
   // Reset state
   Object.assign(hxState, {
@@ -3592,18 +3751,44 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // Check for a saved session first (only relevant for endless/zen)
     if (loadHexacoreProgress()) {
       if (confirm('Continue your saved Hexacore session?')) {
-        startHexacore();
-      } else {
-        clearHexacoreSave();
-        startHexacore();
+        startHexacore('endless');
+        return;
       }
-    } else {
-      startHexacore();
+      clearHexacoreSave();
     }
+
+    // Show mode select
+    openModeSelectModal(mode => startHexacoreMode(mode));
   });
+
+  // Expose helpers for campaign overlay buttons
+  window._hxStartCampaignLevel = (levelId) => {
+    startCampaignLevel(levelId, null);
+    startHexacore('campaign');
+  };
+  window._hxOpenCampaignModal = () => {
+    openCampaignModal(levelId => {
+      startCampaignLevel(levelId, null);
+      startHexacore('campaign');
+    });
+  };
+  // Allow quest system to add XP via claim
+  window._hxAddXP = (amount) => { addXP(amount); updateXPBarFn(); };
 });
+
+function startHexacoreMode(mode) {
+  if (mode === 'campaign') {
+    openCampaignModal(levelId => {
+      startCampaignLevel(levelId, null);
+      startHexacore('campaign');
+    });
+  } else {
+    startHexacore(mode);
+  }
+}
 
 /* ── TODO: Hexacore events still missing a dedicated sound ─────────
  *
