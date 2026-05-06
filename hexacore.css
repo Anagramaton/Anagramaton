@@ -1971,3 +1971,871 @@ body[data-theme="dark"].hx-active #game-title {
   }
 }
 
+
+/* ================================================================
+   Progression System — XP, Quests, Leaderboards, Mode Select,
+   Campaign, Profile, Tier Challenges
+   ================================================================ */
+
+/* ── XP Bar ──────────────────────────────────────────────────────── */
+#hx-xp-bar-container {
+  position: fixed;
+  bottom: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(260px, 80vw);
+  height: 18px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 9px;
+  border: 1px solid rgba(168,85,247,0.35);
+  overflow: hidden;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+}
+
+#hx-xp-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7, #c084fc);
+  border-radius: 9px;
+  transition: width 0.5s ease;
+}
+
+#hx-xp-label {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  text-align: center;
+  font-size: 0.62rem;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.85);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ── XP Toast ────────────────────────────────────────────────────── */
+.hx-xp-toast {
+  position: fixed;
+  right: 16px;
+  bottom: 110px;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #c084fc;
+  text-shadow: 0 0 12px #a855f7;
+  opacity: 0;
+  transform: translateY(0px);
+  transition: opacity 0.25s, transform 0.8s ease-out;
+  pointer-events: none;
+  z-index: 1200;
+}
+.hx-xp-toast.hx-xp-toast-visible {
+  opacity: 1;
+  transform: translateY(-28px);
+}
+
+/* ── Player Level-Up Banner ──────────────────────────────────────── */
+#hx-player-levelup-banner {
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: hx-levelup-pop 3s cubic-bezier(0.22,1,0.36,1) forwards;
+  pointer-events: none;
+}
+
+/* ── HUD Action Bar ──────────────────────────────────────────────── */
+#hx-action-bar {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+#hx-action-bar button {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 8px;
+  line-height: 1;
+  transition: background 0.15s;
+  min-height: 36px;
+  min-width: 36px;
+}
+
+#hx-action-bar button:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* ── Quests Modal ────────────────────────────────────────────────── */
+#hx-quests-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.65);
+}
+
+#hx-quests-box {
+  background: linear-gradient(135deg, rgba(15,15,30,0.97), rgba(25,10,40,0.97));
+  border: 2px solid rgba(76,201,240,0.5);
+  border-radius: 16px;
+  width: min(420px, 96vw);
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(76,201,240,0.2);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+}
+
+#hx-quests-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#hx-quests-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f1f5f9;
+}
+
+#hx-quests-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+#hx-quests-close:hover { background: rgba(255,255,255,0.1); }
+
+#hx-quests-body {
+  overflow-y: auto;
+  padding: 0.8rem 1rem;
+  flex: 1;
+}
+
+.hx-quest-section {
+  margin-bottom: 1rem;
+}
+
+.hx-quest-section-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.hx-quest-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.hx-quest-item.hx-quest-done {
+  border-color: rgba(34,197,94,0.3);
+  background: rgba(34,197,94,0.06);
+}
+
+.hx-quest-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.hx-quest-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.hx-quest-desc {
+  flex: 1;
+  font-size: 0.75rem;
+  color: #e2e8f0;
+  letter-spacing: 0.03em;
+}
+
+.hx-quest-reward {
+  font-size: 0.7rem;
+  color: #c084fc;
+  white-space: nowrap;
+}
+
+.hx-quest-progress-bar {
+  height: 5px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.25rem;
+}
+
+.hx-quest-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4cc9f0, #7c3aed);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.hx-quest-progress-text {
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.4);
+  text-align: right;
+}
+
+.hx-quest-claim-btn {
+  margin-top: 0.4rem;
+  width: 100%;
+  padding: 0.35rem;
+  background: rgba(168,85,247,0.2);
+  border: 1px solid rgba(168,85,247,0.5);
+  border-radius: 6px;
+  color: #c084fc;
+  font-family: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.hx-quest-claim-btn:hover { background: rgba(168,85,247,0.35); }
+
+/* ── Quest Complete Toast ────────────────────────────────────────── */
+.hx-quest-toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  z-index: 2000;
+  background: rgba(22,163,74,0.18);
+  border: 1px solid rgba(34,197,94,0.5);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.8rem;
+  color: #86efac;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 90vw;
+}
+.hx-quest-toast.hx-quest-toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Leaderboards Modal ──────────────────────────────────────────── */
+#hx-leaderboards-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.65);
+}
+
+#hx-leaderboards-box {
+  background: linear-gradient(135deg, rgba(15,15,30,0.97), rgba(25,10,40,0.97));
+  border: 2px solid rgba(76,201,240,0.5);
+  border-radius: 16px;
+  width: min(440px, 96vw);
+  max-height: 82vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(76,201,240,0.2);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+}
+
+#hx-leaderboards-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#hx-leaderboards-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f1f5f9;
+}
+
+#hx-leaderboards-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+#hx-leaderboards-close:hover { background: rgba(255,255,255,0.1); }
+
+.hx-lb-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.hx-lb-tabs::-webkit-scrollbar { display: none; }
+
+.hx-lb-tab {
+  flex: 1;
+  padding: 0.55rem 0.5rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.hx-lb-tab.hx-lb-tab-active {
+  color: #4cc9f0;
+  border-bottom-color: #4cc9f0;
+}
+
+.hx-lb-tab:hover { color: rgba(255,255,255,0.7); }
+
+#hx-leaderboards-content {
+  overflow-y: auto;
+  padding: 0.8rem 1rem;
+  flex: 1;
+  font-size: 0.82rem;
+  color: #e2e8f0;
+}
+
+/* ── Mode Select Modal ───────────────────────────────────────────── */
+#hx-mode-select-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+}
+
+#hx-mode-select-box {
+  background: linear-gradient(135deg, rgba(10,10,25,0.98), rgba(20,8,35,0.98));
+  border: 2px solid rgba(76,201,240,0.5);
+  border-radius: 18px;
+  width: min(400px, 96vw);
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(76,201,240,0.15);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+}
+
+#hx-mode-select-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#hx-mode-select-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #f1f5f9;
+}
+
+#hx-mode-select-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+#hx-mode-select-close:hover { background: rgba(255,255,255,0.1); }
+
+#hx-mode-cards {
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.hx-mode-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+  color: #e2e8f0;
+}
+
+.hx-mode-card:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: var(--mode-color, rgba(76,201,240,0.5));
+  box-shadow: 0 0 16px rgba(76,201,240,0.12);
+}
+
+.hx-mode-card-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.hx-mode-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hx-mode-card-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--mode-color, #f1f5f9);
+}
+
+.hx-mode-card-desc {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.02em;
+}
+
+.hx-mode-card-arrow {
+  font-size: 1.4rem;
+  color: rgba(255,255,255,0.3);
+}
+
+/* ── Profile Modal ───────────────────────────────────────────────── */
+#hx-profile-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.65);
+}
+
+#hx-profile-box {
+  background: linear-gradient(135deg, rgba(15,15,30,0.97), rgba(25,10,40,0.97));
+  border: 2px solid rgba(168,85,247,0.45);
+  border-radius: 16px;
+  width: min(380px, 96vw);
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(168,85,247,0.15);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+}
+
+#hx-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#hx-profile-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f1f5f9;
+}
+
+#hx-profile-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+#hx-profile-close:hover { background: rgba(255,255,255,0.1); }
+
+#hx-profile-body {
+  padding: 1rem 1.2rem;
+}
+
+#hx-profile-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #f1f5f9;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+#hx-profile-rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(168,85,247,0.1);
+  border: 1px solid rgba(168,85,247,0.25);
+  border-radius: 10px;
+}
+
+.hx-profile-rank-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 2px;
+}
+
+.hx-profile-rank-num {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #c084fc;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.hx-profile-xp-total {
+  font-size: 0.75rem;
+  color: rgba(192,132,252,0.7);
+}
+
+#hx-profile-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hx-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+}
+
+.hx-stat-label {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.05em;
+}
+
+.hx-stat-value {
+  font-size: 0.82rem;
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+/* ── Campaign Modal ──────────────────────────────────────────────── */
+#hx-campaign-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.65);
+}
+
+#hx-campaign-box {
+  background: linear-gradient(135deg, rgba(15,15,30,0.97), rgba(25,10,40,0.97));
+  border: 2px solid rgba(168,85,247,0.45);
+  border-radius: 16px;
+  width: min(480px, 98vw);
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(168,85,247,0.2);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+}
+
+#hx-campaign-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#hx-campaign-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f1f5f9;
+  flex: 1;
+}
+
+#hx-campaign-progress {
+  font-size: 0.7rem;
+  color: rgba(192,132,252,0.7);
+}
+
+#hx-campaign-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+#hx-campaign-close:hover { background: rgba(255,255,255,0.1); }
+
+#hx-campaign-grid {
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.5rem;
+}
+
+.hx-campaign-level-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 0.7rem 0.5rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: #e2e8f0;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.hx-campaign-level-card:hover:not([disabled]) {
+  background: rgba(168,85,247,0.15);
+  border-color: rgba(168,85,247,0.4);
+}
+
+.hx-campaign-level-card.hx-campaign-complete {
+  border-color: rgba(192,132,252,0.35);
+  background: rgba(168,85,247,0.08);
+}
+
+.hx-campaign-level-card.hx-campaign-locked {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.hx-campaign-level-num {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.06em;
+}
+
+.hx-campaign-level-title {
+  font-size: 0.68rem;
+  color: #e2e8f0;
+  line-height: 1.2;
+}
+
+.hx-campaign-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.hx-star {
+  color: rgba(255,255,255,0.2);
+  font-size: 0.75rem;
+}
+
+.hx-star.hx-star-filled {
+  color: #fbbf24;
+}
+
+/* ── Campaign Level Complete Overlay ────────────────────────────── */
+#hx-campaign-complete-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.72);
+}
+
+#hx-levelcomplete-box {
+  background: linear-gradient(135deg, rgba(15,15,30,0.98), rgba(30,10,50,0.98));
+  border: 2px solid rgba(168,85,247,0.6);
+  border-radius: 18px;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  min-width: 260px;
+  box-shadow: 0 0 60px rgba(168,85,247,0.3);
+}
+
+.hx-levelcomplete-title {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #c084fc;
+  margin-bottom: 0.3rem;
+}
+
+.hx-levelcomplete-name {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 1rem;
+}
+
+.hx-levelcomplete-stars {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 0.25rem;
+}
+
+.hx-levelcomplete-star {
+  font-size: 2rem;
+  color: rgba(255,255,255,0.15);
+}
+.hx-levelcomplete-star.filled {
+  color: #fbbf24;
+  text-shadow: 0 0 12px rgba(251,191,36,0.7);
+}
+
+.hx-levelcomplete-stars-label {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.08em;
+}
+
+#hx-levelcomplete-next,
+#hx-levelcomplete-menu {
+  display: block;
+  width: 100%;
+  padding: 0.55rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#hx-levelcomplete-next {
+  background: rgba(168,85,247,0.25);
+  border: 1px solid rgba(168,85,247,0.55);
+  color: #c084fc;
+}
+#hx-levelcomplete-next:hover { background: rgba(168,85,247,0.4); }
+
+#hx-levelcomplete-menu {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.6);
+}
+#hx-levelcomplete-menu:hover { background: rgba(255,255,255,0.1); }
+
+/* ── Challenges — Tier Styles ────────────────────────────────────── */
+.hx-challenges-tier-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  margin-bottom: 0.35rem;
+}
+
+.hx-challenges-tier-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.hx-challenges-tier-bar {
+  height: 5px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.hx-challenges-tier-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.hx-tier-spark .hx-challenges-tier-label   { color: #fbbf24; }
+.hx-tier-blaze .hx-challenges-tier-label   { color: #f97316; }
+.hx-tier-inferno .hx-challenges-tier-label { color: #ef4444; }
+.hx-tier-ascendant .hx-challenges-tier-label { color: #a855f7; }
+
+.hx-challenges-section {
+  margin-bottom: 1.2rem;
+}
+
+/* ── Mobile responsive additions ────────────────────────────────── */
+@media (max-width: 640px) {
+  #hx-xp-bar-container {
+    bottom: 46px;
+    width: min(220px, 72vw);
+    height: 15px;
+  }
+
+  #hx-xp-label {
+    font-size: 0.55rem;
+  }
+
+  .hx-xp-toast {
+    right: 8px;
+    bottom: 100px;
+    font-size: 0.85rem;
+  }
+
+  #hx-action-bar button {
+    font-size: 0.85rem;
+    padding: 5px 6px;
+    min-height: 32px;
+    min-width: 32px;
+  }
+
+  #hx-campaign-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+}
