@@ -135,39 +135,50 @@
 #hx-score-hud {
   position: fixed;
   bottom: clamp(14px, 3vh, 36px);
-  right: clamp(12px, 3vw, 24px);
-  left: auto;
-  transform: none;
-  color: #4cc9f0;
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(1.2rem, 2.5vw, 2rem);
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  left: 50%;
+  transform: translateX(-50%);
+  right: auto;
+  text-align: center;
   pointer-events: none;
   z-index: 900;
   white-space: nowrap;
+  text-shadow: 0 0 20px rgba(76, 201, 240, 0.4);
+}
+#hx-score-num {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--neon, #4cc9f0);
+}
+#hx-score-label {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: rgba(76, 201, 240, 0.6);
 }
 
-/* ── Live word-score preview (shown bottom-center-left while selecting) */
+/* ── Live word-score preview (shown above #hx-live-word, valid words only) */
 #hx-word-score-hud {
   position: fixed;
-  bottom: clamp(50px, 7vh, 80px);
-  right: clamp(12px, 3vw, 24px);
-  left: auto;
+  bottom: clamp(100px, 14vh, 140px);
+  left: 50%;
+  transform: translateX(-50%);
+  right: auto;
   top: auto;
-  transform: none;
   color: #ffd700;
-  font-family: 'Orbitron', monospace;
+  font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.9rem, 2vw, 1.4rem);
-  font-weight: 900;
-  letter-spacing: 0.12em;
+  font-weight: 400;
+  letter-spacing: 0.14em;
   pointer-events: none;
   z-index: 900;
   white-space: nowrap;
+  text-align: center;
   text-shadow:
-    0 0 10px rgba(255, 215, 0, 0.9),
-    0 0 22px rgba(255, 180, 0, 0.6),
-    0 2px 6px rgba(0, 0, 0, 0.7);
+    0 0 14px rgba(255, 215, 0, 0.7),
+    0 2px 8px rgba(0, 0, 0, 0.6);
   transition: opacity 0.1s;
   animation: hx-word-score-breathe 1s ease-in-out infinite alternate;
 }
@@ -175,53 +186,19 @@
 @keyframes hx-word-score-breathe {
   from {
     text-shadow:
-      0 0  8px rgba(255, 215,   0, 0.8),
-      0 0 18px rgba(255, 160,   0, 0.5),
-      0 2px  6px rgba(0, 0, 0, 0.6);
-    transform: scale(1.00);
+      0 0  8px rgba(255, 215,   0, 0.6),
+      0 0 18px rgba(255, 180,   0, 0.35),
+      0 2px  6px rgba(0, 0, 0, 0.5);
+    transform: translateX(-50%) scale(1.00);
   }
   to {
     text-shadow:
-      0 0 16px rgba(255, 230,   0, 1),
-      0 0 34px rgba(255, 200,   0, 0.75),
-      0 0 50px rgba(255, 140,   0, 0.35),
-      0 2px  6px rgba(0, 0, 0, 0.7);
-    transform: scale(1.06);
+      0 0 14px rgba(255, 230,   0, 0.9),
+      0 0 28px rgba(255, 200,   0, 0.6),
+      0 0 44px rgba(255, 140,   0, 0.25),
+      0 2px  6px rgba(0, 0, 0, 0.6);
+    transform: translateX(-50%) scale(1.05);
   }
-}
-
-/* ── Level HUD: top-right dead zone ─────────────────────────── */
-#hx-level-hud {
-  position: fixed;
-  top: clamp(16px, 4vh, 32px);
-  right: clamp(12px, 3vw, 24px);
-  bottom: auto;
-  left: auto;
-  transform: scale(1);
-  z-index: 900;
-  font-family: 'Turret Road', system-ui, sans-serif;
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.14em;
-  color: #a78bfa;
-  background: #1a1a2e;
-  border: 2px solid #a78bfa;
-  border-radius: 0;
-  padding: 8px 14px;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  cursor: pointer;
-  pointer-events: auto;
-  user-select: none;
-  white-space: nowrap;
-  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
-}
-#hx-level-hud:hover,
-#hx-level-hud:focus {
-  background: #a78bfa;
-  color: #1a1a2e;
-  box-shadow: 0 0 14px rgba(167, 139, 250, 1), 0 0 30px rgba(130, 80, 255, 0.7);
-  transform: scale(1.08);
-  outline: none;
 }
 
 /* ── Level-up banner ─────────────────────────────────────────── */
@@ -315,23 +292,84 @@
 
 /* ── Hide Anagramaton-specific UI during Hexacore ──────────────── */
 body.hx-active #score-display        { display: none; }
-body.hx-active .side-toggle          { display: none; }
+body.hx-active #top-btn-bar          { display: none; }
 body.hx-active #current-word-display { display: none; }
+body.hx-active #word-score-preview   { display: none; }
 body.hx-active #left-panel-title,
 body.hx-active #right-panel-title    { display: none; }
 
-/* Hexacore settings button — same top-left position, slightly larger */
-body.hx-active #settings-wrap {
-  top: clamp(16px, 4vh, 32px);
-  left: clamp(12px, 3vw, 24px);
-  right: auto;
-  transform: none;
+/* ── #hx-top-bar: centered top strip with MENU + LVL ──────────── */
+#hx-top-bar {
+  position: fixed;
+  top: clamp(14px, 3.5vh, 28px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: stretch;
+  gap: clamp(10px, 2vw, 20px);
+  z-index: 1200;
+  pointer-events: auto;
 }
-body.hx-active #settings-btn {
-  min-width: 40px;
-  min-height: 40px;
-  font-size: 1.1rem;
-  padding: 4px 8px;
+
+/* Settings-wrap inside #hx-top-bar — reset from Anagramaton layout */
+#hx-top-bar #settings-wrap {
+  position: static;
+  display: flex;
+  align-items: stretch;
+}
+#hx-top-bar #settings-btn {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  min-width: clamp(60px, 8vw, 90px);
+  min-height: 44px;
+  background: rgba(26, 26, 46, 0.88);
+  color: #e2e8f0;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  padding: clamp(7px, 1.2vh, 11px) clamp(12px, 2vw, 20px);
+  cursor: pointer;
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+#hx-top-bar #settings-btn:hover {
+  background: rgba(40, 40, 70, 0.95);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+/* ── Level HUD — inside #hx-top-bar ─────────────────────────── */
+#hx-level-hud {
+  position: static;
+  z-index: auto;
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: #e2d9ff;
+  background: rgba(26, 26, 46, 0.88);
+  border: 1.5px solid rgba(167, 139, 250, 0.5);
+  border-radius: 0;
+  padding: clamp(7px, 1.2vh, 11px) clamp(12px, 2vw, 20px);
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  white-space: nowrap;
+  min-width: clamp(60px, 8vw, 90px);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s, border-color 0.18s;
+}
+#hx-level-hud:hover,
+#hx-level-hud:focus {
+  background: rgba(100, 70, 180, 0.6);
+  border-color: #a78bfa;
+  outline: none;
 }
 
 /* ── Game over overlay ─────────────────────────────────────────── */
@@ -538,9 +576,9 @@ body.hx-active #settings-btn {
 
 /* ── Score HUD pop animation ───────────────────────────────────── */
 @keyframes hx-score-pop {
-  0%   { transform: scale(1);    color: #4cc9f0; }
-  35%  { transform: scale(1.35); color: #ffd700; }
-  100% { transform: scale(1);    color: #4cc9f0; }
+  0%   { transform: translateX(-50%) scale(1); }
+  35%  { transform: translateX(-50%) scale(1.35); }
+  100% { transform: translateX(-50%) scale(1); }
 }
 .hx-score-popping {
   animation: hx-score-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -1167,23 +1205,24 @@ body.hx-active #hex-grid {
   animation: hx-portal-spawn-anim 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* ── Live word display: bottom-left dead zone while player drags ── */
+/* ── Live word display: bottom-center while player drags ──────── */
 #hx-live-word {
   position: fixed;
-  bottom: clamp(50px, 7vh, 80px);
-  left: clamp(12px, 3vw, 24px);
+  bottom: clamp(54px, 9vh, 90px);
+  left: 50%;
+  transform: translateX(-50%);
   top: auto;
-  transform: none;
   color: #ffffff;
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(1rem, 3vw, 1.6rem);
+  font-family: 'Notable', sans-serif;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
   font-weight: 900;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   pointer-events: none;
   z-index: 900;
   white-space: nowrap;
-  text-shadow: 0 0 12px rgba(76, 201, 240, 0.9), 0 0 4px rgba(76, 201, 240, 0.5);
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
   min-height: 2rem;
 }
 
@@ -1865,27 +1904,70 @@ body[data-theme="dark"].hx-active #game-title {
   opacity: 0.15;
 }
 
-/* ── Mobile HUD adjustments ──────────────────────────────────── */
-@media (max-width: 640px) {
-  #hx-score-hud {
-    bottom: clamp(10px, calc(env(safe-area-inset-bottom, 0px) + 2vh), 24px);
-    right: clamp(10px, 3vw, 18px);
-    font-size: clamp(0.9rem, 4.5vw, 1.3rem);
+/* ── Hexacore HUD breakpoints ─────────────────────────────────── */
+
+/* ≥901px desktop — full size (defaults above handle this) */
+
+/* 641–900px tablet */
+@media (min-width: 641px) and (max-width: 900px) {
+  #hx-top-bar {
+    top: clamp(12px, 3vh, 24px);
+    gap: clamp(8px, 1.5vw, 16px);
+  }
+  #hx-top-bar #settings-btn,
+  #hx-level-hud {
+    font-size: clamp(0.65rem, 1.2vw, 0.82rem);
+    padding: 6px 12px;
+    min-width: 56px;
+  }
+  #hx-live-word {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    bottom: clamp(50px, 8vh, 78px);
   }
   #hx-word-score-hud {
-    bottom: clamp(42px, 8vh, 60px);
-    right: clamp(10px, 3vw, 18px);
+    bottom: clamp(88px, 12vh, 118px);
+    font-size: clamp(0.85rem, 1.7vw, 1.2rem);
+  }
+  #hx-score-hud {
+    bottom: clamp(12px, 2.5vh, 30px);
+  }
+  #hx-score-num {
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+  }
+  #hx-score-label {
+    font-size: clamp(0.7rem, 1.3vw, 1rem);
+  }
+}
+
+/* ≤640px mobile */
+@media (max-width: 640px) {
+  #hx-top-bar {
+    top: clamp(10px, 3vh, 20px);
+    gap: 6px;
+  }
+  #hx-top-bar #settings-btn,
+  #hx-level-hud {
+    font-size: clamp(0.6rem, 3vw, 0.8rem);
+    padding: 6px 10px;
+    min-width: 50px;
+    min-height: 44px;
+  }
+  #hx-score-hud {
+    bottom: calc(clamp(10px, 2vh, 20px) + env(safe-area-inset-bottom, 0px));
+  }
+  #hx-score-num {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+  }
+  #hx-score-label {
+    font-size: clamp(0.65rem, 3vw, 0.9rem);
+  }
+  #hx-word-score-hud {
+    bottom: clamp(90px, 13vh, 120px);
     font-size: clamp(0.8rem, 3.5vw, 1.1rem);
   }
   #hx-live-word {
-    bottom: clamp(42px, 8vh, 60px);
-    left: clamp(10px, 3vw, 18px);
-    font-size: clamp(0.85rem, 4vw, 1.2rem);
-  }
-  #hx-level-hud {
-    top: clamp(16px, 4vh, 28px);
-    right: clamp(10px, 3vw, 18px);
-    font-size: 0.85rem;
-    padding: 6px 10px;
+    bottom: clamp(48px, 8vh, 72px);
+    font-size: clamp(1rem, 4.5vw, 1.4rem);
   }
 }
+

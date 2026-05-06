@@ -1154,19 +1154,22 @@ async function animateGridIntro() {
 /* ── Rune wildcard resolution ──────────────────────────────────── */
 function updateScoreDisplay() {
   const el = document.getElementById('score-display');
-  if (el) el.textContent = String(hxState.score);
+  if (!el) return;
+  const n = hxState.score;
+  el.innerHTML = `<span class="score-num">${n}</span><span class="score-pts"> pts</span>`;
 }
 
 function updateHud() {
-  const hud = document.getElementById('hx-score-hud');
-  if (hud) hud.textContent = `${hxState.score} PTS`;
+  const numEl = document.getElementById('hx-score-num');
+  if (numEl) numEl.textContent = hxState.score;
 }
 
 /* ── Animate the HUD score counting up from oldScore → newScore ── */
 let _scoreRafId = 0; // cancel any in-flight count-up before starting a new one
 function animateScoreHud(oldScore, newScore) {
-  const hud = document.getElementById('hx-score-hud');
-  if (!hud) return;
+  const hud    = document.getElementById('hx-score-hud');
+  const numEl  = document.getElementById('hx-score-num');
+  if (!hud || !numEl) return;
 
   // Cancel any in-progress count-up animation
   if (_scoreRafId) { cancelAnimationFrame(_scoreRafId); _scoreRafId = 0; }
@@ -1186,7 +1189,7 @@ function animateScoreHud(oldScore, newScore) {
     const elapsed  = now - startTime;
     const progress = Math.min(elapsed / SCORE_TICK_MS, 1);
     const current  = Math.round(oldScore + (newScore - oldScore) * easeOut(progress));
-    hud.textContent = `${current} PTS`;
+    numEl.textContent = current;
     if (progress < 1) { _scoreRafId = requestAnimationFrame(frame); }
     else { _scoreRafId = 0; }
   }
@@ -1271,9 +1274,11 @@ function showRestoredBanner(level, score) {
 
 function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
+
+  // Score HUD — split into number + label spans
   const hud = document.createElement('div');
   hud.id = 'hx-score-hud';
-  hud.textContent = '0 PTS';
+  hud.innerHTML = '<span id="hx-score-num">0</span><span id="hx-score-label"> PTS</span>';
   document.body.appendChild(hud);
 
   const liveWordEl = document.createElement('div');
@@ -1283,6 +1288,10 @@ function ensureHud() {
   const wordHud = document.createElement('div');
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
+
+  // Top bar: MENU (settings-wrap) on left, LVL on right, centered
+  const hxTopBar = document.createElement('div');
+  hxTopBar.id = 'hx-top-bar';
 
   const levelHud = document.createElement('div');
   levelHud.id = 'hx-level-hud';
@@ -1294,7 +1303,14 @@ function ensureHud() {
   levelHud.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
   });
-  document.body.appendChild(levelHud);
+
+  // Move settings-wrap out of #top-btn-bar and into #hx-top-bar
+  const settingsWrap = document.getElementById('settings-wrap');
+  if (settingsWrap) {
+    hxTopBar.appendChild(settingsWrap);
+  }
+  hxTopBar.appendChild(levelHud);
+  document.body.appendChild(hxTopBar);
 
   const powerUpBarLeft = document.createElement('div');
   powerUpBarLeft.id = 'hx-powerup-bar-left';
@@ -1306,10 +1322,18 @@ function ensureHud() {
 }
 
 function removeHud() {
+  // Restore settings-wrap back into #top-btn-bar before removing #hx-top-bar
+  const settingsWrap = document.getElementById('settings-wrap');
+  const topBtnBar    = document.getElementById('top-btn-bar');
+  const toggleRight  = document.getElementById('toggle-right');
+  if (settingsWrap && topBtnBar && toggleRight) {
+    topBtnBar.insertBefore(settingsWrap, toggleRight);
+  }
+
   document.getElementById('hx-score-hud')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
-  document.getElementById('hx-level-hud')?.remove();
+  document.getElementById('hx-top-bar')?.remove();
   document.getElementById('hx-powerup-bar-left')?.remove();
   document.getElementById('hx-powerup-bar-right')?.remove();
   document.getElementById('hx-powerup-toast')?.remove();
