@@ -3070,7 +3070,7 @@ body[data-theme="dark"].hx-active #game-title {
   text-align: left;
 }
 .hx-cfg-mode-card:hover {
-  background: rgba(var(--hx-mode-color), 0.06);
+  background: rgba(255, 255, 255, 0.06);
   border-color: var(--hx-mode-color);
   transform: translateX(2px);
 }

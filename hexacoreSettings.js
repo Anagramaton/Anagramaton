@@ -88,7 +88,7 @@ import { getXPData }             from './hexacoreXP.js';
         <ul class="hx-cfg-quest-tips">
           <li>🔥 Use <strong>Ember</strong> tiles to earn bonus gems</li>
           <li>✦ Form <strong>long words</strong> (7+ letters) for rare gems</li>
-          <li>📅 Log in every day to maximise daily quest streaks</li>
+          <li>📅 Log in every day to maximize daily quest streaks</li>
           <li>🗓 Weekly quests award up to <strong>1,000 XP</strong></li>
         </ul>
       </div>
