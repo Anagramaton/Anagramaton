@@ -2866,7 +2866,7 @@ body[data-theme="dark"].hx-active #game-title {
 #hx-settings-box {
   position: relative;
   width: min(600px, 100%);
-  max-height: min(780px, 94vh);
+  height: min(780px, 94vh);
   display: flex;
   flex-direction: column;
   background: linear-gradient(160deg, rgba(10, 10, 28, 0.98), rgba(18, 5, 38, 0.98));
