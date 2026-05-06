@@ -3790,6 +3790,12 @@ function startHexacoreMode(mode) {
   }
 }
 
+/* ── hx:start-mode custom event (dispatched by hexacoreSettings.js) */
+document.addEventListener('hx:start-mode', e => {
+  const mode = e.detail?.mode || 'endless';
+  startHexacoreMode(mode);
+});
+
 /* ── TODO: Hexacore events still missing a dedicated sound ─────────
  *
  * The following game events have no audio feedback yet. New audio

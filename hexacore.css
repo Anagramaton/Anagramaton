@@ -1980,7 +1980,9 @@ body[data-theme="dark"].hx-active #game-title {
 /* ── XP Bar ──────────────────────────────────────────────────────── */
 #hx-xp-bar-container {
   position: fixed;
-  bottom: 52px;
+  /* Sit above the score HUD (clamp(1.8rem+3vh) ≈ 42–80px).
+     Use viewport-relative bottom so PTS never overlaps the XP bar. */
+  bottom: clamp(60px, 10vh, 88px);
   left: 50%;
   transform: translateX(-50%);
   width: min(260px, 80vw);
@@ -2813,7 +2815,8 @@ body[data-theme="dark"].hx-active #game-title {
 /* ── Mobile responsive additions ────────────────────────────────── */
 @media (max-width: 640px) {
   #hx-xp-bar-container {
-    bottom: 46px;
+    /* Keep PTS/XP clear on mobile too */
+    bottom: clamp(54px, 9vh, 72px);
     width: min(220px, 72vw);
     height: 15px;
   }
@@ -2837,5 +2840,448 @@ body[data-theme="dark"].hx-active #game-title {
 
   #hx-campaign-grid {
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+}
+
+/* ================================================================
+   Hexacore Settings Modal — hexacoreSettings.js
+   ================================================================ */
+
+/* Overlay */
+#hx-settings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 8, 0.82);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: clamp(8px, 2vw, 20px);
+  box-sizing: border-box;
+}
+
+/* Dialog box */
+#hx-settings-box {
+  position: relative;
+  width: min(600px, 100%);
+  max-height: min(780px, 94vh);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, rgba(10, 10, 28, 0.98), rgba(18, 5, 38, 0.98));
+  border: 1.5px solid rgba(76, 201, 240, 0.4);
+  border-radius: 12px;
+  box-shadow:
+    0 0 60px rgba(76, 201, 240, 0.12),
+    0 0 120px rgba(168, 85, 247, 0.08);
+  overflow: hidden;
+}
+
+/* Header */
+#hx-settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.85rem;
+  border-bottom: 1px solid rgba(76, 201, 240, 0.18);
+  flex-shrink: 0;
+}
+
+#hx-settings-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+#hx-settings-hex-icon {
+  font-size: 1.8rem;
+  color: #4cc9f0;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(76, 201, 240, 0.7));
+}
+
+#hx-settings-title {
+  display: block;
+  font-family: 'Black Han Sans', 'Orbitron', sans-serif;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: #4cc9f0;
+  line-height: 1.15;
+  text-shadow: 0 0 18px rgba(76, 201, 240, 0.5);
+}
+
+#hx-settings-subtitle {
+  display: block;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: clamp(0.55rem, 1.2vw, 0.7rem);
+  letter-spacing: 0.28em;
+  color: rgba(196, 181, 253, 0.7);
+  text-transform: uppercase;
+}
+
+#hx-settings-close {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 5px 9px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+#hx-settings-close:hover {
+  background: rgba(255, 80, 80, 0.15);
+  border-color: rgba(255, 80, 80, 0.5);
+  color: #f87171;
+}
+
+/* Tab bar */
+#hx-settings-tabs {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0;
+  border-bottom: 1px solid rgba(76, 201, 240, 0.15);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+#hx-settings-tabs::-webkit-scrollbar { display: none; }
+
+.hx-settings-tab {
+  flex: 1 0 auto;
+  min-width: 64px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: rgba(196, 181, 253, 0.55);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: clamp(0.55rem, 1.1vw, 0.68rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.6rem 0.4rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.hx-settings-tab:hover {
+  background: rgba(76, 201, 240, 0.07);
+  color: rgba(196, 181, 253, 0.85);
+}
+.hx-settings-tab--active {
+  color: #4cc9f0;
+  border-bottom-color: #4cc9f0;
+  background: rgba(76, 201, 240, 0.08);
+}
+
+.hx-settings-tab-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+.hx-settings-tab-label {
+  line-height: 1;
+}
+
+/* Content area */
+#hx-settings-content {
+  flex: 1 1 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(76, 201, 240, 0.3) transparent;
+}
+#hx-settings-content::-webkit-scrollbar { width: 5px; }
+#hx-settings-content::-webkit-scrollbar-track { background: transparent; }
+#hx-settings-content::-webkit-scrollbar-thumb { background: rgba(76, 201, 240, 0.3); border-radius: 3px; }
+
+/* Panel */
+.hx-cfg-panel {
+  padding: 1.1rem 1.25rem 0.75rem;
+}
+
+.hx-cfg-section-title {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: #e2d9ff;
+  margin: 0 0 0.3rem;
+}
+
+.hx-cfg-section-desc {
+  font-size: 0.78rem;
+  color: rgba(196, 181, 253, 0.65);
+  margin: 0 0 0.9rem;
+  line-height: 1.5;
+}
+
+/* Footer */
+#hx-settings-footer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  border-top: 1px solid rgba(76, 201, 240, 0.12);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.hx-cfg-footer-btn {
+  flex: 1 0 auto;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  color: rgba(196, 181, 253, 0.75);
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  padding: 0.45rem 0.75rem;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.hx-cfg-footer-btn:hover {
+  background: rgba(76, 201, 240, 0.1);
+  border-color: rgba(76, 201, 240, 0.4);
+  color: #4cc9f0;
+}
+
+/* ── Mode cards ──────────────────────────────────────────────────── */
+.hx-cfg-mode-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.hx-cfg-mode-card {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.18s, transform 0.1s;
+  text-align: left;
+}
+.hx-cfg-mode-card:hover {
+  background: rgba(var(--hx-mode-color), 0.06);
+  border-color: var(--hx-mode-color);
+  transform: translateX(2px);
+}
+
+.hx-cfg-mode-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.hx-cfg-mode-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hx-cfg-mode-title {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--hx-mode-color, #e2d9ff);
+}
+
+.hx-cfg-mode-desc {
+  font-size: 0.72rem;
+  color: rgba(196, 181, 253, 0.6);
+  line-height: 1.4;
+}
+
+.hx-cfg-mode-arrow {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+.hx-cfg-mode-card:hover .hx-cfg-mode-arrow {
+  color: var(--hx-mode-color, #e2d9ff);
+}
+
+/* ── Launch button (opens sub-modal) ─────────────────────────────── */
+.hx-cfg-launch-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: rgba(76, 201, 240, 0.07);
+  border: 1.5px solid rgba(76, 201, 240, 0.35);
+  border-radius: 8px;
+  color: #4cc9f0;
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.85rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+.hx-cfg-launch-btn:hover {
+  background: rgba(76, 201, 240, 0.14);
+  border-color: rgba(76, 201, 240, 0.6);
+}
+
+.hx-cfg-secondary-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: rgba(196, 181, 253, 0.75);
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  padding: 0.65rem 1rem;
+  margin-bottom: 0.6rem;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.hx-cfg-secondary-btn:hover {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+}
+
+/* ── Preview / info boxes ────────────────────────────────────────── */
+.hx-cfg-preview-note {
+  font-size: 0.75rem;
+  color: rgba(196, 181, 253, 0.58);
+  line-height: 1.55;
+  margin: 0 0 0.75rem;
+}
+
+.hx-cfg-quest-tips {
+  padding-left: 1.1rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.hx-cfg-quest-tips li {
+  font-size: 0.75rem;
+  color: rgba(196, 181, 253, 0.65);
+  line-height: 1.45;
+}
+
+/* ── Leaderboard tab-info row ────────────────────────────────────── */
+.hx-cfg-lb-tabs-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.hx-cfg-lb-tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 7px;
+  padding: 0.55rem 0.3rem;
+  font-family: 'Turret Road', monospace;
+  font-size: 0.6rem;
+  color: rgba(196, 181, 253, 0.7);
+  letter-spacing: 0.06em;
+}
+.hx-cfg-lb-tab-item span:first-child { font-size: 1.1rem; }
+
+/* ── Profile quick view ──────────────────────────────────────────── */
+.hx-cfg-profile-quick {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: rgba(168, 85, 247, 0.08);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.85rem;
+}
+.hx-cfg-profile-avatar {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+.hx-cfg-profile-name {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  letter-spacing: 0.1em;
+  color: #e2d9ff;
+  margin-bottom: 2px;
+}
+.hx-cfg-profile-level {
+  font-family: 'Turret Road', monospace;
+  font-size: 0.7rem;
+  color: #c084fc;
+  letter-spacing: 0.08em;
+}
+
+/* ── How To highlights ───────────────────────────────────────────── */
+.hx-cfg-howto-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+  margin-top: 0.25rem;
+}
+.hx-cfg-howto-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+}
+.hx-cfg-howto-card-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+.hx-cfg-howto-card strong {
+  display: block;
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: #c4b5fd;
+  margin-bottom: 3px;
+}
+.hx-cfg-howto-card p {
+  margin: 0;
+  font-size: 0.68rem;
+  color: rgba(196, 181, 253, 0.58);
+  line-height: 1.45;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  .hx-cfg-howto-highlights {
+    grid-template-columns: 1fr;
+  }
+  .hx-cfg-lb-tabs-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  #hx-settings-tabs {
+    justify-content: flex-start;
+  }
+  .hx-settings-tab {
+    min-width: 52px;
+    font-size: 0.5rem;
+    padding: 0.5rem 0.3rem 0.4rem;
   }
 }
