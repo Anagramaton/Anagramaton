@@ -907,9 +907,9 @@ details#merged-words-details > summary {
 .side-toggle {
   position: static;
   padding: clamp(7px, 1.2vh, 11px) clamp(14px, 2.5vw, 26px);
-  border: 2.5px solid var(--side-toggle-border);
-  background: var(--side-toggle-bg);
-  color: var(--side-toggle-fg);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: rgba(26, 26, 46, 0.88);
+  color: #e2d9ff;
   cursor: pointer;
   height: auto;
   min-height: 44px;
@@ -923,12 +923,15 @@ details#merged-words-details > summary {
   white-space: nowrap;
   gap: 2px;
   text-shadow: none;
-  box-shadow: 3px 3px 0 rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: none;
   transition:
     background 0.15s ease,
     color 0.15s ease,
+    border-color 0.15s ease,
     transform 0.1s ease;
-  font-family: 'Limelight', sans-serif;
+  font-family: 'Black Han Sans', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.15em;
 }
 
 .vword {
@@ -936,35 +939,38 @@ details#merged-words-details > summary {
   text-orientation: initial;
   display: inline-block;
   line-height: 1;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.15em;
   margin: 0;
   font-size: clamp(0.75rem, 1.4vw, 1rem);
-  font-family: 'Limelight', sans-serif;
+  font-family: 'Black Han Sans', sans-serif;
   font-weight: 400;
   text-transform: uppercase;
 }
 .right-toggle .vword {
   font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
 }
 .side-toggle:hover  {
-  background: var(--side-toggle-hover-bg);
-  color: var(--side-toggle-fg);
+  background: rgba(60, 50, 100, 0.92);
+  color: #e2d9ff;
+  border-color: rgba(167, 139, 250, 0.6);
   transform: scale(1.02);
 }
 .side-toggle:active {
-  background: var(--side-toggle-active-bg);
+  background: rgba(80, 60, 120, 0.95);
   transform: scale(0.98);
 }
 /* WORD toggle: left side — right inner edge cut toward MENU */
 .left-toggle {
-  clip-path: polygon(0% 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%);
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
   border-right: none;
+  border-color: rgba(167, 139, 250, 0.5);
 }
 /* PHRASE toggle: right side — left inner edge cut toward MENU */
 .right-toggle {
-  clip-path: polygon(8px 0%, 100% 0%, 100% 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
   border-left: none;
+  border-color: rgba(167, 139, 250, 0.5);
 }
 
 /* =========================================
@@ -1133,7 +1139,7 @@ body[data-theme="dark"] .tile-point {
 /* Word score preview — above the word builder, only shown on valid word */
 #word-score-preview {
   position: fixed;
-  bottom: clamp(106px, 16vh, 148px);
+  bottom: clamp(120px, 18vh, 162px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 900;
@@ -1141,19 +1147,19 @@ body[data-theme="dark"] .tile-point {
   user-select: none;
   white-space: nowrap;
 
-  font-family: 'Turret Road', sans-serif;
-  font-size: clamp(1rem, 2vw, 1.4rem);
-  font-weight: 800;
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  font-weight: 400;
   letter-spacing: 0.18em;
-  color: var(--neon);
+  color: #ffd700;
   text-shadow:
-    0 0 10px rgba(76, 201, 240, 0.8),
-    0 0 22px rgba(76, 201, 240, 0.4),
-    0 2px 6px rgba(0, 0, 0, 0.5);
+    0 0 12px rgba(255, 215, 0, 0.8),
+    0 0 26px rgba(255, 215, 0, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.6);
 
   /* hidden by default — visible class animates in */
   opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 #word-score-preview.visible {
   opacity: 1;
@@ -1162,7 +1168,7 @@ body[data-theme="dark"] .tile-point {
 /* Current word display — centered bottom */
 #current-word-display {
   position: fixed;
-  bottom: clamp(60px, 10vh, 100px);
+  bottom: clamp(68px, 11vh, 108px);
   left: 50%;
   transform: translateX(-50%);
   top: auto;
@@ -1183,7 +1189,7 @@ body[data-theme="dark"] .tile-point {
 /* Score display — centered, below word builder */
 #score-display {
   position: fixed;
-  bottom: clamp(16px, 3vh, 40px);
+  bottom: clamp(20px, 3.5vh, 48px);
   left: 50%;
   transform: translateX(-50%);
   right: auto;
@@ -1200,23 +1206,23 @@ body[data-theme="dark"] .tile-point {
   user-select: none;
 }
 .score-num {
-  font-family: 'Limelight', sans-serif;
-  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
   font-weight: 400;
   letter-spacing: 0.06em;
-  color: var(--text);
+  color: var(--neon);
 }
 .score-pts {
-  font-family: 'Limelight', sans-serif;
-  font-size: clamp(0.7rem, 1.4vw, 1.1rem);
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(0.75rem, 1.4vw, 1.1rem);
   font-weight: 400;
-  letter-spacing: 0.08em;
-  color: var(--text);
-  opacity: 0.7;
+  letter-spacing: 0.1em;
+  color: var(--neon);
+  opacity: 0.65;
 }
 body[data-theme="dark"] .score-num,
 body[data-theme="dark"] .score-pts {
-  color: #ffffff;
+  color: var(--neon);
 }
 
 /* Desktop adjustments (≥901px) are handled above — no extra block needed */
@@ -1239,21 +1245,21 @@ body[data-theme="dark"] .score-pts {
     font-size: 0.9rem;
   }
   #word-score-preview {
-    bottom: clamp(96px, 14vh, 132px);
-    font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+    bottom: clamp(106px, 16vh, 142px);
+    font-size: clamp(0.95rem, 1.9vw, 1.3rem);
   }
   #current-word-display {
-    bottom: clamp(54px, 9vh, 88px);
+    bottom: clamp(60px, 10vh, 96px);
     font-size: clamp(1.1rem, 2.2vw, 1.6rem);
   }
   #score-display {
-    bottom: clamp(14px, 2.5vh, 34px);
+    bottom: clamp(16px, 2.8vh, 38px);
   }
   .score-num {
-    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    font-size: clamp(1.3rem, 2.6vw, 2.1rem);
   }
   .score-pts {
-    font-size: clamp(0.62rem, 1.2vw, 0.95rem);
+    font-size: clamp(0.65rem, 1.2vw, 0.95rem);
   }
 }
 
@@ -1395,26 +1401,27 @@ body[data-theme="dark"] .score-pts {
 }
 #settings-btn {
   font-size: clamp(0.75rem, 1.4vw, 1rem);
-  font-family: 'Limelight', sans-serif;
+  font-family: 'Black Han Sans', sans-serif;
   font-weight: 400;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   min-width: clamp(60px, 8vw, 90px);
   min-height: 44px;
-  background: var(--side-toggle-bg);
-  color: var(--side-toggle-fg);
-  border: 2.5px solid var(--side-toggle-border);
+  background: rgba(26, 26, 46, 0.88);
+  color: #e2d9ff;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
   border-radius: 0;
   padding: clamp(7px, 1.2vh, 11px) clamp(12px, 2vw, 20px);
   cursor: pointer;
-  /* Chamfered rectangle — distinctive from WORD/PHRASE clip-paths */
-  clip-path: polygon(6px 0%, calc(100% - 6px) 0%, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0% calc(100% - 6px), 0% 6px);
-  transition: background 0.15s, color 0.15s;
+  /* Chamfered rectangle — full 8-corner cut */
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  transition: background 0.15s, border-color 0.15s;
   white-space: nowrap;
 }
 #settings-btn:hover {
-  background: var(--side-toggle-hover-bg);
-  color: var(--side-toggle-fg);
+  background: rgba(60, 50, 100, 0.92);
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #e2d9ff;
 }
 #settings-menu {
   position: absolute;

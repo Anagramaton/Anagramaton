@@ -13,23 +13,26 @@
     min-height: 44px;
     min-width: 54px;
     padding: 6px 10px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.1em;
     transition: all 0.15s ease;
-    background: var(--side-toggle-bg);
-    color: var(--side-toggle-fg);
-    border: 2.5px solid var(--side-toggle-border);
+    background: rgba(26, 26, 46, 0.88);
+    color: #e2d9ff;
+    border: 1.5px solid rgba(167, 139, 250, 0.5);
     font-size: clamp(0.65rem, 3.5vw, 0.85rem);
   }
   .side-toggle .vword {
-    color: var(--side-toggle-fg);
+    color: #e2d9ff;
     font-size: clamp(0.65rem, 3.5vw, 0.85rem);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
   }
   #settings-btn {
     font-size: clamp(0.6rem, 3vw, 0.8rem);
     min-width: 50px;
     min-height: 44px;
     padding: 5px 8px;
+    background: rgba(26, 26, 46, 0.88);
+    color: #e2d9ff;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
   }
   #settings-menu {
     min-width: 180px;
@@ -92,7 +95,7 @@
 @media (max-width: 640px) {
   #score-display {
     position: fixed;
-    bottom: clamp(10px, calc(env(safe-area-inset-bottom, 0px) + 1.5vh), 22px);
+    bottom: clamp(14px, calc(env(safe-area-inset-bottom, 0px) + 2vh), 28px);
     left: 50%;
     transform: translateX(-50%);
     right: auto;
@@ -107,10 +110,10 @@
     padding: 0;
   }
   .score-num {
-    font-size: clamp(1.1rem, 5.5vw, 1.6rem);
+    font-size: clamp(1.2rem, 6vw, 1.8rem);
   }
   .score-pts {
-    font-size: clamp(0.55rem, 2.5vw, 0.8rem);
+    font-size: clamp(0.6rem, 2.8vw, 0.9rem);
   }
 }
 
@@ -120,7 +123,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: clamp(44px, 8vh, 68px);
+    bottom: clamp(56px, 10vh, 82px);
     top: auto;
     z-index: 900;
     display: block;
@@ -141,8 +144,8 @@
 /* ── Word score preview: centered above word display on mobile ───── */
 @media (max-width: 640px) {
   #word-score-preview {
-    bottom: clamp(84px, 13vh, 112px);
-    font-size: clamp(0.85rem, 4vw, 1.1rem);
+    bottom: clamp(98px, 16vh, 130px);
+    font-size: clamp(0.9rem, 4.5vw, 1.2rem);
   }
 }
 

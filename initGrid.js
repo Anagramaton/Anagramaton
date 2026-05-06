@@ -93,11 +93,13 @@ function updateWordPreview() {
 
   if (!word) {
     if (wordPreviewElement) wordPreviewElement.classList.remove('valid-word');
+    window.dispatchEvent(new Event('selection:changed'));
     return;
   }
 
   const isValid = upper.length >= 4 && isValidWord(upper);
   if (wordPreviewElement) wordPreviewElement.classList.toggle('valid-word', isValid);
+  window.dispatchEvent(new Event('selection:changed'));
 }
 
 // Clear word builder state

@@ -152,9 +152,9 @@
   color: var(--neon, #4cc9f0);
 }
 #hx-score-label {
-  font-family: 'Turret Road', sans-serif;
+  font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.8rem, 1.5vw, 1.1rem);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: 0.12em;
   color: rgba(76, 201, 240, 0.6);
 }
@@ -168,7 +168,7 @@
   right: auto;
   top: auto;
   color: #ffd700;
-  font-family: 'Limelight', sans-serif;
+  font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.9rem, 2vw, 1.4rem);
   font-weight: 400;
   letter-spacing: 0.14em;
@@ -318,9 +318,9 @@ body.hx-active #right-panel-title    { display: none; }
   align-items: stretch;
 }
 #hx-top-bar #settings-btn {
-  font-family: 'Turret Road', sans-serif;
+  font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.7rem, 1.4vw, 0.9rem);
-  font-weight: 900;
+  font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   min-width: clamp(60px, 8vw, 90px);
@@ -344,9 +344,9 @@ body.hx-active #right-panel-title    { display: none; }
 #hx-level-hud {
   position: static;
   z-index: auto;
-  font-family: 'Turret Road', sans-serif;
+  font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.7rem, 1.4vw, 0.9rem);
-  font-weight: 900;
+  font-weight: 400;
   letter-spacing: 0.2em;
   color: #e2d9ff;
   background: rgba(26, 26, 46, 0.88);

@@ -761,8 +761,7 @@ window.addEventListener('grid:ready', () => {
   } else {
     const rightPanel  = document.getElementById('right-panel');
     if (rightPanel)  rightPanel.style.display  = 'none';
-    const toggleRight = document.getElementById('toggle-right');
-    if (toggleRight) toggleRight.style.display = 'none';
+    // keep toggle-right visible so the PHRASE button shows in all modes
   }
 
   // --- Build Left Panel Content ---
