@@ -1513,9 +1513,8 @@ const GEM_MULTIPLIERS = {
   gemImperialJade: 12,
   gemAlexandrite:  13,
 };
-// All gems use linear count bonus (count × gemValue).
-// e.g. 3 Emeralds → 3 × 2 = ×6
-const OPTION_B_GEMS = new Set(); // all gems use linear count bonus (count × value)
+// Count bonus = number of unique gem types used (diversity bonus).
+// e.g. 3 Emeralds → 1 unique type → count bonus = 1
 
 /* ── Level requirements checklist ─────────────────────────────── */
 /**
@@ -2030,26 +2029,22 @@ const HX_LEVEL_REQUIREMENTS = [
 ];
 
 /**
- * Calculates the count bonus multiplier for the given selected tiles.
- * For each gem type present, counts how many were used and applies:
- *   - Linear count bonus: count × gemValue  — for all gem types
- *     e.g. 3 Emeralds → 3 × 2 = ×6
+ * Calculates the count bonus for the given selected tiles.
+ * Count bonus = number of unique gem types used (diversity bonus), minimum 1.
+ * e.g. no gems → count bonus = 1
+ *      3 Emeralds → 1 unique type → count bonus = 1
+ *      2 Emeralds + 1 Gold → 2 unique types → count bonus = 2
  * @param {Array} selectedTiles - array of tile objects from hxSelected
- * @returns {number} combined count bonus multiplier (≥1)
+ * @returns {number} number of unique gem types present (≥1)
  */
 function calcGemCountBonus(selectedTiles) {
-  const gemCounts = {};
+  const uniqueGemTypes = new Set();
   selectedTiles.forEach(t => {
     if (GEM_MULTIPLIERS[t.tileType]) {
-      gemCounts[t.tileType] = (gemCounts[t.tileType] || 0) + 1;
+      uniqueGemTypes.add(t.tileType);
     }
   });
-  let countBonus = 1;
-  for (const [gemType, count] of Object.entries(gemCounts)) {
-    const value = GEM_MULTIPLIERS[gemType];
-    countBonus *= OPTION_B_GEMS.has(gemType) ? value ** count : count * value;
-  }
-  return countBonus;
+  return Math.max(1, uniqueGemTypes.size);
 }
 
 /**
