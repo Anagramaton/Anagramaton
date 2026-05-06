@@ -3499,11 +3499,10 @@ body[data-theme="dark"].hx-active #game-title {
     transition: none;
   }
 
-  /* Level-wrap border pulse: replace with instant color flash */
+  /* Level-wrap border pulse: disable (instant border-color transition is fine) */
   #hx-level-wrap.hx-xp-glow-full {
     animation: none;
   }
-  @keyframes hx-wrap-pulse { }
 
   /* Level-up banner: simple fade in/out */
   #hx-levelup-banner,
