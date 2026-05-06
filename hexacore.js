@@ -1315,6 +1315,20 @@ function showPlayerLevelUpBanner(newLevel) {
 
   banner.addEventListener('animationend', () => banner.remove(), { once: true });
   setTimeout(() => banner.remove(), 3200);
+
+  // LVL button badge-pop + XP bar glow sweep
+  const lvlBtn = document.getElementById('hx-level-hud');
+  const xpContainer = document.getElementById('hx-xp-bar-container');
+  if (lvlBtn) {
+    lvlBtn.classList.remove('hx-levelup-badge-pop');
+    requestAnimationFrame(() => lvlBtn.classList.add('hx-levelup-badge-pop'));
+    setTimeout(() => lvlBtn.classList.remove('hx-levelup-badge-pop'), 900);
+  }
+  if (xpContainer) {
+    xpContainer.classList.remove('hx-xp-bar-flash');
+    requestAnimationFrame(() => xpContainer.classList.add('hx-xp-bar-flash'));
+    setTimeout(() => xpContainer.classList.remove('hx-xp-bar-flash'), 1000);
+  }
 }
 
 function ensureHud() {
@@ -1326,12 +1340,6 @@ function ensureHud() {
   hud.innerHTML = '<span id="hx-score-num">0</span><span id="hx-score-label"> PTS</span>';
   document.body.appendChild(hud);
 
-  // XP bar below score HUD
-  const xpBar = document.createElement('div');
-  xpBar.id = 'hx-xp-bar-container';
-  xpBar.innerHTML = '<div id="hx-xp-bar-fill"></div><span id="hx-xp-label">LV 1 · 0/80 XP</span>';
-  document.body.appendChild(xpBar);
-
   const liveWordEl = document.createElement('div');
   liveWordEl.id = 'hx-live-word';
   document.body.appendChild(liveWordEl);
@@ -1340,9 +1348,13 @@ function ensureHud() {
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
 
-  // Top bar: MENU (settings-wrap) on left, action buttons + LVL on right
+  // Top bar: MENU (settings-wrap) on left, level HUD rail on right
   const hxTopBar = document.createElement('div');
   hxTopBar.id = 'hx-top-bar';
+
+  // Level HUD rail — LVL button + XP bar visually connected
+  const levelWrap = document.createElement('div');
+  levelWrap.id = 'hx-level-wrap';
 
   const levelHud = document.createElement('div');
   levelHud.id = 'hx-level-hud';
@@ -1355,12 +1367,25 @@ function ensureHud() {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
   });
 
+  const xpBar = document.createElement('div');
+  xpBar.id = 'hx-xp-bar-container';
+  xpBar.setAttribute('role', 'progressbar');
+  xpBar.setAttribute('aria-valuemin', '0');
+  xpBar.setAttribute('aria-valuemax', '100');
+  xpBar.setAttribute('aria-valuenow', '0');
+  xpBar.setAttribute('aria-label', 'Player XP progress');
+  xpBar.setAttribute('tabindex', '0');
+  xpBar.innerHTML = '<div id="hx-xp-bar-fill"></div><span id="hx-xp-label" aria-hidden="true">LV 1 · 0/80 XP</span>';
+
+  levelWrap.appendChild(levelHud);
+  levelWrap.appendChild(xpBar);
+
   // Move settings-wrap out of #top-btn-bar and into #hx-top-bar
   const settingsWrap = document.getElementById('settings-wrap');
   if (settingsWrap) {
     hxTopBar.appendChild(settingsWrap);
   }
-  hxTopBar.appendChild(levelHud);
+  hxTopBar.appendChild(levelWrap);
   document.body.appendChild(hxTopBar);
 
   const powerUpBarLeft = document.createElement('div');

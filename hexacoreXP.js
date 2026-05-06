@@ -85,6 +85,7 @@ export function addXP(amount) {
  * Called after every XP gain or on HUD init.
  */
 export function updateXPBar() {
+  const wrap      = document.getElementById('hx-level-wrap');
   const container = document.getElementById('hx-xp-bar-container');
   const fill      = document.getElementById('hx-xp-bar-fill');
   const label     = document.getElementById('hx-xp-label');
@@ -97,8 +98,24 @@ export function updateXPBar() {
     ? Math.min(100, ((xp - currThresh) / (nextThresh - currThresh)) * 100)
     : 100;
 
-  fill.style.width = `${pct}%`;
+  // Animate fill via scaleX so the full-width gradient naturally reveals color
+  fill.style.transform = `scaleX(${pct / 100})`;
+
   const xpInLevel  = xp - currThresh;
   const xpNeeded   = nextThresh - currThresh;
-  label.textContent = `LV ${level} · ${xpInLevel}/${xpNeeded} XP`;
+  const labelText  = `LV ${level} · ${xpInLevel}/${xpNeeded} XP`;
+  label.textContent = labelText;
+
+  // Accessibility
+  container.setAttribute('aria-valuenow', Math.round(pct));
+  container.setAttribute('aria-label', `Player level ${level} — ${xpInLevel} of ${xpNeeded} XP`);
+  if (wrap) wrap.title = `LV ${level} — ${xpInLevel} / ${xpNeeded} XP to next level`;
+
+  // Dynamic glow intensity on the level wrap based on fill percentage
+  if (wrap) {
+    wrap.classList.remove('hx-xp-glow-mid', 'hx-xp-glow-high', 'hx-xp-glow-full');
+    if (pct >= 90)      wrap.classList.add('hx-xp-glow-full');
+    else if (pct >= 60) wrap.classList.add('hx-xp-glow-high');
+    else if (pct >= 30) wrap.classList.add('hx-xp-glow-mid');
+  }
 }

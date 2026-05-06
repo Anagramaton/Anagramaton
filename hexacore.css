@@ -298,7 +298,7 @@ body.hx-active #word-score-preview   { display: none; }
 body.hx-active #left-panel-title,
 body.hx-active #right-panel-title    { display: none; }
 
-/* ── #hx-top-bar: centered top strip with MENU + LVL ──────────── */
+/* ── #hx-top-bar: centered top strip with MENU + Level HUD rail ─── */
 #hx-top-bar {
   position: fixed;
   top: clamp(14px, 3.5vh, 28px);
@@ -340,36 +340,78 @@ body.hx-active #right-panel-title    { display: none; }
   border-color: rgba(255, 255, 255, 0.55);
 }
 
-/* ── Level HUD — inside #hx-top-bar ─────────────────────────── */
+/* ── Level HUD rail — LVL button + XP bar connected ───────────── */
+#hx-level-wrap {
+  display: flex;
+  align-items: stretch;
+  background: rgba(26, 26, 46, 0.88);
+  border: 1.5px solid rgba(167, 139, 250, 0.5);
+  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  overflow: hidden;
+  min-height: 44px;
+  transition: border-color 0.6s ease;
+}
+
+/* Dynamic glow on the rail as XP fills */
+#hx-level-wrap.hx-xp-glow-mid {
+  border-color: rgba(76, 201, 240, 0.6);
+}
+#hx-level-wrap.hx-xp-glow-high {
+  border-color: rgba(34, 197, 94, 0.65);
+}
+#hx-level-wrap.hx-xp-glow-full {
+  border-color: rgba(251, 191, 36, 0.8);
+  animation: hx-wrap-pulse 1.2s ease-in-out infinite;
+}
+@keyframes hx-wrap-pulse {
+  0%, 100% { border-color: rgba(251, 191, 36, 0.8); }
+  50%       { border-color: rgba(239, 68, 68, 0.9); }
+}
+
+/* ── LVL button — left side of the rail ─────────────────────── */
 #hx-level-hud {
-  position: static;
-  z-index: auto;
   font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.7rem, 1.4vw, 0.9rem);
   font-weight: 400;
   letter-spacing: 0.2em;
   color: #e2d9ff;
-  background: rgba(26, 26, 46, 0.88);
-  border: 1.5px solid rgba(167, 139, 250, 0.5);
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 0;
-  padding: clamp(7px, 1.2vh, 11px) clamp(12px, 2vw, 20px);
-  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  padding: clamp(7px, 1.2vh, 11px) clamp(10px, 1.5vw, 16px);
   cursor: pointer;
   pointer-events: auto;
   user-select: none;
   white-space: nowrap;
-  min-width: clamp(60px, 8vw, 90px);
-  min-height: 44px;
+  min-width: clamp(54px, 7vw, 80px);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.18s, border-color 0.18s;
+  transition: background 0.18s;
+  flex-shrink: 0;
 }
 #hx-level-hud:hover,
 #hx-level-hud:focus {
-  background: rgba(100, 70, 180, 0.6);
-  border-color: #a78bfa;
+  background: rgba(100, 70, 180, 0.4);
   outline: none;
+}
+#hx-level-hud:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: -2px;
+}
+
+/* Badge-pop animation on level-up */
+@keyframes hx-badge-pop {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.3); color: #c084fc; }
+  50%  { transform: scale(0.92); }
+  68%  { transform: scale(1.12); }
+  84%  { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+.hx-levelup-badge-pop {
+  animation: hx-badge-pop 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards !important;
 }
 
 /* ── Game over overlay ─────────────────────────────────────────── */
@@ -1920,6 +1962,9 @@ body[data-theme="dark"].hx-active #game-title {
     padding: 6px 12px;
     min-width: 56px;
   }
+  #hx-xp-bar-container {
+    min-width: clamp(100px, 15vw, 170px);
+  }
   #hx-live-word {
     font-size: clamp(1.1rem, 2.5vw, 1.5rem);
     bottom: clamp(50px, 8vh, 78px);
@@ -1948,9 +1993,15 @@ body[data-theme="dark"].hx-active #game-title {
   #hx-top-bar #settings-btn,
   #hx-level-hud {
     font-size: clamp(0.6rem, 3vw, 0.8rem);
-    padding: 6px 10px;
-    min-width: 50px;
+    padding: 5px 8px;
+    min-width: 44px;
     min-height: 44px;
+  }
+  #hx-xp-bar-container {
+    min-width: clamp(90px, 28vw, 150px);
+  }
+  #hx-xp-label {
+    font-size: 0.53rem;
   }
   #hx-score-hud {
     bottom: calc(clamp(10px, 2vh, 20px) + env(safe-area-inset-bottom, 0px));
@@ -1971,52 +2022,135 @@ body[data-theme="dark"].hx-active #game-title {
   }
 }
 
+/* ≤380px very small phones */
+@media (max-width: 380px) {
+  #hx-top-bar {
+    gap: 4px;
+  }
+  #hx-top-bar #settings-btn,
+  #hx-level-hud {
+    font-size: 0.6rem;
+    padding: 5px 7px;
+    min-width: 40px;
+  }
+  #hx-xp-bar-container {
+    min-width: 80px;
+    padding: 0 5px 0 4px;
+  }
+  #hx-xp-label {
+    font-size: 0.48rem;
+  }
+}
+
 
 /* ================================================================
    Progression System — XP, Quests, Leaderboards, Mode Select,
    Campaign, Profile, Tier Challenges
    ================================================================ */
 
-/* ── XP Bar ──────────────────────────────────────────────────────── */
+/* ── XP Bar — right side of #hx-level-wrap ──────────────────────── */
 #hx-xp-bar-container {
-  position: fixed;
-  /* Sit above the score HUD (clamp(1.8rem+3vh) ≈ 42–80px).
-     Use viewport-relative bottom so PTS never overlaps the XP bar. */
-  bottom: clamp(60px, 10vh, 88px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(260px, 80vw);
-  height: 18px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 9px;
-  border: 1px solid rgba(168,85,247,0.35);
+  position: relative;
+  flex: 1;
+  min-width: clamp(120px, 18vw, 200px);
+  height: auto;
+  align-self: stretch;
+  background: rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 0;
   overflow: hidden;
-  z-index: 900;
   display: flex;
   align-items: center;
+  padding: 0 8px 0 6px;
+  cursor: default;
+}
+#hx-xp-bar-container:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: -2px;
+}
+
+/* Milestone ticks at 25 / 50 / 75 % */
+#hx-xp-bar-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    linear-gradient(90deg, transparent calc(25% - 0.5px), rgba(255,255,255,0.22) calc(25% - 0.5px), rgba(255,255,255,0.22) calc(25% + 0.5px), transparent calc(25% + 0.5px)),
+    linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(255,255,255,0.22) calc(50% - 0.5px), rgba(255,255,255,0.22) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(90deg, transparent calc(75% - 0.5px), rgba(255,255,255,0.22) calc(75% - 0.5px), rgba(255,255,255,0.22) calc(75% + 0.5px), transparent calc(75% + 0.5px));
+  pointer-events: none;
+}
+
+/* Glow sweep overlay on level-up (::after) */
+#hx-xp-bar-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.7) 50%, transparent 100%);
+  transform: translateX(-120%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+#hx-xp-bar-container.hx-xp-bar-flash::after {
+  animation: hx-xp-sweep 0.9s ease-in-out forwards;
+}
+
+@keyframes hx-xp-sweep {
+  0%   { transform: translateX(-120%); opacity: 0.9; }
+  60%  { opacity: 0.7; }
+  100% { transform: translateX(280%);  opacity: 0; }
+}
+
+/* XP bar flash (brightness burst on level-up) */
+@keyframes hx-xp-flash-burst {
+  0%   { filter: brightness(1); }
+  20%  { filter: brightness(2.2) saturate(1.4); }
+  50%  { filter: brightness(1.5); }
+  75%  { filter: brightness(1.9); }
+  100% { filter: brightness(1); }
+}
+.hx-xp-bar-flash {
+  animation: hx-xp-flash-burst 0.9s ease-out forwards;
 }
 
 #hx-xp-bar-fill {
   position: absolute;
   left: 0;
   top: 0;
+  width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, #a855f7, #c084fc);
-  border-radius: 9px;
-  transition: width 0.5s ease;
+  /* Multi-stop gradient — revealed left-to-right as bar fills */
+  background: linear-gradient(90deg,
+    #a855f7  0%,   /* purple  — nearly empty  */
+    #4cc9f0 33%,   /* cyan    — ~1/3 full     */
+    #22c55e 60%,   /* green   — ~2/3 full     */
+    #fbbf24 82%,   /* gold    — near full     */
+    #ef4444 100%   /* red     — completely full */
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  border-radius: 0;
+  transition: transform 0.5s ease;
+  z-index: 1;
 }
 
 #hx-xp-label {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   text-align: center;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-family: 'Turret Road', 'Orbitron', monospace;
-  letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.9);
   pointer-events: none;
   white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
 }
 
 /* ── XP Toast ────────────────────────────────────────────────────── */
@@ -2814,17 +2948,6 @@ body[data-theme="dark"].hx-active #game-title {
 
 /* ── Mobile responsive additions ────────────────────────────────── */
 @media (max-width: 640px) {
-  #hx-xp-bar-container {
-    /* Keep PTS/XP clear on mobile too */
-    bottom: clamp(54px, 9vh, 72px);
-    width: min(220px, 72vw);
-    height: 15px;
-  }
-
-  #hx-xp-label {
-    font-size: 0.55rem;
-  }
-
   .hx-xp-toast {
     right: 8px;
     bottom: 100px;
@@ -3269,7 +3392,63 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 /* ── Responsive ──────────────────────────────────────────────────── */
+
+/* ── Small tablet (600–768 px) ──────────────────────────────── */
+@media (min-width: 601px) and (max-width: 768px) {
+  #hx-settings-box {
+    width: min(560px, 96vw);
+    height: min(760px, 92vh);
+  }
+  .hx-cfg-panel {
+    padding: 0.9rem 1rem 0.65rem;
+  }
+}
+
+/* ── Mobile (≤600 px) ──────────────────────────────────────── */
+@media (max-width: 600px) {
+  #hx-settings-modal {
+    padding: clamp(4px, 1.5vw, 10px);
+    align-items: flex-end;        /* sheet slides up from bottom */
+  }
+  #hx-settings-box {
+    width: 100%;
+    height: min(680px, 94vh);
+    border-radius: 14px 14px 0 0;  /* bottom-sheet style */
+  }
+  #hx-settings-header {
+    padding: 0.8rem 1rem 0.7rem;
+  }
+  #hx-settings-hex-icon {
+    font-size: 1.4rem;
+  }
+  #hx-settings-title {
+    font-size: 1.05rem;
+  }
+  .hx-cfg-panel {
+    padding: 0.85rem 0.9rem 0.6rem;
+  }
+  #hx-settings-footer {
+    padding: 0.6rem 0.9rem;
+    padding-bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
+  }
+  .hx-cfg-footer-btn {
+    font-size: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    min-height: 40px;
+  }
+  .hx-cfg-section-title {
+    font-size: 0.9rem;
+  }
+  .hx-cfg-lb-tabs-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Mobile (≤420 px) ──────────────────────────────────────── */
 @media (max-width: 420px) {
+  #hx-settings-box {
+    height: min(640px, 96vh);
+  }
   .hx-cfg-howto-highlights {
     grid-template-columns: 1fr;
   }
@@ -3284,4 +3463,85 @@ body[data-theme="dark"].hx-active #game-title {
     font-size: 0.5rem;
     padding: 0.5rem 0.3rem 0.4rem;
   }
+  .hx-cfg-profile-quick {
+    gap: 0.6rem;
+    padding: 0.65rem 0.75rem;
+  }
+}
+
+/* ── Very small phones (≤320 px) ─────────────────────────────── */
+@media (max-width: 320px) {
+  #hx-settings-box {
+    height: 98vh;
+    border-radius: 0;
+  }
+  .hx-cfg-panel {
+    padding: 0.7rem 0.75rem 0.5rem;
+  }
+  .hx-cfg-section-title {
+    font-size: 0.82rem;
+  }
+  .hx-settings-tab {
+    min-width: 44px;
+    font-size: 0.46rem;
+  }
+  .hx-cfg-mode-icon {
+    font-size: 1.15rem;
+  }
+}
+
+/* ================================================================
+   Accessibility — prefers-reduced-motion
+   ================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  /* XP bar fill: instant update instead of smooth slide */
+  #hx-xp-bar-fill {
+    transition: none;
+  }
+
+  /* Level-wrap border pulse: replace with instant color flash */
+  #hx-level-wrap.hx-xp-glow-full {
+    animation: none;
+  }
+  @keyframes hx-wrap-pulse { }
+
+  /* Level-up banner: simple fade in/out */
+  #hx-levelup-banner,
+  #hx-player-levelup-banner {
+    animation: hx-levelup-reduced 2.5s forwards !important;
+  }
+  .hx-levelup-ring {
+    animation: none !important;
+    display: none;
+  }
+
+  /* LVL badge pop: gentle scale only, no bounce */
+  .hx-levelup-badge-pop {
+    animation: hx-badge-pop-reduced 0.5s ease-out forwards !important;
+  }
+
+  /* XP bar flash: tone down to a single brightness bump */
+  .hx-xp-bar-flash {
+    animation: hx-xp-flash-reduced 0.5s ease-out forwards !important;
+  }
+  #hx-xp-bar-container.hx-xp-bar-flash::after {
+    animation: none !important;
+  }
+}
+
+@keyframes hx-levelup-reduced {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  15%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes hx-badge-pop-reduced {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+@keyframes hx-xp-flash-reduced {
+  0%   { filter: brightness(1); }
+  40%  { filter: brightness(1.6); }
+  100% { filter: brightness(1); }
 }
