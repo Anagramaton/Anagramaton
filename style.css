@@ -991,10 +991,6 @@ body[data-theme="dark"] .right-toggle:hover {
   background: rgba(76, 201, 240, 0.15);
 }
 
-/* Clear legacy panel-open slide-off behaviour */
-body.left-open  .left-toggle  { }
-body.right-open .right-toggle { }
-
 /* =========================================
    Base Tile and Text
    ========================================= */
