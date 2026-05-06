@@ -103,7 +103,11 @@ export function updateXPBar() {
 
   const xpInLevel  = xp - currThresh;
   const xpNeeded   = nextThresh - currThresh;
-  label.textContent = `LV ${level} · ${xpInLevel}/${xpNeeded} XP`;
+  label.textContent = `${xpInLevel} / ${xpNeeded} XP`;
+
+  // Keep LVL button in sync with the XP-system level
+  const lvlBtn = document.getElementById('hx-level-hud');
+  if (lvlBtn) lvlBtn.textContent = `LVL ${level}`;
 
   // Accessibility
   container.setAttribute('aria-valuenow', Math.round(pct));

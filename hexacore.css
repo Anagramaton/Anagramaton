@@ -319,7 +319,7 @@ body.hx-active #right-panel-title    { display: none; }
 }
 #hx-top-bar #settings-btn {
   font-family: 'Black Han Sans', sans-serif;
-  font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
   font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -340,15 +340,15 @@ body.hx-active #right-panel-title    { display: none; }
   border-color: rgba(255, 255, 255, 0.55);
 }
 
-/* ── Level HUD rail — LVL button + XP bar connected ───────────── */
+/* ── Level HUD rail — LVL button stacked above XP bar ─────────── */
 #hx-level-wrap {
   display: flex;
+  flex-direction: column;
   align-items: stretch;
   background: rgba(26, 26, 46, 0.88);
   border: 1.5px solid rgba(167, 139, 250, 0.5);
   clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
   overflow: hidden;
-  min-height: 44px;
   transition: border-color 0.6s ease;
 }
 
@@ -368,16 +368,16 @@ body.hx-active #right-panel-title    { display: none; }
   50%       { border-color: rgba(239, 68, 68, 0.9); }
 }
 
-/* ── LVL button — left side of the rail ─────────────────────── */
+/* ── LVL button — top section of the rail ───────────────────── */
 #hx-level-hud {
   font-family: 'Black Han Sans', sans-serif;
-  font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
   font-weight: 400;
   letter-spacing: 0.2em;
   color: #e2d9ff;
   background: transparent;
   border: none;
-  border-right: 1px solid rgba(167, 139, 250, 0.3);
+  border-bottom: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 0;
   padding: clamp(7px, 1.2vh, 11px) clamp(10px, 1.5vw, 16px);
   cursor: pointer;
@@ -385,6 +385,7 @@ body.hx-active #right-panel-title    { display: none; }
   user-select: none;
   white-space: nowrap;
   min-width: clamp(54px, 7vw, 80px);
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1958,12 +1959,9 @@ body[data-theme="dark"].hx-active #game-title {
   }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
-    font-size: clamp(0.65rem, 1.2vw, 0.82rem);
+    font-size: clamp(0.82rem, 1.5vw, 1rem);
     padding: 6px 12px;
     min-width: 56px;
-  }
-  #hx-xp-bar-container {
-    min-width: clamp(100px, 15vw, 170px);
   }
   #hx-live-word {
     font-size: clamp(1.1rem, 2.5vw, 1.5rem);
@@ -1992,16 +1990,13 @@ body[data-theme="dark"].hx-active #game-title {
   }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
-    font-size: clamp(0.6rem, 3vw, 0.8rem);
+    font-size: clamp(0.75rem, 3.5vw, 0.95rem);
     padding: 5px 8px;
     min-width: 44px;
     min-height: 44px;
   }
-  #hx-xp-bar-container {
-    min-width: clamp(90px, 28vw, 150px);
-  }
   #hx-xp-label {
-    font-size: 0.53rem;
+    font-size: 0.65rem;
   }
   #hx-score-hud {
     bottom: calc(clamp(10px, 2vh, 20px) + env(safe-area-inset-bottom, 0px));
@@ -2029,13 +2024,9 @@ body[data-theme="dark"].hx-active #game-title {
   }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     padding: 5px 7px;
     min-width: 40px;
-  }
-  #hx-xp-bar-container {
-    min-width: 80px;
-    padding: 0 5px 0 4px;
   }
   #hx-xp-label {
     font-size: 0.48rem;
@@ -2048,38 +2039,23 @@ body[data-theme="dark"].hx-active #game-title {
    Campaign, Profile, Tier Challenges
    ================================================================ */
 
-/* ── XP Bar — right side of #hx-level-wrap ──────────────────────── */
+/* ── XP Bar — bottom strip of #hx-level-wrap ────────────────────── */
 #hx-xp-bar-container {
   position: relative;
-  flex: 1;
-  min-width: clamp(120px, 18vw, 200px);
-  height: auto;
-  align-self: stretch;
+  flex: 0 0 auto;
+  height: 18px;
   background: rgba(0, 0, 0, 0.25);
   border: none;
   border-radius: 0;
   overflow: hidden;
   display: flex;
   align-items: center;
-  padding: 0 8px 0 6px;
+  padding: 0 6px;
   cursor: default;
 }
 #hx-xp-bar-container:focus-visible {
   outline: 2px solid #a78bfa;
   outline-offset: -2px;
-}
-
-/* Milestone ticks at 25 / 50 / 75 % */
-#hx-xp-bar-container::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background:
-    linear-gradient(90deg, transparent calc(25% - 0.5px), rgba(255,255,255,0.22) calc(25% - 0.5px), rgba(255,255,255,0.22) calc(25% + 0.5px), transparent calc(25% + 0.5px)),
-    linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(255,255,255,0.22) calc(50% - 0.5px), rgba(255,255,255,0.22) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(90deg, transparent calc(75% - 0.5px), rgba(255,255,255,0.22) calc(75% - 0.5px), rgba(255,255,255,0.22) calc(75% + 0.5px), transparent calc(75% + 0.5px));
-  pointer-events: none;
 }
 
 /* Glow sweep overlay on level-up (::after) */
@@ -2144,9 +2120,9 @@ body[data-theme="dark"].hx-active #game-title {
   z-index: 2;
   width: 100%;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   font-family: 'Turret Road', 'Orbitron', monospace;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   color: rgba(255,255,255,0.9);
   pointer-events: none;
   white-space: nowrap;
