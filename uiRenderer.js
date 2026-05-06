@@ -1,7 +1,25 @@
 // uiRenderer.js
 export function updateScoreDisplay(score) {
   const el = document.getElementById('score-display');
-  if (el) el.textContent = `${Number(score) || 0}`;
+  if (!el) return;
+  const n = Number(score) || 0;
+  el.innerHTML = `<span class="score-num">${n}</span><span class="score-pts"> pts</span>`;
+}
+
+export function showWordScorePreview(score) {
+  const el = document.getElementById('word-score-preview');
+  if (el) {
+    el.textContent = `+${score}`;
+    el.classList.add('visible');
+  }
+}
+
+export function hideWordScorePreview() {
+  const el = document.getElementById('word-score-preview');
+  if (el) {
+    el.textContent = '';
+    el.classList.remove('visible');
+  }
 }
 
 export function addWordToList(word, score) {

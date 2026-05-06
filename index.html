@@ -55,40 +55,44 @@
   <!-- Game Title -->
   <h1 id="game-title">ANAGRAMATON</h1>
 
-  <!-- Settings under the title -->
-  <div id="settings-wrap">
+  <!-- Top button bar: WORD · MENU · PHRASE -->
+  <div id="top-btn-bar">
+    <button id="toggle-left" class="side-toggle left-toggle" type="button"
+      aria-controls="left-panel" aria-expanded="false"
+      aria-label="Toggle word panel">
+      <span class="vword">WORD</span>
+    </button>
 
-    <button id="settings-btn" aria-haspopup="true" aria-label="Settings">?</button>
+    <div id="settings-wrap">
+      <button id="settings-btn" aria-haspopup="true" aria-label="Settings">MENU</button>
 
-    <div id="settings-menu" hidden>
-      <button id="home-btn" type="button"><span class="setting-icon">🏠</span> <span class="setting-label">HOME</span></button>
-      <button id="toggle-theme"><span class="setting-icon">🌙</span> <span class="setting-label">THEME</span></button>
-      <button id="toggle-access"><span class="setting-icon">🌓</span> <span class="setting-label">COLORBLIND</span></button>
-    
-      <button id="howto-open"><span class="setting-icon">🎮</span> <span class="setting-label">HOW TO PLAY</span></button>
-      <button id="lb-open-btn" type="button"><span class="setting-icon">🏆</span> <span class="setting-label">LEADERBOARD</span></button>
-      <button id="toggle-mode"><span class="setting-icon">📅</span> <span class="setting-label">DAILY</span></button>
-      <button id="set-name-btn"><span class="setting-icon">👤</span> <span class="setting-label">SET NAME</span></button>
+      <div id="settings-menu" hidden>
+        <button id="home-btn" type="button"><span class="setting-icon">🏠</span> <span class="setting-label">HOME</span></button>
+        <button id="toggle-theme"><span class="setting-icon">🌙</span> <span class="setting-label">THEME</span></button>
+        <button id="toggle-access"><span class="setting-icon">🌓</span> <span class="setting-label">COLORBLIND</span></button>
+      
+        <button id="howto-open"><span class="setting-icon">🎮</span> <span class="setting-label">HOW TO PLAY</span></button>
+        <button id="lb-open-btn" type="button"><span class="setting-icon">🏆</span> <span class="setting-label">LEADERBOARD</span></button>
+        <button id="toggle-mode"><span class="setting-icon">📅</span> <span class="setting-label">DAILY</span></button>
+        <button id="set-name-btn"><span class="setting-icon">👤</span> <span class="setting-label">SET NAME</span></button>
+      </div>
     </div>
+
+    <button id="toggle-right" class="side-toggle right-toggle" type="button"
+      aria-controls="right-panel" aria-expanded="false"
+      aria-label="Toggle phrase panel">
+      <span class="vword">PHRASE</span>
+    </button>
   </div>
 
-  <button id="toggle-left" class="side-toggle left-toggle" type="button"
-    aria-controls="left-panel" aria-expanded="false"
-    aria-label="Toggle word panel">
-    <span class="vword">WORD</span>
-  </button>
-
-  <button id="toggle-right" class="side-toggle right-toggle" type="button"
-    aria-controls="right-panel" aria-expanded="false"
-    aria-label="Toggle phrase panel">
-    <span class="vword">PHRASE</span>
-  </button>
+  <!-- Bottom zone: word score preview, live word, total score -->
+  <div id="word-score-preview" aria-live="polite"></div>
 
   <div id="current-word-display">
     <span id="current-word"></span>
   </div>
 
-  <span id="score-display">0</span>
+  <div id="score-display"><span class="score-num">0</span><span class="score-pts"> pts</span></div>
 
   <!-- GAME CONTAINER NOW ONLY HOLDS THE GRID -->
   <main id="game-container">

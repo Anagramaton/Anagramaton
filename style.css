@@ -889,19 +889,33 @@ details#merged-words-details > summary {
 }
 
 /* =========================================
-   Side Toggles — now horizontal buttons in top-right dead zone
+   Top Button Bar — WORD · MENU · PHRASE
    ========================================= */
-.side-toggle {
+#top-btn-bar {
   position: fixed;
-  top: clamp(16px, 4vh, 32px);
-  padding: 7px 14px;
+  top: clamp(14px, 3.5vh, 30px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  z-index: 1200;
+  /* unified strip feel */
+}
+
+/* Side Toggles — children of #top-btn-bar */
+.side-toggle {
+  position: static;
+  padding: clamp(7px, 1.2vh, 11px) clamp(14px, 2.5vw, 26px);
   border: 2.5px solid var(--side-toggle-border);
   background: var(--side-toggle-bg);
   color: var(--side-toggle-fg);
   cursor: pointer;
   height: auto;
+  min-height: 44px;
   width: auto;
-  z-index: 1200;
+  min-width: 70px;
+  z-index: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -916,7 +930,6 @@ details#merged-words-details > summary {
     transform 0.1s ease;
   font-family: 'Limelight', sans-serif;
 }
-
 
 .vword {
   writing-mode: initial;
@@ -943,22 +956,16 @@ details#merged-words-details > summary {
   background: var(--side-toggle-active-bg);
   transform: scale(0.98);
 }
-/* WORD toggle: second from right */
+/* WORD toggle: left side — right inner edge cut toward MENU */
 .left-toggle {
-  left: auto;
-  right: calc(clamp(72px, 11vw, 120px) + 10px);
-  border-right: none;
   clip-path: polygon(0% 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%);
+  border-right: none;
 }
-/* PHRASE toggle: rightmost */
+/* PHRASE toggle: right side — left inner edge cut toward MENU */
 .right-toggle {
-  right: clamp(12px, 3vw, 24px);
-  border-left: none;
   clip-path: polygon(8px 0%, 100% 0%, 100% 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  border-left: none;
 }
-/* Clear legacy panel-open slide-off behaviour */
-body.left-open  .left-toggle  { right: calc(clamp(72px, 11vw, 120px) + 10px); left: auto; }
-body.right-open .right-toggle { right: clamp(12px, 3vw, 24px); }
 
 /* =========================================
    Base Tile and Text
@@ -1121,53 +1128,132 @@ body[data-theme="dark"] .tile-point {
   font-style: normal;
   text-transform: uppercase;
 }
-#score-display {
+
+/* ── Bottom zone: word score preview → word builder → score ─────── */
+/* Word score preview — above the word builder, only shown on valid word */
+#word-score-preview {
   position: fixed;
-  bottom: clamp(16px, 3vh, 36px);
-  right: clamp(12px, 3vw, 24px);
-  left: auto;
-  transform: none;
+  bottom: clamp(106px, 16vh, 148px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+
+  font-family: 'Turret Road', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--neon);
+  text-shadow:
+    0 0 10px rgba(76, 201, 240, 0.8),
+    0 0 22px rgba(76, 201, 240, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+
+  /* hidden by default — visible class animates in */
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#word-score-preview.visible {
+  opacity: 1;
+}
+
+/* Current word display — centered bottom */
+#current-word-display {
+  position: fixed;
+  bottom: clamp(60px, 10vh, 100px);
+  left: 50%;
+  transform: translateX(-50%);
+  top: auto;
   z-index: 900;
   display: block;
-  text-align: right;
+  text-align: center;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-family: 'Notable', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  max-width: 60vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Score display — centered, below word builder */
+#score-display {
+  position: fixed;
+  bottom: clamp(16px, 3vh, 40px);
+  left: 50%;
+  transform: translateX(-50%);
+  right: auto;
+  z-index: 900;
+  display: block;
+  text-align: center;
   white-space: nowrap;
 
   clip-path: none;
   padding: 0;
   background: none;
 
-  font-family: 'Limelight', sans-serif;
-  font-size: clamp(1.2rem, 2.5vw, 2rem);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--text);
-
-  filter: none;
-  transition: none;
   pointer-events: none;
   user-select: none;
 }
+.score-num {
+  font-family: 'Limelight', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+.score-pts {
+  font-family: 'Limelight', sans-serif;
+  font-size: clamp(0.7rem, 1.4vw, 1.1rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  opacity: 0.7;
+}
+body[data-theme="dark"] .score-num,
+body[data-theme="dark"] .score-pts {
+  color: #ffffff;
+}
 
-/* Desktop current word display — bottom-left dead zone */
+/* Desktop adjustments (≥901px) are handled above — no extra block needed */
 @media (min-width: 901px) {
+  #top-btn-bar {
+    top: clamp(20px, 4vh, 36px);
+  }
+  .side-toggle {
+    padding: clamp(9px, 1.4vh, 13px) clamp(20px, 3vw, 32px);
+  }
+}
+
+/* Tablet breakpoint (641–900px) */
+@media (min-width: 641px) and (max-width: 900px) {
+  #top-btn-bar {
+    top: clamp(16px, 3.5vh, 28px);
+  }
+  .side-toggle {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  #word-score-preview {
+    bottom: clamp(96px, 14vh, 132px);
+    font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+  }
   #current-word-display {
-    position: fixed;
-    left: clamp(12px, 3vw, 24px);
-    transform: none;
-    bottom: clamp(16px, 3vh, 36px);
-    top: auto;
-    z-index: 900;
-    display: block;
-    text-align: left;
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
-    font-family: 'Notable', sans-serif;
-    font-weight: 900;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    max-width: 50vw;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    bottom: clamp(54px, 9vh, 88px);
+    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  }
+  #score-display {
+    bottom: clamp(14px, 2.5vh, 34px);
+  }
+  .score-num {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+  }
+  .score-pts {
+    font-size: clamp(0.62rem, 1.2vw, 0.95rem);
   }
 }
 
@@ -1299,34 +1385,36 @@ body[data-theme="dark"] .tile-point {
 }
 
 /* =========================================
-   Settings Dropdown
+   Settings Dropdown — MENU button in #top-btn-bar
    ========================================= */
 #settings-wrap {
-  position: fixed;
-  top: clamp(16px, 4vh, 32px);
-  left: clamp(12px, 3vw, 24px);
-  right: auto;
-  transform: none;
+  position: relative;
   z-index: 1100;
+  display: flex;
+  align-items: stretch;
 }
 #settings-btn {
-  font-size: 1.4rem;
-  font-weight: 900;
-  font-family: 'Orbitron', sans-serif;
-  min-width: 52px;
-  min-height: 52px;
-  background: #1a1a2e;
-  color: #ffffff;
-  border: 2px solid #4cc9f0;
+  font-size: clamp(0.75rem, 1.4vw, 1rem);
+  font-family: 'Limelight', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  min-width: clamp(60px, 8vw, 90px);
+  min-height: 44px;
+  background: var(--side-toggle-bg);
+  color: var(--side-toggle-fg);
+  border: 2.5px solid var(--side-toggle-border);
   border-radius: 0;
-  padding: 6px 10px;
+  padding: clamp(7px, 1.2vh, 11px) clamp(12px, 2vw, 20px);
   cursor: pointer;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  /* Chamfered rectangle — distinctive from WORD/PHRASE clip-paths */
+  clip-path: polygon(6px 0%, calc(100% - 6px) 0%, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0% calc(100% - 6px), 0% 6px);
   transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
 }
 #settings-btn:hover {
-  background: #4cc9f0;
-  color: #1a1a2e;
+  background: var(--side-toggle-hover-bg);
+  color: var(--side-toggle-fg);
 }
 #settings-menu {
   position: absolute;
@@ -1342,6 +1430,7 @@ body[data-theme="dark"] .tile-point {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  z-index: 1500;
 }
 #settings-menu[hidden] { display: none !important; }
 #settings-menu button {
@@ -1376,7 +1465,7 @@ body[data-theme="dark"] .tile-point {
 }
 
 @media (max-width: 900px) {
-  #settings-btn  { font-size: 1.2rem; padding: 6px 10px; }
+  #settings-btn  { font-size: clamp(0.65rem, 3vw, 0.85rem); padding: 6px 10px; }
   #settings-menu {
     flex-direction: column;
     gap: 4px;
@@ -1389,58 +1478,6 @@ body[data-theme="dark"] .tile-point {
   }
 }
 
-
-
-/* =========================================
-   Tablet breakpoint (641–900px) — dead-zone overlay controls
-   ========================================= */
-@media (min-width: 641px) and (max-width: 900px) {
-  /* Settings button */
-  #settings-wrap {
-    top: clamp(20px, 4vh, 36px);
-    left: clamp(16px, 3vw, 28px);
-  }
-  #settings-btn { font-size: 1.1rem; padding: 5px 9px; }
-
-  /* Word/Phrase toggles */
-  .side-toggle {
-    top: clamp(20px, 4vh, 36px);
-    padding: 8px 16px;
-    font-size: 0.9rem;
-  }
-  .left-toggle  { right: calc(clamp(88px, 12vw, 140px) + 12px); }
-  .right-toggle { right: clamp(16px, 3vw, 28px); }
-
-  /* Current word display */
-  #current-word-display {
-    position: fixed;
-    left: clamp(16px, 3vw, 28px);
-    transform: none;
-    bottom: clamp(20px, 4vh, 44px);
-    top: auto;
-    z-index: 900;
-    display: block;
-    text-align: left;
-    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-    font-family: 'Notable', sans-serif;
-    font-weight: 900;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    max-width: 55vw;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  /* Score display */
-  #score-display {
-    bottom: clamp(20px, 4vh, 44px);
-    right: clamp(16px, 3vw, 28px);
-    left: auto;
-    transform: none;
-    font-size: clamp(1.1rem, 2vw, 1.6rem);
-  }
-}
 
 
 #splash-screen {

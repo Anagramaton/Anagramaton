@@ -1,6 +1,6 @@
 import { initializeGrid } from './initGrid.js';
 import { submitCurrentWord, resetSelectionState, recomputeAllWordScores } from './scoreLogic.js';
-import { updateScoreDisplay, addWordToList } from './uiRenderer.js';
+import { updateScoreDisplay, addWordToList, showWordScorePreview, hideWordScorePreview } from './uiRenderer.js';
 import { gameState } from './gameState.js';
 import { placedWords } from './gridLogic.js';
 import { initPhrasePanelEvents, revealPhrase, computePhraseBonus } from './phrasePanel.js';
@@ -316,16 +316,34 @@ function updateCurrentWordDisplay() {
 
   const el = document.getElementById('current-word');
   if (!el) return;
-  const letters = (gameState.selectedTiles || [])
+  const selectedTiles = gameState.selectedTiles || [];
+  const letters = selectedTiles
     .map(t => String(t.letter || ''))
     .join('')
     .toUpperCase();
   el.textContent = letters;
   fitCurrentWord();
+
+  // Word score preview: show only when selection forms a valid word ≥4 letters
+  if (selectedTiles.length >= 4 && isValidWord(letters)) {
+    let base = 0;
+    for (const tile of selectedTiles) {
+      const letter = String(tile.letter || '').toUpperCase();
+      base += letterPoints[letter] || 1;
+    }
+    const len = selectedTiles.length;
+    const lenKey = Math.min(len, 10);
+    const mult = (len >= 5 && lengthMultipliers[lenKey]) ? lengthMultipliers[lenKey] : 1;
+    const anagramBonus = (letters.length > 1 && letters === letters.split('').reverse().join('')) ? anagramMultiplier : 1;
+    showWordScorePreview(base * mult * anagramBonus);
+  } else {
+    hideWordScorePreview();
+  }
 }
 
 function rejectCurrentWord() {
   const el = document.getElementById('current-word');
+  hideWordScorePreview();
   if (!el) { resetSelectionState(); return; }
   el.classList.remove('word-shake');
   // Force reflow so the animation restarts if called back-to-back
@@ -393,6 +411,7 @@ async function handleAutoSubmitWord() {
   syncSubmitListButton();
 
   playSound('sfxSuccess');
+  hideWordScorePreview();
 
   const currentWordEl = document.getElementById('current-word');
   if (currentWordEl) {

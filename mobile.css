@@ -1,13 +1,18 @@
-/* ── Mobile side-toggle: horizontal buttons in top-right dead zone ── */
+/* ── Mobile top-btn-bar ───────────────────────────────────────── */
 @media (max-width: 640px) {
+  #top-btn-bar {
+    top: clamp(10px, 3vh, 18px);
+    gap: 0;
+  }
   .side-toggle {
-    position: fixed;
+    position: static;
     writing-mode: initial;
     text-orientation: initial;
     width: auto;
     height: auto;
+    min-height: 44px;
+    min-width: 54px;
     padding: 6px 10px;
-    top: clamp(16px, 4vh, 28px);
     letter-spacing: 0.06em;
     transition: all 0.15s ease;
     background: var(--side-toggle-bg);
@@ -20,24 +25,22 @@
     font-size: clamp(0.65rem, 3.5vw, 0.85rem);
     letter-spacing: 0.05em;
   }
-  /* WORD toggle: second from right on mobile */
-  .left-toggle {
-    left: auto;
-    right: calc(clamp(64px, 22vw, 100px) + 8px);
+  #settings-btn {
+    font-size: clamp(0.6rem, 3vw, 0.8rem);
+    min-width: 50px;
+    min-height: 44px;
+    padding: 5px 8px;
   }
-  /* PHRASE toggle: rightmost on mobile */
-  .right-toggle {
-    right: clamp(10px, 3vw, 18px);
+  #settings-menu {
+    min-width: 180px;
+    z-index: 1500;
   }
+  body:has(#left-panel.open) #toggle-right { display: none; }
+  body:has(#right-panel.open) #toggle-left { display: none; }
 }
 
 @media (max-width: 640px) {
-  body:has(#left-panel.open) .right-toggle { display: none; }
-  body:has(#right-panel.open) .left-toggle { display: none; }
-}
-
-@media (max-width: 640px) {
-  .side-toggle { z-index: 1200; }
+  #top-btn-bar { z-index: 1200; }
 }
 
 /* ─────────────────────────────────────────────────────────────── */
@@ -85,47 +88,49 @@
   #left-panel .panel-content * { max-width: 100%; }
 }
 
-/* ── Score display: bottom-right dead zone ──────────────────────── */
+/* ── Score display: centered bottom zone on mobile ──────────────── */
 @media (max-width: 640px) {
   #score-display {
     position: fixed;
-    bottom: clamp(14px, calc(env(safe-area-inset-bottom, 0px) + 2vh), 28px);
-    right: clamp(10px, 3vw, 18px);
-    left: auto;
-    transform: none;
+    bottom: clamp(10px, calc(env(safe-area-inset-bottom, 0px) + 1.5vh), 22px);
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
     z-index: 900;
     display: block;
-    text-align: right;
+    text-align: center;
     width: max-content;
     pointer-events: none;
     background: none;
     clip-path: none;
     filter: none;
     padding: 0;
-    font-family: 'Limelight', sans-serif;
-    font-size: clamp(1rem, 5vw, 1.4rem);
-    font-weight: 700;
-    letter-spacing: 0.04em;
+  }
+  .score-num {
+    font-size: clamp(1.1rem, 5.5vw, 1.6rem);
+  }
+  .score-pts {
+    font-size: clamp(0.55rem, 2.5vw, 0.8rem);
   }
 }
 
-/* ── Current word display: bottom-left dead zone ───────────────── */
+/* ── Current word display: centered bottom zone on mobile ───────── */
 @media (max-width: 640px) {
   #current-word-display {
     position: fixed;
-    left: clamp(10px, 3vw, 18px);
-    transform: none;
-    bottom: clamp(14px, calc(env(safe-area-inset-bottom, 0px) + 2vh), 28px);
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: clamp(44px, 8vh, 68px);
     top: auto;
     z-index: 900;
     display: block;
-    text-align: left;
-    font-size: clamp(0.85rem, 5vw, 1.4rem);
+    text-align: center;
+    font-size: clamp(0.95rem, 5vw, 1.4rem);
     font-family: 'Notable', sans-serif;
     font-weight: 900;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    max-width: 55vw;
+    max-width: 80vw;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -133,24 +138,11 @@
   }
 }
 
-/* ── Settings button: top-left dead zone ────────────────────────── */
+/* ── Word score preview: centered above word display on mobile ───── */
 @media (max-width: 640px) {
-  #settings-wrap {
-    position: fixed;
-    top: clamp(16px, 4vh, 28px);
-    left: clamp(10px, 3vw, 18px);
-    right: auto;
-    transform: none;
-  }
-  #settings-btn {
-    font-size: 1rem;
-    min-width: 36px;
-    min-height: 36px;
-    padding: 4px 8px;
-  }
-  #settings-menu {
-    min-width: 180px;
-    z-index: 1500;
+  #word-score-preview {
+    bottom: clamp(84px, 13vh, 112px);
+    font-size: clamp(0.85rem, 4vw, 1.1rem);
   }
 }
 
