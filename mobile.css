@@ -1,48 +1,21 @@
-/* ── Mobile side-toggle: horizontal buttons in top-right dead zone ── */
+/* ── Mobile side-toggle: tab buttons in game-header ── */
 @media (max-width: 640px) {
   .side-toggle {
-    position: fixed;
-    writing-mode: initial;
-    text-orientation: initial;
-    width: auto;
-    height: auto;
-    padding: 6px 10px;
-    top: clamp(16px, 4vh, 28px);
-    letter-spacing: 0.06em;
-    transition: all 0.15s ease;
-    background: var(--side-toggle-bg);
-    color: var(--side-toggle-fg);
-    border: 2.5px solid var(--side-toggle-border);
-    font-size: clamp(0.65rem, 3.5vw, 0.85rem);
+    padding: 0 12px;
+    font-size: clamp(0.6rem, 3.2vw, 0.8rem);
+    letter-spacing: 0.08em;
   }
-  .side-toggle .vword {
-    color: var(--side-toggle-fg);
-    font-size: clamp(0.65rem, 3.5vw, 0.85rem);
-    letter-spacing: 0.05em;
+  #settings-btn {
+    padding: 0 12px;
+    font-size: clamp(0.6rem, 3.2vw, 0.8rem);
   }
-  /* WORD toggle: second from right on mobile */
-  .left-toggle {
-    left: auto;
-    right: calc(clamp(64px, 22vw, 100px) + 8px);
-  }
-  /* PHRASE toggle: rightmost on mobile */
-  .right-toggle {
-    right: clamp(10px, 3vw, 18px);
+  #settings-menu {
+    min-width: 180px;
+    z-index: 1500;
   }
 }
 
-@media (max-width: 640px) {
-  body:has(#left-panel.open) .right-toggle { display: none; }
-  body:has(#right-panel.open) .left-toggle { display: none; }
-}
-
-@media (max-width: 640px) {
-  .side-toggle { z-index: 1200; }
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-
-/* ── How-to modal ───────────────────────────────────────────────── */
+/* ── Settings button: mobile adjustments ────────────────────────── */
 #howto-modal .rom__dialog {
   display: flex;
   flex-direction: column;
@@ -130,27 +103,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     word-break: keep-all;
-  }
-}
-
-/* ── Settings button: top-left dead zone ────────────────────────── */
-@media (max-width: 640px) {
-  #settings-wrap {
-    position: fixed;
-    top: clamp(16px, 4vh, 28px);
-    left: clamp(10px, 3vw, 18px);
-    right: auto;
-    transform: none;
-  }
-  #settings-btn {
-    font-size: 1rem;
-    min-width: 36px;
-    min-height: 36px;
-    padding: 4px 8px;
-  }
-  #settings-menu {
-    min-width: 180px;
-    z-index: 1500;
   }
 }
 

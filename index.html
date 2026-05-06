@@ -55,40 +55,37 @@
   <!-- Game Title -->
   <h1 id="game-title">ANAGRAMATON</h1>
 
-  <!-- Settings under the title -->
-  <div id="settings-wrap">
-
-    <button id="settings-btn" aria-haspopup="true" aria-label="Settings">?</button>
-
-    <div id="settings-menu" hidden>
-      <button id="home-btn" type="button"><span class="setting-icon">🏠</span> <span class="setting-label">HOME</span></button>
-      <button id="toggle-theme"><span class="setting-icon">🌙</span> <span class="setting-label">THEME</span></button>
-      <button id="toggle-access"><span class="setting-icon">🌓</span> <span class="setting-label">COLORBLIND</span></button>
-    
-      <button id="howto-open"><span class="setting-icon">🎮</span> <span class="setting-label">HOW TO PLAY</span></button>
-      <button id="lb-open-btn" type="button"><span class="setting-icon">🏆</span> <span class="setting-label">LEADERBOARD</span></button>
-      <button id="toggle-mode"><span class="setting-icon">📅</span> <span class="setting-label">DAILY</span></button>
-      <button id="set-name-btn"><span class="setting-icon">👤</span> <span class="setting-label">SET NAME</span></button>
-    </div>
-  </div>
-
-  <button id="toggle-left" class="side-toggle left-toggle" type="button"
-    aria-controls="left-panel" aria-expanded="false"
-    aria-label="Toggle word panel">
-    <span class="vword">WORD</span>
-  </button>
-
-  <button id="toggle-right" class="side-toggle right-toggle" type="button"
-    aria-controls="right-panel" aria-expanded="false"
-    aria-label="Toggle phrase panel">
-    <span class="vword">PHRASE</span>
-  </button>
-
   <div id="current-word-display">
     <span id="current-word"></span>
   </div>
 
   <span id="score-display">0</span>
+
+  <!-- HEADER ROW: WORD | PHRASE | ≡ MENU (Anagramaton) and ≡ MENU | LVL (Hexacore) — above the hex grid -->
+  <div id="game-header">
+    <button id="toggle-left" class="side-toggle left-toggle" type="button"
+      aria-controls="left-panel" aria-expanded="false"
+      aria-label="Toggle word panel">WORD</button>
+
+    <button id="toggle-right" class="side-toggle right-toggle" type="button"
+      aria-controls="right-panel" aria-expanded="false"
+      aria-label="Toggle phrase panel">PHRASE</button>
+
+    <div id="settings-wrap">
+      <button id="settings-btn" aria-haspopup="true" aria-label="Open menu">&#x2261; MENU</button>
+
+      <div id="settings-menu" hidden>
+        <button id="home-btn" type="button"><span class="setting-icon">🏠</span> <span class="setting-label">HOME</span></button>
+        <button id="toggle-theme"><span class="setting-icon">🌙</span> <span class="setting-label">THEME</span></button>
+        <button id="toggle-access"><span class="setting-icon">🌓</span> <span class="setting-label">COLORBLIND</span></button>
+      
+        <button id="howto-open"><span class="setting-icon">🎮</span> <span class="setting-label">HOW TO PLAY</span></button>
+        <button id="lb-open-btn" type="button"><span class="setting-icon">🏆</span> <span class="setting-label">LEADERBOARD</span></button>
+        <button id="toggle-mode"><span class="setting-icon">📅</span> <span class="setting-label">DAILY</span></button>
+        <button id="set-name-btn"><span class="setting-icon">👤</span> <span class="setting-label">SET NAME</span></button>
+      </div>
+    </div>
+  </div>
 
   <!-- GAME CONTAINER NOW ONLY HOLDS THE GRID -->
   <main id="game-container">

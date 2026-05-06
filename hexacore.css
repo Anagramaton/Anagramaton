@@ -320,18 +320,52 @@ body.hx-active #current-word-display { display: none; }
 body.hx-active #left-panel-title,
 body.hx-active #right-panel-title    { display: none; }
 
-/* Hexacore settings button — same top-left position, slightly larger */
+/* Hexacore header — settings button moves to order 1, LVL badge to order 2 */
 body.hx-active #settings-wrap {
-  top: clamp(16px, 4vh, 32px);
-  left: clamp(12px, 3vw, 24px);
-  right: auto;
-  transform: none;
+  order: 1;
 }
 body.hx-active #settings-btn {
-  min-width: 40px;
-  min-height: 40px;
-  font-size: 1.1rem;
-  padding: 4px 8px;
+  color: #ff6b35;
+  border-color: #ff6b35;
+}
+body.hx-active #settings-btn:hover {
+  background: #ff6b35;
+  color: #0a0515;
+}
+
+/* Hexacore LVL HUD — now an in-flow tab in game-header */
+#hx-level-hud {
+  position: static;
+  order: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 28px;
+  font-family: 'Turret Road', system-ui, sans-serif;
+  font-size: clamp(0.72rem, 1.3vw, 0.9rem);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: #a78bfa;
+  background: #1a0a30;
+  border: 2px solid #a78bfa;
+  border-left: none;
+  clip-path: polygon(0% 0%, calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 0% 100%);
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  white-space: nowrap;
+  transition: background 0.18s, color 0.18s;
+  transform: none;
+  z-index: auto;
+}
+#hx-level-hud:hover,
+#hx-level-hud:focus {
+  background: #a78bfa;
+  color: #1a0a30;
+  box-shadow: none;
+  transform: none;
+  outline: none;
 }
 
 /* ── Game over overlay ─────────────────────────────────────────── */
@@ -1883,9 +1917,7 @@ body[data-theme="dark"].hx-active #game-title {
     font-size: clamp(0.85rem, 4vw, 1.2rem);
   }
   #hx-level-hud {
-    top: clamp(16px, 4vh, 28px);
-    right: clamp(10px, 3vw, 18px);
-    font-size: 0.85rem;
-    padding: 6px 10px;
+    font-size: clamp(0.65rem, 3.5vw, 0.85rem);
+    padding: 0 16px;
   }
 }

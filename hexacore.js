@@ -1294,7 +1294,12 @@ function ensureHud() {
   levelHud.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
   });
-  document.body.appendChild(levelHud);
+  const gameHeader = document.getElementById('game-header');
+  if (gameHeader) {
+    gameHeader.appendChild(levelHud);
+  } else {
+    document.body.appendChild(levelHud);
+  }
 
   const powerUpBarLeft = document.createElement('div');
   powerUpBarLeft.id = 'hx-powerup-bar-left';

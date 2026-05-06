@@ -301,6 +301,7 @@ html, body {
 }
 body {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100dvh;
@@ -358,8 +359,9 @@ body[data-theme="dark"] #score-display {
 /* Grid Container */
 #hex-grid { touch-action: none; }
 #game-container {
-  flex: 1;
-  height: 100dvh;
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
   overflow: hidden;
   position: relative;
   background: transparent;
@@ -889,76 +891,109 @@ details#merged-words-details > summary {
 }
 
 /* =========================================
-   Side Toggles — now horizontal buttons in top-right dead zone
+   Game Header — button row above the hex grid
+   ========================================= */
+#game-header {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
+  margin-bottom: 8px;
+  z-index: 1200;
+  position: relative;
+}
+
+/* =========================================
+   Side Toggles — tab-style buttons in the game header
    ========================================= */
 .side-toggle {
-  position: fixed;
-  top: clamp(16px, 4vh, 32px);
-  padding: 7px 14px;
-  border: 2.5px solid var(--side-toggle-border);
-  background: var(--side-toggle-bg);
-  color: var(--side-toggle-fg);
+  position: static;
+  padding: 0 20px;
+  height: 44px;
+  border: 2px solid #4cc9f0;
+  background: #ffffff;
+  color: #1a1a2e;
   cursor: pointer;
-  height: auto;
-  width: auto;
-  z-index: 1200;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   user-select: none;
   white-space: nowrap;
-  gap: 2px;
   text-shadow: none;
-  box-shadow: 3px 3px 0 rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    transform 0.1s ease;
-  font-family: 'Limelight', sans-serif;
+  box-shadow: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  font-family: 'Turret Road', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.72rem, 1.3vw, 0.9rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 0;
+  order: 0;
 }
-
 
 .vword {
-  writing-mode: initial;
-  text-orientation: initial;
-  display: inline-block;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  margin: 0;
-  font-size: clamp(0.75rem, 1.4vw, 1rem);
-  font-family: 'Limelight', sans-serif;
-  font-weight: 400;
-  text-transform: uppercase;
+  display: inline;
 }
-.right-toggle .vword {
-  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-  letter-spacing: 0.06em;
-}
-.side-toggle:hover  {
-  background: var(--side-toggle-hover-bg);
-  color: var(--side-toggle-fg);
-  transform: scale(1.02);
+
+.side-toggle:hover {
+  background: #4cc9f0;
+  color: #1a1a2e;
 }
 .side-toggle:active {
-  background: var(--side-toggle-active-bg);
-  transform: scale(0.98);
+  background: #1a9ec8;
+  color: #ffffff;
 }
-/* WORD toggle: second from right */
+
+/* WORD toggle: leftmost — filled/active style with left-slant */
 .left-toggle {
-  left: auto;
-  right: calc(clamp(72px, 11vw, 120px) + 10px);
+  order: 1;
+  background: #1a1a2e;
+  color: #4cc9f0;
   border-right: none;
-  clip-path: polygon(0% 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%);
+  clip-path: polygon(10px 0%, 100% 0%, 100% 100%, 0% 100%);
 }
-/* PHRASE toggle: rightmost */
+.left-toggle:hover {
+  background: #4cc9f0;
+  color: #1a1a2e;
+}
+
+/* PHRASE toggle: middle — outlined/inactive */
 .right-toggle {
-  right: clamp(12px, 3vw, 24px);
-  border-left: none;
-  clip-path: polygon(8px 0%, 100% 0%, 100% 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+  order: 2;
+  background: transparent;
+  color: #4cc9f0;
+  border-left: 1px solid #4cc9f0;
+  border-right: none;
+  clip-path: none;
 }
+.right-toggle:hover {
+  background: rgba(76, 201, 240, 0.12);
+  color: #4cc9f0;
+}
+
+/* Dark mode adjustments */
+body[data-theme="dark"] .side-toggle {
+  background: transparent;
+  color: #4cc9f0;
+  border-color: #4cc9f0;
+}
+body[data-theme="dark"] .left-toggle {
+  background: #1a1a2e;
+  color: #4cc9f0;
+}
+body[data-theme="dark"] .left-toggle:hover {
+  background: #4cc9f0;
+  color: #1a1a2e;
+}
+body[data-theme="dark"] .right-toggle:hover {
+  background: rgba(76, 201, 240, 0.15);
+}
+
 /* Clear legacy panel-open slide-off behaviour */
-body.left-open  .left-toggle  { right: calc(clamp(72px, 11vw, 120px) + 10px); left: auto; }
-body.right-open .right-toggle { right: clamp(12px, 3vw, 24px); }
+body.left-open  .left-toggle  { }
+body.right-open .right-toggle { }
 
 /* =========================================
    Base Tile and Text
@@ -1302,27 +1337,31 @@ body[data-theme="dark"] .tile-point {
    Settings Dropdown
    ========================================= */
 #settings-wrap {
-  position: fixed;
-  top: clamp(16px, 4vh, 32px);
-  left: clamp(12px, 3vw, 24px);
-  right: auto;
-  transform: none;
+  position: relative;
   z-index: 1100;
+  order: 3;
+  display: flex;
+  align-items: stretch;
 }
 #settings-btn {
-  font-size: 1.4rem;
-  font-weight: 900;
-  font-family: 'Orbitron', sans-serif;
-  min-width: 52px;
-  min-height: 52px;
-  background: #1a1a2e;
-  color: #ffffff;
+  height: 44px;
+  padding: 0 20px;
+  font-size: clamp(0.72rem, 1.3vw, 0.9rem);
+  font-weight: 700;
+  font-family: 'Turret Road', sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  min-width: auto;
+  min-height: auto;
+  background: transparent;
+  color: #4cc9f0;
   border: 2px solid #4cc9f0;
   border-radius: 0;
-  padding: 6px 10px;
+  padding: 0 20px;
   cursor: pointer;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  clip-path: polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
   transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
 }
 #settings-btn:hover {
   background: #4cc9f0;
@@ -1376,7 +1415,6 @@ body[data-theme="dark"] .tile-point {
 }
 
 @media (max-width: 900px) {
-  #settings-btn  { font-size: 1.2rem; padding: 6px 10px; }
   #settings-menu {
     flex-direction: column;
     gap: 4px;
@@ -1392,25 +1430,9 @@ body[data-theme="dark"] .tile-point {
 
 
 /* =========================================
-   Tablet breakpoint (641–900px) — dead-zone overlay controls
+   Tablet breakpoint (641–900px)
    ========================================= */
 @media (min-width: 641px) and (max-width: 900px) {
-  /* Settings button */
-  #settings-wrap {
-    top: clamp(20px, 4vh, 36px);
-    left: clamp(16px, 3vw, 28px);
-  }
-  #settings-btn { font-size: 1.1rem; padding: 5px 9px; }
-
-  /* Word/Phrase toggles */
-  .side-toggle {
-    top: clamp(20px, 4vh, 36px);
-    padding: 8px 16px;
-    font-size: 0.9rem;
-  }
-  .left-toggle  { right: calc(clamp(88px, 12vw, 140px) + 12px); }
-  .right-toggle { right: clamp(16px, 3vw, 28px); }
-
   /* Current word display */
   #current-word-display {
     position: fixed;
