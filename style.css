@@ -317,34 +317,38 @@ body[data-theme="dark"] {
   background-size: 28px 28px;
 }
 
-/* Title */
+/* Title — full-screen diagonal watermark, bottom-left → top-right */
 #game-title {
   font-family: 'Black Han Sans', sans-serif;
-  font-size: clamp(3.2rem, 6.5vw, 5.6rem);
+  font-size: clamp(14vmax, 22vmax, 30vmax);
   letter-spacing: 0.04em;
   font-weight: 900;
-  color: var(--title-stroke);
-  -webkit-text-stroke: 0;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--neon);
   text-shadow: none;
-  filter:
-    drop-shadow(3px 3px 0px #c0c8d8)
-    drop-shadow(-1px -1px 0px #8090b0)
-    drop-shadow(0 0 18px rgba(76, 201, 240, 0.22));   /* ← subtle cyan glow */
+  filter: none;
+  opacity: 0.12;
   position: fixed;
-  top: 4px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%) rotate(-52deg);
+  transform-origin: center center;
+  white-space: nowrap;
   user-select: none;
   pointer-events: none;
-  z-index: 900;
+  z-index: 1;
   margin: 0;
 }
 
+/* Slightly shallower angle for wide (landscape / desktop) viewports */
+@media (min-aspect-ratio: 4/3) {
+  #game-title {
+    transform: translate(-50%, -50%) rotate(-30deg);
+  }
+}
+
 body[data-theme="dark"] #game-title {
-  filter:
-    drop-shadow(3px 3px 0px #1e2a3a)
-    drop-shadow(-1px -1px 0px #4a6080)
-    drop-shadow(0 0 28px rgba(76, 201, 240, 0.45));   /* stronger glow in dark mode */
+  opacity: 0.14;
 }
 
 body[data-theme="dark"] #score-display {
@@ -359,6 +363,7 @@ body[data-theme="dark"] #score-display {
   overflow: hidden;
   position: relative;
   background: transparent;
+  z-index: 2;
 }
 
 /* Backdrop */
@@ -884,18 +889,18 @@ details#merged-words-details > summary {
 }
 
 /* =========================================
-   Side Toggles
+   Side Toggles — now horizontal buttons in top-right dead zone
    ========================================= */
 .side-toggle {
   position: fixed;
-  top: clamp(110px, 15vh, 160px);
-  padding: 0;
+  top: clamp(16px, 4vh, 32px);
+  padding: 7px 14px;
   border: 2.5px solid var(--side-toggle-border);
   background: var(--side-toggle-bg);
   color: var(--side-toggle-fg);
   cursor: pointer;
-  height: 180px;
-  width: 56px;
+  height: auto;
+  width: auto;
   z-index: 1200;
   display: flex;
   align-items: center;
@@ -908,27 +913,25 @@ details#merged-words-details > summary {
   transition:
     background 0.15s ease,
     color 0.15s ease,
-    transform 0.1s ease,
-    left 0.45s ease,
-    right 0.45s ease;
+    transform 0.1s ease;
   font-family: 'Limelight', sans-serif;
 }
 
 
 .vword {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
+  writing-mode: initial;
+  text-orientation: initial;
   display: inline-block;
   line-height: 1;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.08em;
   margin: 0;
-  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  font-size: clamp(0.75rem, 1.4vw, 1rem);
   font-family: 'Limelight', sans-serif;
   font-weight: 400;
   text-transform: uppercase;
 }
 .right-toggle .vword {
-  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
   letter-spacing: 0.06em;
 }
 .side-toggle:hover  {
@@ -940,18 +943,22 @@ details#merged-words-details > summary {
   background: var(--side-toggle-active-bg);
   transform: scale(0.98);
 }
+/* WORD toggle: second from right */
 .left-toggle {
-  left: 0;
-  border-left: none;
+  left: auto;
+  right: calc(clamp(72px, 11vw, 120px) + 10px);
+  border-right: none;
   clip-path: polygon(0% 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%);
 }
+/* PHRASE toggle: rightmost */
 .right-toggle {
-  right: 0;
-  border-right: none;
+  right: clamp(12px, 3vw, 24px);
+  border-left: none;
   clip-path: polygon(8px 0%, 100% 0%, 100% 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
 }
-body.left-open  .left-toggle  { left:  -60px; }
-body.right-open .right-toggle { right: -60px; }
+/* Clear legacy panel-open slide-off behaviour */
+body.left-open  .left-toggle  { right: calc(clamp(72px, 11vw, 120px) + 10px); left: auto; }
+body.right-open .right-toggle { right: clamp(12px, 3vw, 24px); }
 
 /* =========================================
    Base Tile and Text
@@ -1117,11 +1124,12 @@ body[data-theme="dark"] .tile-point {
 #score-display {
   position: fixed;
   bottom: clamp(16px, 3vh, 36px);
-  left: 50%;
-  transform: translateX(-50%);
+  right: clamp(12px, 3vw, 24px);
+  left: auto;
+  transform: none;
   z-index: 900;
   display: block;
-  text-align: center;
+  text-align: right;
   white-space: nowrap;
 
   clip-path: none;
@@ -1129,7 +1137,7 @@ body[data-theme="dark"] .tile-point {
   background: none;
 
   font-family: 'Limelight', sans-serif;
-  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--text);
@@ -1140,22 +1148,26 @@ body[data-theme="dark"] .tile-point {
   user-select: none;
 }
 
-/* Desktop current word display */
+/* Desktop current word display — bottom-left dead zone */
 @media (min-width: 901px) {
   #current-word-display {
     position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    top: min(calc(50% + 290px), calc(100dvh - 112px));
-    z-index: 800;
+    left: clamp(12px, 3vw, 24px);
+    transform: none;
+    bottom: clamp(16px, 3vh, 36px);
+    top: auto;
+    z-index: 900;
     display: block;
-    text-align: center;
-    font-size: 2.5rem;
-    font-family: 'Orbitron', sans-serif;
+    text-align: left;
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-family: 'Notable', sans-serif;
     font-weight: 900;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color:#0a4a60
+    max-width: 50vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
@@ -1291,8 +1303,9 @@ body[data-theme="dark"] .tile-point {
    ========================================= */
 #settings-wrap {
   position: fixed;
-  top: 100px;
-  right: 20%;
+  top: clamp(16px, 4vh, 32px);
+  left: clamp(12px, 3vw, 24px);
+  right: auto;
   transform: none;
   z-index: 1100;
 }
@@ -1379,8 +1392,57 @@ body[data-theme="dark"] .tile-point {
 
 
 /* =========================================
-   Splash Screen
+   Tablet breakpoint (641–900px) — dead-zone overlay controls
    ========================================= */
+@media (min-width: 641px) and (max-width: 900px) {
+  /* Settings button */
+  #settings-wrap {
+    top: clamp(20px, 4vh, 36px);
+    left: clamp(16px, 3vw, 28px);
+  }
+  #settings-btn { font-size: 1.1rem; padding: 5px 9px; }
+
+  /* Word/Phrase toggles */
+  .side-toggle {
+    top: clamp(20px, 4vh, 36px);
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  .left-toggle  { right: calc(clamp(88px, 12vw, 140px) + 12px); }
+  .right-toggle { right: clamp(16px, 3vw, 28px); }
+
+  /* Current word display */
+  #current-word-display {
+    position: fixed;
+    left: clamp(16px, 3vw, 28px);
+    transform: none;
+    bottom: clamp(20px, 4vh, 44px);
+    top: auto;
+    z-index: 900;
+    display: block;
+    text-align: left;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-family: 'Notable', sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    max-width: 55vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* Score display */
+  #score-display {
+    bottom: clamp(20px, 4vh, 44px);
+    right: clamp(16px, 3vw, 28px);
+    left: auto;
+    transform: none;
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+  }
+}
+
+
 #splash-screen {
   position: fixed;
   inset: 0;

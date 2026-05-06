@@ -1,3 +1,4 @@
+/* ── Mobile side-toggle: horizontal buttons in top-right dead zone ── */
 @media (max-width: 640px) {
   .side-toggle {
     position: fixed;
@@ -5,17 +6,28 @@
     text-orientation: initial;
     width: auto;
     height: auto;
-    padding: 8px 10px;
-    border-radius: 4px;
-    top: clamp(40px, 10vh, 80px);
-    letter-spacing: 0.02em;
+    padding: 6px 10px;
+    top: clamp(16px, 4vh, 28px);
+    letter-spacing: 0.06em;
     transition: all 0.15s ease;
     background: var(--side-toggle-bg);
     color: var(--side-toggle-fg);
     border: 2.5px solid var(--side-toggle-border);
+    font-size: clamp(0.65rem, 3.5vw, 0.85rem);
   }
   .side-toggle .vword {
     color: var(--side-toggle-fg);
+    font-size: clamp(0.65rem, 3.5vw, 0.85rem);
+    letter-spacing: 0.05em;
+  }
+  /* WORD toggle: second from right on mobile */
+  .left-toggle {
+    left: auto;
+    right: calc(clamp(64px, 22vw, 100px) + 8px);
+  }
+  /* PHRASE toggle: rightmost on mobile */
+  .right-toggle {
+    right: clamp(10px, 3vw, 18px);
   }
 }
 
@@ -25,12 +37,12 @@
 }
 
 @media (max-width: 640px) {
-  .side-toggle { z-index: 900; }
+  .side-toggle { z-index: 1200; }
 }
 
-/* ──────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────── */
 
-/* ��─ How-to modal ─────────────────────────────────────────────── */
+/* ── How-to modal ───────────────────────────────────────────────── */
 #howto-modal .rom__dialog {
   display: flex;
   flex-direction: column;
@@ -58,7 +70,7 @@
   #howto-modal .rom__dialog { max-height: 92vh; }
 }
 
-/* ── Panels ───────────────────────────────────────────────────── */
+/* ── Panels ─────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   #left-panel .panel-content,
   #right-panel .panel-content {
@@ -73,16 +85,17 @@
   #left-panel .panel-content * { max-width: 100%; }
 }
 
-/* ── Score display ────────────────────────────────────────────── */
+/* ── Score display: bottom-right dead zone ──────────────────────── */
 @media (max-width: 640px) {
   #score-display {
     position: fixed;
-    bottom: clamp(80px, calc(env(safe-area-inset-bottom) + 11vh), 110px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 800;
+    bottom: clamp(14px, calc(env(safe-area-inset-bottom, 0px) + 2vh), 28px);
+    right: clamp(10px, 3vw, 18px);
+    left: auto;
+    transform: none;
+    z-index: 900;
     display: block;
-    text-align: center;
+    text-align: right;
     width: max-content;
     pointer-events: none;
     background: none;
@@ -90,25 +103,29 @@
     filter: none;
     padding: 0;
     font-family: 'Limelight', sans-serif;
-    font-size: 2rem;
+    font-size: clamp(1rem, 5vw, 1.4rem);
     font-weight: 700;
     letter-spacing: 0.04em;
   }
 }
 
-/* ── Current word display ─────────────────────────────────────── */
+/* ── Current word display: bottom-left dead zone ───────────────── */
 @media (max-width: 640px) {
   #current-word-display {
     position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: clamp(120px, calc(env(safe-area-inset-bottom) + 17vh), 170px);
-    z-index: 800;
+    left: clamp(10px, 3vw, 18px);
+    transform: none;
+    bottom: clamp(14px, calc(env(safe-area-inset-bottom, 0px) + 2vh), 28px);
+    top: auto;
+    z-index: 900;
     display: block;
-    text-align: center;
-    font-size: clamp(0.8rem, 5.5vw, 2.4rem);
-    font-family: "Notable";
-    max-width: 90vw;
+    text-align: left;
+    font-size: clamp(0.85rem, 5vw, 1.4rem);
+    font-family: 'Notable', sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    max-width: 55vw;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -116,13 +133,14 @@
   }
 }
 
-/* ── Settings button — mobile: top centre below game title ── */
+/* ── Settings button: top-left dead zone ────────────────────────── */
 @media (max-width: 640px) {
   #settings-wrap {
     position: fixed;
-    top: clamp(68px, 11vh, 90px);
-    left: 50%;
-    transform: translateX(-50%);
+    top: clamp(16px, 4vh, 28px);
+    left: clamp(10px, 3vw, 18px);
+    right: auto;
+    transform: none;
   }
   #settings-btn {
     font-size: 1rem;
@@ -136,85 +154,22 @@
   }
 }
 
-/* ── Hex grid ─────────────────────────────────────────────────── */
+/* ── Hex grid ───────────────────────────────────────────────────── */
 #hex-grid {
-  touch-action: none; 
+  touch-action: none;
 }
 
-/* ── Round-over modal — mobile tweaks ────────────────────────── */
+/* ── Round-over modal: mobile tweaks ────────────────────────────── */
 @media (max-width: 640px) {
   .rom__dismiss-hint {
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }
 }
 
-/* ── Game title ───────────────────────────────────────────────── */
+/* ── Game title watermark: portrait angle preserved ─────────────── */
 @media (max-width: 640px) {
   #game-title {
-    position: fixed;
-    top: clamp(6px, 2vh, 20px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 800;
-    margin: 0;
-    font-size: clamp(2.6rem, 7vw, 3.6rem);
-    font-family: 'Black Han Sans', sans-serif;
-    font-weight: 900;
-    color: var(--title-stroke);
-    -webkit-text-stroke: 0;
-    letter-spacing: 0.04em;
-  }
-}
-
-/* ── Tablet breakpoint (641px–900px) ─────────────────────────── */
-@media (min-width: 641px) and (max-width: 900px) {
-  /* Game title */
-  #game-title {
-    position: fixed;
-    top: clamp(6px, 2vh, 16px);
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: clamp(2.8rem, 5vw, 4rem);
-    z-index: 800;
-    margin: 0;
-  }
-
-  /* Settings button — below title */
-  #settings-wrap {
-    position: fixed;
-    top: clamp(70px, 10vh, 96px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1100;
-  }
-
-  /* Current word display */
-  #current-word-display {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: clamp(110px, 14vh, 160px);
-    z-index: 800;
-    text-align: center;
-    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
-    font-family: 'Notable', sans-serif;
-    max-width: 80vw;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  /* Score display — between buttons */
-  #score-display {
-    position: fixed;
-    bottom: clamp(60px, 9vh, 90px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 800;
-    text-align: center;
-    font-family: 'Limelight', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    pointer-events: none;
+    font-size: clamp(28vw, 35vmax, 50vw);
+    transform: translate(-50%, -50%) rotate(-52deg);
   }
 }
