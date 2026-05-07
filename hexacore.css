@@ -2,6 +2,24 @@
    hexacore.css — Styles for Hexacore endless mode
    ================================================================ */
 
+/* ── Design System Variables ──────────────────────────────────── */
+:root {
+  --hx-cyan:            #4cc9f0;
+  --hx-purple:          #a78bfa;
+  --hx-orange:          #ff8c42;
+  --hx-green:           #22c55e;
+  --hx-amber:           #fbbf24;
+  --hx-red:             #ef4444;
+  --hx-cyan-alpha-10:   rgba(76, 201, 240, 0.1);
+  --hx-cyan-alpha-20:   rgba(76, 201, 240, 0.2);
+  --hx-cyan-alpha-30:   rgba(76, 201, 240, 0.3);
+  --hx-purple-alpha-10: rgba(167, 139, 250, 0.1);
+  --hx-purple-alpha-20: rgba(167, 139, 250, 0.2);
+  --hx-purple-alpha-30: rgba(167, 139, 250, 0.3);
+  --hx-glass-bg:        linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(130, 80, 255, 0.07));
+  --hx-glass-border:    rgba(255, 255, 255, 0.15);
+}
+
 /* ── Ember tile — INFERNO (unmistakably unique fire) ── */
 .hx-ember {
   fill: url(#hx-ember-gradient);
@@ -142,27 +160,49 @@
   pointer-events: none;
   z-index: 900;
   white-space: nowrap;
-  text-shadow: 0 0 20px rgba(76, 201, 240, 0.4);
+  /* Glass morphism */
+  background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(130, 80, 255, 0.07));
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 0.7rem 1.8rem;
+  box-shadow:
+    0 8px 28px rgba(76, 201, 240, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 #hx-score-num {
   font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: var(--neon, #4cc9f0);
+  background: linear-gradient(180deg, #4cc9f0 0%, #e0f7ff 50%, #4cc9f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(76, 201, 240, 0.6)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  animation: hx-score-hologram 2s ease-in-out infinite;
+  will-change: filter;
+  position: relative;
+  z-index: 1;
 }
 #hx-score-label {
   font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.8rem, 1.5vw, 1.1rem);
   font-weight: 400;
-  letter-spacing: 0.12em;
-  color: rgba(76, 201, 240, 0.6);
+  letter-spacing: 0.14em;
+  color: rgba(76, 201, 240, 0.8);
+  text-shadow: 0 0 8px rgba(76, 201, 240, 0.4);
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Live word-score preview (shown above #hx-live-word, valid words only) */
 #hx-word-score-hud {
   position: fixed;
-  bottom: clamp(100px, 14vh, 140px);
+  bottom: clamp(126px, 16vh, 162px);
   left: 50%;
   transform: translateX(-50%);
   right: auto;
@@ -298,22 +338,32 @@ body.hx-active #word-score-preview   { display: none; }
 body.hx-active #left-panel-title,
 body.hx-active #right-panel-title    { display: none; }
 
-/* ── #hx-top-bar: centered top strip with MENU + Level HUD rail ─── */
+/* ── #hx-top-bar: full-width column — LVL button + XP bar centered,
+      MENU button peeled off to top-right via position:fixed ──────── */
 #hx-top-bar {
   position: fixed;
   top: clamp(14px, 3.5vh, 28px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   display: flex;
-  align-items: stretch;
-  gap: clamp(10px, 2vw, 20px);
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 10px);
   z-index: 1200;
+  pointer-events: none; /* clicks fall through the bar background */
+}
+
+/* Restore pointer-events for all direct children */
+#hx-top-bar > * {
   pointer-events: auto;
 }
 
-/* Settings-wrap inside #hx-top-bar — reset from Anagramaton layout */
+/* Settings-wrap inside #hx-top-bar — fixed to top-right corner */
 #hx-top-bar #settings-wrap {
-  position: static;
+  position: fixed;
+  top: clamp(14px, 3.5vh, 28px);
+  right: clamp(12px, 2vw, 24px);
+  pointer-events: auto;
   display: flex;
   align-items: stretch;
 }
@@ -345,11 +395,14 @@ body.hx-active #right-panel-title    { display: none; }
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background: rgba(26, 26, 46, 0.88);
-  border: 1.5px solid rgba(167, 139, 250, 0.5);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(167, 139, 250, 0.18), transparent 70%),
+    rgba(26, 26, 46, 0.92);
+  border: 1.5px solid rgba(167, 139, 250, 0.6);
   clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
   overflow: hidden;
   transition: border-color 0.6s ease;
+  animation: hx-level-border-cycle 5s linear infinite;
 }
 
 /* Dynamic glow on the rail as XP fills */
@@ -368,7 +421,7 @@ body.hx-active #right-panel-title    { display: none; }
   50%       { border-color: rgba(239, 68, 68, 0.9); }
 }
 
-/* ── LVL button — top section of the rail ───────────────────── */
+/* ── LVL button — now the sole child of #hx-level-wrap ──────────── */
 #hx-level-hud {
   font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.9rem, 1.8vw, 1.1rem);
@@ -377,7 +430,6 @@ body.hx-active #right-panel-title    { display: none; }
   color: #e2d9ff;
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 0;
   padding: clamp(7px, 1.2vh, 11px) clamp(10px, 1.5vw, 16px);
   cursor: pointer;
@@ -391,6 +443,7 @@ body.hx-active #right-panel-title    { display: none; }
   justify-content: center;
   transition: background 0.18s;
   flex-shrink: 0;
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
 }
 #hx-level-hud:hover,
 #hx-level-hud:focus {
@@ -427,17 +480,26 @@ body.hx-active #right-panel-title    { display: none; }
   overflow-y: auto;
 }
 #hx-gameover-box {
-  background: linear-gradient(135deg, rgba(20,20,35,0.97), rgba(35,10,45,0.97));
+  background:
+    radial-gradient(ellipse at top, rgba(76, 201, 240, 0.12), transparent 60%),
+    linear-gradient(135deg, rgba(20,20,35,0.98), rgba(35,10,45,0.97));
   border: 2px solid rgba(76,201,240,0.7);
-  border-radius: 14px;
+  border-radius: 20px;
   padding: 2rem 2.5rem;
   max-width: 440px;
   width: 90%;
   color: #f1f5f9;
   font-family: 'Turret Road', 'Orbitron', monospace;
   text-align: center;
-  box-shadow: 0 0 30px rgba(76,201,240,0.4), 0 12px 40px rgba(0,0,0,0.7);
+  box-shadow:
+    0 0 40px rgba(76,201,240,0.35),
+    0 0 80px rgba(76,201,240,0.12),
+    0 20px 60px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   margin: auto;
+  animation: hx-gameover-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  position: relative;
+  overflow: hidden;
 }
 #hx-gameover-box h2 {
   font-size: 1.8rem;
@@ -446,11 +508,16 @@ body.hx-active #right-panel-title    { display: none; }
   margin-bottom: 0.5rem;
 }
 #hx-gameover-box .hx-final-score {
-  font-size: 3rem;
+  font-size: clamp(2.4rem, 6vw, 3rem);
   font-weight: 800;
-  color: #4cc9f0;
+  background: linear-gradient(180deg, #4cc9f0 0%, #e0f7ff 40%, #4cc9f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 16px rgba(76, 201, 240, 0.7));
   line-height: 1;
   margin: 0.5rem 0;
+  animation: hx-gameover-score-pulse 1.5s ease-in-out infinite;
 }
 #hx-gameover-box .hx-stats {
   font-size: 0.85rem;
@@ -461,24 +528,39 @@ body.hx-active #right-panel-title    { display: none; }
   display: block;
   width: 100%;
   margin: 0.5rem 0;
-  padding: 0.6rem 1.2rem;
-  border-radius: 7px;
+  padding: 0.65rem 1.2rem;
+  border-radius: 10px;
   border: 1px solid rgba(76,201,240,0.6);
   background: rgba(76,201,240,0.1);
   color: #f1f5f9;
   font-family: inherit;
   font-size: 0.85rem;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(76, 201, 240, 0.15), inset 0 1px 0 rgba(255,255,255,0.08);
 }
-#hx-gameover-box button:hover { background: rgba(76,201,240,0.25); }
+#hx-gameover-box button:hover {
+  background: rgba(76,201,240,0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(76, 201, 240, 0.3), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+#hx-gameover-box button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(76, 201, 240, 0.2);
+}
 #hx-gameover-box button.hx-btn-primary {
   border-color: #f59e0b;
   background: rgba(245,158,11,0.15);
   color: #f59e0b;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2), inset 0 1px 0 rgba(255,255,255,0.08);
 }
-#hx-gameover-box button.hx-btn-primary:hover { background: rgba(245,158,11,0.3); }
+#hx-gameover-box button.hx-btn-primary:hover {
+  background: rgba(245,158,11,0.3);
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+}
 #hx-gameover-box button:disabled {
   opacity: 0.5;
   cursor: default;
@@ -522,16 +604,21 @@ body.hx-active #right-panel-title    { display: none; }
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #ff8c42;
-  background: transparent;
+  background: rgba(255, 140, 66, 0.06);
   border: 2px solid rgba(255, 140, 40, 0.5);
   border-radius: 0;
   cursor: pointer;
   clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(255, 140, 66, 0.15);
 }
 #splash-hexacore-play-btn:hover {
-  background: rgba(255, 140, 40, 0.12);
-  border-color: rgba(255, 140, 40, 0.85);
+  background: rgba(255, 140, 40, 0.14);
+  border-color: rgba(255, 140, 40, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 140, 66, 0.35), 0 0 30px rgba(255, 120, 40, 0.2);
 }
 #splash-hexacore-play-btn:active {
   transform: translateY(1px) scale(0.97);
@@ -1251,7 +1338,7 @@ body.hx-active #hex-grid {
 /* ── Live word display: bottom-center while player drags ──────── */
 #hx-live-word {
   position: fixed;
-  bottom: clamp(54px, 9vh, 90px);
+  bottom: clamp(88px, 11vh, 118px);
   left: 50%;
   transform: translateX(-50%);
   top: auto;
@@ -1955,7 +2042,11 @@ body[data-theme="dark"].hx-active #game-title {
 @media (min-width: 641px) and (max-width: 900px) {
   #hx-top-bar {
     top: clamp(12px, 3vh, 24px);
-    gap: clamp(8px, 1.5vw, 16px);
+    gap: clamp(5px, 1vh, 8px);
+  }
+  #hx-top-bar #settings-wrap {
+    top: clamp(12px, 3vh, 24px);
+    right: clamp(10px, 1.5vw, 18px);
   }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
@@ -1963,12 +2054,19 @@ body[data-theme="dark"].hx-active #game-title {
     padding: 6px 12px;
     min-width: 56px;
   }
+  #hx-xp-bar-container {
+    width: clamp(160px, 20vw, 260px);
+    height: 30px;
+  }
+  #hx-xp-label {
+    font-size: 0.78rem;
+  }
   #hx-live-word {
     font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-    bottom: clamp(50px, 8vh, 78px);
+    bottom: clamp(86px, 11.5vh, 114px);
   }
   #hx-word-score-hud {
-    bottom: clamp(88px, 12vh, 118px);
+    bottom: clamp(124px, 16vh, 152px);
     font-size: clamp(0.85rem, 1.7vw, 1.2rem);
   }
   #hx-score-hud {
@@ -1986,7 +2084,11 @@ body[data-theme="dark"].hx-active #game-title {
 @media (max-width: 640px) {
   #hx-top-bar {
     top: clamp(10px, 3vh, 20px);
-    gap: 6px;
+    gap: 5px;
+  }
+  #hx-top-bar #settings-wrap {
+    top: clamp(10px, 3vh, 20px);
+    right: 10px;
   }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
@@ -1995,8 +2097,12 @@ body[data-theme="dark"].hx-active #game-title {
     min-width: 44px;
     min-height: 44px;
   }
+  #hx-xp-bar-container {
+    width: clamp(150px, 55vw, 230px);
+    height: 28px;
+  }
   #hx-xp-label {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
   #hx-score-hud {
     bottom: calc(clamp(10px, 2vh, 20px) + env(safe-area-inset-bottom, 0px));
@@ -2008,11 +2114,11 @@ body[data-theme="dark"].hx-active #game-title {
     font-size: clamp(0.65rem, 3vw, 0.9rem);
   }
   #hx-word-score-hud {
-    bottom: clamp(90px, 13vh, 120px);
+    bottom: clamp(122px, 19vh, 150px);
     font-size: clamp(0.8rem, 3.5vw, 1.1rem);
   }
   #hx-live-word {
-    bottom: clamp(48px, 8vh, 72px);
+    bottom: clamp(84px, 13vh, 110px);
     font-size: clamp(1rem, 4.5vw, 1.4rem);
   }
 }
@@ -2022,14 +2128,29 @@ body[data-theme="dark"].hx-active #game-title {
   #hx-top-bar {
     gap: 4px;
   }
+  #hx-top-bar #settings-wrap {
+    right: 8px;
+  }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
     font-size: 0.7rem;
     padding: 5px 7px;
     min-width: 40px;
   }
+  #hx-xp-bar-container {
+    width: min(190px, 75vw);
+    height: 26px;
+  }
   #hx-xp-label {
-    font-size: 0.48rem;
+    font-size: 0.62rem;
+  }
+  #hx-live-word {
+    bottom: clamp(82px, 13vh, 104px);
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+  }
+  #hx-word-score-hud {
+    bottom: clamp(120px, 18vh, 144px);
+    font-size: clamp(0.75rem, 3vw, 1rem);
   }
 }
 
@@ -2039,19 +2160,22 @@ body[data-theme="dark"].hx-active #game-title {
    Campaign, Profile, Tier Challenges
    ================================================================ */
 
-/* ── XP Bar — bottom strip of #hx-level-wrap ────────────────────── */
+/* ── XP Bar — now a standalone element centered below the LVL button */
 #hx-xp-bar-container {
   position: relative;
   flex: 0 0 auto;
-  height: 18px;
-  background: rgba(0, 0, 0, 0.25);
-  border: none;
-  border-radius: 0;
+  width: clamp(200px, 22vw, 320px);
+  height: 36px; /* doubled from 18px */
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.4), rgba(30, 30, 60, 0.3));
+  border: 1.5px solid rgba(167, 139, 250, 0.4);
+  border-radius: 10px;
   overflow: hidden;
   display: flex;
   align-items: center;
-  padding: 0 6px;
+  padding: 0 8px;
   cursor: default;
+  pointer-events: auto;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 #hx-xp-bar-container:focus-visible {
   outline: 2px solid #a78bfa;
@@ -2110,9 +2234,11 @@ body[data-theme="dark"].hx-active #game-title {
   );
   transform: scaleX(0);
   transform-origin: left center;
-  border-radius: 0;
-  transition: transform 0.5s ease;
+  border-radius: 8px;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
+  box-shadow: 0 0 10px rgba(76, 201, 240, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  overflow: hidden;
 }
 
 #hx-xp-label {
@@ -2120,7 +2246,7 @@ body[data-theme="dark"].hx-active #game-title {
   z-index: 2;
   width: 100%;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-family: 'Turret Road', 'Orbitron', monospace;
   letter-spacing: 0.06em;
   color: rgba(255,255,255,0.9);
@@ -2201,16 +2327,24 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 #hx-quests-box {
-  background: linear-gradient(135deg, rgba(15,15,30,0.97), rgba(25,10,40,0.97));
-  border: 2px solid rgba(76,201,240,0.5);
-  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at top, rgba(76, 201, 240, 0.08), transparent 60%),
+    linear-gradient(135deg, rgba(15,15,30,0.98), rgba(25,10,40,0.97));
+  border: 1.5px solid rgba(76,201,240,0.45);
+  border-radius: 20px;
   width: min(420px, 96vw);
   max-height: 80vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 40px rgba(76,201,240,0.2);
+  box-shadow:
+    0 0 50px rgba(76,201,240,0.18),
+    0 20px 60px rgba(0,0,0,0.75),
+    inset 0 1px 0 rgba(255,255,255,0.08);
   font-family: 'Turret Road', 'Orbitron', monospace;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
 }
 
 #hx-quests-header {
@@ -2373,16 +2507,24 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 #hx-leaderboards-box {
-  background: linear-gradient(135deg, rgba(15,15,30,0.97), rgba(25,10,40,0.97));
-  border: 2px solid rgba(76,201,240,0.5);
-  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at top, rgba(76, 201, 240, 0.08), transparent 60%),
+    linear-gradient(135deg, rgba(15,15,30,0.98), rgba(25,10,40,0.97));
+  border: 1.5px solid rgba(76,201,240,0.45);
+  border-radius: 20px;
   width: min(440px, 96vw);
   max-height: 82vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 40px rgba(76,201,240,0.2);
+  box-shadow:
+    0 0 50px rgba(76,201,240,0.18),
+    0 20px 60px rgba(0,0,0,0.75),
+    inset 0 1px 0 rgba(255,255,255,0.08);
   font-family: 'Turret Road', 'Orbitron', monospace;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
 }
 
 #hx-leaderboards-header {
@@ -2462,13 +2604,21 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 #hx-mode-select-box {
-  background: linear-gradient(135deg, rgba(10,10,25,0.98), rgba(20,8,35,0.98));
-  border: 2px solid rgba(76,201,240,0.5);
-  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at top, rgba(76, 201, 240, 0.1), transparent 50%),
+    linear-gradient(135deg, rgba(10,10,25,0.99), rgba(20,8,35,0.98));
+  border: 1.5px solid rgba(76,201,240,0.45);
+  border-radius: 22px;
   width: min(400px, 96vw);
   overflow: hidden;
-  box-shadow: 0 0 50px rgba(76,201,240,0.15);
+  box-shadow:
+    0 0 60px rgba(76,201,240,0.18),
+    0 20px 60px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.1);
   font-family: 'Turret Road', 'Orbitron', monospace;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  position: relative;
 }
 
 #hx-mode-select-header {
@@ -2509,26 +2659,35 @@ body[data-theme="dark"].hx-active #game-title {
   align-items: center;
   gap: 0.85rem;
   padding: 0.9rem 1rem;
-  background: rgba(255,255,255,0.04);
+  background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   text-align: left;
   width: 100%;
-  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-family: inherit;
   color: #e2e8f0;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
 }
 
 .hx-mode-card:hover {
-  background: rgba(255,255,255,0.09);
-  border-color: var(--mode-color, rgba(76,201,240,0.5));
-  box-shadow: 0 0 16px rgba(76,201,240,0.12);
+  background: rgba(255,255,255,0.08);
+  border-color: var(--mode-color, rgba(76,201,240,0.55));
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.4),
+    0 0 20px rgba(76,201,240,0.15);
+  transform: translateY(-3px) rotateX(1.5deg);
 }
 
 .hx-mode-card-icon {
   font-size: 1.6rem;
   flex-shrink: 0;
+  transition: filter 0.25s ease, transform 0.25s ease;
 }
 
 .hx-mode-card-info {
@@ -2568,13 +2727,21 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 #hx-profile-box {
-  background: linear-gradient(135deg, rgba(15,15,30,0.97), rgba(25,10,40,0.97));
-  border: 2px solid rgba(168,85,247,0.45);
-  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at top, rgba(168,85,247,0.1), transparent 60%),
+    linear-gradient(135deg, rgba(15,15,30,0.98), rgba(25,10,40,0.97));
+  border: 1.5px solid rgba(168,85,247,0.4);
+  border-radius: 20px;
   width: min(380px, 96vw);
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(168,85,247,0.15);
+  box-shadow:
+    0 0 50px rgba(168,85,247,0.18),
+    0 20px 60px rgba(0,0,0,0.75),
+    inset 0 1px 0 rgba(255,255,255,0.08);
   font-family: 'Turret Road', 'Orbitron', monospace;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
 }
 
 #hx-profile-header {
@@ -2686,16 +2853,24 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 #hx-campaign-box {
-  background: linear-gradient(135deg, rgba(15,15,30,0.97), rgba(25,10,40,0.97));
-  border: 2px solid rgba(168,85,247,0.45);
-  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at top, rgba(168,85,247,0.1), transparent 60%),
+    linear-gradient(135deg, rgba(15,15,30,0.98), rgba(25,10,40,0.97));
+  border: 1.5px solid rgba(168,85,247,0.4);
+  border-radius: 20px;
   width: min(480px, 98vw);
   max-height: 85vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 40px rgba(168,85,247,0.2);
+  box-shadow:
+    0 0 50px rgba(168,85,247,0.22),
+    0 20px 60px rgba(0,0,0,0.75),
+    inset 0 1px 0 rgba(255,255,255,0.08);
   font-family: 'Turret Road', 'Orbitron', monospace;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
 }
 
 #hx-campaign-header {
@@ -2739,7 +2914,9 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 .hx-campaign-level-card {
-  background: rgba(255,255,255,0.05);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.15)),
+    rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 10px;
   padding: 0.7rem 0.5rem;
@@ -2747,16 +2924,22 @@ body[data-theme="dark"].hx-active #game-title {
   font-family: inherit;
   color: #e2e8f0;
   text-align: center;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
+  position: relative;
+  overflow: hidden;
 }
 
 .hx-campaign-level-card:hover:not([disabled]) {
-  background: rgba(168,85,247,0.15);
-  border-color: rgba(168,85,247,0.4);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1)),
+    rgba(168,85,247,0.12);
+  border-color: rgba(168,85,247,0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.25);
 }
 
 .hx-campaign-level-card.hx-campaign-complete {
@@ -2793,6 +2976,7 @@ body[data-theme="dark"].hx-active #game-title {
 
 .hx-star.hx-star-filled {
   color: #fbbf24;
+  animation: hx-star-twinkle 2s ease-in-out infinite;
 }
 
 /* ── Campaign Level Complete Overlay ────────────────────────────── */
@@ -2968,13 +3152,19 @@ body[data-theme="dark"].hx-active #game-title {
   height: min(780px, 94vh);
   display: flex;
   flex-direction: column;
-  background: linear-gradient(160deg, rgba(10, 10, 28, 0.98), rgba(18, 5, 38, 0.98));
-  border: 1.5px solid rgba(76, 201, 240, 0.4);
-  border-radius: 12px;
+  background:
+    radial-gradient(ellipse at top, rgba(76, 201, 240, 0.06), transparent 50%),
+    linear-gradient(160deg, rgba(10, 10, 28, 0.99), rgba(18, 5, 38, 0.99));
+  border: 1.5px solid rgba(76, 201, 240, 0.35);
+  border-radius: 14px;
   box-shadow:
-    0 0 60px rgba(76, 201, 240, 0.12),
-    0 0 120px rgba(168, 85, 247, 0.08);
+    0 0 60px rgba(76, 201, 240, 0.14),
+    0 0 120px rgba(168, 85, 247, 0.08),
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
   overflow: hidden;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 /* Header */
@@ -3076,6 +3266,7 @@ body[data-theme="dark"].hx-active #game-title {
   color: #4cc9f0;
   border-bottom-color: #4cc9f0;
   background: rgba(76, 201, 240, 0.08);
+  text-shadow: 0 0 8px rgba(76, 201, 240, 0.5);
 }
 
 .hx-settings-tab-icon {
@@ -3160,18 +3351,20 @@ body[data-theme="dark"].hx-active #game-title {
   align-items: center;
   gap: 0.8rem;
   width: 100%;
-  background: rgba(255, 255, 255, 0.04);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
   border: 1.5px solid rgba(255, 255, 255, 0.1);
   border-radius: 9px;
   padding: 0.7rem 0.9rem;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.18s, transform 0.1s;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
   text-align: left;
+  position: relative;
+  overflow: hidden;
 }
 .hx-cfg-mode-card:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.07);
   border-color: var(--hx-mode-color);
-  transform: translateX(2px);
+  transform: translateX(3px);
 }
 
 .hx-cfg-mode-icon {
@@ -3467,6 +3660,360 @@ body[data-theme="dark"].hx-active #game-title {
 }
 
 /* ================================================================
+   UI Redesign Enhancements — Keyframes, Pseudo-Elements,
+   Breakpoint Overrides
+   ================================================================ */
+
+/* ── Score HUD animated gradient backdrop ─────────────────────── */
+#hx-score-hud::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg,
+    rgba(255, 140, 66, 0.04),
+    rgba(76, 201, 240, 0.08),
+    rgba(167, 139, 250, 0.06));
+  background-size: 400% 400%;
+  animation: hx-hud-gradient-shift 8s ease infinite;
+  pointer-events: none;
+}
+
+@keyframes hx-hud-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* ── Holographic score shimmer ─────────────────────────────────── */
+@keyframes hx-score-hologram {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(76, 201, 240, 0.6))
+            drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(76, 201, 240, 1))
+            drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  }
+}
+
+/* ── Level badge border cycle ──────────────────────────────────── */
+@keyframes hx-level-border-cycle {
+  0%   { border-color: rgba(167, 139, 250, 0.7); }
+  25%  { border-color: rgba(76,  201, 240, 0.7); }
+  50%  { border-color: rgba(34,  197, 94,  0.65); }
+  75%  { border-color: rgba(251, 191, 36,  0.65); }
+  100% { border-color: rgba(167, 139, 250, 0.7); }
+}
+
+/* ── XP bar liquid flow ────────────────────────────────────────── */
+@keyframes hx-xp-flow {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+
+#hx-xp-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%);
+  background-size: 200% 100%;
+  animation: hx-xp-flow 2s linear infinite;
+  pointer-events: none;
+}
+
+/* ── Modal scan line ───────────────────────────────────────────── */
+@keyframes hx-modal-scan {
+  0%, 100% { opacity: 0; transform: translateY(0); }
+  8%        { opacity: 1; }
+  92%       { opacity: 0.7; }
+  99%       { opacity: 0; transform: translateY(500px); }
+}
+
+#hx-mode-select-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, transparent, rgba(76, 201, 240, 0.1), transparent);
+  animation: hx-modal-scan 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Game over entrance ────────────────────────────────────────── */
+@keyframes hx-gameover-enter {
+  from { transform: scale(0.84); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* ── Game over score pulse ─────────────────────────────────────── */
+@keyframes hx-gameover-score-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.06); }
+}
+
+/* ── Game over button sliding highlight ────────────────────────── */
+#hx-gameover-box button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+#hx-gameover-box button:hover::before {
+  transform: translateX(100%);
+}
+
+/* ── Play button sliding highlight ─────────────────────────────── */
+#splash-hexacore-play-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 140, 66, 0.22),
+    transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+#splash-hexacore-play-btn:hover::before {
+  transform: translateX(100%);
+}
+
+/* ── Mode card gradient accent strip ───────────────────────────── */
+.hx-mode-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--mode-color, #4cc9f0), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.hx-mode-card:hover::before {
+  opacity: 1;
+}
+.hx-mode-card:hover .hx-mode-card-icon {
+  filter: drop-shadow(0 0 10px var(--mode-color, #4cc9f0));
+  transform: scale(1.12);
+}
+
+/* ── Cfg mode card gradient accent strip ────────────────────────── */
+.hx-cfg-mode-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--hx-mode-color, #4cc9f0), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.hx-cfg-mode-card:hover::before {
+  opacity: 1;
+}
+
+/* ── Campaign tile shimmer ─────────────────────────────────────── */
+@keyframes hx-tile-shimmer {
+  0%   { background-position: -100% -100%; }
+  50%  { background-position:  100%  100%; }
+  100% { background-position: -100% -100%; }
+}
+
+.hx-campaign-level-card:not(.hx-campaign-locked)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 70%);
+  background-size: 200% 200%;
+  animation: hx-tile-shimmer 3.5s ease infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── Star twinkle ──────────────────────────────────────────────── */
+@keyframes hx-star-twinkle {
+  0%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 6px rgba(251, 191, 36, 0.8);
+  }
+  50% {
+    opacity: 0.8;
+    text-shadow: 0 0 12px rgba(251, 191, 36, 1), 0 0 24px rgba(251, 191, 36, 0.4);
+  }
+}
+
+/* ── Settings tab icon glow ─────────────────────────────────────── */
+.hx-settings-tab--active .hx-settings-tab-icon {
+  filter: drop-shadow(0 0 5px rgba(76, 201, 240, 0.75));
+}
+
+/* ── Level wrap XP glow states — override animation ─────────────── */
+#hx-level-wrap.hx-xp-glow-mid {
+  animation: hx-level-border-cycle 5s linear infinite;
+  border-color: rgba(76, 201, 240, 0.65);
+}
+#hx-level-wrap.hx-xp-glow-high {
+  animation: hx-level-border-cycle 4s linear infinite;
+  border-color: rgba(34, 197, 94, 0.7);
+}
+
+/* ================================================================
+   Redesign Responsive Breakpoints
+   ================================================================ */
+
+/* ── Tablet (641–900px) — moderate effects ─────────────────────── */
+@media (min-width: 641px) and (max-width: 900px) {
+  #hx-score-hud {
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    padding: 0.6rem 1.5rem;
+    border-radius: 17px;
+    box-shadow:
+      0 6px 20px rgba(76, 201, 240, 0.17),
+      inset 0 1px 0 rgba(255, 255, 255, 0.11);
+  }
+  .hx-mode-card:hover {
+    transform: translateY(-2px) rotateX(1deg);
+  }
+  /* Slightly slower flow animation on tablet */
+  #hx-xp-bar-fill::after {
+    animation-duration: 2.6s;
+  }
+  /* Moderate level border speed */
+  #hx-level-wrap {
+    animation-duration: 7s;
+  }
+  /* Moderate score hologram speed */
+  #hx-score-num {
+    animation-duration: 2.5s;
+  }
+  /* Desktop-quality modals get moderate blur */
+  #hx-mode-select-box,
+  #hx-quests-box,
+  #hx-leaderboards-box,
+  #hx-profile-box,
+  #hx-campaign-box {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  #hx-settings-box {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+/* ── Mobile (≤640px) — simplified for performance ──────────────── */
+@media (max-width: 640px) {
+  /* Lighter glass effect on mobile */
+  #hx-score-hud {
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    padding: 0.5rem 1.2rem;
+    border-radius: 16px;
+    box-shadow:
+      0 4px 16px rgba(76, 201, 240, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  }
+  /* No XP flow animation on mobile (performance) */
+  #hx-xp-bar-fill::after {
+    animation: none;
+  }
+  /* Flat card hover on mobile — no 3D */
+  .hx-mode-card:hover {
+    transform: translateY(-1px);
+  }
+  /* No campaign shimmer on mobile (performance) */
+  .hx-campaign-level-card:not(.hx-campaign-locked)::after {
+    animation: none;
+  }
+  /* Slower level border cycle on mobile */
+  #hx-level-wrap {
+    animation-duration: 9s;
+  }
+  /* Slower score hologram on mobile */
+  #hx-score-num {
+    animation-duration: 3s;
+  }
+  /* Scale-only game over entrance on mobile */
+  #hx-gameover-box {
+    animation: hx-gameover-enter-mobile 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    border-radius: 16px;
+  }
+  /* Minimal blur on modal backdrops for mobile performance */
+  #hx-mode-select-box,
+  #hx-quests-box,
+  #hx-leaderboards-box,
+  #hx-profile-box,
+  #hx-campaign-box {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  #hx-settings-box {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  /* No scan line on mobile */
+  #hx-mode-select-box::before {
+    display: none;
+  }
+  /* No slide highlight on mobile buttons */
+  #hx-gameover-box button::before,
+  #splash-hexacore-play-btn::before {
+    display: none;
+  }
+  /* Active-state only feedback on mobile */
+  #hx-gameover-box button:active {
+    transform: scale(0.97);
+  }
+}
+
+@keyframes hx-gameover-enter-mobile {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ── Desktop (≥901px) — full effects ────────────────────────────── */
+@media (min-width: 901px) {
+  /* Remove glass box from score HUD on laptop/desktop; float text closer to edge */
+  #hx-score-hud {
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    bottom: clamp(6px, 1vh, 14px);
+  }
+  .hx-mode-card:hover {
+    transform: translateY(-4px) rotateX(2deg);
+    box-shadow:
+      0 14px 36px rgba(0,0,0,0.45),
+      0 0 28px rgba(76,201,240,0.18);
+  }
+  #hx-score-num {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+}
+
+/* ================================================================
    Accessibility — prefers-reduced-motion
    ================================================================ */
 @media (prefers-reduced-motion: reduce) {
@@ -3477,6 +4024,60 @@ body[data-theme="dark"].hx-active #game-title {
 
   /* Level-wrap border pulse: disable (instant border-color transition is fine) */
   #hx-level-wrap.hx-xp-glow-full {
+    animation: none;
+  }
+
+  /* Level badge border cycle: disable */
+  #hx-level-wrap {
+    animation: none;
+  }
+
+  /* Level badge XP glow state animations: disable */
+  #hx-level-wrap.hx-xp-glow-mid,
+  #hx-level-wrap.hx-xp-glow-high,
+  #hx-level-wrap.hx-xp-glow-full {
+    animation: none;
+  }
+
+  /* Score hologram shimmer: disable */
+  #hx-score-num {
+    animation: none;
+    filter: drop-shadow(0 0 8px rgba(76, 201, 240, 0.5));
+  }
+
+  /* HUD gradient backdrop: disable */
+  #hx-score-hud::before {
+    animation: none;
+  }
+
+  /* XP flow shimmer: disable */
+  #hx-xp-bar-fill::after {
+    animation: none;
+  }
+
+  /* Modal scan line: disable */
+  #hx-mode-select-box::before {
+    animation: none;
+    display: none;
+  }
+
+  /* Game over entrance: disable */
+  #hx-gameover-box {
+    animation: none;
+  }
+
+  /* Game over score pulse: disable */
+  #hx-gameover-box .hx-final-score {
+    animation: none;
+  }
+
+  /* Campaign shimmer: disable */
+  .hx-campaign-level-card:not(.hx-campaign-locked)::after {
+    animation: none;
+  }
+
+  /* Star twinkle: disable */
+  .hx-star.hx-star-filled {
     animation: none;
   }
 
