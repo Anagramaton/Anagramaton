@@ -1212,8 +1212,8 @@ function animateScoreHud(oldScore, newScore) {
 function updateLevelHud() {
   const el = document.getElementById('hx-level-hud');
   if (!el) return;
-  el.textContent = `LVL ${hxState.level}`;
-  el.title = 'View Challenges';
+  el.textContent = 'MENU';
+  el.title = 'Open Hexacore settings';
 }
 
 function checkLevelUp(oldScore, newScore) {
@@ -1351,24 +1351,22 @@ function ensureHud() {
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
 
-  // Top bar: MENU (settings-wrap) on left, level HUD rail on right
+  // Top bar: centered Hexacore menu button with XP bar below it
   const hxTopBar = document.createElement('div');
   hxTopBar.id = 'hx-top-bar';
 
-  // Level HUD rail — LVL button + XP bar visually connected
+  // Center rail — unified MENU button with XP bar beneath it
   const levelWrap = document.createElement('div');
   levelWrap.id = 'hx-level-wrap';
 
-  const levelHud = document.createElement('div');
+  const levelHud = document.createElement('button');
   levelHud.id = 'hx-level-hud';
-  levelHud.textContent = 'LVL 1';
-  levelHud.title = 'View Challenges';
-  levelHud.setAttribute('role', 'button');
-  levelHud.setAttribute('tabindex', '0');
-  levelHud.addEventListener('click', openChallengesModal);
-  levelHud.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChallengesModal(); }
-  });
+  levelHud.type = 'button';
+  levelHud.textContent = 'MENU';
+  levelHud.title = 'Open Hexacore settings';
+  levelHud.setAttribute('aria-haspopup', 'dialog');
+  levelHud.setAttribute('aria-label', 'Open Hexacore settings');
+  levelHud.addEventListener('click', () => document.getElementById('settings-btn')?.click());
 
   const xpBar = document.createElement('div');
   xpBar.id = 'hx-xp-bar-container';
@@ -1382,14 +1380,8 @@ function ensureHud() {
 
   levelWrap.appendChild(levelHud);
 
-  // Move settings-wrap out of #top-btn-bar and into #hx-top-bar
-  const settingsWrap = document.getElementById('settings-wrap');
-  if (settingsWrap) {
-    hxTopBar.appendChild(settingsWrap);
-  }
   hxTopBar.appendChild(levelWrap);
-  // XP bar is a sibling of levelWrap (not inside it) so it's centered
-  // independently below the LVL button
+  // XP bar is a sibling of levelWrap so it stays centered below the menu button
   hxTopBar.appendChild(xpBar);
   document.body.appendChild(hxTopBar);
 
@@ -1405,14 +1397,6 @@ function ensureHud() {
 }
 
 function removeHud() {
-  // Restore settings-wrap back into #top-btn-bar before removing #hx-top-bar
-  const settingsWrap = document.getElementById('settings-wrap');
-  const topBtnBar    = document.getElementById('top-btn-bar');
-  const toggleRight  = document.getElementById('toggle-right');
-  if (settingsWrap && topBtnBar && toggleRight) {
-    topBtnBar.insertBefore(settingsWrap, toggleRight);
-  }
-
   document.getElementById('hx-score-hud')?.remove();
   document.getElementById('hx-xp-bar-container')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();

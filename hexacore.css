@@ -338,8 +338,7 @@ body.hx-active #word-score-preview   { display: none; }
 body.hx-active #left-panel-title,
 body.hx-active #right-panel-title    { display: none; }
 
-/* ── #hx-top-bar: full-width column — LVL button + XP bar centered,
-      MENU button peeled off to top-right via position:fixed ──────── */
+/* ── #hx-top-bar: centered Hexacore action stack ─────────────────── */
 #hx-top-bar {
   position: fixed;
   top: clamp(14px, 3.5vh, 28px);
@@ -358,50 +357,22 @@ body.hx-active #right-panel-title    { display: none; }
   pointer-events: auto;
 }
 
-/* Settings-wrap inside #hx-top-bar — fixed to top-right corner */
-#hx-top-bar #settings-wrap {
-  position: fixed;
-  top: clamp(14px, 3.5vh, 28px);
-  right: clamp(12px, 2vw, 24px);
-  pointer-events: auto;
-  display: flex;
-  align-items: stretch;
-}
-#hx-top-bar #settings-btn {
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  min-width: clamp(60px, 8vw, 90px);
-  min-height: 44px;
-  background: rgba(26, 26, 46, 0.88);
-  color: #e2e8f0;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
-  border-radius: 0;
-  padding: clamp(7px, 1.2vh, 11px) clamp(12px, 2vw, 20px);
-  cursor: pointer;
-  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
-  transition: background 0.15s, border-color 0.15s;
-  white-space: nowrap;
-}
-#hx-top-bar #settings-btn:hover {
-  background: rgba(40, 40, 70, 0.95);
-  border-color: rgba(255, 255, 255, 0.55);
-}
-
-/* ── Level HUD rail — LVL button stacked above XP bar ─────────── */
+/* ── MENU rail — button stacked above XP bar ───────────────────── */
 #hx-level-wrap {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  justify-content: center;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(167, 139, 250, 0.18), transparent 70%),
-    rgba(26, 26, 46, 0.92);
-  border: 1.5px solid rgba(167, 139, 250, 0.6);
-  clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px), 0% 8px);
+    linear-gradient(135deg, rgba(76, 201, 240, 0.22), rgba(167, 139, 250, 0.22)),
+    rgba(12, 14, 28, 0.86);
+  border: 1px solid rgba(76, 201, 240, 0.28);
+  border-radius: 999px;
   overflow: hidden;
-  transition: border-color 0.6s ease;
+  box-shadow:
+    0 14px 34px rgba(10, 14, 32, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
   animation: hx-level-border-cycle 5s linear infinite;
 }
 
@@ -421,38 +392,118 @@ body.hx-active #right-panel-title    { display: none; }
   50%       { border-color: rgba(239, 68, 68, 0.9); }
 }
 
-/* ── LVL button — now the sole child of #hx-level-wrap ──────────── */
+/* ── Unified MENU button ─────────────────────────────────────────── */
 #hx-level-hud {
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  color: #e2d9ff;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: clamp(7px, 1.2vh, 11px) clamp(10px, 1.5vw, 16px);
+  position: relative;
+  isolation: isolate;
+  font-family: 'Orbitron', 'Black Han Sans', sans-serif;
+  font-size: clamp(0.88rem, 1.8vw, 1.08rem);
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #f8fbff;
+  background:
+    linear-gradient(135deg, rgba(76, 201, 240, 0.3), rgba(167, 139, 250, 0.32)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: clamp(9px, 1.3vh, 12px) clamp(18px, 3vw, 30px);
   cursor: pointer;
   pointer-events: auto;
   user-select: none;
   white-space: nowrap;
-  min-width: clamp(54px, 7vw, 80px);
+  min-width: clamp(124px, 16vw, 168px);
   min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.18s;
+  gap: 0.45em;
   flex-shrink: 0;
-  text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+  text-shadow:
+    0 0 12px rgba(76, 201, 240, 0.3),
+    0 1px 0 rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 12px 30px rgba(17, 24, 39, 0.34),
+    0 0 18px rgba(76, 201, 240, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease,
+    color 0.22s ease;
+  animation: hx-menu-breathe 3.4s ease-in-out infinite;
+}
+#hx-level-hud::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0));
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: -1;
+}
+#hx-level-hud::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgba(76, 201, 240, 0.34);
+  opacity: 0.8;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
 }
 #hx-level-hud:hover,
-#hx-level-hud:focus {
-  background: rgba(100, 70, 180, 0.4);
+#hx-level-hud:focus-visible {
+  background:
+    linear-gradient(135deg, rgba(76, 201, 240, 0.44), rgba(167, 139, 250, 0.4)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0));
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 16px 34px rgba(17, 24, 39, 0.42),
+    0 0 24px rgba(76, 201, 240, 0.28),
+    0 0 38px rgba(167, 139, 250, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px) scale(1.02);
   outline: none;
 }
+#hx-level-hud:hover::after,
+#hx-level-hud:focus-visible::after {
+  border-color: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+  transform: scale(1.015);
+}
+#hx-level-hud:active {
+  transform: translateY(1px) scale(0.985);
+  box-shadow:
+    0 8px 18px rgba(17, 24, 39, 0.3),
+    0 0 14px rgba(76, 201, 240, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
 #hx-level-hud:focus-visible {
-  outline: 2px solid #a78bfa;
-  outline-offset: -2px;
+  box-shadow:
+    0 16px 34px rgba(17, 24, 39, 0.42),
+    0 0 0 3px rgba(12, 14, 28, 0.92),
+    0 0 0 5px rgba(76, 201, 240, 0.56),
+    0 0 28px rgba(167, 139, 250, 0.25);
+}
+@keyframes hx-menu-breathe {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow:
+      0 12px 30px rgba(17, 24, 39, 0.34),
+      0 0 18px rgba(76, 201, 240, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    transform: translateY(-1px);
+    box-shadow:
+      0 16px 34px rgba(17, 24, 39, 0.38),
+      0 0 24px rgba(76, 201, 240, 0.22),
+      0 0 34px rgba(167, 139, 250, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  }
 }
 
 /* Badge-pop animation on level-up */
@@ -2129,22 +2180,18 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     top: clamp(12px, 3vh, 24px);
     gap: clamp(5px, 1vh, 8px);
   }
-  #hx-top-bar #settings-wrap {
-    top: clamp(12px, 3vh, 24px);
-    right: clamp(10px, 1.5vw, 18px);
-  }
-  #hx-top-bar #settings-btn,
   #hx-level-hud {
     font-size: clamp(0.82rem, 1.5vw, 1rem);
-    padding: 6px 12px;
-    min-width: 56px;
+    letter-spacing: 0.24em;
+    padding: 8px 18px;
+    min-width: clamp(112px, 18vw, 154px);
   }
   #hx-xp-bar-container {
     width: clamp(160px, 20vw, 260px);
     height: 30px;
   }
   #hx-xp-label {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
   }
   #hx-live-word {
     font-size: clamp(1.1rem, 2.5vw, 1.5rem);
@@ -2171,15 +2218,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     top: clamp(10px, 3vh, 20px);
     gap: 5px;
   }
-  #hx-top-bar #settings-wrap {
-    top: clamp(10px, 3vh, 20px);
-    right: 10px;
-  }
-  #hx-top-bar #settings-btn,
   #hx-level-hud {
     font-size: clamp(0.75rem, 3.5vw, 0.95rem);
-    padding: 5px 8px;
-    min-width: 44px;
+    letter-spacing: 0.22em;
+    padding: 8px 16px;
+    min-width: clamp(108px, 34vw, 148px);
     min-height: 44px;
   }
   #hx-xp-bar-container {
@@ -2213,14 +2256,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   #hx-top-bar {
     gap: 4px;
   }
-  #hx-top-bar #settings-wrap {
-    right: 8px;
-  }
-  #hx-top-bar #settings-btn,
   #hx-level-hud {
     font-size: 0.7rem;
-    padding: 5px 7px;
-    min-width: 40px;
+    letter-spacing: 0.18em;
+    padding: 8px 14px;
+    min-width: min(124px, 48vw);
   }
   #hx-xp-bar-container {
     width: min(190px, 75vw);
@@ -2331,13 +2371,17 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   z-index: 2;
   width: 100%;
   text-align: center;
-  font-size: 0.85rem;
-  font-family: 'Turret Road', 'Orbitron', monospace;
-  letter-spacing: 0.06em;
-  color: rgba(255,255,255,0.9);
+  font-family: 'Orbitron', 'Black Han Sans', sans-serif;
+  font-size: clamp(0.72rem, 1.35vw, 0.88rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(248, 251, 255, 0.92);
   pointer-events: none;
   white-space: nowrap;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  text-shadow:
+    0 0 10px rgba(76, 201, 240, 0.25),
+    0 1px 3px rgba(0,0,0,0.7);
 }
 
 /* ── XP Toast ────────────────────────────────────────────────────── */

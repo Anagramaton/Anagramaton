@@ -103,11 +103,15 @@ export function updateXPBar() {
 
   const xpInLevel  = xp - currThresh;
   const xpNeeded   = nextThresh - currThresh;
-  label.textContent = `${xpInLevel} / ${xpNeeded} XP`;
+  label.textContent = `LV ${level} · ${xpInLevel}/${xpNeeded} XP`;
 
-  // Keep LVL button in sync with the XP-system level
+  // Keep the Hexacore HUD button in its menu state
   const lvlBtn = document.getElementById('hx-level-hud');
-  if (lvlBtn) lvlBtn.textContent = `LVL ${level}`;
+  if (lvlBtn) {
+    lvlBtn.textContent = 'MENU';
+    lvlBtn.title = 'Open Hexacore settings';
+    lvlBtn.setAttribute('aria-label', 'Open Hexacore settings');
+  }
 
   // Accessibility
   container.setAttribute('aria-valuenow', Math.round(pct));
