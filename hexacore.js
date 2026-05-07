@@ -2683,7 +2683,7 @@ function triggerHexacoreTitleFlash(wordScore) {
   if (letterGroups.some(letters => letters.length !== HX_TITLE_TEXT.length)) return;
 
   letterGroups.flat().forEach(letter => letter.classList.remove('hx-title-letter--lit'));
-  titleEls.forEach(titleEl => { void titleEl.offsetWidth; });
+  void titleEls[0].offsetWidth;
   const letters = letterGroups[0];
 
   if (wordScore >= 100) {
