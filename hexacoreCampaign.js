@@ -169,6 +169,10 @@ let _onCompleteCallback = null;
 // Session-only trackers for objectives that need timers, averages, or streak state.
 let _levelSession      = {};
 
+const HX_WORD_STREAK_MIN_LENGTH       = 6;
+const HX_CONSECUTIVE_SCORE_MIN_POINTS = 500;
+const HX_MULTI_GEM_WORD_MIN_GEMS      = 4;
+
 function isGemTile(tile) {
   return !!(tile?.tileType && tile.tileType.startsWith('gem'));
 }
@@ -285,7 +289,7 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
         if (!hasEmber) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
         break;
       case 'wordStreak': {
-        const streak = word.length >= 6
+        const streak = word.length >= HX_WORD_STREAK_MIN_LENGTH
           ? ((_levelSession.currentStreaks[obj.type] ?? 0) + 1)
           : 0;
         _levelSession.currentStreaks[obj.type] = streak;
@@ -293,7 +297,7 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
         break;
       }
       case 'consecutiveScore': {
-        const streak = wordScore >= 500
+        const streak = wordScore >= HX_CONSECUTIVE_SCORE_MIN_POINTS
           ? ((_levelSession.currentStreaks[obj.type] ?? 0) + 1)
           : 0;
         _levelSession.currentStreaks[obj.type] = streak;
@@ -312,7 +316,7 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
         if (!hasRune) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
         break;
       case 'multiGemWord':
-        if (gemCount >= 4) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        if (gemCount >= HX_MULTI_GEM_WORD_MIN_GEMS) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
         break;
       case 'allSpecialWord':
         if (allSpecialWord) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
