@@ -244,7 +244,7 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
   const hasEmber       = emberCount > 0;
   const hasRune        = runeCount > 0;
   const portalUsed     = didUsePortalTile(tiles, state);
-  const allSpecialWord = tiles.length > 0 && tiles.every(tile => isGemTile(tile) || isSpecialTile(tile));
+  const allSpecialWord = tiles.length > 0 && tiles.every(isSpecialTile);
 
   _levelSession.totalWordLength += word.length;
   _levelSession.wordsTracked++;
@@ -337,7 +337,9 @@ function completeCampaignLevel(level, state) {
   // objective since they use the same metric (e.g. total score, word count).
   const mainObj = level.objectives[0];
   const val     = _levelProgress[mainObj.type] ?? 0;
-  const thresholds = level.stars;
+  const thresholds = mainObj.type === 'timeLimit'
+    ? [...level.stars].sort((a, b) => b - a)
+    : level.stars;
   let starsEarned = 0;
   thresholds.forEach(t => {
     if (mainObj.type === 'timeLimit') {
