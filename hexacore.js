@@ -1441,9 +1441,14 @@ function checkHexacoreRequirements(word, tiles, score) {
     newlyCompleted.forEach((desc, i) => {
       setTimeout(() => showRequirementToast(desc), i * 700);
     });
-    // Refresh modal if it's open
+    // Refresh standalone challenges modal if it's open
     if (document.getElementById('hx-challenges-modal')) {
       renderChallengesModal();
+    }
+    // Refresh challenges section inside quests modal if it's open
+    const questsChallengesBody = document.getElementById('hx-quests-challenges-body');
+    if (questsChallengesBody) {
+      window._hxRenderChallengesInto?.(questsChallengesBody);
     }
   }
 }
@@ -1576,6 +1581,59 @@ function renderChallengesModal() {
     body.appendChild(section);
   }
 }
+
+/**
+ * Register a global callback used by hexacoreQuests.js to render challenges
+ * inline inside the quests modal (avoiding a circular import).
+ */
+window._hxRenderChallengesInto = function(container) {
+  if (!container) return;
+
+  const tierMap = new Map([
+    ['spark',   []],
+    ['blaze',   []],
+    ['inferno', []],
+    ['ascend',  []],
+  ]);
+
+  for (const req of HX_LEVEL_REQUIREMENTS) {
+    const tier = getTierFromId(req.id);
+    if (!tierMap.has(tier)) tierMap.set(tier, []);
+    tierMap.get(tier).push(req);
+  }
+
+  container.innerHTML = '';
+
+  for (const [tierKey, reqs] of tierMap) {
+    if (reqs.length === 0) continue;
+    const cfg       = HX_TIER_CONFIG[tierKey] ?? HX_TIER_CONFIG.spark;
+    const doneCount = reqs.filter(r => hxCompletedReqs.has(r.id)).length;
+    const pct       = Math.round((doneCount / reqs.length) * 100);
+
+    const section = document.createElement('div');
+    section.className = `hx-challenges-section ${cfg.className}`;
+
+    section.innerHTML = `
+      <div class="hx-challenges-tier-header">
+        <span class="hx-challenges-tier-label">${cfg.label}</span>
+        <span class="hx-challenges-section-count">${doneCount}/${reqs.length}</span>
+      </div>
+      <div class="hx-challenges-tier-bar">
+        <div class="hx-challenges-tier-bar-fill" style="width:${pct}%;background:${cfg.color}"></div>
+      </div>
+    `;
+
+    for (const req of reqs) {
+      const isDone = hxCompletedReqs.has(req.id);
+      const row = document.createElement('div');
+      row.className = 'hx-challenge-row' + (isDone ? ' hx-challenge-done' : '');
+      row.innerHTML = `<span class="hx-challenge-check">${isDone ? '✓' : '☐'}</span><span class="hx-challenge-desc">${escapeHtml(req.description)}</span>`;
+      section.appendChild(row);
+    }
+
+    container.appendChild(section);
+  }
+};
 
 /* ── Word display / selection ──────────────────────────────────── */
 function updateWordDisplay() {

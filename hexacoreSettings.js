@@ -78,18 +78,19 @@ import { getXPData }             from './hexacoreXP.js';
 
   function renderQuestsSection(panel) {
     panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">📋 QUESTS</h3>
-      <p class="hx-cfg-section-desc">Complete daily and weekly quests to earn XP bonuses.</p>
+      <h3 class="hx-cfg-section-title">📋 QUESTS &amp; CHALLENGES</h3>
+      <p class="hx-cfg-section-desc">Complete daily quests, the weekly login streak, and tier challenges to earn XP bonuses.</p>
       <button class="hx-cfg-launch-btn" id="hx-cfg-quests-open">
-        <span>📋</span> Open Full Quests Panel
+        <span>📋</span> Open Quests &amp; Challenges
       </button>
       <div class="hx-cfg-quest-preview">
-        <p class="hx-cfg-preview-note">Complete quests each day and week to earn XP rewards. Harder quests offer bigger bonuses. Quest progress resets at midnight UTC for dailies, and on Mondays for weeklies.</p>
+        <p class="hx-cfg-preview-note">Quests and challenges are combined in one panel. Daily quests refresh at midnight UTC. The weekly quest rewards logging in every day for 7 days.</p>
         <ul class="hx-cfg-quest-tips">
           <li>🔥 Use <strong>Ember</strong> tiles to earn bonus gems</li>
           <li>✦ Form <strong>long words</strong> (7+ letters) for rare gems</li>
-          <li>📅 Log in every day to maximize daily quest streaks</li>
-          <li>🗓 Weekly quests award up to <strong>1,000 XP</strong></li>
+          <li>📅 Log in every day to complete the weekly login quest</li>
+          <li>🗓 Weekly login quest awards <strong>1,000 XP</strong></li>
+          <li>📋 Challenges unlock permanent achievements across all sessions</li>
         </ul>
       </div>
     `;

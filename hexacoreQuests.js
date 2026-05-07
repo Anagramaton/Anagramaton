@@ -20,52 +20,35 @@ export function getWeekString() {
   return `week-${year}-${String(week).padStart(2, '0')}`;
 }
 
-/* ── Quest pool ─────────────────────────────────────────────────── */
+/* ── Quest pool (15 unique types) ───────────────────────────────── */
 
 const QUEST_POOL = [
-  { id: 'q_5words',    desc: 'Submit 5 words in one session',        reward: 100, target: 5,     trackKey: 'totalWords' },
-  { id: 'q_10words',   desc: 'Submit 10 words in one session',       reward: 150, target: 10,    trackKey: 'totalWords' },
-  { id: 'q_15words',   desc: 'Submit 15 words in one session',       reward: 200, target: 15,    trackKey: 'totalWords' },
-  { id: 'q_20words',   desc: 'Submit 20 words in one session',       reward: 250, target: 20,    trackKey: 'totalWords' },
-  { id: 'q_prism3',    desc: 'Use 3 Prism tiles in words',           reward: 200, target: 3,     trackKey: 'prismUsed' },
-  { id: 'q_prism5',    desc: 'Use 5 Prism tiles in words',           reward: 300, target: 5,     trackKey: 'prismUsed' },
-  { id: 'q_9letter',   desc: 'Submit a 9+ letter word',              reward: 300, target: 1,     trackKey: 'ninePlusWords' },
-  { id: 'q_8letter',   desc: 'Submit an 8+ letter word',             reward: 200, target: 1,     trackKey: 'eightPlusWords' },
-  { id: 'q_10gems',    desc: 'Collect 10 gems in one session',       reward: 250, target: 10,    trackKey: 'gemsCollected' },
-  { id: 'q_5gems',     desc: 'Collect 5 gems in one session',        reward: 150, target: 5,     trackKey: 'gemsCollected' },
-  { id: 'q_portal3',   desc: 'Use the portal in 3 words',            reward: 150, target: 3,     trackKey: 'portalUses' },
-  { id: 'q_portal1',   desc: 'Use the portal in a word',             reward: 100, target: 1,     trackKey: 'portalUses' },
-  { id: 'q_6letter5',  desc: 'Form 5 words of 6+ letters',           reward: 200, target: 5,     trackKey: 'sixPlusWords' },
-  { id: 'q_6letter3',  desc: 'Form 3 words of 6+ letters',           reward: 150, target: 3,     trackKey: 'sixPlusWords' },
-  { id: 'q_score5k',   desc: 'Score 5,000+ points in one session',   reward: 150, target: 5000,  trackKey: 'sessionScore' },
-  { id: 'q_score10k',  desc: 'Score 10,000+ points in one session',  reward: 200, target: 10000, trackKey: 'sessionScore' },
-  { id: 'q_score25k',  desc: 'Score 25,000+ points in one session',  reward: 300, target: 25000, trackKey: 'sessionScore' },
-  { id: 'q_ember3',    desc: 'Use 3 Ember tiles in words',           reward: 200, target: 3,     trackKey: 'emberUsed' },
-  { id: 'q_ember5',    desc: 'Use 5 Ember tiles in words',           reward: 300, target: 5,     trackKey: 'emberUsed' },
-  { id: 'q_rune2',     desc: 'Use 2 Rune wildcards in words',        reward: 250, target: 2,     trackKey: 'runeUsed' },
-  { id: 'q_rune4',     desc: 'Use 4 Rune wildcards in words',        reward: 350, target: 4,     trackKey: 'runeUsed' },
-  { id: 'q_digraph5',  desc: 'Use 5 Digraph tiles in words',         reward: 150, target: 5,     trackKey: 'digraphUsed' },
-  { id: 'q_digraph10', desc: 'Use 10 Digraph tiles in words',        reward: 250, target: 10,    trackKey: 'digraphUsed' },
-  { id: 'q_3gems1word',desc: 'Use 3 gems in a single word',          reward: 300, target: 1,     trackKey: 'tripleGemWord' },
-  { id: 'q_7letter3',  desc: 'Form 3 words of 7+ letters',           reward: 250, target: 3,     trackKey: 'sevenPlusWords' },
-  { id: 'q_7letter1',  desc: 'Form a word of 7+ letters',            reward: 150, target: 1,     trackKey: 'sevenPlusWords' },
-  { id: 'q_emerald3',  desc: 'Use an Emerald gem 3 times',           reward: 150, target: 3,     trackKey: 'emeraldUsed' },
-  { id: 'q_levelup',   desc: 'Reach Level 3 in one session',         reward: 200, target: 3,     trackKey: 'maxLevel' },
-  { id: 'q_wordcombo', desc: 'Score 1,000+ on a single word',        reward: 200, target: 1000,  trackKey: 'bestWordScore' },
-  { id: 'q_wordcombo2',desc: 'Score 5,000+ on a single word',        reward: 350, target: 5000,  trackKey: 'bestWordScore' },
-  { id: 'q_amethyst1', desc: 'Collect an Amethyst power-up',         reward: 150, target: 1,     trackKey: 'amethystCollected' },
-  { id: 'q_selenite1', desc: 'Collect a Selenite power-up',          reward: 150, target: 1,     trackKey: 'seleniteCollected' },
+  { id: 'q_10words',   desc: 'SUBMIT 10 WORDS IN ONE SESSION',        reward: 150, target: 10,    trackKey: 'totalWords' },
+  { id: 'q_9letter',   desc: 'FORM A WORD OF 9 OR MORE LETTERS',      reward: 300, target: 1,     trackKey: 'ninePlusWords' },
+  { id: 'q_8letter',   desc: 'FORM AN 8+ LETTER WORD',                reward: 200, target: 1,     trackKey: 'eightPlusWords' },
+  { id: 'q_6letter3',  desc: 'FORM 3 WORDS OF 6 OR MORE LETTERS',     reward: 150, target: 3,     trackKey: 'sixPlusWords' },
+  { id: 'q_prism3',    desc: 'USE 3 PRISM TILES IN WORDS',            reward: 200, target: 3,     trackKey: 'prismUsed' },
+  { id: 'q_5gems',     desc: 'COLLECT 5 GEMS IN ONE SESSION',         reward: 150, target: 5,     trackKey: 'gemsCollected' },
+  { id: 'q_portal3',   desc: 'USE THE PORTAL IN 3 WORDS',             reward: 150, target: 3,     trackKey: 'portalUses' },
+  { id: 'q_score10k',  desc: 'SCORE 10,000+ POINTS IN ONE SESSION',   reward: 200, target: 10000, trackKey: 'sessionScore' },
+  { id: 'q_ember3',    desc: 'USE 3 EMBER TILES IN WORDS',            reward: 200, target: 3,     trackKey: 'emberUsed' },
+  { id: 'q_rune2',     desc: 'USE 2 RUNE WILDCARD TILES IN WORDS',    reward: 250, target: 2,     trackKey: 'runeUsed' },
+  { id: 'q_digraph5',  desc: 'USE 5 DIGRAPH TILES IN WORDS',          reward: 150, target: 5,     trackKey: 'digraphUsed' },
+  { id: 'q_3gems1word',desc: 'USE 3 GEMS IN A SINGLE WORD',           reward: 300, target: 1,     trackKey: 'tripleGemWord' },
+  { id: 'q_levelup',   desc: 'REACH LEVEL 3 IN ONE SESSION',          reward: 200, target: 3,     trackKey: 'maxLevel' },
+  { id: 'q_wordcombo', desc: 'SCORE 1,000+ POINTS ON A SINGLE WORD',  reward: 200, target: 1000,  trackKey: 'bestWordScore' },
+  { id: 'q_selenite1', desc: 'COLLECT A SELENITE POWER-UP',           reward: 150, target: 1,     trackKey: 'seleniteCollected' },
 ];
 
-const WEEKLY_QUEST_POOL = [
-  { id: 'wq_50words',  desc: 'Submit 50 words across all sessions this week',      reward: 500,  target: 50,    trackKey: 'weeklyTotalWords' },
-  { id: 'wq_score50k', desc: 'Score 50,000+ points in a single session this week', reward: 600,  target: 50000, trackKey: 'weeklyBestScore' },
-  { id: 'wq_9letter3', desc: 'Submit three 9+ letter words this week',             reward: 700,  target: 3,     trackKey: 'weeklyNinePlusWords' },
-  { id: 'wq_gem20',    desc: 'Collect 20 gems this week',                          reward: 500,  target: 20,    trackKey: 'weeklyGemsCollected' },
-  { id: 'wq_level5',   desc: 'Reach Level 5 in any session this week',             reward: 800,  target: 5,     trackKey: 'weeklyMaxLevel' },
-  { id: 'wq_portal10', desc: 'Use the portal 10 times this week',                  reward: 600,  target: 10,    trackKey: 'weeklyPortalUses' },
-  { id: 'wq_10letter', desc: 'Submit a 10+ letter word this week',                 reward: 1000, target: 1,     trackKey: 'weeklyTenPlusWords' },
-];
+/* ── Fixed weekly quest — login streak ──────────────────────────── */
+
+const WEEKLY_LOGIN_QUEST = {
+  id:       'wq_login7',
+  desc:     'LOG IN EACH DAY FOR 7 DAYS THIS WEEK',
+  reward:   1000,
+  target:   7,
+  trackKey: 'weeklyLoginDays',
+};
 
 /* ── Deterministic shuffle from a seed ─────────────────────────── */
 
@@ -95,6 +78,8 @@ function dateSeed(str) {
 
 /* ── Persistence helpers ────────────────────────────────────────── */
 
+const HX_WEEKLY_LOGIN_KEY = 'hexacore_weekly_login';
+
 function loadDailyState() {
   try {
     const json = localStorage.getItem(HX_DAILY_QUESTS_KEY);
@@ -117,6 +102,35 @@ function saveWeeklyState(state) {
   try { localStorage.setItem(HX_WEEKLY_QUEST_KEY, JSON.stringify(state)); } catch (_) {}
 }
 
+function loadWeeklyLoginState() {
+  try {
+    const json = localStorage.getItem(HX_WEEKLY_LOGIN_KEY);
+    return json ? JSON.parse(json) : null;
+  } catch (_) { return null; }
+}
+
+function saveWeeklyLoginState(state) {
+  try { localStorage.setItem(HX_WEEKLY_LOGIN_KEY, JSON.stringify(state)); } catch (_) {}
+}
+
+/**
+ * Record today's login for the weekly login-streak quest.
+ * Keeps a set of unique dates the player opened the game this week.
+ */
+function recordLoginDay() {
+  const week  = getWeekString();
+  const today = getTodayString();
+  let state   = loadWeeklyLoginState();
+
+  if (!state || state.week !== week) {
+    state = { week, days: [] };
+  }
+  if (!state.days.includes(today)) {
+    state.days.push(today);
+    saveWeeklyLoginState(state);
+  }
+}
+
 /* ── Public API ─────────────────────────────────────────────────── */
 
 export function getDailyQuests() {
@@ -137,17 +151,33 @@ export function getDailyQuests() {
 }
 
 export function getWeeklyQuest() {
-  const week = getWeekString();
-  let state  = loadWeeklyState();
+  const week  = getWeekString();
+  let state   = loadWeeklyState();
 
   if (!state || state.week !== week) {
-    const seed  = dateSeed(week);
-    const quest = pickQuests(WEEKLY_QUEST_POOL, 1, seed)[0];
     state = {
       week,
-      quest: { ...quest, progress: 0, completed: false, claimed: false },
+      quest: { ...WEEKLY_LOGIN_QUEST, progress: 0, completed: false, claimed: false },
     };
     saveWeeklyState(state);
+  } else if (state.quest.id !== WEEKLY_LOGIN_QUEST.id) {
+    // migrate old quest format to the new login quest
+    state.quest = { ...WEEKLY_LOGIN_QUEST, progress: 0, completed: false, claimed: false };
+    saveWeeklyState(state);
+  }
+
+  // Sync live login-day count into quest progress
+  const loginState = loadWeeklyLoginState();
+  if (loginState && loginState.week === week) {
+    const days = loginState.days.length;
+    if (!state.quest.completed) {
+      state.quest.progress = days;
+      if (days >= state.quest.target) {
+        state.quest.completed = true;
+        state.quest.progress  = state.quest.target;
+      }
+      saveWeeklyState(state);
+    }
   }
 
   return state.quest;
@@ -212,31 +242,7 @@ export function updateQuestProgress(eventType, data) {
     saveDailyState(dailyState);
     if (completed && document.getElementById('hx-quests-modal')) renderQuestsModal();
   }
-
-  // Update weekly (maps weekly-specific track keys to equivalent daily track keys)
-  const weeklyKeyToBasicKeyMap = {
-    weeklyTotalWords:    'totalWords',
-    weeklyBestScore:     'sessionScore',
-    weeklyNinePlusWords: 'ninePlusWords',
-    weeklyGemsCollected: 'gemsCollected',
-    weeklyMaxLevel:      'maxLevel',
-    weeklyPortalUses:    'portalUses',
-    weeklyTenPlusWords:  'tenPlusWords',
-  };
-  const weekState = loadWeeklyState();
-  const week      = getWeekString();
-  if (weekState && weekState.week === week) {
-    const q = weekState.quest;
-    if (!q.completed) {
-      const mapped = weeklyKeyToBasicKeyMap[q.trackKey];
-      // Re-use updater with a synthetic temp trackKey aligned to daily keys
-      const tempQ = { ...q, trackKey: mapped || q.trackKey };
-      updater([tempQ]);
-      q.progress  = tempQ.progress;
-      q.completed = tempQ.completed;
-      saveWeeklyState(weekState);
-    }
-  }
+  // Weekly quest is login-based — updated only via recordLoginDay(), not word submission.
 }
 
 export function claimQuestReward(questId) {
@@ -266,9 +272,10 @@ export function claimQuestReward(questId) {
   return 0;
 }
 
-/** Called when game starts — resets per-session trackers in state. */
+/** Called when game starts — initialises quests and records today's login. */
 export function initQuests() {
   getDailyQuests();
+  recordLoginDay();
   getWeeklyQuest();
 }
 
@@ -305,6 +312,20 @@ function renderQuestsModal() {
   weeklySection.innerHTML = '<div class="hx-quest-section-title">🗓 WEEKLY QUEST</div>';
   weeklySection.appendChild(buildQuestItem(weekly, true));
   body.appendChild(weeklySection);
+
+  // Challenges section (rendered via hexacore.js callback to avoid circular imports)
+  if (typeof window._hxRenderChallengesInto === 'function') {
+    const challengesHeader = document.createElement('div');
+    challengesHeader.className = 'hx-quest-section-title hx-quest-challenges-header';
+    challengesHeader.innerHTML = '📋 CHALLENGES';
+    body.appendChild(challengesHeader);
+
+    const challengesBody = document.createElement('div');
+    challengesBody.id = 'hx-quests-challenges-body';
+    body.appendChild(challengesBody);
+
+    window._hxRenderChallengesInto(challengesBody);
+  }
 }
 
 function buildQuestItem(q, isWeekly = false) {
