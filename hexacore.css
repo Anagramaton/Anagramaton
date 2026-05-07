@@ -3028,11 +3028,60 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 
 .hx-campaign-level-card.hx-campaign-complete {
-  border-color: rgba(192,132,252,0.35);
-  background: rgba(168,85,247,0.08);
+  border-color: rgba(251, 191, 36, 0.45);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(251, 191, 36, 0.07), rgba(0, 0, 0, 0.12)),
+    rgba(168, 85, 247, 0.1);
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.12);
 }
 
-.hx-campaign-level-card.hx-campaign-locked {
+.hx-campaign-level-card.hx-campaign-complete:hover:not([disabled]) {
+  border-color: rgba(251, 191, 36, 0.75);
+  box-shadow: 0 6px 20px rgba(251, 191, 36, 0.22);
+}
+
+.hx-campaign-level-card.hx-campaign-complete .hx-campaign-level-num {
+  color: rgba(251, 191, 36, 0.65);
+}
+
+.hx-card-check {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.18);
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.hx-card-progress-bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 3px;
+}
+
+.hx-card-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7, #fbbf24);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.hx-level-locked {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.2);
+}
   opacity: 0.38;
   cursor: not-allowed;
 }

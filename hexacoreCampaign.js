@@ -214,10 +214,22 @@ export function openCampaignModal(onLevelStart) {
       `<span class="hx-star${s <= stars ? ' hx-star-filled' : ''}">★</span>`
     ).join('');
 
+    const checkBadge    = info?.completed ? `<span class="hx-card-check" aria-hidden="true">✓</span>` : '';
+    const levelNumHtml  = !unlocked
+      ? `<div class="hx-campaign-level-num hx-level-locked" aria-label="Locked">🔒</div>`
+      : `<div class="hx-campaign-level-num">${level.id}</div>`;
+    const progressBar   = info?.completed
+      ? `<div class="hx-card-progress-bar" aria-label="${stars} of 3 stars">
+           <div class="hx-card-progress-fill" style="width:${Math.round((stars / 3) * 100)}%"></div>
+         </div>`
+      : '';
+
     card.innerHTML = `
-      <div class="hx-campaign-level-num">${level.id}</div>
+      ${checkBadge}
+      ${levelNumHtml}
       <div class="hx-campaign-level-title">${level.title}</div>
       <div class="hx-campaign-stars">${starsHtml}</div>
+      ${progressBar}
     `;
 
     if (unlocked) {
