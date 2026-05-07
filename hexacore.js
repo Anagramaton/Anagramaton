@@ -81,6 +81,7 @@ const WORD_TILE_STAGGER_MS      = 55;  // ms stagger between each consumed tile 
 const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
 const HX_TITLE_TEXT             = 'HEXACORE';
+const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
 let hxLastTitleLitSignature     = '';
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
@@ -2647,38 +2648,47 @@ function resolveLetters(selectedTiles) {
 }
 
 function setHexacoreTitle(title = HX_TITLE_TEXT) {
-  const titleEl = document.getElementById('game-title');
-  if (!titleEl) return;
+  const titleEls = HX_TITLE_ELEMENT_IDS
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  if (!titleEls.length) return;
 
-  titleEl.textContent = '';
-  [...title].forEach((letter, idx) => {
-    const span = document.createElement('span');
-    span.className = 'hx-title-letter';
-    span.textContent = letter;
-    span.style.setProperty('--letter-idx', String(idx));
-    titleEl.appendChild(span);
+  titleEls.forEach(titleEl => {
+    titleEl.textContent = '';
+    [...title].forEach((letter, idx) => {
+      const span = document.createElement('span');
+      span.className = 'hx-title-letter';
+      span.textContent = letter;
+      span.style.setProperty('--letter-idx', String(idx));
+      titleEl.appendChild(span);
+    });
   });
 }
 
 function restoreDefaultTitle() {
-  const titleEl = document.getElementById('game-title');
-  if (titleEl) titleEl.textContent = 'ANAGRAMATON';
+  HX_TITLE_ELEMENT_IDS.forEach(id => {
+    const titleEl = document.getElementById(id);
+    if (titleEl) titleEl.textContent = 'ANAGRAMATON';
+  });
   hxLastTitleLitSignature = '';
 }
 
 function triggerHexacoreTitleFlash(wordScore) {
-  const titleEl = document.getElementById('game-title');
-  if (!titleEl) return;
+  const titleEls = HX_TITLE_ELEMENT_IDS
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  if (!titleEls.length) return;
 
-  const letters = [...titleEl.querySelectorAll('.hx-title-letter')];
-  if (letters.length !== HX_TITLE_TEXT.length) return;
+  const letterGroups = titleEls.map(titleEl => [...titleEl.querySelectorAll('.hx-title-letter')]);
+  if (letterGroups.some(letters => letters.length !== HX_TITLE_TEXT.length)) return;
 
-  letters.forEach(letter => letter.classList.remove('hx-title-letter--lit'));
-  void titleEl.offsetWidth;
+  letterGroups.flat().forEach(letter => letter.classList.remove('hx-title-letter--lit'));
+  titleEls.forEach(titleEl => { void titleEl.offsetWidth; });
+  const letters = letterGroups[0];
 
   if (wordScore >= 100) {
     hxLastTitleLitSignature = 'epic';
-    letters.forEach(letter => letter.classList.add('hx-title-letter--lit'));
+    letterGroups.forEach(group => group.forEach(letter => letter.classList.add('hx-title-letter--lit')));
     return;
   }
 
@@ -2707,7 +2717,7 @@ function triggerHexacoreTitleFlash(wordScore) {
   }
   hxLastTitleLitSignature = signature;
 
-  selected.forEach(idx => letters[idx].classList.add('hx-title-letter--lit'));
+  selected.forEach(idx => letterGroups.forEach(group => group[idx].classList.add('hx-title-letter--lit')));
 }
 
 /* ── Word submission ───────────────────────────────────────────── */

@@ -318,7 +318,8 @@ body[data-theme="dark"] {
 }
 
 /* Title — full-screen diagonal watermark, bottom-left → top-right */
-#game-title {
+#game-title,
+#game-title-mirror {
   font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(14vmax, 22vmax, 30vmax);
   letter-spacing: 0.04em;
@@ -340,14 +341,26 @@ body[data-theme="dark"] {
   margin: 0;
 }
 
+#game-title {
+  transform: translate(-50%, -50%) rotate(-52deg);
+}
+
+#game-title-mirror {
+  transform: translate(-50%, -50%) rotate(52deg);
+}
+
 /* Slightly shallower angle for wide (landscape / desktop) viewports */
 @media (min-aspect-ratio: 4/3) {
   #game-title {
     transform: translate(-50%, -50%) rotate(-30deg);
   }
+  #game-title-mirror {
+    transform: translate(-50%, -50%) rotate(30deg);
+  }
 }
 
-body[data-theme="dark"] #game-title {
+body[data-theme="dark"] #game-title,
+body[data-theme="dark"] #game-title-mirror {
   opacity: 0.14;
 }
 

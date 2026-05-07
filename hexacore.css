@@ -2025,14 +2025,14 @@ body.hx-active #hex-grid {
 /* ── Game title in Hexacore mode: orange stroke watermark ───────── */
 /* Use opacity:1 on the parent so child filter:brightness() is not crushed.
    The dim watermark appearance comes from the low-alpha rgba stroke instead. */
-body.hx-active #game-title {
+body.hx-active :is(#game-title, #game-title-mirror) {
   font-family: 'Bebas Neue', sans-serif;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.12);
   filter: none;
   opacity: 1;
 }
-body.hx-active #game-title .hx-title-letter {
+body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
   display: inline-block;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.12);
@@ -2072,14 +2072,14 @@ body.hx-active #game-title .hx-title-letter {
     opacity: 1;
   }
 }
-body.hx-active #game-title .hx-title-letter--lit {
+body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
   animation: hx-title-letter-flash 1.8s ease-out calc(var(--letter-idx, 0) * 120ms) both;
 }
-body[data-theme="dark"].hx-active #game-title {
+body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) {
   opacity: 1;
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.15);
 }
-body[data-theme="dark"].hx-active #game-title .hx-title-letter {
+body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.15);
 }
 @keyframes hx-title-letter-flash-dark {
@@ -2115,7 +2115,7 @@ body[data-theme="dark"].hx-active #game-title .hx-title-letter {
     opacity: 1;
   }
 }
-body[data-theme="dark"].hx-active #game-title .hx-title-letter--lit {
+body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
   animation: hx-title-letter-flash-dark 1.8s ease-out calc(var(--letter-idx, 0) * 120ms) both;
 }
 

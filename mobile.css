@@ -163,8 +163,14 @@
 
 /* ── Game title watermark: portrait angle preserved ─────────────── */
 @media (max-width: 640px) {
-  #game-title {
+  #game-title,
+  #game-title-mirror {
     font-size: clamp(28vw, 35vmax, 50vw);
+  }
+  #game-title {
     transform: translate(-50%, -50%) rotate(-52deg);
+  }
+  #game-title-mirror {
+    transform: translate(-50%, -50%) rotate(52deg);
   }
 }
