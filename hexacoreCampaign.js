@@ -194,8 +194,7 @@ function didUsePortalTile(tiles, state) {
 
 function isObjectiveMet(obj) {
   if (obj.type === 'timeLimit') {
-    return (_levelSession.failedObjectives?.has(obj.type) !== true) &&
-      ((_levelProgress[obj.type] ?? 0) <= obj.target);
+    return (_levelProgress[obj.type] ?? 0) <= obj.target;
   }
 
   return (_levelProgress[obj.type] ?? 0) >= obj.target;
@@ -216,7 +215,6 @@ export function startCampaignLevel(levelId, onComplete) {
     wordsTracked: 0,
     gemTypes: new Set(),
     currentStreaks: {},
-    failedObjectives: new Set(),
   };
   level.objectives.forEach(obj => { _levelProgress[obj.type] = 0; });
 }
@@ -261,7 +259,6 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
       case 'wordLength': if (word.length >= obj.target) _levelProgress[obj.type] = obj.target; break;
       case 'timeLimit':
         _levelProgress[obj.type] = elapsedSeconds;
-        if (elapsedSeconds > obj.target) _levelSession.failedObjectives.add(obj.type);
         break;
       case 'avgWordLength':
         _levelProgress[obj.type] = _levelSession.wordsTracked > 0
