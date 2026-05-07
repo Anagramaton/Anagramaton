@@ -80,6 +80,8 @@ function hxLevelThreshold(level) {
 const WORD_TILE_STAGGER_MS      = 55;  // ms stagger between each consumed tile pop-out
 const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
+const HX_TITLE_TEXT             = 'HEXACORE';
+let hxLastTitleLitSignature     = '';
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -2644,6 +2646,70 @@ function resolveLetters(selectedTiles) {
   return null;
 }
 
+function setHexacoreTitle(title = HX_TITLE_TEXT) {
+  const titleEl = document.getElementById('game-title');
+  if (!titleEl) return;
+
+  titleEl.textContent = '';
+  [...title].forEach((letter, idx) => {
+    const span = document.createElement('span');
+    span.className = 'hx-title-letter';
+    span.textContent = letter;
+    span.style.setProperty('--letter-idx', String(idx));
+    titleEl.appendChild(span);
+  });
+}
+
+function restoreDefaultTitle() {
+  const titleEl = document.getElementById('game-title');
+  if (titleEl) titleEl.textContent = 'ANAGRAMATON';
+  hxLastTitleLitSignature = '';
+}
+
+function triggerHexacoreTitleFlash(wordScore) {
+  const titleEl = document.getElementById('game-title');
+  if (!titleEl) return;
+
+  const letters = [...titleEl.querySelectorAll('.hx-title-letter')];
+  if (letters.length !== HX_TITLE_TEXT.length) return;
+
+  letters.forEach(letter => letter.classList.remove('hx-title-letter--lit'));
+  void titleEl.offsetWidth;
+
+  if (wordScore >= 100) {
+    hxLastTitleLitSignature = 'epic';
+    letters.forEach(letter => letter.classList.add('hx-title-letter--lit'));
+    return;
+  }
+
+  let min = 1;
+  let max = 2;
+  if (wordScore >= 50) {
+    min = 5;
+    max = 6;
+  } else if (wordScore >= 20) {
+    min = 3;
+    max = 4;
+  }
+
+  const count = min + Math.floor(Math.random() * (max - min + 1));
+  const idxs = letters.map((_, idx) => idx);
+  for (let i = idxs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [idxs[i], idxs[j]] = [idxs[j], idxs[i]];
+  }
+
+  let selected = idxs.slice(0, count).sort((a, b) => a - b);
+  let signature = selected.join(',');
+  if (signature === hxLastTitleLitSignature && count < letters.length) {
+    selected = idxs.slice(1, count + 1).sort((a, b) => a - b);
+    signature = selected.join(',');
+  }
+  hxLastTitleLitSignature = signature;
+
+  selected.forEach(idx => letters[idx].classList.add('hx-title-letter--lit'));
+}
+
 /* ── Word submission ───────────────────────────────────────────── */
 async function submitHexacoreWord() {
   // Too few letters — silently cancel (accidental drag).
@@ -2761,6 +2827,7 @@ async function submitHexacoreWord() {
 
   playSound('sfxSuccess');
   playSound('sfxFunk');
+  triggerHexacoreTitleFlash(wordScore);
   // Consume tiles → gravity → ember advance → refill → special spawns
   await consumeAndRefill(consumed);
   stopSound('sfxFunk');
@@ -3220,8 +3287,7 @@ function triggerGameOver() {
   document.body.classList.remove('hx-active');
 
   // Restore game title
-  const titleEl = document.getElementById('game-title');
-  if (titleEl) titleEl.textContent = 'ANAGRAMATON';
+  restoreDefaultTitle();
 
   removeHud();
 
@@ -3577,8 +3643,7 @@ export function startHexacore(mode = 'endless') {
   if (currentWordEl) currentWordEl.textContent = '';
 
   // Change title to reflect Hexacore mode
-  const titleEl = document.getElementById('game-title');
-  if (titleEl) titleEl.textContent = 'HEXACORE';
+  setHexacoreTitle();
 
   ensureHud();
   updateHud();
@@ -3612,8 +3677,7 @@ export function stopHexacore() {
 
   document.body.classList.remove('hx-active');
 
-  const titleEl = document.getElementById('game-title');
-  if (titleEl) titleEl.textContent = 'ANAGRAMATON';
+  restoreDefaultTitle();
 }
 
 /* ── Standalone Hexacore Leaderboard Modal (window.hxLbModal) ───── */

@@ -2030,6 +2030,29 @@ body.hx-active #game-title {
   filter: none;
   opacity: 0.12;
 }
+body.hx-active #game-title .hx-title-letter {
+  display: inline-block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px #ff8c42;
+  filter: none;
+}
+@keyframes hx-title-letter-flash {
+  0% {
+    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    -webkit-text-stroke-color: #ff8c42;
+  }
+  14% {
+    filter: brightness(4.5) drop-shadow(0 0 20px rgba(255, 140, 40, 1));
+    -webkit-text-stroke-color: #ffb366;
+  }
+  100% {
+    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    -webkit-text-stroke-color: #ff8c42;
+  }
+}
+body.hx-active #game-title .hx-title-letter--lit {
+  animation: hx-title-letter-flash .68s cubic-bezier(0.18, 0.95, 0.25, 1) calc(var(--letter-idx, 0) * 55ms);
+}
 body[data-theme="dark"].hx-active #game-title {
   opacity: 0.15;
 }
