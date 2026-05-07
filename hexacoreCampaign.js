@@ -234,7 +234,10 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
   const level = CAMPAIGN_LEVELS.find(l => l.id === _activeLevelId);
   if (!level) return;
 
-  const elapsedSeconds = (Date.now() - (_levelSession.startedAt ?? Date.now())) / 1000;
+  const startedAt      = _levelSession.startedAt;
+  const elapsedSeconds = Number.isFinite(startedAt)
+    ? ((Date.now() - startedAt) / 1000)
+    : Number.POSITIVE_INFINITY;
   const emberCount     = tiles.filter(t => t.tileType === 'ember').length;
   const prismCount     = tiles.filter(t => t.tileType === 'prism').length;
   const runeCount      = tiles.filter(t => t.tileType === 'rune').length;
