@@ -2467,7 +2467,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     linear-gradient(135deg, rgba(15,15,30,0.98), rgba(25,10,40,0.97));
   border: 1.5px solid rgba(76,201,240,0.45);
   border-radius: 20px;
-  width: min(460px, 96vw);
+  width: min(460px, 94vw);
   max-height: 86vh;
   overflow: hidden;
   display: flex;

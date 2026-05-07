@@ -125,8 +125,11 @@ function recordLoginDay() {
   if (!state || state.week !== week) {
     state = { week, days: [] };
   }
-  if (!state.days.includes(today)) {
-    state.days.push(today);
+  // Use a Set for O(1) duplicate detection, then persist as array
+  const daySet = new Set(state.days);
+  if (!daySet.has(today)) {
+    daySet.add(today);
+    state.days = [...daySet];
     saveWeeklyLoginState(state);
   }
 }
@@ -161,8 +164,16 @@ export function getWeeklyQuest() {
     };
     saveWeeklyState(state);
   } else if (state.quest.id !== WEEKLY_LOGIN_QUEST.id) {
-    // migrate old quest format to the new login quest
-    state.quest = { ...WEEKLY_LOGIN_QUEST, progress: 0, completed: false, claimed: false };
+    // Migrate from an old non-login quest — preserve any login-day progress
+    // already recorded this week rather than wiping it.
+    const loginState = loadWeeklyLoginState();
+    const existingDays = (loginState && loginState.week === week) ? loginState.days.length : 0;
+    state.quest = {
+      ...WEEKLY_LOGIN_QUEST,
+      progress:  Math.min(existingDays, WEEKLY_LOGIN_QUEST.target),
+      completed: existingDays >= WEEKLY_LOGIN_QUEST.target,
+      claimed:   false,
+    };
     saveWeeklyState(state);
   }
 
