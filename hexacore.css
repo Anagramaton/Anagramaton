@@ -338,22 +338,32 @@ body.hx-active #word-score-preview   { display: none; }
 body.hx-active #left-panel-title,
 body.hx-active #right-panel-title    { display: none; }
 
-/* ── #hx-top-bar: centered top strip with MENU + Level HUD rail ─── */
+/* ── #hx-top-bar: full-width column — LVL button + XP bar centered,
+      MENU button peeled off to top-right via position:fixed ──────── */
 #hx-top-bar {
   position: fixed;
   top: clamp(14px, 3.5vh, 28px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   display: flex;
-  align-items: stretch;
-  gap: clamp(10px, 2vw, 20px);
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 10px);
   z-index: 1200;
+  pointer-events: none; /* clicks fall through the bar background */
+}
+
+/* Restore pointer-events for all direct children */
+#hx-top-bar > * {
   pointer-events: auto;
 }
 
-/* Settings-wrap inside #hx-top-bar — reset from Anagramaton layout */
+/* Settings-wrap inside #hx-top-bar — fixed to top-right corner */
 #hx-top-bar #settings-wrap {
-  position: static;
+  position: fixed;
+  top: clamp(14px, 3.5vh, 28px);
+  right: clamp(12px, 2vw, 24px);
+  pointer-events: auto;
   display: flex;
   align-items: stretch;
 }
@@ -411,7 +421,7 @@ body.hx-active #right-panel-title    { display: none; }
   50%       { border-color: rgba(239, 68, 68, 0.9); }
 }
 
-/* ── LVL button — top section of the rail ───────────────────── */
+/* ── LVL button — now the sole child of #hx-level-wrap ──────────── */
 #hx-level-hud {
   font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(0.9rem, 1.8vw, 1.1rem);
@@ -420,7 +430,6 @@ body.hx-active #right-panel-title    { display: none; }
   color: #e2d9ff;
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 0;
   padding: clamp(7px, 1.2vh, 11px) clamp(10px, 1.5vw, 16px);
   cursor: pointer;
@@ -2033,13 +2042,24 @@ body[data-theme="dark"].hx-active #game-title {
 @media (min-width: 641px) and (max-width: 900px) {
   #hx-top-bar {
     top: clamp(12px, 3vh, 24px);
-    gap: clamp(8px, 1.5vw, 16px);
+    gap: clamp(5px, 1vh, 8px);
+  }
+  #hx-top-bar #settings-wrap {
+    top: clamp(12px, 3vh, 24px);
+    right: clamp(10px, 1.5vw, 18px);
   }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
     font-size: clamp(0.82rem, 1.5vw, 1rem);
     padding: 6px 12px;
     min-width: 56px;
+  }
+  #hx-xp-bar-container {
+    width: clamp(160px, 20vw, 260px);
+    height: 30px;
+  }
+  #hx-xp-label {
+    font-size: 0.78rem;
   }
   #hx-live-word {
     font-size: clamp(1.1rem, 2.5vw, 1.5rem);
@@ -2064,7 +2084,11 @@ body[data-theme="dark"].hx-active #game-title {
 @media (max-width: 640px) {
   #hx-top-bar {
     top: clamp(10px, 3vh, 20px);
-    gap: 6px;
+    gap: 5px;
+  }
+  #hx-top-bar #settings-wrap {
+    top: clamp(10px, 3vh, 20px);
+    right: 10px;
   }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
@@ -2073,8 +2097,12 @@ body[data-theme="dark"].hx-active #game-title {
     min-width: 44px;
     min-height: 44px;
   }
+  #hx-xp-bar-container {
+    width: clamp(150px, 55vw, 230px);
+    height: 28px;
+  }
   #hx-xp-label {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
   #hx-score-hud {
     bottom: calc(clamp(10px, 2vh, 20px) + env(safe-area-inset-bottom, 0px));
@@ -2100,14 +2128,21 @@ body[data-theme="dark"].hx-active #game-title {
   #hx-top-bar {
     gap: 4px;
   }
+  #hx-top-bar #settings-wrap {
+    right: 8px;
+  }
   #hx-top-bar #settings-btn,
   #hx-level-hud {
     font-size: 0.7rem;
     padding: 5px 7px;
     min-width: 40px;
   }
+  #hx-xp-bar-container {
+    width: min(190px, 75vw);
+    height: 26px;
+  }
   #hx-xp-label {
-    font-size: 0.48rem;
+    font-size: 0.62rem;
   }
 }
 
@@ -2117,19 +2152,21 @@ body[data-theme="dark"].hx-active #game-title {
    Campaign, Profile, Tier Challenges
    ================================================================ */
 
-/* ── XP Bar — bottom strip of #hx-level-wrap ────────────────────── */
+/* ── XP Bar — now a standalone element centered below the LVL button */
 #hx-xp-bar-container {
   position: relative;
   flex: 0 0 auto;
-  height: 18px;
+  width: clamp(200px, 22vw, 320px);
+  height: 36px; /* doubled from 18px */
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.4), rgba(30, 30, 60, 0.3));
-  border: none;
-  border-radius: 0;
+  border: 1.5px solid rgba(167, 139, 250, 0.4);
+  border-radius: 10px;
   overflow: hidden;
   display: flex;
   align-items: center;
-  padding: 0 6px;
+  padding: 0 8px;
   cursor: default;
+  pointer-events: auto;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 #hx-xp-bar-container:focus-visible {
@@ -2189,7 +2226,7 @@ body[data-theme="dark"].hx-active #game-title {
   );
   transform: scaleX(0);
   transform-origin: left center;
-  border-radius: 0;
+  border-radius: 8px;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
   box-shadow: 0 0 10px rgba(76, 201, 240, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
@@ -2201,7 +2238,7 @@ body[data-theme="dark"].hx-active #game-title {
   z-index: 2;
   width: 100%;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-family: 'Turret Road', 'Orbitron', monospace;
   letter-spacing: 0.06em;
   color: rgba(255,255,255,0.9);

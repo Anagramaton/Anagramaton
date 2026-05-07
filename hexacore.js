@@ -1378,7 +1378,6 @@ function ensureHud() {
   xpBar.innerHTML = '<div id="hx-xp-bar-fill"></div><span id="hx-xp-label" aria-hidden="true">LV 1 · 0/80 XP</span>';
 
   levelWrap.appendChild(levelHud);
-  levelWrap.appendChild(xpBar);
 
   // Move settings-wrap out of #top-btn-bar and into #hx-top-bar
   const settingsWrap = document.getElementById('settings-wrap');
@@ -1386,6 +1385,9 @@ function ensureHud() {
     hxTopBar.appendChild(settingsWrap);
   }
   hxTopBar.appendChild(levelWrap);
+  // XP bar is a sibling of levelWrap (not inside it) so it's centered
+  // independently below the LVL button
+  hxTopBar.appendChild(xpBar);
   document.body.appendChild(hxTopBar);
 
   const powerUpBarLeft = document.createElement('div');
