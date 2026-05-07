@@ -1572,10 +1572,14 @@ function renderChallengesModal() {
 
     for (const req of reqs) {
       const isDone = hxCompletedReqs.has(req.id);
-      const row = document.createElement('div');
-      row.className = 'hx-challenge-row' + (isDone ? ' hx-challenge-done' : '');
-      row.innerHTML = `<span class="hx-challenge-check">${isDone ? '✓' : '☐'}</span><span class="hx-challenge-desc">${escapeHtml(req.description)}</span>`;
-      section.appendChild(row);
+      const item = document.createElement('div');
+      item.className = 'hx-challenge-item' + (isDone ? ' hx-challenge-done' : '');
+      item.innerHTML = `
+        <div class="hx-challenge-row">
+          <span class="hx-challenge-check">${isDone ? '✓' : '☐'}</span>
+          <span class="hx-challenge-desc">${escapeHtml(req.description)}</span>
+        </div>`;
+      section.appendChild(item);
     }
 
     body.appendChild(section);
@@ -1625,10 +1629,14 @@ window._hxRenderChallengesInto = function(container) {
 
     for (const req of reqs) {
       const isDone = hxCompletedReqs.has(req.id);
-      const row = document.createElement('div');
-      row.className = 'hx-challenge-row' + (isDone ? ' hx-challenge-done' : '');
-      row.innerHTML = `<span class="hx-challenge-check">${isDone ? '✓' : '☐'}</span><span class="hx-challenge-desc">${escapeHtml(req.description)}</span>`;
-      section.appendChild(row);
+      const item = document.createElement('div');
+      item.className = 'hx-challenge-item' + (isDone ? ' hx-challenge-done' : '');
+      item.innerHTML = `
+        <div class="hx-challenge-row">
+          <span class="hx-challenge-check">${isDone ? '✓' : '☐'}</span>
+          <span class="hx-challenge-desc">${escapeHtml(req.description)}</span>
+        </div>`;
+      section.appendChild(item);
     }
 
     container.appendChild(section);

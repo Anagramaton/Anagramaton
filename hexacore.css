@@ -1531,6 +1531,67 @@ body.hx-active #hex-grid {
   filter: drop-shadow(0 0 8px rgba(224, 64, 251, 0.7));
 }
 
+/* ── #hx-howto-modal — anchored below MENU + XP bar ─────────────────
+   The top bar (#hx-top-bar z-index 1200) renders above this modal
+   (z-index 1000), so the MENU and XP elements remain always visible.
+   We push the dialog flush below that bar with padding-top instead
+   of using the default centered alignment.
+   ──────────────────────────────────────────────────────────────── */
+#hx-howto-modal {
+  align-items: flex-start;
+  justify-content: center;
+  /* Default (desktop ≥901px): top-bar ≈ 20px top + 44px MENU + 8px gap + 36px XP + 8px = ~116px */
+  padding-top: clamp(112px, 14vh, 138px);
+}
+
+#hx-howto-modal .rom__dialog {
+  /* Fill the remaining viewport height below the top bar */
+  max-height: calc(100vh - clamp(112px, 14vh, 138px) - 1rem);
+  width: min(600px, 94vw);
+}
+
+/* Laptop (901–1440px) — slightly narrower padding to match bar size */
+@media (min-width: 901px) and (max-width: 1440px) {
+  #hx-howto-modal {
+    padding-top: clamp(110px, 14vh, 130px);
+  }
+  #hx-howto-modal .rom__dialog {
+    max-height: calc(100vh - clamp(110px, 14vh, 130px) - 1rem);
+  }
+}
+
+/* Tablet (641–900px) — top bar is slightly shorter */
+@media (min-width: 641px) and (max-width: 900px) {
+  #hx-howto-modal {
+    padding-top: clamp(102px, 14vh, 122px);
+  }
+  #hx-howto-modal .rom__dialog {
+    max-height: calc(100vh - clamp(102px, 14vh, 122px) - 1rem);
+    width: min(560px, 94vw);
+  }
+}
+
+/* Mobile (≤640px) — XP bar is 28px, slightly smaller offsets */
+@media (max-width: 640px) {
+  #hx-howto-modal {
+    padding-top: clamp(94px, 15vh, 114px);
+  }
+  #hx-howto-modal .rom__dialog {
+    max-height: calc(100vh - clamp(94px, 15vh, 114px) - 0.5rem);
+    width: 96vw;
+  }
+}
+
+/* Very small (≤380px) — XP bar is 26px */
+@media (max-width: 380px) {
+  #hx-howto-modal {
+    padding-top: clamp(90px, 15vh, 108px);
+  }
+  #hx-howto-modal .rom__dialog {
+    max-height: calc(100vh - clamp(90px, 15vh, 108px) - 0.25rem);
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════
    Challenges (Requirements Checklist) — modal, toast
    ═══════════════════════════════════════════════════════════════ */
@@ -1647,40 +1708,49 @@ body.hx-active #hex-grid {
   letter-spacing: 0.05em;
 }
 
+/* ── Challenge card (matches .hx-quest-item but without progress bar / +XP) */
+.hx-challenge-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.hx-challenge-item.hx-challenge-done {
+  border-color: rgba(34,197,94,0.3);
+  background: rgba(34,197,94,0.06);
+}
+
 /* ── Challenge row ─────────────────────────────────────────────── */
 .hx-challenge-row {
   display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  padding: 0.35rem 0.25rem;
-  border-radius: 5px;
-  transition: background 0.1s;
+  align-items: center;
+  gap: 0.5rem;
 }
-.hx-challenge-row:hover {
-  background: rgba(76, 201, 240, 0.07);
-}
+
 .hx-challenge-check {
-  font-size: 0.85rem;
-  min-width: 1.1rem;
-  color: #64748b;
+  font-size: 1rem;
   flex-shrink: 0;
-  margin-top: 0.05rem;
+  color: #64748b;
 }
+
 .hx-challenge-desc {
+  flex: 1;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   line-height: 1.45;
-  color: #cbd5e1;
+  color: #e2e8f0;
 }
 
 /* Completed challenge */
-.hx-challenge-done .hx-challenge-check {
+.hx-challenge-item.hx-challenge-done .hx-challenge-check {
   color: #22c55e;
   text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
 }
-.hx-challenge-done .hx-challenge-desc {
+.hx-challenge-item.hx-challenge-done .hx-challenge-desc {
   color: #4b5563;
   text-decoration: line-through;
 }
