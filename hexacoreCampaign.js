@@ -90,6 +90,75 @@ export function recordLevelStars(levelId, stars) {
   saveCampaignProgress(data);
 }
 
+/* ── Level select modal helpers ─────────────────────────────────── */
+
+/** Return a human-readable label for a star threshold value. */
+function formatStarValue(value, objType) {
+  if (objType === 'score' || objType === 'wordScore') return value.toLocaleString() + ' pts';
+  if (objType === 'timeLimit')                        return '≤ ' + value + 's';
+  if (objType === 'avgWordLength')                    return 'avg ≥ ' + value + ' letters';
+  return String(value);
+}
+
+/**
+ * Slide the grid out of view and show a detail panel for one level.
+ * The player can BACK to the grid or START the level.
+ */
+function showLevelPreview(box, gridEl, level, info, onLevelStart, modal) {
+  gridEl.style.display = 'none';
+
+  const stars = info?.stars ?? 0;
+
+  const objectivesHtml = level.objectives.map(obj =>
+    `<li class="hx-preview-obj">${obj.desc}</li>`
+  ).join('');
+
+  const mainObj   = level.objectives[0];
+  const starRows  = level.stars.map((t, i) => {
+    const icons = [1, 2, 3].map(s =>
+      `<span class="hx-star${s <= i + 1 ? ' hx-star-filled' : ''}">★</span>`
+    ).join('');
+    return `<div class="hx-preview-star-row">${icons}<span class="hx-preview-star-label">${formatStarValue(t, mainObj.type)}</span></div>`;
+  }).join('');
+
+  const bestHtml = info?.completed
+    ? `<div class="hx-preview-best">
+         <span class="hx-preview-best-label">BEST</span>
+         <span class="hx-preview-best-stars">
+           ${[1, 2, 3].map(s => `<span class="hx-star${s <= stars ? ' hx-star-filled' : ''}">★</span>`).join('')}
+         </span>
+       </div>`
+    : '';
+
+  const preview = document.createElement('div');
+  preview.id = 'hx-campaign-preview';
+  preview.innerHTML = `
+    <div id="hx-preview-nav">
+      <button id="hx-preview-back" type="button" aria-label="Back to level list">← BACK</button>
+      <span id="hx-preview-levelnum">LEVEL ${level.id}</span>
+    </div>
+    <div id="hx-preview-title">${level.title}</div>
+    <div class="hx-preview-section-label">OBJECTIVES</div>
+    <ul id="hx-preview-objectives">${objectivesHtml}</ul>
+    <div class="hx-preview-section-label">STAR THRESHOLDS</div>
+    <div id="hx-preview-stars">${starRows}</div>
+    ${bestHtml}
+    <button id="hx-preview-start" type="button">▶ START LEVEL</button>
+  `;
+
+  box.appendChild(preview);
+
+  preview.querySelector('#hx-preview-back').addEventListener('click', () => {
+    preview.remove();
+    gridEl.style.display = '';
+  });
+
+  preview.querySelector('#hx-preview-start').addEventListener('click', () => {
+    modal.remove();
+    if (typeof onLevelStart === 'function') onLevelStart(level.id);
+  });
+}
+
 /* ── Level select modal ──────────────────────────────────────────── */
 
 export function openCampaignModal(onLevelStart) {
@@ -144,8 +213,7 @@ export function openCampaignModal(onLevelStart) {
 
     if (unlocked) {
       card.addEventListener('click', () => {
-        modal.remove();
-        if (typeof onLevelStart === 'function') onLevelStart(level.id);
+        showLevelPreview(box, grid, level, info, onLevelStart, modal);
       });
     }
 
