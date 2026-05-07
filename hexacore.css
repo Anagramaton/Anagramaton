@@ -202,7 +202,7 @@
 /* ── Live word-score preview (shown above #hx-live-word, valid words only) */
 #hx-word-score-hud {
   position: fixed;
-  bottom: clamp(100px, 14vh, 140px);
+  bottom: clamp(126px, 16vh, 162px);
   left: 50%;
   transform: translateX(-50%);
   right: auto;
@@ -1338,7 +1338,7 @@ body.hx-active #hex-grid {
 /* ── Live word display: bottom-center while player drags ──────── */
 #hx-live-word {
   position: fixed;
-  bottom: clamp(54px, 9vh, 90px);
+  bottom: clamp(88px, 11vh, 118px);
   left: 50%;
   transform: translateX(-50%);
   top: auto;
@@ -2063,10 +2063,10 @@ body[data-theme="dark"].hx-active #game-title {
   }
   #hx-live-word {
     font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-    bottom: clamp(50px, 8vh, 78px);
+    bottom: clamp(86px, 11.5vh, 114px);
   }
   #hx-word-score-hud {
-    bottom: clamp(88px, 12vh, 118px);
+    bottom: clamp(124px, 16vh, 152px);
     font-size: clamp(0.85rem, 1.7vw, 1.2rem);
   }
   #hx-score-hud {
@@ -2114,11 +2114,11 @@ body[data-theme="dark"].hx-active #game-title {
     font-size: clamp(0.65rem, 3vw, 0.9rem);
   }
   #hx-word-score-hud {
-    bottom: clamp(90px, 13vh, 120px);
+    bottom: clamp(122px, 19vh, 150px);
     font-size: clamp(0.8rem, 3.5vw, 1.1rem);
   }
   #hx-live-word {
-    bottom: clamp(48px, 8vh, 72px);
+    bottom: clamp(84px, 13vh, 110px);
     font-size: clamp(1rem, 4.5vw, 1.4rem);
   }
 }
@@ -2143,6 +2143,14 @@ body[data-theme="dark"].hx-active #game-title {
   }
   #hx-xp-label {
     font-size: 0.62rem;
+  }
+  #hx-live-word {
+    bottom: clamp(82px, 13vh, 104px);
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+  }
+  #hx-word-score-hud {
+    bottom: clamp(120px, 18vh, 144px);
+    font-size: clamp(0.75rem, 3vw, 1rem);
   }
 }
 
