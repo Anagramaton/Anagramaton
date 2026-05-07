@@ -3991,9 +3991,16 @@ body[data-theme="dark"].hx-active #game-title {
 
 /* ── Desktop (≥901px) — full effects ────────────────────────────── */
 @media (min-width: 901px) {
+  /* Remove glass box from score HUD on laptop/desktop; float text closer to edge */
   #hx-score-hud {
-    padding: 0.75rem 2rem;
-    border-radius: 22px;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    bottom: clamp(6px, 1vh, 14px);
   }
   .hx-mode-card:hover {
     transform: translateY(-4px) rotateX(2deg);
