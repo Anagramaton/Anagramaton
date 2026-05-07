@@ -1,4 +1,4 @@
-// hexacoreCampaign.js — Campaign mode with 50 levels for Hexacore
+// hexacoreCampaign.js — Campaign mode level definitions and progress tracking for Hexacore
 
 const HX_CAMPAIGN_KEY = 'hexacore_campaign';
 
@@ -59,6 +59,11 @@ export const CAMPAIGN_LEVELS = [
   { id: 48, title: 'Full Spectrum',    objectives: [{ type: 'uniqueGems', target: 10, desc: 'Use 10 different gem types' }],                           stars: [6, 8, 10] },
   { id: 49, title: 'Hexacore Elite',   objectives: [{ type: 'wordScore',  target: 50000, desc: 'Score 50,000+ on a single word' }],                    stars: [25000, 50000, 100000] },
   { id: 50, title: 'Hexacore Master',  objectives: [{ type: 'score',      target: 250000, desc: 'Score 250,000 points — the ultimate challenge!' }],   stars: [250000, 375000, 500000] },
+  { id: 51, title: 'Speed Demon',      objectives: [{ type: 'formWords',  target: 10, desc: 'Form 10 valid words' }, { type: 'timeLimit', target: 90, desc: 'Complete in under 90 seconds' }], stars: [10, 15, 20] },
+  { id: 52, title: 'Quality Over Quantity', objectives: [{ type: 'avgWordLength', target: 6, desc: 'Average word length ≥ 6 letters' }],                stars: [6, 7, 8] },
+  { id: 53, title: 'Ember Aversion',   objectives: [{ type: 'noEmberUse', target: 15, desc: 'Form 15 words without Ember tiles' }],                    stars: [10, 15, 20] },
+  { id: 54, title: 'Hot Streak',       objectives: [{ type: 'wordStreak', target: 5, desc: 'Submit 5 words in a row (each 6+ letters)' }],             stars: [3, 5, 7] },
+  { id: 55, title: 'Portal Master',    objectives: [{ type: 'portalChain', target: 4, desc: 'Use portal tiles in 4 consecutive words' }],               stars: [2, 4, 5] },
 ];
 
 /* ── Persistence ─────────────────────────────────────────────────── */
@@ -161,6 +166,36 @@ export function openCampaignModal(onLevelStart) {
 let _activeLevelId     = null;
 let _levelProgress     = {};
 let _onCompleteCallback = null;
+// Session-only trackers for objectives that need timers, averages, or streak state.
+let _levelSession      = {};
+
+function isGemTile(tile) {
+  return !!(tile?.tileType && tile.tileType.startsWith('gem'));
+}
+
+function isSpecialTile(tile) {
+  return !!tile?.tileType && tile.tileType !== 'normal';
+}
+
+function didUsePortalTile(tiles, state) {
+  if (!state?.portalOpen || !state.portalEntry || !state.portalExit) return false;
+
+  const entry = `${state.portalEntry.q},${state.portalEntry.r}`;
+  const exit  = `${state.portalExit.q},${state.portalExit.r}`;
+  return tiles.some(tile => {
+    const key = `${tile.q},${tile.r}`;
+    return key === entry || key === exit;
+  });
+}
+
+function isObjectiveMet(obj) {
+  if (obj.type === 'timeLimit') {
+    return (_levelSession.failedObjectives?.has(obj.type) !== true) &&
+      ((_levelProgress[obj.type] ?? 0) <= obj.target);
+  }
+
+  return (_levelProgress[obj.type] ?? 0) >= obj.target;
+}
 
 export function startCampaignLevel(levelId, onComplete) {
   const level = CAMPAIGN_LEVELS.find(l => l.id === levelId);
@@ -171,6 +206,14 @@ export function startCampaignLevel(levelId, onComplete) {
 
   // Reset all objective trackers
   _levelProgress = {};
+  _levelSession = {
+    startedAt: Date.now(),
+    totalWordLength: 0,
+    wordsTracked: 0,
+    gemTypes: new Set(),
+    currentStreaks: {},
+    failedObjectives: new Set(),
+  };
   level.objectives.forEach(obj => { _levelProgress[obj.type] = 0; });
 }
 
@@ -187,42 +230,98 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
   const level = CAMPAIGN_LEVELS.find(l => l.id === _activeLevelId);
   if (!level) return;
 
+  const elapsedSeconds = (Date.now() - (_levelSession.startedAt ?? Date.now())) / 1000;
+  const emberCount     = tiles.filter(t => t.tileType === 'ember').length;
+  const prismCount     = tiles.filter(t => t.tileType === 'prism').length;
+  const runeCount      = tiles.filter(t => t.tileType === 'rune').length;
+  const digraphCount   = tiles.filter(t => t.tileType === 'digraph').length;
+  const gemTiles       = tiles.filter(isGemTile);
+  const gemCount       = gemTiles.length;
+  const hasEmber       = emberCount > 0;
+  const hasRune        = runeCount > 0;
+  const portalUsed     = didUsePortalTile(tiles, state);
+  const allSpecialWord = tiles.length > 0 && tiles.every(tile => isGemTile(tile) || isSpecialTile(tile));
+
+  _levelSession.totalWordLength += word.length;
+  _levelSession.wordsTracked++;
+  gemTiles.forEach(tile => _levelSession.gemTypes.add(tile.tileType));
+
   level.objectives.forEach(obj => {
     switch (obj.type) {
       case 'formWords':  _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1; break;
       case 'score':      _levelProgress[obj.type] = Math.max(_levelProgress[obj.type] ?? 0, state.score); break;
       case 'wordScore':  _levelProgress[obj.type] = Math.max(_levelProgress[obj.type] ?? 0, wordScore); break;
       case 'wordLength': if (word.length >= obj.target) _levelProgress[obj.type] = obj.target; break;
-      case 'useEmber':   _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + tiles.filter(t => t.tileType === 'ember').length; break;
-      case 'usePrism':   _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + tiles.filter(t => t.tileType === 'prism').length; break;
-      case 'useRune':    _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + tiles.filter(t => t.tileType === 'rune').length; break;
-      case 'useDigraph': _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + tiles.filter(t => t.tileType === 'digraph').length; break;
+      case 'timeLimit':
+        _levelProgress[obj.type] = elapsedSeconds;
+        if (elapsedSeconds > obj.target) _levelSession.failedObjectives.add(obj.type);
+        break;
+      case 'avgWordLength':
+        _levelProgress[obj.type] = _levelSession.wordsTracked > 0
+          ? (_levelSession.totalWordLength / _levelSession.wordsTracked)
+          : 0;
+        break;
+      case 'useEmber':   _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + emberCount; break;
+      case 'usePrism':   _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + prismCount; break;
+      case 'useRune':    _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + runeCount; break;
+      case 'useDigraph': _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + digraphCount; break;
       case 'useGem': {
-        const gemCount = tiles.filter(t => t.tileType && t.tileType.startsWith('gem')).length;
         _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + gemCount;
         break;
       }
       case 'gemInWord': {
-        const gemCount = tiles.filter(t => t.tileType && t.tileType.startsWith('gem')).length;
         if (gemCount >= obj.target) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
         break;
       }
       case 'uniqueGems': {
-        const types = new Set(tiles.filter(t => t.tileType && t.tileType.startsWith('gem')).map(t => t.tileType));
-        _levelProgress[obj.type] = Math.max(_levelProgress[obj.type] ?? 0, types.size);
+        _levelProgress[obj.type] = _levelSession.gemTypes.size;
         break;
       }
       case 'emberGem': {
-        const hasEmber = tiles.some(t => t.tileType === 'ember');
-        const hasGem   = tiles.some(t => t.tileType && t.tileType.startsWith('gem'));
-        if (hasEmber && hasGem) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        if (hasEmber && gemCount > 0) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
         break;
       }
+      case 'noEmberUse':
+        if (!hasEmber) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      case 'wordStreak': {
+        const streak = word.length >= 6
+          ? ((_levelSession.currentStreaks[obj.type] ?? 0) + 1)
+          : 0;
+        _levelSession.currentStreaks[obj.type] = streak;
+        _levelProgress[obj.type] = Math.max(_levelProgress[obj.type] ?? 0, streak);
+        break;
+      }
+      case 'consecutiveScore': {
+        const streak = wordScore >= 500
+          ? ((_levelSession.currentStreaks[obj.type] ?? 0) + 1)
+          : 0;
+        _levelSession.currentStreaks[obj.type] = streak;
+        _levelProgress[obj.type] = Math.max(_levelProgress[obj.type] ?? 0, streak);
+        break;
+      }
+      case 'portalChain': {
+        const streak = portalUsed
+          ? ((_levelSession.currentStreaks[obj.type] ?? 0) + 1)
+          : 0;
+        _levelSession.currentStreaks[obj.type] = streak;
+        _levelProgress[obj.type] = Math.max(_levelProgress[obj.type] ?? 0, streak);
+        break;
+      }
+      case 'noWildcards':
+        if (!hasRune) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      case 'multiGemWord':
+        if (gemCount >= 4) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      case 'allSpecialWord':
+        if (allSpecialWord) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
     }
   });
 
   // Check if all objectives are met
-  const allMet = level.objectives.every(obj => (_levelProgress[obj.type] ?? 0) >= obj.target);
+  const allMet = level.objectives.every(isObjectiveMet);
   if (allMet) {
     completeCampaignLevel(level, state);
   }
@@ -236,7 +335,13 @@ function completeCampaignLevel(level, state) {
   const val     = _levelProgress[mainObj.type] ?? 0;
   const thresholds = level.stars;
   let starsEarned = 0;
-  thresholds.forEach(t => { if (val >= t) starsEarned++; });
+  thresholds.forEach(t => {
+    if (mainObj.type === 'timeLimit') {
+      if (val <= t) starsEarned++;
+    } else if (val >= t) {
+      starsEarned++;
+    }
+  });
   starsEarned = Math.max(1, starsEarned);
 
   recordLevelStars(level.id, starsEarned);
@@ -247,6 +352,7 @@ function completeCampaignLevel(level, state) {
   const cb = _onCompleteCallback;
   _activeLevelId      = null;
   _onCompleteCallback = null;
+  _levelSession       = {};
 
   if (typeof cb === 'function') cb({ levelId: level.id, stars: starsEarned });
 }
