@@ -20,7 +20,7 @@ export function getWeekString() {
   return `week-${year}-${String(week).padStart(2, '0')}`;
 }
 
-/* ── Quest pool (15 unique types) ───────────────────────────────── */
+/* ── Quest pool ─────────────────────────────────────────────────── */
 
 const QUEST_POOL = [
   { id: 'q_10words',   desc: 'SUBMIT 10 WORDS IN ONE SESSION',        reward: 150, target: 10,    trackKey: 'totalWords' },

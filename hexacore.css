@@ -1540,7 +1540,7 @@ body.hx-active #hex-grid {
 #hx-howto-modal {
   align-items: flex-start;
   justify-content: center;
-  /* Default (desktop ≥901px): top-bar ≈ 20px top + 44px MENU + 8px gap + 36px XP + 8px = ~116px */
+  /* Desktop ≥901px: top-bar is at top 14–28px + 44px MENU + 6–10px gap + 36px XP + 8px = 108–126px → floored to 112px */
   padding-top: clamp(112px, 14vh, 138px);
 }
 
@@ -2602,6 +2602,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 
 .hx-quest-section-title {
+  /* 0.72rem matches the tier-label scale used across hexacore modals */
   font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 0.16em;
