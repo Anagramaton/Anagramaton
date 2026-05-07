@@ -83,6 +83,7 @@ const SCORE_TICK_MS             = 700; // ms duration for score count-up animati
 const HX_TITLE_TEXT             = 'HEXACORE';
 const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
 let hxLastTitleLitSignature     = '';
+let hxLastTitlePattern          = -1;
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -2735,6 +2736,7 @@ function triggerHexacoreTitleFlash(wordScore) {
   letterGroups.flat().forEach(letter => letter.classList.remove('hx-title-letter--lit'));
   void titleEls[0].offsetWidth;
   const letters = letterGroups[0];
+  const center = Math.floor(letters.length / 2);
 
   if (wordScore >= 100) {
     hxLastTitleLitSignature = 'epic';
@@ -2759,15 +2761,111 @@ function triggerHexacoreTitleFlash(wordScore) {
     [idxs[i], idxs[j]] = [idxs[j], idxs[i]];
   }
 
-  let selected = idxs.slice(0, count).sort((a, b) => a - b);
-  let signature = selected.join(',');
+  const selected = idxs.slice(0, count);
+
+  // Pick a random pattern (1–8), avoiding the same pattern twice in a row.
+  // Deterministic skip: choose from 7 options, then offset past the last pattern.
+  const r = Math.floor(Math.random() * (hxLastTitlePattern === -1 ? 8 : 7));
+  let pattern = r + 1;
+  if (hxLastTitlePattern !== -1 && pattern >= hxLastTitlePattern) pattern++;
+  hxLastTitlePattern = pattern;
+
+  // Compute animation orders for both titles in opposite directions
+  let orderForTitle1 = [];
+  let orderForTitle2 = [];
+
+  switch (pattern) {
+    case 1: // LEFT-TO-RIGHT vs RIGHT-TO-LEFT
+      orderForTitle1 = selected.slice().sort((a, b) => a - b);
+      orderForTitle2 = selected.slice().sort((a, b) => b - a);
+      break;
+    case 2: // RIGHT-TO-LEFT vs LEFT-TO-RIGHT
+      orderForTitle1 = selected.slice().sort((a, b) => b - a);
+      orderForTitle2 = selected.slice().sort((a, b) => a - b);
+      break;
+    case 3: // CENTER-OUT EXPLOSION vs OUTSIDE-IN IMPLOSION
+      orderForTitle1 = selected.slice().sort((a, b) => Math.abs(a - center) - Math.abs(b - center));
+      orderForTitle2 = selected.slice().sort((a, b) => Math.abs(b - center) - Math.abs(a - center));
+      break;
+    case 4: // OUTSIDE-IN IMPLOSION vs CENTER-OUT EXPLOSION
+      orderForTitle1 = selected.slice().sort((a, b) => Math.abs(b - center) - Math.abs(a - center));
+      orderForTitle2 = selected.slice().sort((a, b) => Math.abs(a - center) - Math.abs(b - center));
+      break;
+    case 5: // EVENS FIRST vs ODDS FIRST
+      orderForTitle1 = selected.slice().sort((a, b) => {
+        const aIsEven = a % 2 === 0;
+        const bIsEven = b % 2 === 0;
+        if (aIsEven !== bIsEven) return aIsEven ? -1 : 1;
+        return a - b;
+      });
+      orderForTitle2 = selected.slice().sort((a, b) => {
+        const aIsOdd = a % 2 !== 0;
+        const bIsOdd = b % 2 !== 0;
+        if (aIsOdd !== bIsOdd) return aIsOdd ? -1 : 1;
+        return a - b;
+      });
+      break;
+    case 6: // SINE WAVE ASCENDING vs DESCENDING
+      orderForTitle1 = selected.slice().sort((a, b) => Math.sin(a * 0.5) - Math.sin(b * 0.5));
+      orderForTitle2 = selected.slice().sort((a, b) => Math.sin(b * 0.5) - Math.sin(a * 0.5));
+      break;
+    case 7: // RANDOM SPARKLE (two independent Fisher-Yates shuffles)
+    {
+      const arr1 = selected.slice();
+      for (let i = arr1.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr1[i], arr1[j]] = [arr1[j], arr1[i]];
+      }
+      orderForTitle1 = arr1;
+      const arr2 = selected.slice();
+      for (let i = arr2.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr2[i], arr2[j]] = [arr2[j], arr2[i]];
+      }
+      orderForTitle2 = arr2;
+      break;
+    }
+    case 8: // SEQUENTIAL vs MIRRORED
+      orderForTitle1 = selected.slice().sort((a, b) => a - b);
+      orderForTitle2 = selected.slice().sort((a, b) => {
+        const mirrorA = (letters.length - 1) - a;
+        const mirrorB = (letters.length - 1) - b;
+        return mirrorA - mirrorB;
+      });
+      break;
+  }
+
+  // Anti-repeat signature check: if the exact same letter set appears twice in a row,
+  // shift to the next slice of indices and re-apply the current pattern ordering.
+  const selectedSorted = selected.slice().sort((a, b) => a - b);
+  let signature = selectedSorted.join(',');
   if (signature === hxLastTitleLitSignature && count < letters.length) {
-    selected = idxs.slice(1, count + 1).sort((a, b) => a - b);
-    signature = selected.join(',');
+    const fallbackSelected = idxs.slice(1, count + 1);
+    orderForTitle1 = fallbackSelected.slice().sort((a, b) => a - b);
+    orderForTitle2 = fallbackSelected.slice().sort((a, b) => b - a);
+    signature = fallbackSelected.slice().sort((a, b) => a - b).join(',');
   }
   hxLastTitleLitSignature = signature;
 
-  selected.forEach(idx => letterGroups.forEach(group => group[idx].classList.add('hx-title-letter--lit')));
+  // Apply animation order and light up Title 1
+  orderForTitle1.forEach((idx, animOrder) => {
+    const letter = letterGroups[0][idx];
+    if (letter) {
+      letter.style.setProperty('--anim-order', String(animOrder));
+      letter.classList.add('hx-title-letter--lit');
+    }
+  });
+
+  // Apply animation order and light up Title 2 (opposite direction)
+  if (letterGroups[1]) {
+    orderForTitle2.forEach((idx, animOrder) => {
+      const letter = letterGroups[1][idx];
+      if (letter) {
+        letter.style.setProperty('--anim-order', String(animOrder));
+        letter.classList.add('hx-title-letter--lit');
+      }
+    });
+  }
 }
 
 /* ── Word submission ───────────────────────────────────────────── */
