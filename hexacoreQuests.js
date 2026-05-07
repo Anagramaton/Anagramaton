@@ -125,11 +125,8 @@ function recordLoginDay() {
   if (!state || state.week !== week) {
     state = { week, days: [] };
   }
-  // Use a Set for O(1) duplicate detection, then persist as array
-  const daySet = new Set(state.days);
-  if (!daySet.has(today)) {
-    daySet.add(today);
-    state.days = [...daySet];
+  if (!state.days.includes(today)) {
+    state.days.push(today);
     saveWeeklyLoginState(state);
   }
 }
