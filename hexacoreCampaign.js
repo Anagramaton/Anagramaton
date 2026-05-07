@@ -94,9 +94,18 @@ export function recordLevelStars(levelId, stars) {
 
 /** Return a human-readable label for a star threshold value. */
 function formatStarValue(value, objType) {
-  if (objType === 'score' || objType === 'wordScore') return value.toLocaleString() + ' pts';
-  if (objType === 'timeLimit')                        return '≤ ' + value + 's';
-  if (objType === 'avgWordLength')                    return 'avg ≥ ' + value + ' letters';
+  if (objType === 'score' || objType === 'wordScore')                      return value.toLocaleString() + ' pts';
+  if (objType === 'timeLimit')                                             return '≤ ' + value + 's';
+  if (objType === 'avgWordLength')                                         return 'avg ≥ ' + value + ' letters';
+  if (objType === 'wordStreak' || objType === 'consecutiveScore')          return value + ' in a row';
+  if (objType === 'portalChain')                                           return value + ' portal words';
+  if (objType === 'noEmberUse' || objType === 'noWildcards')               return value + ' clean words';
+  if (objType === 'multiGemWord' || objType === 'allSpecialWord')          return value + (value === 1 ? ' word' : ' words');
+  if (objType === 'emberGem' || objType === 'gemInWord')                   return value + (value === 1 ? ' word' : ' words');
+  if (objType === 'formWords' || objType === 'wordLength')                 return value + (value === 1 ? ' word' : ' words');
+  if (objType === 'useEmber' || objType === 'usePrism' || objType === 'useRune' ||
+      objType === 'useDigraph' || objType === 'useGem')                    return value + (value === 1 ? ' tile' : ' tiles');
+  if (objType === 'uniqueGems')                                            return value + ' gem types';
   return String(value);
 }
 
