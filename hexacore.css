@@ -2194,8 +2194,8 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
     opacity: 1;
   }
   100% {
-    filter: brightness(2) drop-shadow(0 0 8px rgba(255, 140, 40, 0.5));
-    -webkit-text-stroke-color: #ffaa40;
+    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    -webkit-text-stroke-color: rgba(255, 140, 66, 0.12);
     opacity: 1;
   }
 }
@@ -2252,8 +2252,8 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     opacity: 1;
   }
   100% {
-    filter: brightness(2) drop-shadow(0 0 8px rgba(255, 140, 40, 0.5));
-    -webkit-text-stroke-color: #ffaa40;
+    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    -webkit-text-stroke-color: rgba(255, 140, 66, 0.15);
     opacity: 1;
   }
 }
