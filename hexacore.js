@@ -2744,7 +2744,7 @@ function dimHexacoreTitleLetters() {
         { filter: fromFilter },
         { filter: 'brightness(1) drop-shadow(0 0 0 transparent)' }
       ],
-      { duration: 900, easing: 'ease-out', fill: 'forwards' }
+      { duration: 2500, easing: 'ease-out', fill: 'forwards' }
     );
     _hxDimAnimations.set(letter, anim);
     anim.onfinish = () => {

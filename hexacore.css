@@ -2215,7 +2215,7 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
   }
 }
 body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--dimming {
-  animation: hx-title-letter-dim 0.9s ease-out forwards;
+  animation: hx-title-letter-dim 2.5s ease-out forwards;
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) {
   opacity: 1;
@@ -2273,7 +2273,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--dimming {
-  animation: hx-title-letter-dim-dark 0.9s ease-out forwards;
+  animation: hx-title-letter-dim-dark 2.5s ease-out forwards;
 }
 
 /* ── Hexacore HUD breakpoints ─────────────────────────────────── */
