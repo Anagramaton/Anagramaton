@@ -2754,7 +2754,7 @@ function dimHexacoreTitleLetters() {
   });
 }
 
-function triggerHexacoreTitleFlash(wordScore) {
+function triggerHexacoreTitleFlash(_wordScore) {
   const titleEls = HX_TITLE_ELEMENT_IDS
     .map(id => document.getElementById(id))
     .filter(Boolean);
@@ -2772,30 +2772,8 @@ function triggerHexacoreTitleFlash(wordScore) {
   const letters = letterGroups[0];
   const center = Math.floor(letters.length / 2);
 
-  if (wordScore >= 100) {
-    hxLastTitleLitSignature = 'epic';
-    letterGroups.forEach(group => group.forEach(letter => letter.classList.add('hx-title-letter--lit')));
-    return;
-  }
-
-  let min = 1;
-  let max = 2;
-  if (wordScore >= 50) {
-    min = 5;
-    max = 6;
-  } else if (wordScore >= 20) {
-    min = 3;
-    max = 4;
-  }
-
-  const count = min + Math.floor(Math.random() * (max - min + 1));
   const idxs = letters.map((_, idx) => idx);
-  for (let i = idxs.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [idxs[i], idxs[j]] = [idxs[j], idxs[i]];
-  }
-
-  const selected = idxs.slice(0, count);
+  const selected = idxs.slice();
 
   // Pick a random pattern (1–8), avoiding the same pattern twice in a row.
   // Deterministic skip: choose from 7 options, then offset past the last pattern.
@@ -2869,17 +2847,9 @@ function triggerHexacoreTitleFlash(wordScore) {
       break;
   }
 
-  // Anti-repeat signature check: if the exact same letter set appears twice in a row,
-  // shift to the next slice of indices and re-apply the current pattern ordering.
+  // Track lit-letter signature (all HEXACORE letters are animated each submission).
   const selectedSorted = selected.slice().sort((a, b) => a - b);
-  let signature = selectedSorted.join(',');
-  if (signature === hxLastTitleLitSignature && count < letters.length) {
-    const fallbackSelected = idxs.slice(1, count + 1);
-    orderForTitle1 = fallbackSelected.slice().sort((a, b) => a - b);
-    orderForTitle2 = fallbackSelected.slice().sort((a, b) => b - a);
-    signature = fallbackSelected.slice().sort((a, b) => a - b).join(',');
-  }
-  hxLastTitleLitSignature = signature;
+  hxLastTitleLitSignature = selectedSorted.join(',');
 
   // Apply animation order and light up Title 1
   orderForTitle1.forEach((idx, animOrder) => {
