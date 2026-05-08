@@ -84,6 +84,7 @@ const HX_TITLE_TEXT             = 'HEXACORE';
 const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
 let hxLastTitleLitSignature     = '';
 let hxLastTitlePattern          = -1;
+const _hxDimAnimations          = new Map(); // letter element → WAAPI Animation
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -2717,6 +2718,8 @@ function setHexacoreTitle(title = HX_TITLE_TEXT) {
 }
 
 function restoreDefaultTitle() {
+  _hxDimAnimations.forEach(anim => anim.cancel());
+  _hxDimAnimations.clear();
   HX_TITLE_ELEMENT_IDS.forEach(id => {
     const titleEl = document.getElementById(id);
     if (titleEl) titleEl.textContent = 'ANAGRAMATON';
@@ -2732,12 +2735,23 @@ function dimHexacoreTitleLetters() {
     });
   if (!litLetters.length) return;
   litLetters.forEach(letter => {
+    // Snapshot the current animated filter before cancelling the CSS animation
+    const fromFilter = getComputedStyle(letter).filter || 'none';
     letter.classList.remove('hx-title-letter--lit');
-    letter.classList.add('hx-title-letter--dimming');
+    // Dim from wherever the letter currently is using WAAPI
+    const anim = letter.animate(
+      [
+        { filter: fromFilter },
+        { filter: 'brightness(1) drop-shadow(0 0 0 transparent)' }
+      ],
+      { duration: 900, easing: 'ease-out', fill: 'forwards' }
+    );
+    _hxDimAnimations.set(letter, anim);
+    anim.onfinish = () => {
+      anim.cancel();
+      _hxDimAnimations.delete(letter);
+    };
   });
-  setTimeout(() => {
-    litLetters.forEach(letter => letter.classList.remove('hx-title-letter--dimming'));
-  }, 900);
 }
 
 function triggerHexacoreTitleFlash(wordScore) {
@@ -2749,7 +2763,11 @@ function triggerHexacoreTitleFlash(wordScore) {
   const letterGroups = titleEls.map(titleEl => [...titleEl.querySelectorAll('.hx-title-letter')]);
   if (letterGroups.some(letters => letters.length !== HX_TITLE_TEXT.length)) return;
 
-  letterGroups.flat().forEach(letter => letter.classList.remove('hx-title-letter--lit', 'hx-title-letter--dimming'));
+  letterGroups.flat().forEach(letter => {
+    const dimAnim = _hxDimAnimations.get(letter);
+    if (dimAnim) { dimAnim.cancel(); _hxDimAnimations.delete(letter); }
+    letter.classList.remove('hx-title-letter--lit', 'hx-title-letter--dimming');
+  });
   void titleEls[0].offsetWidth;
   const letters = letterGroups[0];
   const center = Math.floor(letters.length / 2);
