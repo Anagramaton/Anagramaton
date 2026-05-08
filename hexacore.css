@@ -2194,13 +2194,28 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
     opacity: 1;
   }
   100% {
+    filter: brightness(2) drop-shadow(0 0 8px rgba(255, 140, 40, 0.5));
+    -webkit-text-stroke-color: #ffaa40;
+    opacity: 1;
+  }
+}
+body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+  animation: hx-title-letter-flash 1.8s ease-out calc(var(--anim-order, 0) * 120ms) infinite alternate both;
+}
+@keyframes hx-title-letter-dim {
+  0% {
+    filter: brightness(2) drop-shadow(0 0 8px rgba(255, 140, 40, 0.5));
+    -webkit-text-stroke-color: #ffaa40;
+    opacity: 1;
+  }
+  100% {
     filter: brightness(1) drop-shadow(0 0 0 transparent);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.12);
     opacity: 1;
   }
 }
-body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
-  animation: hx-title-letter-flash 1.8s ease-out calc(var(--letter-idx, 0) * 120ms) both;
+body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--dimming {
+  animation: hx-title-letter-dim 2.5s ease-out forwards;
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) {
   opacity: 1;
@@ -2237,13 +2252,28 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     opacity: 1;
   }
   100% {
+    filter: brightness(2) drop-shadow(0 0 8px rgba(255, 140, 40, 0.5));
+    -webkit-text-stroke-color: #ffaa40;
+    opacity: 1;
+  }
+}
+body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+  animation: hx-title-letter-flash-dark 1.8s ease-out calc(var(--anim-order, 0) * 120ms) infinite alternate both;
+}
+@keyframes hx-title-letter-dim-dark {
+  0% {
+    filter: brightness(2) drop-shadow(0 0 8px rgba(255, 140, 40, 0.5));
+    -webkit-text-stroke-color: #ffaa40;
+    opacity: 1;
+  }
+  100% {
     filter: brightness(1) drop-shadow(0 0 0 transparent);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.15);
     opacity: 1;
   }
 }
-body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
-  animation: hx-title-letter-flash-dark 1.8s ease-out calc(var(--letter-idx, 0) * 120ms) both;
+body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--dimming {
+  animation: hx-title-letter-dim-dark 2.5s ease-out forwards;
 }
 
 /* ── Hexacore HUD breakpoints ─────────────────────────────────── */
