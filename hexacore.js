@@ -82,7 +82,6 @@ const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refi
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
 const HX_TITLE_TEXT             = 'HEXACORE';
 const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
-let hxLastTitleLitSignature     = '';
 let hxLastTitlePattern          = -1;
 const _hxDimAnimations          = new Map(); // letter element → WAAPI Animation
 
@@ -2724,7 +2723,6 @@ function restoreDefaultTitle() {
     const titleEl = document.getElementById(id);
     if (titleEl) titleEl.textContent = 'ANAGRAMATON';
   });
-  hxLastTitleLitSignature = '';
 }
 
 function dimHexacoreTitleLetters() {
@@ -2754,7 +2752,7 @@ function dimHexacoreTitleLetters() {
   });
 }
 
-function triggerHexacoreTitleFlash(_wordScore) {
+function triggerHexacoreTitleFlash() {
   const titleEls = HX_TITLE_ELEMENT_IDS
     .map(id => document.getElementById(id))
     .filter(Boolean);
@@ -2846,10 +2844,6 @@ function triggerHexacoreTitleFlash(_wordScore) {
       });
       break;
   }
-
-  // Track lit-letter signature (all HEXACORE letters are animated each submission).
-  const selectedSorted = selected.slice().sort((a, b) => a - b);
-  hxLastTitleLitSignature = selectedSorted.join(',');
 
   // Apply animation order and light up Title 1
   orderForTitle1.forEach((idx, animOrder) => {
