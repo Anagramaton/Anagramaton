@@ -2724,6 +2724,22 @@ function restoreDefaultTitle() {
   hxLastTitleLitSignature = '';
 }
 
+function dimHexacoreTitleLetters() {
+  const litLetters = HX_TITLE_ELEMENT_IDS
+    .flatMap(id => {
+      const el = document.getElementById(id);
+      return el ? [...el.querySelectorAll('.hx-title-letter--lit')] : [];
+    });
+  if (!litLetters.length) return;
+  litLetters.forEach(letter => {
+    letter.classList.remove('hx-title-letter--lit');
+    letter.classList.add('hx-title-letter--dimming');
+  });
+  setTimeout(() => {
+    litLetters.forEach(letter => letter.classList.remove('hx-title-letter--dimming'));
+  }, 900);
+}
+
 function triggerHexacoreTitleFlash(wordScore) {
   const titleEls = HX_TITLE_ELEMENT_IDS
     .map(id => document.getElementById(id))
@@ -2733,7 +2749,7 @@ function triggerHexacoreTitleFlash(wordScore) {
   const letterGroups = titleEls.map(titleEl => [...titleEl.querySelectorAll('.hx-title-letter')]);
   if (letterGroups.some(letters => letters.length !== HX_TITLE_TEXT.length)) return;
 
-  letterGroups.flat().forEach(letter => letter.classList.remove('hx-title-letter--lit'));
+  letterGroups.flat().forEach(letter => letter.classList.remove('hx-title-letter--lit', 'hx-title-letter--dimming'));
   void titleEls[0].offsetWidth;
   const letters = letterGroups[0];
   const center = Math.floor(letters.length / 2);
@@ -2993,6 +3009,7 @@ async function submitHexacoreWord() {
   if (!hxState.gameOver) {
     checkLevelUp(oldScore, hxState.score);
     playSound('sfxGemCollect');
+    dimHexacoreTitleLetters();
     // Spawn gem reward based on word length
     spawnGemRewardForWord(word.length);
     // Fire bonus mirrors word reward
