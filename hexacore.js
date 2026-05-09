@@ -1274,12 +1274,7 @@ function showLevelUpBanner(level) {
   `;
   document.body.appendChild(banner);
 
-  const dismiss = () => banner.remove();
-  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', dismiss);
-
-  // Auto-remove after animation completes (~3s) as a fallback
-  banner.addEventListener('animationend', dismiss, { once: true });
-  setTimeout(dismiss, 6000);
+  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => banner.remove());
 }
 
 function showRestoredBanner(level, score) {
@@ -1342,11 +1337,7 @@ function showPlayerLevelUpBanner(newLevel) {
   `;
   document.body.appendChild(banner);
 
-  const dismiss = () => banner.remove();
-  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', dismiss);
-
-  banner.addEventListener('animationend', dismiss, { once: true });
-  setTimeout(dismiss, 6000);
+  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => banner.remove());
 
   // LVL button badge-pop + XP bar glow sweep
   const lvlBtn = document.getElementById('hx-level-hud');
