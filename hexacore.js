@@ -757,6 +757,24 @@ async function animateTileMovesStaggered(moves) {
   await Promise.all(allDone);
 }
 
+/* ── Animate tile moves with FORCED chain-reaction (no unison edge cases) ── */
+async function animateTileMovesWithColumnStagger(moves) {
+  if (moves.length === 0) return;
+
+  const columnGroups = new Map();
+  for (const move of moves) {
+    const colKey = move.fromQ;
+    if (!columnGroups.has(colKey)) columnGroups.set(colKey, []);
+    columnGroups.get(colKey).push(move);
+  }
+
+  const sortedColumns = [...columnGroups.keys()].sort((a, b) => a - b);
+  for (const colQ of sortedColumns) {
+    const colMoves = columnGroups.get(colQ);
+    await animateTileMovesStaggered(colMoves);
+  }
+}
+
 /* ── Tile type styling ─────────────────────────────────────────── */
 function applyTileType(tile) {
   const poly = tile.element.querySelector('polygon');
@@ -3910,7 +3928,7 @@ async function applyGravity() {
     }
 
     if (moves.length === 0) break;
-    await animateTileMovesStaggered(moves);
+    await animateTileMovesWithColumnStagger(moves);
   }
 }
 
