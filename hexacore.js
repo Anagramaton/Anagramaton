@@ -86,6 +86,29 @@ const HX_TITLE_TEXT             = 'HEXACORE';
 const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
 let hxLastTitlePattern          = -1;
 
+/* ── Achievement tile unlock thresholds ────────────────────────── */
+const ORACLE_UNLOCK_WORD_LENGTH    = 9;      // 9-letter word → Oracle spawns
+const BEACON_UNLOCK_SCORE          = 10000;  // 10,000+ pts single word → Beacon spawns
+const ECLIPSE_UNLOCK_PORTAL_WORDS  = 3;      // portal used in 3+ words → Eclipse spawns
+const LODESTONE_UNLOCK_GEM_TYPES   = 5;      // 5 different gem types in one word → Lodestone spawns
+const LEXICON_UNLOCK_WORDS         = 100;    // 100 total words submitted → Lexicon spawns
+
+/* ── Achievement power-up timing constants ─────────────────────── */
+const ORACLE_HIGHLIGHT_DURATION_MS   = 5000;  // ms tiles stay highlighted by Oracle
+const BEACON_TOAST_DURATION_MS       = 5000;  // ms Beacon toast remains visible
+const LEXICON_MODAL_AUTO_DISMISS_MS  = 12000; // ms before Lexicon modal auto-closes
+const ACHIEVEMENT_TOAST_STAGGER_MS   = 2000;  // ms stagger between achievement toasts
+
+/* ── Board analysis constants ───────────────────────────────────── */
+const HX_MAX_LETTER_POINTS          = 10;   // highest point value in HX_LETTER_POINTS
+const MAX_WORD_PATH_DEPTH           = 9;    // max tiles per path in board DFS
+const ORACLE_MAX_RESULTS            = 50;
+const ORACLE_TIME_LIMIT_MS          = 1200;
+const BEACON_MAX_RESULTS            = 50;
+const BEACON_TIME_LIMIT_MS          = 1200;
+const LEXICON_MAX_RESULTS           = 200;
+const LEXICON_TIME_LIMIT_MS         = 1500;
+
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
  * High-frequency vowels + consonants ensure dense playable word coverage.
@@ -2546,10 +2569,22 @@ function updateWordScorePreview() {
   });
 
   const countBonus = calcGemCountBonus(hxSelected);
+  const lodestoneBoostPreview = hxState.lodestoneActive ? 1 : 0;
 
-  const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
+  let previewBase = base;
+  if (hxState.eclipseActive) {
+    // Recalculate with inverted letter values for preview
+    previewBase = 0;
+    knownLetters.forEach(l => {
+      if (l) { for (const ch of l) previewBase += Math.max(1, (HX_MAX_LETTER_POINTS + 1) - (HX_LETTER_POINTS[ch] || 1)); }
+      else previewBase += 5; // average inverted value for unknown rune
+    });
+  }
+
+  const preview = previewBase * lenMult * (hasPrism ? 2 : 1) * gemMult * (countBonus + lodestoneBoostPreview);
   const runeNote = runeCount > 0 ? '~' : '';
-  el.textContent = `${runeNote}+${preview}`;
+  const effectNote = (hxState.eclipseActive || hxState.lodestoneActive) ? '★' : '';
+  el.textContent = `${effectNote}${runeNote}+${preview}`;
 }
 
 function clearSelection() {
@@ -3036,7 +3071,7 @@ function activateOracle() {
   setTimeout(() => {
     result.path.forEach(tile => tile.element.classList.remove('hx-oracle-highlight'));
     label.remove();
-  }, 5000);
+  }, ORACLE_HIGHLIGHT_DURATION_MS);
 }
 
 /* ── Achievement-based tile: Beacon (Highest Scoring) ──────────── */
@@ -3062,7 +3097,7 @@ function activateBeacon() {
   el.className = 'hx-powerup-toast hx-powerup-toast--beacon';
   el.innerHTML = `<span class="hx-powerup-toast-title">◆ BEACON: "${result.word}"</span><span class="hx-powerup-toast-desc">Best word: +${result.score.toLocaleString()} pts</span>`;
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 5000);
+  setTimeout(() => el.remove(), BEACON_TOAST_DURATION_MS);
 }
 
 /* ── Achievement-based tile: Eclipse (Invert Letter Values) ────── */
@@ -3127,7 +3162,6 @@ function showLexiconModal(words) {
   const closeBtn = document.createElement('button');
   closeBtn.className = 'hx-lexicon-modal-close';
   closeBtn.textContent = 'CLOSE';
-  closeBtn.addEventListener('click', () => overlay.remove());
 
   box.appendChild(title);
   box.appendChild(list);
@@ -3135,12 +3169,18 @@ function showLexiconModal(words) {
   overlay.appendChild(box);
   document.body.appendChild(overlay);
 
-  // Auto-dismiss after 12 seconds
-  setTimeout(() => overlay.remove(), 12000);
+  // Auto-dismiss after configured duration
+  const autoDismissTimer = setTimeout(() => overlay.remove(), LEXICON_MODAL_AUTO_DISMISS_MS);
 
-  // Click outside to dismiss
+  // Click outside or close button to dismiss (clear auto-dismiss timer)
+  const dismiss = () => {
+    clearTimeout(autoDismissTimer);
+    overlay.remove();
+  };
+
+  closeBtn.addEventListener('click', dismiss);
   overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.remove();
+    if (e.target === overlay) dismiss();
   });
 }
 
@@ -3152,7 +3192,7 @@ function showLexiconModal(words) {
  * @param {number} maxResults - maximum results to collect
  * @param {number} timeLimitMs - time budget in milliseconds
  */
-function analyzeBoard(maxResults = 10, timeLimitMs = 1200) {
+function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME_LIMIT_MS) {
   const results = [];
   const seen = new Set();
   const deadline = performance.now() + timeLimitMs;
@@ -3185,7 +3225,7 @@ function analyzeBoard(maxResults = 10, timeLimitMs = 1200) {
       results.push({ word: wordStr, score: scoreWord(path), path: [...path] });
     }
 
-    if (path.length >= 9) return; // limit depth
+    if (path.length >= MAX_WORD_PATH_DEPTH) return; // limit depth
     if (performance.now() >= deadline) return;
 
     const last = path[path.length - 1];
@@ -3215,19 +3255,19 @@ function analyzeBoard(maxResults = 10, timeLimitMs = 1200) {
 }
 
 function findLongestWordOnBoard() {
-  const results = analyzeBoard(50, 1200);
+  const results = analyzeBoard(ORACLE_MAX_RESULTS, ORACLE_TIME_LIMIT_MS);
   if (results.length === 0) return null;
   return results.reduce((best, r) => r.word.length > best.word.length ? r : best, results[0]);
 }
 
 function findHighestScoringWordOnBoard() {
-  const results = analyzeBoard(50, 1200);
+  const results = analyzeBoard(BEACON_MAX_RESULTS, BEACON_TIME_LIMIT_MS);
   if (results.length === 0) return null;
   return results.reduce((best, r) => r.score > best.score ? r : best, results[0]);
 }
 
 function findTopWordsOnBoard(n) {
-  const results = analyzeBoard(200, 1500);
+  const results = analyzeBoard(LEXICON_MAX_RESULTS, LEXICON_TIME_LIMIT_MS);
   results.sort((a, b) => b.score - a.score);
   return results.slice(0, n);
 }
@@ -3242,21 +3282,21 @@ function checkAchievementRewards(word, consumed, wordScore, portalUsed) {
   const spawned = [];
 
   // 1. Oracle — 9-letter word
-  if (!hxState.achievements.oracleAwarded && word.length >= 9) {
+  if (!hxState.achievements.oracleAwarded && word.length >= ORACLE_UNLOCK_WORD_LENGTH) {
     hxState.achievements.oracleAwarded = true;
     spawnSpecialInRows('oracle', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
     spawned.push({ tileName: 'ORACLE ⊙', description: 'Longest Word Hunter! Use it in a 5+ letter word to collect.' });
   }
 
   // 2. Beacon — 10,000+ point single word
-  if (!hxState.achievements.beaconAwarded && wordScore >= 10000) {
+  if (!hxState.achievements.beaconAwarded && wordScore >= BEACON_UNLOCK_SCORE) {
     hxState.achievements.beaconAwarded = true;
     spawnSpecialInRows('beacon', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
     spawned.push({ tileName: 'BEACON ◆', description: 'Score Master! Use it in a 5+ letter word to collect.' });
   }
 
   // 3. Eclipse — portal used in 3 different words (cumulative)
-  if (!hxState.achievements.eclipseAwarded && portalUsed && hxState.achievements.portalWordsUsed >= 3) {
+  if (!hxState.achievements.eclipseAwarded && portalUsed && hxState.achievements.portalWordsUsed >= ECLIPSE_UNLOCK_PORTAL_WORDS) {
     hxState.achievements.eclipseAwarded = true;
     spawnSpecialInRows('eclipse', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
     spawned.push({ tileName: 'ECLIPSE ☽', description: 'Portal Traveler! Use it in a 5+ letter word to collect.' });
@@ -3265,7 +3305,7 @@ function checkAchievementRewards(word, consumed, wordScore, portalUsed) {
   // 4. Lodestone — 5 different gem types in one word
   if (!hxState.achievements.lodestoneAwarded) {
     const uniqueGemTypes = new Set(consumed.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType));
-    if (uniqueGemTypes.size >= 5) {
+    if (uniqueGemTypes.size >= LODESTONE_UNLOCK_GEM_TYPES) {
       hxState.achievements.lodestoneAwarded = true;
       spawnSpecialInRows('lodestone', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
       spawned.push({ tileName: 'LODESTONE ⬡', description: 'Gem Collector! Use it in a 5+ letter word to collect.' });
@@ -3273,7 +3313,7 @@ function checkAchievementRewards(word, consumed, wordScore, portalUsed) {
   }
 
   // 5. Lexicon — 100 total words submitted this session
-  if (!hxState.achievements.lexiconAwarded && hxState.wordsSubmitted >= 100) {
+  if (!hxState.achievements.lexiconAwarded && hxState.wordsSubmitted >= LEXICON_UNLOCK_WORDS) {
     hxState.achievements.lexiconAwarded = true;
     spawnSpecialInRows('lexicon', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
     spawned.push({ tileName: 'LEXICON ∞', description: 'Endurance Master! Use it in a 5+ letter word to collect. One-time use.' });
@@ -3600,7 +3640,7 @@ async function submitHexacoreWord() {
   // Eclipse power-up: invert letter point values (common→rare, rare→common)
   if (hxState.eclipseActive) {
     resolved.forEach(l => {
-      for (const ch of l) base += Math.max(1, 11 - (HX_LETTER_POINTS[ch] || 1));
+      for (const ch of l) base += Math.max(1, (HX_MAX_LETTER_POINTS + 1) - (HX_LETTER_POINTS[ch] || 1));
     });
     hxState.eclipseActive = false;
   } else {
@@ -3751,7 +3791,7 @@ async function submitHexacoreWord() {
     pendingPowerUpToasts.forEach(type => showPowerUpCollectToast(type));
     // Show achievement toasts for newly spawned achievement tiles (staggered)
     pendingAchievementSpawns.forEach((spawn, i) => {
-      setTimeout(() => showAchievementToast(spawn.tileName, spawn.description), i * 2000);
+      setTimeout(() => showAchievementToast(spawn.tileName, spawn.description), i * ACHIEVEMENT_TOAST_STAGGER_MS);
     });
 
     checkLevelUp(oldScore, hxState.score);
