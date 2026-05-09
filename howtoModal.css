@@ -36,6 +36,7 @@
   border-radius: 18px;
   width: min(600px, 94vw);
   max-height: min(85vh, 680px);
+  max-height: min(85dvh, 680px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -60,12 +61,14 @@
 /* --- 3. Page wrapper --- */
 #howto-pagewrap {
   flex: 1;
+  min-height: 0; /* allow flex child to shrink so footer stays in view */
   overflow-y: auto;
   padding: 16px 24px;
   scrollbar-width: thin;
   scrollbar-color: #4cc9f0 #0f1520;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 /* --- 4. Page visibility + content --- */
@@ -195,6 +198,7 @@
   #howto-modal .rom__dialog {
     width: 96vw;
     max-height: 90vh;
+    max-height: 90dvh; /* dvh excludes mobile browser toolbar */
     border-radius: 14px;
   }
   #howto-title { font-size: 1.3rem; padding: 16px 18px 12px; }
@@ -226,6 +230,7 @@
   border-radius: 18px;
   width: min(600px, 94vw);
   max-height: min(85vh, 680px);
+  max-height: min(85dvh, 680px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -248,18 +253,21 @@
 
 #hx-howto-pagewrap {
   flex: 1;
+  min-height: 0; /* allow flex child to shrink so footer stays in view */
   overflow-y: auto;
   padding: 16px 24px;
   scrollbar-width: thin;
   scrollbar-color: #4cc9f0 #0f1520;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 @media (max-width: 640px) {
   #hx-howto-modal .rom__dialog {
     width: 96vw;
     max-height: 90vh;
+    max-height: 90dvh; /* dvh excludes mobile browser toolbar */
     border-radius: 14px;
   }
   #hx-howto-title { font-size: 1.3rem; padding: 16px 18px 12px; }
