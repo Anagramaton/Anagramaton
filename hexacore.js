@@ -86,6 +86,29 @@ const HX_TITLE_TEXT             = 'HEXACORE';
 const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
 let hxLastTitlePattern          = -1;
 
+/* ── Achievement tile unlock thresholds ────────────────────────── */
+const ORACLE_UNLOCK_WORD_LENGTH    = 9;      // 9-letter word → Oracle spawns
+const BEACON_UNLOCK_SCORE          = 10000;  // 10,000+ pts single word → Beacon spawns
+const ECLIPSE_UNLOCK_PORTAL_WORDS  = 3;      // portal used in 3+ words → Eclipse spawns
+const LODESTONE_UNLOCK_GEM_TYPES   = 5;      // 5 different gem types in one word → Lodestone spawns
+const LEXICON_UNLOCK_WORDS         = 100;    // 100 total words submitted → Lexicon spawns
+
+/* ── Achievement power-up timing constants ─────────────────────── */
+const ORACLE_HIGHLIGHT_DURATION_MS   = 5000;  // ms tiles stay highlighted by Oracle
+const BEACON_TOAST_DURATION_MS       = 5000;  // ms Beacon toast remains visible
+const LEXICON_MODAL_AUTO_DISMISS_MS  = 12000; // ms before Lexicon modal auto-closes
+const ACHIEVEMENT_TOAST_STAGGER_MS   = 2000;  // ms stagger between achievement toasts
+
+/* ── Board analysis constants ───────────────────────────────────── */
+const HX_MAX_LETTER_POINTS          = 10;   // highest point value in HX_LETTER_POINTS
+const MAX_WORD_PATH_DEPTH           = 9;    // max tiles per path in board DFS
+const ORACLE_MAX_RESULTS            = 50;
+const ORACLE_TIME_LIMIT_MS          = 1200;
+const BEACON_MAX_RESULTS            = 50;
+const BEACON_TIME_LIMIT_MS          = 1200;
+const LEXICON_MAX_RESULTS           = 200;
+const LEXICON_TIME_LIMIT_MS         = 1500;
+
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
  * High-frequency vowels + consonants ensure dense playable word coverage.
@@ -212,10 +235,34 @@ const hxState = {
   gemAlexandriteTiles:  [],
   amethystTiles:   [],
   seleniteTiles:   [],
+  oracleTiles:     [],
+  beaconTiles:     [],
+  eclipseTiles:    [],
+  lodestoneTiles:  [],
+  lexiconTiles:    [],
   amethystCount:   0,
   seleniteCount:   0,
+  oracleCount:     0,
+  beaconCount:     0,
+  eclipseCount:    0,
+  lodestoneCount:  0,
+  lexiconCount:    0,
   gameOver:        false,
   active:          false,
+
+  // Active power-up effect flags
+  eclipseActive:   false,  // next word uses inverted letter values
+  lodestoneActive: false,  // next word grants +1 reuse multiplier bonus
+
+  // Achievement tracking (per session)
+  achievements: {
+    portalWordsUsed:    0,   // number of words submitted using the portal
+    oracleAwarded:      false,
+    beaconAwarded:      false,
+    eclipseAwarded:     false,
+    lodestoneAwarded:   false,
+    lexiconAwarded:     false,
+  },
 
   // Portal system
   wordsSubmitted: 0,      // total words successfully submitted this session
@@ -721,6 +768,7 @@ function applyTileType(tile) {
     'hx-gem-aquamarine', 'hx-gem-topaz', 'hx-gem-opal',
     'hx-gem-imperialjade', 'hx-gem-alexandrite',
     'hx-amethyst', 'hx-selenite',
+    'hx-oracle', 'hx-beacon', 'hx-eclipse', 'hx-lodestone', 'hx-lexicon',
   );
   tile.element.querySelector('.hx-type-icon')?.remove();
   // Reset letter font size (may have been reduced for digraph)
@@ -767,6 +815,26 @@ function applyTileType(tile) {
     poly.classList.add('hx-amethyst');
   } else if (tile.tileType === 'selenite') {
     poly.classList.add('hx-selenite');
+  } else if (tile.tileType === 'oracle') {
+    poly.classList.add('hx-oracle');
+    tile.textLetter.textContent = '⊙';
+    tile.textPoint.textContent  = '';
+  } else if (tile.tileType === 'beacon') {
+    poly.classList.add('hx-beacon');
+    tile.textLetter.textContent = '◆';
+    tile.textPoint.textContent  = '';
+  } else if (tile.tileType === 'eclipse') {
+    poly.classList.add('hx-eclipse');
+    tile.textLetter.textContent = '☽';
+    tile.textPoint.textContent  = '';
+  } else if (tile.tileType === 'lodestone') {
+    poly.classList.add('hx-lodestone');
+    tile.textLetter.textContent = '⬡';
+    tile.textPoint.textContent  = '';
+  } else if (tile.tileType === 'lexicon') {
+    poly.classList.add('hx-lexicon');
+    tile.textLetter.textContent = '∞';
+    tile.textPoint.textContent  = '';
   }
 }
 
@@ -974,6 +1042,108 @@ function injectSvgDefs(svg) {
       seleniteGrad.appendChild(s);
     });
     defs.appendChild(seleniteGrad);
+  }
+
+  // Oracle — moonstone silver → opal shimmer → luminous white
+  if (!document.getElementById('hx-oracle-gradient')) {
+    const oracleGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    oracleGrad.setAttribute('id', 'hx-oracle-gradient');
+    oracleGrad.setAttribute('x1', '0%'); oracleGrad.setAttribute('y1', '100%');
+    oracleGrad.setAttribute('x2', '100%'); oracleGrad.setAttribute('y2', '0%');
+    [
+      ['0%',   '#1e293b'],
+      ['45%',  '#64748b'],
+      ['80%',  '#cbd5e1'],
+      ['100%', '#f8fafc'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      oracleGrad.appendChild(s);
+    });
+    defs.appendChild(oracleGrad);
+  }
+
+  // Beacon — deep amber → gold → sunburst yellow
+  if (!document.getElementById('hx-beacon-gradient')) {
+    const beaconGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    beaconGrad.setAttribute('id', 'hx-beacon-gradient');
+    beaconGrad.setAttribute('x1', '0%'); beaconGrad.setAttribute('y1', '100%');
+    beaconGrad.setAttribute('x2', '100%'); beaconGrad.setAttribute('y2', '0%');
+    [
+      ['0%',   '#451a03'],
+      ['40%',  '#b45309'],
+      ['75%',  '#f59e0b'],
+      ['100%', '#fef08a'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      beaconGrad.appendChild(s);
+    });
+    defs.appendChild(beaconGrad);
+  }
+
+  // Eclipse — obsidian → deep charcoal → shadow violet
+  if (!document.getElementById('hx-eclipse-gradient')) {
+    const eclipseGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    eclipseGrad.setAttribute('id', 'hx-eclipse-gradient');
+    eclipseGrad.setAttribute('x1', '50%'); eclipseGrad.setAttribute('y1', '100%');
+    eclipseGrad.setAttribute('x2', '50%'); eclipseGrad.setAttribute('y2', '0%');
+    [
+      ['0%',   '#020617'],
+      ['45%',  '#1c1917'],
+      ['80%',  '#292524'],
+      ['100%', '#4c1d95'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      eclipseGrad.appendChild(s);
+    });
+    defs.appendChild(eclipseGrad);
+  }
+
+  // Lodestone — iron dark → steel mid → chrome highlight
+  if (!document.getElementById('hx-lodestone-gradient')) {
+    const lodestoneGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    lodestoneGrad.setAttribute('id', 'hx-lodestone-gradient');
+    lodestoneGrad.setAttribute('x1', '0%'); lodestoneGrad.setAttribute('y1', '100%');
+    lodestoneGrad.setAttribute('x2', '100%'); lodestoneGrad.setAttribute('y2', '0%');
+    [
+      ['0%',   '#18181b'],
+      ['40%',  '#3f3f46'],
+      ['75%',  '#a1a1aa'],
+      ['100%', '#e4e4e7'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      lodestoneGrad.appendChild(s);
+    });
+    defs.appendChild(lodestoneGrad);
+  }
+
+  // Lexicon — rainbow prismatic 6-stop spectrum
+  if (!document.getElementById('hx-lexicon-gradient')) {
+    const lexiconGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    lexiconGrad.setAttribute('id', 'hx-lexicon-gradient');
+    lexiconGrad.setAttribute('x1', '0%'); lexiconGrad.setAttribute('y1', '0%');
+    lexiconGrad.setAttribute('x2', '100%'); lexiconGrad.setAttribute('y2', '100%');
+    [
+      ['0%',    '#dc2626'],
+      ['20%',   '#ea580c'],
+      ['40%',   '#16a34a'],
+      ['60%',   '#2563eb'],
+      ['80%',   '#7c3aed'],
+      ['100%',  '#db2777'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      lexiconGrad.appendChild(s);
+    });
+    defs.appendChild(lexiconGrad);
   }
 }
 
@@ -2399,10 +2569,22 @@ function updateWordScorePreview() {
   });
 
   const countBonus = calcGemCountBonus(hxSelected);
+  const lodestoneBoostPreview = hxState.lodestoneActive ? 1 : 0;
 
-  const preview = base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
+  let previewBase = base;
+  if (hxState.eclipseActive) {
+    // Recalculate with inverted letter values for preview
+    previewBase = 0;
+    knownLetters.forEach(l => {
+      if (l) { for (const ch of l) previewBase += Math.max(1, (HX_MAX_LETTER_POINTS + 1) - (HX_LETTER_POINTS[ch] || 1)); }
+      else previewBase += 5; // average inverted value for unknown rune
+    });
+  }
+
+  const preview = previewBase * lenMult * (hasPrism ? 2 : 1) * gemMult * (countBonus + lodestoneBoostPreview);
   const runeNote = runeCount > 0 ? '~' : '';
-  el.textContent = `${runeNote}+${preview}`;
+  const effectNote = (hxState.eclipseActive || hxState.lodestoneActive) ? '★' : '';
+  el.textContent = `${effectNote}${runeNote}+${preview}`;
 }
 
 function clearSelection() {
@@ -2484,29 +2666,25 @@ function showRuneLetterPicker(tile) {
 /** Build the SVG hex icon for a power-up button.
  *  Uses inline <defs> so the gradient works outside the main game SVG. */
 function makePowerUpHexSVG(type) {
-  const isAmethyst = type === 'amethyst';
-  const gradId  = isAmethyst ? 'hx-pu-amethyst-grad' : 'hx-pu-selenite-grad';
+  const gradId  = `hx-pu-${type}-grad`;
   const shineId = gradId + '-shine';
+  const shineDef = `<linearGradient id="${shineId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.42"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>`;
 
-  if (isAmethyst) {
+  if (type === 'amethyst') {
     return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <linearGradient id="${gradId}" x1="1" y1="1" x2="0" y2="0">
           <stop offset="0%"   stop-color="#1a0028"/>
           <stop offset="50%"  stop-color="#7e22ce"/>
           <stop offset="100%" stop-color="#d946ef"/>
-        </linearGradient>
-        <linearGradient id="${shineId}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.42"/>
-          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
+        </linearGradient>${shineDef}
       </defs>
       <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#e879f9" stroke-width="2"/>
       <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
       <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
       <text x="30" y="37" text-anchor="middle" font-size="20" fill="#f0abfc" font-weight="bold">◈</text>
     </svg>`;
-  } else {
+  } else if (type === 'selenite') {
     return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <linearGradient id="${gradId}" x1="0" y1="1" x2="0" y2="0">
@@ -2514,18 +2692,101 @@ function makePowerUpHexSVG(type) {
           <stop offset="35%"  stop-color="#0c4a6e"/>
           <stop offset="70%"  stop-color="#0ea5e9"/>
           <stop offset="100%" stop-color="#e0f2fe"/>
-        </linearGradient>
-        <linearGradient id="${shineId}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.55"/>
-          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
+        </linearGradient>${shineDef}
       </defs>
       <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#7dd3fc" stroke-width="2"/>
       <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="1"/>
       <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
       <text x="30" y="37" text-anchor="middle" font-size="18" fill="#e0f2fe" font-weight="bold">⇌</text>
     </svg>`;
+  } else if (type === 'oracle') {
+    return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="${gradId}" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%"   stop-color="#1e293b"/>
+          <stop offset="50%"  stop-color="#64748b"/>
+          <stop offset="100%" stop-color="#f8fafc"/>
+        </linearGradient>${shineDef}
+      </defs>
+      <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#cbd5e1" stroke-width="2"/>
+      <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="1"/>
+      <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
+      <text x="30" y="37" text-anchor="middle" font-size="18" fill="#f8fafc" font-weight="bold">⊙</text>
+    </svg>`;
+  } else if (type === 'beacon') {
+    return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="${gradId}" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%"   stop-color="#451a03"/>
+          <stop offset="50%"  stop-color="#b45309"/>
+          <stop offset="100%" stop-color="#fef08a"/>
+        </linearGradient>${shineDef}
+      </defs>
+      <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#f59e0b" stroke-width="2"/>
+      <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="1"/>
+      <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
+      <text x="30" y="37" text-anchor="middle" font-size="18" fill="#fef08a" font-weight="bold">◆</text>
+    </svg>`;
+  } else if (type === 'eclipse') {
+    return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="${gradId}" x1="0.5" y1="1" x2="0.5" y2="0">
+          <stop offset="0%"   stop-color="#020617"/>
+          <stop offset="60%"  stop-color="#1c1917"/>
+          <stop offset="100%" stop-color="#4c1d95"/>
+        </linearGradient>${shineDef}
+      </defs>
+      <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#7c3aed" stroke-width="2"/>
+      <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+      <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
+      <text x="30" y="37" text-anchor="middle" font-size="20" fill="#c4b5fd" font-weight="bold">☽</text>
+    </svg>`;
+  } else if (type === 'lodestone') {
+    return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="${gradId}" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%"   stop-color="#18181b"/>
+          <stop offset="50%"  stop-color="#52525b"/>
+          <stop offset="100%" stop-color="#e4e4e7"/>
+        </linearGradient>${shineDef}
+      </defs>
+      <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#a1a1aa" stroke-width="2"/>
+      <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="1"/>
+      <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
+      <text x="30" y="37" text-anchor="middle" font-size="18" fill="#e4e4e7" font-weight="bold">⬡</text>
+    </svg>`;
+  } else { // lexicon
+    return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="${gradId}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"   stop-color="#dc2626"/>
+          <stop offset="33%"  stop-color="#16a34a"/>
+          <stop offset="67%"  stop-color="#2563eb"/>
+          <stop offset="100%" stop-color="#db2777"/>
+        </linearGradient>${shineDef}
+      </defs>
+      <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#f9fafb" stroke-width="2"/>
+      <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.40)" stroke-width="1"/>
+      <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
+      <text x="30" y="37" text-anchor="middle" font-size="20" fill="#ffffff" font-weight="bold">∞</text>
+    </svg>`;
   }
+}
+
+function _makePowerUpBtn(type, title, ariaLabel, count, activateFn) {
+  const btn = document.createElement('button');
+  btn.className = `hx-powerup-icon-btn hx-powerup-icon-btn--${type}`;
+  btn.title = title;
+  btn.setAttribute('aria-label', `${ariaLabel}${count > 1 ? ` ×${count}` : ''}`);
+  btn.innerHTML = makePowerUpHexSVG(type);
+  if (count > 1) {
+    const badge = document.createElement('span');
+    badge.className = 'hx-powerup-icon-count';
+    badge.textContent = count;
+    btn.appendChild(badge);
+  }
+  btn.addEventListener('click', activateFn);
+  return btn;
 }
 
 function updatePowerUpBar() {
@@ -2536,35 +2797,26 @@ function updatePowerUpBar() {
   barRight.innerHTML = '';
 
   if (hxState.amethystCount > 0) {
-    const btn = document.createElement('button');
-    btn.className = 'hx-powerup-icon-btn hx-powerup-icon-btn--amethyst';
-    btn.title = 'Transmute: change any tile\'s letter';
-    btn.setAttribute('aria-label', `Amethyst power-up${hxState.amethystCount > 1 ? ` ×${hxState.amethystCount}` : ''}`);
-    btn.innerHTML = makePowerUpHexSVG('amethyst');
-    if (hxState.amethystCount > 1) {
-      const badge = document.createElement('span');
-      badge.className = 'hx-powerup-icon-count';
-      badge.textContent = hxState.amethystCount;
-      btn.appendChild(badge);
-    }
-    btn.addEventListener('click', () => activateAmethyst());
-    barLeft.appendChild(btn);
+    barLeft.appendChild(_makePowerUpBtn('amethyst', 'Transmute: change any tile\'s letter', 'Amethyst power-up', hxState.amethystCount, () => activateAmethyst()));
+  }
+  if (hxState.oracleCount > 0) {
+    barLeft.appendChild(_makePowerUpBtn('oracle', 'Oracle: highlight longest word path', 'Oracle power-up', hxState.oracleCount, () => activateOracle()));
+  }
+  if (hxState.beaconCount > 0) {
+    barLeft.appendChild(_makePowerUpBtn('beacon', 'Beacon: reveal highest-scoring word', 'Beacon power-up', hxState.beaconCount, () => activateBeacon()));
+  }
+  if (hxState.eclipseCount > 0) {
+    barLeft.appendChild(_makePowerUpBtn('eclipse', 'Eclipse: invert letter values for next word', 'Eclipse power-up', hxState.eclipseCount, () => activateEclipse()));
   }
 
   if (hxState.seleniteCount > 0) {
-    const btn = document.createElement('button');
-    btn.className = 'hx-powerup-icon-btn hx-powerup-icon-btn--selenite';
-    btn.title = 'Phase Swap: swap any two tiles';
-    btn.setAttribute('aria-label', `Selenite power-up${hxState.seleniteCount > 1 ? ` ×${hxState.seleniteCount}` : ''}`);
-    btn.innerHTML = makePowerUpHexSVG('selenite');
-    if (hxState.seleniteCount > 1) {
-      const badge = document.createElement('span');
-      badge.className = 'hx-powerup-icon-count';
-      badge.textContent = hxState.seleniteCount;
-      btn.appendChild(badge);
-    }
-    btn.addEventListener('click', () => activateSelenite());
-    barRight.appendChild(btn);
+    barRight.appendChild(_makePowerUpBtn('selenite', 'Phase Swap: swap any two tiles', 'Selenite power-up', hxState.seleniteCount, () => activateSelenite()));
+  }
+  if (hxState.lodestoneCount > 0) {
+    barRight.appendChild(_makePowerUpBtn('lodestone', 'Lodestone: +1 score multiplier for next word', 'Lodestone power-up', hxState.lodestoneCount, () => activateLodestone()));
+  }
+  if (hxState.lexiconCount > 0) {
+    barRight.appendChild(_makePowerUpBtn('lexicon', 'Lexicon: reveal top 5 words on board (one-time)', 'Lexicon power-up', hxState.lexiconCount, () => activateLexicon()));
   }
 }
 
@@ -2579,8 +2831,18 @@ function showPowerUpCollectToast(type) {
 
   if (type === 'amethyst') {
     toast.innerHTML = '<span class="hx-powerup-toast-title">✨ AMETHYST COLLECTED</span><span class="hx-powerup-toast-desc">Tap to change a tile\'s letter!</span>';
-  } else {
+  } else if (type === 'selenite') {
     toast.innerHTML = '<span class="hx-powerup-toast-title">✨ SELENITE COLLECTED</span><span class="hx-powerup-toast-desc">Tap to swap two tiles!</span>';
+  } else if (type === 'oracle') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">⊙ ORACLE COLLECTED</span><span class="hx-powerup-toast-desc">Tap to highlight the longest possible word!</span>';
+  } else if (type === 'beacon') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">◆ BEACON COLLECTED</span><span class="hx-powerup-toast-desc">Tap to reveal the highest-scoring word!</span>';
+  } else if (type === 'eclipse') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">☽ ECLIPSE COLLECTED</span><span class="hx-powerup-toast-desc">Tap to invert letter values for your next word!</span>';
+  } else if (type === 'lodestone') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">⬡ LODESTONE COLLECTED</span><span class="hx-powerup-toast-desc">Tap to boost your next word\'s multiplier!</span>';
+  } else if (type === 'lexicon') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">∞ LEXICON COLLECTED</span><span class="hx-powerup-toast-desc">Tap to reveal the top 5 words on the board!</span>';
   }
 
   document.body.appendChild(toast);
@@ -2597,8 +2859,18 @@ function showPowerUpUsedToast(type) {
 
   if (type === 'amethyst') {
     toast.innerHTML = '<span class="hx-powerup-toast-title">🔮 AMETHYST USED</span>';
-  } else {
+  } else if (type === 'selenite') {
     toast.innerHTML = '<span class="hx-powerup-toast-title">🌙 SELENITE USED</span>';
+  } else if (type === 'oracle') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">⊙ ORACLE ACTIVATED</span>';
+  } else if (type === 'beacon') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">◆ BEACON ACTIVATED</span>';
+  } else if (type === 'eclipse') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">☽ ECLIPSE ACTIVE — Next word uses inverted values!</span>';
+  } else if (type === 'lodestone') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">⬡ LODESTONE ACTIVE — Next word gets +1 multiplier!</span>';
+  } else if (type === 'lexicon') {
+    toast.innerHTML = '<span class="hx-powerup-toast-title">∞ LEXICON USED</span>';
   }
 
   document.body.appendChild(toast);
@@ -2769,6 +3041,311 @@ function handleSeleniteTileTap(tile) {
   updatePowerUpBar();
   showPowerUpUsedToast('selenite');
   return true;
+}
+
+/* ── Achievement-based tile: Oracle (Longest Word Hunter) ──────── */
+function activateOracle() {
+  if (hxState.oracleCount <= 0 || !hxState.active || hxState.gameOver) return;
+  hxState.oracleCount--;
+  updatePowerUpBar();
+  showPowerUpUsedToast('oracle');
+
+  const result = findLongestWordOnBoard();
+  if (!result) {
+    const el = document.createElement('div');
+    el.id = 'hx-powerup-toast';
+    el.className = 'hx-powerup-toast hx-powerup-toast--oracle';
+    el.innerHTML = '<span class="hx-powerup-toast-title">⊙ ORACLE</span><span class="hx-powerup-toast-desc">No long words found on the current board.</span>';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+    return;
+  }
+
+  // Highlight path tiles for 5 seconds
+  result.path.forEach(tile => tile.element.classList.add('hx-oracle-highlight'));
+  const label = document.createElement('div');
+  label.id = 'hx-powerup-toast';
+  label.className = 'hx-powerup-toast hx-powerup-toast--oracle';
+  label.innerHTML = `<span class="hx-powerup-toast-title">⊙ ORACLE: "${result.word}"</span><span class="hx-powerup-toast-desc">${result.word.length}-letter word highlighted for 5s</span>`;
+  document.body.appendChild(label);
+  setTimeout(() => {
+    result.path.forEach(tile => tile.element.classList.remove('hx-oracle-highlight'));
+    label.remove();
+  }, ORACLE_HIGHLIGHT_DURATION_MS);
+}
+
+/* ── Achievement-based tile: Beacon (Highest Scoring) ──────────── */
+function activateBeacon() {
+  if (hxState.beaconCount <= 0 || !hxState.active || hxState.gameOver) return;
+  hxState.beaconCount--;
+  updatePowerUpBar();
+  showPowerUpUsedToast('beacon');
+
+  const result = findHighestScoringWordOnBoard();
+  if (!result) {
+    const el = document.createElement('div');
+    el.id = 'hx-powerup-toast';
+    el.className = 'hx-powerup-toast hx-powerup-toast--beacon';
+    el.innerHTML = '<span class="hx-powerup-toast-title">◆ BEACON</span><span class="hx-powerup-toast-desc">No scoreable words found on the current board.</span>';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+    return;
+  }
+
+  const el = document.createElement('div');
+  el.id = 'hx-powerup-toast';
+  el.className = 'hx-powerup-toast hx-powerup-toast--beacon';
+  el.innerHTML = `<span class="hx-powerup-toast-title">◆ BEACON: "${result.word}"</span><span class="hx-powerup-toast-desc">Best word: +${result.score.toLocaleString()} pts</span>`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), BEACON_TOAST_DURATION_MS);
+}
+
+/* ── Achievement-based tile: Eclipse (Invert Letter Values) ────── */
+function activateEclipse() {
+  if (hxState.eclipseCount <= 0 || !hxState.active || hxState.gameOver) return;
+  hxState.eclipseCount--;
+  hxState.eclipseActive = true;
+  updatePowerUpBar();
+  showPowerUpUsedToast('eclipse');
+}
+
+/* ── Achievement-based tile: Lodestone (Reuse Boost) ───────────── */
+function activateLodestone() {
+  if (hxState.lodestoneCount <= 0 || !hxState.active || hxState.gameOver) return;
+  hxState.lodestoneCount--;
+  hxState.lodestoneActive = true;
+  updatePowerUpBar();
+  showPowerUpUsedToast('lodestone');
+}
+
+/* ── Achievement-based tile: Lexicon (Top 5 Words Modal) ────────── */
+function activateLexicon() {
+  if (hxState.lexiconCount <= 0 || !hxState.active || hxState.gameOver) return;
+  hxState.lexiconCount--;
+  updatePowerUpBar();
+  showPowerUpUsedToast('lexicon');
+
+  const top5 = findTopWordsOnBoard(5);
+  showLexiconModal(top5);
+}
+
+function showLexiconModal(words) {
+  const existing = document.getElementById('hx-lexicon-modal');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'hx-lexicon-modal';
+  overlay.className = 'hx-lexicon-modal-overlay';
+
+  const box = document.createElement('div');
+  box.className = 'hx-lexicon-modal-box';
+
+  const title = document.createElement('div');
+  title.className = 'hx-lexicon-modal-title';
+  title.innerHTML = '∞ LEXICON — TOP WORDS ON BOARD';
+
+  const list = document.createElement('ol');
+  list.className = 'hx-lexicon-word-list';
+
+  if (words.length === 0) {
+    const li = document.createElement('li');
+    li.textContent = 'No words found on the current board.';
+    list.appendChild(li);
+  } else {
+    words.forEach(({ word, score }) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="hx-lexicon-word">${word}</span><span class="hx-lexicon-score">+${score.toLocaleString()}</span>`;
+      list.appendChild(li);
+    });
+  }
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'hx-lexicon-modal-close';
+  closeBtn.textContent = 'CLOSE';
+
+  box.appendChild(title);
+  box.appendChild(list);
+  box.appendChild(closeBtn);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  // Auto-dismiss after configured duration
+  const autoDismissTimer = setTimeout(() => overlay.remove(), LEXICON_MODAL_AUTO_DISMISS_MS);
+
+  // Click outside or close button to dismiss (clear auto-dismiss timer)
+  const dismiss = () => {
+    clearTimeout(autoDismissTimer);
+    overlay.remove();
+  };
+
+  closeBtn.addEventListener('click', dismiss);
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) dismiss();
+  });
+}
+
+/* ── Board analysis for Oracle / Beacon / Lexicon ──────────────── */
+
+/**
+ * Performs a time-limited DFS over all tiles to find valid words.
+ * Returns an array of { word, score, path } sorted by score descending.
+ * @param {number} maxResults - maximum results to collect
+ * @param {number} timeLimitMs - time budget in milliseconds
+ */
+function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME_LIMIT_MS) {
+  const results = [];
+  const seen = new Set();
+  const deadline = performance.now() + timeLimitMs;
+
+  function scoreWord(path) {
+    let base = 0;
+    path.forEach(t => {
+      const letters = t.tileType === 'rune' ? [t.chosenRuneLetter || 'E'] : [...t.letter];
+      letters.forEach(ch => { base += HX_LETTER_POINTS[ch] || 1; });
+    });
+    const wordStr = path.map(t => t.tileType === 'rune' ? (t.chosenRuneLetter || 'E') : t.letter).join('');
+    const lenMult = HX_LENGTH_MULTIPLIERS[wordStr.length] || wordStr.length;
+    const hasPrism = path.some(t => t.tileType === 'prism');
+    let gemMult = 1;
+    path.forEach(t => { if (GEM_MULTIPLIERS[t.tileType]) gemMult *= GEM_MULTIPLIERS[t.tileType]; });
+    const uniqueGems = new Set(path.filter(t => GEM_MULTIPLIERS[t.tileType]).map(t => t.tileType));
+    const countBonus = Math.max(1, uniqueGems.size);
+    return base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
+  }
+
+  function dfs(path, visitedKeys) {
+    if (performance.now() >= deadline) return;
+
+    // Build the word from the current path
+    const letters = path.map(t => t.tileType === 'rune' ? (t.chosenRuneLetter || 'E') : t.letter);
+    const wordStr = letters.join('');
+
+    if (wordStr.length >= 4 && isValidWord(wordStr) && !seen.has(wordStr)) {
+      seen.add(wordStr);
+      results.push({ word: wordStr, score: scoreWord(path), path: [...path] });
+    }
+
+    if (path.length >= MAX_WORD_PATH_DEPTH) return; // limit depth
+    if (performance.now() >= deadline) return;
+
+    const last = path[path.length - 1];
+    const neighbors = hxState.tiles.filter(t => {
+      if (visitedKeys.has(hxKey(t.q, t.r))) return false;
+      return areNeighbors(last, t);
+    });
+
+    for (const neighbor of neighbors) {
+      const key = hxKey(neighbor.q, neighbor.r);
+      visitedKeys.add(key);
+      path.push(neighbor);
+      dfs(path, visitedKeys);
+      path.pop();
+      visitedKeys.delete(key);
+      if (performance.now() >= deadline) return;
+    }
+  }
+
+  for (const startTile of hxState.tiles) {
+    if (performance.now() >= deadline) break;
+    const visitedKeys = new Set([hxKey(startTile.q, startTile.r)]);
+    dfs([startTile], visitedKeys);
+  }
+
+  return results;
+}
+
+function findLongestWordOnBoard() {
+  const results = analyzeBoard(ORACLE_MAX_RESULTS, ORACLE_TIME_LIMIT_MS);
+  if (results.length === 0) return null;
+  return results.reduce((best, r) => r.word.length > best.word.length ? r : best, results[0]);
+}
+
+function findHighestScoringWordOnBoard() {
+  const results = analyzeBoard(BEACON_MAX_RESULTS, BEACON_TIME_LIMIT_MS);
+  if (results.length === 0) return null;
+  return results.reduce((best, r) => r.score > best.score ? r : best, results[0]);
+}
+
+function findTopWordsOnBoard(n) {
+  const results = analyzeBoard(LEXICON_MAX_RESULTS, LEXICON_TIME_LIMIT_MS);
+  results.sort((a, b) => b.score - a.score);
+  return results.slice(0, n);
+}
+
+/* ── Achievement reward spawner ─────────────────────────────────── */
+
+/**
+ * Checks if any achievement has been unlocked by the current word.
+ * Returns array of { tileName, description } for spawned tiles.
+ */
+function checkAchievementRewards(word, consumed, wordScore, portalUsed) {
+  const spawned = [];
+
+  // 1. Oracle — 9-letter word
+  if (!hxState.achievements.oracleAwarded && word.length >= ORACLE_UNLOCK_WORD_LENGTH) {
+    hxState.achievements.oracleAwarded = true;
+    spawnSpecialInRows('oracle', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+    spawned.push({ tileName: 'ORACLE ⊙', description: 'Longest Word Hunter! Use it in a 5+ letter word to collect.' });
+  }
+
+  // 2. Beacon — 10,000+ point single word
+  if (!hxState.achievements.beaconAwarded && wordScore >= BEACON_UNLOCK_SCORE) {
+    hxState.achievements.beaconAwarded = true;
+    spawnSpecialInRows('beacon', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+    spawned.push({ tileName: 'BEACON ◆', description: 'Score Master! Use it in a 5+ letter word to collect.' });
+  }
+
+  // 3. Eclipse — portal used in 3 different words (cumulative)
+  if (!hxState.achievements.eclipseAwarded && portalUsed && hxState.achievements.portalWordsUsed >= ECLIPSE_UNLOCK_PORTAL_WORDS) {
+    hxState.achievements.eclipseAwarded = true;
+    spawnSpecialInRows('eclipse', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+    spawned.push({ tileName: 'ECLIPSE ☽', description: 'Portal Traveler! Use it in a 5+ letter word to collect.' });
+  }
+
+  // 4. Lodestone — 5 different gem types in one word
+  if (!hxState.achievements.lodestoneAwarded) {
+    const uniqueGemTypes = new Set(consumed.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType));
+    if (uniqueGemTypes.size >= LODESTONE_UNLOCK_GEM_TYPES) {
+      hxState.achievements.lodestoneAwarded = true;
+      spawnSpecialInRows('lodestone', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+      spawned.push({ tileName: 'LODESTONE ⬡', description: 'Gem Collector! Use it in a 5+ letter word to collect.' });
+    }
+  }
+
+  // 5. Lexicon — 100 total words submitted this session
+  if (!hxState.achievements.lexiconAwarded && hxState.wordsSubmitted >= LEXICON_UNLOCK_WORDS) {
+    hxState.achievements.lexiconAwarded = true;
+    spawnSpecialInRows('lexicon', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
+    spawned.push({ tileName: 'LEXICON ∞', description: 'Endurance Master! Use it in a 5+ letter word to collect. One-time use.' });
+  }
+
+  return spawned;
+}
+
+/* ── Achievement toast ──────────────────────────────────────────── */
+function showAchievementToast(tileName, description) {
+  const existing = document.getElementById('hx-achievement-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'hx-achievement-toast';
+  toast.className = 'hx-achievement-toast';
+
+  toast.innerHTML = `
+    <span class="hx-achievement-icon">🏆</span>
+    <div class="hx-achievement-body">
+      <span class="hx-achievement-title">ACHIEVEMENT UNLOCKED</span>
+      <span class="hx-achievement-name">${tileName}</span>
+      <span class="hx-achievement-desc">${description}</span>
+    </div>`;
+
+  document.body.appendChild(toast);
+  // Trigger entrance animation
+  requestAnimationFrame(() => toast.classList.add('hx-achievement-toast--visible'));
+  setTimeout(() => {
+    toast.classList.remove('hx-achievement-toast--visible');
+    setTimeout(() => toast.remove(), 600);
+  }, 4000);
 }
 
 /* ── Pointer events ────────────────────────────────────────────── */
@@ -3060,7 +3637,15 @@ async function submitHexacoreWord() {
   let base = 0;
   // Each element in resolved may be a multi-char string (digraph) or single char;
   // iterate over individual characters so each letter contributes its own point value.
-  resolved.forEach(l => { for (const ch of l) base += HX_LETTER_POINTS[ch] || 1; });
+  // Eclipse power-up: invert letter point values (common→rare, rare→common)
+  if (hxState.eclipseActive) {
+    resolved.forEach(l => {
+      for (const ch of l) base += Math.max(1, (HX_MAX_LETTER_POINTS + 1) - (HX_LETTER_POINTS[ch] || 1));
+    });
+    hxState.eclipseActive = false;
+  } else {
+    resolved.forEach(l => { for (const ch of l) base += HX_LETTER_POINTS[ch] || 1; });
+  }
   const lenMult = HX_LENGTH_MULTIPLIERS[word.length] || word.length;
 
   // Gem multipliers stack multiplicatively
@@ -3070,8 +3655,11 @@ async function submitHexacoreWord() {
   });
 
   const countBonus = calcGemCountBonus(hxSelected);
+  // Lodestone power-up: +1 to the gem-count bonus for this word
+  const lodestoneBoost = hxState.lodestoneActive ? 1 : 0;
+  if (hxState.lodestoneActive) hxState.lodestoneActive = false;
 
-  const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult * countBonus;
+  const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult * (countBonus + lodestoneBoost);
 
   hxWordCount++;
   hxState.wordsSubmitted++;
@@ -3091,6 +3679,12 @@ async function submitHexacoreWord() {
   const portalUsedInWord = hxState.portalOpen && hxState.portalEntry && hxState.portalExit &&
     hxSelected.some(t => hxKey(t.q, t.r) === hxKey(hxState.portalEntry.q, hxState.portalEntry.r) ||
                          hxKey(t.q, t.r) === hxKey(hxState.portalExit.q,  hxState.portalExit.r));
+
+  // Track portal usage for Eclipse achievement
+  if (portalUsedInWord) {
+    hxState.achievements.portalWordsUsed++;
+  }
+
   updateQuestProgress('wordSubmitted', {
     word,
     tiles:               [...hxSelected],
@@ -3109,12 +3703,17 @@ async function submitHexacoreWord() {
 
   const consumed = [...hxSelected];
 
-  // Detect amethyst/selenite power-up collection (5+ letter word).
+  // Detect power-up collection (5+ letter word): amethyst, selenite + 5 new achievement tiles.
   // Update state immediately; queue the toast to show after the refill settles.
   const pendingPowerUpToasts = [];
   if (assembledLength >= 5) {
     const hasAmethystTile  = consumed.some(t => t.tileType === 'amethyst');
     const hasSelenieTile   = consumed.some(t => t.tileType === 'selenite');
+    const hasOracleTile    = consumed.some(t => t.tileType === 'oracle');
+    const hasBeaconTile    = consumed.some(t => t.tileType === 'beacon');
+    const hasEclipseTile   = consumed.some(t => t.tileType === 'eclipse');
+    const hasLodestoneTile = consumed.some(t => t.tileType === 'lodestone');
+    const hasLexiconTile   = consumed.some(t => t.tileType === 'lexicon');
     if (hasAmethystTile) {
       hxState.amethystCount++;
       updatePowerUpBar();
@@ -3125,7 +3724,35 @@ async function submitHexacoreWord() {
       updatePowerUpBar();
       pendingPowerUpToasts.push('selenite');
     }
+    if (hasOracleTile) {
+      hxState.oracleCount++;
+      updatePowerUpBar();
+      pendingPowerUpToasts.push('oracle');
+    }
+    if (hasBeaconTile) {
+      hxState.beaconCount++;
+      updatePowerUpBar();
+      pendingPowerUpToasts.push('beacon');
+    }
+    if (hasEclipseTile) {
+      hxState.eclipseCount++;
+      updatePowerUpBar();
+      pendingPowerUpToasts.push('eclipse');
+    }
+    if (hasLodestoneTile) {
+      hxState.lodestoneCount++;
+      updatePowerUpBar();
+      pendingPowerUpToasts.push('lodestone');
+    }
+    if (hasLexiconTile) {
+      hxState.lexiconCount++;
+      updatePowerUpBar();
+      pendingPowerUpToasts.push('lexicon');
+    }
   }
+
+  // Check achievement rewards (spawns new achievement tiles)
+  const pendingAchievementSpawns = checkAchievementRewards(word, consumed, wordScore, portalUsedInWord);
 
   // If any portal tile is in the consumed set, close the portal now (before
   // tile animations start) so the glowing style doesn't play during pop-out.
@@ -3162,6 +3789,10 @@ async function submitHexacoreWord() {
     if (leveledUp) showPlayerLevelUpBanner(newLevel);
     updateXPBarFn();
     pendingPowerUpToasts.forEach(type => showPowerUpCollectToast(type));
+    // Show achievement toasts for newly spawned achievement tiles (staggered)
+    pendingAchievementSpawns.forEach((spawn, i) => {
+      setTimeout(() => showAchievementToast(spawn.tileName, spawn.description), i * ACHIEVEMENT_TOAST_STAGGER_MS);
+    });
 
     checkLevelUp(oldScore, hxState.score);
     playSound('sfxGemCollect');
@@ -3191,7 +3822,8 @@ async function consumeAndRefill(tilesToRemove) {
   tilesToRemove.forEach((tile, idx) => {
     tile.element.style.setProperty('--tile-idx', String(idx));
     const type = tile.tileType;
-    if (type === 'ember' || type === 'prism' || type === 'rune' || type === 'amethyst' || type === 'selenite') {
+    if (type === 'ember' || type === 'prism' || type === 'rune' || type === 'amethyst' || type === 'selenite'
+        || type === 'oracle' || type === 'beacon' || type === 'eclipse' || type === 'lodestone' || type === 'lexicon') {
       // Consumed-special class replaces hx-tile-removing with combined animation
       tile.element.classList.add(`hx-consumed-${type}`);
     } else if (HX_GEM_TYPES.has(type)) {
@@ -3316,7 +3948,7 @@ async function advanceFireTiles() {
     // For ember tiles, exclude positions occupied by protected tile types
     let validCandidates = candidates;
     if (type === 'ember') {
-      const EMBER_BLOCKED_TYPES = ['ember', 'amethyst', 'selenite'];
+      const EMBER_BLOCKED_TYPES = ['ember', 'amethyst', 'selenite', 'oracle', 'beacon', 'eclipse', 'lodestone', 'lexicon'];
       validCandidates = candidates.filter(pos => {
         const occupant = hxTileMap.get(hxKey(pos.q, pos.r));
         return !occupant
@@ -3586,6 +4218,11 @@ function spawnSpecialInRows(type, rows) {
   else if (type === 'rune')  _hxRegisterTile(target, hxState.runeTiles);
   else if (type === 'amethyst') _hxRegisterTile(target, hxState.amethystTiles);
   else if (type === 'selenite') _hxRegisterTile(target, hxState.seleniteTiles);
+  else if (type === 'oracle')   _hxRegisterTile(target, hxState.oracleTiles);
+  else if (type === 'beacon')   _hxRegisterTile(target, hxState.beaconTiles);
+  else if (type === 'eclipse')  _hxRegisterTile(target, hxState.eclipseTiles);
+  else if (type === 'lodestone') _hxRegisterTile(target, hxState.lodestoneTiles);
+  else if (type === 'lexicon')  _hxRegisterTile(target, hxState.lexiconTiles);
   else if (type === 'digraph') {
     const { digraph, points } = randomDigraph();
     target.letter = digraph;
@@ -3799,6 +4436,14 @@ function saveHexacoreProgress() {
     portalWordsRemaining: hxState.portalWordsRemaining,
     amethystCount:       hxState.amethystCount,
     seleniteCount:       hxState.seleniteCount,
+    oracleCount:         hxState.oracleCount,
+    beaconCount:         hxState.beaconCount,
+    eclipseCount:        hxState.eclipseCount,
+    lodestoneCount:      hxState.lodestoneCount,
+    lexiconCount:        hxState.lexiconCount,
+    eclipseActive:       hxState.eclipseActive,
+    lodestoneActive:     hxState.lodestoneActive,
+    achievements:        { ...hxState.achievements },
   };
 
   try { localStorage.setItem(HX_SAVE_KEY, JSON.stringify(save)); } catch (_) { /* quota / private */ }
@@ -3850,8 +4495,28 @@ export function startHexacore(mode = 'endless') {
     gemAlexandriteTiles:  [],
     amethystTiles:   [],
     seleniteTiles:   [],
+    oracleTiles:     [],
+    beaconTiles:     [],
+    eclipseTiles:    [],
+    lodestoneTiles:  [],
+    lexiconTiles:    [],
     amethystCount:   0,
     seleniteCount:   0,
+    oracleCount:     0,
+    beaconCount:     0,
+    eclipseCount:    0,
+    lodestoneCount:  0,
+    lexiconCount:    0,
+    eclipseActive:   false,
+    lodestoneActive: false,
+    achievements: {
+      portalWordsUsed:    0,
+      oracleAwarded:      false,
+      beaconAwarded:      false,
+      eclipseAwarded:     false,
+      lodestoneAwarded:   false,
+      lexiconAwarded:     false,
+    },
     gameOver:        false,
     active:          false, // set to true after intro animation completes
     // Portal system reset
@@ -3919,6 +4584,11 @@ export function startHexacore(mode = 'endless') {
         gemAlexandrite:  hxState.gemAlexandriteTiles,
         amethyst:     hxState.amethystTiles,
         selenite:     hxState.seleniteTiles,
+        oracle:       hxState.oracleTiles,
+        beacon:       hxState.beaconTiles,
+        eclipse:      hxState.eclipseTiles,
+        lodestone:    hxState.lodestoneTiles,
+        lexicon:      hxState.lexiconTiles,
       };
 
       (save.tiles ?? []).forEach(saved => {
@@ -3952,8 +4622,18 @@ export function startHexacore(mode = 'endless') {
       if (hxState.portalOpen) applyPortalVisuals();
 
       // Restore power-up counts
-      hxState.amethystCount = save.amethystCount ?? 0;
-      hxState.seleniteCount = save.seleniteCount ?? 0;
+      hxState.amethystCount   = save.amethystCount   ?? 0;
+      hxState.seleniteCount   = save.seleniteCount   ?? 0;
+      hxState.oracleCount     = save.oracleCount     ?? 0;
+      hxState.beaconCount     = save.beaconCount     ?? 0;
+      hxState.eclipseCount    = save.eclipseCount    ?? 0;
+      hxState.lodestoneCount  = save.lodestoneCount  ?? 0;
+      hxState.lexiconCount    = save.lexiconCount    ?? 0;
+      hxState.eclipseActive   = save.eclipseActive   ?? false;
+      hxState.lodestoneActive = save.lodestoneActive ?? false;
+      if (save.achievements) {
+        Object.assign(hxState.achievements, save.achievements);
+      }
 
       // Sync HUD to restored values
       updateHud();
