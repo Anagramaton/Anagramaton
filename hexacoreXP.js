@@ -26,7 +26,7 @@ export const HX_MAX_LEVEL = 50;
  *   LV 30 :     443,053 XP  (×2.00)
  *   LV 35 :  25,833,608 XP  (×2.75)
  *   LV 40 :   7,500,643,329 XP  (×3.50)
- *   LV 50 :  ~14.5 quadrillion XP  (×5.00)
+ *   LV 50 :  14,500,941,389,283,442 XP  (×5.00)
  */
 const HX_XP_THRESHOLDS = [
              0,   //  LV  1
