@@ -203,130 +203,6 @@ import { getXPData }             from './hexacoreXP.js';
     });
   }
 
-  function renderTilesSection(panel) {
-    const SPECIAL_TILES = [
-      {
-        swatch: 'linear-gradient(135deg,#0a0a0a,#a3a3a3)',
-        border: '#737373',
-        icon: '🔥',
-        name: 'EMBER',
-        badge: 'DANGER',
-        badgeColor: '#ef4444',
-        desc: 'Advances one row every turn. If it reaches the bottom row, the game ends immediately. Include it in any word to destroy it and earn a bonus gem.',
-      },
-      {
-        swatch: 'linear-gradient(135deg,#111111,#d4d4d4)',
-        border: '#a3a3a3',
-        icon: '✦',
-        name: 'PRISM',
-        badge: 'MULTIPLIER',
-        badgeColor: '#94a3b8',
-        desc: 'Boosts your gem tier when used in a word. The longer the word, the rarer the gem — Prism pushes you to the next tier without needing extra letters.',
-      },
-      {
-        swatch: '#2f2f2f',
-        border: '#6b7280',
-        icon: 'ᚱ',
-        name: 'RUNE',
-        badge: 'WILD',
-        badgeColor: '#94a3b8',
-        desc: 'Include it in any word to open the Rune Picker. Choose any letter to replace it — perfect for breaking up dead-letter clusters.',
-      },
-      {
-        swatch: 'linear-gradient(135deg,#3b2a1f,#8b6b4b)',
-        border: '#8b6b4b',
-        icon: '⟨TH⟩',
-        name: 'DIGRAPH',
-        badge: 'PAIR',
-        badgeColor: '#d97706',
-        desc: 'A pre-joined letter pair (TH, QU, CH, NG…). Both letters count toward word length and scoring. Unlocks word paths that single letters alone cannot reach.',
-      },
-      {
-        swatch: 'linear-gradient(135deg,#111827,#d1d5db)',
-        border: '#9ca3af',
-        icon: '◈',
-        name: 'AMETHYST',
-        badge: 'POWER-UP',
-        badgeColor: '#9ca3af',
-        desc: 'Earned by using it in a 5+ letter word. Spend it (◈ button) to change any tile on the board to any letter. Also advances downward each turn, but converts to a normal tile instead of ending the game.',
-      },
-      {
-        swatch: 'linear-gradient(135deg,#1c1917,#e7e5e4)',
-        border: '#a8a29e',
-        icon: '⇌',
-        name: 'SELENITE',
-        badge: 'POWER-UP',
-        badgeColor: '#9ca3af',
-        desc: 'Earned by using it in a 5+ letter word. Spend it (⇌ button) to swap any two tiles on the board. Also advances downward each turn, but converts to a normal tile instead of ending the game.',
-      },
-      {
-        swatch: 'linear-gradient(135deg,#0a0a0a,#6b7280)',
-        border: '#6b7280',
-        icon: '◈◉',
-        name: 'PORTAL',
-        badge: 'LINK',
-        badgeColor: '#9ca3af',
-        desc: 'After every 10 words, two corner tiles become a portal pair — Entry (◈) and Exit (◉). Chain through both in the same word to connect non-adjacent tiles and build longer paths.',
-      },
-    ];
-
-    const GEM_TIERS = [
-      { name: 'Emerald',    color: '#4ade80', letters: '2' },
-      { name: 'Gold',       color: '#facc15', letters: '3' },
-      { name: 'Sapphire',   color: '#60a5fa', letters: '4' },
-      { name: 'Pearl',      color: '#f1f5f9', letters: '5' },
-      { name: 'Tanzanite',  color: '#818cf8', letters: '6' },
-      { name: 'Ruby',       color: '#f87171', letters: '7' },
-      { name: 'Diamond',    color: '#e2e8f0', letters: '8' },
-      { name: 'Aquamarine', color: '#22d3ee', letters: '9' },
-      { name: 'Topaz',      color: '#fb923c', letters: '10' },
-      { name: 'Opal',       color: '#e879f9', letters: '11' },
-      { name: 'Imp. Jade',  color: '#34d399', letters: '12' },
-      { name: 'Alexandrite',color: '#f472b6', letters: '13+' },
-    ];
-
-    panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">◆ SPECIAL TILES</h3>
-      <p class="hx-cfg-section-desc">Special tiles have unique mechanics that stand apart from gem tiles. Learn what each one does so you can play around them.</p>
-      <div class="hx-cfg-tile-list" id="hx-cfg-tile-list"></div>
-
-      <h3 class="hx-cfg-section-title hx-cfg-gems-title">💎 GEM TIERS</h3>
-      <p class="hx-cfg-section-desc">Gems appear when you destroy normal or special tiles. Longer words yield rarer gems. Multiple gems of the same type multiply each other.</p>
-      <div class="hx-cfg-gem-grid" id="hx-cfg-gem-grid"></div>
-    `;
-
-    const tileList = panel.querySelector('#hx-cfg-tile-list');
-    SPECIAL_TILES.forEach(t => {
-      const row = document.createElement('div');
-      row.className = 'hx-cfg-tile-row';
-      row.innerHTML = `
-        <div class="hx-cfg-tile-swatch" style="background:${t.swatch};border-color:${t.border}" aria-hidden="true">
-          <span class="hx-cfg-tile-swatch-icon">${t.icon}</span>
-        </div>
-        <div class="hx-cfg-tile-info">
-          <div class="hx-cfg-tile-name-row">
-            <span class="hx-cfg-tile-name">${t.name}</span>
-            <span class="hx-cfg-tile-badge" style="color:${t.badgeColor};border-color:${t.badgeColor}">${t.badge}</span>
-          </div>
-          <p class="hx-cfg-tile-desc">${t.desc}</p>
-        </div>
-      `;
-      tileList.appendChild(row);
-    });
-
-    const gemGrid = panel.querySelector('#hx-cfg-gem-grid');
-    GEM_TIERS.forEach(g => {
-      const cell = document.createElement('div');
-      cell.className = 'hx-cfg-gem-cell';
-      cell.innerHTML = `
-        <span class="hx-cfg-gem-dot" style="background:${g.color};box-shadow:0 0 6px ${g.color}88"></span>
-        <span class="hx-cfg-gem-name">${g.name}</span>
-        <span class="hx-cfg-gem-letters">${g.letters}L</span>
-      `;
-      gemGrid.appendChild(cell);
-    });
-  }
-
   /* ── Main modal builder ─────────────────────────────────────────── */
 
   function openHexacoreSettingsModal() {
@@ -340,7 +216,6 @@ import { getXPData }             from './hexacoreXP.js';
 
     const TABS = [
       { id: 'mode',         icon: '🎮', label: 'MODES'   },
-      { id: 'tiles',        icon: '◆',  label: 'TILES'   },
       { id: 'quests',       icon: '📋', label: 'QUESTS'  },
       { id: 'leaderboards', icon: '🏅', label: 'BOARDS'  },
       { id: 'profile',      icon: '👤', label: 'PROFILE' },
@@ -414,7 +289,6 @@ import { getXPData }             from './hexacoreXP.js';
 
       switch (tabId) {
         case 'mode':         renderModeSection(panel);         break;
-        case 'tiles':        renderTilesSection(panel);        break;
         case 'quests':       renderQuestsSection(panel);       break;
         case 'leaderboards': renderLeaderboardsSection(panel); break;
         case 'profile':      renderProfileSection(panel);      break;
