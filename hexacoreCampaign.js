@@ -188,22 +188,22 @@ function showLevelPreview(box, gridEl, level, info, onLevelStart, modal, unlocke
   // Live progress refresh while an active session is running for this level.
   // A MutationObserver ensures the interval is cleared whenever the preview
   // is removed from the DOM (back button, start button, modal close, etc.).
-  let _liveInterval = null;
+  let liveInterval = null;
   if (_activeLevelId === level.id) {
-    _liveInterval = setInterval(() => {
+    liveInterval = setInterval(() => {
       const objEl   = preview.querySelector('#hx-preview-objectives');
       const starsEl = preview.querySelector('#hx-preview-stars');
       if (objEl)   objEl.innerHTML   = buildObjectivesHtml();
       if (starsEl) starsEl.innerHTML = buildStarRows();
     }, 1000);
 
-    const _observer = new MutationObserver(() => {
+    const previewObserver = new MutationObserver(() => {
       if (!document.contains(preview)) {
-        clearInterval(_liveInterval);
-        _observer.disconnect();
+        clearInterval(liveInterval);
+        previewObserver.disconnect();
       }
     });
-    _observer.observe(document.body, { childList: true, subtree: true });
+    previewObserver.observe(document.body, { childList: true, subtree: true });
   }
 
   preview.querySelector('#hx-preview-back').addEventListener('click', () => {
@@ -247,46 +247,73 @@ export function openCampaignModal(onLevelStart) {
   const grid = document.createElement('div');
   grid.id = 'hx-campaign-grid';
 
+  // First pass: determine maxUnlocked
   let maxUnlocked = 1;
   CAMPAIGN_LEVELS.forEach(level => {
-    const info    = progress.levels[level.id];
-    const stars   = info?.stars ?? 0;
+    const info = progress.levels[level.id];
     if (info?.completed && level.id >= maxUnlocked) maxUnlocked = level.id + 1;
+  });
 
-    const unlocked = level.id <= maxUnlocked;
-    const card = document.createElement('button');
-    card.type = 'button';
-    card.className = 'hx-campaign-level-card' +
-      (info?.completed ? ' hx-campaign-complete' : '') +
-      (!unlocked ? ' hx-campaign-locked' : '');
-    const starsHtml = [1, 2, 3].map(s =>
-      `<span class="hx-star${s <= stars ? ' hx-star-filled' : ''}">★</span>`
-    ).join('');
+  // Second pass: build cards grouped into chunks of 5
+  const CHUNK_SIZE = 5;
+  for (let i = 0; i < CAMPAIGN_LEVELS.length; i += CHUNK_SIZE) {
+    const chunk = CAMPAIGN_LEVELS.slice(i, i + CHUNK_SIZE);
 
-    const checkBadge    = info?.completed ? `<span class="hx-card-check" aria-hidden="true">✓</span>` : '';
-    const levelNumHtml  = !unlocked
-      ? `<div class="hx-campaign-level-num hx-level-locked" aria-label="Locked">🔒</div>`
-      : `<div class="hx-campaign-level-num">${level.id}</div>`;
-    const progressBar   = info?.completed
-      ? `<div class="hx-card-progress-bar" aria-label="${stars} of 3 stars">
-           <div class="hx-card-progress-fill" style="width:${Math.round((stars / 3) * 100)}%"></div>
-         </div>`
-      : '';
+    const groupEl = document.createElement('div');
+    groupEl.className = 'hx-campaign-group';
 
-    card.innerHTML = `
-      ${checkBadge}
-      ${levelNumHtml}
-      <div class="hx-campaign-level-title">${level.title}</div>
-      <div class="hx-campaign-stars">${starsHtml}</div>
-      ${progressBar}
-    `;
+    const firstId = chunk[0].id;
+    const lastId  = chunk[chunk.length - 1].id;
+    const labelEl = document.createElement('div');
+    labelEl.className = 'hx-campaign-group-label';
+    labelEl.textContent = `${firstId} – ${lastId}`;
+    groupEl.appendChild(labelEl);
 
-    card.addEventListener('click', () => {
-      showLevelPreview(box, grid, level, info, onLevelStart, modal, unlocked);
+    const cardsEl = document.createElement('div');
+    cardsEl.className = 'hx-campaign-group-cards';
+
+    chunk.forEach(level => {
+      const info    = progress.levels[level.id];
+      const stars   = info?.stars ?? 0;
+
+      const unlocked = level.id <= maxUnlocked;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'hx-campaign-level-card' +
+        (info?.completed ? ' hx-campaign-complete' : '') +
+        (!unlocked ? ' hx-campaign-locked' : '');
+      const starsHtml = [1, 2, 3].map(s =>
+        `<span class="hx-star${s <= stars ? ' hx-star-filled' : ''}">★</span>`
+      ).join('');
+
+      const checkBadge   = info?.completed ? `<span class="hx-card-check" aria-hidden="true">✓</span>` : '';
+      const levelNumHtml = !unlocked
+        ? `<div class="hx-campaign-level-num hx-level-locked" aria-label="Locked">🔒</div>`
+        : `<div class="hx-campaign-level-num">${level.id}</div>`;
+      const progressBar  = info?.completed
+        ? `<div class="hx-card-progress-bar" aria-label="${stars} of 3 stars">
+             <div class="hx-card-progress-fill" style="width:${Math.round((stars / 3) * 100)}%"></div>
+           </div>`
+        : '';
+
+      card.innerHTML = `
+        ${checkBadge}
+        ${levelNumHtml}
+        <div class="hx-campaign-level-title">${level.title}</div>
+        <div class="hx-campaign-stars">${starsHtml}</div>
+        ${progressBar}
+      `;
+
+      card.addEventListener('click', () => {
+        showLevelPreview(box, grid, level, info, onLevelStart, modal, unlocked);
+      });
+
+      cardsEl.appendChild(card);
     });
 
-    grid.appendChild(card);
-  });
+    groupEl.appendChild(cardsEl);
+    grid.appendChild(groupEl);
+  }
 
   box.appendChild(header);
   box.appendChild(grid);

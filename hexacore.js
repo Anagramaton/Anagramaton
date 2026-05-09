@@ -1647,10 +1647,15 @@ function showPlayerLevelUpBanner(newLevel) {
 function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
-  // Score HUD — split into number + label spans
+  // Mode colors matching the mode-select screen
+  const HX_MODE_COLORS = { endless: '#f97316', zen: '#22c55e', daily: '#4cc9f0', campaign: '#a855f7' };
+
+  // Score HUD — split into number + label spans, with a small mode color dot
   const hud = document.createElement('div');
   hud.id = 'hx-score-hud';
-  hud.innerHTML = '<span id="hx-score-num">0</span><span id="hx-score-label"> PTS</span>';
+  hud.setAttribute('data-mode', hxGameMode);
+  hud.style.setProperty('--hx-mode-color', HX_MODE_COLORS[hxGameMode] ?? '#a78bfa');
+  hud.innerHTML = '<span id="hx-mode-dot" aria-hidden="true"></span><span id="hx-score-num">0</span><span id="hx-score-label"> PTS</span>';
   document.body.appendChild(hud);
 
   const liveWordEl = document.createElement('div');
