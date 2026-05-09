@@ -3944,8 +3944,21 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   font-size: 0.8rem;
   color: rgba(255,255,255,0.2);
 }
-  opacity: 0.38;
-  cursor: not-allowed;
+
+.hx-campaign-level-card.hx-campaign-locked {
+  opacity: 0.6;
+  cursor: pointer;
+  filter: grayscale(40%);
+}
+
+.hx-campaign-level-card.hx-campaign-locked:hover {
+  opacity: 0.8;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.15)),
+    rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.22);
+  transform: translateY(-1px);
+  filter: grayscale(20%);
 }
 
 .hx-campaign-level-num {
@@ -4114,6 +4127,37 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 #hx-preview-start:hover {
   background: rgba(168,85,247,0.38);
   box-shadow: 0 0 16px rgba(168,85,247,0.3);
+}
+#hx-preview-start:disabled,
+#hx-preview-start.hx-preview-start-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.4);
+}
+#hx-preview-start:disabled:hover,
+#hx-preview-start.hx-preview-start-disabled:hover {
+  background: rgba(255,255,255,0.06);
+  box-shadow: none;
+}
+
+/* ── Objective live-progress items ─────────────────────────────── */
+.hx-preview-obj-done {
+  color: #86efac;
+}
+.hx-preview-obj-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.hx-preview-obj-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7, #fbbf24);
+  border-radius: 2px;
+  transition: width 0.4s ease;
 }
 
 

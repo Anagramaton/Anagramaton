@@ -112,23 +112,47 @@ function formatStarValue(value, objType) {
 /**
  * Slide the grid out of view and show a detail panel for one level.
  * The player can BACK to the grid or START the level.
+ * @param {boolean} unlocked - Whether this level is available to play.
  */
-function showLevelPreview(box, gridEl, level, info, onLevelStart, modal) {
+function showLevelPreview(box, gridEl, level, info, onLevelStart, modal, unlocked) {
   gridEl.style.display = 'none';
 
   const stars = info?.stars ?? 0;
 
-  const objectivesHtml = level.objectives.map(obj =>
-    `<li class="hx-preview-obj">${obj.desc}</li>`
-  ).join('');
+  const mainObj = level.objectives[0];
 
-  const mainObj   = level.objectives[0];
-  const starRows  = level.stars.map((t, i) => {
-    const icons = [1, 2, 3].map(s =>
-      `<span class="hx-star${s <= i + 1 ? ' hx-star-filled' : ''}">★</span>`
-    ).join('');
-    return `<div class="hx-preview-star-row">${icons}<span class="hx-preview-star-label">${formatStarValue(t, mainObj.type)}</span></div>`;
-  }).join('');
+  function buildObjectivesHtml() {
+    const liveProgress = _activeLevelId === level.id ? _levelProgress : null;
+    return level.objectives.map(obj => {
+      if (liveProgress !== null) {
+        const current = liveProgress[obj.type] ?? 0;
+        const pct     = Math.min(100, Math.round((current / obj.target) * 100));
+        const done    = obj.type === 'timeLimit' ? current <= obj.target : current >= obj.target;
+        const label   = `${obj.desc} (${formatStarValue(current, obj.type)} / ${formatStarValue(obj.target, obj.type)})`;
+        return `<li class="hx-preview-obj${done ? ' hx-preview-obj-done' : ''}">
+          ${label}
+          <div class="hx-preview-obj-bar"><div class="hx-preview-obj-fill" style="width:${pct}%"></div></div>
+        </li>`;
+      }
+      return `<li class="hx-preview-obj">${obj.desc}</li>`;
+    }).join('');
+  }
+
+  function buildStarRows() {
+    const liveProgress = _activeLevelId === level.id ? _levelProgress : null;
+    return level.stars.map((t, i) => {
+      const icons = [1, 2, 3].map(s =>
+        `<span class="hx-star${s <= i + 1 ? ' hx-star-filled' : ''}">★</span>`
+      ).join('');
+      let progressLabel = '';
+      if (liveProgress !== null) {
+        const current = liveProgress[mainObj.type] ?? 0;
+        const done    = mainObj.type === 'timeLimit' ? current <= t : current >= t;
+        progressLabel = done ? ' ✓' : '';
+      }
+      return `<div class="hx-preview-star-row">${icons}<span class="hx-preview-star-label">${formatStarValue(t, mainObj.type)}${progressLabel}</span></div>`;
+    }).join('');
+  }
 
   const bestHtml = info?.completed
     ? `<div class="hx-preview-best">
@@ -139,6 +163,10 @@ function showLevelPreview(box, gridEl, level, info, onLevelStart, modal) {
        </div>`
     : '';
 
+  const startDisabled = !unlocked ? 'disabled' : '';
+  const startClass    = !unlocked ? 'hx-preview-start-disabled' : '';
+  const startLabel    = unlocked  ? '▶ START LEVEL' : '🔒 LOCKED';
+
   const preview = document.createElement('div');
   preview.id = 'hx-campaign-preview';
   preview.innerHTML = `
@@ -148,24 +176,47 @@ function showLevelPreview(box, gridEl, level, info, onLevelStart, modal) {
     </div>
     <div id="hx-preview-title">${level.title}</div>
     <div class="hx-preview-section-label">OBJECTIVES</div>
-    <ul id="hx-preview-objectives">${objectivesHtml}</ul>
+    <ul id="hx-preview-objectives">${buildObjectivesHtml()}</ul>
     <div class="hx-preview-section-label">STAR THRESHOLDS</div>
-    <div id="hx-preview-stars">${starRows}</div>
+    <div id="hx-preview-stars">${buildStarRows()}</div>
     ${bestHtml}
-    <button id="hx-preview-start" type="button">▶ START LEVEL</button>
+    <button id="hx-preview-start" type="button" ${startDisabled} class="${startClass}">${startLabel}</button>
   `;
 
   box.appendChild(preview);
+
+  // Live progress refresh while an active session is running for this level.
+  // A MutationObserver ensures the interval is cleared whenever the preview
+  // is removed from the DOM (back button, start button, modal close, etc.).
+  let _liveInterval = null;
+  if (_activeLevelId === level.id) {
+    _liveInterval = setInterval(() => {
+      const objEl   = preview.querySelector('#hx-preview-objectives');
+      const starsEl = preview.querySelector('#hx-preview-stars');
+      if (objEl)   objEl.innerHTML   = buildObjectivesHtml();
+      if (starsEl) starsEl.innerHTML = buildStarRows();
+    }, 1000);
+
+    const _observer = new MutationObserver(() => {
+      if (!document.contains(preview)) {
+        clearInterval(_liveInterval);
+        _observer.disconnect();
+      }
+    });
+    _observer.observe(document.body, { childList: true, subtree: true });
+  }
 
   preview.querySelector('#hx-preview-back').addEventListener('click', () => {
     preview.remove();
     gridEl.style.display = '';
   });
 
-  preview.querySelector('#hx-preview-start').addEventListener('click', () => {
-    modal.remove();
-    if (typeof onLevelStart === 'function') onLevelStart(level.id);
-  });
+  if (unlocked) {
+    preview.querySelector('#hx-preview-start').addEventListener('click', () => {
+      modal.remove();
+      if (typeof onLevelStart === 'function') onLevelStart(level.id);
+    });
+  }
 }
 
 /* ── Level select modal ──────────────────────────────────────────── */
@@ -208,8 +259,6 @@ export function openCampaignModal(onLevelStart) {
     card.className = 'hx-campaign-level-card' +
       (info?.completed ? ' hx-campaign-complete' : '') +
       (!unlocked ? ' hx-campaign-locked' : '');
-    card.disabled = !unlocked;
-
     const starsHtml = [1, 2, 3].map(s =>
       `<span class="hx-star${s <= stars ? ' hx-star-filled' : ''}">★</span>`
     ).join('');
@@ -232,11 +281,9 @@ export function openCampaignModal(onLevelStart) {
       ${progressBar}
     `;
 
-    if (unlocked) {
-      card.addEventListener('click', () => {
-        showLevelPreview(box, grid, level, info, onLevelStart, modal);
-      });
-    }
+    card.addEventListener('click', () => {
+      showLevelPreview(box, grid, level, info, onLevelStart, modal, unlocked);
+    });
 
     grid.appendChild(card);
   });
@@ -287,6 +334,11 @@ function isObjectiveMet(obj) {
   }
 
   return (_levelProgress[obj.type] ?? 0) >= obj.target;
+}
+
+/** Return the current live progress object for the active campaign level. */
+export function getCampaignLevelProgress() {
+  return { levelId: _activeLevelId, progress: { ..._levelProgress } };
 }
 
 export function startCampaignLevel(levelId, onComplete) {
