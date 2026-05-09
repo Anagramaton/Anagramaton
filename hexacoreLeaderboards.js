@@ -2,6 +2,7 @@
 
 import { fetchLeaderboard, getPlayerName } from './leaderboard.js';
 import { getXPData } from './hexacoreXP.js';
+import { formatPlayerNameWithTitle } from './hexacoreBadges.js';
 
 const HEXACORE_PARTITION_ID = 'hexacore';
 const HEXACORE_MODE = 'hexacore';
@@ -23,7 +24,7 @@ function buildXPRankingTable(currentPlayer) {
       <div style="font-size:2rem;font-weight:bold;color:#a855f7">${level}</div>
       <div style="opacity:0.6;font-size:0.8rem;margin-bottom:0.5rem">PLAYER LEVEL</div>
       <div style="color:#c4b5fd;font-size:1.1rem">${xp.toLocaleString()} XP</div>
-      ${currentPlayer ? `<div style="margin-top:0.75rem;opacity:0.6;font-size:0.8rem">${escapeHtml(currentPlayer)}</div>` : ''}
+      ${currentPlayer ? `<div style="margin-top:0.75rem;opacity:0.6;font-size:0.8rem">${escapeHtml(formatPlayerNameWithTitle(currentPlayer))}</div>` : ''}
     </div>
     <div style="opacity:0.45;font-size:0.72rem;text-align:center;padding-bottom:0.5rem">
       XP ranking is tracked locally on this device.
@@ -43,7 +44,7 @@ function renderTable(entries, currentPlayer) {
     const style = isYou ? 'color:#f59e0b;font-weight:bold' : '';
     return `<tr class="hx-lb-row" style="${style}">
       <td style="padding:0.35rem 0.5rem;opacity:0.5;width:2rem">${i + 1}</td>
-      <td class="hx-lb-player-name" style="padding:0.35rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}${isYou ? ' 👈' : ''}</td>
+      <td class="hx-lb-player-name" style="padding:0.35rem 0.5rem">${escapeHtml(formatPlayerNameWithTitle(e.player_name || 'Anonymous'))}${isYou ? ' 👈' : ''}</td>
       <td style="padding:0.35rem 0.5rem;color:${isYou ? '#f59e0b' : '#4cc9f0'};font-weight:700;text-align:right">${(e.score || 0).toLocaleString()}</td>
     </tr>`;
   }).join('');

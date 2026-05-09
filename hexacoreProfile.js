@@ -1,5 +1,9 @@
 // hexacoreProfile.js — Player profile & career stats for Hexacore
 
+import { updateAchievementProgress } from './hexacoreAchievements.js';
+import { updateBadgeProgress } from './hexacoreBadges.js';
+import { getStatsSummary } from './hexacoreStats.js';
+
 const HX_PROFILE_KEY = 'hexacore_player_profile';
 
 const DEFAULT_PROFILE = {
@@ -50,6 +54,18 @@ export function updateProfile(sessionData) {
   }, profile.longestWord || '');
   profile.longestWord = longest;
 
+  const hasNineLetterWord = words.some(w => {
+    const wStr = typeof w === 'string' ? w : w.word || '';
+    return wStr.length >= 9;
+  });
+  if (hasNineLetterWord) {
+    updateAchievementProgress('wordSubmitted', { word: 'XXXXXXXXX', score: 0 });
+  }
+  if (level >= 10 && level % 10 === 0) {
+    updateAchievementProgress('levelUp', { level });
+  }
+  updateBadgeProgress(getStatsSummary());
+
   saveProfile(profile);
   return profile;
 }
@@ -62,72 +78,16 @@ function escapeHtml(str) {
 }
 
 export function openProfileModal() {
-  document.getElementById('hx-profile-modal')?.remove();
-
-  const profile = getProfile();
-  let xpData = { xp: 0, level: 1 };
-  try {
-    const raw = localStorage.getItem('hexacore_player_xp');
-    if (raw) xpData = JSON.parse(raw);
-  } catch (_) {}
-
-  const modal = document.createElement('div');
-  modal.id = 'hx-profile-modal';
-  modal.setAttribute('role', 'dialog');
-  modal.setAttribute('aria-modal', 'true');
-  modal.setAttribute('aria-labelledby', 'hx-profile-title');
-
-  const box = document.createElement('div');
-  box.id = 'hx-profile-box';
-
-  const playerName = (() => {
-    try { return localStorage.getItem('anagramaton_player_name') || 'Anonymous'; } catch (_) { return 'Anonymous'; }
-  })();
-
-  box.innerHTML = `
-    <div id="hx-profile-header">
-      <span id="hx-profile-title">👤 PROFILE</span>
-      <button id="hx-profile-close" aria-label="Close profile">✕</button>
-    </div>
-    <div id="hx-profile-body">
-      <div id="hx-profile-name">${escapeHtml(playerName)}</div>
-      <div id="hx-profile-rank">
-        <span class="hx-profile-rank-label">PLAYER LEVEL</span>
-        <span class="hx-profile-rank-num">${xpData.level}</span>
-        <span class="hx-profile-xp-total">${(xpData.xp || 0).toLocaleString()} XP</span>
-      </div>
-      <div id="hx-profile-stats">
-        <div class="hx-stat-row">
-          <span class="hx-stat-label">🎮 Games Played</span>
-          <span class="hx-stat-value">${profile.totalGames}</span>
-        </div>
-        <div class="hx-stat-row">
-          <span class="hx-stat-label">📝 Total Words</span>
-          <span class="hx-stat-value">${profile.totalWords.toLocaleString()}</span>
-        </div>
-        <div class="hx-stat-row">
-          <span class="hx-stat-label">🏆 High Score</span>
-          <span class="hx-stat-value">${profile.highestScore.toLocaleString()}</span>
-        </div>
-        <div class="hx-stat-row">
-          <span class="hx-stat-label">🔤 Longest Word</span>
-          <span class="hx-stat-value">${escapeHtml(profile.longestWord || '—')}</span>
-        </div>
-        <div class="hx-stat-row">
-          <span class="hx-stat-label">⚡ Best Level</span>
-          <span class="hx-stat-value">${profile.bestLevel}</span>
-        </div>
-        <div class="hx-stat-row">
-          <span class="hx-stat-label">✨ Total XP</span>
-          <span class="hx-stat-value">${(profile.totalXP || 0).toLocaleString()}</span>
-        </div>
-      </div>
-    </div>
-  `;
-
-  modal.appendChild(box);
-  document.body.appendChild(modal);
-
-  document.getElementById('hx-profile-close')?.addEventListener('click', () => modal.remove());
-  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  import('./hexacoreProfileNew.js')
+    .then(mod => mod.openProfileModalNew())
+    .catch(() => {
+      // Minimal fallback to avoid a dead button if dynamic import fails
+      document.getElementById('hx-profile-new-modal')?.remove();
+      const modal = document.createElement('div');
+      modal.id = 'hx-profile-new-modal';
+      modal.style.cssText = 'position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.7);z-index:5600;';
+      modal.innerHTML = '<div style="background:#111827;color:#fff;padding:1rem;border-radius:12px">Profile unavailable.</div>';
+      modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+      document.body.appendChild(modal);
+    });
 }

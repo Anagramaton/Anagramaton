@@ -22,6 +22,8 @@ import { getDailyQuests, getWeeklyQuest, updateQuestProgress, openQuestsModal, i
 import { openLeaderboardsModal } from './hexacoreLeaderboards.js';
 import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampaignProgress } from './hexacoreCampaign.js';
 import { getProfile, updateProfile, openProfileModal } from './hexacoreProfile.js';
+import { updateAchievementProgress } from './hexacoreAchievements.js';
+import { updateStatTracking, saveSessionHistory, updateStats } from './hexacoreStats.js';
 
 const HX_LEADERBOARD_ID = 'hexacore';
 
@@ -3709,6 +3711,19 @@ async function submitHexacoreWord() {
     amethystCollected:   false,
     seleniteCollected:   false,
   });
+  updateAchievementProgress('wordSubmitted', {
+    word,
+    tiles: [...hxSelected],
+    score: wordScore,
+    portalUsed: portalUsedInWord,
+  });
+  updateStatTracking('wordSubmitted', {
+    word,
+    tiles: [...hxSelected],
+    score: wordScore,
+    portalUsed: portalUsedInWord,
+    gameLevel: hxState.level,
+  });
 
   // Campaign progress tracking
   if (hxGameMode === 'campaign') {
@@ -4294,6 +4309,20 @@ function triggerGameOver() {
     xpEarned:  0, // XP was already added incrementally
     level:     hxState.level,
   });
+  updateAchievementProgress('gameOver', {
+    score: hxState.score,
+    words: hxState.words.length,
+    level: hxState.level,
+  });
+  updateStatTracking('gameOver', { score: hxState.score, level: hxState.level });
+  saveSessionHistory({
+    score: hxState.score,
+    words: hxState.words.length,
+    level: hxState.level,
+    mode: hxGameMode,
+    date: new Date().toISOString(),
+  });
+  updateStats({ sessionScore: hxState.score, sessionWords: hxState.words.length });
 
   showGameOver();
 }
