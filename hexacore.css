@@ -252,82 +252,272 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  animation: hx-levelup-enter 3s ease-out forwards;
+  animation: hx-levelup-enter 1.2s ease-out forwards;
+  pointer-events: none;
+}
+
+#hx-player-levelup-banner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  animation: hx-levelup-enter 1.2s ease-out forwards;
   pointer-events: none;
 }
 
 .hx-levelup-backdrop {
-  background: rgba(10, 5, 25, 0.88);
+  background:
+    radial-gradient(ellipse at top, rgba(251, 191, 36, 0.12), transparent 60%),
+    rgba(10, 5, 25, 0.96);
   border: 2px solid rgba(167, 139, 250, 0.9);
-  border-radius: 12px;
-  padding: 1.5rem 3rem;
+  border-radius: 18px;
+  padding: 1.6rem 3.2rem 1.8rem;
   box-shadow:
-    0 0 40px rgba(130, 80, 255, 0.6),
-    0 0 80px rgba(130, 80, 255, 0.25),
-    inset 0 0 20px rgba(130, 80, 255, 0.1);
+    0 0 60px rgba(130, 80, 255, 0.65),
+    0 0 120px rgba(130, 80, 255, 0.28),
+    0 0 200px rgba(130, 80, 255, 0.1),
+    inset 0 0 28px rgba(130, 80, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  min-width: 280px;
+}
+
+.hx-levelup-backdrop--xp {
+  background:
+    radial-gradient(ellipse at top, rgba(168, 85, 247, 0.18), transparent 60%),
+    rgba(10, 5, 25, 0.96);
+  border-color: rgba(168, 85, 247, 0.9);
+  box-shadow:
+    0 0 60px rgba(168, 85, 247, 0.65),
+    0 0 120px rgba(168, 85, 247, 0.28),
+    0 0 200px rgba(168, 85, 247, 0.1),
+    inset 0 0 28px rgba(168, 85, 247, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* Stars row */
+.hx-levelup-stars {
+  display: flex;
+  gap: 0.55rem;
+  margin-bottom: 0.35rem;
+}
+
+.hx-levelup-star {
+  font-size: 1.15rem;
+  color: #fbbf24;
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.9));
+  animation: hx-star-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--star-i, 0) * 80ms) both;
+}
+
+.hx-levelup-star--xp {
+  color: #c084fc;
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.9));
+}
+
+@keyframes hx-star-pop {
+  0%   { opacity: 0; transform: scale(0) rotate(-30deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* Context label above the title */
+.hx-levelup-label {
+  font-family: 'Turret Road', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(167, 139, 250, 0.65);
+}
+
+.hx-levelup-label--xp {
+  color: rgba(192, 132, 252, 0.65);
 }
 
 .hx-levelup-title {
   font-family: 'Turret Road', system-ui, sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.55rem;
   font-weight: 900;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: #fbbf24;
-  text-shadow: 0 0 20px rgba(251, 191, 36, 0.8), 0 2px 8px rgba(0,0,0,0.6);
+  text-shadow: 0 0 24px rgba(251, 191, 36, 0.85), 0 2px 8px rgba(0, 0, 0, 0.7);
+  margin-bottom: 2px;
+}
+
+.hx-levelup-title--xp {
+  color: #c084fc;
+  text-shadow: 0 0 24px rgba(168, 85, 247, 0.85), 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Decorative divider */
+.hx-levelup-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167, 139, 250, 0.55),
+    rgba(251, 191, 36, 0.45),
+    rgba(167, 139, 250, 0.55),
+    transparent
+  );
+  margin: 0.5rem 0 0.3rem;
+}
+
+.hx-levelup-divider--xp {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(168, 85, 247, 0.55),
+    rgba(192, 132, 252, 0.45),
+    rgba(168, 85, 247, 0.55),
+    transparent
+  );
 }
 
 .hx-levelup-num {
   font-family: 'Turret Road', system-ui, sans-serif;
-  font-size: 4.5rem;
+  font-size: 5rem;
   font-weight: 900;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
+  line-height: 1;
   color: #ffffff;
   text-shadow:
-    0 0 30px rgba(167, 139, 250, 1),
-    0 0 60px rgba(130, 80, 255, 0.7),
-    0 4px 12px rgba(0, 0, 0, 0.8);
+    0 0 32px rgba(167, 139, 250, 1),
+    0 0 64px rgba(130, 80, 255, 0.75),
+    0 4px 14px rgba(0, 0, 0, 0.85);
+}
+
+.hx-levelup-num--xp {
+  text-shadow:
+    0 0 32px rgba(168, 85, 247, 1),
+    0 0 64px rgba(130, 80, 255, 0.75),
+    0 4px 14px rgba(0, 0, 0, 0.85);
 }
 
 .hx-levelup-sub {
   font-family: 'Turret Road', system-ui, sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   color: #4cc9f0;
-  text-shadow: 0 0 8px rgba(76, 201, 240, 0.8);
+  text-shadow: 0 0 10px rgba(76, 201, 240, 0.8);
+  margin-top: 2px;
 }
 
+.hx-levelup-sub--xp {
+  color: #c084fc;
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+}
+
+/* OK dismiss button */
+.hx-levelup-ok-btn {
+  pointer-events: auto;
+  margin-top: 1rem;
+  padding: 0.5rem 2.4rem;
+  font-family: 'Turret Road', system-ui, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #0a0519;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow:
+    0 0 18px rgba(251, 191, 36, 0.7),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+
+.hx-levelup-ok-btn:hover,
+.hx-levelup-ok-btn:focus-visible {
+  transform: scale(1.07);
+  box-shadow:
+    0 0 28px rgba(251, 191, 36, 0.85),
+    0 4px 12px rgba(0, 0, 0, 0.55);
+  filter: brightness(1.1);
+  outline: none;
+}
+
+.hx-levelup-ok-btn:active {
+  transform: scale(0.96);
+  filter: brightness(0.95);
+}
+
+.hx-levelup-ok-btn--xp {
+  color: #0a0519;
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+  box-shadow:
+    0 0 18px rgba(168, 85, 247, 0.7),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.hx-levelup-ok-btn--xp:hover,
+.hx-levelup-ok-btn--xp:focus-visible {
+  box-shadow:
+    0 0 28px rgba(168, 85, 247, 0.85),
+    0 4px 12px rgba(0, 0, 0, 0.55);
+}
+
+/* Multiple concentric rings */
 .hx-levelup-ring {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 120px;
-  height: 120px;
-  margin-left: -60px;
-  margin-top: -60px;
   border-radius: 50%;
-  border: 3px solid rgba(167, 139, 250, 0.8);
-  animation: hx-levelup-ring 0.8s ease-out forwards;
+  border: 2.5px solid rgba(167, 139, 250, 0.75);
   pointer-events: none;
 }
 
+.hx-levelup-ring--1 {
+  width: 160px;
+  height: 160px;
+  margin-left: -80px;
+  margin-top: -80px;
+  animation: hx-levelup-ring 1s ease-out 0ms forwards;
+}
+
+.hx-levelup-ring--2 {
+  width: 240px;
+  height: 240px;
+  margin-left: -120px;
+  margin-top: -120px;
+  animation: hx-levelup-ring 1s ease-out 160ms forwards;
+}
+
+.hx-levelup-ring--3 {
+  width: 320px;
+  height: 320px;
+  margin-left: -160px;
+  margin-top: -160px;
+  animation: hx-levelup-ring 1s ease-out 320ms forwards;
+}
+
+.hx-levelup-ring--xp {
+  border-color: rgba(168, 85, 247, 0.75);
+}
+
 @keyframes hx-levelup-ring {
-  0%   { transform: scale(0.2); opacity: 1; }
-  100% { transform: scale(4);   opacity: 0; }
+  0%   { transform: scale(0.15); opacity: 1; }
+  100% { transform: scale(1);    opacity: 0; }
 }
 
 @keyframes hx-levelup-enter {
   0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-8deg); filter: brightness(3); }
-  20%  { opacity: 1; transform: translate(-50%, -50%) scale(1.18) rotate(2deg);  filter: brightness(2); }
-  35%  { transform: translate(-50%, -50%) scale(0.96) rotate(-1deg); filter: brightness(1.4); }
-  50%  { transform: translate(-50%, -50%) scale(1.04) rotate(0deg);  filter: brightness(1); }
-  75%  { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1) translateY(-30px); filter: brightness(1.5); }
+  40%  { opacity: 1; transform: translate(-50%, -50%) scale(1.18) rotate(2deg);  filter: brightness(2); }
+  65%  { transform: translate(-50%, -50%) scale(0.96) rotate(-1deg); filter: brightness(1.4); }
+  82%  { transform: translate(-50%, -50%) scale(1.04) rotate(0deg);  filter: brightness(1); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); filter: brightness(1); }
 }
 
 /* ── Hide Anagramaton-specific UI during Hexacore ──────────────── */
@@ -717,46 +907,35 @@ body.hx-active #right-panel-title    { display: none; }
   pointer-events: none;
 }
 
-/* ── Special tile consumed burst — layered over hx-tile-removing ── */
+/* ── Special tile consumed burst — single animation with reduced filter complexity ── */
 @keyframes hx-ember-burst {
-  0%   { filter: brightness(1)    drop-shadow(0 0  0px transparent); }
-  15%  { filter: brightness(6)    drop-shadow(0 0 30px rgba(255, 255, 180, 1))
-                                  drop-shadow(0 0 12px rgba(255, 200, 0, 1)); }
-  35%  { filter: brightness(5)    drop-shadow(0 0 22px rgba(255, 120, 0, 1))
-                                  drop-shadow(0 0  8px rgba(255, 255, 100, 0.9)); }
-  60%  { filter: brightness(2.5)  drop-shadow(0 0 14px rgba(255, 60, 0, 0.8))
-                                  drop-shadow(0 0  4px rgba(255, 180, 0, 0.6)); }
-  100% { filter: brightness(0.2)  drop-shadow(0 0  0px transparent); }
+  0%   { opacity: 1;   transform: scale(1);    filter: brightness(1); }
+  15%  { opacity: 0.9; transform: scale(1.12); filter: brightness(3) drop-shadow(0 0 20px rgba(255, 200, 0, 1)); }
+  40%  { opacity: 0.6; transform: scale(0.8);  filter: brightness(2); }
+  100% { opacity: 0;   transform: scale(0.25); filter: brightness(0.5); }
 }
-/* Replaces the single animation with pop-out + ember burst running together */
 .hx-consumed-ember {
-  animation:
-    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-ember-burst   0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  animation: hx-ember-burst 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
 @keyframes hx-prism-rainbow {
-  0%   { filter: hue-rotate(0deg)   brightness(1)   drop-shadow(0 0  0px transparent); }
-  50%  { filter: hue-rotate(180deg) brightness(3.5) drop-shadow(0 0 20px rgba(100, 200, 255, 1)); }
-  100% { filter: hue-rotate(360deg) brightness(1)   drop-shadow(0 0  0px transparent); }
+  0%   { opacity: 1;   transform: scale(1);    filter: hue-rotate(0deg)   brightness(1); }
+  50%  { opacity: 0.6; transform: scale(1.12); filter: hue-rotate(180deg) brightness(2); }
+  100% { opacity: 0;   transform: scale(0.25); filter: hue-rotate(360deg) brightness(1); }
 }
 .hx-consumed-prism {
-  animation:
-    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-prism-rainbow 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  animation: hx-prism-rainbow 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
 @keyframes hx-rune-implosion {
-  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
-  40%  { filter: brightness(3.5) drop-shadow(0 0 18px rgba(130, 80, 255, 1)); }
-  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  0%   { opacity: 1;   transform: scale(1);    filter: brightness(1); }
+  40%  { opacity: 0.6; transform: scale(1.12); filter: brightness(2); }
+  100% { opacity: 0;   transform: scale(0.25); filter: brightness(1); }
 }
 .hx-consumed-rune {
-  animation:
-    hx-tile-pop-out    0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-rune-implosion  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  animation: hx-rune-implosion 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -2156,6 +2335,7 @@ body.hx-active :is(#game-title, #game-title-mirror) {
   font-family: 'Bebas Neue', sans-serif;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.12);
+  --hx-title-stroke-base: rgba(255, 140, 66, 0.12);
   filter: none;
   opacity: 1;
 }
@@ -2168,38 +2348,38 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
 }
 @keyframes hx-title-letter-flash {
   0% {
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    filter: brightness(1);
+    transform: scale(1);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.12);
     opacity: 1;
   }
   7% {
-    filter: brightness(14)
-            drop-shadow(0 0 40px rgba(255, 200, 80, 1))
-            drop-shadow(0 0 80px rgba(255, 140, 40, 0.9))
-            drop-shadow(0 0 120px rgba(255, 100, 20, 0.6));
+    filter: brightness(2.5);
+    transform: scale(1.08);
     -webkit-text-stroke-color: #ffe0a0;
     opacity: 1;
   }
   25% {
-    filter: brightness(8)
-            drop-shadow(0 0 25px rgba(255, 180, 60, 1))
-            drop-shadow(0 0 50px rgba(255, 120, 30, 0.7));
+    filter: brightness(2);
+    transform: scale(1.05);
     -webkit-text-stroke-color: #ffcc70;
     opacity: 1;
   }
   60% {
-    filter: brightness(3)
-            drop-shadow(0 0 12px rgba(255, 140, 40, 0.8));
+    filter: brightness(1.5);
+    transform: scale(1.02);
     -webkit-text-stroke-color: #ffaa50;
     opacity: 1;
   }
   100% {
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    filter: brightness(1);
+    transform: scale(1);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.12);
     opacity: 1;
   }
 }
 body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+  will-change: filter, transform;
   animation: hx-title-letter-flash 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
 }
 @keyframes hx-title-letter-dim {
@@ -2220,44 +2400,45 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--dimming {
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) {
   opacity: 1;
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.15);
+  --hx-title-stroke-base: rgba(255, 140, 66, 0.15);
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.15);
 }
 @keyframes hx-title-letter-flash-dark {
   0% {
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    filter: brightness(1);
+    transform: scale(1);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.15);
     opacity: 1;
   }
   7% {
-    filter: brightness(14)
-            drop-shadow(0 0 40px rgba(255, 200, 80, 1))
-            drop-shadow(0 0 80px rgba(255, 140, 40, 0.9))
-            drop-shadow(0 0 120px rgba(255, 100, 20, 0.6));
+    filter: brightness(2.5);
+    transform: scale(1.08);
     -webkit-text-stroke-color: #ffe0a0;
     opacity: 1;
   }
   25% {
-    filter: brightness(8)
-            drop-shadow(0 0 25px rgba(255, 180, 60, 1))
-            drop-shadow(0 0 50px rgba(255, 120, 30, 0.7));
+    filter: brightness(2);
+    transform: scale(1.05);
     -webkit-text-stroke-color: #ffcc70;
     opacity: 1;
   }
   60% {
-    filter: brightness(3)
-            drop-shadow(0 0 12px rgba(255, 140, 40, 0.8));
+    filter: brightness(1.5);
+    transform: scale(1.02);
     -webkit-text-stroke-color: #ffaa50;
     opacity: 1;
   }
   100% {
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    filter: brightness(1);
+    transform: scale(1);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.15);
     opacity: 1;
   }
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+  will-change: filter, transform;
   animation: hx-title-letter-flash-dark 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
 }
 @keyframes hx-title-letter-dim-dark {
@@ -2274,6 +2455,55 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--dimming {
   animation: hx-title-letter-dim-dark 2.5s ease-out forwards;
+}
+
+/* ── Animation performance breakpoints ─────────────────────────── */
+
+/* Tablet (769px–1024px): no drop-shadows already handled above; reduce duration 20% */
+@media (min-width: 769px) and (max-width: 1024px) {
+  body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit,
+  body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+    animation-duration: 1.44s;
+  }
+  .hx-consumed-ember,
+  .hx-consumed-prism,
+  .hx-consumed-rune {
+    animation-duration: 0.216s;
+  }
+}
+
+/* Mobile (≤768px): simplified brightness-only title flash; skip burst effects on tiles */
+@media (max-width: 768px) {
+  @keyframes hx-title-letter-flash-mobile {
+    0%   { filter: brightness(1);    transform: scale(1);    -webkit-text-stroke-color: var(--hx-title-stroke-base); }
+    7%   { filter: brightness(1.75); transform: scale(1.05); -webkit-text-stroke-color: #ffe0a0; }
+    25%  { filter: brightness(1.4);  transform: scale(1.03); -webkit-text-stroke-color: #ffcc70; }
+    60%  { filter: brightness(1.2);  transform: scale(1.01); -webkit-text-stroke-color: #ffaa50; }
+    100% { filter: brightness(1);    transform: scale(1);    -webkit-text-stroke-color: var(--hx-title-stroke-base); }
+  }
+  body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit,
+  body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+    animation: hx-title-letter-flash-mobile 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
+  }
+  .hx-consumed-ember,
+  .hx-consumed-prism,
+  .hx-consumed-rune {
+    animation: hx-tile-pop-out 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  }
+}
+
+/* prefers-reduced-motion: replace heavy animations with minimal visual feedback */
+@media (prefers-reduced-motion: reduce) {
+  body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit,
+  body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+    animation: none;
+    filter: brightness(1.5);
+  }
+  .hx-consumed-ember,
+  .hx-consumed-prism,
+  .hx-consumed-rune {
+    animation: hx-tile-pop-out 0.2s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  }
 }
 
 /* ── Hexacore HUD breakpoints ─────────────────────────────────── */
@@ -2509,20 +2739,6 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 .hx-xp-toast.hx-xp-toast-visible {
   opacity: 1;
   transform: translateY(-28px);
-}
-
-/* ── Player Level-Up Banner ──────────────────────────────────────── */
-#hx-player-levelup-banner {
-  position: fixed;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: hx-levelup-pop 3s cubic-bezier(0.22,1,0.36,1) forwards;
-  pointer-events: none;
 }
 
 /* ── HUD Action Bar ──────────────────────────────────────────────── */
@@ -4524,14 +4740,18 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     animation: none;
   }
 
-  /* Level-up banner: simple fade in/out */
+  /* Level-up banner: simple fade in, then hold */
   #hx-levelup-banner,
   #hx-player-levelup-banner {
-    animation: hx-levelup-reduced 2.5s forwards !important;
+    animation: hx-levelup-reduced 0.6s forwards !important;
   }
   .hx-levelup-ring {
     animation: none !important;
     display: none;
+  }
+  .hx-levelup-star {
+    animation: none !important;
+    opacity: 1;
   }
 
   /* LVL badge pop: gentle scale only, no bounce */
@@ -4550,9 +4770,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 
 @keyframes hx-levelup-reduced {
   0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-  15%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  80%  { opacity: 1; }
-  100% { opacity: 0; }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 @keyframes hx-badge-pop-reduced {
   0%   { transform: scale(1); }

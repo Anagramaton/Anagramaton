@@ -1253,18 +1253,28 @@ function showLevelUpBanner(level) {
   const banner = document.createElement('div');
   banner.id = 'hx-levelup-banner';
   banner.innerHTML = `
-    <div class="hx-levelup-ring"></div>
+    <div class="hx-levelup-ring hx-levelup-ring--1"></div>
+    <div class="hx-levelup-ring hx-levelup-ring--2"></div>
+    <div class="hx-levelup-ring hx-levelup-ring--3"></div>
     <div class="hx-levelup-backdrop">
+      <div class="hx-levelup-stars" aria-hidden="true">
+        <span class="hx-levelup-star" style="--star-i:0">★</span>
+        <span class="hx-levelup-star" style="--star-i:1">★</span>
+        <span class="hx-levelup-star" style="--star-i:2">★</span>
+        <span class="hx-levelup-star" style="--star-i:3">★</span>
+        <span class="hx-levelup-star" style="--star-i:4">★</span>
+      </div>
+      <span class="hx-levelup-label">HEXACORE</span>
       <span class="hx-levelup-title">LEVEL UP!</span>
+      <div class="hx-levelup-divider"></div>
       <span class="hx-levelup-num">${level}</span>
       <span class="hx-levelup-sub">${getLevelUpMessage(level)}</span>
+      <button class="hx-levelup-ok-btn" type="button" aria-label="Dismiss level-up banner">OK</button>
     </div>
   `;
   document.body.appendChild(banner);
 
-  // Auto-remove after animation completes (~3s)
-  banner.addEventListener('animationend', () => banner.remove(), { once: true });
-  setTimeout(() => banner.remove(), 3200);
+  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => banner.remove());
 }
 
 function showRestoredBanner(level, score) {
@@ -1308,16 +1318,26 @@ function showPlayerLevelUpBanner(newLevel) {
   const banner = document.createElement('div');
   banner.id = 'hx-player-levelup-banner';
   banner.innerHTML = `
-    <div class="hx-levelup-backdrop" style="background:rgba(168,85,247,0.2);border-color:#a855f7">
-      <span class="hx-levelup-title" style="color:#c084fc">✨ PLAYER LEVEL UP!</span>
-      <span class="hx-levelup-num" style="color:#e9d5ff">${newLevel}</span>
-      <span class="hx-levelup-sub" style="color:#c084fc">RANK INCREASED</span>
+    <div class="hx-levelup-ring hx-levelup-ring--1 hx-levelup-ring--xp"></div>
+    <div class="hx-levelup-ring hx-levelup-ring--2 hx-levelup-ring--xp"></div>
+    <div class="hx-levelup-ring hx-levelup-ring--3 hx-levelup-ring--xp"></div>
+    <div class="hx-levelup-backdrop hx-levelup-backdrop--xp">
+      <div class="hx-levelup-stars hx-levelup-stars--xp" aria-hidden="true">
+        <span class="hx-levelup-star hx-levelup-star--xp" style="--star-i:0">✦</span>
+        <span class="hx-levelup-star hx-levelup-star--xp" style="--star-i:1">✦</span>
+        <span class="hx-levelup-star hx-levelup-star--xp" style="--star-i:2">✦</span>
+      </div>
+      <span class="hx-levelup-label hx-levelup-label--xp">PLAYER</span>
+      <span class="hx-levelup-title hx-levelup-title--xp">LEVEL UP!</span>
+      <div class="hx-levelup-divider hx-levelup-divider--xp"></div>
+      <span class="hx-levelup-num hx-levelup-num--xp">${newLevel}</span>
+      <span class="hx-levelup-sub hx-levelup-sub--xp">RANK INCREASED</span>
+      <button class="hx-levelup-ok-btn hx-levelup-ok-btn--xp" type="button" aria-label="Dismiss level-up banner">OK</button>
     </div>
   `;
   document.body.appendChild(banner);
 
-  banner.addEventListener('animationend', () => banner.remove(), { once: true });
-  setTimeout(() => banner.remove(), 3200);
+  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => banner.remove());
 
   // LVL button badge-pop + XP bar glow sweep
   const lvlBtn = document.getElementById('hx-level-hud');
@@ -2883,15 +2903,9 @@ async function submitHexacoreWord() {
   updateScoreDisplay();
   animateScoreHud(oldScore, hxState.score);
 
-  // Check requirements before the selection is cleared and portal state changes
-  checkHexacoreRequirements(word, [...hxSelected], wordScore);
-
-  // XP gain
+  // XP gain — compute the values now but defer the UI until after refill
   const xpGain = calcWordXP(word, [...hxSelected]);
   const { newLevel, leveledUp } = addXP(xpGain);
-  showXPGainToast(xpGain);
-  if (leveledUp) showPlayerLevelUpBanner(newLevel);
-  updateXPBarFn();
 
   // Quest tracking
   const gemsUsedInWord   = hxSelected.filter(t => t.tileType && t.tileType.startsWith('gem')).length;
@@ -2916,19 +2930,21 @@ async function submitHexacoreWord() {
 
   const consumed = [...hxSelected];
 
-  // Detect amethyst/selenite power-up collection (5+ letter word)
+  // Detect amethyst/selenite power-up collection (5+ letter word).
+  // Update state immediately; queue the toast to show after the refill settles.
+  const pendingPowerUpToasts = [];
   if (assembledLength >= 5) {
     const hasAmethystTile  = consumed.some(t => t.tileType === 'amethyst');
     const hasSelenieTile   = consumed.some(t => t.tileType === 'selenite');
     if (hasAmethystTile) {
       hxState.amethystCount++;
       updatePowerUpBar();
-      showPowerUpCollectToast('amethyst');
+      pendingPowerUpToasts.push('amethyst');
     }
     if (hasSelenieTile) {
       hxState.seleniteCount++;
       updatePowerUpBar();
-      showPowerUpCollectToast('selenite');
+      pendingPowerUpToasts.push('selenite');
     }
   }
 
@@ -2961,6 +2977,13 @@ async function submitHexacoreWord() {
   stopSound('sfxFunk');
 
   if (!hxState.gameOver) {
+    // Show all post-word UI feedback only after gravity cascade and refill complete
+    checkHexacoreRequirements(word, consumed, wordScore);
+    showXPGainToast(xpGain);
+    if (leveledUp) showPlayerLevelUpBanner(newLevel);
+    updateXPBarFn();
+    pendingPowerUpToasts.forEach(type => showPowerUpCollectToast(type));
+
     checkLevelUp(oldScore, hxState.score);
     playSound('sfxGemCollect');
     // Spawn gem reward based on word length
