@@ -239,10 +239,6 @@
   .hx-badge-card.is-unlocked:hover { transform: scale(1.08) rotate(2deg); }
 }
 
-@media (hover: none), (pointer: coarse) {
-  .hx-achievement-burst { animation: none; }
-}
-
 @media (max-width: 640px) {
   .hx-profile-new-modal { padding: .75rem; }
   .hx-profile-new-box { padding: .875rem; }
@@ -263,6 +259,7 @@
   .hx-progress-ring-wrap { width: min(100%, 120px); }
   .hx-donut-chart { width: min(100%, 110px); }
   .hx-mini-chart { height: 60px; }
+  .hx-achievement-burst { animation: none; }
 }
 
 @media (max-width: 480px) {
