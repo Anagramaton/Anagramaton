@@ -365,89 +365,136 @@
         <section class="howto-page" data-page="0">
           <h3>SPECIAL TILES</h3>
           <div class="hx-howto-tile-row">
-            <!-- EMBER -->
+            <!-- EMBER: volcanic crimson → solar orange → gold -->
             <div class="hx-howto-tile-item hx-howto-tile-item--ember">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="hx-ht-ember" x1="0" y1="1" x2="0" y2="0">
-                    <stop offset="0%"   stop-color="#1a0000"/>
-                    <stop offset="30%"  stop-color="#cc1100"/>
-                    <stop offset="60%"  stop-color="#ff4500"/>
-                    <stop offset="80%"  stop-color="#ff9900"/>
-                    <stop offset="100%" stop-color="#ffee00"/>
+                  <linearGradient id="hx-ht-ember" x1="0.2" y1="1" x2="0.8" y2="0">
+                    <stop offset="0%"   stop-color="#260000"/>
+                    <stop offset="30%"  stop-color="#b91c1c"/>
+                    <stop offset="60%"  stop-color="#f97316"/>
+                    <stop offset="85%"  stop-color="#fbbf24"/>
+                    <stop offset="100%" stop-color="#fef3c7"/>
+                  </linearGradient>
+                  <linearGradient id="hx-ht-ember-shine" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.50"/>
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
-                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-ember)" stroke="#ff4500" stroke-width="1.5"/>
-                <text x="30" y="35" text-anchor="middle" font-size="20" fill="#ffee00">🔥</text>
+                <!-- Main body -->
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-ember)" stroke="#fb923c" stroke-width="2"/>
+                <!-- Inner rim shine -->
+                <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.30)" stroke-width="1"/>
+                <!-- Top highlight overlay -->
+                <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#hx-ht-ember-shine)"/>
+                <text x="30" y="35" text-anchor="middle" font-size="20" fill="#fef3c7">🔥</text>
               </svg>
               <span class="hx-howto-tile-label">EMBER</span>
             </div>
-            <!-- PRISM -->
-            <div class="hx-howto-tile-item">
+            <!-- PRISM: deep violet → electric rose -->
+            <div class="hx-howto-tile-item hx-howto-tile-item--prism">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="hx-ht-prism" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%"   stop-color="#a855f7"/>
-                    <stop offset="100%" stop-color="#06b6d4"/>
+                    <stop offset="0%"   stop-color="#1a0040"/>
+                    <stop offset="45%"  stop-color="#7c3aed"/>
+                    <stop offset="100%" stop-color="#db2777"/>
+                  </linearGradient>
+                  <linearGradient id="hx-ht-prism-shine" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.45"/>
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
-                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-prism)" stroke="#a855f7" stroke-width="1.5"/>
-                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#fbbf24" font-weight="bold">✦</text>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-prism)" stroke="#f472b6" stroke-width="2"/>
+                <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+                <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#hx-ht-prism-shine)"/>
+                <text x="30" y="36" text-anchor="middle" font-size="18" fill="#fde68a" font-weight="bold">✦</text>
               </svg>
               <span class="hx-howto-tile-label">PRISM</span>
             </div>
-            <!-- RUNE -->
-            <div class="hx-howto-tile-item">
+            <!-- RUNE: midnight → deep indigo → electric violet -->
+            <div class="hx-howto-tile-item hx-howto-tile-item--rune">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="#2d1b69" stroke="#7c3aed" stroke-width="1.5"/>
+                <defs>
+                  <linearGradient id="hx-ht-rune" x1="0.5" y1="1" x2="0.5" y2="0">
+                    <stop offset="0%"   stop-color="#020617"/>
+                    <stop offset="50%"  stop-color="#312e81"/>
+                    <stop offset="100%" stop-color="#6d28d9"/>
+                  </linearGradient>
+                  <linearGradient id="hx-ht-rune-shine" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.38"/>
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-rune)" stroke="#a78bfa" stroke-width="2"/>
+                <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#hx-ht-rune-shine)"/>
                 <text x="30" y="37" text-anchor="middle" font-size="22" fill="#c4b5fd" font-weight="bold" font-family="monospace">?</text>
               </svg>
               <span class="hx-howto-tile-label">RUNE</span>
             </div>
-            <!-- DIGRAPH -->
-            <div class="hx-howto-tile-item">
+            <!-- DIGRAPH: deep teal → emerald → electric lime -->
+            <div class="hx-howto-tile-item hx-howto-tile-item--digraph">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="hx-ht-digraph" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%"   stop-color="#0d9488"/>
-                    <stop offset="100%" stop-color="#2dd4bf"/>
+                  <linearGradient id="hx-ht-digraph" x1="0" y1="1" x2="1" y2="0">
+                    <stop offset="0%"   stop-color="#022c22"/>
+                    <stop offset="55%"  stop-color="#059669"/>
+                    <stop offset="100%" stop-color="#34d399"/>
+                  </linearGradient>
+                  <linearGradient id="hx-ht-digraph-shine" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.42"/>
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
-                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-digraph)" stroke="#0d9488" stroke-width="1.5"/>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-digraph)" stroke="#6ee7b7" stroke-width="2"/>
+                <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+                <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#hx-ht-digraph-shine)"/>
                 <text x="30" y="31" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="bold" font-family="monospace">HE</text>
-                <text x="30" y="43" text-anchor="middle" font-size="9" fill="#2dd4bf">❋</text>
+                <text x="30" y="43" text-anchor="middle" font-size="9" fill="#6ee7b7">❋</text>
               </svg>
               <span class="hx-howto-tile-label">DIGRAPH</span>
             </div>
-            <!-- AMETHYST -->
-            <div class="hx-howto-tile-item">
+            <!-- AMETHYST: obsidian → royal purple → electric fuchsia -->
+            <div class="hx-howto-tile-item hx-howto-tile-item--amethyst">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="hx-ht-amethyst" x1="0" y1="1" x2="1" y2="0">
-                    <stop offset="0%"   stop-color="#4c0070"/>
-                    <stop offset="50%"  stop-color="#a855f7"/>
-                    <stop offset="100%" stop-color="#e879f9"/>
+                  <linearGradient id="hx-ht-amethyst" x1="1" y1="1" x2="0" y2="0">
+                    <stop offset="0%"   stop-color="#1a0028"/>
+                    <stop offset="50%"  stop-color="#7e22ce"/>
+                    <stop offset="100%" stop-color="#d946ef"/>
+                  </linearGradient>
+                  <linearGradient id="hx-ht-amethyst-shine" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.42"/>
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
-                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-amethyst)" stroke="#a855f7" stroke-width="1.5"/>
-                <text x="30" y="37" text-anchor="middle" font-size="20" fill="#e879f9" font-weight="bold">◈</text>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-amethyst)" stroke="#e879f9" stroke-width="2"/>
+                <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+                <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#hx-ht-amethyst-shine)"/>
+                <text x="30" y="37" text-anchor="middle" font-size="20" fill="#f0abfc" font-weight="bold">◈</text>
               </svg>
               <span class="hx-howto-tile-label">AMETHYST</span>
             </div>
-            <!-- SELENITE -->
-            <div class="hx-howto-tile-item">
+            <!-- SELENITE: deep ocean → arctic teal → crystal ice -->
+            <div class="hx-howto-tile-item hx-howto-tile-item--selenite">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="hx-ht-selenite" x1="0" y1="1" x2="0" y2="0">
-                    <stop offset="0%"   stop-color="#0a0a1a"/>
-                    <stop offset="25%"  stop-color="#1a3a6e"/>
-                    <stop offset="60%"  stop-color="#8ecae6"/>
-                    <stop offset="85%"  stop-color="#caf0f8"/>
-                    <stop offset="100%" stop-color="#ffffff"/>
+                    <stop offset="0%"   stop-color="#030712"/>
+                    <stop offset="35%"  stop-color="#0c4a6e"/>
+                    <stop offset="70%"  stop-color="#0ea5e9"/>
+                    <stop offset="100%" stop-color="#e0f2fe"/>
+                  </linearGradient>
+                  <linearGradient id="hx-ht-selenite-shine" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.55"/>
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
-                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-selenite)" stroke="#8ecae6" stroke-width="1.5"/>
-                <text x="30" y="37" text-anchor="middle" font-size="18" fill="#caf0f8" font-weight="bold">⇌</text>
+                <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#hx-ht-selenite)" stroke="#7dd3fc" stroke-width="2"/>
+                <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="1"/>
+                <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#hx-ht-selenite-shine)"/>
+                <text x="30" y="37" text-anchor="middle" font-size="18" fill="#e0f2fe" font-weight="bold">⇌</text>
               </svg>
               <span class="hx-howto-tile-label">SELENITE</span>
             </div>

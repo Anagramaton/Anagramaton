@@ -35,111 +35,111 @@
 @keyframes hx-ember-inferno {
   0%   {
     filter:
-      drop-shadow(0 0 18px rgba(255, 50,  0, 1))
-      drop-shadow(0 0  6px rgba(255, 220, 0, 0.9))
-      drop-shadow(0 0 36px rgba(255,  0,  0, 0.5))
+      drop-shadow(0 0 18px rgba(249, 115, 22, 0.85))
+      drop-shadow(0 0  6px rgba(185, 28, 28, 0.75))
+      drop-shadow(0 0 36px rgba(251, 191, 36, 0.4))
       brightness(1.2);
     transform: scaleX(1.00) scaleY(1.00) skewX(0deg);
   }
   11%  {
     filter:
-      drop-shadow(0 0 32px rgba(255, 100, 0, 1))
-      drop-shadow(0 0 12px rgba(255, 255, 0, 1))
-      drop-shadow(0 0 50px rgba(255, 60,  0, 0.7))
+      drop-shadow(0 0 32px rgba(254, 243, 199, 1))
+      drop-shadow(0 0 12px rgba(249, 115, 22, 0.9))
+      drop-shadow(0 0 50px rgba(185, 28, 28, 0.75))
       brightness(2.2);
     transform: scaleX(0.88) scaleY(1.08) skewX(-4deg);
   }
   22%  {
     filter:
-      drop-shadow(0 0  8px rgba(200, 20,  0, 1))
-      drop-shadow(0 0  3px rgba(255, 140, 0, 0.6))
+      drop-shadow(0 0  8px rgba(251, 146, 60, 0.8))
+      drop-shadow(0 0  3px rgba(185, 28, 28, 0.7))
       brightness(0.9);
     transform: scaleX(1.04) scaleY(0.96) skewX(2deg);
   }
   33%  {
     filter:
-      drop-shadow(0 0 40px rgba(255, 80,  0, 1))
-      drop-shadow(0 0 16px rgba(255, 230, 0, 1))
-      drop-shadow(0 0 60px rgba(255, 120, 0, 0.6))
+      drop-shadow(0 0 40px rgba(254, 243, 199, 0.95))
+      drop-shadow(0 0 16px rgba(249, 115, 22, 0.9))
+      drop-shadow(0 0 60px rgba(185, 28, 28, 0.7))
       brightness(2.8);
     transform: scaleX(0.84) scaleY(1.12) skewX(5deg);
   }
   44%  {
     filter:
-      drop-shadow(0 0  5px rgba(180, 10,  0, 1))
-      drop-shadow(0 0  2px rgba(255, 100, 0, 0.4))
+      drop-shadow(0 0  5px rgba(251, 191, 36, 0.85))
+      drop-shadow(0 0  2px rgba(185, 28, 28, 0.7))
       brightness(0.8);
     transform: scaleX(1.06) scaleY(0.94) skewX(-3deg);
   }
   55%  {
     filter:
-      drop-shadow(0 0 36px rgba(255, 60,  0, 1))
-      drop-shadow(0 0 14px rgba(255, 245, 0, 1))
-      drop-shadow(0 0 55px rgba(255, 30,  0, 0.65))
+      drop-shadow(0 0 36px rgba(254, 243, 199, 1))
+      drop-shadow(0 0 14px rgba(249, 115, 22, 0.95))
+      drop-shadow(0 0 55px rgba(185, 28, 28, 0.75))
       brightness(2.5);
     transform: scaleX(0.90) scaleY(1.10) skewX(-6deg);
   }
   66%  {
     filter:
-      drop-shadow(0 0 10px rgba(230, 40,  0, 1))
-      drop-shadow(0 0  4px rgba(255, 160, 0, 0.5))
+      drop-shadow(0 0 10px rgba(251, 146, 60, 0.85))
+      drop-shadow(0 0  4px rgba(185, 28, 28, 0.7))
       brightness(1.0);
     transform: scaleX(1.02) scaleY(0.98) skewX(1deg);
   }
   77%  {
     filter:
-      drop-shadow(0 0 44px rgba(255, 110, 0, 1))
-      drop-shadow(0 0 18px rgba(255, 255, 80, 1))
-      drop-shadow(0 0 65px rgba(255, 50,  0, 0.7))
+      drop-shadow(0 0 44px rgba(254, 243, 199, 1))
+      drop-shadow(0 0 18px rgba(251, 191, 36, 0.95))
+      drop-shadow(0 0 65px rgba(185, 28, 28, 0.75))
       brightness(3.2);
     transform: scaleX(0.86) scaleY(1.14) skewX(4deg);
   }
   88%  {
     filter:
-      drop-shadow(0 0  7px rgba(210, 25,  0, 1))
-      drop-shadow(0 0  2px rgba(255, 120, 0, 0.45))
+      drop-shadow(0 0  7px rgba(249, 115, 22, 0.9))
+      drop-shadow(0 0  2px rgba(185, 28, 28, 0.75))
       brightness(0.85);
     transform: scaleX(1.03) scaleY(0.97) skewX(-2deg);
   }
   100% {
     filter:
-      drop-shadow(0 0 22px rgba(255, 70,  0, 1))
-      drop-shadow(0 0  8px rgba(255, 210, 0, 0.8))
-      drop-shadow(0 0 42px rgba(255, 20,  0, 0.55))
+      drop-shadow(0 0 22px rgba(249, 115, 22, 0.9))
+      drop-shadow(0 0  8px rgba(185, 28, 28, 0.8))
+      drop-shadow(0 0 42px rgba(251, 191, 36, 0.45))
       brightness(1.4);
     transform: scaleX(0.96) scaleY(1.04) skewX(0deg);
   }
 }
 
-/* ── Prism tile — rainbow shimmer ──────────────────────────────── */
+/* ── Prism tile — violet→rose shimmer ──────────────────────────── */
 .hx-prism {
   fill: url(#hx-prism-gradient);
   animation: hx-prism-shimmer 1s linear infinite;
 }
 @keyframes hx-prism-shimmer {
-  0%   { filter: hue-rotate(0deg)   drop-shadow(0 0 6px rgba(180, 100, 255, 0.7)); }
-  50%  { filter: hue-rotate(180deg) drop-shadow(0 0 10px rgba(100, 200, 255, 0.9)); }
-  100% { filter: hue-rotate(360deg) drop-shadow(0 0 6px rgba(180, 100, 255, 0.7)); }
+  0%   { filter: brightness(1) contrast(1.1) drop-shadow(0 0 6px rgba(219, 39, 119, 0.7)) drop-shadow(0 0 3px rgba(124, 58, 237, 0.6)); }
+  50%  { filter: brightness(1.35) contrast(1.45) drop-shadow(0 0 12px rgba(244, 114, 182, 0.95)) drop-shadow(0 0 6px rgba(167, 139, 250, 0.85)); }
+  100% { filter: brightness(1) contrast(1.1) drop-shadow(0 0 6px rgba(219, 39, 119, 0.7)) drop-shadow(0 0 3px rgba(124, 58, 237, 0.6)); }
 }
 
-/* ── Digraph tile — teal double-letter bonus ───────────────────── */
+/* ── Digraph tile — teal→emerald pulse ─────────────────────────── */
 .hx-digraph {
   fill: url(#hx-digraph-gradient);
-  filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.8));
+  filter: drop-shadow(0 0 6px rgba(5, 150, 105, 0.85));
   animation: hx-digraph-pulse 1s ease-in-out infinite alternate;
 }
 @keyframes hx-digraph-pulse {
-  from { filter: drop-shadow(0 0 4px rgba(13, 148, 136, 0.7)); }
-  to   { filter: drop-shadow(0 0 12px rgba(45, 212, 191, 1)); }
+  from { filter: drop-shadow(0 0 4px rgba(2, 44, 34, 0.75)); }
+  to   { filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.95)); }
 }
 
 @keyframes hx-digraph-spawn-anim {
   0%   { opacity: 0.2; transform: scale(0.4);
          filter: drop-shadow(0 0 0px transparent); }
   50%  { opacity: 1;   transform: scale(1.25);
-         filter: brightness(2.5) drop-shadow(0 0 20px rgba(45, 212, 191, 1)); }
+         filter: brightness(2.5) drop-shadow(0 0 20px rgba(52, 211, 153, 1)); }
   100% { opacity: 1;   transform: scale(1.0);
-         filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.8)); }
+         filter: drop-shadow(0 0 6px rgba(5, 150, 105, 0.85)); }
 }
 .hx-digraph-spawn {
   transform-box: fill-box;
@@ -147,10 +147,10 @@
   animation: hx-digraph-spawn-anim 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* ── Rune tile — dark purple ───────────────────────────────────── */
+/* ── Rune tile — midnight indigo→electric violet ───────────────── */
 .hx-rune {
-  fill: #2d1b69;
-  filter: drop-shadow(0 0 5px rgba(130, 80, 255, 0.8));
+  fill: url(#hx-rune-gradient);
+  filter: drop-shadow(0 0 5px rgba(109, 40, 217, 0.8));
 }
 
 /* ── Hexacore HUD ──────────────────────────────────────────────── */
@@ -551,6 +551,90 @@ body.hx-active #right-panel-title    { display: none; }
   pointer-events: auto;
 }
 
+/* ── Top menu row: [Amethyst] [MENU button] [Selenite] ─────────── */
+#hx-top-menu-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 20px);
+  pointer-events: auto;
+}
+
+/* ── Power-up slots flanking the MENU button ───────────────────── */
+#hx-powerup-bar-left,
+#hx-powerup-bar-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(44px, 6vw, 60px);
+  min-height: 44px;
+  pointer-events: auto;
+}
+
+/* ── Compact hex icon power-up button ──────────────────────────── */
+.hx-powerup-icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: clamp(44px, 5.5vw, 56px);
+  height: clamp(44px, 5.5vw, 56px);
+  flex-shrink: 0;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+.hx-powerup-icon-btn svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.hx-powerup-icon-btn:hover {
+  transform: scale(1.12);
+}
+.hx-powerup-icon-btn:active {
+  transform: scale(0.94);
+}
+
+.hx-powerup-icon-btn--amethyst svg {
+  filter: drop-shadow(0 0 10px rgba(217, 70, 239, 0.85));
+}
+.hx-powerup-icon-btn--amethyst:hover svg {
+  filter: drop-shadow(0 0 16px rgba(232, 121, 249, 1));
+}
+
+.hx-powerup-icon-btn--selenite svg {
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.85));
+}
+.hx-powerup-icon-btn--selenite:hover svg {
+  filter: drop-shadow(0 0 16px rgba(224, 242, 254, 1));
+}
+
+/* Count badge — top-right corner of the icon */
+.hx-powerup-icon-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: rgba(13, 16, 30, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #f8fafc;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+  pointer-events: none;
+}
+
 /* ── MENU rail — button stacked above XP bar ───────────────────── */
 #hx-level-wrap {
   display: flex;
@@ -920,7 +1004,7 @@ body.hx-active #right-panel-title    { display: none; }
 /* ── Special tile consumed burst — single animation with reduced filter complexity ── */
 @keyframes hx-ember-burst {
   0%   { opacity: 1;   transform: scale(1);    filter: brightness(1); }
-  15%  { opacity: 0.9; transform: scale(1.12); filter: brightness(3) drop-shadow(0 0 20px rgba(255, 200, 0, 1)); }
+  15%  { opacity: 0.9; transform: scale(1.12); filter: brightness(3) drop-shadow(0 0 20px rgba(249, 115, 22, 1)); }
   40%  { opacity: 0.6; transform: scale(0.8);  filter: brightness(2); }
   100% { opacity: 0;   transform: scale(0.25); filter: brightness(0.5); }
 }
@@ -930,9 +1014,9 @@ body.hx-active #right-panel-title    { display: none; }
 }
 
 @keyframes hx-prism-rainbow {
-  0%   { opacity: 1;   transform: scale(1);    filter: hue-rotate(0deg)   brightness(1); }
-  50%  { opacity: 0.6; transform: scale(1.12); filter: hue-rotate(180deg) brightness(2); }
-  100% { opacity: 0;   transform: scale(0.25); filter: hue-rotate(360deg) brightness(1); }
+  0%   { opacity: 1;   transform: scale(1);    filter: brightness(1) contrast(1.1); }
+  50%  { opacity: 0.6; transform: scale(1.12); filter: brightness(2) contrast(1.5) drop-shadow(0 0 12px rgba(244, 114, 182, 0.9)); }
+  100% { opacity: 0;   transform: scale(0.25); filter: brightness(1) contrast(1.1); }
 }
 .hx-consumed-prism {
   animation: hx-prism-rainbow 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
@@ -941,7 +1025,7 @@ body.hx-active #right-panel-title    { display: none; }
 
 @keyframes hx-rune-implosion {
   0%   { opacity: 1;   transform: scale(1);    filter: brightness(1); }
-  40%  { opacity: 0.6; transform: scale(1.12); filter: brightness(2); }
+  40%  { opacity: 0.6; transform: scale(1.12); filter: brightness(2) drop-shadow(0 0 10px rgba(167, 139, 250, 0.9)); }
   100% { opacity: 0;   transform: scale(0.25); filter: brightness(1); }
 }
 .hx-consumed-rune {
@@ -964,19 +1048,19 @@ body.hx-active #right-panel-title    { display: none; }
   0%   { opacity: 0;   transform: scale(0.2) scaleY(0.5);
          filter: brightness(0.3) drop-shadow(0 0  0px transparent); }
   15%  { opacity: 0.7; transform: scale(0.7) scaleY(1.2);
-         filter: brightness(4)   drop-shadow(0 0 20px rgba(255, 100, 0, 1))
-                                 drop-shadow(0 0 40px rgba(255, 200, 0, 0.8)); }
+         filter: brightness(4)   drop-shadow(0 0 20px rgba(249, 115, 22, 1))
+                                  drop-shadow(0 0 40px rgba(185, 28, 28, 0.8)); }
   40%  { opacity: 1;   transform: scale(1.4) scaleY(1.18);
-         filter: brightness(8)   drop-shadow(0 0 50px rgba(255, 255, 100, 1))
-                                 drop-shadow(0 0 20px rgba(255, 50,  0, 1)); }
+         filter: brightness(8)   drop-shadow(0 0 50px rgba(254, 243, 199, 1))
+                                  drop-shadow(0 0 20px rgba(249, 115, 22, 1)); }
   65%  { opacity: 1;   transform: scale(0.92) scaleY(0.96);
-         filter: brightness(3.5) drop-shadow(0 0 24px rgba(255, 120, 0, 1))
-                                 drop-shadow(0 0  8px rgba(255, 230, 0, 0.9)); }
+         filter: brightness(3.5) drop-shadow(0 0 24px rgba(251, 191, 36, 0.95))
+                                  drop-shadow(0 0  8px rgba(249, 115, 22, 0.9)); }
   82%  { opacity: 1;   transform: scale(1.06) scaleY(1.04);
-         filter: brightness(2)   drop-shadow(0 0 16px rgba(255, 80, 0, 1)); }
+         filter: brightness(2)   drop-shadow(0 0 16px rgba(251, 146, 60, 0.95)); }
   100% { opacity: 1;   transform: scale(1.0) scaleY(1.0);
-         filter: drop-shadow(0 0 14px rgba(255, 80, 0, 1))
-                 drop-shadow(0 0  5px rgba(255, 220, 0, 0.8)); }
+         filter: drop-shadow(0 0 14px rgba(249, 115, 22, 0.9))
+                 drop-shadow(0 0  5px rgba(185, 28, 28, 0.85)); }
 }
 .hx-ember-spawn {
   transform-box: fill-box;
@@ -986,11 +1070,11 @@ body.hx-active #right-panel-title    { display: none; }
 
 @keyframes hx-prism-spawn-anim {
   0%   { opacity: 0.3; transform: scale(0.5) rotate(0deg);
-         filter: hue-rotate(0deg); }
+         filter: brightness(1); }
   50%  { opacity: 1;   transform: scale(1.2) rotate(30deg);
-         filter: hue-rotate(180deg) brightness(2.5) drop-shadow(0 0 16px rgba(180, 100, 255, 1)); }
+         filter: brightness(2.5) contrast(1.4) drop-shadow(0 0 16px rgba(244, 114, 182, 1)); }
   100% { opacity: 1;   transform: scale(1.0) rotate(0deg);
-         filter: hue-rotate(360deg) drop-shadow(0 0 6px rgba(180, 100, 255, 0.7)); }
+         filter: brightness(1.1) drop-shadow(0 0 6px rgba(219, 39, 119, 0.8)); }
 }
 .hx-prism-spawn {
   transform-box: fill-box;
@@ -1000,11 +1084,11 @@ body.hx-active #right-panel-title    { display: none; }
 
 @keyframes hx-rune-spawn-anim {
   0%   { opacity: 0;   transform: scale(0.5); filter: brightness(1); }
-  20%  { opacity: 0.8; transform: scale(0.9); filter: brightness(3) drop-shadow(0 0 12px rgba(130, 80, 255, 0.9)); }
+  20%  { opacity: 0.8; transform: scale(0.9); filter: brightness(3) drop-shadow(0 0 12px rgba(167, 139, 250, 0.9)); }
   40%  { opacity: 0.3; transform: scale(0.8); filter: brightness(1); }
-  65%  { opacity: 0.9; transform: scale(1.1); filter: brightness(2.5) drop-shadow(0 0 10px rgba(130, 80, 255, 0.8)); }
+  65%  { opacity: 0.9; transform: scale(1.1); filter: brightness(2.5) drop-shadow(0 0 10px rgba(109, 40, 217, 0.85)); }
   82%  { opacity: 0.5; transform: scale(1.0); filter: brightness(1); }
-  100% { opacity: 1;   transform: scale(1.0); filter: drop-shadow(0 0 5px rgba(130, 80, 255, 0.8)); }
+  100% { opacity: 1;   transform: scale(1.0); filter: drop-shadow(0 0 5px rgba(109, 40, 217, 0.8)); }
 }
 .hx-rune-spawn {
   transform-box: fill-box;
@@ -1528,12 +1612,12 @@ body.hx-active #hex-grid {
 
 @keyframes hx-portal-pulse {
   0%, 100% {
-    filter: drop-shadow(0 0  8px rgba(224,  64, 251, 0.8))
-            drop-shadow(0 0  3px rgba(123,  47, 247, 0.6));
+    filter: drop-shadow(0 0  8px rgba(124, 58, 237, 0.8))
+            drop-shadow(0 0  3px rgba(26, 0, 63, 0.75));
   }
   50% {
-    filter: drop-shadow(0 0 18px rgba(224,  64, 251, 1))
-            drop-shadow(0 0  8px rgba(123,  47, 247, 1));
+    filter: drop-shadow(0 0 18px rgba(167, 139, 250, 0.95))
+            drop-shadow(0 0  8px rgba(124, 58, 237, 0.9));
     transform: scale(1.04);
   }
 }
@@ -1545,13 +1629,13 @@ body.hx-active #hex-grid {
 
 @keyframes hx-portal-active-pulse {
   0%, 100% {
-    filter: drop-shadow(0 0 20px rgba(255, 120, 255, 1))
-            drop-shadow(0 0 10px rgba(224,  64, 251, 1));
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1))
+            drop-shadow(0 0 10px rgba(156, 163, 175, 0.95));
     transform: scale(1.06);
   }
   50% {
-    filter: drop-shadow(0 0 32px rgba(255, 180, 255, 1))
-            drop-shadow(0 0 16px rgba(255, 100, 255, 1));
+    filter: drop-shadow(0 0 32px rgba(255, 255, 255, 1))
+            drop-shadow(0 0 16px rgba(209, 213, 219, 1));
     transform: scale(1.10);
   }
 }
@@ -1566,12 +1650,12 @@ body.hx-active #hex-grid {
   50% {
     opacity: 1;
     transform: scale(1.3);
-    filter: brightness(3) drop-shadow(0 0 24px rgba(224, 64, 251, 1));
+    filter: brightness(3) drop-shadow(0 0 24px rgba(229, 231, 235, 1));
   }
   100% {
     opacity: 1;
     transform: scale(1.0);
-    filter: drop-shadow(0 0 8px rgba(224, 64, 251, 0.8));
+    filter: drop-shadow(0 0 8px rgba(156, 163, 175, 0.85));
   }
 }
 .hx-portal-spawn {
@@ -1698,7 +1782,7 @@ body.hx-active #hex-grid {
   width: 54px;
   height: 54px;
   overflow: visible;
-  filter: drop-shadow(0 0 6px rgba(76, 201, 240, 0.3));
+  filter: drop-shadow(0 0 7px rgba(76, 201, 240, 0.4));
 }
 .hx-howto-tile-label {
   font-family: 'Turret Road', 'Orbitron', monospace;
@@ -1711,9 +1795,24 @@ body.hx-active #hex-grid {
   max-width: 60px;
   line-height: 1.2;
 }
-/* Ember tile gets fire glow */
+/* Per-tile signature glow colors */
 .hx-howto-tile-item--ember svg {
-  filter: drop-shadow(0 0 8px rgba(255, 80, 0, 0.8));
+  filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.9));
+}
+.hx-howto-tile-item--prism svg {
+  filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.8));
+}
+.hx-howto-tile-item--rune svg {
+  filter: drop-shadow(0 0 10px rgba(109, 40, 217, 0.8));
+}
+.hx-howto-tile-item--digraph svg {
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.8));
+}
+.hx-howto-tile-item--amethyst svg {
+  filter: drop-shadow(0 0 10px rgba(217, 70, 239, 0.8));
+}
+.hx-howto-tile-item--selenite svg {
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
 }
 /* Portal tiles get purple glow */
 .hx-howto-tile-item--portal svg {
@@ -1993,7 +2092,7 @@ body.hx-active #hex-grid {
 
 .hx-amethyst {
   fill: url(#hx-amethyst-gradient);
-  stroke: #a855f7;
+  stroke: #e879f9;
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
@@ -2003,13 +2102,13 @@ body.hx-active #hex-grid {
 @keyframes hx-amethyst-shimmer {
   0%, 100% {
     filter:
-      drop-shadow(0 0  8px rgba(168,  85, 247, 0.8))
-      drop-shadow(0 0  3px rgba(232, 121, 249, 0.5));
+      drop-shadow(0 0  8px rgba(126, 34, 206, 0.85))
+      drop-shadow(0 0  3px rgba(217, 70, 239, 0.55));
   }
   50% {
     filter:
-      drop-shadow(0 0 18px rgba(168,  85, 247, 1))
-      drop-shadow(0 0  8px rgba(232, 121, 249, 0.9))
+      drop-shadow(0 0 18px rgba(232, 121, 249, 0.95))
+      drop-shadow(0 0  8px rgba(126, 34, 206, 0.95))
       brightness(1.15);
   }
 }
@@ -2023,17 +2122,17 @@ body.hx-active #hex-grid {
   45% {
     opacity: 1;
     transform: scale(1.35);
-    filter: brightness(3) drop-shadow(0 0 28px rgba(168, 85, 247, 1))
-            drop-shadow(0 0 12px rgba(232, 121, 249, 1));
+    filter: brightness(3) drop-shadow(0 0 28px rgba(232, 121, 249, 1))
+            drop-shadow(0 0 12px rgba(126, 34, 206, 1));
   }
   70% {
     transform: scale(0.92);
-    filter: brightness(1.5) drop-shadow(0 0 14px rgba(168, 85, 247, 0.9));
+    filter: brightness(1.5) drop-shadow(0 0 14px rgba(217, 70, 239, 0.95));
   }
   100% {
     opacity: 1;
     transform: scale(1.0);
-    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.8));
+    filter: drop-shadow(0 0 8px rgba(126, 34, 206, 0.85));
   }
 }
 .hx-amethyst-spawn {
@@ -2044,7 +2143,7 @@ body.hx-active #hex-grid {
 
 @keyframes hx-amethyst-burst {
   0%   { opacity: 1;   transform: scale(1);    filter: brightness(1); }
-  40%  { opacity: 0.9; transform: scale(1.3);  filter: brightness(3) drop-shadow(0 0 20px rgba(168, 85, 247, 1)); }
+  40%  { opacity: 0.9; transform: scale(1.3);  filter: brightness(3) drop-shadow(0 0 20px rgba(232, 121, 249, 1)); }
   100% { opacity: 0;   transform: scale(0.1) translateY(-30px); filter: brightness(0.5); }
 }
 .hx-consumed-amethyst {
@@ -2060,7 +2159,7 @@ body.hx-active #hex-grid {
 
 .hx-selenite {
   fill: url(#hx-selenite-gradient);
-  stroke: #8ecae6;
+  stroke: #7dd3fc;
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
@@ -2070,14 +2169,14 @@ body.hx-active #hex-grid {
 @keyframes hx-selenite-pulse {
   0%, 100% {
     filter:
-      drop-shadow(0 0  6px rgba(202, 240, 248, 0.6))
-      drop-shadow(0 0  2px rgba(142, 202, 230, 0.4));
+      drop-shadow(0 0  6px rgba(14, 165, 233, 0.7))
+      drop-shadow(0 0  2px rgba(12, 74, 110, 0.55));
   }
   50% {
     filter:
-      drop-shadow(0 0 16px rgba(202, 240, 248, 1))
-      drop-shadow(0 0  8px rgba(142, 202, 230, 0.9))
-      drop-shadow(0 0 28px rgba(255, 255, 255, 0.4))
+      drop-shadow(0 0 16px rgba(224, 242, 254, 1))
+      drop-shadow(0 0  8px rgba(125, 211, 252, 0.95))
+      drop-shadow(0 0 28px rgba(14, 165, 233, 0.45))
       brightness(1.2);
     transform: scale(1.02);
   }
@@ -2092,22 +2191,22 @@ body.hx-active #hex-grid {
   30% {
     opacity: 0.7;
     transform: scale(1.5);
-    filter: brightness(4) drop-shadow(0 0 40px rgba(202, 240, 248, 1))
-            drop-shadow(0 0 20px rgba(255, 255, 255, 1));
+    filter: brightness(4) drop-shadow(0 0 40px rgba(224, 242, 254, 1))
+            drop-shadow(0 0 20px rgba(14, 165, 233, 1));
   }
   60% {
     opacity: 1;
     transform: scale(0.88);
-    filter: brightness(1.8) drop-shadow(0 0 18px rgba(142, 202, 230, 1));
+    filter: brightness(1.8) drop-shadow(0 0 18px rgba(125, 211, 252, 1));
   }
   80% {
     transform: scale(1.06);
-    filter: brightness(1.3) drop-shadow(0 0 12px rgba(202, 240, 248, 0.9));
+    filter: brightness(1.3) drop-shadow(0 0 12px rgba(14, 165, 233, 0.9));
   }
   100% {
     opacity: 1;
     transform: scale(1.0);
-    filter: drop-shadow(0 0 6px rgba(202, 240, 248, 0.6));
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.75));
   }
 }
 .hx-selenite-spawn {
@@ -2118,7 +2217,7 @@ body.hx-active #hex-grid {
 
 @keyframes hx-selenite-shatter {
   0%   { opacity: 1; transform: scale(1);    filter: brightness(1); }
-  20%  { opacity: 1; transform: scale(1.15); filter: brightness(3) drop-shadow(0 0 24px rgba(202, 240, 248, 1)); }
+  20%  { opacity: 1; transform: scale(1.15); filter: brightness(3) drop-shadow(0 0 24px rgba(224, 242, 254, 1)); }
   60%  { opacity: 0.6; transform: scale(1.4) rotate(8deg); filter: brightness(2); }
   100% { opacity: 0; transform: scale(0.05) rotate(20deg) translateY(-20px); filter: brightness(0.3); }
 }
@@ -2130,83 +2229,9 @@ body.hx-active #hex-grid {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Power-Up Inventory Bars (flanking the score HUD)
+   Power-Up Inventory Bars (now live inside #hx-top-menu-row;
+   styles are defined at top with #hx-top-bar section)
    ═══════════════════════════════════════════════════════════════ */
-
-#hx-powerup-bar-left {
-  position: fixed;
-  bottom: clamp(80px, 12vh, 130px);
-  right: calc(50% + 80px);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-end;
-  z-index: 600;
-  min-height: 36px;
-  pointer-events: auto;
-}
-
-#hx-powerup-bar-right {
-  position: fixed;
-  bottom: clamp(80px, 12vh, 130px);
-  left: calc(50% + 80px);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  z-index: 600;
-  min-height: 36px;
-  pointer-events: auto;
-}
-
-.hx-powerup-btn {
-  font-family: 'Turret Road', 'Orbitron', monospace;
-  font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.hx-powerup-btn:hover {
-  transform: scale(1.08);
-}
-.hx-powerup-btn:active {
-  transform: scale(0.96);
-}
-
-.hx-powerup-btn--amethyst {
-  background: linear-gradient(135deg, #4c0070, #a855f7);
-  color: #f3e8ff;
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.7);
-}
-.hx-powerup-btn--amethyst:hover {
-  box-shadow: 0 0 18px rgba(168, 85, 247, 1), 0 0 6px rgba(232, 121, 249, 0.9);
-}
-
-.hx-powerup-btn--selenite {
-  background: linear-gradient(135deg, #1a3a6e, #caf0f8);
-  color: #0a0a1a;
-  box-shadow: 0 0 10px rgba(142, 202, 230, 0.7);
-}
-.hx-powerup-btn--selenite:hover {
-  box-shadow: 0 0 18px rgba(202, 240, 248, 1), 0 0 6px rgba(255, 255, 255, 0.9);
-}
-
-.hx-powerup-count {
-  display: inline-block;
-  margin-left: 4px;
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-size: 0.75em;
-  font-weight: 900;
-  background: rgba(255, 255, 255, 0.18);
-  letter-spacing: 0.05em;
-  vertical-align: middle;
-}
 
 /* ── Power-up targeting indicators ─────────────────────────────── */
 .hx-powerup-indicator {
@@ -2232,16 +2257,16 @@ body.hx-active #hex-grid {
 }
 
 .hx-powerup-indicator--amethyst {
-  background: rgba(76, 0, 112, 0.88);
-  color: #e879f9;
-  border: 1px solid #a855f7;
-  box-shadow: 0 0 14px rgba(168, 85, 247, 0.7);
+  background: rgba(17, 24, 39, 0.9);
+  color: #e5e7eb;
+  border: 1px solid #9ca3af;
+  box-shadow: 0 0 14px rgba(148, 163, 184, 0.7);
 }
 .hx-powerup-indicator--selenite {
-  background: rgba(10, 10, 26, 0.88);
-  color: #caf0f8;
-  border: 1px solid #8ecae6;
-  box-shadow: 0 0 14px rgba(202, 240, 248, 0.7);
+  background: rgba(28, 25, 23, 0.9);
+  color: #f5f5f4;
+  border: 1px solid #a8a29e;
+  box-shadow: 0 0 14px rgba(212, 212, 212, 0.7);
 }
 
 /* ── Swap mode highlight on first selected selenite-swap tile ──── */
@@ -2250,15 +2275,15 @@ body.hx-active #hex-grid {
 }
 @keyframes hx-swap-highlight-pulse {
   0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(0, 220, 255, 1))
-            drop-shadow(0 0  4px rgba(0, 220, 255, 0.8));
-    stroke: #00dcff;
+    filter: drop-shadow(0 0 10px rgba(229, 231, 235, 1))
+            drop-shadow(0 0  4px rgba(148, 163, 184, 0.85));
+    stroke: #e5e7eb;
     stroke-width: 3;
   }
   50% {
-    filter: drop-shadow(0 0 22px rgba(0, 220, 255, 1))
-            drop-shadow(0 0 10px rgba(202, 240, 248, 0.9));
-    stroke: #ffffff;
+    filter: drop-shadow(0 0 22px rgba(255, 255, 255, 1))
+            drop-shadow(0 0 10px rgba(209, 213, 219, 0.9));
+    stroke: #f8fafc;
     stroke-width: 4;
   }
 }
@@ -2291,14 +2316,14 @@ body.hx-active #hex-grid {
 }
 
 .hx-powerup-toast--amethyst {
-  background: rgba(76, 0, 112, 0.92);
-  border: 1px solid #a855f7;
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.7);
+  background: rgba(17, 24, 39, 0.92);
+  border: 1px solid #9ca3af;
+  box-shadow: 0 0 20px rgba(148, 163, 184, 0.75);
 }
 .hx-powerup-toast--selenite {
-  background: rgba(10, 10, 26, 0.92);
-  border: 1px solid #8ecae6;
-  box-shadow: 0 0 20px rgba(202, 240, 248, 0.7);
+  background: rgba(28, 25, 23, 0.92);
+  border: 1px solid #a8a29e;
+  box-shadow: 0 0 20px rgba(212, 212, 212, 0.75);
 }
 
 .hx-powerup-toast-title {
@@ -2310,12 +2335,12 @@ body.hx-active #hex-grid {
   text-transform: uppercase;
 }
 .hx-powerup-toast--amethyst .hx-powerup-toast-title {
-  color: #e879f9;
-  text-shadow: 0 0 10px rgba(232, 121, 249, 0.7);
+  color: #e5e7eb;
+  text-shadow: 0 0 10px rgba(229, 231, 235, 0.75);
 }
 .hx-powerup-toast--selenite .hx-powerup-toast-title {
-  color: #caf0f8;
-  text-shadow: 0 0 10px rgba(202, 240, 248, 0.7);
+  color: #f5f5f4;
+  text-shadow: 0 0 10px rgba(212, 212, 212, 0.75);
 }
 
 .hx-powerup-toast-desc {
@@ -2330,12 +2355,12 @@ body.hx-active #hex-grid {
 
 /* Amethyst picker box accent */
 .hx-amethyst-picker {
-  border-color: #a855f7 !important;
-  box-shadow: 0 0 0 1px #a855f7, 0 0 30px rgba(168, 85, 247, 0.4) !important;
+  border-color: #9ca3af !important;
+  box-shadow: 0 0 0 1px #9ca3af, 0 0 30px rgba(148, 163, 184, 0.45) !important;
 }
 .hx-amethyst-picker #hx-rune-picker-title {
-  color: #e879f9 !important;
-  text-shadow: 0 0 12px rgba(232, 121, 249, 0.8) !important;
+  color: #e5e7eb !important;
+  text-shadow: 0 0 12px rgba(229, 231, 235, 0.8) !important;
 }
 
 /* ── Game title in Hexacore mode: orange stroke watermark ───────── */
@@ -3981,10 +4006,13 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 /* Content area */
 #hx-settings-content {
   flex: 1 1 0;
+  min-height: 0;              /* flex items default to min-height:auto which blocks overflow;
+                                 0 allows the item to shrink and overflow-y:auto to scroll */
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;        /* tell the browser this region scrolls vertically */
   scrollbar-width: thin;
   scrollbar-color: rgba(76, 201, 240, 0.3) transparent;
 }
@@ -4315,7 +4343,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
   #hx-settings-box {
     width: 100%;
-    height: min(840px, 96vh);
+    height: min(840px, 96dvh);
     border-radius: 14px 14px 0 0;  /* bottom-sheet style */
   }
   #hx-settings-header {
@@ -4346,6 +4374,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   .hx-cfg-preview-note,
   .hx-cfg-quest-tips li,
   .hx-cfg-howto-card p,
+  .hx-cfg-tile-desc,
   .hx-cfg-mode-desc {
     font-size: 1.1rem;
   }
@@ -4362,13 +4391,14 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
   #hx-settings-box {
     width: 100%;
-    height: min(840px, 96vh);
+    height: min(840px, 96dvh);
     border-radius: 14px 14px 0 0;
   }
   #hx-settings-content {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    touch-action: pan-y;
   }
   #hx-leaderboards-modal {
     align-items: flex-end;
@@ -4384,17 +4414,18 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 /* ── Mobile (≤430 px) ───────────────────────────────────────────── */
 @media (max-width: 430px) {
   #hx-settings-box {
-    height: min(820px, 96vh);
+    height: min(820px, 96dvh);
   }
   #hx-leaderboards-box {
-    max-height: 88vh;
+    max-height: 88dvh;
   }
 }
 
 /* ── Mobile (≤420 px) ──────────────────────────────────────── */
 @media (max-width: 420px) {
   #hx-settings-box {
-    height: min(640px, 96vh);
+    /* Use almost full dynamic-viewport height so content can scroll */
+    height: min(820px, 96dvh);
   }
   .hx-cfg-howto-highlights {
     grid-template-columns: 1fr;
@@ -4419,7 +4450,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 /* ── Very small phones (≤320 px) ─────────────────────────────── */
 @media (max-width: 320px) {
   #hx-settings-box {
-    height: 98vh;
+    height: 98dvh;
     border-radius: 0;
   }
   .hx-cfg-panel {

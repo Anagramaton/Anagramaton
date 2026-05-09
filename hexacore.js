@@ -17,7 +17,7 @@ import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
 import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audioEngine.js';
-import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn } from './hexacoreXP.js';
+import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn, HX_MAX_LEVEL } from './hexacoreXP.js';
 import { getDailyQuests, getWeeklyQuest, updateQuestProgress, openQuestsModal, initQuests, showQuestCompleteToast } from './hexacoreQuests.js';
 import { openLeaderboardsModal } from './hexacoreLeaderboards.js';
 import { openModeSelectModal } from './hexacoreModeSelect.js';
@@ -435,7 +435,7 @@ function _addPortalIcon(tile, glyph) {
   icon.setAttribute('font-size', '11');
   icon.setAttribute('pointer-events', 'none');
   icon.setAttribute('class', 'hx-portal-icon');
-  icon.setAttribute('fill', '#e040fb');
+  icon.setAttribute('fill', '#e5e7eb');
   icon.textContent = glyph;
   tile.element.appendChild(icon);
 }
@@ -815,14 +815,14 @@ function injectSvgDefs(svg) {
   if (!document.getElementById('hx-ember-gradient')) {
     const emberGrad = document.createElementNS(SVG_NS, 'linearGradient');
     emberGrad.setAttribute('id', 'hx-ember-gradient');
-    emberGrad.setAttribute('x1', '0%'); emberGrad.setAttribute('y1', '100%');
-    emberGrad.setAttribute('x2', '0%'); emberGrad.setAttribute('y2', '0%');
+    emberGrad.setAttribute('x1', '20%'); emberGrad.setAttribute('y1', '100%');
+    emberGrad.setAttribute('x2', '80%'); emberGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#1a0000'],  // deep black-red at base
-      ['25%',  '#cc1100'],  // dark crimson
-      ['55%',  '#ff4500'],  // vivid red-orange
-      ['80%',  '#ff9900'],  // bright amber
-      ['100%', '#ffee00'],  // blazing yellow tip
+      ['0%',   '#260000'],
+      ['30%',  '#b91c1c'],
+      ['60%',  '#f97316'],
+      ['85%',  '#fbbf24'],
+      ['100%', '#fef3c7'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -831,9 +831,30 @@ function injectSvgDefs(svg) {
     });
     defs.appendChild(emberGrad);
   }
-  ensureLinearGradient('hx-prism-gradient',    '#a855f7', '#06b6d4');
-  ensureLinearGradient('hx-digraph-gradient',  '#0d9488', '#2dd4bf');
-  ensureLinearGradient('hx-portal-gradient',   '#7b2ff7', '#e040fb');
+  // Prism: deep violet → electric rose
+  ensureLinearGradient('hx-prism-gradient',    '#1a0040', '#db2777');
+  // Digraph: deep teal → emerald
+  ensureLinearGradient('hx-digraph-gradient',  '#022c22', '#34d399');
+  // Portal: midnight → vivid violet → magenta
+  ensureLinearGradient('hx-portal-gradient',   '#1a003f', '#7c3aed');
+  // Rune: midnight blue → electric violet (gradient instead of flat fill)
+  if (!document.getElementById('hx-rune-gradient')) {
+    const runeGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    runeGrad.setAttribute('id', 'hx-rune-gradient');
+    runeGrad.setAttribute('x1', '50%'); runeGrad.setAttribute('y1', '100%');
+    runeGrad.setAttribute('x2', '50%'); runeGrad.setAttribute('y2', '0%');
+    [
+      ['0%',   '#020617'],
+      ['50%',  '#312e81'],
+      ['100%', '#6d28d9'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      runeGrad.appendChild(s);
+    });
+    defs.appendChild(runeGrad);
+  }
   ensureLinearGradient('hx-gem-emerald-gradient',   '#16a34a', '#4ade80');
 
   // Gold — bright lemon yellow (separated from Topaz and Ember which are orange)
@@ -916,16 +937,16 @@ function injectSvgDefs(svg) {
     defs.appendChild(alexGrad);
   }
 
-  // Amethyst — deep purple to violet gradient
+  // Amethyst — obsidian → royal purple → electric fuchsia
   if (!document.getElementById('hx-amethyst-gradient')) {
     const amethystGrad = document.createElementNS(SVG_NS, 'linearGradient');
     amethystGrad.setAttribute('id', 'hx-amethyst-gradient');
-    amethystGrad.setAttribute('x1', '0%'); amethystGrad.setAttribute('y1', '100%');
-    amethystGrad.setAttribute('x2', '100%'); amethystGrad.setAttribute('y2', '0%');
+    amethystGrad.setAttribute('x1', '100%'); amethystGrad.setAttribute('y1', '100%');
+    amethystGrad.setAttribute('x2', '0%');   amethystGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#4c0070'],
-      ['50%',  '#a855f7'],
-      ['100%', '#e879f9'],
+      ['0%',   '#1a0028'],
+      ['50%',  '#7e22ce'],
+      ['100%', '#d946ef'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -935,18 +956,17 @@ function injectSvgDefs(svg) {
     defs.appendChild(amethystGrad);
   }
 
-  // Selenite — dark navy to brilliant white-blue moonstone gradient
+  // Selenite — deep ocean → arctic teal → crystal ice
   if (!document.getElementById('hx-selenite-gradient')) {
     const seleniteGrad = document.createElementNS(SVG_NS, 'linearGradient');
     seleniteGrad.setAttribute('id', 'hx-selenite-gradient');
     seleniteGrad.setAttribute('x1', '0%'); seleniteGrad.setAttribute('y1', '100%');
     seleniteGrad.setAttribute('x2', '0%'); seleniteGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#0a0a1a'],
-      ['25%',  '#1a3a6e'],
-      ['60%',  '#8ecae6'],
-      ['85%',  '#caf0f8'],
-      ['100%', '#ffffff'],
+      ['0%',   '#030712'],
+      ['35%',  '#0c4a6e'],
+      ['70%',  '#0ea5e9'],
+      ['100%', '#e0f2fe'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -1276,7 +1296,105 @@ function showLevelUpBanner(level) {
   `;
   document.body.appendChild(banner);
 
-  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => banner.remove());
+  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => {
+    banner.remove();
+    if (newLevel === 2) applyLevelTwoRewards();
+  });
+}
+
+/**
+ * Fires after the player dismisses the Level 2 banner.
+ * Sequentially: convert 1 tile → prism, 1 tile → rune,
+ * add 1 amethyst, add 1 selenite, open a portal — each
+ * with a brief one-line description toast.
+ */
+function applyLevelTwoRewards() {
+  const DELAY = 1800; // ms between each reward step
+
+  function showRewardToast(msg, icon) {
+    document.getElementById('hx-lv2-reward-toast')?.remove();
+    const toast = document.createElement('div');
+    toast.id = 'hx-lv2-reward-toast';
+    toast.style.cssText = [
+      'position:fixed', 'bottom:22%', 'left:50%',
+      'transform:translateX(-50%) translateY(12px)',
+      'background:rgba(15,10,35,0.93)',
+      'color:#e0d4ff',
+      'border:1px solid rgba(139,92,246,0.6)',
+      'border-radius:12px',
+      'padding:10px 22px',
+      'font-size:14px',
+      'font-family:inherit',
+      'text-align:center',
+      'z-index:2200',
+      'opacity:0',
+      'transition:opacity 0.3s ease, transform 0.3s ease',
+      'pointer-events:none',
+      'max-width:320px',
+    ].join(';');
+    toast.innerHTML = `<strong>${icon}</strong> ${escapeHtml(msg)}`;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(-10px)';
+      toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+      setTimeout(() => toast.remove(), 400);
+    }, DELAY - 300);
+  }
+
+  function convertRandomTile(excludeTile, targetType) {
+    const eligible = hxState.tiles.filter(
+      t => t.tileType === 'normal' && !isPortalTile(t) && t !== excludeTile,
+    );
+    if (eligible.length === 0) return null;
+    const target = eligible[Math.floor(Math.random() * eligible.length)];
+    target.tileType = targetType;
+    if (targetType === 'prism') _hxRegisterTile(target, hxState.prismTiles);
+    else if (targetType === 'rune') _hxRegisterTile(target, hxState.runeTiles);
+    applyTileType(target);
+    target.element.classList.add(`hx-${targetType}-spawn`);
+    target.element.addEventListener('animationend', () => {
+      target.element.classList.remove(`hx-${targetType}-spawn`);
+    }, { once: true });
+    return target;
+  }
+
+  // Step 1 — Prism tile
+  let prismTile = null;
+  setTimeout(() => {
+    prismTile = convertRandomTile(null, 'prism');
+    showRewardToast('Prism Tile: Boosts XP and doubles points for any word it touches.', '🔷');
+  }, 0);
+
+  // Step 2 — Rune tile
+  setTimeout(() => {
+    convertRandomTile(prismTile, 'rune');
+    showRewardToast('Rune Tile: Acts as a wild card — it can be any letter you need.', '🔮');
+  }, DELAY);
+
+  // Step 3 — Amethyst
+  setTimeout(() => {
+    hxState.amethystCount++;
+    updatePowerUpBar();
+    showRewardToast('Amethyst: Tap it to transmute any tile\'s letter into one of your choice.', '💜');
+  }, DELAY * 2);
+
+  // Step 4 — Selenite
+  setTimeout(() => {
+    hxState.seleniteCount++;
+    updatePowerUpBar();
+    showRewardToast('Selenite: Tap it to instantly swap any two tiles on the board.', '🌙');
+  }, DELAY * 3);
+
+  // Step 5 — Portal
+  setTimeout(() => {
+    openPortal();
+    showRewardToast('Portal: Two linked corner tiles — trace through one to teleport to the other.', '🌀');
+  }, DELAY * 4);
 }
 
 function showRestoredBanner(level, score) {
@@ -1317,6 +1435,7 @@ function showXPGainToast(xp) {
 function showPlayerLevelUpBanner(newLevel) {
   document.getElementById('hx-player-levelup-banner')?.remove();
 
+  const isMax = newLevel >= HX_MAX_LEVEL;
   const banner = document.createElement('div');
   banner.id = 'hx-player-levelup-banner';
   banner.innerHTML = `
@@ -1330,10 +1449,10 @@ function showPlayerLevelUpBanner(newLevel) {
         <span class="hx-levelup-star hx-levelup-star--xp" style="--star-i:2">✦</span>
       </div>
       <span class="hx-levelup-label hx-levelup-label--xp">PLAYER</span>
-      <span class="hx-levelup-title hx-levelup-title--xp">LEVEL UP!</span>
+      <span class="hx-levelup-title hx-levelup-title--xp">${isMax ? 'MAX LEVEL!' : 'LEVEL UP!'}</span>
       <div class="hx-levelup-divider hx-levelup-divider--xp"></div>
       <span class="hx-levelup-num hx-levelup-num--xp">${newLevel}</span>
-      <span class="hx-levelup-sub hx-levelup-sub--xp">RANK INCREASED</span>
+      <span class="hx-levelup-sub hx-levelup-sub--xp">${isMax ? 'LEGEND RANK ACHIEVED' : 'RANK INCREASED'}</span>
       <button class="hx-levelup-ok-btn hx-levelup-ok-btn--xp" type="button" aria-label="Dismiss level-up banner">OK</button>
     </div>
   `;
@@ -1377,6 +1496,13 @@ function ensureHud() {
   const hxTopBar = document.createElement('div');
   hxTopBar.id = 'hx-top-bar';
 
+  // Row: [Amethyst pill] [MENU button capsule] [Selenite pill]
+  const topMenuRow = document.createElement('div');
+  topMenuRow.id = 'hx-top-menu-row';
+
+  const powerUpBarLeft = document.createElement('div');
+  powerUpBarLeft.id = 'hx-powerup-bar-left';
+
   // Center rail — unified MENU button with XP bar beneath it
   const levelWrap = document.createElement('div');
   levelWrap.id = 'hx-level-wrap';
@@ -1400,20 +1526,19 @@ function ensureHud() {
   xpBar.setAttribute('tabindex', '0');
   xpBar.innerHTML = '<div id="hx-xp-bar-fill"></div><span id="hx-xp-label" aria-hidden="true">LV 1 · 0/80 XP</span>';
 
-  levelWrap.appendChild(levelHud);
-
-  hxTopBar.appendChild(levelWrap);
-  // XP bar is a sibling of levelWrap so it stays centered below the menu button
-  hxTopBar.appendChild(xpBar);
-  document.body.appendChild(hxTopBar);
-
-  const powerUpBarLeft = document.createElement('div');
-  powerUpBarLeft.id = 'hx-powerup-bar-left';
-  document.body.appendChild(powerUpBarLeft);
-
   const powerUpBarRight = document.createElement('div');
   powerUpBarRight.id = 'hx-powerup-bar-right';
-  document.body.appendChild(powerUpBarRight);
+
+  levelWrap.appendChild(levelHud);
+
+  topMenuRow.appendChild(powerUpBarLeft);
+  topMenuRow.appendChild(levelWrap);
+  topMenuRow.appendChild(powerUpBarRight);
+
+  hxTopBar.appendChild(topMenuRow);
+  // XP bar is a sibling of the row so it stays centered below the menu button
+  hxTopBar.appendChild(xpBar);
+  document.body.appendChild(hxTopBar);
 
   updateXPBarFn();
 }
@@ -1424,8 +1549,6 @@ function removeHud() {
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
   document.getElementById('hx-top-bar')?.remove();
-  document.getElementById('hx-powerup-bar-left')?.remove();
-  document.getElementById('hx-powerup-bar-right')?.remove();
   document.getElementById('hx-powerup-toast')?.remove();
   document.getElementById('hx-powerup-indicator')?.remove();
 }
@@ -2357,6 +2480,54 @@ function showRuneLetterPicker(tile) {
 }
 
 /* ── Power-up: HUD bar ─────────────────────────────────────────── */
+
+/** Build the SVG hex icon for a power-up button.
+ *  Uses inline <defs> so the gradient works outside the main game SVG. */
+function makePowerUpHexSVG(type) {
+  const isAmethyst = type === 'amethyst';
+  const gradId  = isAmethyst ? 'hx-pu-amethyst-grad' : 'hx-pu-selenite-grad';
+  const shineId = gradId + '-shine';
+
+  if (isAmethyst) {
+    return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="${gradId}" x1="1" y1="1" x2="0" y2="0">
+          <stop offset="0%"   stop-color="#1a0028"/>
+          <stop offset="50%"  stop-color="#7e22ce"/>
+          <stop offset="100%" stop-color="#d946ef"/>
+        </linearGradient>
+        <linearGradient id="${shineId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.42"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#e879f9" stroke-width="2"/>
+      <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+      <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
+      <text x="30" y="37" text-anchor="middle" font-size="20" fill="#f0abfc" font-weight="bold">◈</text>
+    </svg>`;
+  } else {
+    return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="${gradId}" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%"   stop-color="#030712"/>
+          <stop offset="35%"  stop-color="#0c4a6e"/>
+          <stop offset="70%"  stop-color="#0ea5e9"/>
+          <stop offset="100%" stop-color="#e0f2fe"/>
+        </linearGradient>
+        <linearGradient id="${shineId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" fill="url(#${gradId})" stroke="#7dd3fc" stroke-width="2"/>
+      <polygon points="30,7 49,18 49,41 30,53 11,41 11,18" fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="1"/>
+      <polygon points="30,5 51,17 51,32 9,32 9,17" fill="url(#${shineId})"/>
+      <text x="30" y="37" text-anchor="middle" font-size="18" fill="#e0f2fe" font-weight="bold">⇌</text>
+    </svg>`;
+  }
+}
+
 function updatePowerUpBar() {
   const barLeft  = document.getElementById('hx-powerup-bar-left');
   const barRight = document.getElementById('hx-powerup-bar-right');
@@ -2366,27 +2537,33 @@ function updatePowerUpBar() {
 
   if (hxState.amethystCount > 0) {
     const btn = document.createElement('button');
-    btn.className = 'hx-powerup-btn hx-powerup-btn--amethyst';
+    btn.className = 'hx-powerup-icon-btn hx-powerup-icon-btn--amethyst';
     btn.title = 'Transmute: change any tile\'s letter';
-    btn.addEventListener('click', () => activateAmethyst());
+    btn.setAttribute('aria-label', `Amethyst power-up${hxState.amethystCount > 1 ? ` ×${hxState.amethystCount}` : ''}`);
+    btn.innerHTML = makePowerUpHexSVG('amethyst');
     if (hxState.amethystCount > 1) {
-      btn.innerHTML = `🔮 AMETHYST <span class="hx-powerup-count">×${hxState.amethystCount}</span>`;
-    } else {
-      btn.textContent = '🔮 AMETHYST';
+      const badge = document.createElement('span');
+      badge.className = 'hx-powerup-icon-count';
+      badge.textContent = hxState.amethystCount;
+      btn.appendChild(badge);
     }
+    btn.addEventListener('click', () => activateAmethyst());
     barLeft.appendChild(btn);
   }
 
   if (hxState.seleniteCount > 0) {
     const btn = document.createElement('button');
-    btn.className = 'hx-powerup-btn hx-powerup-btn--selenite';
+    btn.className = 'hx-powerup-icon-btn hx-powerup-icon-btn--selenite';
     btn.title = 'Phase Swap: swap any two tiles';
-    btn.addEventListener('click', () => activateSelenite());
+    btn.setAttribute('aria-label', `Selenite power-up${hxState.seleniteCount > 1 ? ` ×${hxState.seleniteCount}` : ''}`);
+    btn.innerHTML = makePowerUpHexSVG('selenite');
     if (hxState.seleniteCount > 1) {
-      btn.innerHTML = `🌙 SELENITE <span class="hx-powerup-count">×${hxState.seleniteCount}</span>`;
-    } else {
-      btn.textContent = '🌙 SELENITE';
+      const badge = document.createElement('span');
+      badge.className = 'hx-powerup-icon-count';
+      badge.textContent = hxState.seleniteCount;
+      btn.appendChild(badge);
     }
+    btn.addEventListener('click', () => activateSelenite());
     barRight.appendChild(btn);
   }
 }
@@ -3827,6 +4004,11 @@ export function stopHexacore() {
   document.getElementById('hx-challenges-modal')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
+  const gridSvg = document.getElementById('hex-grid');
+  if (gridSvg) gridSvg.innerHTML = '';
+  hxSvg = null;
+  hxTileMap = new Map();
+  hxUpdateViewForBoard = null;
 
   document.body.classList.remove('hx-active');
 

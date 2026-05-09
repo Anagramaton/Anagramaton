@@ -698,7 +698,7 @@ window.addEventListener('grid:ready', () => {
   // ============================
   const homeBtn = document.getElementById('home-btn');
   if (homeBtn) {
-    homeBtn.addEventListener('click', () => {
+    homeBtn.addEventListener('click', async () => {
       settingsMenu.hidden = true;
       settingsWrap.classList.remove('menu-open');
       if (document.body.classList.contains('hx-active')) {
@@ -709,6 +709,7 @@ window.addEventListener('grid:ready', () => {
           submitScore('hexacore', currentScore, [], 0, 'hexacore').catch(() => {});
         }
         stopHexacore();
+        await initializeGrid().catch(() => {});
       }
       document.getElementById('splash-screen')?.classList.remove('hidden');
     });
