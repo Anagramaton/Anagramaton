@@ -6,6 +6,7 @@ import { getTodayString, getWeekString } from './hexacoreQuests.js';
 import {
   getHexacoreAllTimeLeaderboardId,
   getHexacoreDailyLeaderboardId,
+  getHexacoreRankBadgeLabel,
   getHexacoreWeeklyLeaderboardId,
   resetHexacoreLeaderboardStorage,
 } from './hexacoreLeaderboardKeys.js';
@@ -44,14 +45,14 @@ function renderTable(entries, currentPlayer) {
 
   const rows = entries.slice(0, 20).map((e, i) => {
     const isYou = currentPlayer && e.player_name === currentPlayer;
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    const rankBadge = getHexacoreRankBadgeLabel(i);
     const rowClass = [
       i < 3 ? 'is-top-rank' : '',
       isYou ? 'is-current-player' : '',
     ].filter(Boolean).join(' ');
 
     return `<tr class="${rowClass}">
-      <td><span class="hx-rank-badge">${medal || (i + 1)}</span></td>
+      <td><span class="hx-rank-badge">${rankBadge}</span></td>
       <td>${escapeHtml(e.player_name || 'Anonymous')}${isYou ? ' <span class="hx-you-tag">YOU</span>' : ''}</td>
       <td class="hx-score-col">${(e.score || 0).toLocaleString()}</td>
     </tr>`;

@@ -25,6 +25,7 @@ import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampa
 import { getProfile, updateProfile, openProfileModal } from './hexacoreProfile.js';
 import {
   getHexacoreAllTimeLeaderboardId,
+  getHexacoreRankBadgeLabel,
   resetHexacoreLeaderboardStorage,
 } from './hexacoreLeaderboardKeys.js';
 
@@ -3530,11 +3531,11 @@ async function loadLeaderboard(submitResult) {
   const rows = entries.map((e, i) => {
     const isCurrentPlayer = currentPlayer && e.player_name === currentPlayer;
     if (isCurrentPlayer) playerRank = i + 1;
-    const badge = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    const badge = getHexacoreRankBadgeLabel(i);
     const rowClass = isCurrentPlayer ? ' class="is-current-player"' : '';
     return `
     <tr${rowClass}>
-      <td><span class="hx-rank-badge">${badge || (i + 1)}</span></td>
+      <td><span class="hx-rank-badge">${badge}</span></td>
       <td>${escapeHtml(e.player_name || 'Anonymous')}${isCurrentPlayer ? ' <span class="hx-you-tag">YOU</span>' : ''}</td>
       <td class="hx-score-col">${(e.score || 0).toLocaleString()}</td>
     </tr>`;

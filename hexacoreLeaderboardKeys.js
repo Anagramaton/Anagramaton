@@ -35,6 +35,13 @@ export function normalizeHexacoreLeaderboardId(rawLeaderboardId) {
   return HX_ALL_TIME_LEADERBOARD_ID;
 }
 
+export function getHexacoreRankBadgeLabel(rankIndex) {
+  if (rankIndex === 0) return '🥇';
+  if (rankIndex === 1) return '🥈';
+  if (rankIndex === 2) return '🥉';
+  return String(rankIndex + 1);
+}
+
 export function resetHexacoreLeaderboardStorage() {
   try {
     if (typeof localStorage === 'undefined') return false;
