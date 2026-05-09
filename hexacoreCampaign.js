@@ -112,23 +112,47 @@ function formatStarValue(value, objType) {
 /**
  * Slide the grid out of view and show a detail panel for one level.
  * The player can BACK to the grid or START the level.
+ * @param {boolean} unlocked - Whether this level is available to play.
  */
-function showLevelPreview(box, gridEl, level, info, onLevelStart, modal) {
+function showLevelPreview(box, gridEl, level, info, onLevelStart, modal, unlocked) {
   gridEl.style.display = 'none';
 
   const stars = info?.stars ?? 0;
 
-  const objectivesHtml = level.objectives.map(obj =>
-    `<li class="hx-preview-obj">${obj.desc}</li>`
-  ).join('');
+  const mainObj = level.objectives[0];
 
-  const mainObj   = level.objectives[0];
-  const starRows  = level.stars.map((t, i) => {
-    const icons = [1, 2, 3].map(s =>
-      `<span class="hx-star${s <= i + 1 ? ' hx-star-filled' : ''}">★</span>`
-    ).join('');
-    return `<div class="hx-preview-star-row">${icons}<span class="hx-preview-star-label">${formatStarValue(t, mainObj.type)}</span></div>`;
-  }).join('');
+  function buildObjectivesHtml() {
+    const liveProgress = _activeLevelId === level.id ? _levelProgress : null;
+    return level.objectives.map(obj => {
+      if (liveProgress !== null) {
+        const current = liveProgress[obj.type] ?? 0;
+        const pct     = Math.min(100, Math.round((current / obj.target) * 100));
+        const done    = obj.type === 'timeLimit' ? current <= obj.target : current >= obj.target;
+        const label   = `${obj.desc} (${formatStarValue(current, obj.type)} / ${formatStarValue(obj.target, obj.type)})`;
+        return `<li class="hx-preview-obj${done ? ' hx-preview-obj-done' : ''}">
+          ${label}
+          <div class="hx-preview-obj-bar"><div class="hx-preview-obj-fill" style="width:${pct}%"></div></div>
+        </li>`;
+      }
+      return `<li class="hx-preview-obj">${obj.desc}</li>`;
+    }).join('');
+  }
+
+  function buildStarRows() {
+    const liveProgress = _activeLevelId === level.id ? _levelProgress : null;
+    return level.stars.map((t, i) => {
+      const icons = [1, 2, 3].map(s =>
+        `<span class="hx-star${s <= i + 1 ? ' hx-star-filled' : ''}">★</span>`
+      ).join('');
+      let progressLabel = '';
+      if (liveProgress !== null) {
+        const current = liveProgress[mainObj.type] ?? 0;
+        const done    = mainObj.type === 'timeLimit' ? current <= t : current >= t;
+        progressLabel = done ? ' ✓' : '';
+      }
+      return `<div class="hx-preview-star-row">${icons}<span class="hx-preview-star-label">${formatStarValue(t, mainObj.type)}${progressLabel}</span></div>`;
+    }).join('');
+  }
 
   const bestHtml = info?.completed
     ? `<div class="hx-preview-best">
@@ -139,6 +163,10 @@ function showLevelPreview(box, gridEl, level, info, onLevelStart, modal) {
        </div>`
     : '';
 
+  const startDisabled = !unlocked ? 'disabled' : '';
+  const startClass    = !unlocked ? 'hx-preview-start-disabled' : '';
+  const startLabel    = unlocked  ? '▶ START LEVEL' : '🔒 LOCKED';
+
   const preview = document.createElement('div');
   preview.id = 'hx-campaign-preview';
   preview.innerHTML = `
@@ -148,24 +176,47 @@ function showLevelPreview(box, gridEl, level, info, onLevelStart, modal) {
     </div>
     <div id="hx-preview-title">${level.title}</div>
     <div class="hx-preview-section-label">OBJECTIVES</div>
-    <ul id="hx-preview-objectives">${objectivesHtml}</ul>
+    <ul id="hx-preview-objectives">${buildObjectivesHtml()}</ul>
     <div class="hx-preview-section-label">STAR THRESHOLDS</div>
-    <div id="hx-preview-stars">${starRows}</div>
+    <div id="hx-preview-stars">${buildStarRows()}</div>
     ${bestHtml}
-    <button id="hx-preview-start" type="button">▶ START LEVEL</button>
+    <button id="hx-preview-start" type="button" ${startDisabled} class="${startClass}">${startLabel}</button>
   `;
 
   box.appendChild(preview);
+
+  // Live progress refresh while an active session is running for this level.
+  // A MutationObserver ensures the interval is cleared whenever the preview
+  // is removed from the DOM (back button, start button, modal close, etc.).
+  let liveInterval = null;
+  if (_activeLevelId === level.id) {
+    liveInterval = setInterval(() => {
+      const objEl   = preview.querySelector('#hx-preview-objectives');
+      const starsEl = preview.querySelector('#hx-preview-stars');
+      if (objEl)   objEl.innerHTML   = buildObjectivesHtml();
+      if (starsEl) starsEl.innerHTML = buildStarRows();
+    }, 1000);
+
+    const previewObserver = new MutationObserver(() => {
+      if (!document.contains(preview)) {
+        clearInterval(liveInterval);
+        previewObserver.disconnect();
+      }
+    });
+    previewObserver.observe(document.body, { childList: true, subtree: true });
+  }
 
   preview.querySelector('#hx-preview-back').addEventListener('click', () => {
     preview.remove();
     gridEl.style.display = '';
   });
 
-  preview.querySelector('#hx-preview-start').addEventListener('click', () => {
-    modal.remove();
-    if (typeof onLevelStart === 'function') onLevelStart(level.id);
-  });
+  if (unlocked) {
+    preview.querySelector('#hx-preview-start').addEventListener('click', () => {
+      modal.remove();
+      if (typeof onLevelStart === 'function') onLevelStart(level.id);
+    });
+  }
 }
 
 /* ── Level select modal ──────────────────────────────────────────── */
@@ -196,50 +247,77 @@ export function openCampaignModal(onLevelStart) {
   const grid = document.createElement('div');
   grid.id = 'hx-campaign-grid';
 
+  // First pass: determine maxUnlocked
   let maxUnlocked = 1;
   CAMPAIGN_LEVELS.forEach(level => {
-    const info    = progress.levels[level.id];
-    const stars   = info?.stars ?? 0;
+    const info = progress.levels[level.id];
     if (info?.completed && level.id >= maxUnlocked) maxUnlocked = level.id + 1;
-
-    const unlocked = level.id <= maxUnlocked;
-    const card = document.createElement('button');
-    card.type = 'button';
-    card.className = 'hx-campaign-level-card' +
-      (info?.completed ? ' hx-campaign-complete' : '') +
-      (!unlocked ? ' hx-campaign-locked' : '');
-    card.disabled = !unlocked;
-
-    const starsHtml = [1, 2, 3].map(s =>
-      `<span class="hx-star${s <= stars ? ' hx-star-filled' : ''}">★</span>`
-    ).join('');
-
-    const checkBadge    = info?.completed ? `<span class="hx-card-check" aria-hidden="true">✓</span>` : '';
-    const levelNumHtml  = !unlocked
-      ? `<div class="hx-campaign-level-num hx-level-locked" aria-label="Locked">🔒</div>`
-      : `<div class="hx-campaign-level-num">${level.id}</div>`;
-    const progressBar   = info?.completed
-      ? `<div class="hx-card-progress-bar" aria-label="${stars} of 3 stars">
-           <div class="hx-card-progress-fill" style="width:${Math.round((stars / 3) * 100)}%"></div>
-         </div>`
-      : '';
-
-    card.innerHTML = `
-      ${checkBadge}
-      ${levelNumHtml}
-      <div class="hx-campaign-level-title">${level.title}</div>
-      <div class="hx-campaign-stars">${starsHtml}</div>
-      ${progressBar}
-    `;
-
-    if (unlocked) {
-      card.addEventListener('click', () => {
-        showLevelPreview(box, grid, level, info, onLevelStart, modal);
-      });
-    }
-
-    grid.appendChild(card);
   });
+
+  // Second pass: build cards grouped into chunks of 5
+  const CHUNK_SIZE = 5;
+  for (let i = 0; i < CAMPAIGN_LEVELS.length; i += CHUNK_SIZE) {
+    const chunk = CAMPAIGN_LEVELS.slice(i, i + CHUNK_SIZE);
+
+    const groupEl = document.createElement('div');
+    groupEl.className = 'hx-campaign-group';
+
+    const firstId = chunk[0].id;
+    const lastId  = chunk[chunk.length - 1].id;
+    const labelEl = document.createElement('div');
+    labelEl.className = 'hx-campaign-group-label';
+    labelEl.textContent = `${firstId} – ${lastId}`;
+    groupEl.appendChild(labelEl);
+
+    const cardsEl = document.createElement('div');
+    cardsEl.className = 'hx-campaign-group-cards';
+
+    chunk.forEach(level => {
+      const info    = progress.levels[level.id];
+      const stars   = info?.stars ?? 0;
+
+      const unlocked = level.id <= maxUnlocked;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'hx-campaign-level-card' +
+        (info?.completed ? ' hx-campaign-complete' : '') +
+        (!unlocked ? ' hx-campaign-locked' : '');
+      const starsHtml = [1, 2, 3].map(s =>
+        `<span class="hx-star${s <= stars ? ' hx-star-filled' : ''}">★</span>`
+      ).join('');
+
+      const checkBadge   = info?.completed ? `<span class="hx-card-check" aria-hidden="true">✓</span>` : '';
+      const levelNumHtml = `<div class="hx-campaign-level-num">${level.id}</div>`;
+      const ariaLabel = !unlocked
+        ? `Level ${level.id} – Locked`
+        : info?.completed
+          ? `Level ${level.id}: ${level.title} – Completed, ${stars} of 3 stars`
+          : `Level ${level.id}: ${level.title}`;
+      card.setAttribute('aria-label', ariaLabel);
+      const progressBar  = info?.completed
+        ? `<div class="hx-card-progress-bar" aria-label="${stars} of 3 stars">
+             <div class="hx-card-progress-fill" style="width:${Math.round((stars / 3) * 100)}%"></div>
+           </div>`
+        : '';
+
+      card.innerHTML = `
+        ${checkBadge}
+        ${levelNumHtml}
+        <div class="hx-campaign-level-title">${level.title}</div>
+        <div class="hx-campaign-stars">${starsHtml}</div>
+        ${progressBar}
+      `;
+
+      card.addEventListener('click', () => {
+        showLevelPreview(box, grid, level, info, onLevelStart, modal, unlocked);
+      });
+
+      cardsEl.appendChild(card);
+    });
+
+    groupEl.appendChild(cardsEl);
+    grid.appendChild(groupEl);
+  }
 
   box.appendChild(header);
   box.appendChild(grid);
@@ -287,6 +365,11 @@ function isObjectiveMet(obj) {
   }
 
   return (_levelProgress[obj.type] ?? 0) >= obj.target;
+}
+
+/** Return the current live progress object for the active campaign level. */
+export function getCampaignLevelProgress() {
+  return { levelId: _activeLevelId, progress: { ..._levelProgress } };
 }
 
 export function startCampaignLevel(levelId, onComplete) {

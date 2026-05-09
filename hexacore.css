@@ -168,15 +168,35 @@
   background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(130, 80, 255, 0.07));
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid color-mix(in srgb, var(--hx-mode-color, rgba(255,255,255,0.15)) 40%, rgba(255,255,255,0.15));
   border-radius: 20px;
   padding: 0.7rem 1.8rem;
   box-shadow:
-    0 8px 28px rgba(76, 201, 240, 0.2),
+    0 8px 28px color-mix(in srgb, var(--hx-mode-color, rgba(76,201,240,0)) 35%, rgba(76,201,240,0.05)),
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
+
+/* Mode color dot — small glowing circle matching the active game mode */
+#hx-mode-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--hx-mode-color, #a78bfa);
+  box-shadow: 0 0 8px var(--hx-mode-color, #a78bfa), 0 0 16px color-mix(in srgb, var(--hx-mode-color, #a78bfa) 50%, transparent);
+  margin-right: 0.55rem;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  animation: hx-mode-dot-pulse 2.5s ease-in-out infinite;
+}
+@keyframes hx-mode-dot-pulse {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 8px var(--hx-mode-color, #a78bfa); }
+  50%       { opacity: 0.6; box-shadow: 0 0 18px var(--hx-mode-color, #a78bfa), 0 0 32px color-mix(in srgb, var(--hx-mode-color, #a78bfa) 40%, transparent); }
+}
+
 #hx-score-num {
   font-family: 'Black Han Sans', sans-serif;
   font-size: clamp(1.8rem, 4vw, 3rem);
@@ -3807,6 +3827,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   border-radius: 20px;
   width: min(480px, 98vw);
   max-height: 85vh;
+  max-height: 85dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -3854,10 +3875,33 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 
 #hx-campaign-grid {
   overflow-y: auto;
-  padding: 0.75rem;
+  padding: 0.6rem 0.75rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* ── Campaign level groups (5 levels per row) ─────────────────── */
+.hx-campaign-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.hx-campaign-group-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: rgba(192,132,252,0.45);
+  text-transform: uppercase;
+  padding: 0 0.15rem;
+  border-left: 2px solid rgba(168,85,247,0.3);
+  padding-left: 0.4rem;
+}
+
+.hx-campaign-group-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.35rem;
 }
 
 .hx-campaign-level-card {
@@ -3865,8 +3909,8 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.15)),
     rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 10px;
-  padding: 0.7rem 0.5rem;
+  border-radius: 8px;
+  padding: 0.45rem 0.25rem;
   cursor: pointer;
   font-family: inherit;
   color: #e2e8f0;
@@ -3875,9 +3919,10 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   position: relative;
   overflow: hidden;
+  min-width: 0; /* allow grid children to shrink below their content width */
 }
 
 .hx-campaign-level-card:hover:not([disabled]) {
@@ -3922,6 +3967,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   justify-content: center;
   line-height: 1;
   pointer-events: none;
+  z-index: 1;
 }
 
 .hx-card-progress-bar {
@@ -3929,6 +3975,8 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   height: 3px;
   background: rgba(255,255,255,0.1);
   border-radius: 2px;
+  position: relative;
+  z-index: 1;
   overflow: hidden;
   margin-top: 3px;
 }
@@ -3940,34 +3988,69 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   transition: width 0.4s ease;
 }
 
-.hx-level-locked {
-  font-size: 0.8rem;
-  color: rgba(255,255,255,0.2);
+/* Lock watermark — stretches across entire locked card as a faded background emoji */
+.hx-campaign-level-card.hx-campaign-locked::before {
+  content: '🔒';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  opacity: 0.09;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
 }
-  opacity: 0.38;
-  cursor: not-allowed;
+
+.hx-level-locked {
+  /* kept for legacy; lock is now a CSS ::before watermark */
+}
+
+.hx-campaign-level-card.hx-campaign-locked {
+  opacity: 0.6;
+  cursor: pointer;
+  filter: grayscale(40%);
+}
+
+.hx-campaign-level-card.hx-campaign-locked:hover {
+  opacity: 0.8;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.15)),
+    rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.22);
+  transform: translateY(-1px);
+  filter: grayscale(20%);
 }
 
 .hx-campaign-level-num {
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.4);
-  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.04em;
+  position: relative;
+  z-index: 1;
 }
 
 .hx-campaign-level-title {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   color: #e2e8f0;
-  line-height: 1.2;
+  line-height: 1.25;
+  word-break: break-word;
+  hyphens: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .hx-campaign-stars {
   display: flex;
-  gap: 2px;
+  gap: 1px;
+  position: relative;
+  z-index: 1;
 }
 
 .hx-star {
   color: rgba(255,255,255,0.2);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 }
 
 .hx-star.hx-star-filled {
@@ -4115,6 +4198,37 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   background: rgba(168,85,247,0.38);
   box-shadow: 0 0 16px rgba(168,85,247,0.3);
 }
+#hx-preview-start:disabled,
+#hx-preview-start.hx-preview-start-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.4);
+}
+#hx-preview-start:disabled:hover,
+#hx-preview-start.hx-preview-start-disabled:hover {
+  background: rgba(255,255,255,0.06);
+  box-shadow: none;
+}
+
+/* ── Objective live-progress items ─────────────────────────────── */
+.hx-preview-obj-done {
+  color: #86efac;
+}
+.hx-preview-obj-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.hx-preview-obj-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7, #fbbf24);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
 
 
 #hx-campaign-complete-overlay {
@@ -4258,8 +4372,55 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     min-width: 32px;
   }
 
-  #hx-campaign-grid {
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  /* Campaign cards: tighten spacing on phones */
+  .hx-campaign-group-cards {
+    gap: 0.25rem;
+  }
+  .hx-campaign-level-card {
+    padding: 0.4rem 0.2rem;
+  }
+  .hx-campaign-level-num {
+    font-size: 0.72rem;
+  }
+  .hx-campaign-level-title {
+    font-size: 0.6rem;
+  }
+  .hx-star {
+    font-size: 0.65rem;
+  }
+  .hx-campaign-level-card.hx-campaign-locked::before {
+    font-size: 1.9rem;
+  }
+}
+
+/* ── Campaign cards — small phones (≤430 px) ──────────────────── */
+@media (max-width: 430px) {
+  .hx-campaign-group-cards {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.22rem;
+  }
+  .hx-campaign-level-card {
+    padding: 0.38rem 0.18rem;
+  }
+  .hx-campaign-level-num {
+    font-size: 0.7rem;
+  }
+  .hx-campaign-level-title {
+    font-size: 0.58rem;
+  }
+}
+
+/* ── Campaign cards — very small phones (≤360 px) ─────────────── */
+@media (max-width: 360px) {
+  .hx-campaign-group-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.2rem;
+  }
+  .hx-campaign-level-num {
+    font-size: 0.68rem;
+  }
+  .hx-campaign-level-title {
+    font-size: 0.56rem;
   }
 }
 
@@ -5299,6 +5460,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 
   /* Campaign shimmer: disable */
   .hx-campaign-level-card:not(.hx-campaign-locked)::after {
+    animation: none;
+  }
+
+  /* Mode dot pulse: disable */
+  #hx-mode-dot {
     animation: none;
   }
 
