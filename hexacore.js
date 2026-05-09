@@ -17,7 +17,7 @@ import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
 import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audioEngine.js';
-import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn } from './hexacoreXP.js';
+import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn, HX_MAX_LEVEL } from './hexacoreXP.js';
 import { getDailyQuests, getWeeklyQuest, updateQuestProgress, openQuestsModal, initQuests, showQuestCompleteToast } from './hexacoreQuests.js';
 import { openLeaderboardsModal } from './hexacoreLeaderboards.js';
 import { openModeSelectModal } from './hexacoreModeSelect.js';
@@ -1337,6 +1337,7 @@ function showXPGainToast(xp) {
 function showPlayerLevelUpBanner(newLevel) {
   document.getElementById('hx-player-levelup-banner')?.remove();
 
+  const isMax = newLevel >= HX_MAX_LEVEL;
   const banner = document.createElement('div');
   banner.id = 'hx-player-levelup-banner';
   banner.innerHTML = `
@@ -1350,10 +1351,10 @@ function showPlayerLevelUpBanner(newLevel) {
         <span class="hx-levelup-star hx-levelup-star--xp" style="--star-i:2">✦</span>
       </div>
       <span class="hx-levelup-label hx-levelup-label--xp">PLAYER</span>
-      <span class="hx-levelup-title hx-levelup-title--xp">LEVEL UP!</span>
+      <span class="hx-levelup-title hx-levelup-title--xp">${isMax ? 'MAX LEVEL!' : 'LEVEL UP!'}</span>
       <div class="hx-levelup-divider hx-levelup-divider--xp"></div>
       <span class="hx-levelup-num hx-levelup-num--xp">${newLevel}</span>
-      <span class="hx-levelup-sub hx-levelup-sub--xp">RANK INCREASED</span>
+      <span class="hx-levelup-sub hx-levelup-sub--xp">${isMax ? 'LEGEND RANK ACHIEVED' : 'RANK INCREASED'}</span>
       <button class="hx-levelup-ok-btn hx-levelup-ok-btn--xp" type="button" aria-label="Dismiss level-up banner">OK</button>
     </div>
   `;
