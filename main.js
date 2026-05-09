@@ -709,7 +709,7 @@ window.addEventListener('grid:ready', () => {
           submitScore('hexacore', currentScore, [], 0, 'hexacore').catch(() => {});
         }
         stopHexacore();
-        await initializeGrid();
+        await initializeGrid().catch(() => {});
       }
       document.getElementById('splash-screen')?.classList.remove('hidden');
     });

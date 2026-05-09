@@ -3981,7 +3981,8 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 /* Content area */
 #hx-settings-content {
   flex: 1 1 0;
-  min-height: 0;              /* critical flexbox fix: lets overflow-y: auto work on iOS */
+  min-height: 0;              /* flex items default to min-height:auto which blocks overflow;
+                                 0 allows the item to shrink and overflow-y:auto to scroll */
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
