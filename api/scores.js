@@ -67,6 +67,7 @@ export default async function handler(req, res) {
       .from('scores')
       .select('score')
       .eq('daily_id', 'hexacore')
+      .eq('mode', 'hexacore')
       .eq('player_name', playerName.trim())
       .maybeSingle();
 

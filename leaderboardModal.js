@@ -50,10 +50,10 @@ import { gameState } from './gameState.js';
       style.id = 'lb-modal-font-styles';
       style.textContent = `
         #lb-scores-modal .lb-modal__title {
-          font-family: 'Orbitron', sans-serif;
-          font-size: 1.35rem;
-          font-weight: 900;
-          letter-spacing: 0.14em;
+          font-family: 'Black Han Sans', sans-serif;
+          font-size: clamp(0.75rem, 1.4vw, 1rem);
+          font-weight: 400;
+          letter-spacing: 0.15em;
           text-transform: uppercase;
           color: var(--rom-you, #f59e0b);
           margin: 0 0 14px;
@@ -67,29 +67,36 @@ import { gameState } from './gameState.js';
           margin: 0 18px 12px;
         }
         #lb-scores-modal .rom__tab {
-          font-family: 'Orbitron', sans-serif;
-          font-size: 0.78rem;
-          font-weight: 700;
-          letter-spacing: 0.12em;
+          font-family: 'Black Han Sans', sans-serif;
+          font-size: clamp(0.75rem, 1.4vw, 1rem);
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
         }
         #lb-scores-modal .lb-modal__panels {
           padding: 12px 18px 0;
           min-height: 160px;
         }
         #lb-scores-modal .rom__word {
-          font-family: 'Orbitron', sans-serif;
-          font-size: 0.88rem;
-          font-weight: 700;
-          letter-spacing: 0.06em;
+          font-family: 'Black Han Sans', sans-serif;
+          font-size: clamp(0.75rem, 1.4vw, 1rem);
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
         }
         #lb-scores-modal .rom__score-chip {
-          font-family: 'Orbitron', sans-serif;
-          font-size: 0.78rem;
-          font-weight: 800;
+          font-family: 'Black Han Sans', sans-serif;
+          font-size: clamp(0.75rem, 1.4vw, 1rem);
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
         }
         #lb-scores-modal .lb-modal__note {
-          font-family: 'Orbitron', sans-serif;
-          font-size: 0.82rem;
+          font-family: 'Black Han Sans', sans-serif;
+          font-size: clamp(0.75rem, 1.4vw, 1rem);
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
           color: var(--rom-muted, #6b7280);
           padding: 16px 0;
           text-align: center;
@@ -98,8 +105,11 @@ import { gameState } from './gameState.js';
           padding: 9px 6px;
         }
         #lb-scores-modal .rom__dismiss-hint {
-          font-family: 'Orbitron', sans-serif;
-          font-size: 0.6rem;
+          font-family: 'Black Han Sans', sans-serif;
+          font-size: clamp(0.75rem, 1.4vw, 1rem);
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
         }
         #lb-scores-modal .lb-player-link {
           color: inherit;

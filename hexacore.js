@@ -24,6 +24,8 @@ import { openModeSelectModal } from './hexacoreModeSelect.js';
 import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampaignProgress } from './hexacoreCampaign.js';
 import { getProfile, updateProfile, openProfileModal } from './hexacoreProfile.js';
 
+const HX_LEADERBOARD_ID = 'hexacore';
+
 /* ── Hexacore-specific letter point values ─────────────────────── */
 const HX_LETTER_POINTS = {
   A: 2, E: 2, I: 2, O: 2,
@@ -3517,7 +3519,7 @@ async function handleSubmitScore() {
   }
 
   // dailyId = 'hexacore' is how the API key-partitions the hexacore leaderboard
-  const result = await submitScore('hexacore', hxState.score, hxState.words.map(w => w.word), 0, 'hexacore');
+  const result = await submitScore(HX_LEADERBOARD_ID, hxState.score, hxState.words.map(w => w.word), 0, 'hexacore');
   btn.textContent = '✓ SUBMITTED';
 
   await loadLeaderboard(result);
@@ -3529,7 +3531,7 @@ async function loadLeaderboard(submitResult) {
   area.textContent = 'Loading…';
 
   // dailyId = 'hexacore' partitions this leaderboard from daily/unlimited
-  const result = await fetchLeaderboard('hexacore', 'hexacore');
+  const result = await fetchLeaderboard(HX_LEADERBOARD_ID, 'hexacore');
 
   if (!result.configured || result.entries.length === 0) {
     area.textContent = 'No leaderboard entries yet.';
@@ -3849,7 +3851,8 @@ export function stopHexacore() {
         background:linear-gradient(135deg,rgba(10,10,25,0.97),rgba(20,5,35,0.97));
         border:2px solid rgba(76,201,240,0.6);
         box-shadow:0 0 30px rgba(76,201,240,0.4),0 12px 30px rgba(0,0,0,0.7);
-        color:#f1f5f9;font-family:'Turret Road','Orbitron',monospace;text-align:center;
+        color:#f1f5f9;font-family:'Black Han Sans',sans-serif;font-size:clamp(0.75rem,1.4vw,1rem);
+        font-weight:400;letter-spacing:0.15em;text-transform:uppercase;text-align:center;
       ">
         <button id="hx-lb-standalone-close" style="
           position:absolute;top:0.6rem;right:0.75rem;background:none;border:none;
@@ -3882,7 +3885,7 @@ export function stopHexacore() {
     modal.style.display = 'flex';
     document.getElementById('hx-lb-standalone-area').textContent = 'Loading…';
 
-    const result = await fetchLeaderboard('hexacore', 'hexacore');
+    const result = await fetchLeaderboard(HX_LEADERBOARD_ID, 'hexacore');
     const area = document.getElementById('hx-lb-standalone-area');
     if (!area) return;
 

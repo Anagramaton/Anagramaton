@@ -34,12 +34,20 @@ export default async function handler(req, res) {
     process.env.SUPABASE_ANON_KEY
   );
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('scores')
     .select('player_name, score, words')
     .eq('daily_id', dailyId)
     .order('score', { ascending: false })
     .limit(20);
+
+  // Keep daily backward-compatible with legacy rows that may not have mode set,
+  // but enforce explicit mode partitioning for persistent boards.
+  if (mode === 'unlimited' || mode === 'hexacore') {
+    query = query.eq('mode', mode);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error('[leaderboard] query error:', error);

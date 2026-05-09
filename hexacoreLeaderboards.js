@@ -2,7 +2,9 @@
 
 import { fetchLeaderboard, getPlayerName } from './leaderboard.js';
 import { getXPData } from './hexacoreXP.js';
-import { getTodayString, getWeekString } from './hexacoreQuests.js';
+
+const HEXACORE_PARTITION_ID = 'hexacore';
+const HEXACORE_MODE = 'hexacore';
 
 function escapeHtml(str) {
   return String(str)
@@ -72,24 +74,15 @@ async function loadTab(tabId, contentEl) {
       return;
     }
 
-    let gameId, dailyId;
-    if (tabId === 'alltime') {
-      gameId  = 'hexacore';
-      dailyId = 'hexacore';
-    } else if (tabId === 'daily') {
-      gameId  = 'hexacore';
-      dailyId = 'hexacore_daily_' + getTodayString();
-    } else if (tabId === 'weekly') {
-      gameId  = 'hexacore';
-      dailyId = 'hexacore_weekly_' + getWeekString();
-    }
-
-    const result = await fetchLeaderboard(dailyId, gameId);
+    const result = await fetchLeaderboard(HEXACORE_PARTITION_ID, HEXACORE_MODE);
     if (!result.configured) {
       contentEl.innerHTML = '<div style="opacity:0.5;text-align:center;padding:1rem;font-size:0.8rem">Leaderboard not configured.</div>';
       return;
     }
-    contentEl.innerHTML = renderTable(result.entries, currentPlayer);
+    const unifiedMsg = (tabId === 'daily' || tabId === 'weekly')
+      ? '<div style="opacity:0.45;text-align:center;padding:0.3rem 0 0.7rem;font-size:0.72rem">Hexacore currently uses one global leaderboard pool.</div>'
+      : '';
+    contentEl.innerHTML = unifiedMsg + renderTable(result.entries, currentPlayer);
   } catch (err) {
     contentEl.innerHTML = '<div style="opacity:0.5;text-align:center;padding:1rem;font-size:0.8rem">Failed to load.</div>';
   }

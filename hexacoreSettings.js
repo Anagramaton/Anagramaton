@@ -268,6 +268,11 @@ import { getXPData }             from './hexacoreXP.js';
     const tabs     = modal.querySelectorAll('.hx-settings-tab');
     let   activeId = null;
 
+    if (content) {
+      content.style.overflowY = 'auto';
+      content.style.webkitOverflowScrolling = 'touch';
+    }
+
     function activateTab(tabId) {
       if (activeId === tabId) return;
       activeId = tabId;
@@ -292,6 +297,7 @@ import { getXPData }             from './hexacoreXP.js';
 
       content.innerHTML = '';
       content.appendChild(panel);
+      content.scrollTop = 0;
     }
 
     tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.dataset.tab)));
