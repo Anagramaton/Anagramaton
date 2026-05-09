@@ -87,6 +87,7 @@ const SCORE_TICK_MS             = 700; // ms duration for score count-up animati
 const HX_TITLE_TEXT             = 'HEXACORE';
 const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
 let hxLastTitlePattern          = -1;
+let hxLeaderboardStorageResetDone = false;
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -3625,7 +3626,10 @@ function clearHexacoreSave() {
 /* ── Public entry point ────────────────────────────────────────── */
 export function startHexacore(mode = 'endless') {
   hxGameMode = mode;
-  resetHexacoreLeaderboardStorage();
+  if (!hxLeaderboardStorageResetDone) {
+    resetHexacoreLeaderboardStorage();
+    hxLeaderboardStorageResetDone = true;
+  }
 
   // Load persisted requirements (persist across sessions and new games)
   hxCompletedReqs = new Set(loadHexacoreRequirements());
