@@ -262,6 +262,7 @@ export function claimQuestReward(questId) {
     if (q && q.completed && !q.claimed) {
       q.claimed = true;
       saveDailyState(dailyState);
+      if (q.reward > 0 && typeof window._hxAddXP === 'function') window._hxAddXP(q.reward);
       return q.reward;
     }
   }
@@ -273,6 +274,7 @@ export function claimQuestReward(questId) {
     if (q.id === questId && q.completed && !q.claimed) {
       q.claimed = true;
       saveWeeklyState(weekState);
+      if (q.reward > 0 && typeof window._hxAddXP === 'function') window._hxAddXP(q.reward);
       return q.reward;
     }
   }
@@ -360,8 +362,7 @@ function buildQuestItem(q, isWeekly = false) {
     btn.className = 'hx-quest-claim-btn';
     btn.textContent = 'CLAIM';
     btn.addEventListener('click', () => {
-      const xp = claimQuestReward(q.id);
-      if (xp > 0 && typeof window._hxAddXP === 'function') window._hxAddXP(xp);
+      claimQuestReward(q.id);
       renderQuestsModal();
     });
     item.appendChild(btn);

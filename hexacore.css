@@ -1854,64 +1854,23 @@ body.hx-active #hex-grid {
   filter: drop-shadow(0 0 8px rgba(224, 64, 251, 0.7));
 }
 
-/* ── #hx-howto-modal — anchored below MENU + XP bar ─────────────────
-   The top bar (#hx-top-bar z-index 1200) renders above this modal
-   (z-index 1000), so the MENU and XP elements remain always visible.
-   We push the dialog flush below that bar with padding-top instead
-   of using the default centered alignment.
-   ──────────────────────────────────────────────────────────────── */
+/* ── #hx-howto-modal — overlay full HUD (MENU + XP bar) ───────────── */
 #hx-howto-modal {
-  align-items: flex-start;
+  z-index: 1300;
+  align-items: center;
   justify-content: center;
-  /* Desktop ≥901px: top-bar is at top 14–28px + 44px MENU + 6–10px gap + 36px XP + 8px = 108–126px → floored to 112px */
-  padding-top: clamp(112px, 14vh, 138px);
+  padding: 0;
 }
 
 #hx-howto-modal .rom__dialog {
-  /* Fill the remaining viewport height below the top bar */
-  max-height: calc(100vh - clamp(112px, 14vh, 138px) - 1rem);
+  max-height: min(92dvh, 760px);
   width: min(600px, 94vw);
 }
 
-/* Laptop (901–1440px) — slightly narrower padding to match bar size */
-@media (min-width: 901px) and (max-width: 1440px) {
-  #hx-howto-modal {
-    padding-top: clamp(110px, 14vh, 130px);
-  }
-  #hx-howto-modal .rom__dialog {
-    max-height: calc(100vh - clamp(110px, 14vh, 130px) - 1rem);
-  }
-}
-
-/* Tablet (641–900px) — top bar is slightly shorter */
-@media (min-width: 641px) and (max-width: 900px) {
-  #hx-howto-modal {
-    padding-top: clamp(102px, 14vh, 122px);
-  }
-  #hx-howto-modal .rom__dialog {
-    max-height: calc(100vh - clamp(102px, 14vh, 122px) - 1rem);
-    width: min(560px, 94vw);
-  }
-}
-
-/* Mobile (≤640px) — XP bar is 28px, slightly smaller offsets */
 @media (max-width: 640px) {
-  #hx-howto-modal {
-    padding-top: clamp(94px, 15vh, 114px);
-  }
   #hx-howto-modal .rom__dialog {
-    max-height: calc(100vh - clamp(94px, 15vh, 114px) - 0.5rem);
+    max-height: 94dvh;
     width: 96vw;
-  }
-}
-
-/* Very small (≤380px) — XP bar is 26px */
-@media (max-width: 380px) {
-  #hx-howto-modal {
-    padding-top: clamp(90px, 15vh, 108px);
-  }
-  #hx-howto-modal .rom__dialog {
-    max-height: calc(100vh - clamp(90px, 15vh, 108px) - 0.25rem);
   }
 }
 
