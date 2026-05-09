@@ -717,46 +717,35 @@ body.hx-active #right-panel-title    { display: none; }
   pointer-events: none;
 }
 
-/* ── Special tile consumed burst — layered over hx-tile-removing ── */
+/* ── Special tile consumed burst — single animation with reduced filter complexity ── */
 @keyframes hx-ember-burst {
-  0%   { filter: brightness(1)    drop-shadow(0 0  0px transparent); }
-  15%  { filter: brightness(6)    drop-shadow(0 0 30px rgba(255, 255, 180, 1))
-                                  drop-shadow(0 0 12px rgba(255, 200, 0, 1)); }
-  35%  { filter: brightness(5)    drop-shadow(0 0 22px rgba(255, 120, 0, 1))
-                                  drop-shadow(0 0  8px rgba(255, 255, 100, 0.9)); }
-  60%  { filter: brightness(2.5)  drop-shadow(0 0 14px rgba(255, 60, 0, 0.8))
-                                  drop-shadow(0 0  4px rgba(255, 180, 0, 0.6)); }
-  100% { filter: brightness(0.2)  drop-shadow(0 0  0px transparent); }
+  0%   { opacity: 1;   transform: scale(1);    filter: brightness(1); }
+  15%  { opacity: 0.9; transform: scale(1.12); filter: brightness(3) drop-shadow(0 0 20px rgba(255, 200, 0, 1)); }
+  40%  { opacity: 0.6; transform: scale(0.8);  filter: brightness(2); }
+  100% { opacity: 0;   transform: scale(0.25); filter: brightness(0.5); }
 }
-/* Replaces the single animation with pop-out + ember burst running together */
 .hx-consumed-ember {
-  animation:
-    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-ember-burst   0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  animation: hx-ember-burst 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
 @keyframes hx-prism-rainbow {
-  0%   { filter: hue-rotate(0deg)   brightness(1)   drop-shadow(0 0  0px transparent); }
-  50%  { filter: hue-rotate(180deg) brightness(3.5) drop-shadow(0 0 20px rgba(100, 200, 255, 1)); }
-  100% { filter: hue-rotate(360deg) brightness(1)   drop-shadow(0 0  0px transparent); }
+  0%   { opacity: 1;   transform: scale(1);    filter: hue-rotate(0deg)   brightness(1); }
+  50%  { opacity: 0.6; transform: scale(1.12); filter: hue-rotate(180deg) brightness(2); }
+  100% { opacity: 0;   transform: scale(0.25); filter: hue-rotate(360deg) brightness(1); }
 }
 .hx-consumed-prism {
-  animation:
-    hx-tile-pop-out  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-prism-rainbow 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  animation: hx-prism-rainbow 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
 @keyframes hx-rune-implosion {
-  0%   { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
-  40%  { filter: brightness(3.5) drop-shadow(0 0 18px rgba(130, 80, 255, 1)); }
-  100% { filter: brightness(1)   drop-shadow(0 0  0px transparent); }
+  0%   { opacity: 1;   transform: scale(1);    filter: brightness(1); }
+  40%  { opacity: 0.6; transform: scale(1.12); filter: brightness(2); }
+  100% { opacity: 0;   transform: scale(0.25); filter: brightness(1); }
 }
 .hx-consumed-rune {
-  animation:
-    hx-tile-pop-out    0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards,
-    hx-rune-implosion  0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  animation: hx-rune-implosion 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
   pointer-events: none;
 }
 
@@ -2156,6 +2145,7 @@ body.hx-active :is(#game-title, #game-title-mirror) {
   font-family: 'Bebas Neue', sans-serif;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.12);
+  --hx-title-stroke-base: rgba(255, 140, 66, 0.12);
   filter: none;
   opacity: 1;
 }
@@ -2168,38 +2158,38 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
 }
 @keyframes hx-title-letter-flash {
   0% {
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    filter: brightness(1);
+    transform: scale(1);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.12);
     opacity: 1;
   }
   7% {
-    filter: brightness(14)
-            drop-shadow(0 0 40px rgba(255, 200, 80, 1))
-            drop-shadow(0 0 80px rgba(255, 140, 40, 0.9))
-            drop-shadow(0 0 120px rgba(255, 100, 20, 0.6));
+    filter: brightness(2.5);
+    transform: scale(1.08);
     -webkit-text-stroke-color: #ffe0a0;
     opacity: 1;
   }
   25% {
-    filter: brightness(8)
-            drop-shadow(0 0 25px rgba(255, 180, 60, 1))
-            drop-shadow(0 0 50px rgba(255, 120, 30, 0.7));
+    filter: brightness(2);
+    transform: scale(1.05);
     -webkit-text-stroke-color: #ffcc70;
     opacity: 1;
   }
   60% {
-    filter: brightness(3)
-            drop-shadow(0 0 12px rgba(255, 140, 40, 0.8));
+    filter: brightness(1.5);
+    transform: scale(1.02);
     -webkit-text-stroke-color: #ffaa50;
     opacity: 1;
   }
   100% {
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    filter: brightness(1);
+    transform: scale(1);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.12);
     opacity: 1;
   }
 }
 body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+  will-change: filter, transform;
   animation: hx-title-letter-flash 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
 }
 @keyframes hx-title-letter-dim {
@@ -2220,44 +2210,45 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--dimming {
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) {
   opacity: 1;
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.15);
+  --hx-title-stroke-base: rgba(255, 140, 66, 0.15);
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
   -webkit-text-stroke: 1.5px rgba(255, 140, 66, 0.15);
 }
 @keyframes hx-title-letter-flash-dark {
   0% {
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    filter: brightness(1);
+    transform: scale(1);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.15);
     opacity: 1;
   }
   7% {
-    filter: brightness(14)
-            drop-shadow(0 0 40px rgba(255, 200, 80, 1))
-            drop-shadow(0 0 80px rgba(255, 140, 40, 0.9))
-            drop-shadow(0 0 120px rgba(255, 100, 20, 0.6));
+    filter: brightness(2.5);
+    transform: scale(1.08);
     -webkit-text-stroke-color: #ffe0a0;
     opacity: 1;
   }
   25% {
-    filter: brightness(8)
-            drop-shadow(0 0 25px rgba(255, 180, 60, 1))
-            drop-shadow(0 0 50px rgba(255, 120, 30, 0.7));
+    filter: brightness(2);
+    transform: scale(1.05);
     -webkit-text-stroke-color: #ffcc70;
     opacity: 1;
   }
   60% {
-    filter: brightness(3)
-            drop-shadow(0 0 12px rgba(255, 140, 40, 0.8));
+    filter: brightness(1.5);
+    transform: scale(1.02);
     -webkit-text-stroke-color: #ffaa50;
     opacity: 1;
   }
   100% {
-    filter: brightness(1) drop-shadow(0 0 0 transparent);
+    filter: brightness(1);
+    transform: scale(1);
     -webkit-text-stroke-color: rgba(255, 140, 66, 0.15);
     opacity: 1;
   }
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+  will-change: filter, transform;
   animation: hx-title-letter-flash-dark 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
 }
 @keyframes hx-title-letter-dim-dark {
@@ -2274,6 +2265,55 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--dimming {
   animation: hx-title-letter-dim-dark 2.5s ease-out forwards;
+}
+
+/* ── Animation performance breakpoints ─────────────────────────── */
+
+/* Tablet (769px–1024px): no drop-shadows already handled above; reduce duration 20% */
+@media (min-width: 769px) and (max-width: 1024px) {
+  body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit,
+  body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+    animation-duration: 1.44s;
+  }
+  .hx-consumed-ember,
+  .hx-consumed-prism,
+  .hx-consumed-rune {
+    animation-duration: 0.216s;
+  }
+}
+
+/* Mobile (≤768px): simplified brightness-only title flash; skip burst effects on tiles */
+@media (max-width: 768px) {
+  @keyframes hx-title-letter-flash-mobile {
+    0%   { filter: brightness(1);    transform: scale(1);    -webkit-text-stroke-color: var(--hx-title-stroke-base); }
+    7%   { filter: brightness(1.75); transform: scale(1.05); -webkit-text-stroke-color: #ffe0a0; }
+    25%  { filter: brightness(1.4);  transform: scale(1.03); -webkit-text-stroke-color: #ffcc70; }
+    60%  { filter: brightness(1.2);  transform: scale(1.01); -webkit-text-stroke-color: #ffaa50; }
+    100% { filter: brightness(1);    transform: scale(1);    -webkit-text-stroke-color: var(--hx-title-stroke-base); }
+  }
+  body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit,
+  body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+    animation: hx-title-letter-flash-mobile 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
+  }
+  .hx-consumed-ember,
+  .hx-consumed-prism,
+  .hx-consumed-rune {
+    animation: hx-tile-pop-out 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  }
+}
+
+/* prefers-reduced-motion: replace heavy animations with minimal visual feedback */
+@media (prefers-reduced-motion: reduce) {
+  body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit,
+  body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
+    animation: none;
+    filter: brightness(1.5);
+  }
+  .hx-consumed-ember,
+  .hx-consumed-prism,
+  .hx-consumed-rune {
+    animation: hx-tile-pop-out 0.2s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+  }
 }
 
 /* ── Hexacore HUD breakpoints ─────────────────────────────────── */
