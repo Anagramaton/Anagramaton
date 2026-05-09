@@ -83,7 +83,6 @@ const SCORE_TICK_MS             = 700; // ms duration for score count-up animati
 const HX_TITLE_TEXT             = 'HEXACORE';
 const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
 let hxLastTitlePattern          = -1;
-const _hxDimAnimations          = new Map(); // letter element → WAAPI Animation
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -2704,51 +2703,23 @@ function setHexacoreTitle(title = HX_TITLE_TEXT) {
     .filter(Boolean);
   if (!titleEls.length) return;
 
-  titleEls.forEach(titleEl => {
+  titleEls.forEach((titleEl, titleGroupIdx) => {
     titleEl.textContent = '';
     [...title].forEach((letter, idx) => {
       const span = document.createElement('span');
       span.className = 'hx-title-letter';
       span.textContent = letter;
       span.style.setProperty('--letter-idx', String(idx));
+      span.style.setProperty('--title-group', String(titleGroupIdx));
       titleEl.appendChild(span);
     });
   });
 }
 
 function restoreDefaultTitle() {
-  _hxDimAnimations.forEach(anim => anim.cancel());
-  _hxDimAnimations.clear();
   HX_TITLE_ELEMENT_IDS.forEach(id => {
     const titleEl = document.getElementById(id);
     if (titleEl) titleEl.textContent = 'ANAGRAMATON';
-  });
-}
-
-function dimHexacoreTitleLetters() {
-  const litLetters = HX_TITLE_ELEMENT_IDS
-    .flatMap(id => {
-      const el = document.getElementById(id);
-      return el ? [...el.querySelectorAll('.hx-title-letter--lit')] : [];
-    });
-  if (!litLetters.length) return;
-  litLetters.forEach(letter => {
-    // Snapshot the current animated filter before cancelling the CSS animation
-    const fromFilter = getComputedStyle(letter).filter || 'none';
-    letter.classList.remove('hx-title-letter--lit');
-    // Dim from wherever the letter currently is using WAAPI
-    const anim = letter.animate(
-      [
-        { filter: fromFilter },
-        { filter: 'brightness(1) drop-shadow(0 0 0 transparent)' }
-      ],
-      { duration: 2500, easing: 'ease-out', fill: 'forwards' }
-    );
-    _hxDimAnimations.set(letter, anim);
-    anim.onfinish = () => {
-      anim.cancel();
-      _hxDimAnimations.delete(letter);
-    };
   });
 }
 
@@ -2761,10 +2732,11 @@ function triggerHexacoreTitleFlash() {
   const letterGroups = titleEls.map(titleEl => [...titleEl.querySelectorAll('.hx-title-letter')]);
   if (letterGroups.some(letters => letters.length !== HX_TITLE_TEXT.length)) return;
 
-  letterGroups.flat().forEach(letter => {
-    const dimAnim = _hxDimAnimations.get(letter);
-    if (dimAnim) { dimAnim.cancel(); _hxDimAnimations.delete(letter); }
-    letter.classList.remove('hx-title-letter--lit', 'hx-title-letter--dimming');
+  letterGroups.forEach((group, titleGroupIdx) => {
+    group.forEach(letter => {
+      letter.style.setProperty('--title-group', String(titleGroupIdx));
+      letter.classList.remove('hx-title-letter--lit');
+    });
   });
   void titleEls[0].offsetWidth;
   const letters = letterGroups[0];
@@ -2991,7 +2963,6 @@ async function submitHexacoreWord() {
   if (!hxState.gameOver) {
     checkLevelUp(oldScore, hxState.score);
     playSound('sfxGemCollect');
-    dimHexacoreTitleLetters();
     // Spawn gem reward based on word length
     spawnGemRewardForWord(word.length);
     // Fire bonus mirrors word reward
