@@ -142,7 +142,27 @@ export function addXP(amount) {
   const newLevel = getLevelForXP(newXp);
   const leveledUp = newLevel > data.level;
   saveXPData(newXp, newLevel);
+  if (leveledUp) {
+    document.dispatchEvent(new CustomEvent('hx:level-up', { detail: { level: newLevel, xp: newXp } }));
+    import('./hexacoreBadges.js').then(mod => mod.checkMilestoneBadges(newLevel)).catch(() => {});
+    import('./hexacoreAchievements.js').then(mod => mod.updateAchievementProgress('levelUp', { level: newLevel })).catch(() => {});
+  }
   return { newXp, newLevel, leveledUp };
+}
+
+export function showXPGainNotification(amount, source = 'XP Gained') {
+  if (!Number.isFinite(amount) || amount <= 0) return;
+  const toast = document.createElement('div');
+  toast.className = 'hx-achievement-toast';
+  toast.setAttribute('role', 'status');
+  toast.setAttribute('aria-live', 'polite');
+  toast.textContent = `${source}: +${Math.round(amount)} XP`;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('hx-achievement-toast--show'));
+  setTimeout(() => {
+    toast.classList.remove('hx-achievement-toast--show');
+    setTimeout(() => toast.remove(), 500);
+  }, 2500);
 }
 
 /**
@@ -206,4 +226,3 @@ export function updateXPBar() {
     else if (pct >= 30) wrap.classList.add('hx-xp-glow-mid');
   }
 }
-

@@ -38,6 +38,7 @@ const QUEST_POOL = [
   { id: 'q_levelup',   desc: 'REACH LEVEL 3 IN ONE SESSION',          reward: 200, target: 3,     trackKey: 'maxLevel' },
   { id: 'q_wordcombo', desc: 'SCORE 1,000+ POINTS ON A SINGLE WORD',  reward: 200, target: 1000,  trackKey: 'bestWordScore' },
   { id: 'q_selenite1', desc: 'COLLECT A SELENITE POWER-UP',           reward: 150, target: 1,     trackKey: 'seleniteCollected' },
+  { id: 'q_claim5ach', desc: 'CLAIM 5 ACHIEVEMENTS',                  reward: 350, target: 5,     trackKey: 'achievementsClaimed' },
 ];
 
 /* ── Fixed weekly quest — login streak ──────────────────────────── */
@@ -201,9 +202,10 @@ export function getQuestState() {
  * @param {Object} data - { word, tiles, score, gemsUsed, portalUsed, gameLevel, amethystCollected, seleniteCollected }
  */
 export function updateQuestProgress(eventType, data) {
-  if (eventType !== 'wordSubmitted') return;
+  if (eventType !== 'wordSubmitted' && eventType !== 'achievementClaimed') return;
 
   const { word, tiles, score, gemsUsed, portalUsed, gameLevel, amethystCollected, seleniteCollected } = data;
+  const wordStr = typeof word === 'string' ? word : '';
 
   const updater = (quests) => {
     let anyCompleted = false;
@@ -213,11 +215,11 @@ export function updateQuestProgress(eventType, data) {
       const prev = q.progress;
       switch (q.trackKey) {
         case 'totalWords':        q.progress += 1; break;
-        case 'sixPlusWords':      if (word.length >= 6) q.progress += 1; break;
-        case 'sevenPlusWords':    if (word.length >= 7) q.progress += 1; break;
-        case 'eightPlusWords':    if (word.length >= 8) q.progress += 1; break;
-        case 'ninePlusWords':     if (word.length >= 9) q.progress += 1; break;
-        case 'tenPlusWords':      if (word.length >= 10) q.progress += 1; break;
+        case 'sixPlusWords':      if (wordStr.length >= 6) q.progress += 1; break;
+        case 'sevenPlusWords':    if (wordStr.length >= 7) q.progress += 1; break;
+        case 'eightPlusWords':    if (wordStr.length >= 8) q.progress += 1; break;
+        case 'ninePlusWords':     if (wordStr.length >= 9) q.progress += 1; break;
+        case 'tenPlusWords':      if (wordStr.length >= 10) q.progress += 1; break;
         case 'prismUsed':         q.progress += (tiles || []).filter(t => t.tileType === 'prism').length; break;
         case 'emberUsed':         q.progress += (tiles || []).filter(t => t.tileType === 'ember').length; break;
         case 'runeUsed':          q.progress += (tiles || []).filter(t => t.tileType === 'rune').length; break;
@@ -231,6 +233,9 @@ export function updateQuestProgress(eventType, data) {
         case 'emeraldUsed':       q.progress += (tiles || []).filter(t => t.tileType === 'gemEmerald').length; break;
         case 'amethystCollected': if (amethystCollected) q.progress += 1; break;
         case 'seleniteCollected': if (seleniteCollected) q.progress += 1; break;
+        case 'achievementsClaimed':
+          if (eventType === 'achievementClaimed') q.progress = Math.max(q.progress, data?.count || 0);
+          break;
       }
 
       if (!q.completed && q.progress >= q.target) {
@@ -251,6 +256,10 @@ export function updateQuestProgress(eventType, data) {
     if (completed && document.getElementById('hx-quests-modal')) renderQuestsModal();
   }
   // Weekly quest is login-based — updated only via recordLoginDay(), not word submission.
+}
+
+export function updateAchievementQuestProgress(count) {
+  updateQuestProgress('achievementClaimed', { count });
 }
 
 export function claimQuestReward(questId) {
