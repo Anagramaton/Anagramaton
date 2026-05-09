@@ -19,8 +19,8 @@ export function getHexacoreWeeklyLeaderboardId(weekString) {
   return `${HX_WEEKLY_LEADERBOARD_PREFIX}${String(weekString || '').trim()}`;
 }
 
-export function normalizeHexacoreLeaderboardId(rawDailyId) {
-  const id = String(rawDailyId || '').trim();
+export function normalizeHexacoreLeaderboardId(rawLeaderboardId) {
+  const id = String(rawLeaderboardId || '').trim();
 
   if (!id || id === 'hexacore') return HX_ALL_TIME_LEADERBOARD_ID;
   if (id === HX_ALL_TIME_LEADERBOARD_ID) return id;
