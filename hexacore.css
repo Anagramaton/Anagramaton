@@ -2492,20 +2492,6 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
 }
 
-/* prefers-reduced-motion: replace heavy animations with minimal visual feedback */
-@media (prefers-reduced-motion: reduce) {
-  body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit,
-  body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
-    animation: none;
-    filter: brightness(1.5);
-  }
-  .hx-consumed-ember,
-  .hx-consumed-prism,
-  .hx-consumed-rune {
-    animation: hx-tile-pop-out 0.2s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
-  }
-}
-
 /* ── Hexacore HUD breakpoints ─────────────────────────────────── */
 
 /* ≥901px desktop — full size (defaults above handle this) */
