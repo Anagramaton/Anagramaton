@@ -4856,7 +4856,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
   // Allow quest system to add XP via claim
-  window._hxAddXP = (amount) => { addXP(amount); updateXPBarFn(); };
+  window._hxAddXP = (amount) => {
+    const xpAmount = Number(amount);
+    if (!Number.isFinite(xpAmount) || xpAmount <= 0) return null;
+    const result = addXP(xpAmount);
+    updateXPBarFn();
+    return result;
+  };
 });
 
 function startHexacoreMode(mode) {
