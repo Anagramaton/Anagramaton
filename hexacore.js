@@ -3971,6 +3971,7 @@ async function advanceFireTiles() {
       if (validCandidates.length === 0) continue; // blocked — ember stays put this turn
     }
 
+    if (validCandidates.length === 0) continue;
     const target = validCandidates[Math.floor(Math.random() * validCandidates.length)];
     claimedDests.add(hxKey(target.q, target.r));
 
