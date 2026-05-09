@@ -259,7 +259,6 @@
   .hx-progress-ring-wrap { width: min(100%, 120px); }
   .hx-donut-chart { width: min(100%, 110px); }
   .hx-mini-chart { height: 60px; }
-  .hx-achievement-burst { animation: none; }
 }
 
 @media (max-width: 480px) {
