@@ -240,12 +240,6 @@
 }
 
 @media (hover: none), (pointer: coarse) {
-  .hx-stat-card:hover,
-  .hx-badge-card.is-unlocked:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
   .hx-achievement-burst { animation: none; }
 }
 
@@ -368,13 +362,13 @@
   .hx-achievement-burst,
   .hx-stagger-cards .hx-stat-card,
   .hx-progress-value {
-    animation: none !important;
-    transition: none !important;
+    animation: none;
+    transition: none;
   }
 
   .hx-stat-card:hover,
   .hx-badge-card.is-unlocked:hover {
-    transform: none !important;
-    box-shadow: none !important;
+    transform: none;
+    box-shadow: none;
   }
 }
