@@ -61,6 +61,7 @@ const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
 let hxGameMode = 'endless'; // 'endless' | 'zen' | 'daily' | 'campaign'
+let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
 /* ── Gem tile type set (module-level for shared use) ───────────── */
 const HX_GEM_TYPES = new Set([
@@ -3504,6 +3505,14 @@ function restoreDefaultTitle() {
   });
 }
 
+function restoreUserTheme() {
+  if (_hxSavedTheme !== null) {
+    document.body.setAttribute('data-theme', _hxSavedTheme);
+    localStorage.setItem('theme', _hxSavedTheme);
+    _hxSavedTheme = null;
+  }
+}
+
 function triggerHexacoreTitleFlash() {
   const titleEls = HX_TITLE_ELEMENT_IDS
     .map(id => document.getElementById(id))
@@ -4269,6 +4278,9 @@ function triggerGameOver() {
   clearSelection();
   document.body.classList.remove('hx-active');
 
+  // Restore the user's original theme preference
+  restoreUserTheme();
+
   // Restore game title
   restoreDefaultTitle();
 
@@ -4662,6 +4674,11 @@ export function startHexacore(mode = 'endless') {
   });
   // Ember tiles do NOT spawn at game start — only after milestone words
 
+  // Save the user's current theme and force dark theme for Hexacore
+  _hxSavedTheme = document.body.getAttribute('data-theme') || 'light';
+  document.body.setAttribute('data-theme', 'dark');
+  localStorage.setItem('theme', 'dark');
+
   document.body.classList.add('hx-active');
 
   // Clear the shared word display so no stale main-board letters show
@@ -4707,6 +4724,9 @@ export function stopHexacore() {
   hxUpdateViewForBoard = null;
 
   document.body.classList.remove('hx-active');
+
+  // Restore the user's original theme preference
+  restoreUserTheme();
 
   restoreDefaultTitle();
 }
