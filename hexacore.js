@@ -20,7 +20,6 @@ import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audi
 import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn, HX_MAX_LEVEL } from './hexacoreXP.js';
 import { getDailyQuests, getWeeklyQuest, updateQuestProgress, openQuestsModal, initQuests, showQuestCompleteToast } from './hexacoreQuests.js';
 import { openLeaderboardsModal } from './hexacoreLeaderboards.js';
-import { openModeSelectModal } from './hexacoreModeSelect.js';
 import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampaignProgress } from './hexacoreCampaign.js';
 import { getProfile, updateProfile, openProfileModal } from './hexacoreProfile.js';
 
@@ -4825,17 +4824,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Check for a saved session first (only relevant for endless/zen)
-    if (loadHexacoreProgress()) {
-      if (confirm('Continue your saved Hexacore session?')) {
-        startHexacore('endless');
-        return;
-      }
-      clearHexacoreSave();
-    }
-
-    // Show mode select
-    openModeSelectModal(mode => startHexacoreMode(mode));
+    startHexacore('endless');
   });
 
   // Expose helpers for campaign overlay buttons
