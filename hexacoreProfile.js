@@ -54,12 +54,13 @@ export function updateProfile(sessionData) {
   }, profile.longestWord || '');
   profile.longestWord = longest;
 
-  const hasNineLetterWord = words.some(w => {
+  const nineLetterWord = words.find(w => {
     const wStr = typeof w === 'string' ? w : w.word || '';
     return wStr.length >= 9;
   });
-  if (hasNineLetterWord) {
-    updateAchievementProgress('wordSubmitted', { word: 'XXXXXXXXX', score: 0 });
+  if (nineLetterWord) {
+    const wordValue = typeof nineLetterWord === 'string' ? nineLetterWord : nineLetterWord.word || '';
+    updateAchievementProgress('wordSubmitted', { word: wordValue, score: 0 });
   }
   if (level >= 10 && level % 10 === 0) {
     updateAchievementProgress('levelUp', { level });

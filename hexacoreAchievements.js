@@ -98,9 +98,12 @@ function announceUnlock(text) {
 
 function getMetricValue(type, ctx = {}) {
   const summary = getStatsSummary();
+  const wordStr = typeof ctx.word === 'string'
+    ? ctx.word
+    : (typeof ctx.word?.word === 'string' ? ctx.word.word : '');
   switch (type) {
     case 'totalWords': return summary.totalWords || 0;
-    case 'longestWord': return Math.max(summary.longestWordLength || 0, (ctx.word || '').length);
+    case 'longestWord': return Math.max(summary.longestWordLength || 0, wordStr.length);
     case 'bestWordScore': return Math.max(summary.bestWordScore || 0, Number(ctx.score) || 0);
     case 'portalUses': return Number(summary.tileUsage?.portal || 0);
     case 'achievementClaims': return summary.totalAchievementClaims || 0;

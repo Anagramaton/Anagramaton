@@ -10,7 +10,9 @@ function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function sparkline(series, stroke = '#4cc9f0') {
@@ -57,6 +59,11 @@ function renderStatsTab() {
   const profile = getProfile();
   const stats = getStatsSummary();
   const chart = getChartData();
+  const maxTileValue = Math.max(1, ...chart.tileUsageBars.map(item => item.value || 0));
+  const tileUsageBars = chart.tileUsageBars.map(item => {
+    const widthPct = Math.max(4, ((item.value || 0) / maxTileValue) * 100);
+    return `<div class="hx-bar-row"><span>${escapeHtml(item.label)}</span><div><i style="width:${widthPct}%"></i></div></div>`;
+  }).join('');
 
   return `
     <div class="hx-profile-cards hx-stagger-cards">
@@ -78,7 +85,7 @@ function renderStatsTab() {
       </section>
       <section class="hx-profile-panel">
         <h4>Tile Usage</h4>
-        <div class="hx-bars">${chart.tileUsageBars.map(item => `<div class="hx-bar-row"><span>${escapeHtml(item.label)}</span><div><i style="width:${Math.max(4, item.value)}%"></i></div></div>`).join('') || '<div class="hx-chart-empty">No data</div>'}</div>
+        <div class="hx-bars">${tileUsageBars || '<div class="hx-chart-empty">No data</div>'}</div>
       </section>
       <section class="hx-profile-panel">
         <h4>Score Trend</h4>
@@ -144,6 +151,9 @@ function renderBadgesTab() {
 
 function historyCard(session, idx) {
   const scoreClass = session.score >= 50000 ? 'hx-history-gold' : session.score >= 10000 ? 'hx-history-good' : '';
+  const tileUsageDetails = Object.entries(session.tileUsage || {})
+    .map(([tile, count]) => `<li><span>${escapeHtml(tile)}</span><strong>${Number(count) || 0}</strong></li>`)
+    .join('');
   return `
     <article class="hx-history-card ${scoreClass}">
       <button class="hx-history-toggle" data-history-idx="${idx}" aria-label="Toggle session details">
@@ -156,7 +166,7 @@ function historyCard(session, idx) {
         <span>Mode: ${escapeHtml(session.mode || 'endless')}</span>
       </div>
       <div class="hx-history-details" hidden>
-        <pre>${escapeHtml(JSON.stringify(session.tileUsage || {}, null, 2))}</pre>
+        ${tileUsageDetails ? `<ul>${tileUsageDetails}</ul>` : '<div class="hx-chart-empty">No tile details</div>'}
       </div>
     </article>
   `;
@@ -227,6 +237,11 @@ export function openProfileModalNew() {
     </div>
   `;
 
+  function closeModal() {
+    modal.remove();
+    document.removeEventListener('keydown', onKeydown);
+  }
+
   function reRender(nextTab = activeTab) {
     activeTab = nextTab;
     modal.querySelectorAll('.hx-profile-tab').forEach(btn => {
@@ -266,9 +281,7 @@ export function openProfileModalNew() {
       return;
     }
 
-    if (e.target.id === 'hx-profile-new-close' || e.target === modal) {
-      modal.remove();
-    }
+    if (e.target.id === 'hx-profile-new-close' || e.target === modal) closeModal();
   });
 
   modal.addEventListener('change', e => {
@@ -278,12 +291,12 @@ export function openProfileModalNew() {
     }
   });
 
-  document.addEventListener('keydown', function onKeydown(ev) {
+  function onKeydown(ev) {
     if (ev.key === 'Escape') {
-      modal.remove();
-      document.removeEventListener('keydown', onKeydown);
+      closeModal();
     }
-  });
+  }
+  document.addEventListener('keydown', onKeydown);
 
   document.body.appendChild(modal);
 }

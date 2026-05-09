@@ -58,7 +58,7 @@ export function updateBadgeProgress(metrics = {}) {
     const cond = badge.condition;
     if (!cond) return;
     if (cond.type === 'totalWords' && (metrics.totalWords || 0) >= cond.target) unlockBadge(badge.id);
-    if (cond.type === 'tileUsage:ember' && (metrics.emberUsed || 0) >= cond.target) unlockBadge(badge.id);
+    if (cond.type === 'tileUsage:ember' && (metrics.tileUsage?.ember || 0) >= cond.target) unlockBadge(badge.id);
   });
 }
 

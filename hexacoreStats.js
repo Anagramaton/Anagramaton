@@ -57,15 +57,16 @@ export function saveSessionHistory(session) {
   };
   stats.sessions.push(entry);
   if (stats.sessions.length > MAX_HISTORY) stats.sessions = stats.sessions.slice(-MAX_HISTORY);
-  stats.totalGames = Math.max(stats.totalGames, stats.sessions.length);
   saveStats(stats);
   return entry;
 }
 
 export function updateStats({ sessionScore = 0, sessionWords = 0 } = {}) {
   const stats = getStats();
-  stats.totalScore += safeNumber(sessionScore);
-  stats.totalWords += safeNumber(sessionWords);
+  // Legacy hook kept for compatibility with existing integration points.
+  // Word/score/game counters are updated by updateStatTracking events.
+  void sessionScore;
+  void sessionWords;
   saveStats(stats);
   return stats;
 }
