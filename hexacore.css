@@ -1814,6 +1814,21 @@ body.hx-active #hex-grid {
 .hx-howto-tile-item--selenite svg {
   filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
 }
+.hx-howto-tile-item--oracle svg {
+  filter: drop-shadow(0 0 10px rgba(203, 213, 225, 0.9));
+}
+.hx-howto-tile-item--beacon svg {
+  filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.85));
+}
+.hx-howto-tile-item--eclipse svg {
+  filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.8));
+}
+.hx-howto-tile-item--lodestone svg {
+  filter: drop-shadow(0 0 10px rgba(161, 161, 170, 0.8));
+}
+.hx-howto-tile-item--lexicon svg {
+  filter: drop-shadow(0 0 12px rgba(219, 39, 119, 0.7));
+}
 /* Portal tiles get purple glow */
 .hx-howto-tile-item--portal svg {
   filter: drop-shadow(0 0 8px rgba(224, 64, 251, 0.7));
@@ -2226,6 +2241,408 @@ body.hx-active #hex-grid {
   transform-origin: center;
   animation:
     hx-selenite-shatter 0.3s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Achievement-based power-up tiles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Oracle — moonstone silver shimmer ─────────────────────────── */
+.hx-oracle {
+  fill: url(#hx-oracle-gradient);
+  stroke: #cbd5e1;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-oracle-shimmer 3.5s ease-in-out infinite;
+}
+@keyframes hx-oracle-shimmer {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0  7px rgba(148, 163, 184, 0.8))
+      drop-shadow(0 0  2px rgba(248, 250, 252, 0.5));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 20px rgba(248, 250, 252, 1))
+      drop-shadow(0 0  8px rgba(148, 163, 184, 0.9))
+      brightness(1.18);
+    transform: scale(1.02);
+  }
+}
+@keyframes hx-oracle-spawn-anim {
+  0%   { opacity: 0; transform: scale(0.2); filter: drop-shadow(0 0 0px transparent); }
+  45%  { opacity: 1; transform: scale(1.4); filter: brightness(4) drop-shadow(0 0 30px rgba(248, 250, 252, 1)); }
+  70%  { transform: scale(0.9); filter: brightness(1.6) drop-shadow(0 0 16px rgba(203, 213, 225, 1)); }
+  100% { opacity: 1; transform: scale(1.0); filter: drop-shadow(0 0 7px rgba(148, 163, 184, 0.8)); }
+}
+.hx-oracle-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-oracle-spawn-anim 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes hx-oracle-fade {
+  0%   { opacity: 1; transform: scale(1);   filter: brightness(1); }
+  40%  { opacity: 0.9; transform: scale(1.25); filter: brightness(3) drop-shadow(0 0 22px rgba(248, 250, 252, 1)); }
+  100% { opacity: 0; transform: scale(0.1) translateY(-30px); filter: brightness(0.4); }
+}
+.hx-consumed-oracle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-oracle-fade 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+}
+.hx-oracle-highlight {
+  filter:
+    drop-shadow(0 0 18px rgba(248, 250, 252, 1))
+    drop-shadow(0 0  6px rgba(203, 213, 225, 0.9))
+    brightness(1.5) !important;
+  animation: none !important;
+}
+
+/* ── Beacon — amber gold pulse ─────────────────────────────────── */
+.hx-beacon {
+  fill: url(#hx-beacon-gradient);
+  stroke: #f59e0b;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-beacon-pulse 2.8s ease-in-out infinite;
+}
+@keyframes hx-beacon-pulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0  8px rgba(180, 83, 9, 0.8))
+      drop-shadow(0 0  3px rgba(245, 158, 11, 0.6));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 22px rgba(254, 240, 138, 0.95))
+      drop-shadow(0 0  9px rgba(245, 158, 11, 0.95))
+      brightness(1.2);
+    transform: scale(1.025);
+  }
+}
+@keyframes hx-beacon-spawn-anim {
+  0%   { opacity: 0; transform: scale(0.2); filter: drop-shadow(0 0 0px transparent); }
+  40%  { opacity: 1; transform: scale(1.45); filter: brightness(4) drop-shadow(0 0 35px rgba(254, 240, 138, 1)); }
+  70%  { transform: scale(0.88); filter: brightness(1.7) drop-shadow(0 0 18px rgba(245, 158, 11, 1)); }
+  100% { opacity: 1; transform: scale(1.0); filter: drop-shadow(0 0 8px rgba(180, 83, 9, 0.8)); }
+}
+.hx-beacon-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-beacon-spawn-anim 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes hx-beacon-burst {
+  0%   { opacity: 1; transform: scale(1);   filter: brightness(1); }
+  40%  { opacity: 0.9; transform: scale(1.3); filter: brightness(3) drop-shadow(0 0 24px rgba(254, 240, 138, 1)); }
+  100% { opacity: 0; transform: scale(0.1) translateY(-28px); filter: brightness(0.4); }
+}
+.hx-consumed-beacon {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-beacon-burst 0.27s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+}
+
+/* ── Eclipse — obsidian with violet corona ─────────────────────── */
+.hx-eclipse {
+  fill: url(#hx-eclipse-gradient);
+  stroke: #7c3aed;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-eclipse-pulse 4s ease-in-out infinite;
+}
+@keyframes hx-eclipse-pulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0  5px rgba(76, 29, 149, 0.7))
+      drop-shadow(0 0  2px rgba(124, 58, 237, 0.5));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 15px rgba(124, 58, 237, 0.9))
+      drop-shadow(0 0  5px rgba(196, 181, 253, 0.6))
+      brightness(1.1);
+  }
+}
+@keyframes hx-eclipse-spawn-anim {
+  0%   { opacity: 0; transform: scale(0.15) rotate(-30deg); filter: drop-shadow(0 0 0px transparent); }
+  35%  { opacity: 0.9; transform: scale(1.5) rotate(5deg); filter: brightness(3) drop-shadow(0 0 28px rgba(124, 58, 237, 1)); }
+  65%  { transform: scale(0.9) rotate(-2deg); filter: brightness(1.4) drop-shadow(0 0 14px rgba(76, 29, 149, 0.9)); }
+  100% { opacity: 1; transform: scale(1.0) rotate(0deg); filter: drop-shadow(0 0 5px rgba(76, 29, 149, 0.7)); }
+}
+.hx-eclipse-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-eclipse-spawn-anim 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes hx-eclipse-implode {
+  0%   { opacity: 1; transform: scale(1); filter: brightness(1); }
+  30%  { opacity: 0.9; transform: scale(1.2); filter: brightness(2.5) drop-shadow(0 0 18px rgba(124, 58, 237, 1)); }
+  100% { opacity: 0; transform: scale(0.05) rotate(15deg); filter: brightness(0.2); }
+}
+.hx-consumed-eclipse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-eclipse-implode 0.3s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+}
+
+/* ── Lodestone — metallic iron shimmer ─────────────────────────── */
+.hx-lodestone {
+  fill: url(#hx-lodestone-gradient);
+  stroke: #a1a1aa;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-lodestone-shimmer 3s ease-in-out infinite;
+}
+@keyframes hx-lodestone-shimmer {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0  6px rgba(63, 63, 70, 0.8))
+      drop-shadow(0 0  2px rgba(161, 161, 170, 0.5));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 16px rgba(228, 228, 231, 0.9))
+      drop-shadow(0 0  6px rgba(161, 161, 170, 0.8))
+      brightness(1.15);
+    transform: scale(1.02);
+  }
+}
+@keyframes hx-lodestone-spawn-anim {
+  0%   { opacity: 0; transform: scale(0.2); filter: drop-shadow(0 0 0px transparent); }
+  40%  { opacity: 1; transform: scale(1.4); filter: brightness(3.5) drop-shadow(0 0 30px rgba(228, 228, 231, 1)); }
+  70%  { transform: scale(0.92); filter: brightness(1.5) drop-shadow(0 0 15px rgba(161, 161, 170, 1)); }
+  100% { opacity: 1; transform: scale(1.0); filter: drop-shadow(0 0 6px rgba(63, 63, 70, 0.8)); }
+}
+.hx-lodestone-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-lodestone-spawn-anim 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes hx-lodestone-shatter {
+  0%   { opacity: 1; transform: scale(1); filter: brightness(1); }
+  25%  { opacity: 1; transform: scale(1.2); filter: brightness(3) drop-shadow(0 0 20px rgba(228, 228, 231, 1)); }
+  100% { opacity: 0; transform: scale(0.08) rotate(10deg); filter: brightness(0.3); }
+}
+.hx-consumed-lodestone {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-lodestone-shatter 0.28s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+}
+
+/* ── Lexicon — rainbow prismatic cycle ─────────────────────────── */
+.hx-lexicon {
+  fill: url(#hx-lexicon-gradient);
+  stroke: #f9fafb;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-lexicon-rainbow 2.5s linear infinite;
+}
+@keyframes hx-lexicon-rainbow {
+  0%   { filter: drop-shadow(0 0 10px rgba(220,  38,  38, 0.9)) brightness(1.1); }
+  17%  { filter: drop-shadow(0 0 10px rgba(234,  88,  12, 0.9)) brightness(1.15); }
+  33%  { filter: drop-shadow(0 0 10px rgba( 22, 163,  74, 0.9)) brightness(1.1); }
+  50%  { filter: drop-shadow(0 0 10px rgba( 37,  99, 235, 0.9)) brightness(1.15); }
+  67%  { filter: drop-shadow(0 0 10px rgba(124,  58, 237, 0.9)) brightness(1.1); }
+  83%  { filter: drop-shadow(0 0 10px rgba(219,  39, 119, 0.9)) brightness(1.15); }
+  100% { filter: drop-shadow(0 0 10px rgba(220,  38,  38, 0.9)) brightness(1.1); }
+}
+@keyframes hx-lexicon-spawn-anim {
+  0%   { opacity: 0; transform: scale(0.1) rotate(-45deg); filter: drop-shadow(0 0 0px transparent); }
+  30%  { opacity: 1; transform: scale(1.6) rotate(8deg); filter: brightness(5) drop-shadow(0 0 40px rgba(255,255,255,1)); }
+  60%  { transform: scale(0.88) rotate(-3deg); filter: brightness(2) drop-shadow(0 0 20px rgba(219, 39, 119, 1)); }
+  100% { opacity: 1; transform: scale(1.0) rotate(0deg); }
+}
+.hx-lexicon-spawn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-lexicon-spawn-anim 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes hx-lexicon-burst {
+  0%   { opacity: 1; transform: scale(1); }
+  30%  { opacity: 1; transform: scale(1.35); filter: brightness(5) drop-shadow(0 0 30px rgba(255,255,255,1)); }
+  100% { opacity: 0; transform: scale(0.05) translateY(-25px); filter: brightness(0.2); }
+}
+.hx-consumed-lexicon {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hx-lexicon-burst 0.3s ease-out calc(var(--tile-idx, 0) * 55ms) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Achievement Toast
+   ═══════════════════════════════════════════════════════════════ */
+
+.hx-achievement-toast {
+  position: fixed;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%) translateY(40px);
+  max-width: clamp(280px, 90vw, 360px);
+  width: max-content;
+  background: linear-gradient(135deg, rgba(17, 7, 31, 0.97), rgba(30, 12, 60, 0.97));
+  border: 1.5px solid rgba(251, 191, 36, 0.7);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  z-index: 900;
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  filter:
+    drop-shadow(0 4px 18px rgba(251, 191, 36, 0.45))
+    drop-shadow(0 2px  8px rgba(0, 0, 0, 0.7));
+  pointer-events: none;
+}
+.hx-achievement-toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.hx-achievement-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  animation: hx-achievement-bounce 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes hx-achievement-bounce {
+  0%, 100% { transform: translateY(0); }
+  20%       { transform: translateY(-8px) scale(1.2); }
+  40%       { transform: translateY(2px) scale(0.95); }
+  60%       { transform: translateY(-4px) scale(1.08); }
+  80%       { transform: translateY(1px) scale(0.98); }
+}
+.hx-achievement-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.hx-achievement-title {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(251, 191, 36, 0.9);
+  text-transform: uppercase;
+}
+.hx-achievement-name {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #f8fafc;
+  letter-spacing: 0.05em;
+}
+.hx-achievement-desc {
+  font-size: 0.72rem;
+  color: rgba(203, 213, 225, 0.85);
+  line-height: 1.4;
+}
+
+/* Lexicon modal */
+.hx-lexicon-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 950;
+  backdrop-filter: blur(4px);
+}
+.hx-lexicon-modal-box {
+  background: linear-gradient(135deg, rgba(17, 7, 31, 0.98), rgba(30, 12, 60, 0.98));
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: clamp(16px, 4vw, 28px);
+  max-width: min(480px, 90vw);
+  width: 100%;
+  filter: drop-shadow(0 8px 32px rgba(0,0,0,0.8));
+}
+.hx-lexicon-modal-title {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #f8fafc;
+  text-align: center;
+  margin-bottom: 16px;
+  background: linear-gradient(90deg, #dc2626, #16a34a, #2563eb, #db2777);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hx-lexicon-word-list {
+  list-style: decimal;
+  padding-left: 22px;
+  margin: 0 0 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hx-lexicon-word-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.hx-lexicon-word {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.06em;
+}
+.hx-lexicon-score {
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  font-weight: 700;
+  color: #fbbf24;
+}
+.hx-lexicon-modal-close {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.hx-lexicon-modal-close:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+/* ── Responsive overrides ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hx-achievement-toast {
+    bottom: 12%;
+    max-width: 85vw;
+  }
+  .hx-achievement-name { font-size: 0.78rem; }
+  .hx-achievement-desc { font-size: 0.68rem; }
+}
+@media (max-width: 480px) {
+  .hx-achievement-toast {
+    bottom: 10%;
+    max-width: 90vw;
+    padding: 10px 13px;
+    gap: 9px;
+  }
+  .hx-achievement-icon { font-size: 1.6rem; }
+  .hx-achievement-title { font-size: 0.55rem; }
+  .hx-achievement-name { font-size: 0.72rem; }
+  .hx-achievement-desc { font-size: 0.62rem; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
