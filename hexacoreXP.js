@@ -8,13 +8,13 @@ const XP_BY_LENGTH = { 4: 10, 5: 20, 6: 35, 7: 55, 8: 80, 9: 110 };
 /**
  * Maximum player level.
  */
-export const HX_MAX_LEVEL = 50;
+export const HX_MAX_LEVEL = 39;
 
 /**
  * Cumulative XP required to *reach* each level (index = level - 1).
  *
  * Levels 1-25 : each level costs ×1.25 more XP than the previous (base 80 XP).
- * Levels 26-50: the multiplier itself increases by +0.15 each step,
+ * Levels 26-39: the multiplier itself increases by +0.15 each step,
  *               starting at ×1.40 for LV 25→26, ×1.55 for LV 26→27, etc.
  *
  * Sample thresholds:
@@ -25,8 +25,7 @@ export const HX_MAX_LEVEL = 50;
  *   LV 25 :      67,406 XP  (×1.25)
  *   LV 30 :     443,053 XP  (×2.00)
  *   LV 35 :  25,833,608 XP  (×2.75)
- *   LV 40 :   7,500,643,329 XP  (×3.50)
- *   LV 50 :  14,500,941,389,283,442 XP  (×5.00)
+ *   LV 39 : 2,185,763,899 XP  (×3.35)
  */
 const HX_XP_THRESHOLDS = [
              0,   //  LV  1
@@ -68,17 +67,6 @@ const HX_XP_THRESHOLDS = [
    213_932_298,   //  LV 37  (×3.05)
    667_226_919,   //  LV 38  (×3.20)
  2_185_763_899,   //  LV 39  (×3.35)
- 7_500_643_329,   //  LV 40  (×3.50)
-26_899_953_249,   //  LV 41  (×3.65)
-100_617_330_945,  //  LV 42  (×3.80)
-391_800_972_844,  //  LV 43  (×3.95)
-1_585_653_904_630,   //  LV 44  (×4.10)
-6_659_528_864_721,   //  LV 45  (×4.25)
-28_984_578_689_121,  //  LV 46  (×4.40)
-130_563_555_390_141, //  LV 47  (×4.55)
-607_984_745_884_935, //  LV 48  (×4.70)
-2_923_477_519_784_686,   //  LV 49  (×4.85)
-14_500_941_389_283_442,  //  LV 50  (×5.00)
 ];
 
 /**

@@ -1296,7 +1296,106 @@ function showLevelUpBanner(level) {
   `;
   document.body.appendChild(banner);
 
-  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => banner.remove());
+  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => {
+    banner.remove();
+    if (newLevel === 2) applyLevelTwoRewards();
+  });
+}
+
+/**
+ * Fires after the player dismisses the Level 2 banner.
+ * Sequentially: convert 1 tile → prism, 1 tile → rune,
+ * add 1 amethyst, add 1 selenite, open a portal — each
+ * with a brief one-line description toast.
+ */
+function applyLevelTwoRewards() {
+  const DELAY = 1800; // ms between each reward step
+
+  function showRewardToast(msg, icon) {
+    document.getElementById('hx-lv2-reward-toast')?.remove();
+    const toast = document.createElement('div');
+    toast.id = 'hx-lv2-reward-toast';
+    toast.style.cssText = [
+      'position:fixed', 'bottom:22%', 'left:50%',
+      'transform:translateX(-50%) translateY(12px)',
+      'background:rgba(15,10,35,0.93)',
+      'color:#e0d4ff',
+      'border:1px solid rgba(139,92,246,0.6)',
+      'border-radius:12px',
+      'padding:10px 22px',
+      'font-size:14px',
+      'font-family:inherit',
+      'text-align:center',
+      'z-index:2200',
+      'opacity:0',
+      'transition:opacity 0.3s ease, transform 0.3s ease',
+      'pointer-events:none',
+      'max-width:320px',
+    ].join(';');
+    toast.innerHTML = `<strong>${icon}</strong> ${escapeHtml(msg)}`;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(-10px)';
+      toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+      setTimeout(() => toast.remove(), 400);
+    }, DELAY - 300);
+  }
+
+  function convertRandomTile(excludeTile, targetType) {
+    const eligible = hxState.tiles.filter(
+      t => t.tileType === 'normal' && !isPortalTile(t) && t !== excludeTile,
+    );
+    if (eligible.length === 0) return null;
+    const target = eligible[Math.floor(Math.random() * eligible.length)];
+    if (target.tileType === 'digraph') _hxClearTileType(target);
+    target.tileType = targetType;
+    if (targetType === 'prism') _hxRegisterTile(target, hxState.prismTiles);
+    else if (targetType === 'rune') _hxRegisterTile(target, hxState.runeTiles);
+    applyTileType(target);
+    target.element.classList.add(`hx-${targetType}-spawn`);
+    target.element.addEventListener('animationend', () => {
+      target.element.classList.remove(`hx-${targetType}-spawn`);
+    }, { once: true });
+    return target;
+  }
+
+  // Step 1 — Prism tile
+  let prismTile = null;
+  setTimeout(() => {
+    prismTile = convertRandomTile(null, 'prism');
+    showRewardToast('Prism Tile: Boosts XP and doubles points for any word it touches.', '🔷');
+  }, 0);
+
+  // Step 2 — Rune tile
+  setTimeout(() => {
+    convertRandomTile(prismTile, 'rune');
+    showRewardToast('Rune Tile: Acts as a wild card — it can be any letter you need.', '🔮');
+  }, DELAY);
+
+  // Step 3 — Amethyst
+  setTimeout(() => {
+    hxState.amethystCount++;
+    updatePowerUpBar();
+    showRewardToast('Amethyst: Tap it to transmute any tile\'s letter into one of your choice.', '💜');
+  }, DELAY * 2);
+
+  // Step 4 — Selenite
+  setTimeout(() => {
+    hxState.seleniteCount++;
+    updatePowerUpBar();
+    showRewardToast('Selenite: Tap it to instantly swap any two tiles on the board.', '🌙');
+  }, DELAY * 3);
+
+  // Step 5 — Portal
+  setTimeout(() => {
+    openPortal();
+    showRewardToast('Portal: Two linked corner tiles — trace through one to teleport to the other.', '🌀');
+  }, DELAY * 4);
 }
 
 function showRestoredBanner(level, score) {
