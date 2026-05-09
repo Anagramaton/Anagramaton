@@ -39,6 +39,7 @@ export function resetHexacoreLeaderboardStorage() {
   try {
     if (typeof localStorage === 'undefined') return false;
 
+    // Marker means reset already ran for this version; nothing else to do.
     if (localStorage.getItem(HX_RESET_MARKER_KEY)) return false;
 
     const keysToRemove = [];
