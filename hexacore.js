@@ -2854,7 +2854,16 @@ function triggerHexacoreTitleFlash() {
     }
   });
 
-
+  // Apply animation order and light up Title 2 (opposite direction)
+  if (letterGroups[1]) {
+    orderForTitle2.forEach((idx, animOrder) => {
+      const letter = letterGroups[1][idx];
+      if (letter) {
+        letter.style.setProperty('--anim-order', String(animOrder));
+        letter.classList.add('hx-title-letter--lit');
+      }
+    });
+  }
 }
 
 /* ── Word submission ───────────────────────────────────────────── */
