@@ -1269,13 +1269,17 @@ function showLevelUpBanner(level) {
       <div class="hx-levelup-divider"></div>
       <span class="hx-levelup-num">${level}</span>
       <span class="hx-levelup-sub">${getLevelUpMessage(level)}</span>
+      <button class="hx-levelup-ok-btn" type="button" aria-label="Dismiss level-up banner">OK</button>
     </div>
   `;
   document.body.appendChild(banner);
 
-  // Auto-remove after animation completes (~3s)
-  banner.addEventListener('animationend', () => banner.remove(), { once: true });
-  setTimeout(() => banner.remove(), 3200);
+  const dismiss = () => banner.remove();
+  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', dismiss);
+
+  // Auto-remove after animation completes (~3s) as a fallback
+  banner.addEventListener('animationend', dismiss, { once: true });
+  setTimeout(dismiss, 6000);
 }
 
 function showRestoredBanner(level, score) {
@@ -1333,12 +1337,16 @@ function showPlayerLevelUpBanner(newLevel) {
       <div class="hx-levelup-divider hx-levelup-divider--xp"></div>
       <span class="hx-levelup-num hx-levelup-num--xp">${newLevel}</span>
       <span class="hx-levelup-sub hx-levelup-sub--xp">RANK INCREASED</span>
+      <button class="hx-levelup-ok-btn hx-levelup-ok-btn--xp" type="button" aria-label="Dismiss level-up banner">OK</button>
     </div>
   `;
   document.body.appendChild(banner);
 
-  banner.addEventListener('animationend', () => banner.remove(), { once: true });
-  setTimeout(() => banner.remove(), 3200);
+  const dismiss = () => banner.remove();
+  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', dismiss);
+
+  banner.addEventListener('animationend', dismiss, { once: true });
+  setTimeout(dismiss, 6000);
 
   // LVL button badge-pop + XP bar glow sweep
   const lvlBtn = document.getElementById('hx-level-hud');
