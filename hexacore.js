@@ -1450,9 +1450,6 @@ function removeHud() {
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
   document.getElementById('hx-top-bar')?.remove();
-  document.getElementById('hx-top-menu-row')?.remove();
-  document.getElementById('hx-powerup-bar-left')?.remove();
-  document.getElementById('hx-powerup-bar-right')?.remove();
   document.getElementById('hx-powerup-toast')?.remove();
   document.getElementById('hx-powerup-indicator')?.remove();
 }
