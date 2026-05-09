@@ -3981,10 +3981,12 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 /* Content area */
 #hx-settings-content {
   flex: 1 1 0;
+  min-height: 0;              /* critical flexbox fix: lets overflow-y: auto work on iOS */
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;        /* tell the browser this region scrolls vertically */
   scrollbar-width: thin;
   scrollbar-color: rgba(76, 201, 240, 0.3) transparent;
 }
@@ -4284,6 +4286,160 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 
 /* ── Responsive ──────────────────────────────────────────────────── */
 
+/* ── Special Tiles list ─────────────────────────────────────────── */
+.hx-cfg-tile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.hx-cfg-tile-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 9px;
+  padding: 0.65rem 0.8rem;
+}
+
+.hx-cfg-tile-swatch {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1.5px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hx-cfg-tile-swatch-icon {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1;
+}
+
+.hx-cfg-tile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.hx-cfg-tile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.hx-cfg-tile-name {
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  color: #e2d9ff;
+  text-transform: uppercase;
+}
+
+.hx-cfg-tile-badge {
+  font-family: var(--hx-ui-font-family);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.hx-cfg-tile-desc {
+  margin: 0;
+  font-size: 1.5rem;
+  color: rgba(196, 181, 253, 0.6);
+  line-height: 1.45;
+  text-transform: none;
+}
+
+/* Gem tier section */
+.hx-cfg-gems-title {
+  margin-top: 0.25rem;
+}
+
+.hx-cfg-gem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.hx-cfg-gem-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.4rem 0.55rem;
+}
+
+.hx-cfg-gem-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.hx-cfg-gem-name {
+  font-family: var(--hx-ui-font-family);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #e2d9ff;
+  text-transform: uppercase;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hx-cfg-gem-letters {
+  font-family: var(--hx-ui-font-family);
+  font-size: 0.55rem;
+  color: rgba(196, 181, 253, 0.55);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+/* Mobile adjustments for tiles tab */
+@media (max-width: 600px) {
+  .hx-cfg-tile-swatch {
+    width: 38px;
+    height: 38px;
+  }
+  .hx-cfg-gem-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .hx-cfg-tile-row {
+    padding: 0.55rem 0.65rem;
+    gap: 0.6rem;
+  }
+  .hx-cfg-tile-swatch {
+    width: 34px;
+    height: 34px;
+  }
+  .hx-cfg-gem-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* ── Tablet & small desktop (≤900 px) ───────────────────────────── */
 @media (min-width: 769px) and (max-width: 900px) {
   #hx-settings-box {
@@ -4315,7 +4471,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
   #hx-settings-box {
     width: 100%;
-    height: min(840px, 96vh);
+    height: min(840px, 96dvh);
     border-radius: 14px 14px 0 0;  /* bottom-sheet style */
   }
   #hx-settings-header {
@@ -4346,6 +4502,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   .hx-cfg-preview-note,
   .hx-cfg-quest-tips li,
   .hx-cfg-howto-card p,
+  .hx-cfg-tile-desc,
   .hx-cfg-mode-desc {
     font-size: 1.1rem;
   }
@@ -4362,13 +4519,14 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
   #hx-settings-box {
     width: 100%;
-    height: min(840px, 96vh);
+    height: min(840px, 96dvh);
     border-radius: 14px 14px 0 0;
   }
   #hx-settings-content {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    touch-action: pan-y;
   }
   #hx-leaderboards-modal {
     align-items: flex-end;
@@ -4384,17 +4542,18 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 /* ── Mobile (≤430 px) ───────────────────────────────────────────── */
 @media (max-width: 430px) {
   #hx-settings-box {
-    height: min(820px, 96vh);
+    height: min(820px, 96dvh);
   }
   #hx-leaderboards-box {
-    max-height: 88vh;
+    max-height: 88dvh;
   }
 }
 
 /* ── Mobile (≤420 px) ──────────────────────────────────────── */
 @media (max-width: 420px) {
   #hx-settings-box {
-    height: min(640px, 96vh);
+    /* Use almost full dynamic-viewport height so content can scroll */
+    height: min(820px, 96dvh);
   }
   .hx-cfg-howto-highlights {
     grid-template-columns: 1fr;
@@ -4419,7 +4578,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 /* ── Very small phones (≤320 px) ─────────────────────────────── */
 @media (max-width: 320px) {
   #hx-settings-box {
-    height: 98vh;
+    height: 98dvh;
     border-radius: 0;
   }
   .hx-cfg-panel {
