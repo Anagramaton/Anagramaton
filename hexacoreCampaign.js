@@ -287,9 +287,13 @@ export function openCampaignModal(onLevelStart) {
       ).join('');
 
       const checkBadge   = info?.completed ? `<span class="hx-card-check" aria-hidden="true">✓</span>` : '';
-      const levelNumHtml = !unlocked
-        ? `<div class="hx-campaign-level-num hx-level-locked" aria-label="Locked">🔒</div>`
-        : `<div class="hx-campaign-level-num">${level.id}</div>`;
+      const levelNumHtml = `<div class="hx-campaign-level-num">${level.id}</div>`;
+      const ariaLabel = !unlocked
+        ? `Level ${level.id} – Locked`
+        : info?.completed
+          ? `Level ${level.id}: ${level.title} – Completed, ${stars} of 3 stars`
+          : `Level ${level.id}: ${level.title}`;
+      card.setAttribute('aria-label', ariaLabel);
       const progressBar  = info?.completed
         ? `<div class="hx-card-progress-bar" aria-label="${stars} of 3 stars">
              <div class="hx-card-progress-fill" style="width:${Math.round((stars / 3) * 100)}%"></div>
