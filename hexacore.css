@@ -2200,7 +2200,7 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
   }
 }
 body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
-  animation: hx-title-letter-flash 1.8s ease-out calc(var(--anim-order, 0) * 120ms) infinite alternate both;
+  animation: hx-title-letter-flash 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
 }
 @keyframes hx-title-letter-dim {
   0% {
@@ -2258,7 +2258,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
-  animation: hx-title-letter-flash-dark 1.8s ease-out calc(var(--anim-order, 0) * 120ms) infinite alternate both;
+  animation: hx-title-letter-flash-dark 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
 }
 @keyframes hx-title-letter-dim-dark {
   0% {
