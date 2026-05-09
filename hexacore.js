@@ -435,7 +435,7 @@ function _addPortalIcon(tile, glyph) {
   icon.setAttribute('font-size', '11');
   icon.setAttribute('pointer-events', 'none');
   icon.setAttribute('class', 'hx-portal-icon');
-  icon.setAttribute('fill', '#e040fb');
+  icon.setAttribute('fill', '#e5e7eb');
   icon.textContent = glyph;
   tile.element.appendChild(icon);
 }
@@ -818,11 +818,11 @@ function injectSvgDefs(svg) {
     emberGrad.setAttribute('x1', '0%'); emberGrad.setAttribute('y1', '100%');
     emberGrad.setAttribute('x2', '0%'); emberGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#1a0000'],  // deep black-red at base
-      ['25%',  '#cc1100'],  // dark crimson
-      ['55%',  '#ff4500'],  // vivid red-orange
-      ['80%',  '#ff9900'],  // bright amber
-      ['100%', '#ffee00'],  // blazing yellow tip
+      ['0%',   '#0a0a0a'],
+      ['25%',  '#2a2a2a'],
+      ['55%',  '#545454'],
+      ['80%',  '#a3a3a3'],
+      ['100%', '#f5f5f5'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -831,9 +831,9 @@ function injectSvgDefs(svg) {
     });
     defs.appendChild(emberGrad);
   }
-  ensureLinearGradient('hx-prism-gradient',    '#a855f7', '#06b6d4');
-  ensureLinearGradient('hx-digraph-gradient',  '#0d9488', '#2dd4bf');
-  ensureLinearGradient('hx-portal-gradient',   '#7b2ff7', '#e040fb');
+  ensureLinearGradient('hx-prism-gradient',    '#111111', '#d4d4d4');
+  ensureLinearGradient('hx-digraph-gradient',  '#3b2a1f', '#8b6b4b');
+  ensureLinearGradient('hx-portal-gradient',   '#0a0a0a', '#6b7280');
   ensureLinearGradient('hx-gem-emerald-gradient',   '#16a34a', '#4ade80');
 
   // Gold — bright lemon yellow (separated from Topaz and Ember which are orange)
@@ -916,16 +916,16 @@ function injectSvgDefs(svg) {
     defs.appendChild(alexGrad);
   }
 
-  // Amethyst — deep purple to violet gradient
+  // Amethyst — obsidian steel gradient
   if (!document.getElementById('hx-amethyst-gradient')) {
     const amethystGrad = document.createElementNS(SVG_NS, 'linearGradient');
     amethystGrad.setAttribute('id', 'hx-amethyst-gradient');
     amethystGrad.setAttribute('x1', '0%'); amethystGrad.setAttribute('y1', '100%');
     amethystGrad.setAttribute('x2', '100%'); amethystGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#4c0070'],
-      ['50%',  '#a855f7'],
-      ['100%', '#e879f9'],
+      ['0%',   '#111827'],
+      ['50%',  '#4b5563'],
+      ['100%', '#d1d5db'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -935,18 +935,18 @@ function injectSvgDefs(svg) {
     defs.appendChild(amethystGrad);
   }
 
-  // Selenite — dark navy to brilliant white-blue moonstone gradient
+  // Selenite — charcoal to moonstone white gradient
   if (!document.getElementById('hx-selenite-gradient')) {
     const seleniteGrad = document.createElementNS(SVG_NS, 'linearGradient');
     seleniteGrad.setAttribute('id', 'hx-selenite-gradient');
     seleniteGrad.setAttribute('x1', '0%'); seleniteGrad.setAttribute('y1', '100%');
     seleniteGrad.setAttribute('x2', '0%'); seleniteGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#0a0a1a'],
-      ['25%',  '#1a3a6e'],
-      ['60%',  '#8ecae6'],
-      ['85%',  '#caf0f8'],
-      ['100%', '#ffffff'],
+      ['0%',   '#1c1917'],
+      ['25%',  '#44403c'],
+      ['60%',  '#a8a29e'],
+      ['85%',  '#e7e5e4'],
+      ['100%', '#fafaf9'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -3827,6 +3827,10 @@ export function stopHexacore() {
   document.getElementById('hx-challenges-modal')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
+  hxSvg = document.getElementById('hex-grid');
+  if (hxSvg) hxSvg.innerHTML = '';
+  hxTileMap = new Map();
+  hxUpdateViewForBoard = null;
 
   document.body.classList.remove('hx-active');
 
