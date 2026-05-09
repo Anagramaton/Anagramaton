@@ -3868,7 +3868,12 @@ async function consumeAndRefill(tilesToRemove) {
   await advanceFireTiles();
   if (hxState.gameOver) return;
 
-  // 5. Refill empty columns
+  // 4b. Gravity after ember advancement: tiles above vacated ember slots
+  //     should cascade down naturally before the refill runs.
+  await applyGravity();
+  if (hxState.gameOver) return;
+
+  // 5. Refill empty columns (only the truly-topmost slots remain empty now)
   await refillGrid();
 }
 
