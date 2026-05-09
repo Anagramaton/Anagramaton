@@ -551,6 +551,90 @@ body.hx-active #right-panel-title    { display: none; }
   pointer-events: auto;
 }
 
+/* ── Top menu row: [Amethyst] [MENU button] [Selenite] ─────────── */
+#hx-top-menu-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 20px);
+  pointer-events: auto;
+}
+
+/* ── Power-up slots flanking the MENU button ───────────────────── */
+#hx-powerup-bar-left,
+#hx-powerup-bar-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(44px, 6vw, 60px);
+  min-height: 44px;
+  pointer-events: auto;
+}
+
+/* ── Compact hex icon power-up button ──────────────────────────── */
+.hx-powerup-icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: clamp(44px, 5.5vw, 56px);
+  height: clamp(44px, 5.5vw, 56px);
+  flex-shrink: 0;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+.hx-powerup-icon-btn svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.hx-powerup-icon-btn:hover {
+  transform: scale(1.12);
+}
+.hx-powerup-icon-btn:active {
+  transform: scale(0.94);
+}
+
+.hx-powerup-icon-btn--amethyst svg {
+  filter: drop-shadow(0 0 10px rgba(217, 70, 239, 0.85));
+}
+.hx-powerup-icon-btn--amethyst:hover svg {
+  filter: drop-shadow(0 0 16px rgba(232, 121, 249, 1));
+}
+
+.hx-powerup-icon-btn--selenite svg {
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.85));
+}
+.hx-powerup-icon-btn--selenite:hover svg {
+  filter: drop-shadow(0 0 16px rgba(224, 242, 254, 1));
+}
+
+/* Count badge — top-right corner of the icon */
+.hx-powerup-icon-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: rgba(13, 16, 30, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #f8fafc;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+  pointer-events: none;
+}
+
 /* ── MENU rail — button stacked above XP bar ───────────────────── */
 #hx-level-wrap {
   display: flex;
@@ -2145,83 +2229,9 @@ body.hx-active #hex-grid {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Power-Up Inventory Bars (flanking the score HUD)
+   Power-Up Inventory Bars (now live inside #hx-top-menu-row;
+   styles are defined at top with #hx-top-bar section)
    ═══════════════════════════════════════════════════════════════ */
-
-#hx-powerup-bar-left {
-  position: fixed;
-  bottom: clamp(80px, 12vh, 130px);
-  right: calc(50% + 80px);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-end;
-  z-index: 600;
-  min-height: 36px;
-  pointer-events: auto;
-}
-
-#hx-powerup-bar-right {
-  position: fixed;
-  bottom: clamp(80px, 12vh, 130px);
-  left: calc(50% + 80px);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  z-index: 600;
-  min-height: 36px;
-  pointer-events: auto;
-}
-
-.hx-powerup-btn {
-  font-family: 'Turret Road', 'Orbitron', monospace;
-  font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.hx-powerup-btn:hover {
-  transform: scale(1.08);
-}
-.hx-powerup-btn:active {
-  transform: scale(0.96);
-}
-
-.hx-powerup-btn--amethyst {
-  background: linear-gradient(135deg, #111827, #6b7280);
-  color: #f8fafc;
-  box-shadow: 0 0 10px rgba(148, 163, 184, 0.75);
-}
-.hx-powerup-btn--amethyst:hover {
-  box-shadow: 0 0 18px rgba(229, 231, 235, 0.95), 0 0 6px rgba(148, 163, 184, 0.9);
-}
-
-.hx-powerup-btn--selenite {
-  background: linear-gradient(135deg, #1c1917, #a8a29e);
-  color: #111827;
-  box-shadow: 0 0 10px rgba(168, 162, 158, 0.8);
-}
-.hx-powerup-btn--selenite:hover {
-  box-shadow: 0 0 18px rgba(245, 245, 244, 0.95), 0 0 6px rgba(212, 212, 212, 0.85);
-}
-
-.hx-powerup-count {
-  display: inline-block;
-  margin-left: 4px;
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-size: 0.75em;
-  font-weight: 900;
-  background: rgba(255, 255, 255, 0.18);
-  letter-spacing: 0.05em;
-  vertical-align: middle;
-}
 
 /* ── Power-up targeting indicators ─────────────────────────────── */
 .hx-powerup-indicator {
