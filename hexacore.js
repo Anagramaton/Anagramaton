@@ -815,14 +815,14 @@ function injectSvgDefs(svg) {
   if (!document.getElementById('hx-ember-gradient')) {
     const emberGrad = document.createElementNS(SVG_NS, 'linearGradient');
     emberGrad.setAttribute('id', 'hx-ember-gradient');
-    emberGrad.setAttribute('x1', '0%'); emberGrad.setAttribute('y1', '100%');
-    emberGrad.setAttribute('x2', '0%'); emberGrad.setAttribute('y2', '0%');
+    emberGrad.setAttribute('x1', '20%'); emberGrad.setAttribute('y1', '100%');
+    emberGrad.setAttribute('x2', '80%'); emberGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#0a0a0a'],
-      ['25%',  '#2a2a2a'],
-      ['55%',  '#545454'],
-      ['80%',  '#a3a3a3'],
-      ['100%', '#f5f5f5'],
+      ['0%',   '#260000'],
+      ['30%',  '#b91c1c'],
+      ['60%',  '#f97316'],
+      ['85%',  '#fbbf24'],
+      ['100%', '#fef3c7'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -831,9 +831,30 @@ function injectSvgDefs(svg) {
     });
     defs.appendChild(emberGrad);
   }
-  ensureLinearGradient('hx-prism-gradient',    '#111111', '#d4d4d4');
-  ensureLinearGradient('hx-digraph-gradient',  '#3b2a1f', '#8b6b4b');
-  ensureLinearGradient('hx-portal-gradient',   '#0a0a0a', '#6b7280');
+  // Prism: deep violet → electric rose
+  ensureLinearGradient('hx-prism-gradient',    '#1a0040', '#db2777');
+  // Digraph: deep teal → emerald
+  ensureLinearGradient('hx-digraph-gradient',  '#022c22', '#34d399');
+  // Portal: midnight → vivid violet → magenta
+  ensureLinearGradient('hx-portal-gradient',   '#1a003f', '#7c3aed');
+  // Rune: midnight blue → electric violet (gradient instead of flat fill)
+  if (!document.getElementById('hx-rune-gradient')) {
+    const runeGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    runeGrad.setAttribute('id', 'hx-rune-gradient');
+    runeGrad.setAttribute('x1', '50%'); runeGrad.setAttribute('y1', '100%');
+    runeGrad.setAttribute('x2', '50%'); runeGrad.setAttribute('y2', '0%');
+    [
+      ['0%',   '#020617'],
+      ['50%',  '#312e81'],
+      ['100%', '#6d28d9'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      runeGrad.appendChild(s);
+    });
+    defs.appendChild(runeGrad);
+  }
   ensureLinearGradient('hx-gem-emerald-gradient',   '#16a34a', '#4ade80');
 
   // Gold — bright lemon yellow (separated from Topaz and Ember which are orange)
@@ -916,16 +937,16 @@ function injectSvgDefs(svg) {
     defs.appendChild(alexGrad);
   }
 
-  // Amethyst — obsidian steel gradient
+  // Amethyst — obsidian → royal purple → electric fuchsia
   if (!document.getElementById('hx-amethyst-gradient')) {
     const amethystGrad = document.createElementNS(SVG_NS, 'linearGradient');
     amethystGrad.setAttribute('id', 'hx-amethyst-gradient');
-    amethystGrad.setAttribute('x1', '0%'); amethystGrad.setAttribute('y1', '100%');
-    amethystGrad.setAttribute('x2', '100%'); amethystGrad.setAttribute('y2', '0%');
+    amethystGrad.setAttribute('x1', '100%'); amethystGrad.setAttribute('y1', '100%');
+    amethystGrad.setAttribute('x2', '0%');   amethystGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#111827'],
-      ['50%',  '#4b5563'],
-      ['100%', '#d1d5db'],
+      ['0%',   '#1a0028'],
+      ['50%',  '#7e22ce'],
+      ['100%', '#d946ef'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -935,18 +956,17 @@ function injectSvgDefs(svg) {
     defs.appendChild(amethystGrad);
   }
 
-  // Selenite — charcoal to moonstone white gradient
+  // Selenite — deep ocean → arctic teal → crystal ice
   if (!document.getElementById('hx-selenite-gradient')) {
     const seleniteGrad = document.createElementNS(SVG_NS, 'linearGradient');
     seleniteGrad.setAttribute('id', 'hx-selenite-gradient');
     seleniteGrad.setAttribute('x1', '0%'); seleniteGrad.setAttribute('y1', '100%');
     seleniteGrad.setAttribute('x2', '0%'); seleniteGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#1c1917'],
-      ['25%',  '#44403c'],
-      ['60%',  '#a8a29e'],
-      ['85%',  '#e7e5e4'],
-      ['100%', '#fafaf9'],
+      ['0%',   '#030712'],
+      ['35%',  '#0c4a6e'],
+      ['70%',  '#0ea5e9'],
+      ['100%', '#e0f2fe'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
