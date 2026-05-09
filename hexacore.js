@@ -757,6 +757,7 @@ async function animateTileMovesStaggered(moves) {
   await Promise.all(allDone);
 }
 
+
 /* ── Tile type styling ─────────────────────────────────────────── */
 function applyTileType(tile) {
   const poly = tile.element.querySelector('polygon');
@@ -3867,7 +3868,12 @@ async function consumeAndRefill(tilesToRemove) {
   await advanceFireTiles();
   if (hxState.gameOver) return;
 
-  // 5. Refill empty columns
+  // 4b. Gravity after ember advancement: tiles above vacated ember slots
+  //     should cascade down naturally before the refill runs.
+  await applyGravity();
+  if (hxState.gameOver) return;
+
+  // 5. Refill empty columns (only the truly-topmost slots remain empty now)
   await refillGrid();
 }
 
@@ -3910,7 +3916,7 @@ async function applyGravity() {
     }
 
     if (moves.length === 0) break;
-    await animateTileMovesStaggered(moves);
+    await animateTileMoves(moves);
   }
 }
 
@@ -3923,6 +3929,7 @@ async function advanceFireTiles() {
   ];
 
   const allMoves = [];
+  const claimedDests = new Set(); // destinations already claimed by a planned ember move
 
   for (const { tile, type } of allFireTiles) {
     if (hxState.gameOver) break;
@@ -3950,18 +3957,23 @@ async function advanceFireTiles() {
     }
 
     // For ember tiles, exclude positions occupied by protected tile types
+    // and positions already claimed by another ember this same turn.
     let validCandidates = candidates;
     if (type === 'ember') {
       const EMBER_BLOCKED_TYPES = ['ember', 'amethyst', 'selenite', 'oracle', 'beacon', 'eclipse', 'lodestone', 'lexicon'];
       validCandidates = candidates.filter(pos => {
-        const occupant = hxTileMap.get(hxKey(pos.q, pos.r));
+        const key = hxKey(pos.q, pos.r);
+        if (claimedDests.has(key)) return false; // another ember already heading here
+        const occupant = hxTileMap.get(key);
         return !occupant
           || (!EMBER_BLOCKED_TYPES.includes(occupant.tileType) && !isPortalTile(occupant));
       });
       if (validCandidates.length === 0) continue; // blocked — ember stays put this turn
     }
 
+    if (validCandidates.length === 0) continue;
     const target = validCandidates[Math.floor(Math.random() * validCandidates.length)];
+    claimedDests.add(hxKey(target.q, target.r));
 
     // Displace any tile at the target before moving
     const displaced = hxTileMap.get(hxKey(target.q, target.r));
