@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { normalizeHexacoreLeaderboardId } from '../hexacoreLeaderboardKeys.js';
 
 function getTodayId() {
   const d = new Date();
@@ -23,7 +24,11 @@ export default async function handler(req, res) {
 
   const validModes = ['daily', 'unlimited', 'hexacore'];
   const mode = validModes.includes(req.query?.mode) ? req.query.mode : 'daily';
-  const dailyId = (mode === 'unlimited' || mode === 'hexacore') ? mode : (req.query?.dailyId || getTodayId());
+  const dailyId = mode === 'unlimited'
+    ? 'unlimited'
+    : mode === 'hexacore'
+      ? normalizeHexacoreLeaderboardId(req.query?.dailyId)
+      : (req.query?.dailyId || getTodayId());
 
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
     return res.status(200).json({ configured: false, mode, dailyId, leaderboard: [] });

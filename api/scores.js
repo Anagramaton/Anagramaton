@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { normalizeHexacoreLeaderboardId } from '../hexacoreLeaderboardKeys.js';
 
 function getTodayId() {
   const d = new Date();
@@ -61,12 +62,16 @@ export default async function handler(req, res) {
     process.env.SUPABASE_SERVICE_KEY
   );
 
+  const partitionId = mode === 'hexacore'
+    ? normalizeHexacoreLeaderboardId(dailyId)
+    : (mode === 'unlimited' ? 'unlimited' : dailyId);
+
   if (mode === 'hexacore') {
     // Only update if new score beats the existing personal best
     const { data: existing } = await supabase
       .from('scores')
       .select('score')
-      .eq('daily_id', 'hexacore')
+      .eq('daily_id', partitionId)
       .eq('player_name', playerName.trim())
       .maybeSingle();
 
@@ -75,7 +80,6 @@ export default async function handler(req, res) {
     }
   }
 
-  const partitionId = (mode === 'unlimited' || mode === 'hexacore') ? mode : dailyId;
   const modeValue   = mode === 'unlimited' ? 'unlimited' : mode === 'hexacore' ? 'hexacore' : 'daily';
 
   const { error } = await supabase

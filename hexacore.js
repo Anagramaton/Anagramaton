@@ -23,6 +23,10 @@ import { openLeaderboardsModal } from './hexacoreLeaderboards.js';
 import { openModeSelectModal } from './hexacoreModeSelect.js';
 import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampaignProgress } from './hexacoreCampaign.js';
 import { getProfile, updateProfile, openProfileModal } from './hexacoreProfile.js';
+import {
+  getHexacoreAllTimeLeaderboardId,
+  resetHexacoreLeaderboardStorage,
+} from './hexacoreLeaderboardKeys.js';
 
 /* ── Hexacore-specific letter point values ─────────────────────── */
 const HX_LETTER_POINTS = {
@@ -3443,20 +3447,25 @@ async function showGameOver() {
   overlay.innerHTML = `
     <div id="hx-gameover-box">
       <h2>HEXACORE OVER</h2>
-      <div class="hx-final-score">${hxState.score}</div>
-      <div class="hx-stats">
-        LEVEL ${hxState.level} &nbsp;&middot;&nbsp;
-        ${hxState.words.length} WORD${hxState.words.length !== 1 ? 'S' : ''} FOUND
-        ${best ? `&nbsp;&middot;&nbsp; BEST: ${escapeHtml(best.word)} (${best.score} pts)` : ''}
+      <div class="hx-score-wrap">
+        <div class="hx-score-label">FINAL SCORE</div>
+        <div class="hx-final-score">${hxState.score.toLocaleString()}</div>
       </div>
-      <div id="hx-lb-area" style="margin-bottom:1rem;font-size:0.8rem;min-height:2rem;color:#94a3b8;">
+      <div class="hx-stats">
+        <span class="hx-stat-chip">LEVEL ${hxState.level}</span>
+        <span class="hx-stat-chip">${hxState.words.length} WORD${hxState.words.length !== 1 ? 'S' : ''} FOUND</span>
+        ${best ? `<span class="hx-stat-chip">BEST: ${escapeHtml(best.word)} (${best.score.toLocaleString()} pts)</span>` : ''}
+      </div>
+      <div id="hx-lb-area" class="hx-lb-preview-area">
         Loading leaderboard&hellip;
       </div>
-      <button id="hx-btn-submit" class="hx-btn-primary" type="button">
-        🏆 SUBMIT SCORE &amp; VIEW LEADERBOARD
-      </button>
-      <button id="hx-btn-again" type="button">🔄 PLAY AGAIN</button>
-      <button id="hx-btn-menu"  type="button">🏠 MAIN MENU</button>
+      <div class="hx-gameover-actions">
+        <button id="hx-btn-submit" class="hx-btn-primary" type="button">
+          🏆 SUBMIT SCORE &amp; VIEW LEADERBOARD
+        </button>
+        <button id="hx-btn-again" type="button">🔄 PLAY AGAIN</button>
+        <button id="hx-btn-menu"  type="button">🏠 MAIN MENU</button>
+      </div>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -3493,8 +3502,8 @@ async function handleSubmitScore() {
     return;
   }
 
-  // dailyId = 'hexacore' is how the API key-partitions the hexacore leaderboard
-  const result = await submitScore('hexacore', hxState.score, hxState.words.map(w => w.word), 0, 'hexacore');
+  const allTimeId = getHexacoreAllTimeLeaderboardId();
+  const result = await submitScore(allTimeId, hxState.score, hxState.words.map(w => w.word), 0, 'hexacore');
   btn.textContent = '✓ SUBMITTED';
 
   await loadLeaderboard(result);
@@ -3505,8 +3514,8 @@ async function loadLeaderboard(submitResult) {
   if (!area) return;
   area.textContent = 'Loading…';
 
-  // dailyId = 'hexacore' partitions this leaderboard from daily/unlimited
-  const result = await fetchLeaderboard('hexacore', 'hexacore');
+  const allTimeId = getHexacoreAllTimeLeaderboardId();
+  const result = await fetchLeaderboard(allTimeId, 'hexacore');
 
   if (!result.configured || result.entries.length === 0) {
     area.textContent = 'No leaderboard entries yet.';
@@ -3520,14 +3529,13 @@ async function loadLeaderboard(submitResult) {
   const rows = entries.map((e, i) => {
     const isCurrentPlayer = currentPlayer && e.player_name === currentPlayer;
     if (isCurrentPlayer) playerRank = i + 1;
-    const rowStyle = isCurrentPlayer
-      ? 'color:#f59e0b;font-weight:bold'
-      : '';
+    const badge = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    const rowClass = isCurrentPlayer ? ' class="is-current-player"' : '';
     return `
-    <tr style="${rowStyle}">
-      <td style="padding:0.15rem 0.5rem;opacity:0.5">${i + 1}</td>
-      <td style="padding:0.15rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}</td>
-      <td style="padding:0.15rem 0.5rem;color:${isCurrentPlayer ? '#f59e0b' : '#4cc9f0'};font-weight:700">${e.score}</td>
+    <tr${rowClass}>
+      <td><span class="hx-rank-badge">${badge || (i + 1)}</span></td>
+      <td>${escapeHtml(e.player_name || 'Anonymous')}${isCurrentPlayer ? ' <span class="hx-you-tag">YOU</span>' : ''}</td>
+      <td class="hx-score-col">${(e.score || 0).toLocaleString()}</td>
     </tr>`;
   }).join('');
 
@@ -3541,17 +3549,17 @@ async function loadLeaderboard(submitResult) {
 
   const rankMsg = currentPlayer
     ? (playerRank > 0
-        ? `<div style="margin-top:0.5rem;font-size:0.78rem;color:#f59e0b;font-weight:bold">You are ranked #${playerRank} all-time</div>`
-        : `<div style="margin-top:0.5rem;font-size:0.78rem;color:#94a3b8">Keep playing to reach the top 20!</div>`)
+        ? `<div class="hx-rank-feedback hx-rank-feedback-good">You are ranked #${playerRank} all-time</div>`
+        : `<div class="hx-rank-feedback">Keep playing to reach the top 20!</div>`)
     : '';
 
   area.innerHTML = `
-    <table style="width:100%;border-collapse:collapse;margin-top:0.4rem">
+    <table class="hx-leaderboard-mini-table">
       <thead>
-        <tr style="font-size:0.72rem;opacity:0.5;text-transform:uppercase">
-          <th style="padding:0.15rem 0.5rem">#</th>
-          <th style="padding:0.15rem 0.5rem">Player</th>
-          <th style="padding:0.15rem 0.5rem">Score</th>
+        <tr>
+          <th>#</th>
+          <th>Player</th>
+          <th>Score</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -3617,6 +3625,7 @@ function clearHexacoreSave() {
 /* ── Public entry point ────────────────────────────────────────── */
 export function startHexacore(mode = 'endless') {
   hxGameMode = mode;
+  resetHexacoreLeaderboardStorage();
 
   // Load persisted requirements (persist across sessions and new games)
   hxCompletedReqs = new Set(loadHexacoreRequirements());
@@ -3859,7 +3868,7 @@ export function stopHexacore() {
     modal.style.display = 'flex';
     document.getElementById('hx-lb-standalone-area').textContent = 'Loading…';
 
-    const result = await fetchLeaderboard('hexacore', 'hexacore');
+    const result = await fetchLeaderboard(getHexacoreAllTimeLeaderboardId(), 'hexacore');
     const area = document.getElementById('hx-lb-standalone-area');
     if (!area) return;
 

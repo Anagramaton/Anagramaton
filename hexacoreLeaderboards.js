@@ -3,6 +3,12 @@
 import { fetchLeaderboard, getPlayerName } from './leaderboard.js';
 import { getXPData } from './hexacoreXP.js';
 import { getTodayString, getWeekString } from './hexacoreQuests.js';
+import {
+  getHexacoreAllTimeLeaderboardId,
+  getHexacoreDailyLeaderboardId,
+  getHexacoreWeeklyLeaderboardId,
+  resetHexacoreLeaderboardStorage,
+} from './hexacoreLeaderboardKeys.js';
 
 function escapeHtml(str) {
   return String(str)
@@ -17,13 +23,13 @@ function buildXPRankingTable(currentPlayer) {
   // XP ranking is local-only — just show the current player's data
   const { xp, level } = getXPData();
   return `
-    <div style="text-align:center;padding:1rem 0">
-      <div style="font-size:2rem;font-weight:bold;color:#a855f7">${level}</div>
-      <div style="opacity:0.6;font-size:0.8rem;margin-bottom:0.5rem">PLAYER LEVEL</div>
-      <div style="color:#c4b5fd;font-size:1.1rem">${xp.toLocaleString()} XP</div>
-      ${currentPlayer ? `<div style="margin-top:0.75rem;opacity:0.6;font-size:0.8rem">${escapeHtml(currentPlayer)}</div>` : ''}
+    <div class="hx-lb-xp-card">
+      <div class="hx-lb-xp-level">${level}</div>
+      <div class="hx-lb-xp-label">PLAYER LEVEL</div>
+      <div class="hx-lb-xp-total">${xp.toLocaleString()} XP</div>
+      ${currentPlayer ? `<div class="hx-lb-xp-player">${escapeHtml(currentPlayer)}</div>` : ''}
     </div>
-    <div style="opacity:0.45;font-size:0.72rem;text-align:center;padding-bottom:0.5rem">
+    <div class="hx-lb-note">
       XP ranking is tracked locally on this device.
     </div>
   `;
@@ -33,26 +39,31 @@ function buildXPRankingTable(currentPlayer) {
 
 function renderTable(entries, currentPlayer) {
   if (!entries || entries.length === 0) {
-    return '<div style="opacity:0.5;text-align:center;padding:1rem;font-size:0.85rem">No entries yet.</div>';
+    return '<div class="hx-lb-empty">No entries yet.</div>';
   }
 
   const rows = entries.slice(0, 20).map((e, i) => {
     const isYou = currentPlayer && e.player_name === currentPlayer;
-    const style = isYou ? 'color:#f59e0b;font-weight:bold' : '';
-    return `<tr style="${style}">
-      <td style="padding:0.2rem 0.5rem;opacity:0.5">${i + 1}</td>
-      <td style="padding:0.2rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}${isYou ? ' 👈' : ''}</td>
-      <td style="padding:0.2rem 0.5rem;color:${isYou ? '#f59e0b' : '#4cc9f0'};font-weight:700">${(e.score || 0).toLocaleString()}</td>
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    const rowClass = [
+      i < 3 ? 'is-top-rank' : '',
+      isYou ? 'is-current-player' : '',
+    ].filter(Boolean).join(' ');
+
+    return `<tr class="${rowClass}">
+      <td><span class="hx-rank-badge">${medal || (i + 1)}</span></td>
+      <td>${escapeHtml(e.player_name || 'Anonymous')}${isYou ? ' <span class="hx-you-tag">YOU</span>' : ''}</td>
+      <td class="hx-score-col">${(e.score || 0).toLocaleString()}</td>
     </tr>`;
   }).join('');
 
   return `
-    <table style="width:100%;border-collapse:collapse">
+    <table class="hx-lb-table">
       <thead>
-        <tr style="font-size:0.72rem;opacity:0.5;text-transform:uppercase">
-          <th style="padding:0.2rem 0.5rem">#</th>
-          <th style="padding:0.2rem 0.5rem">Player</th>
-          <th style="padding:0.2rem 0.5rem">Score</th>
+        <tr>
+          <th>#</th>
+          <th>Player</th>
+          <th>Score</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -64,7 +75,7 @@ function renderTable(entries, currentPlayer) {
 
 async function loadTab(tabId, contentEl) {
   const currentPlayer = getPlayerName();
-  contentEl.innerHTML = '<div style="text-align:center;opacity:0.5;padding:1rem">Loading…</div>';
+  contentEl.innerHTML = '<div class="hx-lb-loading">Loading…</div>';
 
   try {
     if (tabId === 'xp') {
@@ -75,23 +86,23 @@ async function loadTab(tabId, contentEl) {
     let gameId, dailyId;
     if (tabId === 'alltime') {
       gameId  = 'hexacore';
-      dailyId = 'hexacore';
+      dailyId = getHexacoreAllTimeLeaderboardId();
     } else if (tabId === 'daily') {
       gameId  = 'hexacore';
-      dailyId = 'hexacore_daily_' + getTodayString();
+      dailyId = getHexacoreDailyLeaderboardId(getTodayString());
     } else if (tabId === 'weekly') {
       gameId  = 'hexacore';
-      dailyId = 'hexacore_weekly_' + getWeekString();
+      dailyId = getHexacoreWeeklyLeaderboardId(getWeekString());
     }
 
     const result = await fetchLeaderboard(dailyId, gameId);
     if (!result.configured) {
-      contentEl.innerHTML = '<div style="opacity:0.5;text-align:center;padding:1rem;font-size:0.8rem">Leaderboard not configured.</div>';
+      contentEl.innerHTML = '<div class="hx-lb-empty">Leaderboard not configured.</div>';
       return;
     }
     contentEl.innerHTML = renderTable(result.entries, currentPlayer);
   } catch (err) {
-    contentEl.innerHTML = '<div style="opacity:0.5;text-align:center;padding:1rem;font-size:0.8rem">Failed to load.</div>';
+    contentEl.innerHTML = '<div class="hx-lb-empty">Failed to load.</div>';
   }
 }
 
@@ -99,6 +110,7 @@ async function loadTab(tabId, contentEl) {
 
 export function openLeaderboardsModal() {
   document.getElementById('hx-leaderboards-modal')?.remove();
+  resetHexacoreLeaderboardStorage();
 
   const TABS = [
     { id: 'alltime', label: '🏆 All-Time' },
@@ -119,7 +131,10 @@ export function openLeaderboardsModal() {
   const header = document.createElement('div');
   header.id = 'hx-leaderboards-header';
   header.innerHTML = `
-    <span id="hx-leaderboards-title">🏅 LEADERBOARDS</span>
+    <div id="hx-leaderboards-title-wrap">
+      <span id="hx-leaderboards-title">🏅 LEADERBOARDS</span>
+      <span id="hx-leaderboards-subtitle">Hexacore Rankings</span>
+    </div>
     <button id="hx-leaderboards-close" aria-label="Close leaderboards">✕</button>
   `;
 
