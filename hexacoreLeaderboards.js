@@ -41,20 +41,20 @@ function renderTable(entries, currentPlayer) {
   const rows = entries.slice(0, 20).map((e, i) => {
     const isYou = currentPlayer && e.player_name === currentPlayer;
     const style = isYou ? 'color:#f59e0b;font-weight:bold' : '';
-    return `<tr style="${style}">
-      <td style="padding:0.2rem 0.5rem;opacity:0.5">${i + 1}</td>
-      <td style="padding:0.2rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}${isYou ? ' 👈' : ''}</td>
-      <td style="padding:0.2rem 0.5rem;color:${isYou ? '#f59e0b' : '#4cc9f0'};font-weight:700">${(e.score || 0).toLocaleString()}</td>
+    return `<tr class="hx-lb-row" style="${style}">
+      <td style="padding:0.35rem 0.5rem;opacity:0.5;width:2rem">${i + 1}</td>
+      <td class="hx-lb-player-name" style="padding:0.35rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}${isYou ? ' 👈' : ''}</td>
+      <td style="padding:0.35rem 0.5rem;color:${isYou ? '#f59e0b' : '#4cc9f0'};font-weight:700;text-align:right">${(e.score || 0).toLocaleString()}</td>
     </tr>`;
   }).join('');
 
   return `
     <table style="width:100%;border-collapse:collapse">
       <thead>
-        <tr style="font-size:0.72rem;opacity:0.5;text-transform:uppercase">
-          <th style="padding:0.2rem 0.5rem">#</th>
-          <th style="padding:0.2rem 0.5rem">Player</th>
-          <th style="padding:0.2rem 0.5rem">Score</th>
+        <tr style="opacity:0.5;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.14)">
+          <th style="padding:0.35rem 0.5rem;text-align:left;font-weight:normal">#</th>
+          <th style="padding:0.35rem 0.5rem;text-align:left;font-weight:normal">Player</th>
+          <th style="padding:0.35rem 0.5rem;text-align:right;font-weight:normal">Score</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>

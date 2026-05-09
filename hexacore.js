@@ -3549,10 +3549,10 @@ async function loadLeaderboard(submitResult) {
       ? 'color:#f59e0b;font-weight:bold'
       : '';
     return `
-    <tr style="${rowStyle}">
-      <td style="padding:0.15rem 0.5rem;opacity:0.5">${i + 1}</td>
-      <td style="padding:0.15rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}</td>
-      <td style="padding:0.15rem 0.5rem;color:${isCurrentPlayer ? '#f59e0b' : '#4cc9f0'};font-weight:700">${e.score}</td>
+    <tr class="hx-lb-row" style="${rowStyle}">
+      <td style="padding:0.35rem 0.5rem;opacity:0.5;width:2rem">${i + 1}</td>
+      <td class="hx-lb-player-name" style="padding:0.35rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}</td>
+      <td style="padding:0.35rem 0.5rem;color:${isCurrentPlayer ? '#f59e0b' : '#4cc9f0'};font-weight:700;text-align:right">${e.score.toLocaleString()}</td>
     </tr>`;
   }).join('');
 
@@ -3573,10 +3573,10 @@ async function loadLeaderboard(submitResult) {
   area.innerHTML = `
     <table style="width:100%;border-collapse:collapse;margin-top:0.4rem">
       <thead>
-        <tr style="font-size:0.72rem;opacity:0.5;text-transform:uppercase">
-          <th style="padding:0.15rem 0.5rem">#</th>
-          <th style="padding:0.15rem 0.5rem">Player</th>
-          <th style="padding:0.15rem 0.5rem">Score</th>
+        <tr style="opacity:0.5;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.14)">
+          <th style="padding:0.35rem 0.5rem;text-align:left;font-weight:normal">#</th>
+          <th style="padding:0.35rem 0.5rem;text-align:left;font-weight:normal">Player</th>
+          <th style="padding:0.35rem 0.5rem;text-align:right;font-weight:normal">Score</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -3903,10 +3903,10 @@ export function stopHexacore() {
       if (isCurrentPlayer) playerRank = i + 1;
       const rowStyle = isCurrentPlayer ? 'color:#f59e0b;font-weight:bold' : '';
       return `
-        <tr style="${rowStyle}">
-          <td style="padding:0.15rem 0.5rem;opacity:0.5">${i + 1}</td>
-          <td style="padding:0.15rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}</td>
-          <td style="padding:0.15rem 0.5rem;color:${isCurrentPlayer ? '#f59e0b' : '#4cc9f0'};font-weight:700">${e.score}</td>
+        <tr class="hx-lb-row" style="${rowStyle}">
+          <td style="padding:0.35rem 0.5rem;opacity:0.5;width:2rem">${i + 1}</td>
+          <td class="hx-lb-player-name" style="padding:0.35rem 0.5rem">${escapeHtml(e.player_name || 'Anonymous')}</td>
+          <td style="padding:0.35rem 0.5rem;color:${isCurrentPlayer ? '#f59e0b' : '#4cc9f0'};font-weight:700;text-align:right">${e.score.toLocaleString()}</td>
         </tr>`;
     }).join('');
 
@@ -3919,10 +3919,10 @@ export function stopHexacore() {
     area.innerHTML = `
       <table style="width:100%;border-collapse:collapse;margin-top:0.4rem">
         <thead>
-          <tr style="font-size:0.72rem;opacity:0.5;text-transform:uppercase">
-            <th style="padding:0.15rem 0.5rem">#</th>
-            <th style="padding:0.15rem 0.5rem">Player</th>
-            <th style="padding:0.15rem 0.5rem">Score</th>
+          <tr style="opacity:0.5;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.14)">
+            <th style="padding:0.35rem 0.5rem;text-align:left;font-weight:normal">#</th>
+            <th style="padding:0.35rem 0.5rem;text-align:left;font-weight:normal">Player</th>
+            <th style="padding:0.35rem 0.5rem;text-align:right;font-weight:normal">Score</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
