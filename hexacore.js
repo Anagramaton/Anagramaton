@@ -1352,7 +1352,6 @@ function applyLevelTwoRewards() {
     );
     if (eligible.length === 0) return null;
     const target = eligible[Math.floor(Math.random() * eligible.length)];
-    if (target.tileType === 'digraph') _hxClearTileType(target);
     target.tileType = targetType;
     if (targetType === 'prism') _hxRegisterTile(target, hxState.prismTiles);
     else if (targetType === 'rune') _hxRegisterTile(target, hxState.runeTiles);
