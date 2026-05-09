@@ -3827,8 +3827,9 @@ export function stopHexacore() {
   document.getElementById('hx-challenges-modal')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
-  hxSvg = document.getElementById('hex-grid');
-  if (hxSvg) hxSvg.innerHTML = '';
+  const gridSvg = document.getElementById('hex-grid');
+  if (gridSvg) gridSvg.innerHTML = '';
+  hxSvg = null;
   hxTileMap = new Map();
   hxUpdateViewForBoard = null;
 
