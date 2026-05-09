@@ -76,6 +76,14 @@
   #howto-modal .rom__dialog { max-height: 92vh; }
 }
 
+/* ── Hexacore settings/leaderboards scroll on mobile ─────────────── */
+@media (max-width: 640px) {
+  #hx-settings-box,
+  #hx-leaderboards-box {
+    max-width: 100vw;
+  }
+}
+
 /* ── Panels ─────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   #left-panel .panel-content,

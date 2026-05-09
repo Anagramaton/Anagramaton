@@ -18,6 +18,10 @@
   --hx-purple-alpha-30: rgba(167, 139, 250, 0.3);
   --hx-glass-bg:        linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(130, 80, 255, 0.07));
   --hx-glass-border:    rgba(255, 255, 255, 0.15);
+  --hx-ui-font-family:  'Black Han Sans', sans-serif;
+  --hx-ui-font-size:    clamp(0.75rem, 1.4vw, 1rem);
+  --hx-ui-font-weight:  400;
+  --hx-ui-letter-spacing: 0.15em;
 }
 
 /* ── Ember tile — INFERNO (unmistakably unique fire) ── */
@@ -586,10 +590,10 @@ body.hx-active #right-panel-title    { display: none; }
 #hx-level-hud {
   position: relative;
   isolation: isolate;
-  font-family: 'Orbitron', 'Black Han Sans', sans-serif;
-  font-size: clamp(0.88rem, 1.8vw, 1.08rem);
-  font-weight: 700;
-  letter-spacing: 0.28em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   text-transform: uppercase;
   color: #f8fbff;
   background:
@@ -735,7 +739,11 @@ body.hx-active #right-panel-title    { display: none; }
   max-width: 440px;
   width: 90%;
   color: #f1f5f9;
-  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
   text-align: center;
   box-shadow:
     0 0 40px rgba(76,201,240,0.35),
@@ -766,7 +774,7 @@ body.hx-active #right-panel-title    { display: none; }
   animation: hx-gameover-score-pulse 1.5s ease-in-out infinite;
 }
 #hx-gameover-box .hx-stats {
-  font-size: 0.85rem;
+  font-size: var(--hx-ui-font-size);
   opacity: 0.75;
   margin-bottom: 1.25rem;
 }
@@ -780,8 +788,10 @@ body.hx-active #right-panel-title    { display: none; }
   background: rgba(76,201,240,0.1);
   color: #f1f5f9;
   font-family: inherit;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
+  font-size: var(--hx-ui-font-size);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  font-weight: var(--hx-ui-font-weight);
+  text-transform: uppercase;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   position: relative;
@@ -2981,8 +2991,8 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     linear-gradient(135deg, rgba(15,15,30,0.98), rgba(25,10,40,0.97));
   border: 1.5px solid rgba(76,201,240,0.45);
   border-radius: 20px;
-  width: min(440px, 96vw);
-  max-height: 82vh;
+  width: min(580px, 96vw);
+  max-height: 88vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -2990,7 +3000,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     0 0 50px rgba(76,201,240,0.18),
     0 20px 60px rgba(0,0,0,0.75),
     inset 0 1px 0 rgba(255,255,255,0.08);
-  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: relative;
@@ -3005,10 +3019,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 
 #hx-leaderboards-title {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   color: #f1f5f9;
+  text-transform: uppercase;
 }
 
 #hx-leaderboards-close {
@@ -3038,9 +3053,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   border: none;
   border-bottom: 2px solid transparent;
   color: rgba(255,255,255,0.45);
-  font-family: 'Turret Road', 'Orbitron', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.06em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
   white-space: nowrap;
@@ -3055,10 +3072,29 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 
 #hx-leaderboards-content {
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 0.8rem 1rem;
   flex: 1;
-  font-size: 0.82rem;
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   color: #e2e8f0;
+}
+
+/* Leaderboard table row dividers */
+.hx-lb-row td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 0.45rem 0.5rem;
+}
+.hx-lb-row:last-child td {
+  border-bottom: none;
+}
+
+/* Preserve original player name casing */
+.hx-lb-player-name {
+  text-transform: none;
 }
 
 /* ── Mode Select Modal ───────────────────────────────────────────── */
@@ -3808,7 +3844,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 #hx-settings-box {
   position: relative;
   width: min(600px, 100%);
-  height: min(780px, 94vh);
+  height: min(860px, 94vh);
   display: flex;
   flex-direction: column;
   background:
@@ -3822,6 +3858,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     0 20px 60px rgba(0, 0, 0, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
   overflow: hidden;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
@@ -3851,10 +3892,10 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 
 #hx-settings-title {
   display: block;
-  font-family: 'Black Han Sans', 'Orbitron', sans-serif;
-  font-size: clamp(1.1rem, 3vw, 1.5rem);
-  font-weight: 400;
-  letter-spacing: 0.18em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   color: #4cc9f0;
   line-height: 1.15;
   text-shadow: 0 0 18px rgba(76, 201, 240, 0.5);
@@ -3862,9 +3903,10 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 
 #hx-settings-subtitle {
   display: block;
-  font-family: 'Turret Road', 'Orbitron', monospace;
-  font-size: clamp(0.55rem, 1.2vw, 0.7rem);
-  letter-spacing: 0.28em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   color: rgba(196, 181, 253, 0.7);
   text-transform: uppercase;
 }
@@ -3904,10 +3946,10 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   border: none;
   border-bottom: 3px solid transparent;
   color: rgba(196, 181, 253, 0.55);
-  font-family: 'Turret Road', 'Orbitron', monospace;
-  font-size: clamp(0.55rem, 1.1vw, 0.68rem);
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   text-transform: uppercase;
   cursor: pointer;
   padding: 0.6rem 0.4rem 0.5rem;
@@ -3940,6 +3982,9 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 #hx-settings-content {
   flex: 1 1 0;
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: rgba(76, 201, 240, 0.3) transparent;
 }
@@ -3953,19 +3998,20 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 
 .hx-cfg-section-title {
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
-  font-weight: 400;
-  letter-spacing: 0.12em;
+  font-family: var(--hx-ui-font-family);
+  font-size: 2rem;
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   color: #e2d9ff;
   margin: 0 0 0.3rem;
 }
 
 .hx-cfg-section-desc {
-  font-size: 0.78rem;
+  font-size: 1.5rem;
   color: rgba(196, 181, 253, 0.65);
   margin: 0 0 0.9rem;
   line-height: 1.5;
+  text-transform: none;
 }
 
 /* Footer */
@@ -3984,9 +4030,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 6px;
   color: rgba(196, 181, 253, 0.75);
-  font-family: 'Turret Road', 'Orbitron', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
   cursor: pointer;
   padding: 0.45rem 0.75rem;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
@@ -4039,17 +4087,19 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 
 .hx-cfg-mode-title {
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   color: var(--hx-mode-color, #e2d9ff);
+  text-transform: uppercase;
 }
 
 .hx-cfg-mode-desc {
-  font-size: 0.72rem;
+  font-size: 1.5rem;
   color: rgba(196, 181, 253, 0.6);
   line-height: 1.4;
+  text-transform: none;
 }
 
 .hx-cfg-mode-arrow {
@@ -4072,10 +4122,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   border: 1.5px solid rgba(76, 201, 240, 0.35);
   border-radius: 8px;
   color: #4cc9f0;
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
   cursor: pointer;
   padding: 0.75rem 1rem;
   margin-bottom: 0.85rem;
@@ -4095,10 +4146,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   color: rgba(196, 181, 253, 0.75);
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
   cursor: pointer;
   padding: 0.65rem 1rem;
   margin-bottom: 0.6rem;
@@ -4112,10 +4164,11 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 
 /* ── Preview / info boxes ────────────────────────────────────────── */
 .hx-cfg-preview-note {
-  font-size: 0.75rem;
+  font-size: 1.5rem;
   color: rgba(196, 181, 253, 0.58);
   line-height: 1.55;
   margin: 0 0 0.75rem;
+  text-transform: none;
 }
 
 .hx-cfg-quest-tips {
@@ -4126,9 +4179,10 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   gap: 0.35rem;
 }
 .hx-cfg-quest-tips li {
-  font-size: 0.75rem;
+  font-size: 1.5rem;
   color: rgba(196, 181, 253, 0.65);
   line-height: 1.45;
+  text-transform: none;
 }
 
 /* ── Leaderboard tab-info row ────────────────────────────────────── */
@@ -4147,10 +4201,12 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 7px;
   padding: 0.55rem 0.3rem;
-  font-family: 'Turret Road', monospace;
-  font-size: 0.6rem;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
   color: rgba(196, 181, 253, 0.7);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
 }
 .hx-cfg-lb-tab-item span:first-child { font-size: 1.1rem; }
 
@@ -4170,17 +4226,21 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   flex-shrink: 0;
 }
 .hx-cfg-profile-name {
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: clamp(0.85rem, 2vw, 1.05rem);
-  letter-spacing: 0.1em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   color: #e2d9ff;
   margin-bottom: 2px;
+  text-transform: uppercase;
 }
 .hx-cfg-profile-level {
-  font-family: 'Turret Road', monospace;
-  font-size: 0.7rem;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
   color: #c084fc;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--hx-ui-letter-spacing);
+  text-transform: uppercase;
 }
 
 /* ── How To highlights ───────────────────────────────────────────── */
@@ -4206,20 +4266,35 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 .hx-cfg-howto-card strong {
   display: block;
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  font-family: var(--hx-ui-font-family);
+  font-size: var(--hx-ui-font-size);
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: var(--hx-ui-letter-spacing);
   color: #c4b5fd;
   margin-bottom: 3px;
+  text-transform: uppercase;
 }
 .hx-cfg-howto-card p {
   margin: 0;
-  font-size: 0.68rem;
+  font-size: 1.5rem;
   color: rgba(196, 181, 253, 0.58);
   line-height: 1.45;
+  text-transform: none;
 }
 
 /* ── Responsive ──────────────────────────────────────────────────── */
+
+/* ── Tablet & small desktop (≤900 px) ───────────────────────────── */
+@media (min-width: 769px) and (max-width: 900px) {
+  #hx-settings-box {
+    width: min(580px, 96vw);
+    height: min(760px, 94vh);
+  }
+  #hx-leaderboards-box {
+    width: min(460px, 96vw);
+    max-height: 86vh;
+  }
+}
 
 /* ── Small tablet (600–768 px) ──────────────────────────────── */
 @media (min-width: 601px) and (max-width: 768px) {
@@ -4240,7 +4315,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
   #hx-settings-box {
     width: 100%;
-    height: min(680px, 94vh);
+    height: min(840px, 96vh);
     border-radius: 14px 14px 0 0;  /* bottom-sheet style */
   }
   #hx-settings-header {
@@ -4265,10 +4340,54 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
     min-height: 40px;
   }
   .hx-cfg-section-title {
-    font-size: 0.9rem;
+    font-size: 1.4rem;
+  }
+  .hx-cfg-section-desc,
+  .hx-cfg-preview-note,
+  .hx-cfg-quest-tips li,
+  .hx-cfg-howto-card p,
+  .hx-cfg-mode-desc {
+    font-size: 1.1rem;
   }
   .hx-cfg-lb-tabs-info {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Mobile (≤640 px) ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  #hx-settings-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+  #hx-settings-box {
+    width: 100%;
+    height: min(840px, 96vh);
+    border-radius: 14px 14px 0 0;
+  }
+  #hx-settings-content {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  #hx-leaderboards-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+  #hx-leaderboards-box {
+    width: 100%;
+    border-radius: 14px 14px 0 0;
+    max-height: 84vh;
+  }
+}
+
+/* ── Mobile (≤430 px) ───────────────────────────────────────────── */
+@media (max-width: 430px) {
+  #hx-settings-box {
+    height: min(820px, 96vh);
+  }
+  #hx-leaderboards-box {
+    max-height: 88vh;
   }
 }
 
