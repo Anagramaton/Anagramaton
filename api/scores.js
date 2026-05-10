@@ -46,7 +46,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid or expired dailyId' });
     }
     if (mode === 'hexacore_daily') {
-      if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(dailyId))) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(String(dailyId))) {
         return res.status(400).json({ error: 'Invalid hexacore_daily date format' });
       }
       const submittedDay = new Date(`${dailyId}T00:00:00Z`);
