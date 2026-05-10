@@ -39,8 +39,6 @@ import { getXPData }             from './hexacoreXP.js';
     const MODES = [
       { id: 'endless',  icon: '🔥', title: 'ENDLESS',  color: '#f97316',
         desc: 'Survive the ember. Score as high as you can with no limits.' },
-      { id: 'zen',      icon: '🌿', title: 'ZEN MODE', color: '#22c55e',
-        desc: 'No ember tiles. Relax and build words at your own pace.' },
       { id: 'daily',    icon: '📅', title: 'DAILY',    color: '#4cc9f0',
         desc: 'A fresh challenge every day. Compete for the daily top score.' },
       { id: 'campaign', icon: '⚔️', title: 'CAMPAIGN', color: '#a855f7',

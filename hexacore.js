@@ -60,9 +60,10 @@ const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000,
 /* ── localStorage save keys ────────────────────────────────────── */
 const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
+const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
-let hxGameMode = 'endless'; // 'endless' | 'zen' | 'daily' | 'campaign'
+let hxGameMode = 'endless'; // 'endless' | 'daily' | 'campaign'
 let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
 /* ── Gem tile type set (module-level for shared use) ───────────── */
@@ -94,6 +95,35 @@ const BEACON_UNLOCK_SCORE          = 10000;  // 10,000+ pts single word → Beac
 const ECLIPSE_UNLOCK_PORTAL_WORDS  = 3;      // portal used in 3+ words → Eclipse spawns
 const LODESTONE_UNLOCK_GEM_TYPES   = 5;      // 5 different gem types in one word → Lodestone spawns
 const LEXICON_UNLOCK_WORDS         = 100;    // 100 total words submitted → Lexicon spawns
+
+const HX_ACHIEVEMENT_TILE_ORDER = ['oracle', 'beacon', 'eclipse', 'lodestone', 'lexicon'];
+const HX_ACHIEVEMENT_TILE_META = {
+  oracle: {
+    label: 'Oracle',
+    letter: 'O',
+    intro: 'Achievement tile "O": use it in a 5+ letter word to gain Oracle Sight.',
+  },
+  beacon: {
+    label: 'Beacon',
+    letter: 'B',
+    intro: 'Achievement tile "B": use it in a 5+ letter word to gain Beacon Burst.',
+  },
+  eclipse: {
+    label: 'Eclipse',
+    letter: 'E',
+    intro: 'Achievement tile "E": use it in a 5+ letter word to invert letter values once.',
+  },
+  lodestone: {
+    label: 'Lodestone',
+    letter: 'L',
+    intro: 'Achievement tile "L": use it in a 5+ letter word to boost your next gem bonus.',
+  },
+  lexicon: {
+    label: 'Lexicon',
+    letter: 'X',
+    intro: 'Achievement tile "X": use it in a 5+ letter word to reveal top scoring words.',
+  },
+};
 
 /* ── Achievement power-up timing constants ─────────────────────── */
 const ORACLE_HIGHLIGHT_DURATION_MS   = 5000;  // ms tiles stay highlighted by Oracle
@@ -324,6 +354,12 @@ let pendingDigraphComplements = new Map();
 let hxPointerCleanup    = null;
 let hxUpdateViewForBoard = null;
 let hxCompletedReqs     = new Set(); // IDs of completed requirements (persists across games)
+let hxIntroducedTileTypes = new Set();
+let hxQueuedTileIntros    = new Set();
+let hxPendingTutorialModals = [];
+let hxTutorialQueueRunning = false;
+let hxTutorialModalOpen    = false;
+let hxAchievementLettersCollected = new Set();
 
 // Power-up targeting mode state
 let hxAmethystTargeting  = false; // true when waiting for tile tap to transmute
@@ -776,6 +812,7 @@ function applyTileType(tile) {
   tile.element.querySelector('.hx-type-icon')?.remove();
   // Reset letter font size (may have been reduced for digraph)
   tile.textLetter.setAttribute('font-size', '28');
+  tile.textLetter.classList.remove('hx-achievement-tile-letter');
 
   if (tile.tileType === 'digraph') {
     poly.classList.add('hx-digraph');
@@ -820,23 +857,28 @@ function applyTileType(tile) {
     poly.classList.add('hx-selenite');
   } else if (tile.tileType === 'oracle') {
     poly.classList.add('hx-oracle');
-    tile.textLetter.textContent = '⊙';
+    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.oracle.letter;
+    tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'beacon') {
     poly.classList.add('hx-beacon');
-    tile.textLetter.textContent = '◆';
+    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.beacon.letter;
+    tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'eclipse') {
     poly.classList.add('hx-eclipse');
-    tile.textLetter.textContent = '☽';
+    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.eclipse.letter;
+    tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'lodestone') {
     poly.classList.add('hx-lodestone');
-    tile.textLetter.textContent = '⬡';
+    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.lodestone.letter;
+    tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'lexicon') {
     poly.classList.add('hx-lexicon');
-    tile.textLetter.textContent = '∞';
+    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.lexicon.letter;
+    tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   }
 }
@@ -1420,11 +1462,6 @@ function checkLevelUp(oldScore, newScore) {
   if (leveled) {
     updateLevelHud();
     showLevelUpBanner(hxState.level);
-    // Spawn 2 embers as a level-up hazard surge (not in zen mode)
-    if (hxGameMode !== 'zen') {
-      spawnSpecialInRows('ember', [-GRID_RADIUS]);
-      spawnSpecialInRows('ember', [-GRID_RADIUS]);
-    }
   }
 }
 
@@ -1471,18 +1508,17 @@ function showLevelUpBanner(level) {
 
   banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => {
     banner.remove();
-    if (newLevel === 2) applyLevelTwoRewards();
+    applyLevelUpRewards();
   });
 }
 
 /**
- * Fires after the player dismisses the Level 2 banner.
- * Sequentially: convert 1 tile → prism, 1 tile → rune,
- * add 1 amethyst, add 1 selenite, open a portal — each
- * with a brief one-line description toast.
+ * Fires after the player dismisses the Level-Up banner (every level).
+ * Converts up to 2 basic/Emerald tiles → Prism, 1 → Rune,
+ * 1 → Lodestone, 1 → Amethyst, and opens a Portal if one isn't active.
  */
-function applyLevelTwoRewards() {
-  const DELAY = 1800; // ms between each reward step
+function applyLevelUpRewards() {
+  const DELAY = 1200; // ms between each reward step (stagger so each is visible)
 
   function showRewardToast(msg, icon) {
     document.getElementById('hx-lv2-reward-toast')?.remove();
@@ -1519,55 +1555,77 @@ function applyLevelTwoRewards() {
     }, DELAY - 300);
   }
 
-  function convertRandomTile(excludeTile, targetType) {
+  // Eligible tiles: normal or Emerald gem, not a portal tile
+  const converted = [];
+  function pickEligibleTile() {
     const eligible = hxState.tiles.filter(
-      t => t.tileType === 'normal' && !isPortalTile(t) && t !== excludeTile,
+      t => (t.tileType === 'normal' || t.tileType === 'gemEmerald')
+        && !isPortalTile(t)
+        && !converted.includes(t),
     );
     if (eligible.length === 0) return null;
-    const target = eligible[Math.floor(Math.random() * eligible.length)];
-    target.tileType = targetType;
-    if (targetType === 'prism') _hxRegisterTile(target, hxState.prismTiles);
-    else if (targetType === 'rune') _hxRegisterTile(target, hxState.runeTiles);
-    applyTileType(target);
-    target.element.classList.add(`hx-${targetType}-spawn`);
-    target.element.addEventListener('animationend', () => {
-      target.element.classList.remove(`hx-${targetType}-spawn`);
-    }, { once: true });
-    return target;
+    return eligible[Math.floor(Math.random() * eligible.length)];
   }
 
-  // Step 1 — Prism tile
-  let prismTile = null;
+  function convertTile(tile, targetType) {
+    if (!tile) return;
+    _hxClearTileType(tile);
+    tile.tileType = targetType;
+    if (targetType === 'prism')     _hxRegisterTile(tile, hxState.prismTiles);
+    else if (targetType === 'rune') _hxRegisterTile(tile, hxState.runeTiles);
+    else if (targetType === 'lodestone') _hxRegisterTile(tile, hxState.lodestoneTiles);
+    else if (targetType === 'amethyst')  _hxRegisterTile(tile, hxState.amethystTiles);
+    applyTileType(tile);
+    enqueueTileIntroduction(tile);
+    tile.element.classList.add(`hx-${targetType}-spawn`);
+    tile.element.addEventListener('animationend', () => {
+      tile.element.classList.remove(`hx-${targetType}-spawn`);
+    }, { once: true });
+    converted.push(tile);
+  }
+
+  // Step 1 — Prism #1
   setTimeout(() => {
-    prismTile = convertRandomTile(null, 'prism');
-    showRewardToast('Prism Tile: Boosts XP and doubles points for any word it touches.', '🔷');
+    const t = pickEligibleTile();
+    convertTile(t, 'prism');
+    showRewardToast('Prism Tile: doubles the score of any word it joins!', '🔷');
   }, 0);
 
-  // Step 2 — Rune tile
+  // Step 2 — Prism #2
   setTimeout(() => {
-    convertRandomTile(prismTile, 'rune');
-    showRewardToast('Rune Tile: Acts as a wild card — it can be any letter you need.', '🔮');
+    const t = pickEligibleTile();
+    convertTile(t, 'prism');
+    showRewardToast('Another Prism Tile added!', '🔷');
   }, DELAY);
 
-  // Step 3 — Amethyst
+  // Step 3 — Rune
   setTimeout(() => {
-    hxState.amethystCount++;
-    updatePowerUpBar();
-    showRewardToast('Amethyst: Tap it to transmute any tile\'s letter into one of your choice.', '💜');
+    const t = pickEligibleTile();
+    convertTile(t, 'rune');
+    showRewardToast('Rune Tile: a wildcard — any letter you need.', '🔮');
   }, DELAY * 2);
 
-  // Step 4 — Selenite
+  // Step 4 — Portal (skip if already open)
   setTimeout(() => {
-    hxState.seleniteCount++;
-    updatePowerUpBar();
-    showRewardToast('Selenite: Tap it to instantly swap any two tiles on the board.', '🌙');
+    if (!hxState.portalOpen) {
+      openPortal();
+      showRewardToast('Portal: trace through one corner tile to link to the other!', '🌀');
+    }
   }, DELAY * 3);
 
-  // Step 5 — Portal
+  // Step 5 — Lodestone
   setTimeout(() => {
-    openPortal();
-    showRewardToast('Portal: Two linked corner tiles — trace through one to teleport to the other.', '🌀');
+    const t = pickEligibleTile();
+    convertTile(t, 'lodestone');
+    showRewardToast('Lodestone: boosts gem scoring for your next word!', '⬡');
   }, DELAY * 4);
+
+  // Step 6 — Amethyst
+  setTimeout(() => {
+    const t = pickEligibleTile();
+    convertTile(t, 'amethyst');
+    showRewardToast("Amethyst: transmute any tile's letter into one of your choice!", '💜');
+  }, DELAY * 5);
 }
 
 function showRestoredBanner(level, score) {
@@ -1652,7 +1710,7 @@ function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
   // Mode colors matching the mode-select screen
-  const HX_MODE_COLORS = { endless: '#f97316', zen: '#22c55e', daily: '#4cc9f0', campaign: '#a855f7' };
+  const HX_MODE_COLORS = { endless: '#f97316', daily: '#4cc9f0', campaign: '#a855f7' };
 
   // Score HUD — split into number + label spans, with a small mode color dot
   const hud = document.createElement('div');
@@ -3284,47 +3342,44 @@ function findTopWordsOnBoard(n) {
 
 /**
  * Checks if any achievement has been unlocked by the current word.
+ * An achievement tile spawns whenever its condition is met, as long as
+ * a tile of that type is NOT already on the board (no stacking).
  * Returns array of { tileName, description } for spawned tiles.
  */
 function checkAchievementRewards(word, consumed, wordScore, portalUsed) {
   const spawned = [];
 
-  // 1. Oracle — 9-letter word
-  if (!hxState.achievements.oracleAwarded && word.length >= ORACLE_UNLOCK_WORD_LENGTH) {
-    hxState.achievements.oracleAwarded = true;
+  // 1. Oracle — 9-letter word; re-spawns once the previous one is collected
+  if (hxState.oracleTiles.length === 0 && word.length >= ORACLE_UNLOCK_WORD_LENGTH) {
     spawnSpecialInRows('oracle', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-    spawned.push({ tileName: 'ORACLE ⊙', description: 'Longest Word Hunter! Use it in a 5+ letter word to collect.' });
+    spawned.push({ tileName: 'ORACLE O', description: 'Longest Word Hunter! Use it in a 5+ letter word to collect.' });
   }
 
-  // 2. Beacon — 10,000+ point single word
-  if (!hxState.achievements.beaconAwarded && wordScore >= BEACON_UNLOCK_SCORE) {
-    hxState.achievements.beaconAwarded = true;
+  // 2. Beacon — 10,000+ point single word; re-spawns once the previous one is collected
+  if (hxState.beaconTiles.length === 0 && wordScore >= BEACON_UNLOCK_SCORE) {
     spawnSpecialInRows('beacon', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-    spawned.push({ tileName: 'BEACON ◆', description: 'Score Master! Use it in a 5+ letter word to collect.' });
+    spawned.push({ tileName: 'BEACON B', description: 'Score Master! Use it in a 5+ letter word to collect.' });
   }
 
-  // 3. Eclipse — portal used in 3 different words (cumulative)
-  if (!hxState.achievements.eclipseAwarded && portalUsed && hxState.achievements.portalWordsUsed >= ECLIPSE_UNLOCK_PORTAL_WORDS) {
-    hxState.achievements.eclipseAwarded = true;
+  // 3. Eclipse — portal used in 3 different words; re-spawns once the previous one is collected
+  if (hxState.eclipseTiles.length === 0 && portalUsed && hxState.achievements.portalWordsUsed >= ECLIPSE_UNLOCK_PORTAL_WORDS) {
     spawnSpecialInRows('eclipse', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-    spawned.push({ tileName: 'ECLIPSE ☽', description: 'Portal Traveler! Use it in a 5+ letter word to collect.' });
+    spawned.push({ tileName: 'ECLIPSE E', description: 'Portal Traveler! Use it in a 5+ letter word to collect.' });
   }
 
-  // 4. Lodestone — 5 different gem types in one word
-  if (!hxState.achievements.lodestoneAwarded) {
+  // 4. Lodestone — 5 different gem types in one word; re-spawns once the previous one is collected
+  if (hxState.lodestoneTiles.length === 0) {
     const uniqueGemTypes = new Set(consumed.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType));
     if (uniqueGemTypes.size >= LODESTONE_UNLOCK_GEM_TYPES) {
-      hxState.achievements.lodestoneAwarded = true;
       spawnSpecialInRows('lodestone', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-      spawned.push({ tileName: 'LODESTONE ⬡', description: 'Gem Collector! Use it in a 5+ letter word to collect.' });
+      spawned.push({ tileName: 'LODESTONE L', description: 'Gem Collector! Use it in a 5+ letter word to collect.' });
     }
   }
 
-  // 5. Lexicon — 100 total words submitted this session
-  if (!hxState.achievements.lexiconAwarded && hxState.wordsSubmitted >= LEXICON_UNLOCK_WORDS) {
-    hxState.achievements.lexiconAwarded = true;
+  // 5. Lexicon — 100 total words submitted; re-spawns once the previous one is collected
+  if (hxState.lexiconTiles.length === 0 && hxState.wordsSubmitted >= LEXICON_UNLOCK_WORDS) {
     spawnSpecialInRows('lexicon', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-    spawned.push({ tileName: 'LEXICON ∞', description: 'Endurance Master! Use it in a 5+ letter word to collect. One-time use.' });
+    spawned.push({ tileName: 'LEXICON X', description: 'Endurance Master! Use it in a 5+ letter word to collect.' });
   }
 
   return spawned;
@@ -3778,6 +3833,7 @@ async function submitHexacoreWord() {
       updatePowerUpBar();
       pendingPowerUpToasts.push('lexicon');
     }
+    enqueueCollectedTileModals(consumed);
   }
 
   // Check achievement rewards (spawns new achievement tiles)
@@ -3830,8 +3886,8 @@ async function submitHexacoreWord() {
     // Fire bonus mirrors word reward
     if (hasEmber) spawnGemRewardForWord(word.length);
     spawnSpecialTiles();
-    // Also spawn an ember on any 6+ letter word (not in zen mode)
-    if (word.length >= 6 && hxGameMode !== 'zen') {
+    // Also spawn an ember on any 6+ letter word
+    if (word.length >= 6) {
       spawnSpecialInRows('ember', [-GRID_RADIUS]);
     }
 
@@ -3841,6 +3897,7 @@ async function submitHexacoreWord() {
       openPortal();
     }
 
+    await maybeRunTutorialModalQueue();
     saveHexacoreProgress();
   }
 }
@@ -4050,6 +4107,7 @@ async function refillGrid() {
       } else {
         tile.tileType = 'normal';
       }
+      enqueueTileIntroduction(tile);
       tile.s        = -q - r;
 
       hxState.tiles.push(tile);
@@ -4143,6 +4201,7 @@ function transformTileToGem(tile, gemType) {
   tile.tileType = gemType;
   _hxRegisterTile(tile, hxState[GEM_STATE_KEY[gemType]]);
   applyTileType(tile);
+  enqueueTileIntroduction(tile);
   const spawnClass = GEM_SPAWN_CLASS[gemType];
   tile.element.classList.add(spawnClass);
   tile.element.addEventListener('animationend', () => {
@@ -4216,12 +4275,9 @@ function spawnGemRewardForWord(wordLength) {
 
 /* ── Special tile spawning ─────────────────────────────────────── */
 function spawnSpecialTiles() {
-  // Zen mode: skip all ember spawns
-  if (hxGameMode !== 'zen') {
-    // Every 3 words → 1 new ember in top row
-    if (hxWordCount % 3 === 0) {
-      spawnSpecialInRows('ember', [-GRID_RADIUS]);
-    }
+  // Every 3 words → 1 new ember in top row
+  if (hxWordCount % 3 === 0) {
+    spawnSpecialInRows('ember', [-GRID_RADIUS]);
   }
   // Random interval (4–6 words) → 1 new prism in top 3 rows
   if (hxWordCount >= hxNextPrismSpawn) {
@@ -4270,6 +4326,7 @@ function spawnSpecialInRows(type, rows) {
     _hxRegisterTile(target, hxState.digraphTiles);
   }
   applyTileType(target);
+  enqueueTileIntroduction(target);
 
   // Dramatic entrance animation for the newly spawned special tile
   const spawnClass = `hx-${type}-spawn`;
@@ -4286,6 +4343,7 @@ function triggerGameOver() {
   hxState.active   = false;
 
   window.removeEventListener('beforeunload', saveHexacoreProgress);
+  window.removeEventListener('pagehide',     saveHexacoreProgress);
   clearHexacoreSave();
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
   cancelAmethystTargeting();
@@ -4469,6 +4527,297 @@ function showAlert(msg) {
 /* ── Misc ──────────────────────────────────────────────────────── */
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+function loadHexacoreTutorialState() {
+  try {
+    const json = localStorage.getItem(HX_TUTORIAL_SAVE_KEY);
+    if (!json) return [];
+    const parsed = JSON.parse(json);
+    if (Array.isArray(parsed)) return parsed;
+    return Array.isArray(parsed.introduced) ? parsed.introduced : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function saveHexacoreTutorialState() {
+  try {
+    localStorage.setItem(HX_TUTORIAL_SAVE_KEY, JSON.stringify({
+      introduced: [...hxIntroducedTileTypes],
+    }));
+  } catch (_) {
+    /* ignore storage errors */
+  }
+}
+
+function getTileTypeDisplayName(tileType) {
+  if (tileType === 'normal') return 'Letter Tile';
+  if (tileType === 'digraph') return 'Digraph Tile';
+  if (tileType === 'ember') return 'Ember Tile';
+  if (tileType === 'prism') return 'Prism Tile';
+  if (tileType === 'rune') return 'Rune Tile';
+  if (tileType === 'amethyst') return 'Amethyst Tile';
+  if (tileType === 'selenite') return 'Selenite Tile';
+  if (HX_ACHIEVEMENT_TILE_META[tileType]) {
+    const meta = HX_ACHIEVEMENT_TILE_META[tileType];
+    return `${meta.label} Achievement Tile`;
+  }
+  if (tileType?.startsWith('gem')) {
+    const base = tileType.replace(/^gem/, '').replace(/([A-Z])/g, ' $1').trim();
+    return `${base} Gem Tile`;
+  }
+  return `${tileType} Tile`;
+}
+
+function getTileIntroDescription(tileType) {
+  if (tileType === 'normal') return 'Letter tiles are the core of every word you build.';
+  if (tileType === 'digraph') return 'Digraph tiles count as both letters on the same tile.';
+  if (tileType === 'ember') return 'Ember tiles advance downward each turn and can end your run.';
+  if (tileType === 'prism') return 'Prism tiles double the final score of the word they are in.';
+  if (tileType === 'rune') return 'Rune tiles are wildcards and let you choose any letter.';
+  if (tileType === 'amethyst') return 'Match Amethyst in a 5+ letter word to gain Transmute.';
+  if (tileType === 'selenite') return 'Match Selenite in a 5+ letter word to gain Phase Swap.';
+  if (HX_ACHIEVEMENT_TILE_META[tileType]) return HX_ACHIEVEMENT_TILE_META[tileType].intro;
+  if (tileType?.startsWith('gem')) {
+    const mult = GEM_MULTIPLIERS[tileType];
+    return `Gem tiles multiply score${mult ? ` (${mult}x for this gem)` : ''}.`;
+  }
+  return 'Special tiles grant unique effects when used in words.';
+}
+
+function getAchievementCollectionProgress() {
+  return HX_ACHIEVEMENT_TILE_ORDER
+    .map(type => hxAchievementLettersCollected.has(type) ? HX_ACHIEVEMENT_TILE_META[type].letter : '_')
+    .join('');
+}
+
+function findTileByType(tileType) {
+  return hxState.tiles.find(t => t.tileType === tileType) || null;
+}
+
+function hasTransientBoardAnimations() {
+  if (!hxSvg) return false;
+  if (typeof Element.prototype.getAnimations === 'function') {
+    const animated = [...hxSvg.querySelectorAll('.tile, .tile *')];
+    if (animated.some(el => el.getAnimations().some(anim => {
+      const timing = anim.effect?.getTiming?.();
+      return anim.playState === 'running' && timing?.iterations !== Infinity;
+    }))) {
+      return true;
+    }
+  }
+  return !!hxSvg.querySelector('.hx-tile-removing, [class*="-spawn"], [class*="hx-consumed-"]');
+}
+
+async function waitForBoardToSettle(maxMs = 2000) {
+  const start = performance.now();
+  while (hasTransientBoardAnimations() && performance.now() - start < maxMs) {
+    await delay(80);
+  }
+}
+
+function enqueueTutorialModal(item) {
+  hxPendingTutorialModals.push(item);
+  void maybeRunTutorialModalQueue();
+}
+
+function enqueueTileIntroduction(tile) {
+  if (!tile) return;
+  const type = tile.tileType || 'normal';
+  // Skip basic letter/digraph tiles — no intro modal needed for them
+  if (type === 'normal' || type === 'digraph') return;
+  if (hxIntroducedTileTypes.has(type) || hxQueuedTileIntros.has(type)) return;
+  hxQueuedTileIntros.add(type);
+  enqueueTutorialModal({ kind: 'intro', tileType: type, tile });
+}
+
+function enqueueCollectedTileModals(consumedTiles) {
+  if (!Array.isArray(consumedTiles) || consumedTiles.length === 0) return;
+
+  if (consumedTiles.some(t => t.tileType === 'amethyst')) {
+    enqueueTutorialModal({
+      kind: 'collection',
+      title: 'Amethyst Collected',
+      description: "You've collected an Amethyst tile and gained 1 Transmute charge.",
+      tileType: 'amethyst',
+    });
+  }
+
+  if (consumedTiles.some(t => t.tileType === 'selenite')) {
+    enqueueTutorialModal({
+      kind: 'collection',
+      title: 'Selenite Collected',
+      description: "You've collected a Selenite tile and gained 1 Phase Swap charge.",
+      tileType: 'selenite',
+    });
+  }
+
+  HX_ACHIEVEMENT_TILE_ORDER.forEach(type => {
+    if (!consumedTiles.some(t => t.tileType === type)) return;
+    hxAchievementLettersCollected.add(type);
+    const letter = HX_ACHIEVEMENT_TILE_META[type].letter;
+    const collected = hxAchievementLettersCollected.size;
+    enqueueTutorialModal({
+      kind: 'collection',
+      title: `${HX_ACHIEVEMENT_TILE_META[type].label} Collected`,
+      description: `You've collected "${letter}"! Progress: ${getAchievementCollectionProgress()} (${collected}/${HX_ACHIEVEMENT_TILE_ORDER.length})`,
+      tileType: type,
+    });
+  });
+}
+
+function queueBoardTileIntroductions() {
+  hxState.tiles.forEach(tile => enqueueTileIntroduction(tile));
+}
+
+function hasBlockingHexacoreModal() {
+  return !!(
+    document.getElementById('hx-rune-picker')
+    || document.getElementById('hx-lexicon-modal')
+    || document.getElementById('hx-challenges-modal')
+    || document.getElementById('hx-gameover-overlay')
+  );
+}
+
+function closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl) {
+  overlay.remove();
+  arrowSvg?.remove();
+  if (restoreFocusEl?.isConnected) restoreFocusEl.focus();
+  hxTutorialModalOpen = false;
+  if (!hxState.gameOver) hxState.active = wasActive;
+  resolve();
+}
+
+function showTutorialModal(item, tile) {
+  return new Promise(resolve => {
+    const wasActive = hxState.active;
+    hxState.active = false;
+    hxTutorialModalOpen = true;
+
+    // Full-screen click-blocker — transparent so the board stays fully visible
+    const overlay = document.createElement('div');
+    overlay.id = 'hx-tutorial-modal';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-labelledby', 'hx-tutorial-modal-title');
+    overlay.setAttribute('aria-describedby', 'hx-tutorial-modal-desc');
+
+    const box = document.createElement('div');
+    box.className = 'hx-tutorial-modal-box';
+
+    const title = document.createElement('h3');
+    title.id = 'hx-tutorial-modal-title';
+    title.className = 'hx-tutorial-modal-title';
+    title.textContent = item.kind === 'intro'
+      ? `${getTileTypeDisplayName(item.tileType)} Found`
+      : (item.title || 'Tile Collected');
+
+    const desc = document.createElement('p');
+    desc.id = 'hx-tutorial-modal-desc';
+    desc.className = 'hx-tutorial-modal-desc';
+    desc.textContent = item.kind === 'intro'
+      ? getTileIntroDescription(item.tileType)
+      : item.description;
+
+    const ok = document.createElement('button');
+    ok.type = 'button';
+    ok.className = 'hx-tutorial-modal-ok';
+    ok.textContent = 'OK';
+
+    // The tile is NOT highlighted or modified — it appears exactly as the player sees it.
+    let arrowSvg = null;
+
+    const restoreFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl), { once: true });
+
+    box.append(title, desc, ok);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // After layout: draw a dashed connector from the modal's top-centre to the tile centre.
+    requestAnimationFrame(() => {
+      ok.focus();
+      if (tile?.element) {
+        const tileRect = tile.element.getBoundingClientRect();
+        const boxRect  = box.getBoundingClientRect();
+        if (tileRect.width > 0 && boxRect.width > 0) {
+          const tx = tileRect.left + tileRect.width  / 2;
+          const ty = tileRect.top  + tileRect.height / 2;
+          const bx = boxRect.left  + boxRect.width   / 2;
+          const by = boxRect.top;
+
+          arrowSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          arrowSvg.setAttribute('class', 'hx-tutorial-arrow-svg');
+          arrowSvg.setAttribute('aria-hidden', 'true');
+
+          const defs   = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+          const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+          marker.setAttribute('id',          'hx-tut-tip');
+          marker.setAttribute('markerWidth',  '7');
+          marker.setAttribute('markerHeight', '7');
+          marker.setAttribute('refX',         '3.5');
+          marker.setAttribute('refY',         '3.5');
+          marker.setAttribute('orient',       'auto-start-reverse');
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('cx', '3.5');
+          dot.setAttribute('cy', '3.5');
+          dot.setAttribute('r',  '3');
+          dot.setAttribute('fill', 'rgba(76,201,240,0.9)');
+          marker.appendChild(dot);
+          defs.appendChild(marker);
+          arrowSvg.appendChild(defs);
+
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', String(bx));
+          line.setAttribute('y1', String(by));
+          line.setAttribute('x2', String(tx));
+          line.setAttribute('y2', String(ty));
+          line.setAttribute('stroke',           'rgba(76,201,240,0.65)');
+          line.setAttribute('stroke-width',     '1.5');
+          line.setAttribute('stroke-dasharray', '5,4');
+          line.setAttribute('marker-end',       'url(#hx-tut-tip)');
+          arrowSvg.appendChild(line);
+
+          document.body.appendChild(arrowSvg);
+        }
+      }
+    });
+  });
+}
+
+async function maybeRunTutorialModalQueue() {
+  if (hxTutorialQueueRunning || hxTutorialModalOpen || hxState.gameOver || !hxSvg) return;
+  if (hxPendingTutorialModals.length === 0) return;
+
+  hxTutorialQueueRunning = true;
+  try {
+    while (hxPendingTutorialModals.length > 0 && !hxState.gameOver) {
+      if (hasBlockingHexacoreModal()) {
+        await delay(120);
+        continue;
+      }
+      await waitForBoardToSettle();
+      if (hxTutorialModalOpen || hxState.gameOver) break;
+
+      const item = hxPendingTutorialModals.shift();
+      if (!item) break;
+
+      if (item.kind === 'intro') {
+        const target = hxState.tiles.includes(item.tile) ? item.tile : findTileByType(item.tileType);
+        hxQueuedTileIntros.delete(item.tileType);
+        if (!target || hxIntroducedTileTypes.has(item.tileType)) continue;
+        await showTutorialModal(item, target);
+        hxIntroducedTileTypes.add(item.tileType);
+        saveHexacoreTutorialState();
+      } else {
+        const target = item.tileType ? findTileByType(item.tileType) : null;
+        await showTutorialModal(item, target);
+      }
+    }
+  } finally {
+    hxTutorialQueueRunning = false;
+  }
+}
+
 /* ── Progress persistence ──────────────────────────────────────── */
 function saveHexacoreProgress() {
   const tiles = [];
@@ -4498,6 +4847,7 @@ function saveHexacoreProgress() {
     eclipseCount:        hxState.eclipseCount,
     lodestoneCount:      hxState.lodestoneCount,
     lexiconCount:        hxState.lexiconCount,
+    achievementLettersCollected: [...hxAchievementLettersCollected],
     eclipseActive:       hxState.eclipseActive,
     lodestoneActive:     hxState.lodestoneActive,
     achievements:        { ...hxState.achievements },
@@ -4524,6 +4874,12 @@ export function startHexacore(mode = 'endless') {
 
   // Load persisted requirements (persist across sessions and new games)
   hxCompletedReqs = new Set(loadHexacoreRequirements());
+  hxIntroducedTileTypes = new Set(loadHexacoreTutorialState());
+  hxQueuedTileIntros = new Set();
+  hxPendingTutorialModals = [];
+  hxTutorialQueueRunning = false;
+  hxTutorialModalOpen = false;
+  hxAchievementLettersCollected = new Set();
 
   // Initialise quest system
   initQuests();
@@ -4688,6 +5044,9 @@ export function startHexacore(mode = 'endless') {
       hxState.lexiconCount    = save.lexiconCount    ?? 0;
       hxState.eclipseActive   = save.eclipseActive   ?? false;
       hxState.lodestoneActive = save.lodestoneActive ?? false;
+      hxAchievementLettersCollected = new Set(
+        Array.isArray(save.achievementLettersCollected) ? save.achievementLettersCollected : [],
+      );
       if (save.achievements) {
         Object.assign(hxState.achievements, save.achievements);
       }
@@ -4700,6 +5059,8 @@ export function startHexacore(mode = 'endless') {
 
       showRestoredBanner(hxState.level, hxState.score);
     }
+    queueBoardTileIntroductions();
+    void maybeRunTutorialModalQueue();
   });
   // Ember tiles do NOT spawn at game start — only after milestone words
 
@@ -4726,6 +5087,7 @@ export function startHexacore(mode = 'endless') {
   setupPointerEvents();
   playSound('sfxUnlock');
   window.addEventListener('beforeunload', saveHexacoreProgress);
+  window.addEventListener('pagehide',     saveHexacoreProgress);
 }
 
 export function getHexacoreScore() {
@@ -4733,10 +5095,15 @@ export function getHexacoreScore() {
 }
 
 export function stopHexacore() {
+  // Persist the current board before any state is torn down so that returning
+  // players face the same board they left — prevents the leave-to-reset exploit.
+  if (!hxState.gameOver) saveHexacoreProgress();
+
   hxState.gameOver = true;
   hxState.active   = false;
 
   window.removeEventListener('beforeunload', saveHexacoreProgress);
+  window.removeEventListener('pagehide',     saveHexacoreProgress);
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
 
   cancelAmethystTargeting();
@@ -4744,6 +5111,8 @@ export function stopHexacore() {
 
   document.getElementById('hx-gameover-overlay')?.remove();
   document.getElementById('hx-challenges-modal')?.remove();
+  document.getElementById('hx-tutorial-modal')?.remove();
+  document.querySelector('.hx-tutorial-arrow-svg')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
   const gridSvg = document.getElementById('hex-grid');

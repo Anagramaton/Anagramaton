@@ -1707,6 +1707,104 @@ body.hx-active #hex-grid {
   min-height: 2rem;
 }
 
+/* ── Hexacore tutorial / collection modal ───────────────────────── */
+/*
+ * The overlay is a transparent full-screen click-blocker only.
+ * No background tint, no blur — the board stays fully visible so the
+ * player can see the referenced tile at the same time as the modal.
+ */
+#hx-tutorial-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  /* Transparent — no dark tint, no backdrop blur */
+  background: none;
+}
+
+.hx-tutorial-modal-box {
+  position: absolute;
+  bottom: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(88vw, 400px);
+  padding: 1.1rem 1.15rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(76, 201, 240, 0.6);
+  background: linear-gradient(160deg, rgba(9, 13, 30, 0.97), rgba(18, 9, 34, 0.96));
+  box-shadow:
+    0 0 26px rgba(76, 201, 240, 0.22),
+    0 16px 34px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+/* Narrow-screen adjustments */
+@media (max-width: 480px) {
+  .hx-tutorial-modal-box {
+    bottom: 2vh;
+    width: min(94vw, 400px);
+    padding: 0.85rem 0.9rem 0.75rem;
+  }
+}
+
+/* Short-viewport adjustments (landscape phones, etc.) */
+@media (max-height: 560px) {
+  .hx-tutorial-modal-box {
+    bottom: 1vh;
+    padding: 0.65rem 0.85rem 0.6rem;
+  }
+  .hx-tutorial-modal-title { font-size: 0.8rem; }
+  .hx-tutorial-modal-desc  { font-size: 0.75rem; }
+  .hx-tutorial-modal-ok    { margin-top: 0.6rem; padding: 0.32rem 0.75rem; }
+}
+
+.hx-tutorial-modal-title {
+  margin: 0 0 0.5rem;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  color: #4cc9f0;
+  text-transform: uppercase;
+}
+
+.hx-tutorial-modal-desc {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.hx-tutorial-modal-ok {
+  margin-top: 0.9rem;
+  min-width: 82px;
+  border: 1px solid rgba(34, 197, 94, 0.75);
+  border-radius: 8px;
+  padding: 0.46rem 0.95rem;
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.2), rgba(21, 128, 61, 0.36));
+  color: #dcfce7;
+  font-family: 'Black Han Sans', sans-serif;
+  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.hx-tutorial-modal-ok:hover,
+.hx-tutorial-modal-ok:focus-visible {
+  outline: none;
+  border-color: rgba(134, 239, 172, 0.95);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.28);
+}
+
+/* SVG connector line drawn from modal box to the referenced tile */
+.hx-tutorial-arrow-svg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9099;
+}
+
 /* ── Rune letter picker modal ──────────────────────────────────── */
 #hx-rune-picker {
   position: fixed;
@@ -2236,6 +2334,14 @@ body.hx-active #hex-grid {
   transform-box: fill-box;
   transform-origin: center;
   animation: hx-oracle-shimmer 3.5s ease-in-out infinite;
+}
+
+.tile .hx-achievement-tile-letter {
+  fill: #f8fafc;
+  stroke: rgba(15, 23, 42, 0.9);
+  stroke-width: 1.6px;
+  font-size: 24px;
+  letter-spacing: 0.04em;
 }
 @keyframes hx-oracle-shimmer {
   0%, 100% {
