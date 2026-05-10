@@ -21,9 +21,17 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const validModes = ['daily', 'unlimited', 'hexacore'];
+  const validModes = ['daily', 'unlimited', 'hexacore', 'hexacore_daily'];
   const mode = validModes.includes(req.query?.mode) ? req.query.mode : 'daily';
-  const dailyId = (mode === 'unlimited' || mode === 'hexacore') ? mode : (req.query?.dailyId || getTodayId());
+  const requestedDailyId = req.query?.dailyId || getTodayId();
+  const dailyId =
+    mode === 'unlimited'
+      ? 'unlimited'
+      : mode === 'hexacore'
+        ? 'hexacore'
+        : mode === 'hexacore_daily'
+          ? `hexacore_daily:${requestedDailyId}`
+          : requestedDailyId;
 
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
     return res.status(200).json({ configured: false, mode, dailyId, leaderboard: [] });
@@ -36,14 +44,14 @@ export default async function handler(req, res) {
 
   let query = supabase
     .from('scores')
-    .select('player_name, score, words')
+    .select('player_name, score, words, tiles_used, penalty, solve_time_seconds')
     .eq('daily_id', dailyId)
     .order('score', { ascending: false })
-    .limit(20);
+    .limit(mode === 'hexacore_daily' ? 50 : 20);
 
   // Keep daily backward-compatible with legacy rows that may not have mode set,
   // but enforce explicit mode partitioning for persistent boards.
-  if (mode === 'unlimited' || mode === 'hexacore') {
+  if (mode === 'unlimited' || mode === 'hexacore' || mode === 'hexacore_daily') {
     query = query.eq('mode', mode);
   }
 

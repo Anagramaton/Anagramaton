@@ -39,8 +39,8 @@ import { getXPData }             from './hexacoreXP.js';
     const MODES = [
       { id: 'endless',  icon: '🔥', title: 'ENDLESS',  color: '#f97316',
         desc: 'Survive the ember. Score as high as you can with no limits.' },
-      { id: 'daily',    icon: '📅', title: 'DAILY',    color: '#4cc9f0',
-        desc: 'A fresh challenge every day. Compete for the daily top score.' },
+      { id: 'daily',    icon: '📅', title: 'DAILY CHALLENGE',    color: '#4cc9f0',
+        desc: 'Fixed daily board with no refills. Submit for the best final score.' },
       { id: 'campaign', icon: '⚔️', title: 'CAMPAIGN', color: '#a855f7',
         desc: '50 structured levels with unique objectives and star ratings.' },
     ];

@@ -78,10 +78,18 @@ create table scores (
   score       integer     not null,
   words       text[]      default '{}',
   hints_used  integer     default 0,
+  mode        text        default 'daily',
+  tiles_used  integer,
+  penalty     integer,
+  solve_time_seconds integer,
   created_at  timestamptz default now(),
 
   unique (daily_id, player_name)
 );
+
+create unique index scores_daily_challenge
+on scores (daily_id, player_name, mode)
+where mode = 'hexacore_daily';
 
 -- Allow the anon key to read scores
 alter table scores enable row level security;
@@ -133,6 +141,8 @@ Once redeployed the **Leaderboard** tab in the round-over screen will be live.
 
 ```bash
 npm run generate   # Regenerates prebuiltBoards.json
+npm run generate:daily-hexacore         # Generate today's Hexacore Daily Challenge board
+npm run generate:daily-hexacore-batch   # Generate next 30 Hexacore Daily Challenge boards
 ```
 
 The bootstrap word pool is derived at runtime from `wordList.js` — no separate `bootstrapWords.js` file is needed.

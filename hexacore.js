@@ -64,6 +64,7 @@ const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
 let hxGameMode = 'endless'; // 'endless' | 'daily' | 'campaign'
+const HX_DAILY_MODE_ID = 'hexacore_daily';
 let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
 /* ── Gem tile type set (module-level for shared use) ───────────── */
@@ -303,6 +304,13 @@ const hxState = {
   portalEntry:    null,   // { q, r, s } coordinate of the entry portal tile
   portalExit:     null,   // { q, r, s } coordinate of the exit portal tile
   portalWordsRemaining: 0, // words left before portal auto-closes (3 when opened)
+  dailyBoardDate: null,
+  dailyMetadata: null,
+  dailyStartMs: 0,
+  dailySubmitted: false,
+  dailyFinalScore: 0,
+  dailyPenalty: 0,
+  dailyTilesUsed: 0,
 };
 
 // Maps each tile object → the hxState type-array it belongs to (single O(1) lookup on removal)
@@ -1176,8 +1184,56 @@ function injectSvgDefs(svg) {
   }
 }
 
+function hxIsoDateLocal(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+async function loadDailyChallengeBoard(dateStr) {
+  const targetDate = dateStr || hxIsoDateLocal();
+  const res = await fetch(`/boards/hexacoreDaily/${targetDate}.json`, { cache: 'no-cache' });
+  if (res.ok) return await res.json();
+
+  // Dev fallback when no prebuilt file exists
+  const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
+  return generateDailyHexacoreBoard({ date: targetDate });
+}
+
+function getDailyWordTotal() {
+  return hxState.words.reduce((sum, w) => sum + (Number(w.score) || 0), 0);
+}
+
+function getDailyUnusedPenalty() {
+  return hxState.tiles.reduce((sum, tile) => {
+    if (tile.tileType && tile.tileType !== 'normal') return sum;
+    return sum + (Number(tile.point) || 0);
+  }, 0);
+}
+
+function updateDailyHud() {
+  if (hxGameMode !== 'daily') return;
+  const root = document.getElementById('hx-daily-hud');
+  if (!root) return;
+
+  const tilesLeft = hxState.tiles.length;
+  const wordTotal = getDailyWordTotal();
+  const penalty = getDailyUnusedPenalty();
+  const preview = Math.max(0, wordTotal - penalty);
+
+  document.getElementById('hx-daily-tiles-left')?.replaceChildren(document.createTextNode(String(tilesLeft)));
+  document.getElementById('hx-daily-word-total')?.replaceChildren(document.createTextNode(wordTotal.toLocaleString()));
+  document.getElementById('hx-daily-penalty')?.replaceChildren(document.createTextNode(penalty.toLocaleString()));
+  document.getElementById('hx-daily-preview')?.replaceChildren(document.createTextNode(preview.toLocaleString()));
+}
+
+function hasAnyDailyWordLeft() {
+  return analyzeBoard(1, 300).length > 0;
+}
+
 /* ── Grid construction ─────────────────────────────────────────── */
-function buildGrid(onReady) {
+function buildGrid(onReady, boardData = null) {
   const board = document.createElementNS(SVG_NS, 'g');
   board.setAttribute('id', 'board');
 
@@ -1203,41 +1259,43 @@ function buildGrid(onReady) {
     if (ring <= 4) byRing[ring].push({ q, r });
   });
 
-  // Pre-designate vowel slots (density-based, ring-aware):
-  //   • Ring 0 (centre): always a vowel
-  //   • Ring 1: 2 of 6 tiles are vowels
-  //   • Rings 2–4: random fill until VOWEL_DENSITY reached
-  const vowelTargets = new Set();
-  const VOWEL_DENSITY = 0.28;
-
-  byRing[0].forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
-  byRing[1]
-    .slice().sort(() => Math.random() - 0.5)
-    .slice(0, 2)
-    .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
-
-  const outerCoords = [...byRing[2], ...byRing[3], ...byRing[4]]
-    .slice().sort(() => Math.random() - 0.5);
-  const totalVowels = Math.round(allCoords.length * VOWEL_DENSITY);
-  outerCoords
-    .slice(0, Math.max(0, totalVowels - vowelTargets.size))
-    .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
-
   // Reset complement hints for fresh board
   pendingDigraphComplements = new Map();
 
   // ── Phase 2: place tiles ring-by-ring (0 → 4) ───────────────────
   // Processing ring by ring ensures each tile sees already-placed neighbors.
-
   const spiralCoords = [...byRing[0], ...byRing[1], ...byRing[2], ...byRing[3], ...byRing[4]];
+
+  // Endless/Campaign keep procedural generation. Daily uses prebuilt fixed letters.
+  const isDaily = hxGameMode === 'daily';
+  const dailyGrid = (isDaily && boardData?.grid) ? boardData.grid : null;
+
+  // Pre-designate vowel slots for endless/campaign generation
+  const vowelTargets = new Set();
+  if (!dailyGrid) {
+    const VOWEL_DENSITY = 0.28;
+    byRing[0].forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
+    byRing[1]
+      .slice().sort(() => Math.random() - 0.5)
+      .slice(0, 2)
+      .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
+    const outerCoords = [...byRing[2], ...byRing[3], ...byRing[4]]
+      .slice().sort(() => Math.random() - 0.5);
+    const totalVowels = Math.round(allCoords.length * VOWEL_DENSITY);
+    outerCoords
+      .slice(0, Math.max(0, totalVowels - vowelTargets.size))
+      .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
+  }
 
   for (const { q, r } of spiralCoords) {
     const key = hxKey(q, r);
     const s   = -q - r;
-    const isVowelSlot = vowelTargets.has(key);
 
     let result;
-    if (isVowelSlot) {
+    const forcedLetter = dailyGrid?.[key];
+    if (forcedLetter) {
+      result = { isDigraph: false, letter: String(forcedLetter).toUpperCase() };
+    } else if (vowelTargets.has(key)) {
       result = {
         isDigraph: false,
         letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)],
@@ -1284,6 +1342,16 @@ function buildGrid(onReady) {
     // Hide until intro animation reveals the tile
     tile.element.style.opacity = '0';
   }
+
+  if (isDaily && Array.isArray(boardData?.specialTiles)) {
+    for (const spec of boardData.specialTiles) {
+      const key = hxKey(spec.q, spec.r);
+      const tile = hxTileMap.get(key);
+      if (!tile) continue;
+      convertTile(tile, spec.type);
+    }
+  }
+
   hxSvg.appendChild(board);
 
   // Tighten viewBox to board bounds on mobile FIRST,
@@ -1396,6 +1464,7 @@ function updateHud() {
   const numEl = document.getElementById('hx-score-num');
   if (numEl) numEl.textContent = hxState.score;
   updateXPBarFn();
+  updateDailyHud();
 }
 
 /* ── Animate the HUD score counting up from oldScore → newScore ── */
@@ -1712,6 +1781,20 @@ function ensureHud() {
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
 
+  if (hxGameMode === 'daily') {
+    const dailyHud = document.createElement('div');
+    dailyHud.id = 'hx-daily-hud';
+    dailyHud.innerHTML = `
+      <div class="hx-daily-hud-row"><span>Tiles Left</span><strong id="hx-daily-tiles-left">61</strong></div>
+      <div class="hx-daily-hud-row"><span>Word Total</span><strong id="hx-daily-word-total">0</strong></div>
+      <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
+      <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
+      <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
+    `;
+    document.body.appendChild(dailyHud);
+    dailyHud.querySelector('#hx-daily-submit-btn')?.addEventListener('click', () => completeDailyChallenge(false));
+  }
+
   // Top bar: centered Hexacore menu button with XP bar below it
   const hxTopBar = document.createElement('div');
   hxTopBar.id = 'hx-top-bar';
@@ -1768,6 +1851,7 @@ function removeHud() {
   document.getElementById('hx-xp-bar-container')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
+  document.getElementById('hx-daily-hud')?.remove();
   document.getElementById('hx-top-bar')?.remove();
   document.getElementById('hx-powerup-toast')?.remove();
   document.getElementById('hx-powerup-indicator')?.remove();
@@ -3847,12 +3931,12 @@ async function submitHexacoreWord() {
   playSound('sfxSuccess');
   playSound('sfxFunk');
   triggerHexacoreTitleFlash(wordScore);
-  // Consume tiles → gravity → ember advance → refill → special spawns
+  // Consume tiles; in Daily mode this removes tiles permanently (no refill).
   await consumeAndRefill(consumed);
   stopSound('sfxFunk');
 
   if (!hxState.gameOver) {
-    // Show all post-word UI feedback only after gravity cascade and refill complete
+    // Show all post-word UI feedback only after board settle
     checkHexacoreRequirements(word, consumed, wordScore);
     showXPGainToast(xpGain);
     if (leveledUp) showPlayerLevelUpBanner(newLevel);
@@ -3863,22 +3947,30 @@ async function submitHexacoreWord() {
       setTimeout(() => showAchievementToast(spawn.tileName, spawn.description), i * ACHIEVEMENT_TOAST_STAGGER_MS);
     });
 
-    checkLevelUp(oldScore, hxState.score);
-    playSound('sfxGemCollect');
-    // Spawn gem reward based on word length
-    spawnGemRewardForWord(word.length);
-    // Fire bonus mirrors word reward
-    if (hasEmber) spawnGemRewardForWord(word.length);
-    spawnSpecialTiles();
-    // Also spawn an ember on any 6+ letter word
-    if (word.length >= 6) {
-      spawnSpecialInRows('ember', [-GRID_RADIUS]);
-    }
+    if (hxGameMode !== 'daily') {
+      checkLevelUp(oldScore, hxState.score);
+      playSound('sfxGemCollect');
+      // Spawn gem reward based on word length
+      spawnGemRewardForWord(word.length);
+      // Fire bonus mirrors word reward
+      if (hasEmber) spawnGemRewardForWord(word.length);
+      spawnSpecialTiles();
+      // Also spawn an ember on any 6+ letter word
+      if (word.length >= 6) {
+        spawnSpecialInRows('ember', [-GRID_RADIUS]);
+      }
 
-    // Portal milestone: open a new portal after every 10th word submitted
-    if (hxState.wordsSubmitted > 0 && hxState.wordsSubmitted % 10 === 0) {
-      closePortal(); // close any existing portal first
-      openPortal();
+      // Portal milestone: open a new portal after every 10th word submitted
+      if (hxState.wordsSubmitted > 0 && hxState.wordsSubmitted % 10 === 0) {
+        closePortal(); // close any existing portal first
+        openPortal();
+      }
+    } else {
+      updateDailyHud();
+      if (!hasAnyDailyWordLeft()) {
+        await completeDailyChallenge(true);
+        return;
+      }
     }
 
     await maybeRunTutorialModalQueue();
@@ -3910,6 +4002,11 @@ async function consumeAndRefill(tilesToRemove) {
     tile.element.remove();
     _hxUnregisterTile(tile);
   });
+
+  if (hxGameMode === 'daily') {
+    updateDailyHud();
+    return;
+  }
 
   // 2. Capture portal tile references before gravity so we can detect movement
   const preGravityEntryTile = hxState.portalOpen && hxState.portalEntry
@@ -4282,15 +4379,10 @@ function spawnSpecialTiles() {
   }
 }
 
-function spawnSpecialInRows(type, rows) {
-  const eligible = hxState.tiles.filter(
-    t => (t.tileType === 'normal' || t.tileType === 'digraph') && rows.includes(t.r) && !isPortalTile(t),
-  );
-  if (eligible.length === 0) return;
-  const target = eligible[Math.floor(Math.random() * eligible.length)];
-
-  // If overwriting a digraph tile, clear its type registration first
+function convertTile(target, type) {
+  if (!target) return;
   if (target.tileType === 'digraph') _hxClearTileType(target);
+  if (target.tileType && target.tileType !== 'normal' && target.tileType !== 'digraph') _hxClearTileType(target);
 
   target.tileType = type;
   if (type === 'ember') _hxRegisterTile(target, hxState.emberTiles);
@@ -4303,21 +4395,130 @@ function spawnSpecialInRows(type, rows) {
   else if (type === 'eclipse')  _hxRegisterTile(target, hxState.eclipseTiles);
   else if (type === 'lodestone') _hxRegisterTile(target, hxState.lodestoneTiles);
   else if (type === 'lexicon')  _hxRegisterTile(target, hxState.lexiconTiles);
+  else if (type === 'gemEmerald') _hxRegisterTile(target, hxState.gemEmeraldTiles);
+  else if (type === 'gemGold') _hxRegisterTile(target, hxState.gemGoldTiles);
+  else if (type === 'gemSapphire') _hxRegisterTile(target, hxState.gemSapphireTiles);
+  else if (type === 'gemPearl') _hxRegisterTile(target, hxState.gemPearlTiles);
+  else if (type === 'gemTanzanite') _hxRegisterTile(target, hxState.gemTanzaniteTiles);
+  else if (type === 'gemRuby') _hxRegisterTile(target, hxState.gemRubyTiles);
+  else if (type === 'gemDiamond') _hxRegisterTile(target, hxState.gemDiamondTiles);
+  else if (type === 'gemAquamarine') _hxRegisterTile(target, hxState.gemAquamarineTiles);
+  else if (type === 'gemTopaz') _hxRegisterTile(target, hxState.gemTopazTiles);
+  else if (type === 'gemOpal') _hxRegisterTile(target, hxState.gemOpalTiles);
+  else if (type === 'gemImperialJade') _hxRegisterTile(target, hxState.gemImperialJadeTiles);
+  else if (type === 'gemAlexandrite') _hxRegisterTile(target, hxState.gemAlexandriteTiles);
   else if (type === 'digraph') {
     const { digraph, points } = randomDigraph();
     target.letter = digraph;
     target.point  = points;
     _hxRegisterTile(target, hxState.digraphTiles);
   }
+
   applyTileType(target);
   enqueueTileIntroduction(target);
 
-  // Dramatic entrance animation for the newly spawned special tile
   const spawnClass = `hx-${type}-spawn`;
   target.element.classList.add(spawnClass);
   target.element.addEventListener('animationend', () => {
     target.element.classList.remove(spawnClass);
   }, { once: true });
+}
+
+function spawnSpecialInRows(type, rows) {
+  const eligible = hxState.tiles.filter(
+    t => (t.tileType === 'normal' || t.tileType === 'digraph') && rows.includes(t.r) && !isPortalTile(t),
+  );
+  if (eligible.length === 0) return;
+  const target = eligible[Math.floor(Math.random() * eligible.length)];
+
+  convertTile(target, type);
+}
+
+async function completeDailyChallenge(autoTriggered = false) {
+  if (hxGameMode !== 'daily' || hxState.dailySubmitted) return;
+  hxState.dailySubmitted = true;
+  hxState.active = false;
+  clearSelection();
+
+  const wordTotal = getDailyWordTotal();
+  const penalty = getDailyUnusedPenalty();
+  const finalScore = Math.max(0, wordTotal - penalty);
+  const tilesUsed = 61 - hxState.tiles.length;
+  const solveTimeSeconds = Math.max(0, Math.round((Date.now() - (hxState.dailyStartMs || Date.now())) / 1000));
+  const words = hxState.words.map(w => w.word);
+
+  hxState.dailyFinalScore = finalScore;
+  hxState.dailyPenalty = penalty;
+  hxState.dailyTilesUsed = tilesUsed;
+
+  let name = getPlayerName();
+  if (!name) {
+    name = await promptPlayerName();
+  }
+  if (name) {
+    await submitScore(
+      hxState.dailyBoardDate || hxIsoDateLocal(),
+      finalScore,
+      words,
+      0,
+      HX_DAILY_MODE_ID,
+      { tilesUsed, penalty, solveTimeSeconds },
+    );
+  }
+
+  showDailyChallengeResults({
+    autoTriggered,
+    finalScore,
+    wordTotal,
+    penalty,
+    tilesUsed,
+    tilesTotal: 61,
+    words,
+  });
+}
+
+function showDailyChallengeResults({ autoTriggered, finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words }) {
+  document.getElementById('hx-daily-result-overlay')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'hx-daily-result-overlay';
+  overlay.innerHTML = `
+    <div id="hx-daily-result-box">
+      <h2>DAILY CHALLENGE COMPLETE</h2>
+      <div class="hx-final-score">${finalScore.toLocaleString()}</div>
+      <div class="hx-stats">
+        ${autoTriggered ? 'No more valid 4+ words remain' : 'Submission complete'}<br>
+        Words Submitted: ${words.length}<br>
+        Total Word Score: ${wordTotal.toLocaleString()}<br>
+        Tiles Used: ${tilesUsed} / ${tilesTotal}<br>
+        Penalty: -${penalty.toLocaleString()}
+      </div>
+      <div id="hx-daily-opt-wrap" style="margin-bottom:1rem;font-size:0.74rem;min-height:2rem;color:#cbd5e1;"></div>
+      <button id="hx-daily-opt-btn" class="hx-btn-primary" type="button">VIEW OPTIMAL SOLUTIONS</button>
+      <button id="hx-daily-leaderboard-btn" type="button">LEADERBOARD</button>
+      <button id="hx-daily-again-btn" type="button">PLAY AGAIN</button>
+      <button id="hx-daily-menu-btn" type="button">MAIN MENU</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  document.getElementById('hx-daily-opt-btn')?.addEventListener('click', () => {
+    const wrap = document.getElementById('hx-daily-opt-wrap');
+    if (!wrap) return;
+    const strategies = (hxState.dailyMetadata?.optimalSolutions || []).slice(0, 3);
+    if (strategies.length === 0) {
+      wrap.textContent = 'No strategy data available.';
+      return;
+    }
+    wrap.innerHTML = strategies.map((s, i) =>
+      `<div style="text-align:left;margin:0.4rem 0;"><strong>#${i + 1}</strong> · ${(s.finalScore || 0).toLocaleString()} pts · ${(s.words || []).join(', ')}</div>`
+    ).join('');
+  });
+  document.getElementById('hx-daily-leaderboard-btn')?.addEventListener('click', () => openLeaderboardsModal('daily'));
+  document.getElementById('hx-daily-again-btn')?.addEventListener('click', () => {
+    overlay.remove();
+    startHexacore('daily');
+  });
+  document.getElementById('hx-daily-menu-btn')?.addEventListener('click', () => window.location.reload());
 }
 
 /* ── Game over ─────────────────────────────────────────────────── */
@@ -4804,6 +5005,7 @@ async function maybeRunTutorialModalQueue() {
 
 /* ── Progress persistence ──────────────────────────────────────── */
 function saveHexacoreProgress() {
+  if (hxGameMode === 'daily') return;
   const tiles = [];
   hxTileMap.forEach(tile => {
     tiles.push({
@@ -4923,6 +5125,13 @@ export function startHexacore(mode = 'endless') {
     portalEntry:    null,
     portalExit:     null,
     portalWordsRemaining: 0,
+    dailyBoardDate: null,
+    dailyMetadata: null,
+    dailyStartMs: 0,
+    dailySubmitted: false,
+    dailyFinalScore: 0,
+    dailyPenalty: 0,
+    dailyTilesUsed: 0,
   });
   hxSelected           = [];
   hxPointerDown        = false;
@@ -4950,9 +5159,23 @@ export function startHexacore(mode = 'endless') {
   hxLayout = makeLayout();
 
   injectSvgDefs(hxSvg);
-  buildGrid(() => {
+
+  const initBoard = async () => {
+    let boardData = null;
+    if (hxGameMode === 'daily') {
+      try {
+        boardData = await loadDailyChallengeBoard(hxIsoDateLocal());
+        hxState.dailyBoardDate = boardData?.date || hxIsoDateLocal();
+        hxState.dailyMetadata = boardData?.metadata || null;
+      } catch (err) {
+        console.warn('[hexacore] daily board load failed, falling back to procedural board:', err);
+      }
+      hxState.dailyStartMs = Date.now();
+    }
+
+    buildGrid(() => {
     // Restore a saved session (if any) after the intro animation completes
-    const save = loadHexacoreProgress();
+    const save = hxGameMode === 'daily' ? null : loadHexacoreProgress();
     if (save) {
       hxState.score          = save.score          ?? 0;
       hxState.level          = save.level          ?? 1;
@@ -5045,7 +5268,10 @@ export function startHexacore(mode = 'endless') {
     }
     queueBoardTileIntroductions();
     void maybeRunTutorialModalQueue();
-  });
+    updateDailyHud();
+  }, boardData);
+  };
+  void initBoard();
   // Ember tiles do NOT spawn at game start — only after milestone words
 
   // Save the user's current theme and force dark theme for Hexacore
