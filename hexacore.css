@@ -4581,6 +4581,35 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   text-transform: uppercase;
 }
 
+/* Header action group (HOME + THEME + close in one row) */
+#hx-settings-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.hx-cfg-header-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  color: rgba(196, 181, 253, 0.8);
+  font-family: var(--hx-ui-font-family);
+  font-size: 0.62rem;
+  font-weight: var(--hx-ui-font-weight);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 5px 9px;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.hx-cfg-header-btn:hover {
+  background: rgba(76, 201, 240, 0.12);
+  border-color: rgba(76, 201, 240, 0.45);
+  color: #4cc9f0;
+}
+
 #hx-settings-close {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -4687,38 +4716,6 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   text-transform: none;
 }
 
-/* Footer */
-#hx-settings-footer {
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.7rem 1.25rem;
-  border-top: 1px solid rgba(76, 201, 240, 0.12);
-  flex-shrink: 0;
-  flex-wrap: wrap;
-}
-
-.hx-cfg-footer-btn {
-  flex: 1 0 auto;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 6px;
-  color: rgba(196, 181, 253, 0.75);
-  font-family: var(--hx-ui-font-family);
-  font-size: var(--hx-ui-font-size);
-  font-weight: var(--hx-ui-font-weight);
-  letter-spacing: var(--hx-ui-letter-spacing);
-  text-transform: uppercase;
-  cursor: pointer;
-  padding: 0.45rem 0.75rem;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-  white-space: nowrap;
-}
-.hx-cfg-footer-btn:hover {
-  background: rgba(76, 201, 240, 0.1);
-  border-color: rgba(76, 201, 240, 0.4);
-  color: #4cc9f0;
-}
-
 /* ── Mode cards ──────────────────────────────────────────────────── */
 .hx-cfg-mode-grid {
   display: flex;
@@ -4745,6 +4742,21 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   background: rgba(255, 255, 255, 0.07);
   border-color: var(--hx-mode-color);
   transform: translateX(3px);
+}
+
+/* Disabled state – daily already completed today */
+.hx-cfg-mode-card--disabled,
+.hx-cfg-mode-card--disabled:hover {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.hx-cfg-mode-completed {
+  color: rgba(76, 201, 240, 0.75) !important;
+  font-style: italic;
 }
 
 .hx-cfg-mode-icon {
@@ -5003,14 +5015,9 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   .hx-cfg-panel {
     padding: 0.85rem 0.9rem 0.6rem;
   }
-  #hx-settings-footer {
-    padding: 0.6rem 0.9rem;
-    padding-bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
-  }
-  .hx-cfg-footer-btn {
-    font-size: 0.6rem;
-    padding: 0.5rem 0.6rem;
-    min-height: 40px;
+  .hx-cfg-header-btn {
+    font-size: 0.55rem;
+    padding: 4px 7px;
   }
   .hx-cfg-section-title {
     font-size: 1.4rem;

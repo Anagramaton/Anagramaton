@@ -1193,14 +1193,52 @@ function hxIsoDateLocal(d = new Date()) {
   return `${y}-${m}-${day}`;
 }
 
-async function loadDailyChallengeBoard(dateStr) {
-  const targetDate = dateStr || hxIsoDateLocal();
-  const res = await fetch(`/boards/hexacoreDaily/${targetDate}.json`, { cache: 'no-cache' });
-  if (res.ok) return await res.json();
+/** Returns the current date string in Eastern Time (America/New_York), yyyy-mm-dd.
+ *  Daily boards reset at midnight ET so all players worldwide see the same puzzle. */
+function hxEasternDateStr() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/New_York',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date());
+    const get = type => parts.find(p => p.type === type)?.value ?? '';
+    return `${get('year')}-${get('month')}-${get('day')}`;
+  } catch (_) {
+    return hxIsoDateLocal();
+  }
+}
 
-  // Dev fallback when no prebuilt file exists
-  const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
-  return generateDailyHexacoreBoard({ date: targetDate });
+const HX_DAILY_COMPLETED_KEY = 'hxDailyCompleted';
+const HX_DAILY_BOARD_CACHE_PREFIX = 'hxDailyBoardCache_';
+
+/** Persist that the player has finished today's daily (ET date). */
+function hxMarkDailyCompleted() {
+  try { localStorage.setItem(HX_DAILY_COMPLETED_KEY, hxEasternDateStr()); } catch (_) {}
+}
+
+async function loadDailyChallengeBoard(dateStr) {
+  const targetDate = dateStr || hxEasternDateStr();
+  const cacheKey = HX_DAILY_BOARD_CACHE_PREFIX + targetDate;
+
+  // Return the cached board for this date so every click yields the same puzzle.
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) return JSON.parse(cached);
+  } catch (_) {}
+
+  let data;
+  const res = await fetch(`/boards/hexacoreDaily/${targetDate}.json`);
+  if (res.ok) {
+    data = await res.json();
+  } else {
+    // Dev fallback when no prebuilt file exists
+    const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
+    data = generateDailyHexacoreBoard({ date: targetDate });
+  }
+
+  // Cache so subsequent clicks (or page reloads) re-use the same board today.
+  try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch (_) {}
+  return data;
 }
 
 function getDailyWordTotal() {
@@ -4471,6 +4509,9 @@ async function completeDailyChallenge(autoTriggered = false) {
     console.warn('[hexacore] daily score submission skipped: missing daily board date');
   }
 
+  // Persist completion so the Daily card is disabled until midnight ET.
+  hxMarkDailyCompleted();
+
   showDailyChallengeResults({
     autoTriggered,
     finalScore,
@@ -5170,8 +5211,8 @@ export function startHexacore(mode = 'endless') {
     let boardData = null;
     if (hxGameMode === 'daily') {
       try {
-        boardData = await loadDailyChallengeBoard(hxIsoDateLocal());
-        hxState.dailyBoardDate = boardData?.date || hxIsoDateLocal();
+        boardData = await loadDailyChallengeBoard(hxEasternDateStr());
+        hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();
         hxState.dailyMetadata = boardData?.metadata || null;
       } catch (err) {
         console.warn('[hexacore] daily board load failed, falling back to procedural board:', err);
