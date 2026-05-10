@@ -1518,7 +1518,7 @@ function showLevelUpBanner(level) {
  * 1 → Lodestone, 1 → Amethyst, and opens a Portal if one isn't active.
  */
 function applyLevelUpRewards() {
-  const DELAY = 1200; // ms between each reward step
+  const DELAY = 1200; // ms between each reward step (stagger so each is visible)
 
   function showRewardToast(msg, icon) {
     document.getElementById('hx-lv2-reward-toast')?.remove();
