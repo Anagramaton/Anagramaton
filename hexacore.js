@@ -4683,7 +4683,7 @@ function hasBlockingHexacoreModal() {
 function closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl) {
   overlay.remove();
   arrowSvg?.remove();
-  restoreFocusEl?.focus?.();
+  if (restoreFocusEl?.isConnected) restoreFocusEl.focus();
   hxTutorialModalOpen = false;
   if (!hxState.gameOver) hxState.active = wasActive;
   resolve();
