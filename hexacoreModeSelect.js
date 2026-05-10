@@ -11,8 +11,8 @@ const MODES = [
   {
     id:    'daily',
     icon:  '📅',
-    title: 'DAILY',
-    desc:  'A fresh challenge every day. Compete for the daily top score.',
+    title: 'DAILY CHALLENGE',
+    desc:  'Fixed daily board with no refills. Submit for the best final score.',
     color: '#4cc9f0',
   },
   {

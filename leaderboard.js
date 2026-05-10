@@ -235,14 +235,20 @@ export function promptSignOut() {
 
 /* ── Score submission ──────────────────────────────────────────── */
 
-export async function submitScore(dailyId, score, words, hintsUsed, mode = 'daily') {
+export async function submitScore(dailyId, score, words, hintsUsed, mode = 'daily', metadata = null) {
   const playerName = getPlayerName();
   if (!playerName) return null;
   try {
+    const payload = { dailyId, playerName, score, words, hintsUsed, mode };
+    if (metadata && typeof metadata === 'object') {
+      if (Number.isFinite(metadata.tilesUsed)) payload.tilesUsed = Math.round(metadata.tilesUsed);
+      if (Number.isFinite(metadata.penalty)) payload.penalty = Math.round(metadata.penalty);
+      if (Number.isFinite(metadata.solveTimeSeconds)) payload.solveTimeSeconds = Math.round(metadata.solveTimeSeconds);
+    }
     const res = await fetch('/api/scores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dailyId, playerName, score, words, hintsUsed, mode }),
+      body: JSON.stringify(payload),
     });
     if (!res.ok) return null;
     return await res.json();

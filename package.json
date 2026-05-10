@@ -6,6 +6,8 @@
     "generate": "node scripts/generateBoards.mjs",
     "generate:unlimited": "node scripts/generateUnlimitedBoards.mjs",
     "generate:all": "npm run generate && npm run generate:unlimited",
+    "generate:daily-hexacore": "node scripts/generateDailyHexacore.mjs",
+    "generate:daily-hexacore-batch": "node scripts/generateDailyHexacore.mjs --count=30",
     "clean-words": "node scripts/cleanWordLists.js"
   },
   "dependencies": {

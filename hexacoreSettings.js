@@ -33,75 +33,110 @@ import { getXPData }             from './hexacoreXP.js';
     if (btn) btn.addEventListener('click', onSettingsBtnClick);
   });
 
+  /* ── Daily-completion helpers ─────────────────────────────────── */
+
+  function easternDateStr() {
+    try {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'America/New_York',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+      }).formatToParts(new Date());
+      const get = type => parts.find(p => p.type === type)?.value ?? '';
+      return `${get('year')}-${get('month')}-${get('day')}`;
+    } catch (_) {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+  }
+
+  function isDailyCompleted() {
+    try {
+      return localStorage.getItem('hxDailyCompleted') === easternDateStr();
+    } catch (_) { return false; }
+  }
+
+  /** Milliseconds until midnight America/New_York. */
+  function msUntilMidnightEastern() {
+    try {
+      const nowET = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+      const nextMidnight = new Date(nowET);
+      nextMidnight.setHours(24, 0, 0, 0);
+      return Math.max(0, nextMidnight - nowET);
+    } catch (_) {
+      // Fallback: midnight local
+      const now = new Date();
+      const next = new Date(now); next.setHours(24, 0, 0, 0);
+      return Math.max(0, next - now);
+    }
+  }
+
+  function formatCountdown(ms) {
+    const s = Math.floor(ms / 1000);
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    return `${h}h ${m}m`;
+  }
+
   /* ── Section renderers ────────────────────────────────────────── */
 
   function renderModeSection(panel) {
+    const completed = isDailyCompleted();
+    const countdown = completed ? formatCountdown(msUntilMidnightEastern()) : null;
+
+    // Order: DAILY → ENDLESS → CAMPAIGN → QUESTS
     const MODES = [
-      { id: 'endless',  icon: '🔥', title: 'ENDLESS',  color: '#f97316',
+      { id: 'daily',    icon: '📅', title: 'DAILY CHALLENGE', color: '#4cc9f0',
+        desc: 'Fixed daily board with no refills. Submit for the best final score.' },
+      { id: 'endless',  icon: '🔥', title: 'ENDLESS',         color: '#f97316',
         desc: 'Survive the ember. Score as high as you can with no limits.' },
-      { id: 'daily',    icon: '📅', title: 'DAILY',    color: '#4cc9f0',
-        desc: 'A fresh challenge every day. Compete for the daily top score.' },
-      { id: 'campaign', icon: '⚔️', title: 'CAMPAIGN', color: '#a855f7',
+      { id: 'campaign', icon: '⚔️', title: 'CAMPAIGN',        color: '#a855f7',
         desc: '50 structured levels with unique objectives and star ratings.' },
+      { id: 'quests',   icon: '📋', title: 'QUESTS',          color: '#fbbf24',
+        desc: 'Complete daily quests and tier challenges to earn XP bonuses.' },
     ];
 
-    panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">🎮 MODE SELECTORS</h3>
-      <p class="hx-cfg-section-desc">Choose your Hexacore experience. Each mode has unique rules and goals.</p>
-      <div class="hx-cfg-mode-grid"></div>
-    `;
-
+    panel.innerHTML = '<div class="hx-cfg-mode-grid"></div>';
     const grid = panel.querySelector('.hx-cfg-mode-grid');
+
     MODES.forEach(m => {
+      const isDisabledDaily = m.id === 'daily' && completed;
+
       const card = document.createElement('button');
       card.type = 'button';
-      card.className = 'hx-cfg-mode-card';
+      card.className = 'hx-cfg-mode-card' + (isDisabledDaily ? ' hx-cfg-mode-card--disabled' : '');
       card.style.setProperty('--hx-mode-color', m.color);
+      if (isDisabledDaily) card.disabled = true;
+
+      const subtitleHtml = isDisabledDaily
+        ? `<span class="hx-cfg-mode-desc hx-cfg-mode-completed">✓ Completed · Next in ${countdown}</span>`
+        : `<span class="hx-cfg-mode-desc">${m.desc}</span>`;
+
       card.innerHTML = `
         <span class="hx-cfg-mode-icon">${m.icon}</span>
         <div class="hx-cfg-mode-info">
           <span class="hx-cfg-mode-title">${m.title}</span>
-          <span class="hx-cfg-mode-desc">${m.desc}</span>
+          ${subtitleHtml}
         </div>
-        <span class="hx-cfg-mode-arrow">›</span>
+        ${isDisabledDaily ? '' : '<span class="hx-cfg-mode-arrow">›</span>'}
       `;
-      card.addEventListener('click', () => {
-        $('hx-settings-modal')?.remove();
-        // Dispatch event — hexacore.js handles mode start
-        document.dispatchEvent(new CustomEvent('hx:start-mode', { detail: { mode: m.id } }));
-      });
-      grid.appendChild(card);
-    });
-  }
 
-  function renderQuestsSection(panel) {
-    panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">📋 QUESTS &amp; CHALLENGES</h3>
-      <p class="hx-cfg-section-desc">Complete daily quests, the weekly login streak, and tier challenges to earn XP bonuses.</p>
-      <button class="hx-cfg-launch-btn" id="hx-cfg-quests-open">
-        <span>📋</span> Open Quests &amp; Challenges
-      </button>
-      <div class="hx-cfg-quest-preview">
-        <p class="hx-cfg-preview-note">Quests and challenges are combined in one panel. Daily quests refresh at midnight UTC. The weekly quest rewards logging in every day for 7 days.</p>
-        <ul class="hx-cfg-quest-tips">
-          <li>🔥 Use <strong>Ember</strong> tiles to earn bonus gems</li>
-          <li>✦ Form <strong>long words</strong> (7+ letters) for rare gems</li>
-          <li>📅 Log in every day to complete the weekly login quest</li>
-          <li>🗓 Weekly login quest awards <strong>1,000 XP</strong></li>
-          <li>📋 Challenges unlock permanent achievements across all sessions</li>
-        </ul>
-      </div>
-    `;
-    panel.querySelector('#hx-cfg-quests-open')?.addEventListener('click', () => {
-      $('hx-settings-modal')?.remove();
-      openQuestsModal();
+      if (!isDisabledDaily) {
+        card.addEventListener('click', () => {
+          if (m.id === 'quests') {
+            $('hx-settings-modal')?.remove();
+            openQuestsModal();
+            return;
+          }
+          $('hx-settings-modal')?.remove();
+          document.dispatchEvent(new CustomEvent('hx:start-mode', { detail: { mode: m.id } }));
+        });
+      }
+      grid.appendChild(card);
     });
   }
 
   function renderLeaderboardsSection(panel) {
     panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">🏅 LEADERBOARDS</h3>
-      <p class="hx-cfg-section-desc">Compete globally — all-time, daily, weekly, and XP rankings.</p>
       <button class="hx-cfg-launch-btn" id="hx-cfg-lb-open">
         <span>🏅</span> Open Full Leaderboards
       </button>
@@ -131,8 +166,6 @@ import { getXPData }             from './hexacoreXP.js';
     const displayName = playerName || 'Anonymous';
 
     panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">👤 PROFILE</h3>
-      <p class="hx-cfg-section-desc">Your Hexacore career stats and player identity.</p>
       <div class="hx-cfg-profile-quick">
         <div class="hx-cfg-profile-avatar">👤</div>
         <div class="hx-cfg-profile-info">
@@ -157,50 +190,6 @@ import { getXPData }             from './hexacoreXP.js';
     });
   }
 
-  function renderHowtoSection(panel) {
-    panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">❓ HOW TO PLAY</h3>
-      <p class="hx-cfg-section-desc">Learn Hexacore mechanics — special tiles, gems, scoring, and quests.</p>
-      <button class="hx-cfg-launch-btn" id="hx-cfg-howto-open">
-        <span>🎮</span> Open Full How-To Guide
-      </button>
-      <div class="hx-cfg-howto-highlights">
-        <div class="hx-cfg-howto-card">
-          <span class="hx-cfg-howto-card-icon">🔥</span>
-          <div>
-            <strong>Ember Tiles</strong>
-            <p>Advance every turn. Reach the bottom = game over. Use them in words to destroy them and earn bonus gems.</p>
-          </div>
-        </div>
-        <div class="hx-cfg-howto-card">
-          <span class="hx-cfg-howto-card-icon">◆</span>
-          <div>
-            <strong>Gem Tiles</strong>
-            <p>Longer words spawn gems (Emerald×2 → Alexandrite×13). Multiple gems of the same type multiply together.</p>
-          </div>
-        </div>
-        <div class="hx-cfg-howto-card">
-          <span class="hx-cfg-howto-card-icon">✨</span>
-          <div>
-            <strong>XP &amp; Levels</strong>
-            <p>Every word earns XP. Level up to unlock Tier Challenges. Check your level in the top bar.</p>
-          </div>
-        </div>
-        <div class="hx-cfg-howto-card">
-          <span class="hx-cfg-howto-card-icon">◈</span>
-          <div>
-            <strong>Portals</strong>
-            <p>After every 10 words, corner tiles become a portal pair. Chain through Entry + Exit to link non-adjacent tiles.</p>
-          </div>
-        </div>
-      </div>
-    `;
-    panel.querySelector('#hx-cfg-howto-open')?.addEventListener('click', () => {
-      $('hx-settings-modal')?.remove();
-      window.hxHowto?.open();
-    });
-  }
-
   /* ── Main modal builder ─────────────────────────────────────────── */
 
   function openHexacoreSettingsModal() {
@@ -212,12 +201,11 @@ import { getXPData }             from './hexacoreXP.js';
     modal.setAttribute('aria-modal', 'true');
     modal.setAttribute('aria-labelledby', 'hx-settings-title');
 
+    // Three tabs only: MODES · LEADERBOARDS · PROFILE
     const TABS = [
-      { id: 'mode',         icon: '🎮', label: 'MODES'   },
-      { id: 'quests',       icon: '📋', label: 'QUESTS'  },
-      { id: 'leaderboards', icon: '🏅', label: 'BOARDS'  },
-      { id: 'profile',      icon: '👤', label: 'PROFILE' },
-      { id: 'howto',        icon: '❓', label: 'HOW TO'  },
+      { id: 'mode',         icon: '🎮', label: 'MODES'        },
+      { id: 'leaderboards', icon: '🏅', label: 'LEADERBOARDS' },
+      { id: 'profile',      icon: '👤', label: 'PROFILE'      },
     ];
 
     modal.innerHTML = `
@@ -230,7 +218,12 @@ import { getXPData }             from './hexacoreXP.js';
               <span id="hx-settings-subtitle">SETTINGS</span>
             </div>
           </div>
-          <button id="hx-settings-close" type="button" aria-label="Close Hexacore settings">✕</button>
+          <div id="hx-settings-header-actions">
+            <button class="hx-cfg-header-btn" id="hx-cfg-home-btn"  type="button">🏠 HOME</button>
+            <button class="hx-cfg-header-btn" id="hx-cfg-theme-btn" type="button">🌙 THEME</button>
+            <button class="hx-cfg-header-btn" id="hx-cfg-howto-btn" type="button">❓ HOW TO</button>
+            <button id="hx-settings-close" type="button" aria-label="Close Hexacore settings">✕</button>
+          </div>
         </div>
 
         <nav id="hx-settings-tabs" role="tablist" aria-label="Hexacore settings sections">
@@ -251,12 +244,6 @@ import { getXPData }             from './hexacoreXP.js';
         </nav>
 
         <div id="hx-settings-content" role="tabpanel"></div>
-
-        <div id="hx-settings-footer">
-          <button class="hx-cfg-footer-btn" id="hx-cfg-home-btn"  type="button">🏠 HOME</button>
-          <button class="hx-cfg-footer-btn" id="hx-cfg-theme-btn" type="button">🌙 THEME</button>
-          <button class="hx-cfg-footer-btn" id="hx-cfg-cb-btn"    type="button">🌓 A11Y</button>
-        </div>
       </div>
     `;
 
@@ -287,10 +274,8 @@ import { getXPData }             from './hexacoreXP.js';
 
       switch (tabId) {
         case 'mode':         renderModeSection(panel);         break;
-        case 'quests':       renderQuestsSection(panel);       break;
         case 'leaderboards': renderLeaderboardsSection(panel); break;
         case 'profile':      renderProfileSection(panel);      break;
-        case 'howto':        renderHowtoSection(panel);        break;
       }
 
       content.innerHTML = '';
@@ -308,7 +293,7 @@ import { getXPData }             from './hexacoreXP.js';
     const escHandler = e => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escHandler); } };
     document.addEventListener('keydown', escHandler);
 
-    // Footer buttons delegate to the existing Anagramaton controls
+    // Header action buttons
     $('hx-cfg-home-btn')?.addEventListener('click', () => { close(); $('home-btn')?.click(); });
     $('hx-cfg-theme-btn')?.addEventListener('click', () => {
       $('toggle-theme')?.click();
@@ -316,7 +301,7 @@ import { getXPData }             from './hexacoreXP.js';
       const btn   = $('hx-cfg-theme-btn');
       if (btn) btn.textContent = theme === 'dark' ? '☀️ THEME' : '🌙 THEME';
     });
-    $('hx-cfg-cb-btn')?.addEventListener('click', () => { $('toggle-access')?.click(); });
+    $('hx-cfg-howto-btn')?.addEventListener('click', () => { close(); window.hxHowto?.open(); });
 
     // Show first tab
     activateTab('mode');
