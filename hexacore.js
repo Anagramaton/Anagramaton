@@ -596,46 +596,30 @@ function closePortal() {
 }
 
 /**
- * After gravity runs, if a portal tile has moved (fallen), transfers the portal
- * identity to whichever tile now occupies the old portal position.  If nothing
- * occupies the old position the portal tracks the tile to its new location.
+ * After gravity runs, removes portal visuals from any tile that has moved away
+ * from a portal coordinate, then reapplies visuals to whatever tile now occupies
+ * each portal coordinate.  Portal coordinates (hxState.portalEntry/portalExit)
+ * are fixed location markers and are never changed here.
  * Accepts the tile object references captured before gravity ran.
  */
 function transferPortalIfMoved(preGravityEntryTile, preGravityExitTile) {
   if (!hxState.portalOpen) return;
-  let changed = false;
 
-  function transferOne(preGravityTile, portalCoord, updateCoord) {
+  function cleanupVisuals(preGravityTile, portalCoord) {
     if (!preGravityTile || !portalCoord) return;
-    if (preGravityTile.q === portalCoord.q && preGravityTile.r === portalCoord.r) return;
-
-    // The portal tile has moved — remove its portal visuals
-    preGravityTile.element.querySelector('polygon')
-      ?.classList.remove('hx-portal', 'hx-portal-active');
-    preGravityTile.element.querySelector('.hx-portal-icon')?.remove();
-
-    const tileAtOldPos = hxTileMap.get(hxKey(portalCoord.q, portalCoord.r));
-    if (tileAtOldPos && tileAtOldPos !== preGravityTile) {
-      // A different tile landed in the old portal position — it becomes the new portal
-      updateCoord({ q: tileAtOldPos.q, r: tileAtOldPos.r, s: tileAtOldPos.s });
-      changed = true;
+    // If the tile moved away from the portal position, remove its portal visuals
+    if (preGravityTile.q !== portalCoord.q || preGravityTile.r !== portalCoord.r) {
+      preGravityTile.element.querySelector('polygon')
+        ?.classList.remove('hx-portal', 'hx-portal-active');
+      preGravityTile.element.querySelector('.hx-portal-icon')?.remove();
     }
-    // If old position is empty, leave portalEntry/portalExit pointing at the original
-    // coords — applyPortalVisuals will silently skip until a new tile arrives there.
   }
 
-  transferOne(
-    preGravityEntryTile,
-    hxState.portalEntry,
-    coord => { hxState.portalEntry = coord; },
-  );
-  transferOne(
-    preGravityExitTile,
-    hxState.portalExit,
-    coord => { hxState.portalExit = coord; },
-  );
+  cleanupVisuals(preGravityEntryTile, hxState.portalEntry);
+  cleanupVisuals(preGravityExitTile, hxState.portalExit);
 
-  if (changed) applyPortalVisuals();
+  // Reapply visuals to whatever tiles are now at the fixed portal coordinates
+  applyPortalVisuals();
 }
 
 function escapeHtml(str) {
