@@ -45,6 +45,17 @@ export default async function handler(req, res) {
     if (!dailyId || (mode !== 'hexacore_daily' && dailyId !== todayId)) {
       return res.status(400).json({ error: 'Invalid or expired dailyId' });
     }
+    if (mode === 'hexacore_daily') {
+      if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(dailyId))) {
+        return res.status(400).json({ error: 'Invalid hexacore_daily date format' });
+      }
+      const submittedDay = new Date(`${dailyId}T00:00:00Z`);
+      const todayDay = new Date();
+      todayDay.setUTCHours(0, 0, 0, 0);
+      if (!Number.isFinite(submittedDay.getTime()) || submittedDay.getTime() > todayDay.getTime()) {
+        return res.status(400).json({ error: 'hexacore_daily date cannot be in the future' });
+      }
+    }
   }
 
   // Validate playerName

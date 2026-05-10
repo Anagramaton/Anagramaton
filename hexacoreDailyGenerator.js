@@ -64,6 +64,8 @@ const LETTER_POOL = [
 ];
 
 const HIGH_VALUE_LETTERS = new Set(['Q', 'Z', 'X', 'J']);
+const MAX_SCORE_ESTIMATE_MULTIPLIER = 2.5;
+const MIN_SCORE_ESTIMATE_MULTIPLIER = 2.0;
 
 function toIsoDate(d = new Date()) {
   const y = d.getFullYear();
@@ -274,7 +276,7 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
     const ordered = candidates
       .filter(c => !taken.has(c.key) && !!grid[c.key])
       .sort((a, b) => (b.weight || 0) - (a.weight || 0));
-    const picks = shuffled(ordered.slice(0, Math.max(ordered.length, 1)), rng);
+    const picks = shuffled(ordered, rng);
     for (const c of picks) {
       if (count <= 0) break;
       if (taken.has(c.key) || !grid[c.key]) continue;
@@ -464,8 +466,8 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
     if (uses < minUses && broadUses < minUses) return { valid: false, reason: `${s.type} lacks multi-word strategic use` };
   }
 
-  const maxScore = Math.round(scored.slice(0, 3).reduce((sum, p) => sum + p.estimatedScore, 0) * 2.5);
-  const minScore = Math.round(scored.slice(0, 1).reduce((sum, p) => sum + p.estimatedScore, 0) * 2.0);
+  const maxScore = Math.round(scored.slice(0, 3).reduce((sum, p) => sum + p.estimatedScore, 0) * MAX_SCORE_ESTIMATE_MULTIPLIER);
+  const minScore = Math.round(scored.slice(0, 1).reduce((sum, p) => sum + p.estimatedScore, 0) * MIN_SCORE_ESTIMATE_MULTIPLIER);
 
   const nearOptimal = Math.max(3, scored.filter(s => s.estimatedScore >= scored[0].estimatedScore * 0.65).length);
 

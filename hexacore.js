@@ -141,6 +141,8 @@ const BEACON_MAX_RESULTS            = 50;
 const BEACON_TIME_LIMIT_MS          = 1200;
 const LEXICON_MAX_RESULTS           = 200;
 const LEXICON_TIME_LIMIT_MS         = 1500;
+const DAILY_ENDCHECK_MAX_RESULTS    = 1;
+const DAILY_ENDCHECK_TIME_LIMIT_MS  = 300;
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -1229,7 +1231,7 @@ function updateDailyHud() {
 }
 
 function hasAnyDailyWordLeft() {
-  return analyzeBoard(1, 300).length > 0;
+  return analyzeBoard(DAILY_ENDCHECK_MAX_RESULTS, DAILY_ENDCHECK_TIME_LIMIT_MS).length > 0;
 }
 
 /* ── Grid construction ─────────────────────────────────────────── */
@@ -4450,20 +4452,23 @@ async function completeDailyChallenge(autoTriggered = false) {
   hxState.dailyFinalScore = finalScore;
   hxState.dailyPenalty = penalty;
   hxState.dailyTilesUsed = tilesUsed;
+  const submissionDate = hxState.dailyBoardDate || null;
 
   let name = getPlayerName();
   if (!name) {
     name = await promptPlayerName();
   }
-  if (name) {
+  if (name && submissionDate) {
     await submitScore(
-      hxState.dailyBoardDate || hxIsoDateLocal(),
+      submissionDate,
       finalScore,
       words,
       0,
       HX_DAILY_MODE_ID,
       { tilesUsed, penalty, solveTimeSeconds },
     );
+  } else if (!submissionDate) {
+    console.warn('[hexacore] daily score submission skipped: missing daily board date');
   }
 
   showDailyChallengeResults({
@@ -5043,6 +5048,7 @@ function saveHexacoreProgress() {
 }
 
 function loadHexacoreProgress() {
+  if (hxGameMode === 'daily') return null;
   try {
     const json = localStorage.getItem(HX_SAVE_KEY);
     if (!json) return null;
@@ -5175,7 +5181,7 @@ export function startHexacore(mode = 'endless') {
 
     buildGrid(() => {
     // Restore a saved session (if any) after the intro animation completes
-    const save = hxGameMode === 'daily' ? null : loadHexacoreProgress();
+    const save = loadHexacoreProgress();
     if (save) {
       hxState.score          = save.score          ?? 0;
       hxState.level          = save.level          ?? 1;

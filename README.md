@@ -84,12 +84,8 @@ create table scores (
   solve_time_seconds integer,
   created_at  timestamptz default now(),
 
-  unique (daily_id, player_name)
+  unique (daily_id, player_name, mode)
 );
-
-create unique index scores_daily_challenge
-on scores (daily_id, player_name, mode)
-where mode = 'hexacore_daily';
 
 -- Allow the anon key to read scores
 alter table scores enable row level security;
@@ -104,6 +100,15 @@ create policy "Service insert" on scores
 create policy "Service update" on scores
   for update using (true);
 ```
+
+If your table already exists with `unique (daily_id, player_name)`, migrate it:
+
+```sql
+alter table scores drop constraint if exists scores_daily_id_player_name_key;
+alter table scores add constraint scores_daily_player_mode_key unique (daily_id, player_name, mode);
+```
+
+If duplicate rows already exist for the same `(daily_id, player_name, mode)`, resolve or delete duplicates before adding the new constraint.
 
 #### 3 — Get your API keys
 
