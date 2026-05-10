@@ -137,8 +137,6 @@ import { getXPData }             from './hexacoreXP.js';
 
   function renderLeaderboardsSection(panel) {
     panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">🏅 LEADERBOARDS</h3>
-      <p class="hx-cfg-section-desc">Compete globally — all-time, daily, weekly, and XP rankings.</p>
       <button class="hx-cfg-launch-btn" id="hx-cfg-lb-open">
         <span>🏅</span> Open Full Leaderboards
       </button>
@@ -168,8 +166,6 @@ import { getXPData }             from './hexacoreXP.js';
     const displayName = playerName || 'Anonymous';
 
     panel.innerHTML = `
-      <h3 class="hx-cfg-section-title">👤 PROFILE</h3>
-      <p class="hx-cfg-section-desc">Your Hexacore career stats and player identity.</p>
       <div class="hx-cfg-profile-quick">
         <div class="hx-cfg-profile-avatar">👤</div>
         <div class="hx-cfg-profile-info">
@@ -225,6 +221,7 @@ import { getXPData }             from './hexacoreXP.js';
           <div id="hx-settings-header-actions">
             <button class="hx-cfg-header-btn" id="hx-cfg-home-btn"  type="button">🏠 HOME</button>
             <button class="hx-cfg-header-btn" id="hx-cfg-theme-btn" type="button">🌙 THEME</button>
+            <button class="hx-cfg-header-btn" id="hx-cfg-howto-btn" type="button">❓ HOW TO</button>
             <button id="hx-settings-close" type="button" aria-label="Close Hexacore settings">✕</button>
           </div>
         </div>
@@ -304,6 +301,7 @@ import { getXPData }             from './hexacoreXP.js';
       const btn   = $('hx-cfg-theme-btn');
       if (btn) btn.textContent = theme === 'dark' ? '☀️ THEME' : '🌙 THEME';
     });
+    $('hx-cfg-howto-btn')?.addEventListener('click', () => { close(); window.hxHowto?.open(); });
 
     // Show first tab
     activateTab('mode');
