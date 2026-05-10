@@ -4680,10 +4680,9 @@ function hasBlockingHexacoreModal() {
   );
 }
 
-function closeTutorialModal(resolve, overlay, beacon, highlightedTile, wasActive, restoreFocusEl) {
+function closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl) {
   overlay.remove();
-  beacon?.remove();
-  highlightedTile?.element?.classList.remove('hx-tutorial-highlight');
+  arrowSvg?.remove();
   restoreFocusEl?.focus?.();
   hxTutorialModalOpen = false;
   if (!hxState.gameOver) hxState.active = wasActive;
@@ -4696,9 +4695,9 @@ function showTutorialModal(item, tile) {
     hxState.active = false;
     hxTutorialModalOpen = true;
 
+    // Full-screen click-blocker — transparent so the board stays fully visible
     const overlay = document.createElement('div');
     overlay.id = 'hx-tutorial-modal';
-    overlay.className = 'hx-tutorial-modal-overlay';
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
     overlay.setAttribute('aria-labelledby', 'hx-tutorial-modal-title');
@@ -4726,38 +4725,64 @@ function showTutorialModal(item, tile) {
     ok.className = 'hx-tutorial-modal-ok';
     ok.textContent = 'OK';
 
-    const highlightedTile = tile || null;
-    if (highlightedTile?.element) highlightedTile.element.classList.add('hx-tutorial-highlight');
-
-    // Build pulsing beacon at the tile's screen position
-    let beacon = null;
-    if (highlightedTile?.element) {
-      const rect = highlightedTile.element.getBoundingClientRect();
-      if (rect.width > 0) {
-        beacon = document.createElement('div');
-        beacon.className = 'hx-tutorial-tile-beacon';
-        const size = Math.max(rect.width, rect.height) + 16;
-        beacon.style.cssText = [
-          'position:fixed',
-          `left:${rect.left + rect.width / 2}px`,
-          `top:${rect.top + rect.height / 2}px`,
-          `width:${size}px`,
-          `height:${size}px`,
-          'pointer-events:none',
-          'z-index:9099',
-        ].join(';');
-        document.body.appendChild(beacon);
-      }
-    }
+    // The tile is NOT highlighted or modified — it appears exactly as the player sees it.
+    let arrowSvg = null;
 
     const restoreFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, beacon, highlightedTile, wasActive, restoreFocusEl), { once: true });
+    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl), { once: true });
 
     box.append(title, desc, ok);
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    requestAnimationFrame(() => ok.focus());
+    // After layout: draw a dashed connector from the modal's top-centre to the tile centre.
+    requestAnimationFrame(() => {
+      ok.focus();
+      if (tile?.element) {
+        const tileRect = tile.element.getBoundingClientRect();
+        const boxRect  = box.getBoundingClientRect();
+        if (tileRect.width > 0 && boxRect.width > 0) {
+          const tx = tileRect.left + tileRect.width  / 2;
+          const ty = tileRect.top  + tileRect.height / 2;
+          const bx = boxRect.left  + boxRect.width   / 2;
+          const by = boxRect.top;
+
+          arrowSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          arrowSvg.setAttribute('class', 'hx-tutorial-arrow-svg');
+          arrowSvg.setAttribute('aria-hidden', 'true');
+
+          const defs   = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+          const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+          marker.setAttribute('id',          'hx-tut-tip');
+          marker.setAttribute('markerWidth',  '7');
+          marker.setAttribute('markerHeight', '7');
+          marker.setAttribute('refX',         '3.5');
+          marker.setAttribute('refY',         '3.5');
+          marker.setAttribute('orient',       'auto-start-reverse');
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('cx', '3.5');
+          dot.setAttribute('cy', '3.5');
+          dot.setAttribute('r',  '3');
+          dot.setAttribute('fill', 'rgba(76,201,240,0.9)');
+          marker.appendChild(dot);
+          defs.appendChild(marker);
+          arrowSvg.appendChild(defs);
+
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', String(bx));
+          line.setAttribute('y1', String(by));
+          line.setAttribute('x2', String(tx));
+          line.setAttribute('y2', String(ty));
+          line.setAttribute('stroke',           'rgba(76,201,240,0.65)');
+          line.setAttribute('stroke-width',     '1.5');
+          line.setAttribute('stroke-dasharray', '5,4');
+          line.setAttribute('marker-end',       'url(#hx-tut-tip)');
+          arrowSvg.appendChild(line);
+
+          document.body.appendChild(arrowSvg);
+        }
+      }
+    });
   });
 }
 
@@ -5083,8 +5108,7 @@ export function stopHexacore() {
   document.getElementById('hx-gameover-overlay')?.remove();
   document.getElementById('hx-challenges-modal')?.remove();
   document.getElementById('hx-tutorial-modal')?.remove();
-  document.querySelector('.hx-tutorial-tile-beacon')?.remove();
-  hxState.tiles.forEach(tile => tile.element?.classList?.remove('hx-tutorial-highlight'));
+  document.querySelector('.hx-tutorial-arrow-svg')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
   const gridSvg = document.getElementById('hex-grid');

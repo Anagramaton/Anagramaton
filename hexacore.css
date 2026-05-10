@@ -1708,19 +1708,25 @@ body.hx-active #hex-grid {
 }
 
 /* ── Hexacore tutorial / collection modal ───────────────────────── */
+/*
+ * The overlay is a transparent full-screen click-blocker only.
+ * No background tint, no blur — the board stays fully visible so the
+ * player can see the referenced tile at the same time as the modal.
+ */
 #hx-tutorial-modal {
   position: fixed;
   inset: 0;
   z-index: 9100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(2, 6, 23, 0.78);
-  backdrop-filter: blur(6px);
+  /* Transparent — no dark tint, no backdrop blur */
+  background: none;
 }
 
 .hx-tutorial-modal-box {
-  width: min(92vw, 430px);
+  position: absolute;
+  bottom: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(88vw, 400px);
   padding: 1.1rem 1.15rem 1rem;
   border-radius: 12px;
   border: 1px solid rgba(76, 201, 240, 0.6);
@@ -1729,6 +1735,26 @@ body.hx-active #hex-grid {
     0 0 26px rgba(76, 201, 240, 0.22),
     0 16px 34px rgba(0, 0, 0, 0.7);
   text-align: center;
+}
+
+/* Narrow-screen adjustments */
+@media (max-width: 480px) {
+  .hx-tutorial-modal-box {
+    bottom: 2vh;
+    width: min(94vw, 400px);
+    padding: 0.85rem 0.9rem 0.75rem;
+  }
+}
+
+/* Short-viewport adjustments (landscape phones, etc.) */
+@media (max-height: 560px) {
+  .hx-tutorial-modal-box {
+    bottom: 1vh;
+    padding: 0.65rem 0.85rem 0.6rem;
+  }
+  .hx-tutorial-modal-title { font-size: 0.8rem; }
+  .hx-tutorial-modal-desc  { font-size: 0.75rem; }
+  .hx-tutorial-modal-ok    { margin-top: 0.6rem; padding: 0.32rem 0.75rem; }
 }
 
 .hx-tutorial-modal-title {
@@ -1769,31 +1795,14 @@ body.hx-active #hex-grid {
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.28);
 }
 
-.tile.hx-tutorial-highlight {
-  filter:
-    drop-shadow(0 0 12px rgba(76, 201, 240, 0.95))
-    drop-shadow(0 0 24px rgba(59, 130, 246, 0.45));
-}
-
-/* Pulsing ring drawn at the tile's screen position */
-.hx-tutorial-tile-beacon {
-  border-radius: 50%;
-  border: 3px solid rgba(76, 201, 240, 0.9);
-  transform: translate(-50%, -50%);
-  animation: hx-tutorial-beacon-pulse 0.9s ease-in-out infinite;
-}
-
-@keyframes hx-tutorial-beacon-pulse {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.95;
-    box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.6);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.22);
-    opacity: 0.35;
-    box-shadow: 0 0 0 10px rgba(76, 201, 240, 0);
-  }
+/* SVG connector line drawn from modal box to the referenced tile */
+.hx-tutorial-arrow-svg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9099;
 }
 
 /* ── Rune letter picker modal ──────────────────────────────────── */
