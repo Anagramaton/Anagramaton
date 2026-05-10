@@ -1707,6 +1707,83 @@ body.hx-active #hex-grid {
   min-height: 2rem;
 }
 
+/* ── Hexacore tutorial / collection modal ───────────────────────── */
+#hx-tutorial-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 23, 0.78);
+  backdrop-filter: blur(6px);
+}
+
+.hx-tutorial-modal-box {
+  width: min(92vw, 430px);
+  padding: 1.1rem 1.15rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(76, 201, 240, 0.6);
+  background: linear-gradient(160deg, rgba(9, 13, 30, 0.97), rgba(18, 9, 34, 0.96));
+  box-shadow:
+    0 0 26px rgba(76, 201, 240, 0.22),
+    0 16px 34px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+.hx-tutorial-modal-title {
+  margin: 0 0 0.5rem;
+  font-family: 'Turret Road', 'Orbitron', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  color: #4cc9f0;
+  text-transform: uppercase;
+}
+
+.hx-tutorial-modal-desc {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.hx-tutorial-modal-pointer {
+  margin: 0.6rem 0 0;
+  color: #93c5fd;
+  font-size: 0.7rem;
+  font-family: 'Orbitron', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hx-tutorial-modal-ok {
+  margin-top: 0.9rem;
+  min-width: 82px;
+  border: 1px solid rgba(34, 197, 94, 0.75);
+  border-radius: 8px;
+  padding: 0.46rem 0.95rem;
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.2), rgba(21, 128, 61, 0.36));
+  color: #dcfce7;
+  font-family: 'Black Han Sans', sans-serif;
+  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.hx-tutorial-modal-ok:hover,
+.hx-tutorial-modal-ok:focus-visible {
+  outline: none;
+  border-color: rgba(134, 239, 172, 0.95);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.28);
+}
+
+.tile.hx-tutorial-highlight {
+  filter:
+    drop-shadow(0 0 12px rgba(76, 201, 240, 0.95))
+    drop-shadow(0 0 24px rgba(59, 130, 246, 0.45));
+}
+
 /* ── Rune letter picker modal ──────────────────────────────────── */
 #hx-rune-picker {
   position: fixed;
@@ -2236,6 +2313,14 @@ body.hx-active #hex-grid {
   transform-box: fill-box;
   transform-origin: center;
   animation: hx-oracle-shimmer 3.5s ease-in-out infinite;
+}
+
+.hx-achievement-tile-letter {
+  fill: #f8fafc;
+  stroke: rgba(15, 23, 42, 0.9);
+  stroke-width: 1.6px;
+  font-size: 24px !important;
+  letter-spacing: 0.04em;
 }
 @keyframes hx-oracle-shimmer {
   0%, 100% {
