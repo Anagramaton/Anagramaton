@@ -9,13 +9,6 @@ const MODES = [
     color: '#f97316',
   },
   {
-    id:    'zen',
-    icon:  '🌿',
-    title: 'ZEN MODE',
-    desc:  'No ember tiles. Relax and build words at your own pace.',
-    color: '#22c55e',
-  },
-  {
     id:    'daily',
     icon:  '📅',
     title: 'DAILY',

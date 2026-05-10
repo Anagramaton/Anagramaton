@@ -63,7 +63,7 @@ const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
-let hxGameMode = 'endless'; // 'endless' | 'zen' | 'daily' | 'campaign'
+let hxGameMode = 'endless'; // 'endless' | 'daily' | 'campaign'
 let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
 /* ── Gem tile type set (module-level for shared use) ───────────── */
@@ -1710,7 +1710,7 @@ function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
   // Mode colors matching the mode-select screen
-  const HX_MODE_COLORS = { endless: '#f97316', zen: '#22c55e', daily: '#4cc9f0', campaign: '#a855f7' };
+  const HX_MODE_COLORS = { endless: '#f97316', daily: '#4cc9f0', campaign: '#a855f7' };
 
   // Score HUD — split into number + label spans, with a small mode color dot
   const hud = document.createElement('div');
@@ -3886,8 +3886,8 @@ async function submitHexacoreWord() {
     // Fire bonus mirrors word reward
     if (hasEmber) spawnGemRewardForWord(word.length);
     spawnSpecialTiles();
-    // Also spawn an ember on any 6+ letter word (not in zen mode)
-    if (word.length >= 6 && hxGameMode !== 'zen') {
+    // Also spawn an ember on any 6+ letter word
+    if (word.length >= 6) {
       spawnSpecialInRows('ember', [-GRID_RADIUS]);
     }
 
@@ -4275,12 +4275,9 @@ function spawnGemRewardForWord(wordLength) {
 
 /* ── Special tile spawning ─────────────────────────────────────── */
 function spawnSpecialTiles() {
-  // Zen mode: skip all ember spawns
-  if (hxGameMode !== 'zen') {
-    // Every 3 words → 1 new ember in top row
-    if (hxWordCount % 3 === 0) {
-      spawnSpecialInRows('ember', [-GRID_RADIUS]);
-    }
+  // Every 3 words → 1 new ember in top row
+  if (hxWordCount % 3 === 0) {
+    spawnSpecialInRows('ember', [-GRID_RADIUS]);
   }
   // Random interval (4–6 words) → 1 new prism in top 3 rows
   if (hxWordCount >= hxNextPrismSpawn) {
