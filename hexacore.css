@@ -2315,11 +2315,11 @@ body.hx-active #hex-grid {
   animation: hx-oracle-shimmer 3.5s ease-in-out infinite;
 }
 
-.hx-achievement-tile-letter {
+.tile .hx-achievement-tile-letter {
   fill: #f8fafc;
   stroke: rgba(15, 23, 42, 0.9);
   stroke-width: 1.6px;
-  font-size: 24px !important;
+  font-size: 24px;
   letter-spacing: 0.04em;
 }
 @keyframes hx-oracle-shimmer {

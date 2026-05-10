@@ -4624,7 +4624,7 @@ function enqueueCollectedTileModals(consumedTiles) {
     enqueueTutorialModal({
       kind: 'collection',
       title: 'Amethyst Collected',
-      description: 'You collected an Amethyst tile and gained 1 Transmute charge.',
+      description: 'You\'ve collected an Amethyst tile and gained 1 Transmute charge.',
       tileType: 'amethyst',
     });
   }
@@ -4633,7 +4633,7 @@ function enqueueCollectedTileModals(consumedTiles) {
     enqueueTutorialModal({
       kind: 'collection',
       title: 'Selenite Collected',
-      description: 'You collected a Selenite tile and gained 1 Phase Swap charge.',
+      description: 'You\'ve collected a Selenite tile and gained 1 Phase Swap charge.',
       tileType: 'selenite',
     });
   }
@@ -4646,7 +4646,7 @@ function enqueueCollectedTileModals(consumedTiles) {
     enqueueTutorialModal({
       kind: 'collection',
       title: `${HX_ACHIEVEMENT_TILE_META[type].label} Collected`,
-      description: `You collected "${letter}"! Progress: ${getAchievementCollectionProgress()} (${collected}/${HX_ACHIEVEMENT_TILE_ORDER.length})`,
+      description: `You\'ve collected "${letter}"! Progress: ${getAchievementCollectionProgress()} (${collected}/${HX_ACHIEVEMENT_TILE_ORDER.length})`,
       tileType: type,
     });
   });
