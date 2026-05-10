@@ -4343,6 +4343,7 @@ function triggerGameOver() {
   hxState.active   = false;
 
   window.removeEventListener('beforeunload', saveHexacoreProgress);
+  window.removeEventListener('pagehide',     saveHexacoreProgress);
   clearHexacoreSave();
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
   cancelAmethystTargeting();
@@ -5086,6 +5087,7 @@ export function startHexacore(mode = 'endless') {
   setupPointerEvents();
   playSound('sfxUnlock');
   window.addEventListener('beforeunload', saveHexacoreProgress);
+  window.addEventListener('pagehide',     saveHexacoreProgress);
 }
 
 export function getHexacoreScore() {
@@ -5093,10 +5095,15 @@ export function getHexacoreScore() {
 }
 
 export function stopHexacore() {
+  // Persist the current board before any state is torn down so that returning
+  // players face the same board they left — prevents the leave-to-reset exploit.
+  if (!hxState.gameOver) saveHexacoreProgress();
+
   hxState.gameOver = true;
   hxState.active   = false;
 
   window.removeEventListener('beforeunload', saveHexacoreProgress);
+  window.removeEventListener('pagehide',     saveHexacoreProgress);
   if (hxPointerCleanup) { hxPointerCleanup(); hxPointerCleanup = null; }
 
   cancelAmethystTargeting();
