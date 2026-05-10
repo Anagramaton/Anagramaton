@@ -1462,11 +1462,6 @@ function checkLevelUp(oldScore, newScore) {
   if (leveled) {
     updateLevelHud();
     showLevelUpBanner(hxState.level);
-    // Spawn 2 embers as a level-up hazard surge (not in zen mode)
-    if (hxGameMode !== 'zen') {
-      spawnSpecialInRows('ember', [-GRID_RADIUS]);
-      spawnSpecialInRows('ember', [-GRID_RADIUS]);
-    }
   }
 }
 
@@ -1513,18 +1508,17 @@ function showLevelUpBanner(level) {
 
   banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => {
     banner.remove();
-    if (newLevel === 2) applyLevelTwoRewards();
+    applyLevelUpRewards();
   });
 }
 
 /**
- * Fires after the player dismisses the Level 2 banner.
- * Sequentially: convert 1 tile → prism, 1 tile → rune,
- * add 1 amethyst, add 1 selenite, open a portal — each
- * with a brief one-line description toast.
+ * Fires after the player dismisses the Level-Up banner (every level).
+ * Converts up to 2 basic/Emerald tiles → Prism, 1 → Rune,
+ * 1 → Lodestone, 1 → Amethyst, and opens a Portal if one isn't active.
  */
-function applyLevelTwoRewards() {
-  const DELAY = 1800; // ms between each reward step
+function applyLevelUpRewards() {
+  const DELAY = 1200; // ms between each reward step
 
   function showRewardToast(msg, icon) {
     document.getElementById('hx-lv2-reward-toast')?.remove();
@@ -1561,55 +1555,77 @@ function applyLevelTwoRewards() {
     }, DELAY - 300);
   }
 
-  function convertRandomTile(excludeTile, targetType) {
+  // Eligible tiles: normal or Emerald gem, not a portal tile
+  const converted = [];
+  function pickEligibleTile() {
     const eligible = hxState.tiles.filter(
-      t => t.tileType === 'normal' && !isPortalTile(t) && t !== excludeTile,
+      t => (t.tileType === 'normal' || t.tileType === 'gemEmerald')
+        && !isPortalTile(t)
+        && !converted.includes(t),
     );
     if (eligible.length === 0) return null;
-    const target = eligible[Math.floor(Math.random() * eligible.length)];
-    target.tileType = targetType;
-    if (targetType === 'prism') _hxRegisterTile(target, hxState.prismTiles);
-    else if (targetType === 'rune') _hxRegisterTile(target, hxState.runeTiles);
-    applyTileType(target);
-    target.element.classList.add(`hx-${targetType}-spawn`);
-    target.element.addEventListener('animationend', () => {
-      target.element.classList.remove(`hx-${targetType}-spawn`);
-    }, { once: true });
-    return target;
+    return eligible[Math.floor(Math.random() * eligible.length)];
   }
 
-  // Step 1 — Prism tile
-  let prismTile = null;
+  function convertTile(tile, targetType) {
+    if (!tile) return;
+    _hxClearTileType(tile);
+    tile.tileType = targetType;
+    if (targetType === 'prism')     _hxRegisterTile(tile, hxState.prismTiles);
+    else if (targetType === 'rune') _hxRegisterTile(tile, hxState.runeTiles);
+    else if (targetType === 'lodestone') _hxRegisterTile(tile, hxState.lodestoneTiles);
+    else if (targetType === 'amethyst')  _hxRegisterTile(tile, hxState.amethystTiles);
+    applyTileType(tile);
+    enqueueTileIntroduction(tile);
+    tile.element.classList.add(`hx-${targetType}-spawn`);
+    tile.element.addEventListener('animationend', () => {
+      tile.element.classList.remove(`hx-${targetType}-spawn`);
+    }, { once: true });
+    converted.push(tile);
+  }
+
+  // Step 1 — Prism #1
   setTimeout(() => {
-    prismTile = convertRandomTile(null, 'prism');
-    showRewardToast('Prism Tile: Boosts XP and doubles points for any word it touches.', '🔷');
+    const t = pickEligibleTile();
+    convertTile(t, 'prism');
+    showRewardToast('Prism Tile: doubles the score of any word it joins!', '🔷');
   }, 0);
 
-  // Step 2 — Rune tile
+  // Step 2 — Prism #2
   setTimeout(() => {
-    convertRandomTile(prismTile, 'rune');
-    showRewardToast('Rune Tile: Acts as a wild card — it can be any letter you need.', '🔮');
+    const t = pickEligibleTile();
+    convertTile(t, 'prism');
+    showRewardToast('Another Prism Tile added!', '🔷');
   }, DELAY);
 
-  // Step 3 — Amethyst
+  // Step 3 — Rune
   setTimeout(() => {
-    hxState.amethystCount++;
-    updatePowerUpBar();
-    showRewardToast('Amethyst: Tap it to transmute any tile\'s letter into one of your choice.', '💜');
+    const t = pickEligibleTile();
+    convertTile(t, 'rune');
+    showRewardToast('Rune Tile: a wildcard — any letter you need.', '🔮');
   }, DELAY * 2);
 
-  // Step 4 — Selenite
+  // Step 4 — Portal (skip if already open)
   setTimeout(() => {
-    hxState.seleniteCount++;
-    updatePowerUpBar();
-    showRewardToast('Selenite: Tap it to instantly swap any two tiles on the board.', '🌙');
+    if (!hxState.portalOpen) {
+      openPortal();
+      showRewardToast('Portal: trace through one corner tile to link to the other!', '🌀');
+    }
   }, DELAY * 3);
 
-  // Step 5 — Portal
+  // Step 5 — Lodestone
   setTimeout(() => {
-    openPortal();
-    showRewardToast('Portal: Two linked corner tiles — trace through one to teleport to the other.', '🌀');
+    const t = pickEligibleTile();
+    convertTile(t, 'lodestone');
+    showRewardToast('Lodestone: boosts gem scoring for your next word!', '⬡');
   }, DELAY * 4);
+
+  // Step 6 — Amethyst
+  setTimeout(() => {
+    const t = pickEligibleTile();
+    convertTile(t, 'amethyst');
+    showRewardToast("Amethyst: transmute any tile's letter into one of your choice!", '💜');
+  }, DELAY * 5);
 }
 
 function showRestoredBanner(level, score) {
@@ -3326,47 +3342,44 @@ function findTopWordsOnBoard(n) {
 
 /**
  * Checks if any achievement has been unlocked by the current word.
+ * An achievement tile spawns whenever its condition is met, as long as
+ * a tile of that type is NOT already on the board (no stacking).
  * Returns array of { tileName, description } for spawned tiles.
  */
 function checkAchievementRewards(word, consumed, wordScore, portalUsed) {
   const spawned = [];
 
-  // 1. Oracle — 9-letter word
-  if (!hxState.achievements.oracleAwarded && word.length >= ORACLE_UNLOCK_WORD_LENGTH) {
-    hxState.achievements.oracleAwarded = true;
+  // 1. Oracle — 9-letter word; re-spawns once the previous one is collected
+  if (hxState.oracleTiles.length === 0 && word.length >= ORACLE_UNLOCK_WORD_LENGTH) {
     spawnSpecialInRows('oracle', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-    spawned.push({ tileName: 'ORACLE ⊙', description: 'Longest Word Hunter! Use it in a 5+ letter word to collect.' });
+    spawned.push({ tileName: 'ORACLE O', description: 'Longest Word Hunter! Use it in a 5+ letter word to collect.' });
   }
 
-  // 2. Beacon — 10,000+ point single word
-  if (!hxState.achievements.beaconAwarded && wordScore >= BEACON_UNLOCK_SCORE) {
-    hxState.achievements.beaconAwarded = true;
+  // 2. Beacon — 10,000+ point single word; re-spawns once the previous one is collected
+  if (hxState.beaconTiles.length === 0 && wordScore >= BEACON_UNLOCK_SCORE) {
     spawnSpecialInRows('beacon', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-    spawned.push({ tileName: 'BEACON ◆', description: 'Score Master! Use it in a 5+ letter word to collect.' });
+    spawned.push({ tileName: 'BEACON B', description: 'Score Master! Use it in a 5+ letter word to collect.' });
   }
 
-  // 3. Eclipse — portal used in 3 different words (cumulative)
-  if (!hxState.achievements.eclipseAwarded && portalUsed && hxState.achievements.portalWordsUsed >= ECLIPSE_UNLOCK_PORTAL_WORDS) {
-    hxState.achievements.eclipseAwarded = true;
+  // 3. Eclipse — portal used in 3 different words; re-spawns once the previous one is collected
+  if (hxState.eclipseTiles.length === 0 && portalUsed && hxState.achievements.portalWordsUsed >= ECLIPSE_UNLOCK_PORTAL_WORDS) {
     spawnSpecialInRows('eclipse', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-    spawned.push({ tileName: 'ECLIPSE ☽', description: 'Portal Traveler! Use it in a 5+ letter word to collect.' });
+    spawned.push({ tileName: 'ECLIPSE E', description: 'Portal Traveler! Use it in a 5+ letter word to collect.' });
   }
 
-  // 4. Lodestone — 5 different gem types in one word
-  if (!hxState.achievements.lodestoneAwarded) {
+  // 4. Lodestone — 5 different gem types in one word; re-spawns once the previous one is collected
+  if (hxState.lodestoneTiles.length === 0) {
     const uniqueGemTypes = new Set(consumed.filter(t => HX_GEM_TYPES.has(t.tileType)).map(t => t.tileType));
     if (uniqueGemTypes.size >= LODESTONE_UNLOCK_GEM_TYPES) {
-      hxState.achievements.lodestoneAwarded = true;
       spawnSpecialInRows('lodestone', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-      spawned.push({ tileName: 'LODESTONE ⬡', description: 'Gem Collector! Use it in a 5+ letter word to collect.' });
+      spawned.push({ tileName: 'LODESTONE L', description: 'Gem Collector! Use it in a 5+ letter word to collect.' });
     }
   }
 
-  // 5. Lexicon — 100 total words submitted this session
-  if (!hxState.achievements.lexiconAwarded && hxState.wordsSubmitted >= LEXICON_UNLOCK_WORDS) {
-    hxState.achievements.lexiconAwarded = true;
+  // 5. Lexicon — 100 total words submitted; re-spawns once the previous one is collected
+  if (hxState.lexiconTiles.length === 0 && hxState.wordsSubmitted >= LEXICON_UNLOCK_WORDS) {
     spawnSpecialInRows('lexicon', [-GRID_RADIUS, -GRID_RADIUS + 1, -GRID_RADIUS + 2]);
-    spawned.push({ tileName: 'LEXICON ∞', description: 'Endurance Master! Use it in a 5+ letter word to collect. One-time use.' });
+    spawned.push({ tileName: 'LEXICON X', description: 'Endurance Master! Use it in a 5+ letter word to collect.' });
   }
 
   return spawned;
@@ -4612,6 +4625,8 @@ function enqueueTutorialModal(item) {
 function enqueueTileIntroduction(tile) {
   if (!tile) return;
   const type = tile.tileType || 'normal';
+  // Skip basic letter/digraph tiles — no intro modal needed for them
+  if (type === 'normal' || type === 'digraph') return;
   if (hxIntroducedTileTypes.has(type) || hxQueuedTileIntros.has(type)) return;
   hxQueuedTileIntros.add(type);
   enqueueTutorialModal({ kind: 'intro', tileType: type, tile });
@@ -4665,8 +4680,9 @@ function hasBlockingHexacoreModal() {
   );
 }
 
-function closeTutorialModal(resolve, overlay, highlightedTile, wasActive, restoreFocusEl) {
+function closeTutorialModal(resolve, overlay, beacon, highlightedTile, wasActive, restoreFocusEl) {
   overlay.remove();
+  beacon?.remove();
   highlightedTile?.element?.classList.remove('hx-tutorial-highlight');
   restoreFocusEl?.focus?.();
   hxTutorialModalOpen = false;
@@ -4705,11 +4721,6 @@ function showTutorialModal(item, tile) {
       ? getTileIntroDescription(item.tileType)
       : item.description;
 
-    const tileId = tile ? hxKey(tile.q, tile.r) : '';
-    const pointer = document.createElement('p');
-    pointer.className = 'hx-tutorial-modal-pointer';
-    pointer.textContent = tileId ? `Highlighted tile: ${tileId}` : '';
-
     const ok = document.createElement('button');
     ok.type = 'button';
     ok.className = 'hx-tutorial-modal-ok';
@@ -4718,12 +4729,31 @@ function showTutorialModal(item, tile) {
     const highlightedTile = tile || null;
     if (highlightedTile?.element) highlightedTile.element.classList.add('hx-tutorial-highlight');
 
-    const restoreFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, highlightedTile, wasActive, restoreFocusEl), { once: true });
+    // Build pulsing beacon at the tile's screen position
+    let beacon = null;
+    if (highlightedTile?.element) {
+      const rect = highlightedTile.element.getBoundingClientRect();
+      if (rect.width > 0) {
+        beacon = document.createElement('div');
+        beacon.className = 'hx-tutorial-tile-beacon';
+        const size = Math.max(rect.width, rect.height) + 16;
+        beacon.style.cssText = [
+          'position:fixed',
+          `left:${rect.left + rect.width / 2}px`,
+          `top:${rect.top + rect.height / 2}px`,
+          `width:${size}px`,
+          `height:${size}px`,
+          'pointer-events:none',
+          'z-index:9099',
+        ].join(';');
+        document.body.appendChild(beacon);
+      }
+    }
 
-    box.append(title, desc);
-    if (pointer.textContent) box.appendChild(pointer);
-    box.appendChild(ok);
+    const restoreFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, beacon, highlightedTile, wasActive, restoreFocusEl), { once: true });
+
+    box.append(title, desc, ok);
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
@@ -5053,6 +5083,7 @@ export function stopHexacore() {
   document.getElementById('hx-gameover-overlay')?.remove();
   document.getElementById('hx-challenges-modal')?.remove();
   document.getElementById('hx-tutorial-modal')?.remove();
+  document.querySelector('.hx-tutorial-tile-beacon')?.remove();
   hxState.tiles.forEach(tile => tile.element?.classList?.remove('hx-tutorial-highlight'));
   document.getElementById('hx-req-toast')?.remove();
   removeHud();

@@ -1748,15 +1748,6 @@ body.hx-active #hex-grid {
   letter-spacing: 0.02em;
 }
 
-.hx-tutorial-modal-pointer {
-  margin: 0.6rem 0 0;
-  color: #93c5fd;
-  font-size: 0.7rem;
-  font-family: 'Orbitron', monospace;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .hx-tutorial-modal-ok {
   margin-top: 0.9rem;
   min-width: 82px;
@@ -1782,6 +1773,27 @@ body.hx-active #hex-grid {
   filter:
     drop-shadow(0 0 12px rgba(76, 201, 240, 0.95))
     drop-shadow(0 0 24px rgba(59, 130, 246, 0.45));
+}
+
+/* Pulsing ring drawn at the tile's screen position */
+.hx-tutorial-tile-beacon {
+  border-radius: 50%;
+  border: 3px solid rgba(76, 201, 240, 0.9);
+  transform: translate(-50%, -50%);
+  animation: hx-tutorial-beacon-pulse 0.9s ease-in-out infinite;
+}
+
+@keyframes hx-tutorial-beacon-pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.95;
+    box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.6);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.22);
+    opacity: 0.35;
+    box-shadow: 0 0 0 10px rgba(76, 201, 240, 0);
+  }
 }
 
 /* ── Rune letter picker modal ──────────────────────────────────── */
