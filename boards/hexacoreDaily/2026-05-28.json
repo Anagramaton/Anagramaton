@@ -1,0 +1,89 @@
+{
+  "date": "2026-05-28",
+  "grid": {
+    "3,-3": "E",
+    "2,-2": "X",
+    "1,-2": "T",
+    "1,-1": "E",
+    "0,0": "R",
+    "1,0": "N",
+    "1,1": "A",
+    "0,1": "L",
+    "-1,2": "I",
+    "-2,2": "Z",
+    "-1,1": "I",
+    "-1,0": "N",
+    "-2,1": "G",
+    "4,-2": "W",
+    "3,-2": "I",
+    "2,-1": "L",
+    "3,-1": "L",
+    "2,0": "I",
+    "2,1": "W",
+    "0,2": "W",
+    "0,-1": "B",
+    "0,-2": "U",
+    "-1,-1": "F",
+    "-2,-1": "F",
+    "-2,0": "E",
+    "-3,1": "D",
+    "-4,4": "M",
+    "-3,3": "O",
+    "-2,3": "Z",
+    "-1,3": "E",
+    "0,4": "P",
+    "0,3": "A",
+    "1,2": "P",
+    "0,-4": "B",
+    "0,-3": "O",
+    "undefined": "U"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": 1,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3073,
+    "minAchievableScore": 1274,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "EXTERNALIZING",
+          "WILLIWAW",
+          "REBUFFED",
+          "PAWPAW"
+        ],
+        "wordTotal": 1421,
+        "penalty": 31,
+        "finalScore": 1390
+      },
+      {
+        "words": [
+          "EXTERNALIZING",
+          "WILLIWAW",
+          "REBUFFED",
+          "PAWPAW"
+        ],
+        "wordTotal": 1421,
+        "penalty": 31,
+        "finalScore": 1390
+      },
+      {
+        "words": [
+          "EXTERNALIZING",
+          "WILLIWAW",
+          "REBUFFED",
+          "PAWPAW"
+        ],
+        "wordTotal": 1421,
+        "penalty": 31,
+        "finalScore": 1390
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:38.434Z"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "date": "2026-07-06",
+  "grid": {
+    "0,-3": "B",
+    "0,-2": "U",
+    "1,-2": "M",
+    "1,-1": "B",
+    "0,0": "L",
+    "0,1": "E",
+    "1,0": "B",
+    "1,1": "E",
+    "0,2": "R",
+    "-1,2": "R",
+    "-1,1": "I",
+    "-2,1": "E",
+    "-1,0": "S",
+    "-2,-1": "M",
+    "-2,0": "I",
+    "-1,-1": "Z",
+    "0,-1": "Z",
+    "3,-3": "J",
+    "2,-2": "O",
+    "2,0": "I",
+    "3,-1": "N",
+    "2,-1": "G",
+    "3,-2": "S",
+    "-4,4": "B",
+    "-3,3": "I",
+    "-2,2": "F",
+    "-3,2": "F",
+    "-3,1": "D",
+    "-1,-2": "Y",
+    "-3,4": "F",
+    "-2,3": "A",
+    "undefined": "L"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": 1,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3073,
+    "minAchievableScore": 1274,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "BUMBLEBERRIES",
+          "MIZZLIER",
+          "JOBBINGS",
+          "BIFFED"
+        ],
+        "wordTotal": 1403,
+        "penalty": 16,
+        "finalScore": 1387
+      },
+      {
+        "words": [
+          "BUMBLEBERRIES",
+          "MIZZLIER",
+          "JOBBINGS",
+          "BIFFED"
+        ],
+        "wordTotal": 1403,
+        "penalty": 16,
+        "finalScore": 1387
+      },
+      {
+        "words": [
+          "BUMBLEBERRIES",
+          "MIZZLIER",
+          "JOBBINGS",
+          "BUZZY"
+        ],
+        "wordTotal": 1399,
+        "penalty": 39,
+        "finalScore": 1360
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:39.236Z"
+  }
+}

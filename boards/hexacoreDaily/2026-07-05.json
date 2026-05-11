@@ -1,0 +1,84 @@
+{
+  "date": "2026-07-05",
+  "grid": {
+    "0,1": "M",
+    "0,2": "A",
+    "-1,2": "N",
+    "-1,1": "G",
+    "-2,1": "E",
+    "-2,0": "L",
+    "-1,-1": "W",
+    "0,-1": "U",
+    "-1,0": "R",
+    "0,0": "Z",
+    "1,-1": "E",
+    "1,0": "L",
+    "2,-1": "S",
+    "-3,0": "P",
+    "-2,-1": "O",
+    "0,-2": "B",
+    "1,-2": "O",
+    "2,-3": "Y",
+    "2,-2": "S",
+    "3,0": "J",
+    "2,0": "A",
+    "2,1": "B",
+    "1,1": "B",
+    "-4,2": "W",
+    "-3,2": "I",
+    "-2,2": "V",
+    "-2,3": "I",
+    "-1,-3": "J",
+    "-1,-2": "A",
+    "1,-3": "X",
+    "undefined": "U"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": 2,
+      "r": -3
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2975,
+    "minAchievableScore": 1352,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "MANGELWURZELS",
+          "PLOWBOYS",
+          "JAWBOX",
+          "JABBLE"
+        ],
+        "wordTotal": 1370,
+        "penalty": 24,
+        "finalScore": 1346
+      },
+      {
+        "words": [
+          "MANGELWURZELS",
+          "JAWBOX",
+          "PLOWBOYS",
+          "JABBLE"
+        ],
+        "wordTotal": 1370,
+        "penalty": 24,
+        "finalScore": 1346
+      },
+      {
+        "words": [
+          "MANGELWURZELS",
+          "PLOWBOYS",
+          "JAWBOX",
+          "JABBLE"
+        ],
+        "wordTotal": 1370,
+        "penalty": 24,
+        "finalScore": 1346
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:39.232Z"
+  }
+}

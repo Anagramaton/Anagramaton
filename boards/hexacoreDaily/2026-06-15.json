@@ -1,0 +1,87 @@
+{
+  "date": "2026-06-15",
+  "grid": {
+    "0,1": "A",
+    "1,0": "P",
+    "0,0": "P",
+    "-1,1": "R",
+    "-1,2": "O",
+    "-2,2": "X",
+    "-2,1": "I",
+    "-1,0": "M",
+    "-1,-1": "A",
+    "0,-2": "T",
+    "0,-1": "I",
+    "1,-2": "N",
+    "2,-2": "G",
+    "-3,4": "S",
+    "-2,3": "L",
+    "0,2": "W",
+    "1,1": "B",
+    "2,1": "A",
+    "2,0": "C",
+    "3,0": "K",
+    "-4,0": "M",
+    "-3,0": "U",
+    "-2,0": "Z",
+    "-3,1": "J",
+    "-3,2": "K",
+    "4,-3": "B",
+    "3,-2": "O",
+    "2,-1": "F",
+    "1,-1": "F",
+    "-4,1": "H",
+    "-2,-1": "Z",
+    "4,-2": "B",
+    "3,-1": "I",
+    "undefined": "A"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": -2,
+      "r": 1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3060,
+    "minAchievableScore": 1248,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "APPROXIMATING",
+          "HUZZAING",
+          "SLOWBACK",
+          "MUZJIK"
+        ],
+        "wordTotal": 1434,
+        "penalty": 34,
+        "finalScore": 1400
+      },
+      {
+        "words": [
+          "APPROXIMATING",
+          "HUZZAING",
+          "SLOWBACK",
+          "MUZJIK"
+        ],
+        "wordTotal": 1434,
+        "penalty": 34,
+        "finalScore": 1400
+      },
+      {
+        "words": [
+          "APPROXIMATING",
+          "HUZZAING",
+          "SLOWBACK",
+          "MUZJIK"
+        ],
+        "wordTotal": 1434,
+        "penalty": 34,
+        "finalScore": 1400
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:38.771Z"
+  }
+}

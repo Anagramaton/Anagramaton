@@ -1,0 +1,87 @@
+{
+  "date": "2026-06-23",
+  "grid": {
+    "1,-1": "D",
+    "2,-1": "U",
+    "2,-2": "M",
+    "1,-2": "B",
+    "1,-3": "F",
+    "0,-2": "O",
+    "0,-1": "U",
+    "-1,0": "N",
+    "-1,1": "D",
+    "0,1": "E",
+    "0,0": "R",
+    "1,0": "E",
+    "1,1": "D",
+    "-2,0": "M",
+    "-2,1": "O",
+    "-3,2": "Z",
+    "-2,2": "Z",
+    "-2,3": "E",
+    "-1,2": "T",
+    "0,2": "T",
+    "3,-2": "V",
+    "3,-1": "M",
+    "2,0": "M",
+    "1,-4": "B",
+    "0,-3": "R",
+    "-1,-2": "W",
+    "-1,-1": "S",
+    "-2,-1": "Y",
+    "-4,1": "S",
+    "-3,1": "C",
+    "-3,3": "A",
+    "3,-4": "Z",
+    "2,-3": "A",
+    "undefined": "L"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": -1,
+      "r": 2
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2813,
+    "minAchievableScore": 1274,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "DUMBFOUNDERED",
+          "MOZZETTE",
+          "SCOZZA",
+          "ZAMBOS"
+        ],
+        "wordTotal": 1299,
+        "penalty": 44,
+        "finalScore": 1255
+      },
+      {
+        "words": [
+          "DUMBFOUNDERED",
+          "MOZZETTE",
+          "SCOZZA",
+          "ZAMBOS"
+        ],
+        "wordTotal": 1299,
+        "penalty": 44,
+        "finalScore": 1255
+      },
+      {
+        "words": [
+          "DUMBFOUNDERED",
+          "MOZZETTE",
+          "SCOZZA",
+          "ZAMBOS"
+        ],
+        "wordTotal": 1299,
+        "penalty": 44,
+        "finalScore": 1255
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:38.983Z"
+  }
+}

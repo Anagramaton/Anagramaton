@@ -1,0 +1,87 @@
+{
+  "date": "2026-05-13",
+  "grid": {
+    "3,-3": "E",
+    "2,-2": "X",
+    "1,-2": "C",
+    "1,-1": "L",
+    "2,-1": "U",
+    "2,0": "D",
+    "1,1": "A",
+    "1,0": "B",
+    "0,1": "I",
+    "-1,1": "L",
+    "0,0": "I",
+    "-1,0": "T",
+    "-1,-1": "Y",
+    "0,2": "Z",
+    "-1,2": "G",
+    "-2,2": "Z",
+    "-2,1": "A",
+    "-3,1": "G",
+    "-2,0": "G",
+    "-2,-1": "Y",
+    "2,-4": "Q",
+    "1,-3": "W",
+    "0,-2": "E",
+    "0,-1": "R",
+    "3,1": "Q",
+    "2,1": "U",
+    "1,2": "Z",
+    "-1,3": "Y",
+    "2,2": "P",
+    "0,3": "Z",
+    "-4,3": "S",
+    "-3,3": "Y",
+    "-2,3": "Y",
+    "undefined": "I"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": 1,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3010,
+    "minAchievableScore": 1300,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "EXCLUDABILITY",
+          "ZIGZAGGY",
+          "QUAZZY",
+          "QWERTY"
+        ],
+        "wordTotal": 1390,
+        "penalty": 28,
+        "finalScore": 1362
+      },
+      {
+        "words": [
+          "EXCLUDABILITY",
+          "ZIGZAGGY",
+          "QUAZZY",
+          "QWERTY"
+        ],
+        "wordTotal": 1390,
+        "penalty": 28,
+        "finalScore": 1362
+      },
+      {
+        "words": [
+          "EXCLUDABILITY",
+          "ZIGZAGGY",
+          "QUAZZY",
+          "PZAZZ"
+        ],
+        "wordTotal": 1389,
+        "penalty": 37,
+        "finalScore": 1352
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:38.195Z"
+  }
+}

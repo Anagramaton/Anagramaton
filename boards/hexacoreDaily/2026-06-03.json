@@ -1,0 +1,85 @@
+{
+  "date": "2026-06-03",
+  "grid": {
+    "2,-1": "A",
+    "2,0": "S",
+    "1,0": "S",
+    "1,1": "E",
+    "0,2": "M",
+    "0,1": "B",
+    "-1,2": "L",
+    "-2,2": "Y",
+    "-2,1": "W",
+    "-1,1": "O",
+    "0,0": "M",
+    "-1,0": "E",
+    "-1,-1": "N",
+    "1,-3": "B",
+    "1,-2": "I",
+    "2,-2": "J",
+    "1,-1": "W",
+    "0,-1": "O",
+    "-2,0": "R",
+    "0,-4": "B",
+    "0,-3": "O",
+    "0,-2": "X",
+    "-1,-2": "I",
+    "-2,-1": "G",
+    "-4,1": "F",
+    "-3,1": "O",
+    "-3,2": "H",
+    "-2,4": "W",
+    "-1,3": "A",
+    "-2,3": "B",
+    "-3,0": "K",
+    "undefined": "O"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": 2,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2830,
+    "minAchievableScore": 1300,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "ASSEMBLYWOMEN",
+          "BIJWONER",
+          "BYWORK",
+          "WAMBLY"
+        ],
+        "wordTotal": 1312,
+        "penalty": 38,
+        "finalScore": 1274
+      },
+      {
+        "words": [
+          "ASSEMBLYWOMEN",
+          "BIJWONER",
+          "BYWORK",
+          "WAMBLY"
+        ],
+        "wordTotal": 1312,
+        "penalty": 38,
+        "finalScore": 1274
+      },
+      {
+        "words": [
+          "ASSEMBLYWOMEN",
+          "BIJWONER",
+          "BYWORK",
+          "WAMBLY"
+        ],
+        "wordTotal": 1312,
+        "penalty": 38,
+        "finalScore": 1274
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:38.533Z"
+  }
+}

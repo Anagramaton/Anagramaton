@@ -1,0 +1,87 @@
+{
+  "date": "2026-06-08",
+  "grid": {
+    "-1,0": "B",
+    "-1,-1": "A",
+    "-2,0": "C",
+    "-2,1": "K",
+    "-1,1": "T",
+    "0,0": "R",
+    "0,-1": "A",
+    "1,-1": "C",
+    "1,-2": "K",
+    "2,-2": "I",
+    "2,-1": "N",
+    "1,0": "G",
+    "1,1": "S",
+    "-1,3": "Q",
+    "-1,2": "U",
+    "-2,2": "E",
+    "0,1": "Z",
+    "0,2": "A",
+    "1,2": "L",
+    "-2,-2": "B",
+    "-2,-1": "R",
+    "-1,-2": "I",
+    "0,-2": "Z",
+    "1,-3": "E",
+    "3,0": "C",
+    "2,0": "O",
+    "3,-2": "F",
+    "2,-3": "X",
+    "-3,3": "M",
+    "-2,3": "Z",
+    "3,-1": "B",
+    "2,1": "W",
+    "0,3": "W",
+    "undefined": "E"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": -1,
+      "r": -2
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2858,
+    "minAchievableScore": 1326,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "BACKTRACKINGS",
+          "QUETZALS",
+          "MEZUZA",
+          "BOWSAW"
+        ],
+        "wordTotal": 1335,
+        "penalty": 48,
+        "finalScore": 1287
+      },
+      {
+        "words": [
+          "BACKTRACKINGS",
+          "QUETZALS",
+          "MEZUZA",
+          "BOWSAW"
+        ],
+        "wordTotal": 1335,
+        "penalty": 48,
+        "finalScore": 1287
+      },
+      {
+        "words": [
+          "BACKTRACKINGS",
+          "QUETZALS",
+          "MEZUZA",
+          "BOWSAW"
+        ],
+        "wordTotal": 1335,
+        "penalty": 48,
+        "finalScore": 1287
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:38.606Z"
+  }
+}

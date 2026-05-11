@@ -1,0 +1,86 @@
+{
+  "date": "2026-05-18",
+  "grid": {
+    "0,1": "U",
+    "-1,2": "N",
+    "0,2": "E",
+    "1,1": "X",
+    "1,0": "C",
+    "2,-1": "L",
+    "2,-2": "U",
+    "1,-2": "S",
+    "1,-1": "I",
+    "0,0": "V",
+    "0,-1": "E",
+    "-1,0": "L",
+    "-2,0": "Y",
+    "-1,1": "Z",
+    "-2,2": "Z",
+    "-3,2": "E",
+    "-2,1": "S",
+    "1,-4": "T",
+    "0,-3": "Z",
+    "0,-2": "E",
+    "-1,-2": "T",
+    "-1,-1": "Z",
+    "-2,4": "C",
+    "-2,3": "O",
+    "-1,3": "V",
+    "1,2": "X",
+    "3,0": "B",
+    "2,0": "R",
+    "2,1": "U",
+    "0,3": "D",
+    "-4,3": "F",
+    "-3,3": "U",
+    "undefined": "E"
+  },
+  "specialTiles": [
+    {
+      "type": "rune",
+      "q": 0,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2678,
+    "minAchievableScore": 1326,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "UNEXCLUSIVELY",
+          "FUZZLE",
+          "CUZZES",
+          "TZETZE"
+        ],
+        "wordTotal": 1251,
+        "penalty": 44,
+        "finalScore": 1207
+      },
+      {
+        "words": [
+          "UNEXCLUSIVELY",
+          "FUZZLE",
+          "CUZZES",
+          "TZETZE"
+        ],
+        "wordTotal": 1251,
+        "penalty": 44,
+        "finalScore": 1207
+      },
+      {
+        "words": [
+          "UNEXCLUSIVELY",
+          "FUZZLE",
+          "CUZZES",
+          "TZETZE"
+        ],
+        "wordTotal": 1251,
+        "penalty": 44,
+        "finalScore": 1207
+      }
+    ],
+    "generatedAt": "2026-05-11T08:06:38.294Z"
+  }
+}
