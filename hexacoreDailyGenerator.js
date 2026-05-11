@@ -495,35 +495,40 @@ export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 1
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const rng = mkSeededRng((seed + attempt * 9973) >>> 0);
+    const originalRandom = Math.random;
+    Math.random = rng;
+    try {
+      const words = chooseTargetWords(rng);
+      const { grid, placements } = placeWords(words, rng, radius);
+      if (placements.length < 6) {
+        lastFailure = 'insufficient placed words';
+        continue;
+      }
 
-    const words = chooseTargetWords(rng);
-    const { grid, placements } = placeWords(words, rng, radius);
-    if (placements.length < 6) {
-      lastFailure = 'insufficient placed words';
-      continue;
+      fillEmptyTiles(grid, rng, radius);
+      const specialTiles = placeSpecialTiles(grid, placements, rng, radius);
+
+      const validation = validateDailyBoard({ grid, placements, specialTiles });
+      if (!validation.valid) {
+        lastFailure = validation.reason || 'validation failed';
+        continue;
+      }
+
+      return {
+        date,
+        grid,
+        specialTiles,
+        metadata: {
+          maxPossibleScore: validation.maxScore,
+          minAchievableScore: validation.minScore,
+          strategicPathCount: validation.strategicPaths,
+          optimalSolutions: validation.strategies,
+          generatedAt: new Date().toISOString(),
+        },
+      };
+    } finally {
+      Math.random = originalRandom;
     }
-
-    fillEmptyTiles(grid, rng, radius);
-    const specialTiles = placeSpecialTiles(grid, placements, rng, radius);
-
-    const validation = validateDailyBoard({ grid, placements, specialTiles });
-    if (!validation.valid) {
-      lastFailure = validation.reason || 'validation failed';
-      continue;
-    }
-
-    return {
-      date,
-      grid,
-      specialTiles,
-      metadata: {
-        maxPossibleScore: validation.maxScore,
-        minAchievableScore: validation.minScore,
-        strategicPathCount: validation.strategicPaths,
-        optimalSolutions: validation.strategies,
-        generatedAt: new Date().toISOString(),
-      },
-    };
   }
 
   throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);
