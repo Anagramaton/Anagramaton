@@ -24,6 +24,7 @@ import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampa
 import { getProfile, updateProfile, openProfileModal } from './hexacoreProfile.js';
 import { updateAchievementProgress } from './hexacoreAchievements.js';
 import { updateStatTracking, saveSessionHistory, updateStats } from './hexacoreStats.js';
+import { openModeSelectModal } from './hexacoreModeSelect.js';
 
 const HX_LEADERBOARD_ID = 'hexacore';
 
@@ -63,7 +64,8 @@ const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
-let hxGameMode = 'endless'; // 'endless' | 'daily' | 'campaign'
+let hxGameMode = null; // 'endless' | 'daily' | 'campaign'
+const HX_VALID_MODES = ['endless', 'daily', 'campaign'];
 const HX_DAILY_MODE_ID = 'hexacore_daily';
 let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
@@ -851,27 +853,22 @@ function applyTileType(tile) {
     poly.classList.add('hx-selenite');
   } else if (tile.tileType === 'oracle') {
     poly.classList.add('hx-oracle');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.oracle.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'beacon') {
     poly.classList.add('hx-beacon');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.beacon.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'eclipse') {
     poly.classList.add('hx-eclipse');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.eclipse.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'lodestone') {
     poly.classList.add('hx-lodestone');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.lodestone.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'lexicon') {
     poly.classList.add('hx-lexicon');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.lexicon.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   }
@@ -4650,7 +4647,7 @@ async function showGameOver() {
   document.getElementById('hx-btn-again')?.addEventListener('click', () => {
     overlay.remove();
     clearHexacoreSave();
-    startHexacore();
+    startHexacoreMode(hxGameMode);
   });
   document.getElementById('hx-btn-menu')?.addEventListener('click', () => {
     window.location.reload();
@@ -5102,7 +5099,11 @@ function clearHexacoreSave() {
 }
 
 /* ── Public entry point ────────────────────────────────────────── */
-export function startHexacore(mode = 'endless') {
+export function startHexacore(mode) {
+  if (!HX_VALID_MODES.includes(mode)) {
+    console.error(`startHexacore: invalid mode "${mode}"`);
+    return;
+  }
   hxGameMode = mode;
 
   // Load persisted requirements (persist across sessions and new games)
@@ -5516,7 +5517,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    startHexacore('endless');
+    openModeSelectModal(mode => startHexacoreMode(mode));
   });
 
   // Expose helpers for campaign overlay buttons
@@ -5553,8 +5554,8 @@ function startHexacoreMode(mode) {
 
 /* ── hx:start-mode custom event (dispatched by hexacoreSettings.js) */
 document.addEventListener('hx:start-mode', e => {
-  const mode = e.detail?.mode || 'endless';
-  startHexacoreMode(mode);
+  const mode = e.detail?.mode;
+  if (mode != null) startHexacoreMode(mode);
 });
 
 /* ── TODO: Hexacore events still missing a dedicated sound ─────────
