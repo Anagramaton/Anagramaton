@@ -28,14 +28,17 @@ jobs:
       - name: Generate daily board
         run: npm run generate
 
+      - name: Generate daily Hexacore board
+        run: npm run generate:daily-hexacore
+
       - name: Commit and push if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add prebuiltBoards.json
+          git add prebuiltBoards.json boards/hexacoreDaily/
           if git diff --quiet --cached; then
-            echo "No changes to prebuiltBoards.json — skipping commit."
+            echo "No changes to daily boards — skipping commit."
           else
-            git commit -m "chore: generate daily board $(date -u +'%Y-%m-%d')"
+            git commit -m "chore: generate daily boards $(date -u +'%Y-%m-%d')"
             git push origin main
           fi
