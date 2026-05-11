@@ -1261,14 +1261,14 @@ async function loadDailyChallengeBoard(dateStr) {
     const serialized = JSON.stringify(data);
     localStorage.setItem(cacheKey, serialized);
     const verification = localStorage.getItem(cacheKey);
-    if (verification) {
+    if (verification === serialized) {
       console.log('[hexacore-daily] ✅ Board cached successfully');
     } else {
       console.error('[hexacore-daily] ❌ Cache write verification failed - data not persisted');
     }
   } catch (cacheWriteErr) {
     console.error('[hexacore-daily] ❌ Failed to cache board:', cacheWriteErr);
-    if (cacheWriteErr?.name === 'QuotaExceededError') {
+    if (cacheWriteErr.name === 'QuotaExceededError') {
       console.warn('[hexacore-daily] localStorage quota exceeded - consider clearing old daily boards');
     }
   }
