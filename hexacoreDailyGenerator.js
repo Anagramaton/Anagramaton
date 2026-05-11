@@ -174,6 +174,10 @@ function placeWords(words, rng, radius) {
         new Set(),
         radius,
         { allowZigZag: true, preferOverlap: true, maxStraight: 2, wallBuffer: 1, maxEdgeRun: 1 },
+        null,
+        0,
+        0,
+        rng,
       );
       if (!path) continue;
 

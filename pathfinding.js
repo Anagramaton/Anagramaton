@@ -28,7 +28,8 @@ function findPath(
   },
   prevDirIdx = null,
   straightRun = 0,
-  edgeRun = 0
+  edgeRun = 0,
+  rng = Math.random.bind(Math)
 ) {
 
   const {
@@ -100,7 +101,7 @@ function findPath(
   }
 
   // Shuffle only the pruned (much smaller) list
-  const neighbors = shuffledArray(rawNeighbors);
+  const neighbors = shuffledArray(rawNeighbors, rng);
 
   // Sort: prefer deeper / non-straight / overlapping tiles
   neighbors.sort((a, b) => {
@@ -130,7 +131,8 @@ function findPath(
       opts,
       nb.dirIdx,
       nb.isStraight ? straightRun + 1 : 0,
-      nb.nDepth <= wallBuffer ? nextEdgeRunBase + 1 : 0
+      nb.nDepth <= wallBuffer ? nextEdgeRunBase + 1 : 0,
+      rng
     );
 
     if (path) {

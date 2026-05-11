@@ -1231,9 +1231,7 @@ async function loadDailyChallengeBoard(dateStr) {
   if (res.ok) {
     data = await res.json();
   } else {
-    // Dev fallback when no prebuilt file exists
-    const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
-    data = generateDailyHexacoreBoard({ date: targetDate });
+    throw new Error(`Daily board not found for ${targetDate}`);
   }
 
   // Cache so subsequent clicks (or page reloads) re-use the same board today.
@@ -4044,6 +4042,7 @@ async function consumeAndRefill(tilesToRemove) {
   });
 
   if (hxGameMode === 'daily') {
+    await applyGravity();
     updateDailyHud();
     return;
   }
