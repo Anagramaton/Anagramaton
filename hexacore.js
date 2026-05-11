@@ -1268,7 +1268,12 @@ async function loadDailyChallengeBoard(dateStr) {
     }
   } catch (cacheWriteErr) {
     console.error('[hexacore-daily] ❌ Failed to cache board:', cacheWriteErr);
-    if (cacheWriteErr.name === 'QuotaExceededError') {
+    const isQuotaExceeded =
+      (typeof DOMException !== 'undefined'
+        && cacheWriteErr instanceof DOMException
+        && cacheWriteErr.name === 'QuotaExceededError')
+      || (cacheWriteErr && cacheWriteErr.name === 'QuotaExceededError');
+    if (isQuotaExceeded) {
       console.warn('[hexacore-daily] localStorage quota exceeded - consider clearing old daily boards');
     }
   }
