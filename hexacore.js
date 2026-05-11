@@ -3415,10 +3415,10 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
   for (const tile of hxState.tiles) {
     const key = hxKey(tile.q, tile.r);
     if (!neighborMap.has(key)) neighborMap.set(key, []);
-    const tilePairs = neighborMap.get(key);
+    const neighborTiles = neighborMap.get(key);
     for (const other of hxState.tiles) {
       if (other === tile) continue;
-      if (areNeighbors(tile, other)) tilePairs.push(other);
+      if (areNeighbors(tile, other)) neighborTiles.push(other);
     }
   }
 
