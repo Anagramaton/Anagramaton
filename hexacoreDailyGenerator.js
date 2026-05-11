@@ -496,17 +496,28 @@ export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 1
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const rng = mkSeededRng((seed + attempt * 9973) >>> 0);
 
-    const words = chooseTargetWords(rng);
-    const { grid, placements } = placeWords(words, rng, radius);
-    if (placements.length < 6) {
-      lastFailure = 'insufficient placed words';
-      continue;
+    // Replace Math.random with the seeded RNG for the duration of this attempt
+    // so that pathfinding.js (shuffledArray) and any other Math.random callers
+    // inside the generation pipeline are fully deterministic for the same date.
+    const originalRandom = Math.random;
+    Math.random = rng;
+
+    let words, grid, placements, specialTiles, validation;
+    try {
+      words = chooseTargetWords(rng);
+      ({ grid, placements } = placeWords(words, rng, radius));
+      if (placements.length < 6) {
+        lastFailure = 'insufficient placed words';
+        continue;
+      }
+
+      fillEmptyTiles(grid, rng, radius);
+      specialTiles = placeSpecialTiles(grid, placements, rng, radius);
+      validation = validateDailyBoard({ grid, placements, specialTiles });
+    } finally {
+      Math.random = originalRandom;
     }
 
-    fillEmptyTiles(grid, rng, radius);
-    const specialTiles = placeSpecialTiles(grid, placements, rng, radius);
-
-    const validation = validateDailyBoard({ grid, placements, specialTiles });
     if (!validation.valid) {
       lastFailure = validation.reason || 'validation failed';
       continue;

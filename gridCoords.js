@@ -22,7 +22,7 @@ function getAllCoords(radius) {
     const rMin = Math.max(-radius, -q - radius);
     const rMax = Math.min(radius, -q + radius);
     for (let r = rMin; r <= rMax; r++) {
-      coords.push({ q, r });
+      coords.push({ q, r, key: hexKey(q, r) });
     }
   }
   return coords;
