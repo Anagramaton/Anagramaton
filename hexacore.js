@@ -4645,7 +4645,7 @@ async function showGameOver() {
   document.getElementById('hx-btn-again')?.addEventListener('click', () => {
     overlay.remove();
     clearHexacoreSave();
-    startHexacore();
+    startHexacoreMode(hxGameMode);
   });
   document.getElementById('hx-btn-menu')?.addEventListener('click', () => {
     window.location.reload();
