@@ -851,27 +851,22 @@ function applyTileType(tile) {
     poly.classList.add('hx-selenite');
   } else if (tile.tileType === 'oracle') {
     poly.classList.add('hx-oracle');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.oracle.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'beacon') {
     poly.classList.add('hx-beacon');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.beacon.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'eclipse') {
     poly.classList.add('hx-eclipse');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.eclipse.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'lodestone') {
     poly.classList.add('hx-lodestone');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.lodestone.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'lexicon') {
     poly.classList.add('hx-lexicon');
-    tile.textLetter.textContent = HX_ACHIEVEMENT_TILE_META.lexicon.letter;
     tile.textLetter.classList.add('hx-achievement-tile-letter');
     tile.textPoint.textContent  = '';
   }
