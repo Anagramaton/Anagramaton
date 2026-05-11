@@ -1220,24 +1220,58 @@ async function loadDailyChallengeBoard(dateStr) {
   const targetDate = dateStr || hxEasternDateStr();
   const cacheKey = HX_DAILY_BOARD_CACHE_PREFIX + targetDate;
 
+  console.log(`[hexacore-daily] Loading board for date: ${targetDate}`);
+  console.log(`[hexacore-daily] Cache key: ${cacheKey}`);
+
   // Return the cached board for this date so every click yields the same puzzle.
   try {
     const cached = localStorage.getItem(cacheKey);
-    if (cached) return JSON.parse(cached);
-  } catch (_) {}
+    if (cached) {
+      console.log('[hexacore-daily] ✅ Cache HIT - using cached board');
+      return JSON.parse(cached);
+    }
+    console.log('[hexacore-daily] ❌ Cache MISS - board not in cache');
+  } catch (cacheReadErr) {
+    console.error('[hexacore-daily] ❌ Cache read failed:', cacheReadErr);
+  }
 
   let data;
-  const res = await fetch(`/boards/hexacoreDaily/${targetDate}.json`);
-  if (res.ok) {
-    data = await res.json();
-  } else {
-    // Dev fallback when no prebuilt file exists
+  console.log('[hexacore-daily] Attempting to fetch prebuilt board from server...');
+  try {
+    const res = await fetch(`/boards/hexacoreDaily/${targetDate}.json`);
+    if (res.ok) {
+      data = await res.json();
+      console.log('[hexacore-daily] ✅ Loaded prebuilt board from server');
+    } else {
+      console.log(`[hexacore-daily] ⚠️  Server returned ${res.status} - falling back to generator`);
+      // Dev fallback when no prebuilt file exists
+      const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
+      data = generateDailyHexacoreBoard({ date: targetDate });
+      console.log('[hexacore-daily] ✅ Generated board using deterministic seed');
+    }
+  } catch (fetchErr) {
+    console.error('[hexacore-daily] ❌ Fetch failed, using generator fallback:', fetchErr);
     const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
     data = generateDailyHexacoreBoard({ date: targetDate });
+    console.log('[hexacore-daily] ✅ Generated board using deterministic seed');
   }
 
   // Cache so subsequent clicks (or page reloads) re-use the same board today.
-  try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch (_) {}
+  try {
+    const serialized = JSON.stringify(data);
+    localStorage.setItem(cacheKey, serialized);
+    const verification = localStorage.getItem(cacheKey);
+    if (verification) {
+      console.log('[hexacore-daily] ✅ Board cached successfully');
+    } else {
+      console.error('[hexacore-daily] ❌ Cache write verification failed - data not persisted');
+    }
+  } catch (cacheWriteErr) {
+    console.error('[hexacore-daily] ❌ Failed to cache board:', cacheWriteErr);
+    if (cacheWriteErr?.name === 'QuotaExceededError') {
+      console.warn('[hexacore-daily] localStorage quota exceeded - consider clearing old daily boards');
+    }
+  }
   return data;
 }
 
