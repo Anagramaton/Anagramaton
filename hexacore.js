@@ -1,5 +1,14 @@
 // hexacore.js — Hexacore endless word game mode for Anagramaton
 
+/**
+ * BREAKPOINT RULE — ALWAYS REQUIRED FOR EVERY PR
+ * Any JS that injects or manipulates DOM elements, modals, overlays,
+ * toasts, HUD components, or tile visuals MUST be paired with CSS
+ * breakpoint rules covering ≤900 px, ≤640 px, ≤430 px (and ≤375 px
+ * where needed).  Use clamp() for font sizes and spacing.
+ * Always test at 375 px, 430 px, 640 px, and 900 px viewport widths.
+ */
+
 import {
   GRID_RADIUS,
   HEX_RADIUS,
@@ -808,7 +817,10 @@ function applyTileType(tile) {
   tile.element.querySelector('.hx-type-icon')?.remove();
   // Reset letter font size (may have been reduced for digraph)
   tile.textLetter.setAttribute('font-size', '28');
-  tile.textLetter.classList.remove('hx-achievement-tile-letter');
+  tile.textLetter.classList.remove(
+    'hx-achievement-tile-letter',
+    'hx-sparkle-amethyst', 'hx-sparkle-selenite', 'hx-sparkle-rune',
+  );
 
   if (tile.tileType === 'digraph') {
     poly.classList.add('hx-digraph');
@@ -823,6 +835,8 @@ function applyTileType(tile) {
     poly.classList.add('hx-rune');
     tile.textLetter.textContent = '?';
     tile.textPoint.textContent  = '?';
+    // Sparkle fallback for browsers without :has() support
+    tile.textLetter.classList.add('hx-sparkle-rune');
   } else if (tile.tileType === 'gemEmerald') {
     poly.classList.add('hx-gem-emerald');
   } else if (tile.tileType === 'gemGold') {
@@ -849,8 +863,12 @@ function applyTileType(tile) {
     poly.classList.add('hx-gem-alexandrite');
   } else if (tile.tileType === 'amethyst') {
     poly.classList.add('hx-amethyst');
+    // Sparkle fallback for browsers without :has() support
+    tile.textLetter.classList.add('hx-sparkle-amethyst');
   } else if (tile.tileType === 'selenite') {
     poly.classList.add('hx-selenite');
+    // Sparkle fallback for browsers without :has() support
+    tile.textLetter.classList.add('hx-sparkle-selenite');
   } else if (tile.tileType === 'oracle') {
     poly.classList.add('hx-oracle');
     tile.textLetter.classList.add('hx-achievement-tile-letter');
