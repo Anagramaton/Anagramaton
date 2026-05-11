@@ -29,7 +29,7 @@ function findPath(
   prevDirIdx = null,
   straightRun = 0,
   edgeRun = 0,
-  rng = Math.random.bind(Math)
+  rng = Math.random
 ) {
 
   const {

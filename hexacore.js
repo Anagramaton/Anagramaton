@@ -1231,7 +1231,7 @@ async function loadDailyChallengeBoard(dateStr) {
   if (res.ok) {
     data = await res.json();
   } else {
-    throw new Error(`Daily board JSON not found at /boards/hexacoreDaily/${targetDate}.json`);
+    throw new Error(`Daily board JSON not found at /boards/hexacoreDaily/${targetDate}.json (status: ${res.status})`);
   }
 
   // Cache so subsequent clicks (or page reloads) re-use the same board today.

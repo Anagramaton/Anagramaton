@@ -23,7 +23,7 @@ export function areAxialNeighbors(a, b) {
 }
 
 // ▸ Shuffle array (Fisher–Yates, non-mutating)
-export function shuffledArray(arr = [], rng = Math.random.bind(Math)) {
+export function shuffledArray(arr = [], rng = Math.random) {
   const copy = Array.isArray(arr) ? arr.slice() : Array.from(arr);
   for (let i = copy.length - 1; i > 0; i--) {
     const j = (rng() * (i + 1)) | 0;
