@@ -142,7 +142,7 @@ const BEACON_TIME_LIMIT_MS          = 1200;
 const LEXICON_MAX_RESULTS           = 200;
 const LEXICON_TIME_LIMIT_MS         = 1500;
 const DAILY_ENDCHECK_MAX_RESULTS    = 1;
-const DAILY_ENDCHECK_TIME_LIMIT_MS  = 300;
+const DAILY_ENDCHECK_TIME_LIMIT_MS  = 2000;
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -3410,6 +3410,18 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
   const seen = new Set();
   const deadline = performance.now() + timeLimitMs;
 
+  // Pre-build neighbor map for O(1) lookup instead of O(n) filter per DFS step.
+  const neighborMap = new Map();
+  for (const tile of hxState.tiles) {
+    const key = hxKey(tile.q, tile.r);
+    if (!neighborMap.has(key)) neighborMap.set(key, []);
+    const tilePairs = neighborMap.get(key);
+    for (const other of hxState.tiles) {
+      if (other === tile) continue;
+      if (areNeighbors(tile, other)) tilePairs.push(other);
+    }
+  }
+
   function scoreWord(path) {
     let base = 0;
     path.forEach(t => {
@@ -3442,12 +3454,10 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
     if (performance.now() >= deadline) return;
 
     const last = path[path.length - 1];
-    const neighbors = hxState.tiles.filter(t => {
-      if (visitedKeys.has(hxKey(t.q, t.r))) return false;
-      return areNeighbors(last, t);
-    });
+    const neighbors = neighborMap.get(hxKey(last.q, last.r)) || [];
+    const unvisited = neighbors.filter(t => !visitedKeys.has(hxKey(t.q, t.r)));
 
-    for (const neighbor of neighbors) {
+    for (const neighbor of unvisited) {
       const key = hxKey(neighbor.q, neighbor.r);
       visitedKeys.add(key);
       path.push(neighbor);
