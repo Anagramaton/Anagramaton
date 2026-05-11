@@ -99,7 +99,7 @@ const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refi
 const SCORE_TICK_MS             = 700; // ms duration for score count-up animation
 const HX_TITLE_TEXT             = 'HEXACORE';
 const HX_TITLE_ELEMENT_IDS      = ['game-title', 'game-title-mirror'];
-let hxLastTitlePattern          = -1;
+let hxTitlePatternHistory   = []; // last 3 pattern IDs — prevents repeating a recent pattern
 
 /* ── Achievement tile unlock thresholds ────────────────────────── */
 const ORACLE_UNLOCK_WORD_LENGTH    = 9;      // 9-letter word → Oracle spawns
@@ -3710,39 +3710,75 @@ function triggerHexacoreTitleFlash() {
   });
   void titleEls[0].offsetWidth;
   const letters = letterGroups[0];
-  const center = Math.floor(letters.length / 2);
+  const n       = letters.length; // 8 for HEXACORE
+  const center  = Math.floor(n / 2);
 
-  const idxs = letters.map((_, idx) => idx);
+  const idxs     = letters.map((_, idx) => idx);
   const selected = idxs.slice();
 
-  // Pick a random pattern (1–8), avoiding the same pattern twice in a row.
-  // Deterministic skip: choose from 7 options, then offset past the last pattern.
-  const r = Math.floor(Math.random() * (hxLastTitlePattern === -1 ? 8 : 7));
-  let pattern = r + 1;
-  if (hxLastTitlePattern !== -1 && pattern >= hxLastTitlePattern) pattern++;
-  hxLastTitlePattern = pattern;
+  // ── Randomise the inter-letter stagger so every trigger feels different ──
+  const staggerChoices = [60, 80, 100, 120, 140, 160, 200];
+  const staggerMs = staggerChoices[Math.floor(Math.random() * staggerChoices.length)];
+  titleEls.forEach(el => el.style.setProperty('--hx-title-stagger', `${staggerMs}ms`));
 
-  // Compute animation orders for both titles in opposite directions
+  // ── Pick a random pattern (1–14), skipping the last 3 used ──────────────
+  const TOTAL_PATTERNS = 14;
+  const HISTORY_SIZE   = 3;
+  let pattern;
+  let tries = 0;
+  do {
+    pattern = Math.floor(Math.random() * TOTAL_PATTERNS) + 1;
+    tries++;
+  } while (hxTitlePatternHistory.includes(pattern) && tries < 40);
+  hxTitlePatternHistory.push(pattern);
+  if (hxTitlePatternHistory.length > HISTORY_SIZE) hxTitlePatternHistory.shift();
+
+  // Compute animation orders for both titles in opposite / complementary directions
   let orderForTitle1 = [];
   let orderForTitle2 = [];
+
+  /* Helper: Fisher-Yates shuffle in-place */
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  /* Helper: cyclic stride — step through indices [0..n-1] in steps of `stride` */
+  function strideOrder(stride, start = 0) {
+    const out = [];
+    let cur = start;
+    const len = n;
+    for (let i = 0; i < len; i++) {
+      out.push(cur);
+      cur = (cur + stride) % len;
+    }
+    return out;
+  }
 
   switch (pattern) {
     case 1: // LEFT-TO-RIGHT vs RIGHT-TO-LEFT
       orderForTitle1 = selected.slice().sort((a, b) => a - b);
       orderForTitle2 = selected.slice().sort((a, b) => b - a);
       break;
+
     case 2: // RIGHT-TO-LEFT vs LEFT-TO-RIGHT
       orderForTitle1 = selected.slice().sort((a, b) => b - a);
       orderForTitle2 = selected.slice().sort((a, b) => a - b);
       break;
+
     case 3: // CENTER-OUT EXPLOSION vs OUTSIDE-IN IMPLOSION
       orderForTitle1 = selected.slice().sort((a, b) => Math.abs(a - center) - Math.abs(b - center));
       orderForTitle2 = selected.slice().sort((a, b) => Math.abs(b - center) - Math.abs(a - center));
       break;
+
     case 4: // OUTSIDE-IN IMPLOSION vs CENTER-OUT EXPLOSION
       orderForTitle1 = selected.slice().sort((a, b) => Math.abs(b - center) - Math.abs(a - center));
       orderForTitle2 = selected.slice().sort((a, b) => Math.abs(a - center) - Math.abs(b - center));
       break;
+
     case 5: // EVENS FIRST vs ODDS FIRST
       orderForTitle1 = selected.slice().sort((a, b) => {
         const aIsEven = a % 2 === 0;
@@ -3757,34 +3793,79 @@ function triggerHexacoreTitleFlash() {
         return a - b;
       });
       break;
+
     case 6: // SINE WAVE ASCENDING vs DESCENDING
       orderForTitle1 = selected.slice().sort((a, b) => Math.sin(a * 0.5) - Math.sin(b * 0.5));
       orderForTitle2 = selected.slice().sort((a, b) => Math.sin(b * 0.5) - Math.sin(a * 0.5));
       break;
-    case 7: // RANDOM SPARKLE (two independent Fisher-Yates shuffles)
-    {
-      const arr1 = selected.slice();
-      for (let i = arr1.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr1[i], arr1[j]] = [arr1[j], arr1[i]];
-      }
-      orderForTitle1 = arr1;
-      const arr2 = selected.slice();
-      for (let i = arr2.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr2[i], arr2[j]] = [arr2[j], arr2[i]];
-      }
-      orderForTitle2 = arr2;
+
+    case 7: // RANDOM SPARKLE — two independent Fisher-Yates shuffles
+      orderForTitle1 = shuffle(selected.slice());
+      orderForTitle2 = shuffle(selected.slice());
       break;
-    }
-    case 8: // SEQUENTIAL vs MIRRORED
-      orderForTitle1 = selected.slice().sort((a, b) => a - b);
-      orderForTitle2 = selected.slice().sort((a, b) => {
-        const mirrorA = (letters.length - 1) - a;
-        const mirrorB = (letters.length - 1) - b;
-        return mirrorA - mirrorB;
+
+    case 8: // HALF-SWAP — right half LTR then left half LTR (vs left RTL then right RTL)
+      orderForTitle1 = [
+        ...selected.filter(i => i >= n / 2).sort((a, b) => a - b),
+        ...selected.filter(i => i < n / 2).sort((a, b) => a - b),
+      ];
+      orderForTitle2 = [
+        ...selected.filter(i => i < n / 2).sort((a, b) => b - a),
+        ...selected.filter(i => i >= n / 2).sort((a, b) => b - a),
+      ];
+      break;
+
+    case 9: // STRIDE-3 — step every 3 positions cyclically
+      orderForTitle1 = strideOrder(3, 0);
+      orderForTitle2 = strideOrder(3, 0).slice().reverse();
+      break;
+
+    case 10: // SNAKE — first half forward then second half backward
+      orderForTitle1 = [
+        ...selected.filter(i => i < n / 2).sort((a, b) => a - b),
+        ...selected.filter(i => i >= n / 2).sort((a, b) => b - a),
+      ];
+      orderForTitle2 = [
+        ...selected.filter(i => i >= n / 2).sort((a, b) => a - b),
+        ...selected.filter(i => i < n / 2).sort((a, b) => b - a),
+      ];
+      break;
+
+    case 11: // PHASE-SHIFTED WAVE — sort by sin at a different frequency / phase
+      orderForTitle1 = selected.slice().sort((a, b) => Math.sin(a * 0.8 + 0.5) - Math.sin(b * 0.8 + 0.5));
+      orderForTitle2 = selected.slice().sort((a, b) => Math.sin(b * 0.8 + 0.5) - Math.sin(a * 0.8 + 0.5));
+      break;
+
+    case 12: // STRIDE-5 — step every 5 positions cyclically (coprime with 8)
+      orderForTitle1 = strideOrder(5, 0);
+      orderForTitle2 = strideOrder(5, 0).slice().reverse();
+      break;
+
+    case 13: // BIT-REVERSAL — 3-bit index reversal (FFT butterfly order)
+      // Indices 0-7 reversed in 3 bits: 0→0,1→4,2→2,3→6,4→1,5→5,6→3,7→7
+      orderForTitle1 = selected.slice().sort((a, b) => {
+        const rev = x => ((x & 1) << 2) | (x & 2) | ((x >> 2) & 1);
+        return rev(a) - rev(b);
       });
+      orderForTitle2 = orderForTitle1.slice().reverse();
       break;
+
+    case 14: // DUAL-CONVERGE — alternate from both ends toward center
+      {
+        const left  = selected.filter(i => i < n / 2).sort((a, b) => b - a); // 3,2,1,0
+        const right = selected.filter(i => i >= n / 2).sort((a, b) => a - b); // 4,5,6,7
+        // Interleave: right-end, left-end, right-end-1, left-end-1, …
+        const r = right.slice().reverse(); // 7,6,5,4
+        const l = left.slice();            // 3,2,1,0
+        const t1 = [], t2 = [];
+        for (let i = 0; i < Math.max(r.length, l.length); i++) {
+          if (i < r.length) t1.push(r[i]);
+          if (i < l.length) t1.push(l[i]);
+        }
+        orderForTitle1 = t1; // fires 7,3,6,2,5,1,4,0
+        orderForTitle2 = t1.slice().reverse();
+        break;
+      }
   }
 
   // Apply animation order and light up Title 1
@@ -3796,7 +3877,7 @@ function triggerHexacoreTitleFlash() {
     }
   });
 
-  // Apply animation order and light up Title 2 (opposite direction)
+  // Apply animation order and light up Title 2 (complementary direction)
   if (letterGroups[1]) {
     orderForTitle2.forEach((idx, animOrder) => {
       const letter = letterGroups[1][idx];

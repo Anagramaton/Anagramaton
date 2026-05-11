@@ -3100,7 +3100,7 @@ body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter {
 }
 body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
   will-change: filter, transform;
-  animation: hx-title-letter-flash 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
+  animation: hx-title-letter-flash 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * var(--hx-title-stagger, 120ms))) 1 normal both;
 }
 @keyframes hx-title-letter-dim {
   0% {
@@ -3159,7 +3159,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
 }
 body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
   will-change: filter, transform;
-  animation: hx-title-letter-flash-dark 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
+  animation: hx-title-letter-flash-dark 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * var(--hx-title-stagger, 120ms))) 1 normal both;
 }
 @keyframes hx-title-letter-dim-dark {
   0% {
@@ -3203,7 +3203,7 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   }
   body.hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit,
   body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
-    animation: hx-title-letter-flash-mobile 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
+    animation: hx-title-letter-flash-mobile 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * var(--hx-title-stagger, 120ms))) 1 normal both;
   }
   .hx-consumed-ember,
   .hx-consumed-prism,
@@ -5828,7 +5828,7 @@ body[data-theme="light"].hx-active :is(#game-title, #game-title-mirror) .hx-titl
 }
 body[data-theme="light"].hx-active :is(#game-title, #game-title-mirror) .hx-title-letter--lit {
   will-change: filter, transform;
-  animation: hx-title-letter-flash-light 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * 120ms)) 1 normal both;
+  animation: hx-title-letter-flash-light 1.8s ease-out calc((var(--title-group, 0) * 1800ms) + (var(--anim-order, 0) * var(--hx-title-stagger, 120ms))) 1 normal both;
 }
 
 @keyframes hx-title-letter-dim-light {
