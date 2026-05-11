@@ -2366,17 +2366,6 @@ body.hx-active #hex-grid {
   animation: hx-oracle-shimmer 3.5s ease-in-out infinite;
 }
 
-.tile .hx-achievement-tile-letter {
-  fill: #f8fafc;
-  stroke: rgba(15, 23, 42, 0.9);
-  stroke-width: 0.8;
-  font-size: 28px;
-  font-weight: 900;
-  paint-order: stroke fill;
-  letter-spacing: 0.04em;
-  animation: hx-sparkle-achievement 3s ease-in-out infinite;
-}
-
 /* ═══════════════════════════════════════════════════════════════
    Sparkle / glitter animations for special tile letters
    Applied to the SVG <text> letter element inside special tiles.
@@ -2402,6 +2391,17 @@ body.hx-active #hex-grid {
             drop-shadow(0 0  5px rgba(200, 220, 255, 0.7))
             brightness(1.35);
   }
+}
+
+.tile .hx-achievement-tile-letter {
+  fill: #f8fafc;
+  stroke: rgba(15, 23, 42, 0.9);
+  stroke-width: 0.8;
+  font-size: 28px;
+  font-weight: 900;
+  paint-order: stroke fill;
+  letter-spacing: 0.04em;
+  animation: hx-sparkle-achievement 3s ease-in-out infinite;
 }
 
 /* ── Amethyst tile letters — purple/pink tones ──────────────────── */
@@ -2451,6 +2451,8 @@ body.hx-active #hex-grid {
 }
 .tile:has(.hx-selenite) .tile-letter,
 .tile-letter.hx-sparkle-selenite {
+  /* 0.4 s delay staggers selenite relative to amethyst (0 s) so simultaneous
+     tiles don't all flash in unison */
   animation: hx-sparkle-selenite 3.2s ease-in-out infinite 0.4s;
 }
 
@@ -2476,6 +2478,7 @@ body.hx-active #hex-grid {
 }
 .tile:has(.hx-portal) .tile-letter,
 .tile-letter.hx-sparkle-portal {
+  /* 0.8 s delay staggers portal relative to amethyst (0 s) and selenite (0.4 s) */
   animation: hx-sparkle-portal 2.2s ease-in-out infinite 0.8s;
 }
 
@@ -2501,10 +2504,13 @@ body.hx-active #hex-grid {
 }
 .tile:has(.hx-rune) .tile-letter,
 .tile-letter.hx-sparkle-rune {
+  /* 1.2 s delay staggers rune last in the four-type sequence */
   animation: hx-sparkle-rune 2.8s ease-in-out infinite 1.2s;
 }
 
 /* ── Reduced motion override ────────────────────────────────────── */
+/* Fully disable sparkle animations for users who prefer reduced motion
+   to avoid triggering vestibular disorders. */
 @media (prefers-reduced-motion: reduce) {
   .tile .hx-achievement-tile-letter,
   .tile:has(.hx-amethyst) .tile-letter,
@@ -2515,12 +2521,8 @@ body.hx-active #hex-grid {
   .tile-letter.hx-sparkle-portal,
   .tile:has(.hx-rune) .tile-letter,
   .tile-letter.hx-sparkle-rune {
-    animation: hx-sparkle-reduced-motion 4s ease-in-out infinite;
+    animation: none;
   }
-}
-@keyframes hx-sparkle-reduced-motion {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.75; }
 }
 @keyframes hx-oracle-shimmer {
   0%, 100% {
