@@ -3725,11 +3725,14 @@ function triggerHexacoreTitleFlash() {
   const TOTAL_PATTERNS = 14;
   const HISTORY_SIZE   = 3;
   let pattern;
+  // Cap retries at TOTAL_PATTERNS * 3 to guarantee termination even if
+  // HISTORY_SIZE were ever raised close to TOTAL_PATTERNS.
+  const MAX_TRIES = TOTAL_PATTERNS * 3;
   let tries = 0;
   do {
     pattern = Math.floor(Math.random() * TOTAL_PATTERNS) + 1;
     tries++;
-  } while (hxTitlePatternHistory.includes(pattern) && tries < 40);
+  } while (hxTitlePatternHistory.includes(pattern) && tries < MAX_TRIES);
   hxTitlePatternHistory.push(pattern);
   if (hxTitlePatternHistory.length > HISTORY_SIZE) hxTitlePatternHistory.shift();
 
@@ -3737,7 +3740,7 @@ function triggerHexacoreTitleFlash() {
   let orderForTitle1 = [];
   let orderForTitle2 = [];
 
-  /* Helper: Fisher-Yates shuffle in-place */
+  /* Helper: Fisher-Yates shuffle in-place. Mutates and returns the input array. */
   function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -3842,7 +3845,9 @@ function triggerHexacoreTitleFlash() {
       break;
 
     case 13: // BIT-REVERSAL — 3-bit index reversal (FFT butterfly order)
-      // Indices 0-7 reversed in 3 bits: 0→0,1→4,2→2,3→6,4→1,5→5,6→3,7→7
+      // Reverses the 3-bit binary representation of each index:
+      //   bit0↔bit2, bit1 unchanged → 0→0, 1→4, 2→2, 3→6, 4→1, 5→5, 6→3, 7→7
+      // Result: letters fire at every-other interval, then fill the gaps.
       orderForTitle1 = selected.slice().sort((a, b) => {
         const rev = x => ((x & 1) << 2) | (x & 2) | ((x >> 2) & 1);
         return rev(a) - rev(b);
