@@ -71,7 +71,6 @@ const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000,
 const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
-const HX_DAILY_TUTORIAL_KEY = 'hxDailyTutorialShown_v1';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
 let hxGameMode = null; // 'endless' | 'daily' | 'campaign'
@@ -379,9 +378,6 @@ let hxUpdateViewForBoard = null;
 let hxCompletedReqs     = new Set(); // IDs of completed requirements (persists across games)
 let hxIntroducedTileTypes = new Set();
 let hxQueuedTileIntros    = new Set();
-let hxPendingTutorialModals = [];
-let hxTutorialQueueRunning = false;
-let hxTutorialModalOpen    = false;
 let hxAchievementLettersCollected = new Set();
 
 // Power-up targeting mode state
@@ -1444,7 +1440,6 @@ function buildGrid(onReady, boardData = null) {
         );
         _hxRegisterTile(tile, hxState.digraphTiles);
         applyTileType(tile);
-        enqueueTileIntroduction(tile);
       } else {
         convertTile(tile, spec.type);
       }
@@ -1740,7 +1735,6 @@ function applyLevelUpRewards() {
     else if (targetType === 'lodestone') _hxRegisterTile(tile, hxState.lodestoneTiles);
     else if (targetType === 'amethyst')  _hxRegisterTile(tile, hxState.amethystTiles);
     applyTileType(tile);
-    enqueueTileIntroduction(tile);
     tile.element.classList.add(`hx-${targetType}-spawn`);
     tile.element.addEventListener('animationend', () => {
       tile.element.classList.remove(`hx-${targetType}-spawn`);
@@ -2006,9 +2000,11 @@ function buildTileGuide() {
   const toggle = document.createElement('button');
   toggle.id = 'hx-tile-guide-toggle';
   toggle.type = 'button';
-  toggle.textContent = '▼ TILE GUIDE';
   toggle.setAttribute('aria-expanded', 'false');
   toggle.setAttribute('aria-controls', 'hx-tile-guide-body');
+  toggle.setAttribute('aria-label', 'Toggle tile reference guide');
+  // Icon-only: hexagon symbol indicates tile guide
+  toggle.innerHTML = '<span aria-hidden="true">⬡</span>';
 
   const body = document.createElement('div');
   body.id = 'hx-tile-guide-body';
@@ -2027,7 +2023,7 @@ function buildTileGuide() {
     ACHIEVEMENT_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc, isDaily)));
   }
 
-  // Section 3 — Gems (multiplier only, no prose)
+  // Section 3 — Gems (multiplier only, no prose — both modes)
   if (GEM_TILES.length > 0) {
     if (!isDaily) {
       body.appendChild(sectionHeader('Gems  (score \u00d7 multiplier)'));
@@ -2038,7 +2034,7 @@ function buildTileGuide() {
       });
     } else {
       GEM_TILES.forEach(t => {
-        const card = tileRow(t.grad, t.name, t.desc, true);
+        const card = tileRow(t.grad, t.name, `\u00d7${t.mult}`, true);
         card.classList.add('hx-guide-card--gem');
         body.appendChild(card);
       });
@@ -2058,7 +2054,6 @@ function buildTileGuide() {
     toggle.setAttribute('aria-expanded', String(!open));
     body.hidden = open;
     body.setAttribute('aria-hidden', String(open));
-    toggle.textContent = open ? '▼ TILE GUIDE' : '▲ TILE GUIDE';
   });
 
   panel.appendChild(toggle);
@@ -4318,10 +4313,7 @@ async function submitHexacoreWord() {
       updatePowerUpBar();
       pendingPowerUpToasts.push('lexicon');
     }
-    enqueueCollectedTileModals(consumed);
   }
-
-  // Check achievement rewards (spawns new achievement tiles)
   const pendingAchievementSpawns = checkAchievementRewards(word, consumed, wordScore, portalUsedInWord);
 
   // If any portal tile is in the consumed set, close the portal now (before
@@ -4392,7 +4384,6 @@ async function submitHexacoreWord() {
       }
     }
 
-    await maybeRunTutorialModalQueue();
     saveHexacoreProgress();
   }
 }
@@ -4608,7 +4599,6 @@ async function refillGrid() {
       } else {
         tile.tileType = 'normal';
       }
-      enqueueTileIntroduction(tile);
       tile.s        = -q - r;
 
       hxState.tiles.push(tile);
@@ -4702,7 +4692,6 @@ function transformTileToGem(tile, gemType) {
   tile.tileType = gemType;
   _hxRegisterTile(tile, hxState[GEM_STATE_KEY[gemType]]);
   applyTileType(tile);
-  enqueueTileIntroduction(tile);
   const spawnClass = GEM_SPAWN_CLASS[gemType];
   tile.element.classList.add(spawnClass);
   tile.element.addEventListener('animationend', () => {
@@ -4835,7 +4824,6 @@ function convertTile(target, type) {
   }
 
   applyTileType(target);
-  enqueueTileIntroduction(target);
 
   const spawnClass = `hx-${type}-spawn`;
   target.element.classList.add(spawnClass);
@@ -5248,61 +5236,6 @@ async function waitForBoardToSettle(maxMs = 2000) {
   }
 }
 
-function enqueueTutorialModal(item) {
-  hxPendingTutorialModals.push(item);
-  // Queue is started explicitly after the board intro animation completes
-  // (via onReady callback) and after each word submission — not here.
-}
-
-function enqueueTileIntroduction(tile) {
-  if (!tile) return;
-  const type = tile.tileType || 'normal';
-  // Skip basic letter/digraph tiles — no intro modal needed for them
-  if (type === 'normal' || type === 'digraph') return;
-  if (hxIntroducedTileTypes.has(type) || hxQueuedTileIntros.has(type)) return;
-  hxQueuedTileIntros.add(type);
-  enqueueTutorialModal({ kind: 'intro', tileType: type, tile });
-}
-
-function enqueueCollectedTileModals(consumedTiles) {
-  if (!Array.isArray(consumedTiles) || consumedTiles.length === 0) return;
-
-  if (consumedTiles.some(t => t.tileType === 'amethyst')) {
-    enqueueTutorialModal({
-      kind: 'collection',
-      title: 'Amethyst Collected',
-      description: "You've collected an Amethyst tile and gained 1 Transmute charge.",
-      tileType: 'amethyst',
-    });
-  }
-
-  if (consumedTiles.some(t => t.tileType === 'selenite')) {
-    enqueueTutorialModal({
-      kind: 'collection',
-      title: 'Selenite Collected',
-      description: "You've collected a Selenite tile and gained 1 Phase Swap charge.",
-      tileType: 'selenite',
-    });
-  }
-
-  HX_ACHIEVEMENT_TILE_ORDER.forEach(type => {
-    if (!consumedTiles.some(t => t.tileType === type)) return;
-    hxAchievementLettersCollected.add(type);
-    const letter = HX_ACHIEVEMENT_TILE_META[type].letter;
-    const collected = hxAchievementLettersCollected.size;
-    enqueueTutorialModal({
-      kind: 'collection',
-      title: `${HX_ACHIEVEMENT_TILE_META[type].label} Collected`,
-      description: `You've collected "${letter}"! Progress: ${getAchievementCollectionProgress()} (${collected}/${HX_ACHIEVEMENT_TILE_ORDER.length})`,
-      tileType: type,
-    });
-  });
-}
-
-function queueBoardTileIntroductions() {
-  hxState.tiles.forEach(tile => enqueueTileIntroduction(tile));
-}
-
 function hasBlockingHexacoreModal() {
   return !!(
     document.getElementById('hx-rune-picker')
@@ -5310,95 +5243,6 @@ function hasBlockingHexacoreModal() {
     || document.getElementById('hx-challenges-modal')
     || document.getElementById('hx-gameover-overlay')
   );
-}
-
-function closeTutorialModal(resolve, overlay, wasActive, restoreFocusEl) {
-  overlay.remove();
-  if (restoreFocusEl?.isConnected) restoreFocusEl.focus();
-  hxTutorialModalOpen = false;
-  if (!hxState.gameOver) hxState.active = wasActive;
-  resolve();
-}
-
-function showTutorialModal(item, tile) {
-  return new Promise(resolve => {
-    const wasActive = hxState.active;
-    hxState.active = false;
-    hxTutorialModalOpen = true;
-
-    // Full-screen click-blocker — transparent so the board stays fully visible
-    const overlay = document.createElement('div');
-    overlay.id = 'hx-tutorial-modal';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-labelledby', 'hx-tutorial-modal-title');
-    overlay.setAttribute('aria-describedby', 'hx-tutorial-modal-desc');
-
-    const box = document.createElement('div');
-    box.className = 'hx-tutorial-modal-box';
-
-    const title = document.createElement('h3');
-    title.id = 'hx-tutorial-modal-title';
-    title.className = 'hx-tutorial-modal-title';
-    title.textContent = item.kind === 'intro'
-      ? `${getTileTypeDisplayName(item.tileType)} Found`
-      : (item.title || 'Tile Collected');
-
-    const desc = document.createElement('p');
-    desc.id = 'hx-tutorial-modal-desc';
-    desc.className = 'hx-tutorial-modal-desc';
-    desc.textContent = item.kind === 'intro'
-      ? getTileIntroDescription(item.tileType)
-      : item.description;
-
-    const ok = document.createElement('button');
-    ok.type = 'button';
-    ok.className = 'hx-tutorial-modal-ok';
-    ok.textContent = 'OK';
-
-    const restoreFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, wasActive, restoreFocusEl), { once: true });
-
-    box.append(title, desc, ok);
-    overlay.appendChild(box);
-    document.body.appendChild(overlay);
-
-    requestAnimationFrame(() => { ok.focus(); });
-  });
-}
-
-async function maybeRunTutorialModalQueue() {
-  if (hxTutorialQueueRunning || hxTutorialModalOpen || hxState.gameOver || !hxSvg) return;
-  if (hxPendingTutorialModals.length === 0) return;
-
-  hxTutorialQueueRunning = true;
-  try {
-    while (hxPendingTutorialModals.length > 0 && !hxState.gameOver) {
-      if (hasBlockingHexacoreModal()) {
-        await delay(120);
-        continue;
-      }
-      await waitForBoardToSettle();
-      if (hxTutorialModalOpen || hxState.gameOver) break;
-
-      const item = hxPendingTutorialModals.shift();
-      if (!item) break;
-
-      if (item.kind === 'intro') {
-        const target = hxState.tiles.includes(item.tile) ? item.tile : findTileByType(item.tileType);
-        hxQueuedTileIntros.delete(item.tileType);
-        if (!target || hxIntroducedTileTypes.has(item.tileType)) continue;
-        await showTutorialModal(item, target);
-        hxIntroducedTileTypes.add(item.tileType);
-        saveHexacoreTutorialState();
-      } else {
-        const target = item.tileType ? findTileByType(item.tileType) : null;
-        await showTutorialModal(item, target);
-      }
-    }
-  } finally {
-    hxTutorialQueueRunning = false;
-  }
 }
 
 /* ── Progress persistence ──────────────────────────────────────── */
@@ -5465,9 +5309,6 @@ export function startHexacore(mode) {
   hxCompletedReqs = new Set(loadHexacoreRequirements());
   hxIntroducedTileTypes = new Set(loadHexacoreTutorialState());
   hxQueuedTileIntros = new Set();
-  hxPendingTutorialModals = [];
-  hxTutorialQueueRunning = false;
-  hxTutorialModalOpen = false;
   hxAchievementLettersCollected = new Set();
 
   // Initialise quest system
@@ -5671,42 +5512,6 @@ export function startHexacore(mode) {
 
       showRestoredBanner(hxState.level, hxState.score);
     }
-    // For daily mode, prepend a one-time tutorial before tile introductions
-    if (hxGameMode === 'daily') {
-      let shownTutorial = false;
-      try { shownTutorial = !!localStorage.getItem(HX_DAILY_TUTORIAL_KEY); } catch (_) {}
-      if (!shownTutorial) {
-        const DAILY_INTRO_SLIDES = [
-          {
-            title: 'WELCOME TO DAILY',
-            description:
-              "Every day a brand-new board appears for everyone. Use all the tiles wisely — " +
-              "unused tiles subtract from your final score. You get one attempt, so make it count!",
-          },
-          {
-            title: 'GEMS & SPECIAL TILES',
-            description:
-              "5 gem tiles are hidden across the board. Include them in words to multiply your score. " +
-              "Prism doubles a word's total, Rune is a wildcard, and Digraph tiles count as two letters.",
-          },
-          {
-            title: 'POWER-UPS & ACHIEVEMENTS',
-            description:
-              "Amethyst and Selenite grant Transmute and Phase Swap power-ups when used in any word. " +
-              "Eclipse and Lodestone are achievement tiles — collect them for special effects. Portal links two corner tiles.",
-          },
-        ];
-        for (const slide of DAILY_INTRO_SLIDES) {
-          hxPendingTutorialModals.unshift({ kind: 'dailyIntro', title: slide.title, description: slide.description });
-        }
-        try { localStorage.setItem(HX_DAILY_TUTORIAL_KEY, '1'); } catch (_) {}
-      }
-    }
-    // Skip tile-introduction modals in daily mode — they clutter the experience
-    if (hxGameMode !== 'daily') {
-      queueBoardTileIntroductions();
-      void maybeRunTutorialModalQueue();
-    }
     updateDailyHud();
     // Rebuild the tile guide after board is ready so daily mode shows only
     // the special tiles that actually appear on today's board.
@@ -5763,7 +5568,6 @@ export function stopHexacore() {
 
   document.getElementById('hx-gameover-overlay')?.remove();
   document.getElementById('hx-challenges-modal')?.remove();
-  document.getElementById('hx-tutorial-modal')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
   const gridSvg = document.getElementById('hex-grid');
