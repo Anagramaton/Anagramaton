@@ -85,7 +85,7 @@ import { getXPData }             from './hexacoreXP.js';
 
     // Order: DAILY → ENDLESS → CAMPAIGN → QUESTS
     const MODES = [
-      { id: 'daily',    icon: '📅', title: 'DAILY CHALLENGE', color: '#4cc9f0',
+      { id: 'daily',    icon: '📅', title: 'DAILY',           color: '#4cc9f0',
         desc: 'Fixed daily board with no refills. Submit for the best final score.' },
       { id: 'endless',  icon: '🔥', title: 'ENDLESS',         color: '#f97316',
         desc: 'Survive the ember. Score as high as you can with no limits.' },

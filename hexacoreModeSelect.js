@@ -11,7 +11,7 @@ const MODES = [
   {
     id:    'daily',
     icon:  '📅',
-    title: 'DAILY CHALLENGE',
+    title: 'DAILY',
     desc:  'Fixed daily board with no refills. Submit for the best final score.',
     color: '#4cc9f0',
   },
@@ -24,8 +24,9 @@ const MODES = [
   },
 ];
 
-/** Open the mode select modal; calls onModeSelected(modeId) when a mode is chosen. */
-export function openModeSelectModal(onModeSelected) {
+/** Open the mode select modal; calls onModeSelected(modeId) when a mode is chosen,
+ *  or onClose() when dismissed without selecting a mode. */
+export function openModeSelectModal(onModeSelected, onClose) {
   document.getElementById('hx-mode-select-modal')?.remove();
 
   const modal = document.createElement('div');
@@ -71,6 +72,14 @@ export function openModeSelectModal(onModeSelected) {
     cardsEl.appendChild(card);
   });
 
-  document.getElementById('hx-mode-select-close')?.addEventListener('click', () => modal.remove());
-  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.getElementById('hx-mode-select-close')?.addEventListener('click', () => {
+    modal.remove();
+    if (typeof onClose === 'function') onClose();
+  });
+  modal.addEventListener('click', e => {
+    if (e.target === modal) {
+      modal.remove();
+      if (typeof onClose === 'function') onClose();
+    }
+  });
 }

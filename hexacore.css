@@ -5997,6 +5997,50 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   padding: 0.35rem 0.3rem;
   cursor: pointer;
 }
+#hx-daily-reset-btn {
+  width: 100%;
+  margin-top: 0.3rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.09em;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(148, 163, 184, 0.08);
+  color: #94a3b8;
+  padding: 0.35rem 0.3rem;
+  cursor: pointer;
+}
+#hx-daily-no-words-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+}
+#hx-daily-no-words-box {
+  width: min(380px, 90vw);
+  background: linear-gradient(145deg, rgba(8, 18, 32, 0.97), rgba(20, 15, 40, 0.97));
+  border: 2px solid rgba(76, 201, 240, 0.55);
+  border-radius: 14px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+}
+#hx-daily-no-words-box h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #f8fafc;
+  letter-spacing: 0.08em;
+}
+#hx-daily-no-words-box p {
+  margin: 0 0 0.9rem;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+#hx-daily-no-words-box > button {
+  width: 100%;
+  margin-top: 0.45rem;
+}
 #hx-daily-result-overlay {
   position: fixed;
   inset: 0;
@@ -6055,6 +6099,10 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
     font-size: 0.54rem;
     padding: 0.3rem 0.25rem;
     margin-top: 0.35rem;
+  }
+  #hx-daily-reset-btn {
+    font-size: 0.54rem;
+    padding: 0.3rem 0.25rem;
   }
   #hx-daily-result-box {
     width: min(440px, 95vw);

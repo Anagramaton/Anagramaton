@@ -1845,9 +1845,15 @@ function ensureHud() {
       <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
       <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
       <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
+      <button id="hx-daily-reset-btn" type="button">RESET BOARD</button>
     `;
     document.body.appendChild(dailyHud);
-    dailyHud.querySelector('#hx-daily-submit-btn')?.addEventListener('click', () => completeDailyChallenge(false));
+    dailyHud.querySelector('#hx-daily-submit-btn')?.addEventListener('click', () => completeDailyChallenge());
+    dailyHud.querySelector('#hx-daily-reset-btn')?.addEventListener('click', () => {
+      if (confirm('Reset the daily board? Your current progress will be lost.')) {
+        startHexacore('daily');
+      }
+    });
   }
 
   // Top bar: centered Hexacore menu button with XP bar below it
@@ -1894,11 +1900,15 @@ function ensureHud() {
   topMenuRow.appendChild(powerUpBarRight);
 
   hxTopBar.appendChild(topMenuRow);
-  // XP bar is a sibling of the row so it stays centered below the menu button
-  hxTopBar.appendChild(xpBar);
+  // XP bar is shown for endless/campaign only — daily mode has no XP
+  if (hxGameMode !== 'daily') {
+    hxTopBar.appendChild(xpBar);
+  }
   document.body.appendChild(hxTopBar);
 
-  updateXPBarFn();
+  if (hxGameMode !== 'daily') {
+    updateXPBarFn();
+  }
 }
 
 function removeHud() {
@@ -1910,6 +1920,7 @@ function removeHud() {
   document.getElementById('hx-top-bar')?.remove();
   document.getElementById('hx-powerup-toast')?.remove();
   document.getElementById('hx-powerup-indicator')?.remove();
+  document.getElementById('hx-daily-no-words-overlay')?.remove();
 }
 
 /* ── Requirements persistence ──────────────────────────────────── */
@@ -3951,10 +3962,16 @@ async function submitHexacoreWord() {
   animateScoreHud(oldScore, hxState.score);
 
   // XP gain — compute the values now but defer the UI until after refill
-  const xpGain = calcWordXP(word, [...hxSelected]);
-  const { newLevel, leveledUp } = addXP(xpGain);
+  // (Daily mode does not award XP or track quests)
+  let xpGain = 0;
+  let leveledUp = false;
+  let newLevel = null;
+  if (hxGameMode !== 'daily') {
+    xpGain = calcWordXP(word, [...hxSelected]);
+    ({ newLevel, leveledUp } = addXP(xpGain));
+  }
 
-  // Quest tracking
+  // Quest/portal tracking
   const gemsUsedInWord   = hxSelected.filter(t => t.tileType && t.tileType.startsWith('gem')).length;
   const portalUsedInWord = hxState.portalOpen && hxState.portalEntry && hxState.portalExit &&
     hxSelected.some(t => hxKey(t.q, t.r) === hxKey(hxState.portalEntry.q, hxState.portalEntry.r) ||
@@ -3965,16 +3982,18 @@ async function submitHexacoreWord() {
     hxState.achievements.portalWordsUsed++;
   }
 
-  updateQuestProgress('wordSubmitted', {
-    word,
-    tiles:               [...hxSelected],
-    score:               hxState.score,
-    gemsUsed:            gemsUsedInWord,
-    portalUsed:          portalUsedInWord,
-    gameLevel:           hxState.level,
-    amethystCollected:   false,
-    seleniteCollected:   false,
-  });
+  if (hxGameMode !== 'daily') {
+    updateQuestProgress('wordSubmitted', {
+      word,
+      tiles:               [...hxSelected],
+      score:               hxState.score,
+      gemsUsed:            gemsUsedInWord,
+      portalUsed:          portalUsedInWord,
+      gameLevel:           hxState.level,
+      amethystCollected:   false,
+      seleniteCollected:   false,
+    });
+  }
   updateAchievementProgress('wordSubmitted', {
     word,
     tiles: [...hxSelected],
@@ -4079,9 +4098,11 @@ async function submitHexacoreWord() {
   if (!hxState.gameOver) {
     // Show all post-word UI feedback only after board settle
     checkHexacoreRequirements(word, consumed, wordScore);
-    showXPGainToast(xpGain);
-    if (leveledUp) showPlayerLevelUpBanner(newLevel);
-    updateXPBarFn();
+    if (hxGameMode !== 'daily') {
+      showXPGainToast(xpGain);
+      if (leveledUp) showPlayerLevelUpBanner(newLevel);
+      updateXPBarFn();
+    }
     pendingPowerUpToasts.forEach(type => showPowerUpCollectToast(type));
     // Show achievement toasts for newly spawned achievement tiles (staggered)
     pendingAchievementSpawns.forEach((spawn, i) => {
@@ -4109,7 +4130,7 @@ async function submitHexacoreWord() {
     } else {
       updateDailyHud();
       if (!hasAnyDailyWordLeft()) {
-        await completeDailyChallenge(true);
+        showDailyNoWordsPrompt();
         return;
       }
     }
@@ -4145,6 +4166,7 @@ async function consumeAndRefill(tilesToRemove) {
   });
 
   if (hxGameMode === 'daily') {
+    await applyGravity();
     updateDailyHud();
     return;
   }
@@ -4575,8 +4597,31 @@ function spawnSpecialInRows(type, rows) {
   convertTile(target, type);
 }
 
-async function completeDailyChallenge(autoTriggered = false) {
+function showDailyNoWordsPrompt() {
+  document.getElementById('hx-daily-no-words-overlay')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'hx-daily-no-words-overlay';
+  overlay.innerHTML = `
+    <div id="hx-daily-no-words-box">
+      <h2>NO MORE VALID WORDS</h2>
+      <p>Are you satisfied with your board?</p>
+      <button id="hx-daily-nw-submit-btn" class="hx-btn-primary" type="button">SUBMIT</button>
+      <button id="hx-daily-nw-better-btn" type="button">I CAN DO BETTER</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('hx-daily-nw-submit-btn')?.addEventListener('click', async () => {
+    overlay.remove();
+    await completeDailyChallenge();
+  });
+  document.getElementById('hx-daily-nw-better-btn')?.addEventListener('click', () => {
+    overlay.remove();
+  });
+}
+
+async function completeDailyChallenge() {
   if (hxGameMode !== 'daily' || hxState.dailySubmitted) return;
+  document.getElementById('hx-daily-no-words-overlay')?.remove();
   hxState.dailySubmitted = true;
   hxState.active = false;
   clearSelection();
@@ -4614,7 +4659,6 @@ async function completeDailyChallenge(autoTriggered = false) {
   hxMarkDailyCompleted();
 
   showDailyChallengeResults({
-    autoTriggered,
     finalScore,
     wordTotal,
     penalty,
@@ -4624,7 +4668,7 @@ async function completeDailyChallenge(autoTriggered = false) {
   });
 }
 
-function showDailyChallengeResults({ autoTriggered, finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words }) {
+function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words }) {
   document.getElementById('hx-daily-result-overlay')?.remove();
   const overlay = document.createElement('div');
   overlay.id = 'hx-daily-result-overlay';
@@ -4633,7 +4677,7 @@ function showDailyChallengeResults({ autoTriggered, finalScore, wordTotal, penal
       <h2>DAILY CHALLENGE COMPLETE</h2>
       <div class="hx-final-score">${finalScore.toLocaleString()}</div>
       <div class="hx-stats">
-        ${autoTriggered ? 'No more valid 4+ words remain' : 'Submission complete'}<br>
+        Submission complete<br>
         Words Submitted: ${words.length}<br>
         Total Word Score: ${wordTotal.toLocaleString()}<br>
         Tiles Used: ${tilesUsed} / ${tilesTotal}<br>
@@ -5621,7 +5665,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    openModeSelectModal(mode => startHexacoreMode(mode));
+    openModeSelectModal(
+      mode => startHexacoreMode(mode),
+      () => document.getElementById('splash-screen')?.classList.remove('hidden'),
+    );
   });
 
   // Expose helpers for campaign overlay buttons
@@ -5659,7 +5706,11 @@ function startHexacoreMode(mode) {
 /* ── hx:start-mode custom event (dispatched by hexacoreSettings.js) */
 document.addEventListener('hx:start-mode', e => {
   const mode = e.detail?.mode;
-  if (mode != null) startHexacoreMode(mode);
+  if (mode == null) return;
+  // If the player is already actively playing this mode (game not over), just
+  // resume — don't regenerate the board (fixes daily board being reset via settings).
+  if (mode === hxGameMode && hxState.active && !hxState.gameOver) return;
+  startHexacoreMode(mode);
 });
 
 /* ── TODO: Hexacore events still missing a dedicated sound ─────────
