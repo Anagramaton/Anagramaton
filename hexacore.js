@@ -71,6 +71,7 @@ const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000,
 const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
+const HX_DAILY_TUTORIAL_KEY = 'hxDailyTutorialShown_v1';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
 let hxGameMode = null; // 'endless' | 'daily' | 'campaign'
@@ -4069,10 +4070,11 @@ async function submitHexacoreWord() {
 
   const consumed = [...hxSelected];
 
-  // Detect power-up collection (5+ letter word): amethyst, selenite + 5 new achievement tiles.
-  // Update state immediately; queue the toast to show after the refill settles.
+  // Detect power-up collection: amethyst, selenite + achievement tiles.
+  // In daily mode any word length collects a power-up tile; in other modes
+  // the word must be 5+ letters.
   const pendingPowerUpToasts = [];
-  if (assembledLength >= 5) {
+  if (assembledLength >= 5 || hxGameMode === 'daily') {
     const hasAmethystTile  = consumed.some(t => t.tileType === 'amethyst');
     const hasSelenieTile   = consumed.some(t => t.tileType === 'selenite');
     const hasOracleTile    = consumed.some(t => t.tileType === 'oracle');
@@ -5047,7 +5049,8 @@ async function waitForBoardToSettle(maxMs = 2000) {
 
 function enqueueTutorialModal(item) {
   hxPendingTutorialModals.push(item);
-  void maybeRunTutorialModalQueue();
+  // Queue is started explicitly after the board intro animation completes
+  // (via onReady callback) and after each word submission — not here.
 }
 
 function enqueueTileIntroduction(tile) {
@@ -5108,9 +5111,8 @@ function hasBlockingHexacoreModal() {
   );
 }
 
-function closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl) {
+function closeTutorialModal(resolve, overlay, wasActive, restoreFocusEl) {
   overlay.remove();
-  arrowSvg?.remove();
   if (restoreFocusEl?.isConnected) restoreFocusEl.focus();
   hxTutorialModalOpen = false;
   if (!hxState.gameOver) hxState.active = wasActive;
@@ -5153,64 +5155,14 @@ function showTutorialModal(item, tile) {
     ok.className = 'hx-tutorial-modal-ok';
     ok.textContent = 'OK';
 
-    // The tile is NOT highlighted or modified — it appears exactly as the player sees it.
-    let arrowSvg = null;
-
     const restoreFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl), { once: true });
+    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, wasActive, restoreFocusEl), { once: true });
 
     box.append(title, desc, ok);
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    // After layout: draw a dashed connector from the modal's top-centre to the tile centre.
-    requestAnimationFrame(() => {
-      ok.focus();
-      if (tile?.element) {
-        const tileRect = tile.element.getBoundingClientRect();
-        const boxRect  = box.getBoundingClientRect();
-        if (tileRect.width > 0 && boxRect.width > 0) {
-          const tx = tileRect.left + tileRect.width  / 2;
-          const ty = tileRect.top  + tileRect.height / 2;
-          const bx = boxRect.left  + boxRect.width   / 2;
-          const by = boxRect.top;
-
-          arrowSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          arrowSvg.setAttribute('class', 'hx-tutorial-arrow-svg');
-          arrowSvg.setAttribute('aria-hidden', 'true');
-
-          const defs   = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-          const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-          marker.setAttribute('id',          'hx-tut-tip');
-          marker.setAttribute('markerWidth',  '7');
-          marker.setAttribute('markerHeight', '7');
-          marker.setAttribute('refX',         '3.5');
-          marker.setAttribute('refY',         '3.5');
-          marker.setAttribute('orient',       'auto-start-reverse');
-          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          dot.setAttribute('cx', '3.5');
-          dot.setAttribute('cy', '3.5');
-          dot.setAttribute('r',  '3');
-          dot.setAttribute('fill', 'rgba(76,201,240,0.9)');
-          marker.appendChild(dot);
-          defs.appendChild(marker);
-          arrowSvg.appendChild(defs);
-
-          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          line.setAttribute('x1', String(bx));
-          line.setAttribute('y1', String(by));
-          line.setAttribute('x2', String(tx));
-          line.setAttribute('y2', String(ty));
-          line.setAttribute('stroke',           'rgba(76,201,240,0.65)');
-          line.setAttribute('stroke-width',     '1.5');
-          line.setAttribute('stroke-dasharray', '5,4');
-          line.setAttribute('marker-end',       'url(#hx-tut-tip)');
-          arrowSvg.appendChild(line);
-
-          document.body.appendChild(arrowSvg);
-        }
-      }
-    });
+    requestAnimationFrame(() => { ok.focus(); });
   });
 }
 
@@ -5516,6 +5468,37 @@ export function startHexacore(mode) {
 
       showRestoredBanner(hxState.level, hxState.score);
     }
+    // For daily mode, prepend a one-time tutorial before tile introductions
+    if (hxGameMode === 'daily') {
+      let shownTutorial = false;
+      try { shownTutorial = !!localStorage.getItem(HX_DAILY_TUTORIAL_KEY); } catch (_) {}
+      if (!shownTutorial) {
+        const DAILY_INTRO_SLIDES = [
+          {
+            title: 'WELCOME TO DAILY',
+            description:
+              "Every day a brand-new board appears for everyone. Use all the tiles wisely — " +
+              "unused tiles subtract from your final score. You get one attempt, so make it count!",
+          },
+          {
+            title: 'GEMS & SPECIAL TILES',
+            description:
+              "5 gem tiles are hidden across the board. Include them in words to multiply your score. " +
+              "Prism doubles a word's total, Rune is a wildcard, and Digraph tiles count as two letters.",
+          },
+          {
+            title: 'POWER-UPS & ACHIEVEMENTS',
+            description:
+              "Amethyst and Selenite grant Transmute and Phase Swap power-ups when used in any word. " +
+              "Eclipse and Lodestone are achievement tiles — collect them for special effects. Portal links two corner tiles.",
+          },
+        ];
+        for (const slide of DAILY_INTRO_SLIDES) {
+          hxPendingTutorialModals.unshift({ kind: 'dailyIntro', title: slide.title, description: slide.description });
+        }
+        try { localStorage.setItem(HX_DAILY_TUTORIAL_KEY, '1'); } catch (_) {}
+      }
+    }
     queueBoardTileIntroductions();
     void maybeRunTutorialModalQueue();
     updateDailyHud();
@@ -5572,7 +5555,6 @@ export function stopHexacore() {
   document.getElementById('hx-gameover-overlay')?.remove();
   document.getElementById('hx-challenges-modal')?.remove();
   document.getElementById('hx-tutorial-modal')?.remove();
-  document.querySelector('.hx-tutorial-arrow-svg')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
   const gridSvg = document.getElementById('hex-grid');

@@ -361,9 +361,10 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     };
   });
 
-  // Pick 3 distinct gem types randomly using the seeded RNG
+  // Pick 5 distinct gem types randomly using the seeded RNG
+  // DAILY_GEM_POOL has 7 entries, so slicing 5 always yields unique types.
   const shuffledGems = shuffled(DAILY_GEM_POOL, rng);
-  const chosenGems = shuffledGems.slice(0, 3);
+  const chosenGems = shuffledGems.slice(0, 5);
 
   for (const gemType of chosenGems) {
     const multi = GEM_MULTIPLIERS[gemType] || 1;
