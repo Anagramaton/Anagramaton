@@ -5706,7 +5706,11 @@ function startHexacoreMode(mode) {
 /* ── hx:start-mode custom event (dispatched by hexacoreSettings.js) */
 document.addEventListener('hx:start-mode', e => {
   const mode = e.detail?.mode;
-  if (mode != null) startHexacoreMode(mode);
+  if (mode == null) return;
+  // If the player is already actively playing this mode (game not over), just
+  // resume — don't regenerate the board (fixes daily board being reset via settings).
+  if (mode === hxGameMode && hxState.active && !hxState.gameOver) return;
+  startHexacoreMode(mode);
 });
 
 /* ── TODO: Hexacore events still missing a dedicated sound ─────────
