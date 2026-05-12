@@ -4071,10 +4071,11 @@ async function submitHexacoreWord() {
   const consumed = [...hxSelected];
 
   // Detect power-up collection: amethyst, selenite + achievement tiles.
-  // In daily mode any word length collects a power-up tile; in other modes
-  // the word must be 5+ letters.
+  // In daily mode any word of 3+ letters collects a power-up tile; in other
+  // modes the word must be 5+ letters.
+  const dailyPowerUpGate = hxGameMode === 'daily' ? 3 : 5;
   const pendingPowerUpToasts = [];
-  if (assembledLength >= 5 || hxGameMode === 'daily') {
+  if (assembledLength >= dailyPowerUpGate) {
     const hasAmethystTile  = consumed.some(t => t.tileType === 'amethyst');
     const hasSelenieTile   = consumed.some(t => t.tileType === 'selenite');
     const hasOracleTile    = consumed.some(t => t.tileType === 'oracle');
