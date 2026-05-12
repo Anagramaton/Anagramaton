@@ -1,0 +1,194 @@
+{
+  "date": "2026-06-02",
+  "grid": {
+    "-2,2": "D",
+    "-1,1": "E",
+    "-1,0": "C",
+    "-2,1": "A",
+    "-2,0": "R",
+    "-1,-1": "B",
+    "0,-1": "U",
+    "1,-2": "R",
+    "1,-1": "I",
+    "0,0": "Z",
+    "1,0": "I",
+    "0,1": "N",
+    "1,1": "G",
+    "3,1": "B",
+    "2,1": "U",
+    "2,0": "M",
+    "3,-1": "B",
+    "2,-1": "A",
+    "3,-2": "Z",
+    "2,-2": "E",
+    "2,-3": "D",
+    "-1,4": "W",
+    "0,3": "I",
+    "0,2": "Z",
+    "-1,3": "Z",
+    "-1,2": "E",
+    "-2,3": "S",
+    "-3,-1": "B",
+    "-2,-1": "O",
+    "-1,-2": "B",
+    "0,-2": "I",
+    "1,-3": "N",
+    "1,3": "M",
+    "1,2": "U",
+    "0,4": "G",
+    "-4,0": "U",
+    "-4,1": "R",
+    "-4,2": "A",
+    "-4,3": "O",
+    "-4,4": "U",
+    "-3,0": "G",
+    "-3,1": "L",
+    "-3,2": "D",
+    "-3,3": "E",
+    "-3,4": "E",
+    "-2,-2": "N",
+    "-2,4": "R",
+    "-1,-3": "U",
+    "0,-4": "R",
+    "0,-3": "Q",
+    "1,-4": "E",
+    "2,-4": "G",
+    "2,2": "I",
+    "3,-4": "U",
+    "3,-3": "I",
+    "3,0": "T",
+    "4,-4": "O",
+    "4,-3": "H",
+    "4,-2": "O",
+    "4,-1": "N",
+    "4,0": "I"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 0,
+      "r": 2
+    },
+    {
+      "type": "rune",
+      "q": 0,
+      "r": 3
+    },
+    {
+      "type": "gemGold",
+      "q": -3,
+      "r": 4
+    },
+    {
+      "type": "gemDiamond",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "gemPearl",
+      "q": 1,
+      "r": 3
+    },
+    {
+      "type": "gemEmerald",
+      "q": -2,
+      "r": -2
+    },
+    {
+      "type": "gemTanzanite",
+      "q": 1,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -2,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "LE"
+    },
+    {
+      "type": "amethyst",
+      "q": -1,
+      "r": 1
+    },
+    {
+      "type": "selenite",
+      "q": -2,
+      "r": 2
+    },
+    {
+      "type": "eclipse",
+      "q": 1,
+      "r": -4
+    },
+    {
+      "type": "lodestone",
+      "q": 2,
+      "r": 1
+    },
+    {
+      "type": "portal",
+      "q": -2,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "q": -2,
+      "r": 4
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 162180,
+    "minAchievableScore": 124800,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "DECARBURIZING",
+          "MUZZED",
+          "WIZZES",
+          "GIZZES",
+          "BUMBAZED"
+        ],
+        "wordTotal": 65564,
+        "penalty": 100,
+        "finalScore": 65464
+      },
+      {
+        "words": [
+          "DECARBURIZING",
+          "MUZZED",
+          "WIZZES",
+          "GIZZES",
+          "BUMBAZED"
+        ],
+        "wordTotal": 65564,
+        "penalty": 100,
+        "finalScore": 65464
+      },
+      {
+        "words": [
+          "DECARBURIZING",
+          "BUMBAZED",
+          "MUZZED",
+          "WIZZES"
+        ],
+        "wordTotal": 65192,
+        "penalty": 104,
+        "finalScore": 65088
+      }
+    ],
+    "generatedAt": "2026-05-12T20:01:53.819Z"
+  }
+}

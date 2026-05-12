@@ -24,36 +24,46 @@ const LETTER_POINTS = {
 };
 
 const GEM_MULTIPLIERS = {
-  gemEmerald: 2,
-  gemGold: 3,
-  gemSapphire: 3,
-  gemRuby: 4,
-  gemDiamond: 9,
-  gemAlexandrite: 13,
-  gemAquamarine: 6,
-  gemTopaz: 5,
-  gemOpal: 7,
+  gemEmerald:  2,
+  gemGold:     3,
+  gemSapphire: 4,
+  gemPearl:    5,
+  gemTanzanite: 6,
+  gemRuby:     7,
+  gemDiamond:  8,
 };
 
-const DAILY_SPECIAL_COUNTS = {
-  prism: 2,
-  rune: 2,
-  gems: {
-    gemAlexandrite: 1,
-    gemDiamond: 1,
-    gemRuby: 2,
-    gemGold: 2,
-    gemSapphire: 2,
-    gemEmerald: 3,
-  },
-  powerups: {
-    oracle: 1,
-    beacon: 1,
-    lodestone: 1,
-    amethyst: 1,
-    selenite: 1,
-  },
-};
+// All gem types available for random selection on daily boards
+const DAILY_GEM_POOL = Object.keys(GEM_MULTIPLIERS);
+
+// The 6 corner tiles of the radius-4 hex grid that may become portals
+const DAILY_PORTAL_CORNERS = [
+  { q: -2, r:  4 },
+  { q:  2, r:  4 },
+  { q:  4, r:  0 },
+  { q:  2, r: -4 },
+  { q: -2, r: -4 },
+  { q: -4, r:  0 },
+];
+
+// Digraph combos eligible for daily board placement
+const DAILY_DIGRAPH_OPTIONS = [
+  'TH', 'HE', 'IN', 'ER', 'RE', 'ST', 'AN', 'ON', 'EA',
+  'IO', 'LL', 'QU', 'CK', 'CH', 'EN', 'CO', 'LY', 'AL',
+  'LE', 'ED', 'ES', 'UN', 'GH', 'CR', 'WH', 'NT', 'NG', 'TY',
+];
+
+// Milliseconds in one day — used for day-parity calculation
+const MS_PER_DAY = 86400000;
+
+// Minimum gem multiplier threshold to consider a gem "high-tier" for validation
+const HIGH_TIER_GEM_MULTIPLIER = 6;
+// Derived from GEM_MULTIPLIERS so the list stays in sync automatically
+const HIGH_TIER_GEMS = new Set(
+  Object.entries(GEM_MULTIPLIERS)
+    .filter(([, mult]) => mult >= HIGH_TIER_GEM_MULTIPLIER)
+    .map(([type]) => type),
+);
 
 const LETTER_POOL = [
   ...Array(12).fill('E'), ...Array(9).fill('A'), ...Array(8).fill('I'), ...Array(8).fill('O'), ...Array(4).fill('U'),
@@ -145,10 +155,19 @@ function shuffled(list, rng) {
   return arr;
 }
 
+function coordKey(cell) {
+  if (cell?.key) return cell.key;
+  return hexKey(cell.q, cell.r);
+}
+
+function getAllCoordsWithKeys(radius) {
+  return getAllCoords(radius).map(c => ({ ...c, key: coordKey(c) }));
+}
+
 function pathOverlap(path, grid, word) {
   let overlap = 0;
   path.forEach((cell, i) => {
-    const existing = grid[cell.key];
+    const existing = grid[coordKey(cell)];
     if (existing && existing === word[i]) overlap += 1;
   });
   return overlap;
@@ -176,20 +195,21 @@ function placeWords(words, rng, radius) {
         { allowZigZag: true, preferOverlap: true, maxStraight: 2, wallBuffer: 1, maxEdgeRun: 1 },
       );
       if (!path) continue;
+      const normalizedPath = path.map(c => ({ ...c, key: coordKey(c) }));
 
-      const overlap = pathOverlap(path, grid, word);
-      const centerBias = path.reduce((sum, c) => sum - Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)), 0);
+      const overlap = pathOverlap(normalizedPath, grid, word);
+      const centerBias = normalizedPath.reduce((sum, c) => sum - Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)), 0);
       const metric = overlap * 16 + centerBias;
       if (metric > bestMetric) {
         bestMetric = metric;
-        best = path;
+        best = normalizedPath;
       }
     }
 
     if (!best) return false;
 
     best.forEach((cell, i) => {
-      grid[cell.key] = word[i];
+      grid[coordKey(cell)] = word[i];
     });
     placements.push({ word, path: best, score: wordScore(word) });
     return true;
@@ -258,12 +278,12 @@ function getCoordsWithinRadius(center, radius, boardRadius) {
   return out;
 }
 
-function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
+function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '') {
   const specials = [];
   const taken = new Set();
   const { coordToWords, longMiddle } = buildCoordStats(placements);
 
-  const allCoords = getAllCoords(radius);
+  const allCoords = getAllCoordsWithKeys(radius);
   const pathDensity = new Map();
   for (const c of allCoords) {
     const n = neighbors(c.q, c.r, radius);
@@ -272,7 +292,7 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
     pathDensity.set(c.key, density);
   }
 
-  const placeType = (type, candidates, count) => {
+  const placeType = (type, candidates, count, extra = {}) => {
     const ordered = candidates
       .filter(c => !taken.has(c.key) && !!grid[c.key])
       .sort((a, b) => (b.weight || 0) - (a.weight || 0));
@@ -280,12 +300,13 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
     for (const c of picks) {
       if (count <= 0) break;
       if (taken.has(c.key) || !grid[c.key]) continue;
-      specials.push({ type, q: c.q, r: c.r });
+      specials.push({ type, q: c.q, r: c.r, ...extra });
       taken.add(c.key);
       count -= 1;
     }
   };
 
+  // ── 1 · PRISM — highest strategic overlap ────────────────────────
   const prismCandidates = allCoords
     .map(c => {
       const wordCount = coordToWords.get(c.key)?.size || 0;
@@ -296,8 +317,9 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
       return { ...c, weight: wordCount * 10 + (nearHigh ? 5 : 0) + (longMiddle.has(c.key) ? 4 : 0) };
     })
     .filter(Boolean);
-  placeType('prism', prismCandidates, DAILY_SPECIAL_COUNTS.prism);
+  placeType('prism', prismCandidates, 1);
 
+  // ── 1 · RUNE — near a high-value letter ──────────────────────────
   const runeCandidates = allCoords
     .map(c => {
       const n = neighbors(c.q, c.r, radius);
@@ -307,7 +329,15 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
       return { ...c, weight: options + 10 };
     })
     .filter(Boolean);
-  placeType('rune', runeCandidates, DAILY_SPECIAL_COUNTS.rune);
+  placeType('rune', runeCandidates, 1);
+
+  // ── 3 RANDOM GEMS — pick 3 distinct types, place strategically ───
+  const vowelRichness = (coord) => {
+    const around = getCoordsWithinRadius(coord, 2, radius);
+    let vowels = 0;
+    around.forEach(c => { if ('AEIOU'.includes(grid[c.key] || '')) vowels += 1; });
+    return vowels;
+  };
 
   const longPathCoords = new Set();
   const mediumPathCoords = new Set();
@@ -315,13 +345,6 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
     if (p.word.length >= 7) p.path.forEach(c => longPathCoords.add(c.key));
     if (p.word.length >= 6) p.path.forEach(c => mediumPathCoords.add(c.key));
   });
-
-  const vowelRichness = (coord) => {
-    const around = getCoordsWithinRadius(coord, 2, radius);
-    let vowels = 0;
-    around.forEach(c => { if ('AEIOU'.includes(grid[c.key] || '')) vowels += 1; });
-    return vowels;
-  };
 
   const gemCandidates = allCoords.map(c => {
     const key = c.key;
@@ -338,35 +361,76 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
     };
   });
 
-  placeType('gemAlexandrite', gemCandidates.filter(c => c.wc7 >= 2 && c.vowels >= 3).map(c => ({ ...c, weight: c.wc7 * 10 + c.vowels })), DAILY_SPECIAL_COUNTS.gems.gemAlexandrite);
-  placeType('gemDiamond', gemCandidates.filter(c => c.wc7 >= 2 && c.vowels >= 3).map(c => ({ ...c, weight: c.wc7 * 9 + c.vowels })), DAILY_SPECIAL_COUNTS.gems.gemDiamond);
-  placeType('gemRuby', gemCandidates.filter(c => c.wc6 >= 1 && c.vowels >= 2).map(c => ({ ...c, weight: c.wc6 * 6 + c.vowels })), DAILY_SPECIAL_COUNTS.gems.gemRuby);
-  placeType('gemGold', gemCandidates.filter(c => c.inMedium).map(c => ({ ...c, weight: c.density + c.vowels })), DAILY_SPECIAL_COUNTS.gems.gemGold);
-  placeType('gemSapphire', gemCandidates.filter(c => c.inMedium).map(c => ({ ...c, weight: c.density + c.vowels })), DAILY_SPECIAL_COUNTS.gems.gemSapphire);
-  placeType('gemEmerald', gemCandidates.map(c => ({ ...c, weight: c.density })), DAILY_SPECIAL_COUNTS.gems.gemEmerald);
+  // Pick 5 distinct gem types randomly using the seeded RNG.
+  // DAILY_GEM_POOL contains 7 gem types (the subset used on daily boards),
+  // so slicing 5 always yields unique types. Not all 12 game gem types
+  // appear on daily boards — the remaining gems can appear in endless/campaign.
+  const shuffledGems = shuffled(DAILY_GEM_POOL, rng);
+  const chosenGems = shuffledGems.slice(0, Math.min(5, DAILY_GEM_POOL.length));
 
+  for (const gemType of chosenGems) {
+    const multi = GEM_MULTIPLIERS[gemType] || 1;
+    // Higher-tier gems get placed on longer-word paths
+    const minLen = multi >= 6 ? 7 : multi >= 4 ? 6 : 0;
+    const cands = gemCandidates
+      .filter(c => minLen === 0 || (minLen === 6 ? c.wc6 >= 1 : c.wc7 >= 1))
+      .map(c => ({ ...c, weight: c.density * multi + c.vowels }));
+    const fallback = gemCandidates.map(c => ({ ...c, weight: c.density }));
+    placeType(gemType, cands.length >= 3 ? cands : fallback, 1);
+  }
+
+  // ── 2-4 DIGRAPHS — unique combos, placed near long-word paths ────
+  const shuffledDigraphs = shuffled(DAILY_DIGRAPH_OPTIONS, rng);
+  // Count is 2, 3, or 4 (rng() → [0,1) × 3 → floor → 0,1,2 → +2 → 2,3,4)
+  const digraphCount = 2 + Math.floor(rng() * 3);
+  const chosenDigraphs = shuffledDigraphs.slice(0, digraphCount);
+
+  const digraphCandidates = allCoords.map(c => ({
+    ...c,
+    weight: (longPathCoords.has(c.key) ? 10 : 0) + (pathDensity.get(c.key) || 0),
+  }));
+  for (const dg of chosenDigraphs) {
+    placeType('digraph', digraphCandidates, 1, { digraph: dg });
+  }
+
+  // ── 1 · AMETHYST ─────────────────────────────────────────────────
   const denseCandidates = allCoords.map(c => ({ ...c, weight: pathDensity.get(c.key) || 0 }));
-  placeType('oracle', denseCandidates, DAILY_SPECIAL_COUNTS.powerups.oracle);
-  placeType('beacon', denseCandidates, DAILY_SPECIAL_COUNTS.powerups.beacon);
+  placeType('amethyst', denseCandidates, 1);
 
-  const lodestoneCandidates = allCoords
-    .map(c => {
-      const adj = neighbors(c.q, c.r, radius);
-      const gemsNearby = adj.filter(n => specials.some(s => s.q === n.q && s.r === n.r && s.type.startsWith('gem'))).length;
-      if (gemsNearby === 0) return null;
-      return { ...c, weight: gemsNearby * 10 + (pathDensity.get(c.key) || 0) };
-    })
-    .filter(Boolean);
-  placeType('lodestone', lodestoneCandidates, DAILY_SPECIAL_COUNTS.powerups.lodestone);
+  // ── 1 · SELENITE ─────────────────────────────────────────────────
+  placeType('selenite', denseCandidates, 1);
 
-  placeType('amethyst', denseCandidates, DAILY_SPECIAL_COUNTS.powerups.amethyst);
-  placeType('selenite', denseCandidates, DAILY_SPECIAL_COUNTS.powerups.selenite);
+  // ── 1 · ECLIPSE (achievement tile — always present) ──────────────
+  placeType('eclipse', denseCandidates, 1);
+
+  // ── 1 · LODESTONE every other day (based on day-of-year parity) ──
+  const dayNumber = date ? Math.floor(new Date(`${date}T00:00:00Z`).getTime() / MS_PER_DAY) : 0;
+  if (dayNumber % 2 === 0) {
+    const lodestoneCandidates = allCoords
+      .map(c => {
+        const adj = neighbors(c.q, c.r, radius);
+        const gemsNearby = adj.filter(n => specials.some(s => s.q === n.q && s.r === n.r && s.type.startsWith('gem'))).length;
+        if (gemsNearby === 0) return null;
+        return { ...c, weight: gemsNearby * 10 + (pathDensity.get(c.key) || 0) };
+      })
+      .filter(Boolean);
+    placeType('lodestone', lodestoneCandidates.length >= 1 ? lodestoneCandidates : denseCandidates, 1);
+  }
+
+  // ── 1 · PORTAL — 2 random corner tiles form a portal pair ────────
+  const availableCorners = shuffled(DAILY_PORTAL_CORNERS, rng);
+  for (let i = 0; i < Math.min(2, availableCorners.length); i++) {
+    const corner = availableCorners[i];
+    const key = hexKey(corner.q, corner.r);
+    specials.push({ type: 'portal', q: corner.q, r: corner.r });
+    taken.add(key);
+  }
 
   return specials;
 }
 
 function fillEmptyTiles(grid, rng, radius = GRID_RADIUS) {
-  const coords = getAllCoords(radius);
+  const coords = getAllCoordsWithKeys(radius);
   const pool = LETTER_POOL;
 
   for (const c of coords) {
@@ -471,7 +535,7 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
 
   const nearOptimal = Math.max(3, scored.filter(s => s.estimatedScore >= scored[0].estimatedScore * 0.65).length);
 
-  const highTier = specialTiles.filter(s => s.type === 'gemAlexandrite' || s.type === 'gemDiamond' || s.type === 'gemOpal');
+  const highTier = specialTiles.filter(s => HIGH_TIER_GEMS.has(s.type));
   for (const gem of highTier) {
     const key = hexKey(gem.q, gem.r);
     const reachable = placements.some(p => p.word.length >= 7 && p.path.some(c => c.key === key));
@@ -489,12 +553,19 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
   };
 }
 
-export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 10, radius = GRID_RADIUS } = {}) {
+export function generateDailyHexacoreBoard({
+  date = toIsoDate(),
+  maxAttempts = 10,
+  radius = GRID_RADIUS,
+  attemptSeedOffset = 0,
+  includePlacements = false,
+} = {}) {
   const seed = fnv1a32(String(date));
   let lastFailure = 'unknown';
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const rng = mkSeededRng((seed + attempt * 9973) >>> 0);
+    const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
+    const rng = mkSeededRng((seed + effectiveAttempt * 9973) >>> 0);
 
     const words = chooseTargetWords(rng);
     const { grid, placements } = placeWords(words, rng, radius);
@@ -504,7 +575,7 @@ export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 1
     }
 
     fillEmptyTiles(grid, rng, radius);
-    const specialTiles = placeSpecialTiles(grid, placements, rng, radius);
+    const specialTiles = placeSpecialTiles(grid, placements, rng, radius, date);
 
     const validation = validateDailyBoard({ grid, placements, specialTiles });
     if (!validation.valid) {
@@ -512,7 +583,7 @@ export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 1
       continue;
     }
 
-    return {
+    const board = {
       date,
       grid,
       specialTiles,
@@ -524,6 +595,8 @@ export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 1
         generatedAt: new Date().toISOString(),
       },
     };
+    if (includePlacements) board.placements = placements;
+    return board;
   }
 
   throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);

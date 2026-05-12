@@ -71,6 +71,7 @@ const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000,
 const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
+const HX_DAILY_TUTORIAL_KEY = 'hxDailyTutorialShown_v1';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
 let hxGameMode = null; // 'endless' | 'daily' | 'campaign'
@@ -1225,6 +1226,21 @@ function hxEasternDateStr() {
 
 const HX_DAILY_COMPLETED_KEY = 'hxDailyCompleted';
 const HX_DAILY_BOARD_CACHE_PREFIX = 'hxDailyBoardCache_';
+let hxDailyManifestCache = null;
+
+async function hxLoadDailyManifest() {
+  if (hxDailyManifestCache) return hxDailyManifestCache;
+  try {
+    const res = await fetch('/boards/daily/index.json');
+    if (!res.ok) return null;
+    const manifest = await res.json();
+    if (!manifest || !Array.isArray(manifest.boards)) return null;
+    hxDailyManifestCache = manifest;
+    return manifest;
+  } catch (_) {
+    return null;
+  }
+}
 
 /** Persist that the player has finished today's daily (ET date). */
 function hxMarkDailyCompleted() {
@@ -1242,10 +1258,15 @@ async function loadDailyChallengeBoard(dateStr) {
   } catch (_) {}
 
   let data;
-  const res = await fetch(`/boards/hexacoreDaily/${targetDate}.json`);
-  if (res.ok) {
-    data = await res.json();
-  } else {
+  const manifest = await hxLoadDailyManifest();
+  const canFetchFromStatic = !manifest || manifest.boards.some(b => b?.date === targetDate);
+
+  if (canFetchFromStatic) {
+    const res = await fetch(`/boards/daily/${targetDate}.json`);
+    if (res.ok) data = await res.json();
+  }
+
+  if (!data) {
     // Dev fallback when no prebuilt file exists
     const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
     data = generateDailyHexacoreBoard({ date: targetDate });
@@ -1399,11 +1420,45 @@ function buildGrid(onReady, boardData = null) {
   }
 
   if (isDaily && Array.isArray(boardData?.specialTiles)) {
+    const portalSpecs = [];
     for (const spec of boardData.specialTiles) {
       const key = hxKey(spec.q, spec.r);
       const tile = hxTileMap.get(key);
+
+      if (spec.type === 'portal') {
+        // Collect portal specs; applied as a pair after all other tiles
+        portalSpecs.push(spec);
+        continue;
+      }
+
       if (!tile) continue;
-      convertTile(tile, spec.type);
+
+      if (spec.type === 'digraph' && spec.digraph) {
+        // Apply the specific persisted digraph rather than picking a random one
+        _hxClearTileType(tile);
+        tile.tileType = 'digraph';
+        tile.letter   = String(spec.digraph).toUpperCase();
+        tile.point    = spec.point ?? (
+          (HX_LETTER_POINTS[tile.letter[0]] || 1) + (HX_LETTER_POINTS[tile.letter[1]] || 1)
+        );
+        _hxRegisterTile(tile, hxState.digraphTiles);
+        applyTileType(tile);
+        enqueueTileIntroduction(tile);
+      } else {
+        convertTile(tile, spec.type);
+      }
+    }
+
+    // Set up the pre-opened portal pair (entry = first spec, exit = second)
+    if (portalSpecs.length >= 2) {
+      const ep = portalSpecs[0];
+      const xp = portalSpecs[1];
+      hxState.portalOpen           = true;
+      hxState.portalUsed           = false;
+      hxState.portalEntry          = { q: ep.q, r: ep.r, s: -ep.q - ep.r };
+      hxState.portalExit           = { q: xp.q, r: xp.r, s: -xp.q - xp.r };
+      hxState.portalWordsRemaining = 5;
+      applyPortalVisuals();
     }
   }
 
@@ -1814,6 +1869,141 @@ function showPlayerLevelUpBanner(newLevel) {
   }
 }
 
+/* ── Tile Reference Guide ──────────────────────────────────────── */
+/**
+ * Gradient colour stops for each gem type used in the tile reference guide.
+ * Colours are sampled from the matching SVG linearGradient definitions in
+ * injectSvgDefs() — keep them in sync if the SVG gradients change.
+ * The multiplier values are read directly from GEM_MULTIPLIERS at runtime.
+ */
+const HX_GUIDE_GEM_GRADS = {
+  gemEmerald:      ['#16a34a','#4ade80'],
+  gemGold:         ['#92400e','#fef08a'],
+  gemSapphire:     ['#1d4ed8','#93c5fd'],
+  gemPearl:        ['#9ca3af','#f9fafb'],
+  gemTanzanite:    ['#1e3a8a','#60a5fa'],
+  gemRuby:         ['#7f1d1d','#ef4444'],
+  gemDiamond:      ['#475569','#f1f5f9'],
+  gemAquamarine:   ['#0891b2','#67e8f9'],
+  gemTopaz:        ['#c2410c','#fdba74'],
+  gemOpal:         ['#a78bfa','#ffffff'],
+  gemImperialJade: ['#064e3b','#34d399'],
+  gemAlexandrite:  ['#a21caf','#fce7f3'],
+};
+
+/**
+ * Builds a compact, collapsible tile reference panel and appends it to
+ * `document.body`. The panel is always accessible during gameplay.
+ */
+function buildTileGuide() {
+  document.getElementById('hx-tile-guide')?.remove();
+
+  // ── Tile data ──────────────────────────────────────────────────
+  const SPECIAL_TILES = [
+    { name: 'Ember',   grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn \u2014 use it before it falls off.' },
+    { name: 'Prism',   grad: ['#7c1a85','#db2777'], desc: 'Doubles the total score of any word it joins.' },
+    { name: 'Rune',    grad: ['#312e81','#6d28d9'], desc: 'Wildcard \u2014 pick any letter when you play it.' },
+    { name: 'Digraph', grad: ['#022c22','#34d399'], desc: 'Two letters in one tile; both count toward the word.' },
+    { name: 'Portal',  grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles \u2014 include both in one word.' },
+  ];
+
+  const ACHIEVEMENT_TILES = [
+    { name: 'Amethyst', grad: ['#7e22ce','#d946ef'], desc: 'Transmute: change any tile\u2019s letter.' },
+    { name: 'Selenite', grad: ['#0c4a6e','#e0f2fe'], desc: 'Phase Swap: swap any two tiles on the board.' },
+    { name: 'Oracle',   grad: ['#334155','#f8fafc'], desc: 'Oracle Sight: highlights the longest word path.' },
+    { name: 'Beacon',   grad: ['#b45309','#fef08a'], desc: 'Beacon Burst: reveals the highest-scoring word.' },
+    { name: 'Eclipse',  grad: ['#1c1917','#4c1d95'], desc: 'Eclipse: inverts letter point values for one word.' },
+    { name: 'Lodestone',grad: ['#3f3f46','#e4e4e7'], desc: 'Lodestone: boosts your next gem-score bonus.' },
+    { name: 'Lexicon',  grad: ['#2563eb','#e879f9'], desc: 'Lexicon: reveals top-scoring word options.' },
+  ];
+
+  // Derive gem guide rows from the canonical GEM_MULTIPLIERS constant so
+  // multiplier values and the list of gem types stay in sync automatically.
+  const GEM_TILES = Object.entries(GEM_MULTIPLIERS).map(([key, mult]) => {
+    // Convert camelCase key to display name: 'gemImperialJade' → 'Imperial Jade'
+    const displayName = key
+      .replace(/^gem/, '')
+      .replace(/([A-Z])/g, ' $1')
+      .trim();
+    return { name: displayName, grad: HX_GUIDE_GEM_GRADS[key] ?? ['#334155','#94a3b8'], mult };
+  });
+
+  // ── Helper: mini pointy-top hexagon rendered as a clip-path div ─
+  function miniHex(grad) {
+    const hex = document.createElement('div');
+    hex.className = 'hx-guide-hex';
+    hex.style.background = `linear-gradient(135deg, ${grad[0]}, ${grad[1]})`;
+    return hex;
+  }
+
+  // ── Helper: build a single tile row ─────────────────────────────
+  function tileRow(grad, name, right) {
+    const row = document.createElement('div');
+    row.className = 'hx-guide-row';
+    const nameEl = document.createElement('span');
+    nameEl.className = 'hx-guide-name';
+    nameEl.textContent = name;
+    const rightEl = document.createElement('span');
+    rightEl.className = 'hx-guide-right';
+    rightEl.textContent = right;
+    row.append(miniHex(grad), nameEl, rightEl);
+    return row;
+  }
+
+  // ── Helper: section header ───────────────────────────────────────
+  function sectionHeader(label) {
+    const h = document.createElement('div');
+    h.className = 'hx-guide-section-header';
+    h.textContent = label;
+    return h;
+  }
+
+  // ── Build panel ──────────────────────────────────────────────────
+  const panel = document.createElement('div');
+  panel.id = 'hx-tile-guide';
+  panel.setAttribute('aria-label', 'Tile reference guide');
+
+  const toggle = document.createElement('button');
+  toggle.id = 'hx-tile-guide-toggle';
+  toggle.type = 'button';
+  toggle.textContent = '▼ TILE GUIDE';
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-controls', 'hx-tile-guide-body');
+
+  const body = document.createElement('div');
+  body.id = 'hx-tile-guide-body';
+  body.setAttribute('aria-hidden', 'true');
+  body.hidden = true;
+
+  // Section 1 — Special tiles
+  body.appendChild(sectionHeader('Special Tiles'));
+  SPECIAL_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc)));
+
+  // Section 2 — Achievement / power-up tiles
+  body.appendChild(sectionHeader('Achievement Tiles'));
+  ACHIEVEMENT_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc)));
+
+  // Section 3 — Gems (multiplier only, no prose)
+  body.appendChild(sectionHeader('Gems  (score × multiplier)'));
+  GEM_TILES.forEach(t => {
+    const row = tileRow(t.grad, t.name, `\u00d7${t.mult}`);
+    row.classList.add('hx-guide-row--gem');
+    body.appendChild(row);
+  });
+
+  toggle.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    body.hidden = open;
+    body.setAttribute('aria-hidden', String(open));
+    toggle.textContent = open ? '▼ TILE GUIDE' : '▲ TILE GUIDE';
+  });
+
+  panel.appendChild(toggle);
+  panel.appendChild(body);
+  document.body.appendChild(panel);
+}
+
 function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
@@ -1909,6 +2099,8 @@ function ensureHud() {
   if (hxGameMode !== 'daily') {
     updateXPBarFn();
   }
+
+  buildTileGuide();
 }
 
 function removeHud() {
@@ -1921,6 +2113,7 @@ function removeHud() {
   document.getElementById('hx-powerup-toast')?.remove();
   document.getElementById('hx-powerup-indicator')?.remove();
   document.getElementById('hx-daily-no-words-overlay')?.remove();
+  document.getElementById('hx-tile-guide')?.remove();
 }
 
 /* ── Requirements persistence ──────────────────────────────────── */
@@ -4015,10 +4208,12 @@ async function submitHexacoreWord() {
 
   const consumed = [...hxSelected];
 
-  // Detect power-up collection (5+ letter word): amethyst, selenite + 5 new achievement tiles.
-  // Update state immediately; queue the toast to show after the refill settles.
+  // Detect power-up collection: amethyst, selenite + achievement tiles.
+  // In daily mode any word of 3+ letters collects a power-up tile; in other
+  // modes the word must be 5+ letters.
+  const powerUpMinWordLength = hxGameMode === 'daily' ? 3 : 5;
   const pendingPowerUpToasts = [];
-  if (assembledLength >= 5) {
+  if (assembledLength >= powerUpMinWordLength) {
     const hasAmethystTile  = consumed.some(t => t.tileType === 'amethyst');
     const hasSelenieTile   = consumed.some(t => t.tileType === 'selenite');
     const hasOracleTile    = consumed.some(t => t.tileType === 'oracle');
@@ -4993,7 +5188,8 @@ async function waitForBoardToSettle(maxMs = 2000) {
 
 function enqueueTutorialModal(item) {
   hxPendingTutorialModals.push(item);
-  void maybeRunTutorialModalQueue();
+  // Queue is started explicitly after the board intro animation completes
+  // (via onReady callback) and after each word submission — not here.
 }
 
 function enqueueTileIntroduction(tile) {
@@ -5054,9 +5250,8 @@ function hasBlockingHexacoreModal() {
   );
 }
 
-function closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl) {
+function closeTutorialModal(resolve, overlay, wasActive, restoreFocusEl) {
   overlay.remove();
-  arrowSvg?.remove();
   if (restoreFocusEl?.isConnected) restoreFocusEl.focus();
   hxTutorialModalOpen = false;
   if (!hxState.gameOver) hxState.active = wasActive;
@@ -5099,64 +5294,14 @@ function showTutorialModal(item, tile) {
     ok.className = 'hx-tutorial-modal-ok';
     ok.textContent = 'OK';
 
-    // The tile is NOT highlighted or modified — it appears exactly as the player sees it.
-    let arrowSvg = null;
-
     const restoreFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, arrowSvg, wasActive, restoreFocusEl), { once: true });
+    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, wasActive, restoreFocusEl), { once: true });
 
     box.append(title, desc, ok);
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    // After layout: draw a dashed connector from the modal's top-centre to the tile centre.
-    requestAnimationFrame(() => {
-      ok.focus();
-      if (tile?.element) {
-        const tileRect = tile.element.getBoundingClientRect();
-        const boxRect  = box.getBoundingClientRect();
-        if (tileRect.width > 0 && boxRect.width > 0) {
-          const tx = tileRect.left + tileRect.width  / 2;
-          const ty = tileRect.top  + tileRect.height / 2;
-          const bx = boxRect.left  + boxRect.width   / 2;
-          const by = boxRect.top;
-
-          arrowSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          arrowSvg.setAttribute('class', 'hx-tutorial-arrow-svg');
-          arrowSvg.setAttribute('aria-hidden', 'true');
-
-          const defs   = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-          const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-          marker.setAttribute('id',          'hx-tut-tip');
-          marker.setAttribute('markerWidth',  '7');
-          marker.setAttribute('markerHeight', '7');
-          marker.setAttribute('refX',         '3.5');
-          marker.setAttribute('refY',         '3.5');
-          marker.setAttribute('orient',       'auto-start-reverse');
-          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          dot.setAttribute('cx', '3.5');
-          dot.setAttribute('cy', '3.5');
-          dot.setAttribute('r',  '3');
-          dot.setAttribute('fill', 'rgba(76,201,240,0.9)');
-          marker.appendChild(dot);
-          defs.appendChild(marker);
-          arrowSvg.appendChild(defs);
-
-          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          line.setAttribute('x1', String(bx));
-          line.setAttribute('y1', String(by));
-          line.setAttribute('x2', String(tx));
-          line.setAttribute('y2', String(ty));
-          line.setAttribute('stroke',           'rgba(76,201,240,0.65)');
-          line.setAttribute('stroke-width',     '1.5');
-          line.setAttribute('stroke-dasharray', '5,4');
-          line.setAttribute('marker-end',       'url(#hx-tut-tip)');
-          arrowSvg.appendChild(line);
-
-          document.body.appendChild(arrowSvg);
-        }
-      }
-    });
+    requestAnimationFrame(() => { ok.focus(); });
   });
 }
 
@@ -5462,6 +5607,37 @@ export function startHexacore(mode) {
 
       showRestoredBanner(hxState.level, hxState.score);
     }
+    // For daily mode, prepend a one-time tutorial before tile introductions
+    if (hxGameMode === 'daily') {
+      let shownTutorial = false;
+      try { shownTutorial = !!localStorage.getItem(HX_DAILY_TUTORIAL_KEY); } catch (_) {}
+      if (!shownTutorial) {
+        const DAILY_INTRO_SLIDES = [
+          {
+            title: 'WELCOME TO DAILY',
+            description:
+              "Every day a brand-new board appears for everyone. Use all the tiles wisely — " +
+              "unused tiles subtract from your final score. You get one attempt, so make it count!",
+          },
+          {
+            title: 'GEMS & SPECIAL TILES',
+            description:
+              "5 gem tiles are hidden across the board. Include them in words to multiply your score. " +
+              "Prism doubles a word's total, Rune is a wildcard, and Digraph tiles count as two letters.",
+          },
+          {
+            title: 'POWER-UPS & ACHIEVEMENTS',
+            description:
+              "Amethyst and Selenite grant Transmute and Phase Swap power-ups when used in any word. " +
+              "Eclipse and Lodestone are achievement tiles — collect them for special effects. Portal links two corner tiles.",
+          },
+        ];
+        for (const slide of DAILY_INTRO_SLIDES) {
+          hxPendingTutorialModals.unshift({ kind: 'dailyIntro', title: slide.title, description: slide.description });
+        }
+        try { localStorage.setItem(HX_DAILY_TUTORIAL_KEY, '1'); } catch (_) {}
+      }
+    }
     queueBoardTileIntroductions();
     void maybeRunTutorialModalQueue();
     updateDailyHud();
@@ -5518,7 +5694,6 @@ export function stopHexacore() {
   document.getElementById('hx-gameover-overlay')?.remove();
   document.getElementById('hx-challenges-modal')?.remove();
   document.getElementById('hx-tutorial-modal')?.remove();
-  document.querySelector('.hx-tutorial-arrow-svg')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
   const gridSvg = document.getElementById('hex-grid');

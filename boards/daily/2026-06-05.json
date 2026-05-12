@@ -1,0 +1,187 @@
+{
+  "date": "2026-06-05",
+  "grid": {
+    "1,1": "C",
+    "0,1": "A",
+    "-1,2": "R",
+    "-1,1": "N",
+    "-2,1": "I",
+    "-2,0": "V",
+    "-1,-1": "A",
+    "-1,0": "L",
+    "0,-1": "E",
+    "0,0": "S",
+    "1,-1": "Q",
+    "1,0": "U",
+    "2,-1": "E",
+    "0,-2": "F",
+    "1,-3": "R",
+    "1,-2": "A",
+    "2,-2": "W",
+    "3,-2": "Z",
+    "3,-1": "Y",
+    "2,0": "S",
+    "-3,4": "B",
+    "-3,3": "A",
+    "-2,2": "W",
+    "-2,3": "D",
+    "0,2": "Y",
+    "-4,2": "S",
+    "-3,2": "P",
+    "-3,1": "V",
+    "-2,-1": "Y",
+    "1,2": "K",
+    "2,-3": "D",
+    "0,-3": "S",
+    "-4,0": "O",
+    "-4,1": "I",
+    "-4,3": "L",
+    "-4,4": "U",
+    "-3,-1": "L",
+    "-3,0": "G",
+    "-2,-2": "A",
+    "-2,4": "I",
+    "-1,-3": "Y",
+    "-1,-2": "A",
+    "-1,3": "G",
+    "-1,4": "E",
+    "0,-4": "A",
+    "0,3": "O",
+    "0,4": "A",
+    "1,-4": "R",
+    "1,3": "Y",
+    "2,-4": "I",
+    "2,1": "I",
+    "2,2": "Y",
+    "3,-4": "L",
+    "3,-3": "D",
+    "3,0": "A",
+    "3,1": "N",
+    "4,-4": "I",
+    "4,-3": "I",
+    "4,-2": "C",
+    "4,-1": "G",
+    "4,0": "N"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "rune",
+      "q": 0,
+      "r": -1
+    },
+    {
+      "type": "gemGold",
+      "q": 4,
+      "r": -3
+    },
+    {
+      "type": "gemPearl",
+      "q": 3,
+      "r": -2
+    },
+    {
+      "type": "gemEmerald",
+      "q": -2,
+      "r": 2
+    },
+    {
+      "type": "gemRuby",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "gemDiamond",
+      "q": 2,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 0,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -2,
+      "digraph": "ED"
+    },
+    {
+      "type": "amethyst",
+      "q": 2,
+      "r": -4
+    },
+    {
+      "type": "selenite",
+      "q": -1,
+      "r": 2
+    },
+    {
+      "type": "eclipse",
+      "q": 3,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "q": -4,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "q": 2,
+      "r": 4
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 88990,
+    "minAchievableScore": 51200,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "FRAWZEYS",
+          "CARNIVALESQUE",
+          "QUACKY",
+          "SPIVVY"
+        ],
+        "wordTotal": 35956,
+        "penalty": 111,
+        "finalScore": 35845
+      },
+      {
+        "words": [
+          "FRAWZEYS",
+          "CARNIVALESQUE",
+          "QUACKY",
+          "SPIVVY"
+        ],
+        "wordTotal": 35956,
+        "penalty": 111,
+        "finalScore": 35845
+      },
+      {
+        "words": [
+          "CARNIVALESQUE",
+          "FRAWZEYS",
+          "QUACKY",
+          "SPIVVY"
+        ],
+        "wordTotal": 35956,
+        "penalty": 111,
+        "finalScore": 35845
+      }
+    ],
+    "generatedAt": "2026-05-12T20:01:53.861Z"
+  }
+}

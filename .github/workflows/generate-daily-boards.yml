@@ -1,0 +1,86 @@
+name: Generate Daily Boards
+
+on:
+  schedule:
+    - cron: '30 0 * * *'
+  push:
+    branches: ['main']
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: 'Start date (YYYY-MM-DD). Defaults to today (UTC).'
+        required: false
+      days:
+        description: 'Number of days to generate'
+        required: false
+        default: '30'
+      force:
+        description: 'Regenerate boards even if files already exist'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate daily boards
+        id: generate
+        run: |
+          ARGS="--days=${{ github.event.inputs.days || '30' }} --summary-file=/tmp/daily-board-summary.json"
+          if [ -n "${{ github.event.inputs.start_date }}" ]; then
+            ARGS="$ARGS --start-date=${{ github.event.inputs.start_date }}"
+          fi
+          if [ "${{ github.event.inputs.force || 'false' }}" = "true" ]; then
+            ARGS="$ARGS --force"
+          fi
+
+          echo "Running: node scripts/generate-daily-boards.js $ARGS"
+          node scripts/generate-daily-boards.js $ARGS
+          cat /tmp/daily-board-summary.json
+
+          GENERATED=$(jq -r '.generated' /tmp/daily-board-summary.json)
+          UPDATED=$(jq -r '.updated' /tmp/daily-board-summary.json)
+          SKIPPED=$(jq -r '.skipped' /tmp/daily-board-summary.json)
+          FAILED=$(jq -r '.failed' /tmp/daily-board-summary.json)
+          FAILURE_DATES=$(jq -r '.failures | map(.date) | join(",")' /tmp/daily-board-summary.json)
+
+          echo "generated=$GENERATED" >> "$GITHUB_OUTPUT"
+          echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
+          echo "skipped=$SKIPPED" >> "$GITHUB_OUTPUT"
+          echo "failed=$FAILED" >> "$GITHUB_OUTPUT"
+          echo "failure_dates=$FAILURE_DATES" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push boards
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add boards/daily/
+
+          if git diff --quiet --cached; then
+            echo "No changes in boards/daily — skipping commit."
+            exit 0
+          fi
+
+          MSG="chore: generate daily boards (new:${{ steps.generate.outputs.generated }}, updated:${{ steps.generate.outputs.updated }}, skipped:${{ steps.generate.outputs.skipped }}, failed:${{ steps.generate.outputs.failed }}) $(date -u +'%Y-%m-%d')"
+          if [ -n "${{ steps.generate.outputs.failure_dates }}" ]; then
+            MSG="$MSG [failed-dates:${{ steps.generate.outputs.failure_dates }}]"
+          fi
+
+          git commit -m "$MSG"
+          git push origin main
