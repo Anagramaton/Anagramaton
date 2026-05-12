@@ -1,179 +1,182 @@
 {
   "date": "2026-06-06",
   "grid": {
-    "-2,3": "B",
-    "-1,2": "L",
+    "0,-1": "P",
+    "-1,-1": "S",
+    "0,-2": "Y",
+    "1,-2": "C",
+    "1,-1": "H",
+    "2,-1": "O",
+    "2,0": "B",
+    "1,1": "A",
+    "0,1": "B",
+    "0,0": "B",
+    "-1,0": "L",
+    "-2,1": "E",
+    "-2,0": "R",
+    "-2,3": "J",
     "-2,2": "A",
-    "-2,1": "C",
-    "-1,0": "K",
-    "-1,1": "J",
-    "0,1": "A",
-    "0,0": "C",
-    "1,0": "K",
-    "1,-1": "I",
-    "0,-1": "N",
-    "0,-2": "G",
-    "1,1": "Q",
-    "2,0": "U",
-    "2,-1": "I",
-    "3,-2": "Z",
-    "2,-2": "Z",
-    "3,-1": "P",
-    "2,-3": "Z",
-    "1,-2": "A",
-    "1,-3": "S",
+    "-1,2": "C",
+    "-1,1": "K",
+    "1,0": "O",
+    "2,-2": "T",
+    "3,1": "W",
+    "2,1": "R",
+    "1,2": "W",
+    "0,2": "L",
+    "0,3": "S",
+    "-1,3": "Y",
+    "4,-3": "B",
+    "3,-2": "L",
+    "3,-1": "W",
+    "3,0": "Y",
+    "-4,0": "A",
     "-4,1": "S",
-    "-3,1": "W",
-    "-2,0": "A",
-    "-2,-1": "B",
-    "-1,-1": "B",
-    "-1,-2": "Y",
-    "-3,-1": "F",
-    "-3,0": "L",
-    "0,2": "B",
-    "-4,0": "O",
-    "-4,2": "E",
-    "-4,3": "F",
+    "-4,2": "A",
+    "-4,3": "P",
     "-4,4": "E",
-    "-3,2": "I",
-    "-3,3": "H",
-    "-3,4": "E",
-    "-2,-2": "A",
-    "-2,4": "L",
-    "-1,-3": "V",
-    "-1,3": "U",
-    "-1,4": "E",
-    "0,-4": "O",
-    "0,-3": "H",
-    "0,3": "T",
-    "0,4": "S",
-    "1,-4": "Y",
-    "1,2": "E",
-    "1,3": "H",
-    "2,-4": "U",
-    "2,1": "T",
-    "2,2": "R",
+    "-3,-1": "E",
+    "-3,0": "U",
+    "-3,1": "H",
+    "-3,2": "S",
+    "-3,3": "I",
+    "-3,4": "Q",
+    "-2,-2": "M",
+    "-2,-1": "S",
+    "-2,4": "A",
+    "-1,-3": "Y",
+    "-1,-2": "C",
+    "-1,4": "A",
+    "0,-4": "E",
+    "0,-3": "T",
+    "0,4": "V",
+    "1,-4": "L",
+    "1,-3": "P",
+    "1,3": "R",
+    "2,-4": "L",
+    "2,-3": "E",
+    "2,2": "O",
     "3,-4": "A",
-    "3,-3": "R",
-    "3,0": "C",
-    "3,1": "E",
-    "4,-4": "N",
-    "4,-3": "I",
-    "4,-2": "R",
-    "4,-1": "U",
-    "4,0": "E"
+    "3,-3": "O",
+    "4,-4": "C",
+    "4,-2": "E",
+    "4,-1": "D",
+    "4,0": "A"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": 3,
-      "r": -1
+      "q": 2,
+      "r": 0
     },
     {
       "type": "rune",
-      "q": -2,
-      "r": 1
+      "q": -1,
+      "r": 3
     },
     {
-      "type": "gemRuby",
+      "type": "gemPearl",
+      "q": 0,
+      "r": 0
+    },
+    {
+      "type": "gemDiamond",
       "q": 1,
       "r": 0
     },
     {
-      "type": "gemEmerald",
-      "q": 0,
-      "r": -2
-    },
-    {
       "type": "gemGold",
-      "q": -4,
-      "r": 4
-    },
-    {
-      "type": "digraph",
-      "q": 4,
-      "r": -1,
-      "digraph": "ES"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -1,
-      "digraph": "CH"
-    },
-    {
-      "type": "amethyst",
-      "q": 4,
-      "r": -2
-    },
-    {
-      "type": "selenite",
-      "q": -1,
+      "q": 1,
       "r": 1
     },
     {
-      "type": "eclipse",
-      "q": -2,
-      "r": 3
+      "type": "digraph",
+      "q": 0,
+      "r": 3,
+      "digraph": "LY"
     },
     {
-      "type": "lodestone",
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -4,
+      "digraph": "LE"
+    },
+    {
+      "type": "amethyst",
+      "q": 0,
+      "r": 2
+    },
+    {
+      "type": "selenite",
       "q": -3,
       "r": 3
     },
     {
-      "type": "portal",
-      "q": -2,
-      "r": -4
+      "type": "eclipse",
+      "q": -4,
+      "r": 1
+    },
+    {
+      "type": "lodestone",
+      "q": 2,
+      "r": -1
     },
     {
       "type": "portal",
-      "q": -2,
+      "q": 2,
       "r": 4
+    },
+    {
+      "type": "portal",
+      "q": 2,
+      "r": -4
     }
   ],
   "metadata": {
-    "maxPossibleScore": 53000,
-    "minAchievableScore": 36288,
+    "maxPossibleScore": 234900,
+    "minAchievableScore": 84240,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "BLACKJACKING",
-          "BACKUP",
-          "QUIZZING",
-          "PIZZAS",
-          "SWABBY"
+          "PSYCHOBABBLER",
+          "BOBBLY",
+          "JACKBOOT",
+          "BABBLE"
         ],
-        "wordTotal": 21776,
-        "penalty": 105,
-        "finalScore": 21671
+        "wordTotal": 104040,
+        "penalty": 154,
+        "finalScore": 103886
       },
       {
         "words": [
-          "BLACKJACKING",
-          "BACKUP",
-          "QUIZZING",
-          "PIZZAS",
-          "SWABBY"
+          "BOBBLY",
+          "PSYCHOBABBLER",
+          "JACKBOOT",
+          "BABBLE"
         ],
-        "wordTotal": 21776,
-        "penalty": 105,
-        "finalScore": 21671
+        "wordTotal": 104040,
+        "penalty": 154,
+        "finalScore": 103886
       },
       {
         "words": [
-          "BLACKJACKING",
-          "QUIZZING",
-          "BACKUP",
-          "PIZZAS",
-          "SWABBY"
+          "PSYCHOBABBLER",
+          "JACKBOOT",
+          "BOBBLY",
+          "BABBLE"
         ],
-        "wordTotal": 21776,
-        "penalty": 105,
-        "finalScore": 21671
+        "wordTotal": 104040,
+        "penalty": 154,
+        "finalScore": 103886
       }
     ],
-    "generatedAt": "2026-05-12T19:34:43.087Z"
+    "generatedAt": "2026-05-12T19:37:16.085Z"
   }
 }

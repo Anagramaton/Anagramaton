@@ -1,188 +1,179 @@
 {
   "date": "2026-06-08",
   "grid": {
-    "-2,1": "B",
-    "-2,2": "A",
-    "-1,1": "C",
-    "-1,0": "K",
-    "0,-1": "T",
-    "1,-1": "R",
-    "0,0": "A",
-    "1,0": "C",
-    "2,-1": "K",
-    "2,0": "I",
-    "1,1": "N",
-    "0,1": "G",
-    "-1,2": "S",
-    "0,-3": "Q",
-    "0,-2": "U",
-    "-1,-1": "E",
-    "1,-2": "Z",
-    "2,-3": "A",
-    "2,-2": "L",
-    "3,-2": "S",
-    "-1,-3": "W",
-    "-1,-2": "H",
-    "-2,-1": "E",
-    "-2,0": "Z",
-    "-3,1": "E",
-    "1,-3": "E",
-    "-1,3": "P",
-    "0,2": "H",
-    "1,2": "Y",
-    "2,1": "X",
+    "-1,0": "B",
+    "-2,0": "A",
+    "-3,1": "C",
+    "-2,1": "K",
+    "-2,2": "T",
+    "-1,1": "R",
+    "-1,2": "A",
+    "0,2": "C",
+    "0,1": "K",
+    "1,0": "I",
+    "0,0": "N",
+    "0,-1": "G",
+    "1,-2": "S",
     "4,-2": "Q",
     "3,-1": "U",
+    "2,0": "E",
+    "2,-1": "T",
+    "3,-2": "Z",
+    "2,-2": "A",
+    "1,-1": "L",
+    "-3,-1": "B",
+    "-2,-1": "O",
+    "-1,-1": "Y",
+    "-1,-2": "A",
+    "0,-2": "U",
+    "0,-3": "X",
+    "4,0": "W",
+    "3,0": "H",
+    "2,1": "E",
+    "1,1": "Z",
+    "1,2": "E",
+    "-4,1": "Q",
+    "-3,0": "U",
+    "-3,2": "Y",
+    "-2,4": "P",
+    "-1,3": "I",
+    "-2,3": "X",
     "-4,0": "O",
-    "-4,1": "R",
-    "-4,2": "I",
-    "-4,3": "Y",
-    "-4,4": "Z",
-    "-3,-1": "E",
-    "-3,0": "E",
-    "-3,2": "P",
-    "-3,3": "L",
-    "-3,4": "A",
-    "-2,-2": "O",
-    "-2,3": "R",
-    "-2,4": "T",
-    "-1,4": "I",
-    "0,-4": "E",
-    "0,3": "I",
-    "0,4": "M",
-    "1,-4": "I",
-    "1,3": "S",
-    "2,-4": "G",
-    "2,2": "A",
-    "3,-4": "I",
-    "3,-3": "L",
-    "3,0": "O",
-    "3,1": "R",
-    "4,-4": "Y",
+    "-4,2": "U",
+    "-4,3": "L",
+    "-4,4": "A",
+    "-3,3": "O",
+    "-3,4": "M",
+    "-2,-2": "E",
+    "-1,-3": "B",
+    "-1,4": "E",
+    "0,-4": "A",
+    "0,3": "T",
+    "0,4": "U",
+    "1,-4": "A",
+    "1,-3": "F",
+    "1,3": "W",
+    "2,-4": "O",
+    "2,-3": "S",
+    "2,2": "E",
+    "3,-4": "B",
+    "3,-3": "S",
+    "3,1": "M",
+    "4,-4": "A",
     "4,-3": "E",
-    "4,-1": "A",
-    "4,0": "Y"
+    "4,-1": "B"
   },
   "specialTiles": [
     {
       "type": "prism",
       "q": 0,
-      "r": -2
+      "r": 2
     },
     {
       "type": "rune",
-      "q": 2,
-      "r": -3
-    },
-    {
-      "type": "gemDiamond",
-      "q": 2,
-      "r": -1
-    },
-    {
-      "type": "gemSapphire",
-      "q": 1,
-      "r": -3
-    },
-    {
-      "type": "gemPearl",
-      "q": 2,
+      "q": 0,
       "r": -2
     },
     {
-      "type": "digraph",
-      "q": -2,
-      "r": 0,
-      "digraph": "QU"
-    },
-    {
-      "type": "digraph",
+      "type": "gemDiamond",
       "q": 1,
-      "r": 3,
-      "digraph": "TH"
+      "r": -1
     },
     {
-      "type": "digraph",
-      "q": -4,
-      "r": 0,
-      "digraph": "GH"
+      "type": "gemGold",
+      "q": -1,
+      "r": 1
     },
     {
-      "type": "digraph",
+      "type": "gemEmerald",
       "q": -2,
-      "r": -1,
-      "digraph": "TY"
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "AL"
     },
     {
       "type": "amethyst",
-      "q": 0,
-      "r": 3
+      "q": -3,
+      "r": -1
     },
     {
       "type": "selenite",
-      "q": 0,
+      "q": -3,
       "r": 1
     },
     {
       "type": "eclipse",
       "q": 0,
-      "r": 0
+      "r": -4
     },
     {
       "type": "lodestone",
-      "q": 3,
-      "r": -1
+      "q": -3,
+      "r": 3
     },
     {
       "type": "portal",
-      "q": 4,
+      "q": -4,
       "r": 0
     },
     {
       "type": "portal",
-      "q": -2,
+      "q": 2,
       "r": 4
     }
   ],
   "metadata": {
-    "maxPossibleScore": 56460,
-    "minAchievableScore": 28800,
+    "maxPossibleScore": 46440,
+    "minAchievableScore": 31824,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "QUEZAL",
           "BACKTRACKINGS",
           "QUETZALS",
-          "QUICKS"
+          "PICKAX",
+          "QUACKY",
+          "BOYAUX"
         ],
-        "wordTotal": 23976,
-        "penalty": 137,
-        "finalScore": 23839
-      },
-      {
-        "words": [
-          "QUEZAL",
-          "BACKTRACKINGS",
-          "QUETZALS",
-          "QUICKS"
-        ],
-        "wordTotal": 23976,
-        "penalty": 137,
-        "finalScore": 23839
+        "wordTotal": 18924,
+        "penalty": 114,
+        "finalScore": 18810
       },
       {
         "words": [
           "BACKTRACKINGS",
           "QUETZALS",
-          "QUEZAL",
-          "QUICKS"
+          "PICKAX",
+          "QUACKY",
+          "BOYAUX"
         ],
-        "wordTotal": 23976,
-        "penalty": 137,
-        "finalScore": 23839
+        "wordTotal": 18924,
+        "penalty": 114,
+        "finalScore": 18810
+      },
+      {
+        "words": [
+          "BACKTRACKINGS",
+          "QUETZALS",
+          "PICKAX",
+          "QUACKY",
+          "BOYAUX"
+        ],
+        "wordTotal": 18924,
+        "penalty": 114,
+        "finalScore": 18810
       }
     ],
-    "generatedAt": "2026-05-12T19:34:43.126Z"
+    "generatedAt": "2026-05-12T19:37:16.111Z"
   }
 }

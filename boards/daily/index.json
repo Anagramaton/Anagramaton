@@ -1,185 +1,185 @@
 {
-  "generatedAt": "2026-05-12T19:34:43.168Z",
+  "generatedAt": "2026-05-12T19:37:16.133Z",
   "boards": [
     {
       "date": "2026-05-12",
       "filename": "2026-05-12.json",
-      "maxScore": 269250,
-      "generatedAt": "2026-05-12T19:34:42.653Z"
+      "maxScore": 161640,
+      "generatedAt": "2026-05-12T19:37:15.504Z"
     },
     {
       "date": "2026-05-13",
       "filename": "2026-05-13.json",
-      "maxScore": 20790,
-      "generatedAt": "2026-05-12T19:34:42.676Z"
+      "maxScore": 14930,
+      "generatedAt": "2026-05-12T19:37:15.547Z"
     },
     {
       "date": "2026-05-14",
       "filename": "2026-05-14.json",
-      "maxScore": 86020,
-      "generatedAt": "2026-05-12T19:34:42.685Z"
+      "maxScore": 275520,
+      "generatedAt": "2026-05-12T19:37:15.561Z"
     },
     {
       "date": "2026-05-15",
       "filename": "2026-05-15.json",
-      "maxScore": 157400,
-      "generatedAt": "2026-05-12T19:34:42.702Z"
+      "maxScore": 833040,
+      "generatedAt": "2026-05-12T19:37:15.584Z"
     },
     {
       "date": "2026-05-16",
       "filename": "2026-05-16.json",
-      "maxScore": 234310,
-      "generatedAt": "2026-05-12T19:34:42.790Z"
+      "maxScore": 82470,
+      "generatedAt": "2026-05-12T19:37:15.595Z"
     },
     {
       "date": "2026-05-17",
       "filename": "2026-05-17.json",
-      "maxScore": 63575,
-      "generatedAt": "2026-05-12T19:34:42.823Z"
+      "maxScore": 116020,
+      "generatedAt": "2026-05-12T19:37:15.647Z"
     },
     {
       "date": "2026-05-18",
       "filename": "2026-05-18.json",
-      "maxScore": 25298,
-      "generatedAt": "2026-05-12T19:34:42.831Z"
+      "maxScore": 22935,
+      "generatedAt": "2026-05-12T19:37:15.667Z"
     },
     {
       "date": "2026-05-19",
       "filename": "2026-05-19.json",
-      "maxScore": 35650,
-      "generatedAt": "2026-05-12T19:34:42.842Z"
+      "maxScore": 124500,
+      "generatedAt": "2026-05-12T19:37:15.676Z"
     },
     {
       "date": "2026-05-20",
       "filename": "2026-05-20.json",
-      "maxScore": 7770,
-      "generatedAt": "2026-05-12T19:34:42.870Z"
+      "maxScore": 21690,
+      "generatedAt": "2026-05-12T19:37:15.692Z"
     },
     {
       "date": "2026-05-21",
       "filename": "2026-05-21.json",
-      "maxScore": 298840,
-      "generatedAt": "2026-05-12T19:34:42.882Z"
+      "maxScore": 124710,
+      "generatedAt": "2026-05-12T19:37:15.737Z"
     },
     {
       "date": "2026-05-22",
       "filename": "2026-05-22.json",
-      "maxScore": 37370,
-      "generatedAt": "2026-05-12T19:34:42.890Z"
+      "maxScore": 119220,
+      "generatedAt": "2026-05-12T19:37:15.746Z"
     },
     {
       "date": "2026-05-23",
       "filename": "2026-05-23.json",
-      "maxScore": 9845,
-      "generatedAt": "2026-05-12T19:34:42.904Z"
+      "maxScore": 112145,
+      "generatedAt": "2026-05-12T19:37:15.787Z"
     },
     {
       "date": "2026-05-24",
       "filename": "2026-05-24.json",
-      "maxScore": 269170,
-      "generatedAt": "2026-05-12T19:34:42.935Z"
+      "maxScore": 161400,
+      "generatedAt": "2026-05-12T19:37:15.806Z"
     },
     {
       "date": "2026-05-25",
       "filename": "2026-05-25.json",
-      "maxScore": 15440,
-      "generatedAt": "2026-05-12T19:34:42.944Z"
+      "maxScore": 29840,
+      "generatedAt": "2026-05-12T19:37:15.818Z"
     },
     {
       "date": "2026-05-26",
       "filename": "2026-05-26.json",
-      "maxScore": 272470,
-      "generatedAt": "2026-05-12T19:34:42.952Z"
+      "maxScore": 1051760,
+      "generatedAt": "2026-05-12T19:37:15.842Z"
     },
     {
       "date": "2026-05-27",
       "filename": "2026-05-27.json",
-      "maxScore": 341800,
-      "generatedAt": "2026-05-12T19:34:42.973Z"
+      "maxScore": 256655,
+      "generatedAt": "2026-05-12T19:37:15.869Z"
     },
     {
       "date": "2026-05-28",
       "filename": "2026-05-28.json",
-      "maxScore": 2305200,
-      "generatedAt": "2026-05-12T19:34:42.990Z"
+      "maxScore": 45865,
+      "generatedAt": "2026-05-12T19:37:15.875Z"
     },
     {
       "date": "2026-05-29",
       "filename": "2026-05-29.json",
-      "maxScore": 12240,
-      "generatedAt": "2026-05-12T19:34:43.000Z"
+      "maxScore": 410520,
+      "generatedAt": "2026-05-12T19:37:15.895Z"
     },
     {
       "date": "2026-05-30",
       "filename": "2026-05-30.json",
-      "maxScore": 24860,
-      "generatedAt": "2026-05-12T19:34:43.008Z"
+      "maxScore": 110060,
+      "generatedAt": "2026-05-12T19:37:15.908Z"
     },
     {
       "date": "2026-05-31",
       "filename": "2026-05-31.json",
-      "maxScore": 86880,
-      "generatedAt": "2026-05-12T19:34:43.027Z"
+      "maxScore": 109200,
+      "generatedAt": "2026-05-12T19:37:15.936Z"
     },
     {
       "date": "2026-06-01",
       "filename": "2026-06-01.json",
-      "maxScore": 14090,
-      "generatedAt": "2026-05-12T19:34:43.035Z"
+      "maxScore": 283290,
+      "generatedAt": "2026-05-12T19:37:15.957Z"
     },
     {
       "date": "2026-06-02",
       "filename": "2026-06-02.json",
-      "maxScore": 12275,
-      "generatedAt": "2026-05-12T19:34:43.044Z"
+      "maxScore": 12430,
+      "generatedAt": "2026-05-12T19:37:15.965Z"
     },
     {
       "date": "2026-06-03",
       "filename": "2026-06-03.json",
-      "maxScore": 15285,
-      "generatedAt": "2026-05-12T19:34:43.058Z"
+      "maxScore": 1493400,
+      "generatedAt": "2026-05-12T19:37:15.972Z"
     },
     {
       "date": "2026-06-04",
       "filename": "2026-06-04.json",
-      "maxScore": 20625,
-      "generatedAt": "2026-05-12T19:34:43.068Z"
+      "maxScore": 18005,
+      "generatedAt": "2026-05-12T19:37:15.989Z"
     },
     {
       "date": "2026-06-05",
       "filename": "2026-06-05.json",
-      "maxScore": 205120,
-      "generatedAt": "2026-05-12T19:34:43.078Z"
+      "maxScore": 192040,
+      "generatedAt": "2026-05-12T19:37:16.058Z"
     },
     {
       "date": "2026-06-06",
       "filename": "2026-06-06.json",
-      "maxScore": 53000,
-      "generatedAt": "2026-05-12T19:34:43.087Z"
+      "maxScore": 234900,
+      "generatedAt": "2026-05-12T19:37:16.085Z"
     },
     {
       "date": "2026-06-07",
       "filename": "2026-06-07.json",
-      "maxScore": 27510,
-      "generatedAt": "2026-05-12T19:34:43.112Z"
+      "maxScore": 197320,
+      "generatedAt": "2026-05-12T19:37:16.096Z"
     },
     {
       "date": "2026-06-08",
       "filename": "2026-06-08.json",
-      "maxScore": 56460,
-      "generatedAt": "2026-05-12T19:34:43.126Z"
+      "maxScore": 46440,
+      "generatedAt": "2026-05-12T19:37:16.111Z"
     },
     {
       "date": "2026-06-09",
       "filename": "2026-06-09.json",
-      "maxScore": 9580,
-      "generatedAt": "2026-05-12T19:34:43.158Z"
+      "maxScore": 1314925,
+      "generatedAt": "2026-05-12T19:37:16.117Z"
     },
     {
       "date": "2026-06-10",
       "filename": "2026-06-10.json",
-      "maxScore": 19605,
-      "generatedAt": "2026-05-12T19:34:43.166Z"
+      "maxScore": 32690,
+      "generatedAt": "2026-05-12T19:37:16.131Z"
     }
   ]
 }

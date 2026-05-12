@@ -53,6 +53,18 @@ const DAILY_DIGRAPH_OPTIONS = [
   'LE', 'ED', 'ES', 'UN', 'GH', 'CR', 'WH', 'NT', 'NG', 'TY',
 ];
 
+// Milliseconds in one day — used for day-parity calculation
+const MS_PER_DAY = 86400000;
+
+// Minimum gem multiplier threshold to consider a gem "high-tier" for validation
+const HIGH_TIER_GEM_MULTIPLIER = 6;
+// Derived from GEM_MULTIPLIERS so the list stays in sync automatically
+const HIGH_TIER_GEMS = new Set(
+  Object.entries(GEM_MULTIPLIERS)
+    .filter(([, mult]) => mult >= HIGH_TIER_GEM_MULTIPLIER)
+    .map(([type]) => type),
+);
+
 const LETTER_POOL = [
   ...Array(12).fill('E'), ...Array(9).fill('A'), ...Array(8).fill('I'), ...Array(8).fill('O'), ...Array(4).fill('U'),
   ...Array(7).fill('R'), ...Array(7).fill('S'), ...Array(7).fill('T'), ...Array(6).fill('L'), ...Array(6).fill('N'),
@@ -366,7 +378,8 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
 
   // ── 2-4 DIGRAPHS — unique combos, placed near long-word paths ────
   const shuffledDigraphs = shuffled(DAILY_DIGRAPH_OPTIONS, rng);
-  const digraphCount = 2 + Math.floor(rng() * 3); // 2, 3, or 4
+  // Count is 2, 3, or 4 (rng() → [0,1) × 3 → floor → 0,1,2 → +2 → 2,3,4)
+  const digraphCount = 2 + Math.floor(rng() * 3);
   const chosenDigraphs = shuffledDigraphs.slice(0, digraphCount);
 
   const digraphCandidates = allCoords.map(c => ({
@@ -388,7 +401,7 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   placeType('eclipse', denseCandidates, 1);
 
   // ── 1 · LODESTONE every other day (based on day-of-year parity) ──
-  const dayNumber = date ? Math.floor(new Date(`${date}T00:00:00Z`).getTime() / 86400000) : 0;
+  const dayNumber = date ? Math.floor(new Date(`${date}T00:00:00Z`).getTime() / MS_PER_DAY) : 0;
   if (dayNumber % 2 === 0) {
     const lodestoneCandidates = allCoords
       .map(c => {
@@ -519,7 +532,7 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
 
   const nearOptimal = Math.max(3, scored.filter(s => s.estimatedScore >= scored[0].estimatedScore * 0.65).length);
 
-  const highTier = specialTiles.filter(s => s.type === 'gemDiamond' || s.type === 'gemRuby' || s.type === 'gemTanzanite');
+  const highTier = specialTiles.filter(s => HIGH_TIER_GEMS.has(s.type));
   for (const gem of highTier) {
     const key = hexKey(gem.q, gem.r);
     const reachable = placements.some(p => p.word.length >= 7 && p.path.some(c => c.key === key));
