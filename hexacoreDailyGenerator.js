@@ -460,6 +460,17 @@ let _simTrie = null;
 const SIM_MIN_LEN = 5;
 const SIM_MAX_LEN = 11;
 
+/** Cap on how many valid word paths findAllValidPaths may return per round. */
+const MAX_SIMULATION_PATHS = 300;
+
+/** Maximum greedy-play rounds in simulateMaxScore (safety cap). */
+const MAX_SIMULATION_ROUNDS = 25;
+
+/** Score thresholds for difficulty classification. */
+const DIFFICULTY_EASY_THRESHOLD   = 15_000;
+const DIFFICULTY_MEDIUM_THRESHOLD = 30_000;
+const DIFFICULTY_HARD_THRESHOLD   = 50_000;
+
 function getSimTrie() {
   if (_simTrie) return _simTrie;
   const trie = Object.create(null);
@@ -567,7 +578,7 @@ function calculatePathScore(word, path, simGrid) {
  * @param {number} radius        - Grid radius
  * @param {number} maxPathfinds  - Maximum pathfinding attempts (performance cap)
  */
-function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = 300) {
+function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMULATION_PATHS) {
   const trie = getSimTrie();
 
   const foundWords = new Set();
@@ -633,7 +644,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = 300) {
  * @param {number} maxRounds   - Safety cap on simulation iterations
  * @returns {{ maxScore, optimalMoves, averageWordLength, gemDensity, solutionPath }}
  */
-export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRounds = 25) {
+export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRounds = MAX_SIMULATION_ROUNDS) {
   // Build a combined simulation grid: { [key]: { letter, special } }
   const simGrid = {};
   for (const [key, letter] of Object.entries(grid)) {
@@ -686,9 +697,9 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
  * Classifies difficulty based on maximum achievable score.
  */
 function classifyDifficulty(maxScore) {
-  if (maxScore < 15000) return 'easy';
-  if (maxScore < 30000) return 'medium';
-  if (maxScore < 50000) return 'hard';
+  if (maxScore < DIFFICULTY_EASY_THRESHOLD)   return 'easy';
+  if (maxScore < DIFFICULTY_MEDIUM_THRESHOLD) return 'medium';
+  if (maxScore < DIFFICULTY_HARD_THRESHOLD)   return 'hard';
   return 'expert';
 }
 

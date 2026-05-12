@@ -2003,8 +2003,11 @@ function buildTileGuide() {
   toggle.setAttribute('aria-expanded', 'false');
   toggle.setAttribute('aria-controls', 'hx-tile-guide-body');
   toggle.setAttribute('aria-label', 'Toggle tile reference guide');
-  // Icon-only: hexagon symbol indicates tile guide
-  toggle.innerHTML = '<span aria-hidden="true">⬡</span>';
+  // Icon-only: use a text node for better screen-reader compatibility
+  const iconSpan = document.createElement('span');
+  iconSpan.setAttribute('aria-hidden', 'true');
+  iconSpan.textContent = '\u2b21'; // ⬡ white hexagon
+  toggle.appendChild(iconSpan);
 
   const body = document.createElement('div');
   body.id = 'hx-tile-guide-body';
