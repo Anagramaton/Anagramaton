@@ -153,7 +153,7 @@ const BEACON_TIME_LIMIT_MS          = 1200;
 const LEXICON_MAX_RESULTS           = 200;
 const LEXICON_TIME_LIMIT_MS         = 1500;
 const DAILY_ENDCHECK_MAX_RESULTS    = 1;
-const DAILY_ENDCHECK_TIME_LIMIT_MS  = 300;
+const DAILY_ENDCHECK_TIME_LIMIT_MS  = 1500;
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -3676,9 +3676,11 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
     if (wordStr.length >= 4 && isValidWord(wordStr) && !seen.has(wordStr)) {
       seen.add(wordStr);
       results.push({ word: wordStr, score: scoreWord(path), path: [...path] });
+      if (results.length >= maxResults) return; // early exit once we have enough
     }
 
     if (path.length >= MAX_WORD_PATH_DEPTH) return; // limit depth
+    if (results.length >= maxResults) return; // propagate early exit up through the DFS
     if (performance.now() >= deadline) return;
 
     const last = path[path.length - 1];
@@ -3688,6 +3690,7 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
     });
 
     for (const neighbor of neighbors) {
+      if (results.length >= maxResults) return; // propagate early exit
       const key = hxKey(neighbor.q, neighbor.r);
       visitedKeys.add(key);
       path.push(neighbor);
@@ -3700,6 +3703,7 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
 
   for (const startTile of hxState.tiles) {
     if (performance.now() >= deadline) break;
+    if (results.length >= maxResults) break; // stop once we have enough results
     const visitedKeys = new Set([hxKey(startTile.q, startTile.r)]);
     dfs([startTile], visitedKeys);
   }
