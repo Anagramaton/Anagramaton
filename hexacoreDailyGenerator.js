@@ -527,18 +527,16 @@ function applyGravity(simGrid, radius = GRID_RADIUS) {
  * @param {Object} simGrid - { [hexKey]: { letter, special } }
  * @returns {number} Integer score
  */
+
+// Mirrors HX_LENGTH_MULTIPLIERS in hexacore.js — single source of truth for simulation scoring.
+const LENGTH_MULT_TABLE = { 4: 2, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12, 13: 13 };
+
 function calculatePathScore(word, path, simGrid) {
   let base = 0;
   for (const ch of word) base += LETTER_POINTS[ch] || 1;
 
-  // Mirrors HX_LENGTH_MULTIPLIERS in hexacore.js
-  const lenMult = word.length <= 3 ? 1
-    : word.length === 4 ? 2
-    : word.length <= 15 ? word.length
-    : word.length;
-  // Override for the specific multiplier table values
-  const LENGTH_MULT_TABLE = { 4: 2, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12, 13: 13 };
-  const actualLenMult = LENGTH_MULT_TABLE[word.length] ?? lenMult;
+  // Use the length-multiplier table; fall back to word.length for lengths > 13
+  const actualLenMult = LENGTH_MULT_TABLE[word.length] ?? word.length;
 
   let hasPrism = false;
   let gemMult = 1;
@@ -834,8 +832,9 @@ export function generateDailyHexacoreBoard({
     if (runSimulation) {
       try {
         simData = simulateMaxScore(grid, specialTiles, radius);
-      } catch (_) {
+      } catch (err) {
         // Simulation failure is non-fatal — fall back to estimate
+        console.warn('[hexacoreGenerator] simulateMaxScore failed:', err?.message ?? err);
         simData = null;
       }
     }

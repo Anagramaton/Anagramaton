@@ -1926,7 +1926,13 @@ function buildTileGuide() {
       .replace(/^gem/, '')
       .replace(/([A-Z])/g, ' $1')
       .trim();
-    return { key, name: displayName, grad: HX_GUIDE_GEM_GRADS[key] ?? ['#334155','#94a3b8'], mult };
+    return {
+      key,
+      name: displayName,
+      grad: HX_GUIDE_GEM_GRADS[key] ?? ['#334155','#94a3b8'],
+      mult,
+      desc: `Score multiplier: \u00d7${mult}. Include in words for massive point bonuses.`,
+    };
   });
 
   // ── Daily mode: filter to only tiles present on the current board ─
@@ -2032,7 +2038,7 @@ function buildTileGuide() {
       });
     } else {
       GEM_TILES.forEach(t => {
-        const card = tileRow(t.grad, t.name, `Score multiplier: \u00d7${t.mult}. Include in words for massive point bonuses.`, true);
+        const card = tileRow(t.grad, t.name, t.desc, true);
         card.classList.add('hx-guide-card--gem');
         body.appendChild(card);
       });
