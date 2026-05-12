@@ -4145,6 +4145,7 @@ async function consumeAndRefill(tilesToRemove) {
   });
 
   if (hxGameMode === 'daily') {
+    await applyGravity();
     updateDailyHud();
     return;
   }
