@@ -1869,6 +1869,125 @@ function showPlayerLevelUpBanner(newLevel) {
   }
 }
 
+/* ── Tile Reference Guide ──────────────────────────────────────── */
+/**
+ * Builds a compact, collapsible tile reference panel and appends it to
+ * `document.body`. The panel is always accessible during gameplay.
+ */
+function buildTileGuide() {
+  document.getElementById('hx-tile-guide')?.remove();
+
+  // ── Tile data ──────────────────────────────────────────────────
+  const SPECIAL_TILES = [
+    { name: 'Ember',   grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn — use it before it falls off.' },
+    { name: 'Prism',   grad: ['#7c1a85','#db2777'], desc: 'Doubles the total score of any word it joins.' },
+    { name: 'Rune',    grad: ['#312e81','#6d28d9'], desc: 'Wildcard — pick any letter when you play it.' },
+    { name: 'Digraph', grad: ['#022c22','#34d399'], desc: 'Two letters in one tile; both count toward the word.' },
+    { name: 'Portal',  grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles — include both in one word.' },
+  ];
+
+  const ACHIEVEMENT_TILES = [
+    { name: 'Amethyst', grad: ['#7e22ce','#d946ef'], desc: 'Transmute: change any tile\u2019s letter.' },
+    { name: 'Selenite', grad: ['#0c4a6e','#e0f2fe'], desc: 'Phase Swap: swap any two tiles on the board.' },
+    { name: 'Oracle',   grad: ['#334155','#f8fafc'], desc: 'Oracle Sight: highlights the longest word path.' },
+    { name: 'Beacon',   grad: ['#b45309','#fef08a'], desc: 'Beacon Burst: reveals the highest-scoring word.' },
+    { name: 'Eclipse',  grad: ['#1c1917','#4c1d95'], desc: 'Eclipse: inverts letter point values for one word.' },
+    { name: 'Lodestone',grad: ['#3f3f46','#e4e4e7'], desc: 'Lodestone: boosts your next gem-score bonus.' },
+    { name: 'Lexicon',  grad: ['#2563eb','#e879f9'], desc: 'Lexicon: reveals top-scoring word options.' },
+  ];
+
+  // Ordered from lowest to highest multiplier (matching GEM_MULTIPLIERS in hexacore.js)
+  const GEM_TILES = [
+    { name: 'Emerald',      grad: ['#16a34a','#4ade80'], mult: 2  },
+    { name: 'Gold',         grad: ['#92400e','#fef08a'], mult: 3  },
+    { name: 'Sapphire',     grad: ['#1d4ed8','#93c5fd'], mult: 4  },
+    { name: 'Pearl',        grad: ['#9ca3af','#f9fafb'], mult: 5  },
+    { name: 'Tanzanite',    grad: ['#1e3a8a','#60a5fa'], mult: 6  },
+    { name: 'Ruby',         grad: ['#7f1d1d','#ef4444'], mult: 7  },
+    { name: 'Diamond',      grad: ['#475569','#f1f5f9'], mult: 8  },
+    { name: 'Aquamarine',   grad: ['#0891b2','#67e8f9'], mult: 9  },
+    { name: 'Topaz',        grad: ['#c2410c','#fdba74'], mult: 10 },
+    { name: 'Opal',         grad: ['#a78bfa','#ffffff'], mult: 11 },
+    { name: 'Imperial Jade',grad: ['#064e3b','#34d399'], mult: 12 },
+    { name: 'Alexandrite',  grad: ['#a21caf','#fce7f3'], mult: 13 },
+  ];
+
+  // ── Helper: mini pointy-top hexagon rendered as a clip-path div ─
+  function miniHex(grad) {
+    const hex = document.createElement('div');
+    hex.className = 'hx-guide-hex';
+    hex.style.background = `linear-gradient(135deg, ${grad[0]}, ${grad[1]})`;
+    return hex;
+  }
+
+  // ── Helper: build a single tile row ─────────────────────────────
+  function tileRow(grad, name, right) {
+    const row = document.createElement('div');
+    row.className = 'hx-guide-row';
+    const nameEl = document.createElement('span');
+    nameEl.className = 'hx-guide-name';
+    nameEl.textContent = name;
+    const rightEl = document.createElement('span');
+    rightEl.className = 'hx-guide-right';
+    rightEl.textContent = right;
+    row.append(miniHex(grad), nameEl, rightEl);
+    return row;
+  }
+
+  // ── Helper: section header ───────────────────────────────────────
+  function sectionHeader(label) {
+    const h = document.createElement('div');
+    h.className = 'hx-guide-section-header';
+    h.textContent = label;
+    return h;
+  }
+
+  // ── Build panel ──────────────────────────────────────────────────
+  const panel = document.createElement('div');
+  panel.id = 'hx-tile-guide';
+  panel.setAttribute('aria-label', 'Tile reference guide');
+
+  const toggle = document.createElement('button');
+  toggle.id = 'hx-tile-guide-toggle';
+  toggle.type = 'button';
+  toggle.textContent = '▼ TILE GUIDE';
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-controls', 'hx-tile-guide-body');
+
+  const body = document.createElement('div');
+  body.id = 'hx-tile-guide-body';
+  body.setAttribute('aria-hidden', 'true');
+  body.hidden = true;
+
+  // Section 1 — Special tiles
+  body.appendChild(sectionHeader('Special Tiles'));
+  SPECIAL_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc)));
+
+  // Section 2 — Achievement / power-up tiles
+  body.appendChild(sectionHeader('Achievement Tiles'));
+  ACHIEVEMENT_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc)));
+
+  // Section 3 — Gems (multiplier only, no prose)
+  body.appendChild(sectionHeader('Gems  (score × multiplier)'));
+  GEM_TILES.forEach(t => {
+    const row = tileRow(t.grad, t.name, `\u00d7${t.mult}`);
+    row.classList.add('hx-guide-row--gem');
+    body.appendChild(row);
+  });
+
+  toggle.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    body.hidden = open;
+    body.setAttribute('aria-hidden', String(open));
+    toggle.textContent = open ? '▼ TILE GUIDE' : '▲ TILE GUIDE';
+  });
+
+  panel.appendChild(toggle);
+  panel.appendChild(body);
+  document.body.appendChild(panel);
+}
+
 function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
@@ -1964,6 +2083,8 @@ function ensureHud() {
   if (hxGameMode !== 'daily') {
     updateXPBarFn();
   }
+
+  buildTileGuide();
 }
 
 function removeHud() {
@@ -1976,6 +2097,7 @@ function removeHud() {
   document.getElementById('hx-powerup-toast')?.remove();
   document.getElementById('hx-powerup-indicator')?.remove();
   document.getElementById('hx-daily-no-words-overlay')?.remove();
+  document.getElementById('hx-tile-guide')?.remove();
 }
 
 /* ── Requirements persistence ──────────────────────────────────── */
