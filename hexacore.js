@@ -1871,6 +1871,27 @@ function showPlayerLevelUpBanner(newLevel) {
 
 /* ── Tile Reference Guide ──────────────────────────────────────── */
 /**
+ * Gradient colour stops for each gem type used in the tile reference guide.
+ * Colours are sampled from the matching SVG linearGradient definitions in
+ * injectSvgDefs() — keep them in sync if the SVG gradients change.
+ * The multiplier values are read directly from GEM_MULTIPLIERS at runtime.
+ */
+const HX_GUIDE_GEM_GRADS = {
+  gemEmerald:      ['#16a34a','#4ade80'],
+  gemGold:         ['#92400e','#fef08a'],
+  gemSapphire:     ['#1d4ed8','#93c5fd'],
+  gemPearl:        ['#9ca3af','#f9fafb'],
+  gemTanzanite:    ['#1e3a8a','#60a5fa'],
+  gemRuby:         ['#7f1d1d','#ef4444'],
+  gemDiamond:      ['#475569','#f1f5f9'],
+  gemAquamarine:   ['#0891b2','#67e8f9'],
+  gemTopaz:        ['#c2410c','#fdba74'],
+  gemOpal:         ['#a78bfa','#ffffff'],
+  gemImperialJade: ['#064e3b','#34d399'],
+  gemAlexandrite:  ['#a21caf','#fce7f3'],
+};
+
+/**
  * Builds a compact, collapsible tile reference panel and appends it to
  * `document.body`. The panel is always accessible during gameplay.
  */
@@ -1879,11 +1900,11 @@ function buildTileGuide() {
 
   // ── Tile data ──────────────────────────────────────────────────
   const SPECIAL_TILES = [
-    { name: 'Ember',   grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn — use it before it falls off.' },
+    { name: 'Ember',   grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn \u2014 use it before it falls off.' },
     { name: 'Prism',   grad: ['#7c1a85','#db2777'], desc: 'Doubles the total score of any word it joins.' },
-    { name: 'Rune',    grad: ['#312e81','#6d28d9'], desc: 'Wildcard — pick any letter when you play it.' },
+    { name: 'Rune',    grad: ['#312e81','#6d28d9'], desc: 'Wildcard \u2014 pick any letter when you play it.' },
     { name: 'Digraph', grad: ['#022c22','#34d399'], desc: 'Two letters in one tile; both count toward the word.' },
-    { name: 'Portal',  grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles — include both in one word.' },
+    { name: 'Portal',  grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles \u2014 include both in one word.' },
   ];
 
   const ACHIEVEMENT_TILES = [
@@ -1896,21 +1917,16 @@ function buildTileGuide() {
     { name: 'Lexicon',  grad: ['#2563eb','#e879f9'], desc: 'Lexicon: reveals top-scoring word options.' },
   ];
 
-  // Ordered from lowest to highest multiplier (matching GEM_MULTIPLIERS in hexacore.js)
-  const GEM_TILES = [
-    { name: 'Emerald',      grad: ['#16a34a','#4ade80'], mult: 2  },
-    { name: 'Gold',         grad: ['#92400e','#fef08a'], mult: 3  },
-    { name: 'Sapphire',     grad: ['#1d4ed8','#93c5fd'], mult: 4  },
-    { name: 'Pearl',        grad: ['#9ca3af','#f9fafb'], mult: 5  },
-    { name: 'Tanzanite',    grad: ['#1e3a8a','#60a5fa'], mult: 6  },
-    { name: 'Ruby',         grad: ['#7f1d1d','#ef4444'], mult: 7  },
-    { name: 'Diamond',      grad: ['#475569','#f1f5f9'], mult: 8  },
-    { name: 'Aquamarine',   grad: ['#0891b2','#67e8f9'], mult: 9  },
-    { name: 'Topaz',        grad: ['#c2410c','#fdba74'], mult: 10 },
-    { name: 'Opal',         grad: ['#a78bfa','#ffffff'], mult: 11 },
-    { name: 'Imperial Jade',grad: ['#064e3b','#34d399'], mult: 12 },
-    { name: 'Alexandrite',  grad: ['#a21caf','#fce7f3'], mult: 13 },
-  ];
+  // Derive gem guide rows from the canonical GEM_MULTIPLIERS constant so
+  // multiplier values and the list of gem types stay in sync automatically.
+  const GEM_TILES = Object.entries(GEM_MULTIPLIERS).map(([key, mult]) => {
+    // Convert camelCase key to display name: 'gemImperialJade' → 'Imperial Jade'
+    const displayName = key
+      .replace(/^gem/, '')
+      .replace(/([A-Z])/g, ' $1')
+      .trim();
+    return { name: displayName, grad: HX_GUIDE_GEM_GRADS[key] ?? ['#334155','#94a3b8'], mult };
+  });
 
   // ── Helper: mini pointy-top hexagon rendered as a clip-path div ─
   function miniHex(grad) {
@@ -4195,9 +4211,9 @@ async function submitHexacoreWord() {
   // Detect power-up collection: amethyst, selenite + achievement tiles.
   // In daily mode any word of 3+ letters collects a power-up tile; in other
   // modes the word must be 5+ letters.
-  const dailyPowerUpGate = hxGameMode === 'daily' ? 3 : 5;
+  const powerUpMinWordLength = hxGameMode === 'daily' ? 3 : 5;
   const pendingPowerUpToasts = [];
-  if (assembledLength >= dailyPowerUpGate) {
+  if (assembledLength >= powerUpMinWordLength) {
     const hasAmethystTile  = consumed.some(t => t.tileType === 'amethyst');
     const hasSelenieTile   = consumed.some(t => t.tileType === 'selenite');
     const hasOracleTile    = consumed.some(t => t.tileType === 'oracle');

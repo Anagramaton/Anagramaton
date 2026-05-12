@@ -362,7 +362,9 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   });
 
   // Pick 5 distinct gem types randomly using the seeded RNG.
-  // DAILY_GEM_POOL has exactly DAILY_GEM_POOL.length (≥5) entries; slicing 5 always yields unique types.
+  // DAILY_GEM_POOL contains 7 gem types (the subset used on daily boards),
+  // so slicing 5 always yields unique types. Not all 12 game gem types
+  // appear on daily boards — the remaining gems can appear in endless/campaign.
   const shuffledGems = shuffled(DAILY_GEM_POOL, rng);
   const chosenGems = shuffledGems.slice(0, Math.min(5, DAILY_GEM_POOL.length));
 
