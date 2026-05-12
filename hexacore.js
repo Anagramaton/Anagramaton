@@ -5621,7 +5621,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    openModeSelectModal(mode => startHexacoreMode(mode));
+    openModeSelectModal(
+      mode => startHexacoreMode(mode),
+      () => document.getElementById('splash-screen')?.classList.remove('hidden'),
+    );
   });
 
   // Expose helpers for campaign overlay buttons
