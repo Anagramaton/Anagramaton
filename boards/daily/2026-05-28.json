@@ -1,67 +1,67 @@
 {
   "date": "2026-05-28",
   "grid": {
-    "0,0": "E",
+    "2,-1": "E",
     "1,-1": "X",
-    "2,-1": "T",
-    "2,0": "E",
-    "1,0": "R",
-    "1,1": "N",
-    "0,2": "A",
+    "0,0": "T",
+    "-1,0": "E",
+    "-2,1": "R",
+    "-2,2": "N",
+    "-1,1": "A",
     "-1,2": "L",
-    "-1,1": "I",
-    "-2,1": "Z",
+    "0,2": "I",
+    "0,1": "Z",
+    "1,1": "I",
+    "1,0": "N",
+    "2,0": "G",
+    "-2,-1": "W",
     "-2,0": "I",
-    "-1,0": "N",
-    "0,-1": "G",
-    "-3,2": "W",
-    "-2,2": "I",
-    "-2,3": "L",
-    "0,1": "W",
-    "-1,3": "W",
-    "3,-3": "R",
-    "2,-2": "E",
-    "2,-3": "B",
-    "1,-2": "U",
-    "0,-2": "F",
-    "-1,-2": "F",
-    "-1,-1": "E",
-    "-2,-1": "D",
-    "-1,-3": "B",
-    "0,-3": "A",
-    "2,-4": "B",
-    "1,-3": "I",
-    "2,1": "Z",
-    "3,0": "S",
-    "-4,0": "A",
-    "-4,1": "O",
-    "-4,2": "U",
-    "-4,3": "T",
-    "-4,4": "O",
-    "-3,-1": "E",
-    "-3,0": "Q",
-    "-3,1": "H",
-    "-3,3": "A",
-    "-3,4": "C",
-    "-2,-2": "A",
-    "-2,4": "I",
-    "-1,4": "S",
-    "0,-4": "L",
-    "0,3": "L",
-    "0,4": "I",
-    "1,-4": "A",
-    "1,2": "H",
-    "1,3": "I",
-    "2,2": "E",
-    "3,-4": "U",
-    "3,-2": "F",
+    "-1,-1": "L",
+    "0,-1": "L",
+    "0,-2": "I",
+    "1,-2": "W",
+    "2,-3": "A",
+    "2,-2": "W",
+    "4,-3": "T",
+    "3,-3": "O",
+    "3,-2": "Z",
     "3,-1": "S",
-    "3,1": "B",
-    "4,-4": "R",
-    "4,-3": "I",
-    "4,-2": "L",
-    "4,-1": "U",
-    "4,0": "A"
+    "2,2": "B",
+    "2,1": "L",
+    "1,2": "J",
+    "-1,3": "V",
+    "-3,2": "D",
+    "-4,0": "I",
+    "-4,1": "O",
+    "-4,2": "S",
+    "-4,3": "E",
+    "-4,4": "K",
+    "-3,-1": "E",
+    "-3,0": "A",
+    "-3,1": "S",
+    "-3,3": "N",
+    "-3,4": "A",
+    "-2,-2": "N",
+    "-2,3": "R",
+    "-2,4": "L",
+    "-1,-3": "I",
+    "-1,-2": "P",
+    "-1,4": "F",
+    "0,-4": "S",
+    "0,-3": "O",
+    "0,3": "T",
+    "0,4": "D",
+    "1,-4": "E",
+    "1,-3": "V",
+    "1,3": "I",
+    "2,-4": "D",
+    "3,-4": "X",
+    "3,0": "U",
+    "3,1": "O",
+    "4,-4": "E",
+    "4,-2": "E",
+    "4,-1": "P",
+    "4,0": "T"
   },
   "specialTiles": [
     {
@@ -70,140 +70,114 @@
       "r": 1
     },
     {
-      "type": "prism",
-      "q": -2,
-      "r": -1
-    },
-    {
       "type": "rune",
+      "q": 3,
+      "r": -3
+    },
+    {
+      "type": "gemPearl",
       "q": -2,
-      "r": 0
-    },
-    {
-      "type": "rune",
-      "q": 2,
-      "r": 0
-    },
-    {
-      "type": "gemAlexandrite",
-      "q": -1,
       "r": 1
     },
     {
-      "type": "gemDiamond",
+      "type": "gemTanzanite",
       "q": 0,
-      "r": 2
-    },
-    {
-      "type": "gemRuby",
-      "q": 2,
-      "r": -2
-    },
-    {
-      "type": "gemRuby",
-      "q": 1,
       "r": 0
     },
     {
-      "type": "gemGold",
+      "type": "gemDiamond",
       "q": 2,
       "r": -1
     },
     {
-      "type": "gemGold",
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -1,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "NT"
+    },
+    {
+      "type": "amethyst",
+      "q": 4,
+      "r": -3
+    },
+    {
+      "type": "selenite",
+      "q": -1,
+      "r": -1
+    },
+    {
+      "type": "eclipse",
       "q": 0,
       "r": -3
     },
     {
-      "type": "gemSapphire",
-      "q": -1,
-      "r": 0
-    },
-    {
-      "type": "gemSapphire",
-      "q": 0,
-      "r": -1
-    },
-    {
-      "type": "gemEmerald",
-      "q": -4,
-      "r": 4
-    },
-    {
-      "type": "gemEmerald",
-      "q": -2,
-      "r": 3
-    },
-    {
-      "type": "gemEmerald",
+      "type": "portal",
       "q": 4,
       "r": 0
     },
     {
-      "type": "oracle",
+      "type": "portal",
       "q": 2,
-      "r": -3
-    },
-    {
-      "type": "beacon",
-      "q": 3,
       "r": -4
-    },
-    {
-      "type": "lodestone",
-      "q": -3,
-      "r": 3
-    },
-    {
-      "type": "amethyst",
-      "q": 0,
-      "r": 3
-    },
-    {
-      "type": "selenite",
-      "q": 1,
-      "r": 2
     }
   ],
   "metadata": {
-    "maxPossibleScore": 201783690,
-    "minAchievableScore": 160982640,
+    "maxPossibleScore": 2305200,
+    "minAchievableScore": 1834560,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "EXTERNALIZING",
-          "WILLIWAW",
-          "WANZES",
-          "REBUFFED"
+          "JINXES",
+          "BLINTZ",
+          "TOWZES"
         ],
-        "wordTotal": 80715716,
-        "penalty": 111,
-        "finalScore": 80715605
+        "wordTotal": 923472,
+        "penalty": 147,
+        "finalScore": 923325
+      },
+      {
+        "words": [
+          "EXTERNALIZING",
+          "JINXES",
+          "BLINTZ",
+          "TOWZES"
+        ],
+        "wordTotal": 923472,
+        "penalty": 147,
+        "finalScore": 923325
       },
       {
         "words": [
           "EXTERNALIZING",
           "WILLIWAW",
-          "WANZES",
-          "REBUFFED"
+          "JINXES",
+          "BLINTZ"
         ],
-        "wordTotal": 80715716,
-        "penalty": 111,
-        "finalScore": 80715605
-      },
-      {
-        "words": [
-          "EXTERNALIZING",
-          "WILLIWAW",
-          "REBUFFED",
-          "WANZES"
-        ],
-        "wordTotal": 80715716,
-        "penalty": 111,
-        "finalScore": 80715605
+        "wordTotal": 922392,
+        "penalty": 132,
+        "finalScore": 922260
       }
     ],
-    "generatedAt": "2026-05-12T18:40:04.629Z"
+    "generatedAt": "2026-05-12T19:34:42.990Z"
   }
 }

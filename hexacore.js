@@ -1419,11 +1419,45 @@ function buildGrid(onReady, boardData = null) {
   }
 
   if (isDaily && Array.isArray(boardData?.specialTiles)) {
+    const portalSpecs = [];
     for (const spec of boardData.specialTiles) {
       const key = hxKey(spec.q, spec.r);
       const tile = hxTileMap.get(key);
+
+      if (spec.type === 'portal') {
+        // Collect portal specs; applied as a pair after all other tiles
+        portalSpecs.push(spec);
+        continue;
+      }
+
       if (!tile) continue;
-      convertTile(tile, spec.type);
+
+      if (spec.type === 'digraph' && spec.digraph) {
+        // Apply the specific persisted digraph rather than picking a random one
+        _hxClearTileType(tile);
+        tile.tileType = 'digraph';
+        tile.letter   = String(spec.digraph).toUpperCase();
+        tile.point    = spec.point ?? (
+          (HX_LETTER_POINTS[tile.letter[0]] || 1) + (HX_LETTER_POINTS[tile.letter[1]] || 1)
+        );
+        _hxRegisterTile(tile, hxState.digraphTiles);
+        applyTileType(tile);
+        enqueueTileIntroduction(tile);
+      } else {
+        convertTile(tile, spec.type);
+      }
+    }
+
+    // Set up the pre-opened portal pair (entry = first spec, exit = second)
+    if (portalSpecs.length >= 2) {
+      const ep = portalSpecs[0];
+      const xp = portalSpecs[1];
+      hxState.portalOpen           = true;
+      hxState.portalUsed           = false;
+      hxState.portalEntry          = { q: ep.q, r: ep.r, s: -ep.q - ep.r };
+      hxState.portalExit           = { q: xp.q, r: xp.r, s: -xp.q - xp.r };
+      hxState.portalWordsRemaining = 5;
+      applyPortalVisuals();
     }
   }
 

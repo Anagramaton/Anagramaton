@@ -1,209 +1,188 @@
 {
   "date": "2026-06-08",
   "grid": {
-    "1,1": "B",
-    "2,0": "A",
-    "1,0": "C",
-    "1,-1": "K",
+    "-2,1": "B",
+    "-2,2": "A",
+    "-1,1": "C",
+    "-1,0": "K",
     "0,-1": "T",
-    "-1,0": "R",
+    "1,-1": "R",
     "0,0": "A",
-    "0,1": "C",
-    "-1,1": "K",
-    "-1,2": "I",
-    "-2,2": "N",
-    "-2,1": "G",
-    "-3,1": "S",
-    "2,-3": "Q",
-    "1,-2": "U",
-    "0,-2": "E",
-    "-1,-1": "Z",
-    "-2,-1": "A",
-    "-2,0": "L",
-    "0,-3": "G",
-    "1,-3": "F",
-    "2,-2": "F",
-    "3,-2": "F",
-    "2,-1": "L",
-    "3,-1": "E",
-    "-1,3": "J",
-    "0,2": "L",
-    "3,0": "B",
-    "1,2": "B",
-    "0,3": "E",
+    "1,0": "C",
+    "2,-1": "K",
+    "2,0": "I",
+    "1,1": "N",
+    "0,1": "G",
+    "-1,2": "S",
+    "0,-3": "Q",
+    "0,-2": "U",
+    "-1,-1": "E",
+    "1,-2": "Z",
+    "2,-3": "A",
+    "2,-2": "L",
+    "3,-2": "S",
+    "-1,-3": "W",
+    "-1,-2": "H",
+    "-2,-1": "E",
+    "-2,0": "Z",
+    "-3,1": "E",
+    "1,-3": "E",
+    "-1,3": "P",
+    "0,2": "H",
+    "1,2": "Y",
+    "2,1": "X",
+    "4,-2": "Q",
+    "3,-1": "U",
     "-4,0": "O",
-    "-4,1": "U",
-    "-4,2": "E",
-    "-4,3": "U",
-    "-4,4": "A",
-    "-3,-1": "Y",
-    "-3,0": "A",
-    "-3,2": "M",
-    "-3,3": "A",
-    "-3,4": "E",
-    "-2,-2": "P",
-    "-2,3": "O",
-    "-2,4": "L",
-    "-1,-3": "G",
-    "-1,-2": "O",
-    "-1,4": "E",
-    "0,-4": "I",
-    "0,4": "E",
-    "1,-4": "T",
-    "1,3": "P",
-    "2,-4": "U",
-    "2,1": "S",
-    "2,2": "E",
-    "3,-4": "R",
-    "3,-3": "O",
-    "3,1": "E",
-    "4,-4": "D",
-    "4,-3": "C",
-    "4,-2": "T",
-    "4,-1": "I",
-    "4,0": "P"
+    "-4,1": "R",
+    "-4,2": "I",
+    "-4,3": "Y",
+    "-4,4": "Z",
+    "-3,-1": "E",
+    "-3,0": "E",
+    "-3,2": "P",
+    "-3,3": "L",
+    "-3,4": "A",
+    "-2,-2": "O",
+    "-2,3": "R",
+    "-2,4": "T",
+    "-1,4": "I",
+    "0,-4": "E",
+    "0,3": "I",
+    "0,4": "M",
+    "1,-4": "I",
+    "1,3": "S",
+    "2,-4": "G",
+    "2,2": "A",
+    "3,-4": "I",
+    "3,-3": "L",
+    "3,0": "O",
+    "3,1": "R",
+    "4,-4": "Y",
+    "4,-3": "E",
+    "4,-1": "A",
+    "4,0": "Y"
   },
   "specialTiles": [
     {
       "type": "prism",
       "q": 0,
-      "r": -1
-    },
-    {
-      "type": "prism",
-      "q": 0,
       "r": -2
     },
     {
       "type": "rune",
-      "q": -2,
-      "r": -1
-    },
-    {
-      "type": "rune",
-      "q": -2,
-      "r": 0
-    },
-    {
-      "type": "gemAlexandrite",
-      "q": -3,
-      "r": 1
+      "q": 2,
+      "r": -3
     },
     {
       "type": "gemDiamond",
-      "q": 1,
-      "r": -2
-    },
-    {
-      "type": "gemRuby",
-      "q": 2,
-      "r": -3
-    },
-    {
-      "type": "gemRuby",
-      "q": 1,
-      "r": 0
-    },
-    {
-      "type": "gemGold",
       "q": 2,
       "r": -1
     },
     {
-      "type": "gemGold",
-      "q": -1,
-      "r": 0
-    },
-    {
       "type": "gemSapphire",
-      "q": -2,
-      "r": 1
-    },
-    {
-      "type": "gemSapphire",
-      "q": 0,
-      "r": 3
-    },
-    {
-      "type": "gemEmerald",
-      "q": -2,
-      "r": 4
-    },
-    {
-      "type": "gemEmerald",
       "q": 1,
       "r": -3
     },
     {
-      "type": "gemEmerald",
-      "q": 0,
-      "r": 4
-    },
-    {
-      "type": "oracle",
+      "type": "gemPearl",
       "q": 2,
       "r": -2
     },
     {
-      "type": "beacon",
+      "type": "digraph",
+      "q": -2,
+      "r": 0,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 3,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 0,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -1,
+      "digraph": "TY"
+    },
+    {
+      "type": "amethyst",
+      "q": 0,
+      "r": 3
+    },
+    {
+      "type": "selenite",
       "q": 0,
       "r": 1
     },
     {
-      "type": "lodestone",
+      "type": "eclipse",
       "q": 0,
       "r": 0
     },
     {
-      "type": "amethyst",
-      "q": -4,
-      "r": 4
+      "type": "lodestone",
+      "q": 3,
+      "r": -1
     },
     {
-      "type": "selenite",
+      "type": "portal",
+      "q": 4,
+      "r": 0
+    },
+    {
+      "type": "portal",
       "q": -2,
-      "r": 3
+      "r": 4
     }
   ],
   "metadata": {
-    "maxPossibleScore": 8454240,
-    "minAchievableScore": 4964544,
+    "maxPossibleScore": 56460,
+    "minAchievableScore": 28800,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
+          "QUEZAL",
           "BACKTRACKINGS",
           "QUETZALS",
-          "GEFUFFLE",
-          "QUEZAL"
+          "QUICKS"
         ],
-        "wordTotal": 3407616,
-        "penalty": 119,
-        "finalScore": 3407497
+        "wordTotal": 23976,
+        "penalty": 137,
+        "finalScore": 23839
+      },
+      {
+        "words": [
+          "QUEZAL",
+          "BACKTRACKINGS",
+          "QUETZALS",
+          "QUICKS"
+        ],
+        "wordTotal": 23976,
+        "penalty": 137,
+        "finalScore": 23839
       },
       {
         "words": [
           "BACKTRACKINGS",
           "QUETZALS",
-          "GEFUFFLE",
-          "QUEZAL"
+          "QUEZAL",
+          "QUICKS"
         ],
-        "wordTotal": 3407616,
-        "penalty": 119,
-        "finalScore": 3407497
-      },
-      {
-        "words": [
-          "BACKTRACKINGS",
-          "QUETZALS",
-          "GEFUFFLE",
-          "QUEZAL"
-        ],
-        "wordTotal": 3407616,
-        "penalty": 119,
-        "finalScore": 3407497
+        "wordTotal": 23976,
+        "penalty": 137,
+        "finalScore": 23839
       }
     ],
-    "generatedAt": "2026-05-12T18:40:04.829Z"
+    "generatedAt": "2026-05-12T19:34:43.126Z"
   }
 }

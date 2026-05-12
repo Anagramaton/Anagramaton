@@ -1,199 +1,183 @@
 {
   "date": "2026-05-16",
   "grid": {
-    "0,2": "U",
-    "1,1": "N",
-    "0,1": "C",
-    "0,0": "O",
-    "-1,1": "N",
-    "-2,1": "C",
-    "-1,0": "E",
-    "-1,-1": "I",
-    "0,-1": "V",
-    "1,-2": "A",
-    "2,-2": "B",
-    "1,-1": "L",
-    "1,0": "Y",
-    "1,2": "Q",
-    "-1,3": "E",
-    "-1,2": "B",
-    "-2,2": "E",
-    "1,-3": "S",
-    "0,-2": "Q",
-    "-1,-2": "U",
+    "1,-1": "A",
+    "1,0": "D",
+    "0,0": "V",
+    "0,-1": "E",
+    "-1,0": "R",
     "-2,0": "B",
-    "-3,0": "S",
-    "3,-2": "O",
-    "2,-1": "S",
-    "3,-1": "B",
-    "2,0": "O",
-    "3,0": "K",
-    "4,-3": "C",
-    "2,-3": "Z",
-    "-1,4": "Z",
-    "-3,2": "K",
-    "-4,0": "T",
-    "-4,1": "A",
-    "-4,2": "E",
-    "-4,3": "T",
-    "-4,4": "L",
-    "-3,-1": "I",
-    "-3,1": "Y",
-    "-3,3": "T",
-    "-3,4": "E",
-    "-2,-2": "W",
-    "-2,-1": "I",
-    "-2,3": "O",
-    "-2,4": "T",
-    "-1,-3": "H",
-    "0,-4": "E",
-    "0,-3": "Q",
-    "0,3": "Y",
-    "0,4": "E",
-    "1,-4": "R",
-    "1,3": "A",
-    "2,-4": "O",
-    "2,1": "M",
-    "2,2": "T",
-    "3,-4": "L",
-    "3,-3": "A",
-    "3,1": "E",
-    "4,-4": "A",
-    "4,-2": "I",
-    "4,-1": "I",
-    "4,0": "S"
+    "-3,1": "I",
+    "-2,1": "A",
+    "-2,2": "L",
+    "-1,2": "I",
+    "-1,1": "Z",
+    "0,1": "E",
+    "0,2": "S",
+    "-1,-1": "L",
+    "0,-2": "O",
+    "1,-2": "C",
+    "2,-3": "K",
+    "2,-2": "J",
+    "2,-1": "W",
+    "2,0": "S",
+    "-4,1": "B",
+    "-3,0": "U",
+    "-2,-1": "B",
+    "-1,-2": "Y",
+    "-3,2": "B",
+    "-4,0": "I",
+    "-4,2": "I",
+    "-4,3": "N",
+    "-4,4": "E",
+    "-3,-1": "H",
+    "-3,3": "R",
+    "-3,4": "D",
+    "-2,-2": "O",
+    "-2,3": "R",
+    "-2,4": "U",
+    "-1,-3": "F",
+    "-1,3": "C",
+    "-1,4": "S",
+    "0,-4": "U",
+    "0,-3": "O",
+    "0,3": "E",
+    "0,4": "O",
+    "1,-4": "H",
+    "1,-3": "O",
+    "1,1": "O",
+    "1,2": "A",
+    "1,3": "T",
+    "2,-4": "T",
+    "2,1": "I",
+    "2,2": "G",
+    "3,-4": "O",
+    "3,-3": "G",
+    "3,-2": "I",
+    "3,-1": "I",
+    "3,0": "G",
+    "3,1": "R",
+    "4,-4": "R",
+    "4,-3": "E",
+    "4,-2": "T",
+    "4,-1": "L",
+    "4,0": "N"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": 1,
-      "r": -2
-    },
-    {
-      "type": "prism",
       "q": -2,
-      "r": 1
-    },
-    {
-      "type": "rune",
-      "q": 0,
-      "r": 2
-    },
-    {
-      "type": "rune",
-      "q": 1,
-      "r": 1
-    },
-    {
-      "type": "gemRuby",
-      "q": -1,
-      "r": -1
-    },
-    {
-      "type": "gemRuby",
-      "q": 1,
-      "r": -3
-    },
-    {
-      "type": "gemGold",
-      "q": 2,
-      "r": -3
-    },
-    {
-      "type": "gemGold",
-      "q": 0,
-      "r": -1
-    },
-    {
-      "type": "gemSapphire",
-      "q": 1,
       "r": 0
     },
     {
-      "type": "gemSapphire",
-      "q": 1,
-      "r": -1
-    },
-    {
-      "type": "gemEmerald",
+      "type": "rune",
       "q": -1,
-      "r": 3
-    },
-    {
-      "type": "gemEmerald",
-      "q": -2,
-      "r": 2
+      "r": 0
     },
     {
       "type": "gemEmerald",
       "q": 0,
-      "r": 3
+      "r": -3
     },
     {
-      "type": "oracle",
-      "q": -1,
+      "type": "gemRuby",
+      "q": 0,
+      "r": -1
+    },
+    {
+      "type": "gemPearl",
+      "q": -2,
       "r": 2
     },
     {
-      "type": "beacon",
-      "q": -4,
-      "r": 2
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "ED"
     },
     {
-      "type": "lodestone",
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
       "q": -3,
-      "r": 3
+      "r": 3,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "NT"
     },
     {
       "type": "amethyst",
-      "q": 2,
-      "r": -1
+      "q": -2,
+      "r": 1
     },
     {
       "type": "selenite",
       "q": -1,
-      "r": -2
+      "r": -3
+    },
+    {
+      "type": "eclipse",
+      "q": 4,
+      "r": -1
+    },
+    {
+      "type": "portal",
+      "q": 2,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "q": -2,
+      "r": -4
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1059540,
-    "minAchievableScore": 825552,
+    "maxPossibleScore": 234310,
+    "minAchievableScore": 182000,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "UNCONCEIVABLY",
-          "COBZAS",
-          "SQUIBS",
-          "ZEBECK"
+          "ADVERBIALIZES",
+          "BIBBLE",
+          "BUBBLY",
+          "BABBLY"
         ],
-        "wordTotal": 425352,
-        "penalty": 121,
-        "finalScore": 425231
+        "wordTotal": 94084,
+        "penalty": 139,
+        "finalScore": 93945
       },
       {
         "words": [
-          "UNCONCEIVABLY",
-          "COBZAS",
-          "SQUIBS",
-          "ZEBECK"
+          "ADVERBIALIZES",
+          "BIBBLE",
+          "BUBBLY",
+          "BABBLY"
         ],
-        "wordTotal": 425352,
-        "penalty": 121,
-        "finalScore": 425231
+        "wordTotal": 94084,
+        "penalty": 139,
+        "finalScore": 93945
       },
       {
         "words": [
-          "UNCONCEIVABLY",
-          "COBZAS",
-          "SQUIBS",
-          "ZEBECK"
+          "ADVERBIALIZES",
+          "LOCKJAWS",
+          "BIBBLE",
+          "BUBBLY"
         ],
-        "wordTotal": 425352,
-        "penalty": 121,
-        "finalScore": 425231
+        "wordTotal": 94036,
+        "penalty": 112,
+        "finalScore": 93924
       }
     ],
-    "generatedAt": "2026-05-12T18:40:04.301Z"
+    "generatedAt": "2026-05-12T19:34:42.790Z"
   }
 }
