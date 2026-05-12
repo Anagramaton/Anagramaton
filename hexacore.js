@@ -320,6 +320,7 @@ const hxState = {
   portalWordsRemaining: 0, // words left before portal auto-closes (3 when opened)
   dailyBoardDate: null,
   dailyMetadata: null,
+  dailySpecialTiles: null,
   dailyStartMs: 0,
   dailySubmitted: false,
   dailyFinalScore: 0,
@@ -1899,45 +1900,77 @@ function buildTileGuide() {
   document.getElementById('hx-tile-guide')?.remove();
 
   // ── Tile data ──────────────────────────────────────────────────
-  const SPECIAL_TILES = [
-    { name: 'Ember',   grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn \u2014 use it before it falls off.' },
-    { name: 'Prism',   grad: ['#7c1a85','#db2777'], desc: 'Doubles the total score of any word it joins.' },
-    { name: 'Rune',    grad: ['#312e81','#6d28d9'], desc: 'Wildcard \u2014 pick any letter when you play it.' },
-    { name: 'Digraph', grad: ['#022c22','#34d399'], desc: 'Two letters in one tile; both count toward the word.' },
-    { name: 'Portal',  grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles \u2014 include both in one word.' },
+  const ALL_SPECIAL_TILES = [
+    { key: 'ember',    name: 'Ember',    grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn \u2014 use it before it falls off.' },
+    { key: 'prism',    name: 'Prism',    grad: ['#7c1a85','#db2777'], desc: 'Doubles the total score of any word it joins.' },
+    { key: 'rune',     name: 'Rune',     grad: ['#312e81','#6d28d9'], desc: 'Wildcard \u2014 pick any letter when you play it.' },
+    { key: 'digraph',  name: 'Digraph',  grad: ['#022c22','#34d399'], desc: 'Two letters in one tile; both count toward the word.' },
+    { key: 'portal',   name: 'Portal',   grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles \u2014 include both in one word.' },
   ];
 
-  const ACHIEVEMENT_TILES = [
-    { name: 'Amethyst', grad: ['#7e22ce','#d946ef'], desc: 'Transmute: change any tile\u2019s letter.' },
-    { name: 'Selenite', grad: ['#0c4a6e','#e0f2fe'], desc: 'Phase Swap: swap any two tiles on the board.' },
-    { name: 'Oracle',   grad: ['#334155','#f8fafc'], desc: 'Oracle Sight: highlights the longest word path.' },
-    { name: 'Beacon',   grad: ['#b45309','#fef08a'], desc: 'Beacon Burst: reveals the highest-scoring word.' },
-    { name: 'Eclipse',  grad: ['#1c1917','#4c1d95'], desc: 'Eclipse: inverts letter point values for one word.' },
-    { name: 'Lodestone',grad: ['#3f3f46','#e4e4e7'], desc: 'Lodestone: boosts your next gem-score bonus.' },
-    { name: 'Lexicon',  grad: ['#2563eb','#e879f9'], desc: 'Lexicon: reveals top-scoring word options.' },
+  const ALL_ACHIEVEMENT_TILES = [
+    { key: 'amethyst',  name: 'Amethyst',  grad: ['#7e22ce','#d946ef'], desc: 'Transmute: change any tile\u2019s letter.' },
+    { key: 'selenite',  name: 'Selenite',  grad: ['#0c4a6e','#e0f2fe'], desc: 'Phase Swap: swap any two tiles on the board.' },
+    { key: 'oracle',    name: 'Oracle',    grad: ['#334155','#f8fafc'], desc: 'Oracle Sight: highlights the longest word path.' },
+    { key: 'beacon',    name: 'Beacon',    grad: ['#b45309','#fef08a'], desc: 'Beacon Burst: reveals the highest-scoring word.' },
+    { key: 'eclipse',   name: 'Eclipse',   grad: ['#1c1917','#4c1d95'], desc: 'Eclipse: inverts letter point values for one word.' },
+    { key: 'lodestone', name: 'Lodestone', grad: ['#3f3f46','#e4e4e7'], desc: 'Lodestone: boosts your next gem-score bonus.' },
+    { key: 'lexicon',   name: 'Lexicon',   grad: ['#2563eb','#e879f9'], desc: 'Lexicon: reveals top-scoring word options.' },
   ];
 
   // Derive gem guide rows from the canonical GEM_MULTIPLIERS constant so
   // multiplier values and the list of gem types stay in sync automatically.
-  const GEM_TILES = Object.entries(GEM_MULTIPLIERS).map(([key, mult]) => {
+  const ALL_GEM_TILES = Object.entries(GEM_MULTIPLIERS).map(([key, mult]) => {
     // Convert camelCase key to display name: 'gemImperialJade' → 'Imperial Jade'
     const displayName = key
       .replace(/^gem/, '')
       .replace(/([A-Z])/g, ' $1')
       .trim();
-    return { name: displayName, grad: HX_GUIDE_GEM_GRADS[key] ?? ['#334155','#94a3b8'], mult };
+    return { key, name: displayName, grad: HX_GUIDE_GEM_GRADS[key] ?? ['#334155','#94a3b8'], mult };
   });
 
-  // ── Helper: mini pointy-top hexagon rendered as a clip-path div ─
-  function miniHex(grad) {
+  // ── Daily mode: filter to only tiles present on the current board ─
+  const isDaily = hxGameMode === 'daily';
+  let SPECIAL_TILES = ALL_SPECIAL_TILES;
+  let ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES;
+  let GEM_TILES = ALL_GEM_TILES;
+
+  if (isDaily && hxState.dailySpecialTiles) {
+    const boardTypes = new Set(hxState.dailySpecialTiles.map(s => s.type));
+    // Portal appears as two tiles with the same type
+    SPECIAL_TILES = ALL_SPECIAL_TILES.filter(t => boardTypes.has(t.key));
+    ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES.filter(t => boardTypes.has(t.key));
+    GEM_TILES = ALL_GEM_TILES.filter(t => boardTypes.has(t.key));
+  }
+
+  // ── Helper: mini pointy-top hexagon ─────────────────────────────
+  function miniHex(grad, large = false) {
     const hex = document.createElement('div');
-    hex.className = 'hx-guide-hex';
+    hex.className = large ? 'hx-guide-hex hx-guide-hex--large' : 'hx-guide-hex';
     hex.style.background = `linear-gradient(135deg, ${grad[0]}, ${grad[1]})`;
     return hex;
   }
 
-  // ── Helper: build a single tile row ─────────────────────────────
-  function tileRow(grad, name, right) {
+  // ── Helper: build a tile entry ───────────────────────────────────
+  // In daily mode: large card layout with bigger hex + full description.
+  // In other modes: compact row layout.
+  function tileRow(grad, name, right, large = false) {
+    if (large) {
+      const card = document.createElement('div');
+      card.className = 'hx-guide-card';
+      const hexEl = miniHex(grad, true);
+      const info = document.createElement('div');
+      info.className = 'hx-guide-card-info';
+      const nameEl = document.createElement('div');
+      nameEl.className = 'hx-guide-card-name';
+      nameEl.textContent = name;
+      const descEl = document.createElement('div');
+      descEl.className = 'hx-guide-card-desc';
+      descEl.textContent = right;
+      info.append(nameEl, descEl);
+      card.append(hexEl, info);
+      return card;
+    }
     const row = document.createElement('div');
     row.className = 'hx-guide-row';
     const nameEl = document.createElement('span');
@@ -1961,6 +1994,7 @@ function buildTileGuide() {
   // ── Build panel ──────────────────────────────────────────────────
   const panel = document.createElement('div');
   panel.id = 'hx-tile-guide';
+  if (isDaily) panel.classList.add('hx-tile-guide--daily');
   panel.setAttribute('aria-label', 'Tile reference guide');
 
   const toggle = document.createElement('button');
@@ -1976,20 +2010,42 @@ function buildTileGuide() {
   body.hidden = true;
 
   // Section 1 — Special tiles
-  body.appendChild(sectionHeader('Special Tiles'));
-  SPECIAL_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc)));
+  if (SPECIAL_TILES.length > 0) {
+    if (!isDaily) body.appendChild(sectionHeader('Special Tiles'));
+    SPECIAL_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc, isDaily)));
+  }
 
   // Section 2 — Achievement / power-up tiles
-  body.appendChild(sectionHeader('Achievement Tiles'));
-  ACHIEVEMENT_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc)));
+  if (ACHIEVEMENT_TILES.length > 0) {
+    if (!isDaily) body.appendChild(sectionHeader('Achievement Tiles'));
+    ACHIEVEMENT_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc, isDaily)));
+  }
 
   // Section 3 — Gems (multiplier only, no prose)
-  body.appendChild(sectionHeader('Gems  (score × multiplier)'));
-  GEM_TILES.forEach(t => {
-    const row = tileRow(t.grad, t.name, `\u00d7${t.mult}`);
-    row.classList.add('hx-guide-row--gem');
-    body.appendChild(row);
-  });
+  if (GEM_TILES.length > 0) {
+    if (!isDaily) {
+      body.appendChild(sectionHeader('Gems  (score \u00d7 multiplier)'));
+      GEM_TILES.forEach(t => {
+        const row = tileRow(t.grad, t.name, `\u00d7${t.mult}`);
+        row.classList.add('hx-guide-row--gem');
+        body.appendChild(row);
+      });
+    } else {
+      GEM_TILES.forEach(t => {
+        const card = tileRow(t.grad, t.name, `Score multiplier: \u00d7${t.mult}. Include in words for massive point bonuses.`, true);
+        card.classList.add('hx-guide-card--gem');
+        body.appendChild(card);
+      });
+    }
+  }
+
+  // Daily mode: show a notice if no special tiles are on the board
+  if (isDaily && SPECIAL_TILES.length === 0 && ACHIEVEMENT_TILES.length === 0 && GEM_TILES.length === 0) {
+    const note = document.createElement('div');
+    note.className = 'hx-guide-empty-note';
+    note.textContent = 'No special tiles on this board.';
+    body.appendChild(note);
+  }
 
   toggle.addEventListener('click', () => {
     const open = toggle.getAttribute('aria-expanded') === 'true';
@@ -5468,6 +5524,7 @@ export function startHexacore(mode) {
     portalWordsRemaining: 0,
     dailyBoardDate: null,
     dailyMetadata: null,
+    dailySpecialTiles: null,
     dailyStartMs: 0,
     dailySubmitted: false,
     dailyFinalScore: 0,
@@ -5508,6 +5565,7 @@ export function startHexacore(mode) {
         boardData = await loadDailyChallengeBoard(hxEasternDateStr());
         hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();
         hxState.dailyMetadata = boardData?.metadata || null;
+        hxState.dailySpecialTiles = boardData?.specialTiles || null;
       } catch (err) {
         console.warn('[hexacore] daily board load failed, falling back to procedural board:', err);
       }
@@ -5638,9 +5696,15 @@ export function startHexacore(mode) {
         try { localStorage.setItem(HX_DAILY_TUTORIAL_KEY, '1'); } catch (_) {}
       }
     }
-    queueBoardTileIntroductions();
-    void maybeRunTutorialModalQueue();
+    // Skip tile-introduction modals in daily mode — they clutter the experience
+    if (hxGameMode !== 'daily') {
+      queueBoardTileIntroductions();
+      void maybeRunTutorialModalQueue();
+    }
     updateDailyHud();
+    // Rebuild the tile guide after board is ready so daily mode shows only
+    // the special tiles that actually appear on today's board.
+    if (hxGameMode === 'daily') buildTileGuide();
   }, boardData);
   };
   void initBoard();
