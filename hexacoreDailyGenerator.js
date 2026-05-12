@@ -145,10 +145,19 @@ function shuffled(list, rng) {
   return arr;
 }
 
+function coordKey(cell) {
+  if (cell?.key) return cell.key;
+  return hexKey(cell.q, cell.r);
+}
+
+function getAllCoordsWithKeys(radius) {
+  return getAllCoords(radius).map(c => ({ ...c, key: coordKey(c) }));
+}
+
 function pathOverlap(path, grid, word) {
   let overlap = 0;
   path.forEach((cell, i) => {
-    const existing = grid[cell.key];
+    const existing = grid[coordKey(cell)];
     if (existing && existing === word[i]) overlap += 1;
   });
   return overlap;
@@ -176,20 +185,21 @@ function placeWords(words, rng, radius) {
         { allowZigZag: true, preferOverlap: true, maxStraight: 2, wallBuffer: 1, maxEdgeRun: 1 },
       );
       if (!path) continue;
+      const normalizedPath = path.map(c => ({ ...c, key: coordKey(c) }));
 
-      const overlap = pathOverlap(path, grid, word);
-      const centerBias = path.reduce((sum, c) => sum - Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)), 0);
+      const overlap = pathOverlap(normalizedPath, grid, word);
+      const centerBias = normalizedPath.reduce((sum, c) => sum - Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)), 0);
       const metric = overlap * 16 + centerBias;
       if (metric > bestMetric) {
         bestMetric = metric;
-        best = path;
+        best = normalizedPath;
       }
     }
 
     if (!best) return false;
 
     best.forEach((cell, i) => {
-      grid[cell.key] = word[i];
+      grid[coordKey(cell)] = word[i];
     });
     placements.push({ word, path: best, score: wordScore(word) });
     return true;
@@ -263,7 +273,7 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
   const taken = new Set();
   const { coordToWords, longMiddle } = buildCoordStats(placements);
 
-  const allCoords = getAllCoords(radius);
+  const allCoords = getAllCoordsWithKeys(radius);
   const pathDensity = new Map();
   for (const c of allCoords) {
     const n = neighbors(c.q, c.r, radius);
@@ -366,7 +376,7 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS) {
 }
 
 function fillEmptyTiles(grid, rng, radius = GRID_RADIUS) {
-  const coords = getAllCoords(radius);
+  const coords = getAllCoordsWithKeys(radius);
   const pool = LETTER_POOL;
 
   for (const c of coords) {
@@ -489,12 +499,19 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
   };
 }
 
-export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 10, radius = GRID_RADIUS } = {}) {
+export function generateDailyHexacoreBoard({
+  date = toIsoDate(),
+  maxAttempts = 10,
+  radius = GRID_RADIUS,
+  attemptSeedOffset = 0,
+  includePlacements = false,
+} = {}) {
   const seed = fnv1a32(String(date));
   let lastFailure = 'unknown';
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const rng = mkSeededRng((seed + attempt * 9973) >>> 0);
+    const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
+    const rng = mkSeededRng((seed + effectiveAttempt * 9973) >>> 0);
 
     const words = chooseTargetWords(rng);
     const { grid, placements } = placeWords(words, rng, radius);
@@ -512,7 +529,7 @@ export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 1
       continue;
     }
 
-    return {
+    const board = {
       date,
       grid,
       specialTiles,
@@ -524,6 +541,8 @@ export function generateDailyHexacoreBoard({ date = toIsoDate(), maxAttempts = 1
         generatedAt: new Date().toISOString(),
       },
     };
+    if (includePlacements) board.placements = placements;
+    return board;
   }
 
   throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);

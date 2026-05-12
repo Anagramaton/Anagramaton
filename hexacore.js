@@ -1225,6 +1225,21 @@ function hxEasternDateStr() {
 
 const HX_DAILY_COMPLETED_KEY = 'hxDailyCompleted';
 const HX_DAILY_BOARD_CACHE_PREFIX = 'hxDailyBoardCache_';
+let hxDailyManifestCache = null;
+
+async function hxLoadDailyManifest() {
+  if (hxDailyManifestCache) return hxDailyManifestCache;
+  try {
+    const res = await fetch('/boards/daily/index.json');
+    if (!res.ok) return null;
+    const manifest = await res.json();
+    if (!manifest || !Array.isArray(manifest.boards)) return null;
+    hxDailyManifestCache = manifest;
+    return manifest;
+  } catch (_) {
+    return null;
+  }
+}
 
 /** Persist that the player has finished today's daily (ET date). */
 function hxMarkDailyCompleted() {
@@ -1242,10 +1257,15 @@ async function loadDailyChallengeBoard(dateStr) {
   } catch (_) {}
 
   let data;
-  const res = await fetch(`/boards/hexacoreDaily/${targetDate}.json`);
-  if (res.ok) {
-    data = await res.json();
-  } else {
+  const manifest = await hxLoadDailyManifest();
+  const canFetchFromStatic = !manifest || manifest.boards.some(b => b?.date === targetDate);
+
+  if (canFetchFromStatic) {
+    const res = await fetch(`/boards/daily/${targetDate}.json`);
+    if (res.ok) data = await res.json();
+  }
+
+  if (!data) {
     // Dev fallback when no prebuilt file exists
     const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
     data = generateDailyHexacoreBoard({ date: targetDate });

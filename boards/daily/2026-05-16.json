@@ -1,0 +1,199 @@
+{
+  "date": "2026-05-16",
+  "grid": {
+    "0,2": "U",
+    "1,1": "N",
+    "0,1": "C",
+    "0,0": "O",
+    "-1,1": "N",
+    "-2,1": "C",
+    "-1,0": "E",
+    "-1,-1": "I",
+    "0,-1": "V",
+    "1,-2": "A",
+    "2,-2": "B",
+    "1,-1": "L",
+    "1,0": "Y",
+    "1,2": "Q",
+    "-1,3": "E",
+    "-1,2": "B",
+    "-2,2": "E",
+    "1,-3": "S",
+    "0,-2": "Q",
+    "-1,-2": "U",
+    "-2,0": "B",
+    "-3,0": "S",
+    "3,-2": "O",
+    "2,-1": "S",
+    "3,-1": "B",
+    "2,0": "O",
+    "3,0": "K",
+    "4,-3": "C",
+    "2,-3": "Z",
+    "-1,4": "Z",
+    "-3,2": "K",
+    "-4,0": "T",
+    "-4,1": "A",
+    "-4,2": "E",
+    "-4,3": "T",
+    "-4,4": "L",
+    "-3,-1": "I",
+    "-3,1": "Y",
+    "-3,3": "T",
+    "-3,4": "E",
+    "-2,-2": "W",
+    "-2,-1": "I",
+    "-2,3": "O",
+    "-2,4": "T",
+    "-1,-3": "H",
+    "0,-4": "E",
+    "0,-3": "Q",
+    "0,3": "Y",
+    "0,4": "E",
+    "1,-4": "R",
+    "1,3": "A",
+    "2,-4": "O",
+    "2,1": "M",
+    "2,2": "T",
+    "3,-4": "L",
+    "3,-3": "A",
+    "3,1": "E",
+    "4,-4": "A",
+    "4,-2": "I",
+    "4,-1": "I",
+    "4,0": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 1,
+      "r": -2
+    },
+    {
+      "type": "prism",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "rune",
+      "q": 0,
+      "r": 2
+    },
+    {
+      "type": "rune",
+      "q": 1,
+      "r": 1
+    },
+    {
+      "type": "gemRuby",
+      "q": -1,
+      "r": -1
+    },
+    {
+      "type": "gemRuby",
+      "q": 1,
+      "r": -3
+    },
+    {
+      "type": "gemGold",
+      "q": 2,
+      "r": -3
+    },
+    {
+      "type": "gemGold",
+      "q": 0,
+      "r": -1
+    },
+    {
+      "type": "gemSapphire",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "gemSapphire",
+      "q": 1,
+      "r": -1
+    },
+    {
+      "type": "gemEmerald",
+      "q": -1,
+      "r": 3
+    },
+    {
+      "type": "gemEmerald",
+      "q": -2,
+      "r": 2
+    },
+    {
+      "type": "gemEmerald",
+      "q": 0,
+      "r": 3
+    },
+    {
+      "type": "oracle",
+      "q": -1,
+      "r": 2
+    },
+    {
+      "type": "beacon",
+      "q": -4,
+      "r": 2
+    },
+    {
+      "type": "lodestone",
+      "q": -3,
+      "r": 3
+    },
+    {
+      "type": "amethyst",
+      "q": 2,
+      "r": -1
+    },
+    {
+      "type": "selenite",
+      "q": -1,
+      "r": -2
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1059540,
+    "minAchievableScore": 825552,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "UNCONCEIVABLY",
+          "COBZAS",
+          "SQUIBS",
+          "ZEBECK"
+        ],
+        "wordTotal": 425352,
+        "penalty": 121,
+        "finalScore": 425231
+      },
+      {
+        "words": [
+          "UNCONCEIVABLY",
+          "COBZAS",
+          "SQUIBS",
+          "ZEBECK"
+        ],
+        "wordTotal": 425352,
+        "penalty": 121,
+        "finalScore": 425231
+      },
+      {
+        "words": [
+          "UNCONCEIVABLY",
+          "COBZAS",
+          "SQUIBS",
+          "ZEBECK"
+        ],
+        "wordTotal": 425352,
+        "penalty": 121,
+        "finalScore": 425231
+      }
+    ],
+    "generatedAt": "2026-05-12T18:40:04.301Z"
+  }
+}

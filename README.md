@@ -148,6 +148,8 @@ Once redeployed the **Leaderboard** tab in the round-over screen will be live.
 npm run generate   # Regenerates prebuiltBoards.json
 npm run generate:daily-hexacore         # Generate today's Hexacore Daily Challenge board
 npm run generate:daily-hexacore-batch   # Generate next 30 Hexacore Daily Challenge boards
+npm run generate:daily-boards           # Generate boards/daily (default: 30-day rolling window)
+npm run generate:daily-boards:batch     # Generate 30 boards into boards/daily + index.json
 ```
 
 The bootstrap word pool is derived at runtime from `wordList.js` — no separate `bootstrapWords.js` file is needed.
