@@ -311,19 +311,9 @@ function renderQuestsModal() {
   const body = document.getElementById('hx-quests-body');
   if (!body) return;
 
-  const daily  = getDailyQuests();
   const weekly = getWeeklyQuest();
 
   body.innerHTML = '';
-
-  // Daily section
-  const dailySection = document.createElement('div');
-  dailySection.className = 'hx-quest-section';
-  dailySection.innerHTML = '<div class="hx-quest-section-title">📅 DAILY QUESTS</div>';
-  daily.forEach(q => {
-    dailySection.appendChild(buildQuestItem(q));
-  });
-  body.appendChild(dailySection);
 
   // Weekly section
   const weeklySection = document.createElement('div');
