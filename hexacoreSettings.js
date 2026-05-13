@@ -88,7 +88,7 @@ import { getXPData }             from './hexacoreXP.js';
       { id: 'daily',    icon: '📅', title: 'DAILY',           color: '#4cc9f0',
         desc: 'Fixed daily board with no refills. Submit for the best final score.' },
       { id: 'daily-unlimited', icon: '🔄', title: 'DAILY UNLIMITED', color: '#10b981',
-        desc: 'Play today\'s daily board with unlimited refills and no time limit.' },
+        desc: 'Play today\'s daily board, then yesterday\'s, then the day before — unlimited boards in sequence.' },
       { id: 'endless',  icon: '🔥', title: 'ENDLESS',         color: '#f97316',
         desc: 'Survive the ember. Score as high as you can with no limits.' },
       { id: 'campaign', icon: '⚔️', title: 'CAMPAIGN',        color: '#a855f7',

@@ -19,7 +19,7 @@ const MODES = [
     id:    'daily-unlimited',
     icon:  '🔄',
     title: 'DAILY UNLIMITED',
-    desc:  'Play today\'s daily board with unlimited refills and no time limit.',
+    desc:  'Play today\'s daily board, then yesterday\'s, then the day before — unlimited boards in sequence.',
     color: '#10b981',
   },
   {
