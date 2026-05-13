@@ -4932,6 +4932,8 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
   const highScore = Number.isFinite(maxFromMetadata)
     ? Math.max(maxFromMetadata, maxFromStrategies)
     : maxFromStrategies;
+  // Fall back to the player's own score when no strategy data is available so
+  // the "HIGH SCORE" card always shows a meaningful, non-zero value.
   const displayHighScore = highScore > 0 ? highScore : finalScore;
 
   // Build the best-solution block (always visible, no button click required)
