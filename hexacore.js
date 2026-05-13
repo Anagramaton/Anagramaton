@@ -71,6 +71,7 @@ const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000,
 const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
+const HX_DAILY_HUD_OPEN_KEY = 'hexacore_daily_hud_open';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
 let hxGameMode = null; // 'endless' | 'daily' | 'campaign'
@@ -957,16 +958,16 @@ function injectSvgDefs(svg) {
   ensureLinearGradient('hx-digraph-gradient',  '#022c22', '#34d399');
   // Portal: midnight → vivid violet → magenta
   ensureLinearGradient('hx-portal-gradient',   '#1a003f', '#7c3aed');
-  // Rune: midnight blue → electric violet (gradient instead of flat fill)
+  // Rune: imperial violet base with gilded highlights
   if (!document.getElementById('hx-rune-gradient')) {
     const runeGrad = document.createElementNS(SVG_NS, 'linearGradient');
     runeGrad.setAttribute('id', 'hx-rune-gradient');
     runeGrad.setAttribute('x1', '50%'); runeGrad.setAttribute('y1', '100%');
     runeGrad.setAttribute('x2', '50%'); runeGrad.setAttribute('y2', '0%');
     [
-      ['0%',   '#020617'],
-      ['50%',  '#312e81'],
-      ['100%', '#6d28d9'],
+      ['0%',   '#1f1033'],
+      ['55%',  '#5b21b6'],
+      ['100%', '#fbbf24'],
     ].forEach(([offset, color]) => {
       const s = document.createElementNS(SVG_NS, 'stop');
       s.setAttribute('offset', offset);
@@ -2087,6 +2088,8 @@ function ensureHud() {
   document.body.appendChild(wordHud);
 
   if (hxGameMode === 'daily') {
+    const hudShell = document.createElement('div');
+    hudShell.id = 'hx-daily-hud-shell';
     const dailyHud = document.createElement('div');
     dailyHud.id = 'hx-daily-hud';
     dailyHud.innerHTML = `
@@ -2097,7 +2100,36 @@ function ensureHud() {
       <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
       <button id="hx-daily-reset-btn" type="button">RESET BOARD</button>
     `;
-    document.body.appendChild(dailyHud);
+    const dailyHudToggle = document.createElement('button');
+    dailyHudToggle.id = 'hx-daily-hud-toggle';
+    dailyHudToggle.type = 'button';
+    dailyHudToggle.innerHTML = '<span aria-hidden="true">☰</span>';
+    dailyHudToggle.setAttribute('aria-controls', 'hx-daily-hud');
+
+    const setDailyHudOpen = (open) => {
+      hudShell.classList.toggle('hx-daily-hud-collapsed', !open);
+      dailyHudToggle.setAttribute('aria-expanded', String(open));
+      dailyHudToggle.setAttribute('aria-label', open ? 'Hide daily challenge controls' : 'Show daily challenge controls');
+      try {
+        localStorage.setItem(HX_DAILY_HUD_OPEN_KEY, open ? 'open' : 'closed');
+      } catch (_) {}
+    };
+
+    let hudOpen = false;
+    try {
+      const savedHudOpen = localStorage.getItem(HX_DAILY_HUD_OPEN_KEY);
+      if (savedHudOpen === 'open') hudOpen = true;
+    } catch (_) {}
+    setDailyHudOpen(hudOpen);
+
+    dailyHudToggle.addEventListener('click', () => {
+      const isOpen = dailyHudToggle.getAttribute('aria-expanded') === 'true';
+      setDailyHudOpen(!isOpen);
+    });
+
+    hudShell.appendChild(dailyHud);
+    hudShell.appendChild(dailyHudToggle);
+    document.body.appendChild(hudShell);
     dailyHud.querySelector('#hx-daily-submit-btn')?.addEventListener('click', () => completeDailyChallenge());
     dailyHud.querySelector('#hx-daily-reset-btn')?.addEventListener('click', () => {
       if (confirm('Reset the daily board? Your current progress will be lost.')) {
@@ -2168,6 +2200,7 @@ function removeHud() {
   document.getElementById('hx-xp-bar-container')?.remove();
   document.getElementById('hx-word-score-hud')?.remove();
   document.getElementById('hx-live-word')?.remove();
+  document.getElementById('hx-daily-hud-shell')?.remove();
   document.getElementById('hx-daily-hud')?.remove();
   document.getElementById('hx-top-bar')?.remove();
   document.getElementById('hx-powerup-toast')?.remove();
