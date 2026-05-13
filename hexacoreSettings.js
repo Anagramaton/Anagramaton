@@ -83,15 +83,17 @@ import { getXPData }             from './hexacoreXP.js';
     const completed = isDailyCompleted();
     const countdown = completed ? formatCountdown(msUntilMidnightEastern()) : null;
 
-    // Order: DAILY → ENDLESS → CAMPAIGN → QUESTS
+    // Order: DAILY → UNLIMITED → ENDLESS → CAMPAIGN → QUESTS
     const MODES = [
-      { id: 'daily',    icon: '📅', title: 'DAILY',           color: '#4cc9f0',
+      { id: 'daily',     icon: '📅', title: 'DAILY',     color: '#4cc9f0',
         desc: 'Fixed daily board with no refills. Submit for the best final score.' },
-      { id: 'endless',  icon: '🔥', title: 'ENDLESS',         color: '#f97316',
+      { id: 'unlimited', icon: '♾️', title: 'UNLIMITED', color: '#a855f7',
+        desc: 'Practice today\'s daily board with unlimited retries. No leaderboard.' },
+      { id: 'endless',   icon: '🔥', title: 'ENDLESS',   color: '#f97316',
         desc: 'Survive the ember. Score as high as you can with no limits.' },
-      { id: 'campaign', icon: '⚔️', title: 'CAMPAIGN',        color: '#a855f7',
+      { id: 'campaign',  icon: '⚔️', title: 'CAMPAIGN',  color: '#a855f7',
         desc: '50 structured levels with unique objectives and star ratings.' },
-      { id: 'quests',   icon: '📋', title: 'QUESTS',          color: '#fbbf24',
+      { id: 'quests',    icon: '📋', title: 'QUESTS',    color: '#fbbf24',
         desc: 'Complete daily quests and tier challenges to earn XP bonuses.' },
     ];
 

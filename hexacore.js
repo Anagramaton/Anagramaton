@@ -74,8 +74,8 @@ const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
 const HX_DAILY_HUD_OPEN_KEY = 'hexacore_daily_hud_open';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
-let hxGameMode = null; // 'endless' | 'daily' | 'campaign'
-const HX_VALID_MODES = ['endless', 'daily', 'campaign'];
+let hxGameMode = null; // 'endless' | 'daily' | 'campaign' | 'unlimited'
+const HX_VALID_MODES = ['endless', 'daily', 'campaign', 'unlimited'];
 const HX_DAILY_MODE_ID = 'hexacore_daily';
 let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
@@ -1242,6 +1242,7 @@ async function hxLoadDailyManifest() {
 
 /** Persist that the player has finished today's daily (ET date). */
 function hxMarkDailyCompleted() {
+  if (hxGameMode !== 'daily') return; // Don't mark as completed in unlimited mode
   try { localStorage.setItem(HX_DAILY_COMPLETED_KEY, hxEasternDateStr()); } catch (_) {}
 }
 
@@ -1287,7 +1288,7 @@ function getDailyUnusedPenalty() {
 }
 
 function updateDailyHud() {
-  if (hxGameMode !== 'daily') return;
+  if (hxGameMode !== 'daily' && hxGameMode !== 'unlimited') return;
   const root = document.getElementById('hx-daily-hud');
   if (!root) return;
 
@@ -1340,8 +1341,8 @@ function buildGrid(onReady, boardData = null) {
   // Processing ring by ring ensures each tile sees already-placed neighbors.
   const spiralCoords = [...byRing[0], ...byRing[1], ...byRing[2], ...byRing[3], ...byRing[4]];
 
-  // Endless/Campaign keep procedural generation. Daily uses prebuilt fixed letters.
-  const isDaily = hxGameMode === 'daily';
+  // Endless/Campaign keep procedural generation. Daily and Unlimited use prebuilt fixed letters.
+  const isDaily = hxGameMode === 'daily' || hxGameMode === 'unlimited';
   const dailyGrid = (isDaily && boardData?.grid) ? boardData.grid : null;
 
   // Pre-designate vowel slots for endless/campaign generation
@@ -1931,7 +1932,7 @@ function buildTileGuide() {
   });
 
   // ── Daily mode: filter to only tiles present on the current board ─
-  const isDaily = hxGameMode === 'daily';
+  const isDaily = hxGameMode === 'daily' || hxGameMode === 'unlimited';
   let SPECIAL_TILES = ALL_SPECIAL_TILES;
   let ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES;
   let GEM_TILES = ALL_GEM_TILES;
@@ -2087,19 +2088,31 @@ function ensureHud() {
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
 
-  if (hxGameMode === 'daily') {
+  if (hxGameMode === 'daily' || hxGameMode === 'unlimited') {
     const hudShell = document.createElement('div');
     hudShell.id = 'hx-daily-hud-shell';
     const dailyHud = document.createElement('div');
     dailyHud.id = 'hx-daily-hud';
-    dailyHud.innerHTML = `
-      <div class="hx-daily-hud-row"><span>Tiles Left</span><strong id="hx-daily-tiles-left">61</strong></div>
-      <div class="hx-daily-hud-row"><span>Word Total</span><strong id="hx-daily-word-total">0</strong></div>
-      <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
-      <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
-      <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
-      <button id="hx-daily-reset-btn" type="button">RESET BOARD</button>
-    `;
+    if (hxGameMode === 'unlimited') {
+      dailyHud.innerHTML = `
+        <div class="hx-daily-hud-row hx-unlimited-badge-row"><span class="hx-unlimited-badge">♾️ UNLIMITED</span></div>
+        <div class="hx-daily-hud-row"><span>Tiles Left</span><strong id="hx-daily-tiles-left">61</strong></div>
+        <div class="hx-daily-hud-row"><span>Word Total</span><strong id="hx-daily-word-total">0</strong></div>
+        <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
+        <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
+        <button id="hx-daily-submit-btn" type="button">FINISH PRACTICE</button>
+        <button id="hx-daily-reset-btn" type="button">RETRY BOARD</button>
+      `;
+    } else {
+      dailyHud.innerHTML = `
+        <div class="hx-daily-hud-row"><span>Tiles Left</span><strong id="hx-daily-tiles-left">61</strong></div>
+        <div class="hx-daily-hud-row"><span>Word Total</span><strong id="hx-daily-word-total">0</strong></div>
+        <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
+        <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
+        <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
+        <button id="hx-daily-reset-btn" type="button">RESET BOARD</button>
+      `;
+    }
     const dailyHudToggle = document.createElement('button');
     dailyHudToggle.id = 'hx-daily-hud-toggle';
     dailyHudToggle.type = 'button';
@@ -2130,10 +2143,16 @@ function ensureHud() {
     hudShell.appendChild(dailyHud);
     hudShell.appendChild(dailyHudToggle);
     document.body.appendChild(hudShell);
-    dailyHud.querySelector('#hx-daily-submit-btn')?.addEventListener('click', () => completeDailyChallenge());
+    dailyHud.querySelector('#hx-daily-submit-btn')?.addEventListener('click', () => {
+      if (hxGameMode === 'unlimited') completeUnlimitedChallenge();
+      else completeDailyChallenge();
+    });
     dailyHud.querySelector('#hx-daily-reset-btn')?.addEventListener('click', () => {
-      if (confirm('Reset the daily board? Your current progress will be lost.')) {
-        startHexacore('daily');
+      const msg = hxGameMode === 'unlimited'
+        ? 'Retry the unlimited board? Your current practice session will be lost.'
+        : 'Reset the daily board? Your current progress will be lost.';
+      if (confirm(msg)) {
+        startHexacore(hxGameMode);
       }
     });
   }
@@ -4306,9 +4325,9 @@ async function submitHexacoreWord() {
   const consumed = [...hxSelected];
 
   // Detect power-up collection: amethyst, selenite + achievement tiles.
-  // In daily mode any word of 3+ letters collects a power-up tile; in other
-  // modes the word must be 5+ letters.
-  const powerUpMinWordLength = hxGameMode === 'daily' ? 3 : 5;
+  // In daily/unlimited mode any word of 3+ letters collects a power-up tile;
+  // in other modes the word must be 5+ letters.
+  const powerUpMinWordLength = (hxGameMode === 'daily' || hxGameMode === 'unlimited') ? 3 : 5;
   const pendingPowerUpToasts = [];
   if (assembledLength >= powerUpMinWordLength) {
     const hasAmethystTile  = consumed.some(t => t.tileType === 'amethyst');
@@ -4387,7 +4406,11 @@ async function submitHexacoreWord() {
   if (!hxState.gameOver) {
     // Show all post-word UI feedback only after board settle
     checkHexacoreRequirements(word, consumed, wordScore);
-    if (hxGameMode !== 'daily') {
+    if (hxGameMode !== 'daily' && hxGameMode !== 'unlimited') {
+      showXPGainToast(xpGain);
+      if (leveledUp) showPlayerLevelUpBanner(newLevel);
+      updateXPBarFn();
+    } else if (hxGameMode === 'unlimited' && xpGain > 0) {
       showXPGainToast(xpGain);
       if (leveledUp) showPlayerLevelUpBanner(newLevel);
       updateXPBarFn();
@@ -4398,7 +4421,7 @@ async function submitHexacoreWord() {
       setTimeout(() => showAchievementToast(spawn.tileName, spawn.description), i * ACHIEVEMENT_TOAST_STAGGER_MS);
     });
 
-    if (hxGameMode !== 'daily') {
+    if (hxGameMode !== 'daily' && hxGameMode !== 'unlimited') {
       checkLevelUp(oldScore, hxState.score);
       playSound('sfxGemCollect');
       // Spawn gem reward based on word length
@@ -4453,7 +4476,7 @@ async function consumeAndRefill(tilesToRemove) {
     _hxUnregisterTile(tile);
   });
 
-  if (hxGameMode === 'daily') {
+  if (hxGameMode === 'daily' || hxGameMode === 'unlimited') {
     await applyGravity();
     updateDailyHud();
     return;
@@ -4884,20 +4907,25 @@ function spawnSpecialInRows(type, rows) {
 
 function showDailyNoWordsPrompt() {
   document.getElementById('hx-daily-no-words-overlay')?.remove();
+  const isUnlimited = hxGameMode === 'unlimited';
   const overlay = document.createElement('div');
   overlay.id = 'hx-daily-no-words-overlay';
   overlay.innerHTML = `
     <div id="hx-daily-no-words-box">
       <h2>NO MORE VALID WORDS</h2>
-      <p>Are you satisfied with your board?</p>
-      <button id="hx-daily-nw-submit-btn" class="hx-btn-primary" type="button">SUBMIT</button>
+      <p>${isUnlimited ? 'Practice session complete!' : 'Are you satisfied with your board?'}</p>
+      <button id="hx-daily-nw-submit-btn" class="hx-btn-primary" type="button">${isUnlimited ? 'FINISH PRACTICE' : 'SUBMIT'}</button>
       <button id="hx-daily-nw-better-btn" type="button">I CAN DO BETTER</button>
     </div>
   `;
   document.body.appendChild(overlay);
   document.getElementById('hx-daily-nw-submit-btn')?.addEventListener('click', async () => {
     overlay.remove();
-    await completeDailyChallenge();
+    if (isUnlimited) {
+      await completeUnlimitedChallenge();
+    } else {
+      await completeDailyChallenge();
+    }
   });
   document.getElementById('hx-daily-nw-better-btn')?.addEventListener('click', () => {
     overlay.remove();
@@ -4951,6 +4979,105 @@ async function completeDailyChallenge() {
     tilesTotal: 61,
     words,
   });
+}
+
+async function completeUnlimitedChallenge() {
+  if (hxGameMode !== 'unlimited' || hxState.dailySubmitted) return;
+  document.getElementById('hx-daily-no-words-overlay')?.remove();
+  hxState.dailySubmitted = true;
+  hxState.active = false;
+  clearSelection();
+
+  const wordTotal = getDailyWordTotal();
+  const penalty = getDailyUnusedPenalty();
+  const finalScore = Math.max(0, wordTotal - penalty);
+  const tilesUsed = 61 - hxState.tiles.length;
+  const words = hxState.words.map(w => w.word);
+
+  hxState.dailyFinalScore = finalScore;
+  hxState.dailyPenalty = penalty;
+  hxState.dailyTilesUsed = tilesUsed;
+
+  // No leaderboard submission and no daily completion mark for unlimited mode
+  showUnlimitedResults({
+    finalScore,
+    wordTotal,
+    penalty,
+    tilesUsed,
+    tilesTotal: 61,
+    words,
+  });
+}
+
+function showUnlimitedResults({ finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words }) {
+  document.getElementById('hx-daily-result-overlay')?.remove();
+  const allStrategies = hxState.dailyMetadata?.optimalSolutions || [];
+  const bestStrategy  = allStrategies[0] || null;
+  const maxFromStrategies = allStrategies.reduce((maxScore, strategy) => {
+    const candidate = Number(strategy?.finalScore);
+    return Number.isFinite(candidate) ? Math.max(maxScore, candidate) : maxScore;
+  }, 0);
+  const maxFromMetadata = Number(hxState.dailyMetadata?.maxPossibleScore);
+  const highScore = Number.isFinite(maxFromMetadata)
+    ? Math.max(maxFromMetadata, maxFromStrategies)
+    : maxFromStrategies;
+  const displayHighScore = highScore > 0 ? highScore : finalScore;
+
+  let optimalHtml = '';
+  if (bestStrategy) {
+    const wordsMarkup = (bestStrategy.words || [])
+      .map((word) => `<span class="hx-daily-opt-word">${escapeHtml(word)}</span>`)
+      .join('');
+    const bWordTotal = Number(bestStrategy.wordTotal || 0);
+    const bPenalty   = Number(bestStrategy.penalty   || 0);
+    const bFinal     = Number(bestStrategy.finalScore || 0);
+    optimalHtml = `
+      <div class="hx-daily-opt-section">
+        <div class="hx-daily-opt-heading">🏆 OPTIMAL SOLUTION</div>
+        <div class="hx-daily-opt-words">${wordsMarkup}</div>
+        <div class="hx-stats hx-stats--daily hx-stats--opt">
+          <div class="hx-stat-row"><span>Word Score</span><strong>${bWordTotal.toLocaleString()}</strong></div>
+          <div class="hx-stat-row"><span>Penalty</span><strong>-${bPenalty.toLocaleString()}</strong></div>
+          <div class="hx-stat-row hx-stat-row--highlight"><span>Final Score</span><strong>${bFinal.toLocaleString()} pts</strong></div>
+        </div>
+      </div>
+    `;
+  }
+
+  const overlay = document.createElement('div');
+  overlay.id = 'hx-daily-result-overlay';
+  overlay.innerHTML = `
+    <div id="hx-daily-result-box">
+      <div class="hx-practice-mode-banner">♾️ UNLIMITED MODE — Practice Only · No Leaderboard</div>
+      <h2>UNLIMITED COMPLETE</h2>
+      <div class="hx-daily-score-strip">
+        <div class="hx-daily-score-card">
+          <span class="hx-daily-score-label">YOUR SCORE</span>
+          <span class="hx-final-score">${finalScore.toLocaleString()} pts</span>
+        </div>
+        <div class="hx-daily-score-card hx-daily-score-card--high">
+          <span class="hx-daily-score-label">HIGH SCORE</span>
+          <span class="hx-daily-score-value">${displayHighScore.toLocaleString()} pts</span>
+        </div>
+      </div>
+      <div class="hx-stats hx-stats--daily">
+        <div class="hx-stat-row"><span>Words Submitted</span><strong>${words.length}</strong></div>
+        <div class="hx-stat-row"><span>Total Word Score</span><strong>${wordTotal.toLocaleString()}</strong></div>
+        <div class="hx-stat-row"><span>Tiles Used</span><strong>${tilesUsed} / ${tilesTotal}</strong></div>
+        <div class="hx-stat-row"><span>Penalty</span><strong>-${penalty.toLocaleString()}</strong></div>
+      </div>
+      ${optimalHtml}
+      <button id="hx-daily-again-btn" type="button">PLAY AGAIN (UNLIMITED)</button>
+      <button id="hx-daily-menu-btn" type="button">MAIN MENU</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  document.getElementById('hx-daily-again-btn')?.addEventListener('click', () => {
+    overlay.remove();
+    startHexacore('unlimited');
+  });
+  document.getElementById('hx-daily-menu-btn')?.addEventListener('click', () => window.location.reload());
 }
 
 function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words }) {
@@ -5318,7 +5445,7 @@ function hasBlockingHexacoreModal() {
 
 /* ── Progress persistence ──────────────────────────────────────── */
 function saveHexacoreProgress() {
-  if (hxGameMode === 'daily') return;
+  if (hxGameMode === 'daily' || hxGameMode === 'unlimited') return;
   const tiles = [];
   hxTileMap.forEach(tile => {
     tiles.push({
@@ -5356,7 +5483,7 @@ function saveHexacoreProgress() {
 }
 
 function loadHexacoreProgress() {
-  if (hxGameMode === 'daily') return null;
+  if (hxGameMode === 'daily' || hxGameMode === 'unlimited') return null;
   try {
     const json = localStorage.getItem(HX_SAVE_KEY);
     if (!json) return null;
@@ -5478,7 +5605,7 @@ export function startHexacore(mode) {
 
   const initBoard = async () => {
     let boardData = null;
-    if (hxGameMode === 'daily') {
+    if (hxGameMode === 'daily' || hxGameMode === 'unlimited') {
       try {
         boardData = await loadDailyChallengeBoard(hxEasternDateStr());
         hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();
@@ -5584,9 +5711,9 @@ export function startHexacore(mode) {
       showRestoredBanner(hxState.level, hxState.score);
     }
     updateDailyHud();
-    // Rebuild the tile guide after board is ready so daily mode shows only
+    // Rebuild the tile guide after board is ready so daily/unlimited mode shows only
     // the special tiles that actually appear on today's board.
-    if (hxGameMode === 'daily') buildTileGuide();
+    if (hxGameMode === 'daily' || hxGameMode === 'unlimited') buildTileGuide();
   }, boardData);
   };
   void initBoard();

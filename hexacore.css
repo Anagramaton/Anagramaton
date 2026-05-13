@@ -6198,6 +6198,36 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   }
 }
 
+/* ── Unlimited mode styles ─────────────────────────────────────── */
+.hx-unlimited-badge-row {
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.hx-unlimited-badge {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.hx-practice-mode-banner {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
 /* ── Tile Reference Guide ──────────────────────────────────────── */
 #hx-tile-guide {
   position: fixed;
