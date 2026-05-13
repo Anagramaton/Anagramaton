@@ -153,6 +153,9 @@ function pickWordGroup(rng, ranked, count, window = 600) {
   return result;
 }
 
+/** Maximum number of target words selected for a daily board. */
+const DAILY_TARGET_WORD_COUNT = 8;
+
 function chooseTargetWords(rng) {
   const shortCount = 3 + Math.floor(rng() * 3);
   // Use daily-safe lists and larger windows for more day-to-day variety.
@@ -165,14 +168,14 @@ function chooseTargetWords(rng) {
   const words = [];
   let highValueWordCount = 0;
   for (const word of candidates) {
-    if (words.length >= 8) break;
+    if (words.length >= DAILY_TARGET_WORD_COUNT) break;
     if (countHighValueLetters(word) > 0) {
       if (highValueWordCount >= 2) continue;
       highValueWordCount++;
     }
     words.push(word);
   }
-  return words.slice(0, 8);
+  return words.slice(0, DAILY_TARGET_WORD_COUNT);
 }
 
 function shuffled(list, rng) {
