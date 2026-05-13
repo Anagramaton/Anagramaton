@@ -5026,6 +5026,7 @@ function triggerGameOver() {
   cancelSeleniteTargeting();
   clearSelection();
   document.body.classList.remove('hx-active');
+  document.body.removeAttribute('data-hx-mode');
 
   // Restore the user's original theme preference
   restoreUserTheme();
@@ -5582,6 +5583,7 @@ export function startHexacore(mode) {
   localStorage.setItem('theme', 'dark');
 
   document.body.classList.add('hx-active');
+  document.body.setAttribute('data-hx-mode', hxGameMode);
 
   // Clear the shared word display so no stale main-board letters show
   const currentWordEl = document.getElementById('current-word');

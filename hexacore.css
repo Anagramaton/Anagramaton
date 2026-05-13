@@ -6106,7 +6106,13 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
     border-radius: 12px;
     background: rgba(15, 10, 35, 0.95);
     border: 2px solid rgba(76, 201, 240, 0.6);
-    z-index: 980;
+    /* Appear above #hx-top-bar so HUD isn't obscured by power-up bar */
+    z-index: 1210;
+  }
+  /* In daily mode, hide the top-bar MENU button — its role is taken by the daily HUD */
+  body[data-hx-mode="daily"] #hx-level-hud {
+    visibility: hidden;
+    pointer-events: none;
   }
   /* Show the collapsible header on mobile */
   .hx-daily-hud-header {

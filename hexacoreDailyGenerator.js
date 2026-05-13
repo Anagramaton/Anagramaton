@@ -123,7 +123,11 @@ const SHORT_RANKED = makeRanked([...wordList_5, ...wordList_6], 5, 6);
 const MEDIUM_RANKED = makeRanked([...wordList_7, ...wordList_8], 7, 8);
 const LONG_RANKED = makeRanked([...wordList_9, ...wordList_10, ...wordList_11, ...wordList_12, ...wordList_13], 9, 13);
 
-// Count high-value letters (Q, X, Z, J) in a word
+/**
+ * Counts the number of high-value letters (Q, X, Z, J) in a word.
+ * @param {string} word - Uppercase word string
+ * @returns {number} Count of high-value letters
+ */
 function countHighValueLetters(word) {
   let n = 0;
   for (const ch of word) if (HIGH_VALUE_LETTERS.has(ch)) n++;
@@ -160,13 +164,13 @@ function chooseTargetWords(rng) {
   // Cap boards to at most 2 words that contain any Q/X/Z/J letter.
   const words = [];
   let highValueWordCount = 0;
-  for (const w of candidates) {
+  for (const word of candidates) {
     if (words.length >= 8) break;
-    if (countHighValueLetters(w) > 0) {
+    if (countHighValueLetters(word) > 0) {
       if (highValueWordCount >= 2) continue;
       highValueWordCount++;
     }
-    words.push(w);
+    words.push(word);
   }
   return words.slice(0, 8);
 }
@@ -274,7 +278,12 @@ function neighbors(q, r, radius) {
   return result;
 }
 
-/** Cube-coordinate distance between two hex positions. */
+/**
+ * Cube-coordinate hex distance between two positions.
+ * @param {{ q: number, r: number }} a - First hex position
+ * @param {{ q: number, r: number }} b - Second hex position
+ * @returns {number} Integer distance in hex steps
+ */
 function hexDist(a, b) {
   return (Math.abs(a.q - b.q) + Math.abs(a.q + a.r - b.q - b.r) + Math.abs(a.r - b.r)) / 2;
 }
