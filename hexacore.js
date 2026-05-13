@@ -2086,25 +2086,8 @@ function ensureHud() {
   wordHud.id = 'hx-word-score-hud';
   document.body.appendChild(wordHud);
 
-  if (hxGameMode === 'daily') {
-    const dailyHud = document.createElement('div');
-    dailyHud.id = 'hx-daily-hud';
-    dailyHud.innerHTML = `
-      <div class="hx-daily-hud-row"><span>Tiles Left</span><strong id="hx-daily-tiles-left">61</strong></div>
-      <div class="hx-daily-hud-row"><span>Word Total</span><strong id="hx-daily-word-total">0</strong></div>
-      <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
-      <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
-      <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
-      <button id="hx-daily-reset-btn" type="button">RESET BOARD</button>
-    `;
-    document.body.appendChild(dailyHud);
-    dailyHud.querySelector('#hx-daily-submit-btn')?.addEventListener('click', () => completeDailyChallenge());
-    dailyHud.querySelector('#hx-daily-reset-btn')?.addEventListener('click', () => {
-      if (confirm('Reset the daily board? Your current progress will be lost.')) {
-        startHexacore('daily');
-      }
-    });
-  }
+  // Daily mode: stats are shown in the game-over results overlay only.
+  // Action buttons are placed in the center top bar below the MENU button.
 
   // Top bar: centered Hexacore menu button with XP bar below it
   const hxTopBar = document.createElement('div');
@@ -2153,6 +2136,33 @@ function ensureHud() {
   // XP bar is shown for endless/campaign only — daily mode has no XP
   if (hxGameMode !== 'daily') {
     hxTopBar.appendChild(xpBar);
+  }
+  // Daily mode: Submit + Reset buttons sit below the MENU button in the top bar
+  if (hxGameMode === 'daily') {
+    const dailyActionRow = document.createElement('div');
+    dailyActionRow.id = 'hx-daily-action-row';
+
+    const submitBtn = document.createElement('button');
+    submitBtn.id = 'hx-daily-submit-btn';
+    submitBtn.type = 'button';
+    submitBtn.textContent = 'SUBMIT DAILY';
+    submitBtn.setAttribute('aria-label', 'Submit daily challenge');
+    submitBtn.addEventListener('click', () => completeDailyChallenge());
+
+    const resetBtn = document.createElement('button');
+    resetBtn.id = 'hx-daily-reset-btn';
+    resetBtn.type = 'button';
+    resetBtn.textContent = 'RESET BOARD';
+    resetBtn.setAttribute('aria-label', 'Reset the daily board');
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Reset the daily board? Your current progress will be lost.')) {
+        startHexacore('daily');
+      }
+    });
+
+    dailyActionRow.appendChild(submitBtn);
+    dailyActionRow.appendChild(resetBtn);
+    hxTopBar.appendChild(dailyActionRow);
   }
   document.body.appendChild(hxTopBar);
 
@@ -4353,7 +4363,9 @@ async function submitHexacoreWord() {
 
   if (!hxState.gameOver) {
     // Show all post-word UI feedback only after board settle
-    checkHexacoreRequirements(word, consumed, wordScore);
+    if (hxGameMode !== 'daily') {
+      checkHexacoreRequirements(word, consumed, wordScore);
+    }
     if (hxGameMode !== 'daily') {
       showXPGainToast(xpGain);
       if (leveledUp) showPlayerLevelUpBanner(newLevel);
@@ -4975,9 +4987,10 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
       </div>
       <div class="hx-stats hx-stats--daily">
         <div class="hx-stat-row"><span>Words Submitted</span><strong>${words.length}</strong></div>
-        <div class="hx-stat-row"><span>Total Word Score</span><strong>${wordTotal.toLocaleString()}</strong></div>
-        <div class="hx-stat-row"><span>Tiles Used</span><strong>${tilesUsed} / ${tilesTotal}</strong></div>
+        <div class="hx-stat-row"><span>Word Total</span><strong>${wordTotal.toLocaleString()}</strong></div>
+        <div class="hx-stat-row"><span>Tiles Left</span><strong>${tilesTotal - tilesUsed}</strong></div>
         <div class="hx-stat-row"><span>Penalty</span><strong>-${penalty.toLocaleString()}</strong></div>
+        <div class="hx-stat-row hx-stat-row--highlight"><span>Final Score</span><strong>${finalScore.toLocaleString()} pts</strong></div>
       </div>
       ${optimalHtml}
       <button id="hx-daily-leaderboard-btn" type="button">LEADERBOARD</button>
@@ -5009,6 +5022,7 @@ function triggerGameOver() {
   cancelSeleniteTargeting();
   clearSelection();
   document.body.classList.remove('hx-active');
+  document.body.removeAttribute('data-hx-mode');
 
   // Restore the user's original theme preference
   restoreUserTheme();
@@ -5565,6 +5579,7 @@ export function startHexacore(mode) {
   localStorage.setItem('theme', 'dark');
 
   document.body.classList.add('hx-active');
+  document.body.setAttribute('data-hx-mode', hxGameMode);
 
   // Clear the shared word display so no stale main-board letters show
   const currentWordEl = document.getElementById('current-word');
