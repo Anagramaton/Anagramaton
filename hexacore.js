@@ -5488,6 +5488,8 @@ export function startHexacore(mode) {
         console.warn('[hexacore] daily board load failed, falling back to procedural board:', err);
       }
       if (hxGameMode === 'daily') {
+        // Daily challenge tracks solve time for one-shot leaderboard submission.
+        // Daily-unlimited intentionally skips this timestamp because it never submits.
         hxState.dailyStartMs = Date.now();
       }
     }
