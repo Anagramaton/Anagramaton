@@ -4406,11 +4406,7 @@ async function submitHexacoreWord() {
   if (!hxState.gameOver) {
     // Show all post-word UI feedback only after board settle
     checkHexacoreRequirements(word, consumed, wordScore);
-    if (hxGameMode !== 'daily' && hxGameMode !== 'unlimited') {
-      showXPGainToast(xpGain);
-      if (leveledUp) showPlayerLevelUpBanner(newLevel);
-      updateXPBarFn();
-    } else if (hxGameMode === 'unlimited' && xpGain > 0) {
+    if (hxGameMode !== 'daily') {
       showXPGainToast(xpGain);
       if (leveledUp) showPlayerLevelUpBanner(newLevel);
       updateXPBarFn();
@@ -5067,7 +5063,7 @@ function showUnlimitedResults({ finalScore, wordTotal, penalty, tilesUsed, tiles
         <div class="hx-stat-row"><span>Penalty</span><strong>-${penalty.toLocaleString()}</strong></div>
       </div>
       ${optimalHtml}
-      <button id="hx-daily-again-btn" type="button">PLAY AGAIN (UNLIMITED)</button>
+      <button id="hx-daily-again-btn" type="button">PLAY AGAIN</button>
       <button id="hx-daily-menu-btn" type="button">MAIN MENU</button>
     </div>
   `;
