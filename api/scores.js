@@ -42,11 +42,11 @@ export default async function handler(req, res) {
   } else {
     // Validate dailyId matches today
     const todayId = getTodayId();
-    const isHexacoreDailyMode = mode === 'hexacore_daily' || mode === 'hexacore_daily_unlimited';
-    if (!dailyId || (!isHexacoreDailyMode && dailyId !== todayId)) {
+    const isHexacoreDailyVariant = mode === 'hexacore_daily' || mode === 'hexacore_daily_unlimited';
+    if (!dailyId || (!isHexacoreDailyVariant && dailyId !== todayId)) {
       return res.status(400).json({ error: 'Invalid or expired dailyId' });
     }
-    if (isHexacoreDailyMode) {
+    if (isHexacoreDailyVariant) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(String(dailyId))) {
         return res.status(400).json({ error: 'Invalid hexacore daily date format' });
       }

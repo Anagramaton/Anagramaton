@@ -5082,7 +5082,7 @@ async function loadNextDailyUnlimitedBoard() {
   if (hxGameMode !== 'daily-unlimited') return;
 
   // Advance board counter: index 0 = today, 1 = yesterday, 2 = day-before, …
-  hxState.dailyUnlimitedBoardIndex = (hxState.dailyUnlimitedBoardIndex || 0) + 1;
+  hxState.dailyUnlimitedBoardIndex = (hxState.dailyUnlimitedBoardIndex ?? 0) + 1;
   const boardsCompleted = hxState.dailyUnlimitedBoardIndex;
 
   showDailyUnlimitedNextBoardToast(boardsCompleted);
