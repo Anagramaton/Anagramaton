@@ -71,7 +71,6 @@ const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000,
 const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
-const HX_DAILY_TUTORIAL_KEY = 'hxDailyTutorialShown_v1';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
 let hxGameMode = null; // 'endless' | 'daily' | 'campaign'
@@ -154,7 +153,7 @@ const BEACON_TIME_LIMIT_MS          = 1200;
 const LEXICON_MAX_RESULTS           = 200;
 const LEXICON_TIME_LIMIT_MS         = 1500;
 const DAILY_ENDCHECK_MAX_RESULTS    = 1;
-const DAILY_ENDCHECK_TIME_LIMIT_MS  = 300;
+const DAILY_ENDCHECK_TIME_LIMIT_MS  = 1500;
 
 /* ── Letter pool — mirrors Scrabble tile distribution for maximum playability ──
  * Counts sourced from: https://norvig.com/scrabble-letter-scores.html
@@ -320,6 +319,7 @@ const hxState = {
   portalWordsRemaining: 0, // words left before portal auto-closes (3 when opened)
   dailyBoardDate: null,
   dailyMetadata: null,
+  dailySpecialTiles: null,
   dailyStartMs: 0,
   dailySubmitted: false,
   dailyFinalScore: 0,
@@ -378,9 +378,6 @@ let hxUpdateViewForBoard = null;
 let hxCompletedReqs     = new Set(); // IDs of completed requirements (persists across games)
 let hxIntroducedTileTypes = new Set();
 let hxQueuedTileIntros    = new Set();
-let hxPendingTutorialModals = [];
-let hxTutorialQueueRunning = false;
-let hxTutorialModalOpen    = false;
 let hxAchievementLettersCollected = new Set();
 
 // Power-up targeting mode state
@@ -1443,7 +1440,6 @@ function buildGrid(onReady, boardData = null) {
         );
         _hxRegisterTile(tile, hxState.digraphTiles);
         applyTileType(tile);
-        enqueueTileIntroduction(tile);
       } else {
         convertTile(tile, spec.type);
       }
@@ -1739,7 +1735,6 @@ function applyLevelUpRewards() {
     else if (targetType === 'lodestone') _hxRegisterTile(tile, hxState.lodestoneTiles);
     else if (targetType === 'amethyst')  _hxRegisterTile(tile, hxState.amethystTiles);
     applyTileType(tile);
-    enqueueTileIntroduction(tile);
     tile.element.classList.add(`hx-${targetType}-spawn`);
     tile.element.addEventListener('animationend', () => {
       tile.element.classList.remove(`hx-${targetType}-spawn`);
@@ -1899,45 +1894,83 @@ function buildTileGuide() {
   document.getElementById('hx-tile-guide')?.remove();
 
   // ── Tile data ──────────────────────────────────────────────────
-  const SPECIAL_TILES = [
-    { name: 'Ember',   grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn \u2014 use it before it falls off.' },
-    { name: 'Prism',   grad: ['#7c1a85','#db2777'], desc: 'Doubles the total score of any word it joins.' },
-    { name: 'Rune',    grad: ['#312e81','#6d28d9'], desc: 'Wildcard \u2014 pick any letter when you play it.' },
-    { name: 'Digraph', grad: ['#022c22','#34d399'], desc: 'Two letters in one tile; both count toward the word.' },
-    { name: 'Portal',  grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles \u2014 include both in one word.' },
+  const ALL_SPECIAL_TILES = [
+    { key: 'ember',    name: 'Ember',    grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn \u2014 use it before it falls off.' },
+    { key: 'prism',    name: 'Prism',    grad: ['#7c1a85','#db2777'], desc: 'Doubles the total score of any word it joins.' },
+    { key: 'rune',     name: 'Rune',     grad: ['#312e81','#6d28d9'], desc: 'Wildcard \u2014 pick any letter when you play it.' },
+    { key: 'digraph',  name: 'Digraph',  grad: ['#022c22','#34d399'], desc: 'Two letters in one tile; both count toward the word.' },
+    { key: 'portal',   name: 'Portal',   grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles \u2014 include both in one word.' },
   ];
 
-  const ACHIEVEMENT_TILES = [
-    { name: 'Amethyst', grad: ['#7e22ce','#d946ef'], desc: 'Transmute: change any tile\u2019s letter.' },
-    { name: 'Selenite', grad: ['#0c4a6e','#e0f2fe'], desc: 'Phase Swap: swap any two tiles on the board.' },
-    { name: 'Oracle',   grad: ['#334155','#f8fafc'], desc: 'Oracle Sight: highlights the longest word path.' },
-    { name: 'Beacon',   grad: ['#b45309','#fef08a'], desc: 'Beacon Burst: reveals the highest-scoring word.' },
-    { name: 'Eclipse',  grad: ['#1c1917','#4c1d95'], desc: 'Eclipse: inverts letter point values for one word.' },
-    { name: 'Lodestone',grad: ['#3f3f46','#e4e4e7'], desc: 'Lodestone: boosts your next gem-score bonus.' },
-    { name: 'Lexicon',  grad: ['#2563eb','#e879f9'], desc: 'Lexicon: reveals top-scoring word options.' },
+  const ALL_ACHIEVEMENT_TILES = [
+    { key: 'amethyst',  name: 'Amethyst',  grad: ['#7e22ce','#d946ef'], desc: 'Transmute: change any tile\u2019s letter.' },
+    { key: 'selenite',  name: 'Selenite',  grad: ['#0c4a6e','#e0f2fe'], desc: 'Phase Swap: swap any two tiles on the board.' },
+    { key: 'oracle',    name: 'Oracle',    grad: ['#334155','#f8fafc'], desc: 'Oracle Sight: highlights the longest word path.' },
+    { key: 'beacon',    name: 'Beacon',    grad: ['#b45309','#fef08a'], desc: 'Beacon Burst: reveals the highest-scoring word.' },
+    { key: 'eclipse',   name: 'Eclipse',   grad: ['#1c1917','#4c1d95'], desc: 'Eclipse: inverts letter point values for one word.' },
+    { key: 'lodestone', name: 'Lodestone', grad: ['#3f3f46','#e4e4e7'], desc: 'Lodestone: boosts your next gem-score bonus.' },
+    { key: 'lexicon',   name: 'Lexicon',   grad: ['#2563eb','#e879f9'], desc: 'Lexicon: reveals top-scoring word options.' },
   ];
 
   // Derive gem guide rows from the canonical GEM_MULTIPLIERS constant so
   // multiplier values and the list of gem types stay in sync automatically.
-  const GEM_TILES = Object.entries(GEM_MULTIPLIERS).map(([key, mult]) => {
+  const ALL_GEM_TILES = Object.entries(GEM_MULTIPLIERS).map(([key, mult]) => {
     // Convert camelCase key to display name: 'gemImperialJade' → 'Imperial Jade'
     const displayName = key
       .replace(/^gem/, '')
       .replace(/([A-Z])/g, ' $1')
       .trim();
-    return { name: displayName, grad: HX_GUIDE_GEM_GRADS[key] ?? ['#334155','#94a3b8'], mult };
+    return {
+      key,
+      name: displayName,
+      grad: HX_GUIDE_GEM_GRADS[key] ?? ['#334155','#94a3b8'],
+      mult,
+      desc: `Score multiplier: \u00d7${mult}. Include in words for massive point bonuses.`,
+    };
   });
 
-  // ── Helper: mini pointy-top hexagon rendered as a clip-path div ─
-  function miniHex(grad) {
+  // ── Daily mode: filter to only tiles present on the current board ─
+  const isDaily = hxGameMode === 'daily';
+  let SPECIAL_TILES = ALL_SPECIAL_TILES;
+  let ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES;
+  let GEM_TILES = ALL_GEM_TILES;
+
+  if (isDaily && hxState.dailySpecialTiles) {
+    const boardTypes = new Set(hxState.dailySpecialTiles.map(s => s.type));
+    // Portal appears as two tiles with the same type
+    SPECIAL_TILES = ALL_SPECIAL_TILES.filter(t => boardTypes.has(t.key));
+    ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES.filter(t => boardTypes.has(t.key));
+    GEM_TILES = ALL_GEM_TILES.filter(t => boardTypes.has(t.key));
+  }
+
+  // ── Helper: mini pointy-top hexagon ─────────────────────────────
+  function miniHex(grad, large = false) {
     const hex = document.createElement('div');
-    hex.className = 'hx-guide-hex';
+    hex.className = large ? 'hx-guide-hex hx-guide-hex--large' : 'hx-guide-hex';
     hex.style.background = `linear-gradient(135deg, ${grad[0]}, ${grad[1]})`;
     return hex;
   }
 
-  // ── Helper: build a single tile row ─────────────────────────────
-  function tileRow(grad, name, right) {
+  // ── Helper: build a tile entry ───────────────────────────────────
+  // In daily mode: large card layout with bigger hex + full description.
+  // In other modes: compact row layout.
+  function tileRow(grad, name, right, large = false) {
+    if (large) {
+      const card = document.createElement('div');
+      card.className = 'hx-guide-card';
+      const hexEl = miniHex(grad, true);
+      const info = document.createElement('div');
+      info.className = 'hx-guide-card-info';
+      const nameEl = document.createElement('div');
+      nameEl.className = 'hx-guide-card-name';
+      nameEl.textContent = name;
+      const descEl = document.createElement('div');
+      descEl.className = 'hx-guide-card-desc';
+      descEl.textContent = right;
+      info.append(nameEl, descEl);
+      card.append(hexEl, info);
+      return card;
+    }
     const row = document.createElement('div');
     row.className = 'hx-guide-row';
     const nameEl = document.createElement('span');
@@ -1961,14 +1994,20 @@ function buildTileGuide() {
   // ── Build panel ──────────────────────────────────────────────────
   const panel = document.createElement('div');
   panel.id = 'hx-tile-guide';
+  if (isDaily) panel.classList.add('hx-tile-guide--daily');
   panel.setAttribute('aria-label', 'Tile reference guide');
 
   const toggle = document.createElement('button');
   toggle.id = 'hx-tile-guide-toggle';
   toggle.type = 'button';
-  toggle.textContent = '▼ TILE GUIDE';
   toggle.setAttribute('aria-expanded', 'false');
   toggle.setAttribute('aria-controls', 'hx-tile-guide-body');
+  toggle.setAttribute('aria-label', 'Toggle tile reference guide');
+  // Icon-only: use a text node for better screen-reader compatibility
+  const iconSpan = document.createElement('span');
+  iconSpan.setAttribute('aria-hidden', 'true');
+  iconSpan.textContent = '\u2b21'; // ⬡ white hexagon
+  toggle.appendChild(iconSpan);
 
   const body = document.createElement('div');
   body.id = 'hx-tile-guide-body';
@@ -1976,27 +2015,48 @@ function buildTileGuide() {
   body.hidden = true;
 
   // Section 1 — Special tiles
-  body.appendChild(sectionHeader('Special Tiles'));
-  SPECIAL_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc)));
+  if (SPECIAL_TILES.length > 0) {
+    if (!isDaily) body.appendChild(sectionHeader('Special Tiles'));
+    SPECIAL_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc, isDaily)));
+  }
 
   // Section 2 — Achievement / power-up tiles
-  body.appendChild(sectionHeader('Achievement Tiles'));
-  ACHIEVEMENT_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc)));
+  if (ACHIEVEMENT_TILES.length > 0) {
+    if (!isDaily) body.appendChild(sectionHeader('Achievement Tiles'));
+    ACHIEVEMENT_TILES.forEach(t => body.appendChild(tileRow(t.grad, t.name, t.desc, isDaily)));
+  }
 
-  // Section 3 — Gems (multiplier only, no prose)
-  body.appendChild(sectionHeader('Gems  (score × multiplier)'));
-  GEM_TILES.forEach(t => {
-    const row = tileRow(t.grad, t.name, `\u00d7${t.mult}`);
-    row.classList.add('hx-guide-row--gem');
-    body.appendChild(row);
-  });
+  // Section 3 — Gems (multiplier only, no prose — both modes)
+  if (GEM_TILES.length > 0) {
+    if (!isDaily) {
+      body.appendChild(sectionHeader('Gems (score \u00d7 multiplier)'));
+      GEM_TILES.forEach(t => {
+        const row = tileRow(t.grad, t.name, `\u00d7${t.mult}`);
+        row.classList.add('hx-guide-row--gem');
+        body.appendChild(row);
+      });
+    } else {
+      GEM_TILES.forEach(t => {
+        const card = tileRow(t.grad, t.name, `\u00d7${t.mult}`, true);
+        card.classList.add('hx-guide-card--gem');
+        body.appendChild(card);
+      });
+    }
+  }
+
+  // Daily mode: show a notice if no special tiles are on the board
+  if (isDaily && SPECIAL_TILES.length === 0 && ACHIEVEMENT_TILES.length === 0 && GEM_TILES.length === 0) {
+    const note = document.createElement('div');
+    note.className = 'hx-guide-empty-note';
+    note.textContent = 'No special tiles on this board.';
+    body.appendChild(note);
+  }
 
   toggle.addEventListener('click', () => {
     const open = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!open));
     body.hidden = open;
     body.setAttribute('aria-hidden', String(open));
-    toggle.textContent = open ? '▼ TILE GUIDE' : '▲ TILE GUIDE';
   });
 
   panel.appendChild(toggle);
@@ -3616,9 +3676,11 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
     if (wordStr.length >= 4 && isValidWord(wordStr) && !seen.has(wordStr)) {
       seen.add(wordStr);
       results.push({ word: wordStr, score: scoreWord(path), path: [...path] });
+      if (results.length >= maxResults) return; // early exit once we have enough
     }
 
     if (path.length >= MAX_WORD_PATH_DEPTH) return; // limit depth
+    if (results.length >= maxResults) return; // propagate early exit up through the DFS
     if (performance.now() >= deadline) return;
 
     const last = path[path.length - 1];
@@ -3628,6 +3690,7 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
     });
 
     for (const neighbor of neighbors) {
+      if (results.length >= maxResults) return; // propagate early exit
       const key = hxKey(neighbor.q, neighbor.r);
       visitedKeys.add(key);
       path.push(neighbor);
@@ -3640,6 +3703,7 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
 
   for (const startTile of hxState.tiles) {
     if (performance.now() >= deadline) break;
+    if (results.length >= maxResults) break; // stop once we have enough results
     const visitedKeys = new Set([hxKey(startTile.q, startTile.r)]);
     dfs([startTile], visitedKeys);
   }
@@ -4256,10 +4320,7 @@ async function submitHexacoreWord() {
       updatePowerUpBar();
       pendingPowerUpToasts.push('lexicon');
     }
-    enqueueCollectedTileModals(consumed);
   }
-
-  // Check achievement rewards (spawns new achievement tiles)
   const pendingAchievementSpawns = checkAchievementRewards(word, consumed, wordScore, portalUsedInWord);
 
   // If any portal tile is in the consumed set, close the portal now (before
@@ -4330,7 +4391,6 @@ async function submitHexacoreWord() {
       }
     }
 
-    await maybeRunTutorialModalQueue();
     saveHexacoreProgress();
   }
 }
@@ -4546,7 +4606,6 @@ async function refillGrid() {
       } else {
         tile.tileType = 'normal';
       }
-      enqueueTileIntroduction(tile);
       tile.s        = -q - r;
 
       hxState.tiles.push(tile);
@@ -4640,7 +4699,6 @@ function transformTileToGem(tile, gemType) {
   tile.tileType = gemType;
   _hxRegisterTile(tile, hxState[GEM_STATE_KEY[gemType]]);
   applyTileType(tile);
-  enqueueTileIntroduction(tile);
   const spawnClass = GEM_SPAWN_CLASS[gemType];
   tile.element.classList.add(spawnClass);
   tile.element.addEventListener('animationend', () => {
@@ -4773,7 +4831,6 @@ function convertTile(target, type) {
   }
 
   applyTileType(target);
-  enqueueTileIntroduction(target);
 
   const spawnClass = `hx-${type}-spawn`;
   target.element.classList.add(spawnClass);
@@ -5186,61 +5243,6 @@ async function waitForBoardToSettle(maxMs = 2000) {
   }
 }
 
-function enqueueTutorialModal(item) {
-  hxPendingTutorialModals.push(item);
-  // Queue is started explicitly after the board intro animation completes
-  // (via onReady callback) and after each word submission — not here.
-}
-
-function enqueueTileIntroduction(tile) {
-  if (!tile) return;
-  const type = tile.tileType || 'normal';
-  // Skip basic letter/digraph tiles — no intro modal needed for them
-  if (type === 'normal' || type === 'digraph') return;
-  if (hxIntroducedTileTypes.has(type) || hxQueuedTileIntros.has(type)) return;
-  hxQueuedTileIntros.add(type);
-  enqueueTutorialModal({ kind: 'intro', tileType: type, tile });
-}
-
-function enqueueCollectedTileModals(consumedTiles) {
-  if (!Array.isArray(consumedTiles) || consumedTiles.length === 0) return;
-
-  if (consumedTiles.some(t => t.tileType === 'amethyst')) {
-    enqueueTutorialModal({
-      kind: 'collection',
-      title: 'Amethyst Collected',
-      description: "You've collected an Amethyst tile and gained 1 Transmute charge.",
-      tileType: 'amethyst',
-    });
-  }
-
-  if (consumedTiles.some(t => t.tileType === 'selenite')) {
-    enqueueTutorialModal({
-      kind: 'collection',
-      title: 'Selenite Collected',
-      description: "You've collected a Selenite tile and gained 1 Phase Swap charge.",
-      tileType: 'selenite',
-    });
-  }
-
-  HX_ACHIEVEMENT_TILE_ORDER.forEach(type => {
-    if (!consumedTiles.some(t => t.tileType === type)) return;
-    hxAchievementLettersCollected.add(type);
-    const letter = HX_ACHIEVEMENT_TILE_META[type].letter;
-    const collected = hxAchievementLettersCollected.size;
-    enqueueTutorialModal({
-      kind: 'collection',
-      title: `${HX_ACHIEVEMENT_TILE_META[type].label} Collected`,
-      description: `You've collected "${letter}"! Progress: ${getAchievementCollectionProgress()} (${collected}/${HX_ACHIEVEMENT_TILE_ORDER.length})`,
-      tileType: type,
-    });
-  });
-}
-
-function queueBoardTileIntroductions() {
-  hxState.tiles.forEach(tile => enqueueTileIntroduction(tile));
-}
-
 function hasBlockingHexacoreModal() {
   return !!(
     document.getElementById('hx-rune-picker')
@@ -5248,95 +5250,6 @@ function hasBlockingHexacoreModal() {
     || document.getElementById('hx-challenges-modal')
     || document.getElementById('hx-gameover-overlay')
   );
-}
-
-function closeTutorialModal(resolve, overlay, wasActive, restoreFocusEl) {
-  overlay.remove();
-  if (restoreFocusEl?.isConnected) restoreFocusEl.focus();
-  hxTutorialModalOpen = false;
-  if (!hxState.gameOver) hxState.active = wasActive;
-  resolve();
-}
-
-function showTutorialModal(item, tile) {
-  return new Promise(resolve => {
-    const wasActive = hxState.active;
-    hxState.active = false;
-    hxTutorialModalOpen = true;
-
-    // Full-screen click-blocker — transparent so the board stays fully visible
-    const overlay = document.createElement('div');
-    overlay.id = 'hx-tutorial-modal';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-labelledby', 'hx-tutorial-modal-title');
-    overlay.setAttribute('aria-describedby', 'hx-tutorial-modal-desc');
-
-    const box = document.createElement('div');
-    box.className = 'hx-tutorial-modal-box';
-
-    const title = document.createElement('h3');
-    title.id = 'hx-tutorial-modal-title';
-    title.className = 'hx-tutorial-modal-title';
-    title.textContent = item.kind === 'intro'
-      ? `${getTileTypeDisplayName(item.tileType)} Found`
-      : (item.title || 'Tile Collected');
-
-    const desc = document.createElement('p');
-    desc.id = 'hx-tutorial-modal-desc';
-    desc.className = 'hx-tutorial-modal-desc';
-    desc.textContent = item.kind === 'intro'
-      ? getTileIntroDescription(item.tileType)
-      : item.description;
-
-    const ok = document.createElement('button');
-    ok.type = 'button';
-    ok.className = 'hx-tutorial-modal-ok';
-    ok.textContent = 'OK';
-
-    const restoreFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    ok.addEventListener('click', () => closeTutorialModal(resolve, overlay, wasActive, restoreFocusEl), { once: true });
-
-    box.append(title, desc, ok);
-    overlay.appendChild(box);
-    document.body.appendChild(overlay);
-
-    requestAnimationFrame(() => { ok.focus(); });
-  });
-}
-
-async function maybeRunTutorialModalQueue() {
-  if (hxTutorialQueueRunning || hxTutorialModalOpen || hxState.gameOver || !hxSvg) return;
-  if (hxPendingTutorialModals.length === 0) return;
-
-  hxTutorialQueueRunning = true;
-  try {
-    while (hxPendingTutorialModals.length > 0 && !hxState.gameOver) {
-      if (hasBlockingHexacoreModal()) {
-        await delay(120);
-        continue;
-      }
-      await waitForBoardToSettle();
-      if (hxTutorialModalOpen || hxState.gameOver) break;
-
-      const item = hxPendingTutorialModals.shift();
-      if (!item) break;
-
-      if (item.kind === 'intro') {
-        const target = hxState.tiles.includes(item.tile) ? item.tile : findTileByType(item.tileType);
-        hxQueuedTileIntros.delete(item.tileType);
-        if (!target || hxIntroducedTileTypes.has(item.tileType)) continue;
-        await showTutorialModal(item, target);
-        hxIntroducedTileTypes.add(item.tileType);
-        saveHexacoreTutorialState();
-      } else {
-        const target = item.tileType ? findTileByType(item.tileType) : null;
-        await showTutorialModal(item, target);
-      }
-    }
-  } finally {
-    hxTutorialQueueRunning = false;
-  }
 }
 
 /* ── Progress persistence ──────────────────────────────────────── */
@@ -5403,9 +5316,6 @@ export function startHexacore(mode) {
   hxCompletedReqs = new Set(loadHexacoreRequirements());
   hxIntroducedTileTypes = new Set(loadHexacoreTutorialState());
   hxQueuedTileIntros = new Set();
-  hxPendingTutorialModals = [];
-  hxTutorialQueueRunning = false;
-  hxTutorialModalOpen = false;
   hxAchievementLettersCollected = new Set();
 
   // Initialise quest system
@@ -5468,6 +5378,7 @@ export function startHexacore(mode) {
     portalWordsRemaining: 0,
     dailyBoardDate: null,
     dailyMetadata: null,
+    dailySpecialTiles: null,
     dailyStartMs: 0,
     dailySubmitted: false,
     dailyFinalScore: 0,
@@ -5508,6 +5419,7 @@ export function startHexacore(mode) {
         boardData = await loadDailyChallengeBoard(hxEasternDateStr());
         hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();
         hxState.dailyMetadata = boardData?.metadata || null;
+        hxState.dailySpecialTiles = boardData?.specialTiles || null;
       } catch (err) {
         console.warn('[hexacore] daily board load failed, falling back to procedural board:', err);
       }
@@ -5607,40 +5519,10 @@ export function startHexacore(mode) {
 
       showRestoredBanner(hxState.level, hxState.score);
     }
-    // For daily mode, prepend a one-time tutorial before tile introductions
-    if (hxGameMode === 'daily') {
-      let shownTutorial = false;
-      try { shownTutorial = !!localStorage.getItem(HX_DAILY_TUTORIAL_KEY); } catch (_) {}
-      if (!shownTutorial) {
-        const DAILY_INTRO_SLIDES = [
-          {
-            title: 'WELCOME TO DAILY',
-            description:
-              "Every day a brand-new board appears for everyone. Use all the tiles wisely — " +
-              "unused tiles subtract from your final score. You get one attempt, so make it count!",
-          },
-          {
-            title: 'GEMS & SPECIAL TILES',
-            description:
-              "5 gem tiles are hidden across the board. Include them in words to multiply your score. " +
-              "Prism doubles a word's total, Rune is a wildcard, and Digraph tiles count as two letters.",
-          },
-          {
-            title: 'POWER-UPS & ACHIEVEMENTS',
-            description:
-              "Amethyst and Selenite grant Transmute and Phase Swap power-ups when used in any word. " +
-              "Eclipse and Lodestone are achievement tiles — collect them for special effects. Portal links two corner tiles.",
-          },
-        ];
-        for (const slide of DAILY_INTRO_SLIDES) {
-          hxPendingTutorialModals.unshift({ kind: 'dailyIntro', title: slide.title, description: slide.description });
-        }
-        try { localStorage.setItem(HX_DAILY_TUTORIAL_KEY, '1'); } catch (_) {}
-      }
-    }
-    queueBoardTileIntroductions();
-    void maybeRunTutorialModalQueue();
     updateDailyHud();
+    // Rebuild the tile guide after board is ready so daily mode shows only
+    // the special tiles that actually appear on today's board.
+    if (hxGameMode === 'daily') buildTileGuide();
   }, boardData);
   };
   void initBoard();
@@ -5693,7 +5575,6 @@ export function stopHexacore() {
 
   document.getElementById('hx-gameover-overlay')?.remove();
   document.getElementById('hx-challenges-modal')?.remove();
-  document.getElementById('hx-tutorial-modal')?.remove();
   document.getElementById('hx-req-toast')?.remove();
   removeHud();
   const gridSvg = document.getElementById('hex-grid');
