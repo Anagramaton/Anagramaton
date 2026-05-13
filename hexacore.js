@@ -4922,21 +4922,64 @@ async function completeDailyChallenge() {
 
 function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words }) {
   document.getElementById('hx-daily-result-overlay')?.remove();
+  const allStrategies = hxState.dailyMetadata?.optimalSolutions || [];
+  const bestStrategy  = allStrategies[0] || null;
+  const maxFromStrategies = allStrategies.reduce((maxScore, strategy) => {
+    const candidate = Number(strategy?.finalScore);
+    return Number.isFinite(candidate) ? Math.max(maxScore, candidate) : maxScore;
+  }, 0);
+  const maxFromMetadata = Number(hxState.dailyMetadata?.maxPossibleScore);
+  const highScore = Number.isFinite(maxFromMetadata)
+    ? Math.max(maxFromMetadata, maxFromStrategies)
+    : maxFromStrategies;
+  // Fall back to the player's own score when no strategy data is available so
+  // the "HIGH SCORE" card always shows a meaningful, non-zero value.
+  const displayHighScore = highScore > 0 ? highScore : finalScore;
+
+  // Build the best-solution block (always visible, no button click required)
+  let optimalHtml = '';
+  if (bestStrategy) {
+    const wordsMarkup = (bestStrategy.words || [])
+      .map((word) => `<span class="hx-daily-opt-word">${escapeHtml(word)}</span>`)
+      .join('');
+    const bWordTotal = Number(bestStrategy.wordTotal || 0);
+    const bPenalty   = Number(bestStrategy.penalty   || 0);
+    const bFinal     = Number(bestStrategy.finalScore || 0);
+    optimalHtml = `
+      <div class="hx-daily-opt-section">
+        <div class="hx-daily-opt-heading">🏆 OPTIMAL SOLUTION</div>
+        <div class="hx-daily-opt-words">${wordsMarkup}</div>
+        <div class="hx-stats hx-stats--daily hx-stats--opt">
+          <div class="hx-stat-row"><span>Word Score</span><strong>${bWordTotal.toLocaleString()}</strong></div>
+          <div class="hx-stat-row"><span>Penalty</span><strong>-${bPenalty.toLocaleString()}</strong></div>
+          <div class="hx-stat-row hx-stat-row--highlight"><span>Final Score</span><strong>${bFinal.toLocaleString()} pts</strong></div>
+        </div>
+      </div>
+    `;
+  }
+
   const overlay = document.createElement('div');
   overlay.id = 'hx-daily-result-overlay';
   overlay.innerHTML = `
     <div id="hx-daily-result-box">
       <h2>DAILY CHALLENGE COMPLETE</h2>
-      <div class="hx-final-score">${finalScore.toLocaleString()}</div>
-      <div class="hx-stats">
-        Submission complete<br>
-        Words Submitted: ${words.length}<br>
-        Total Word Score: ${wordTotal.toLocaleString()}<br>
-        Tiles Used: ${tilesUsed} / ${tilesTotal}<br>
-        Penalty: -${penalty.toLocaleString()}
+      <div class="hx-daily-score-strip">
+        <div class="hx-daily-score-card">
+          <span class="hx-daily-score-label">YOUR SCORE</span>
+          <span class="hx-final-score">${finalScore.toLocaleString()} pts</span>
+        </div>
+        <div class="hx-daily-score-card hx-daily-score-card--high">
+          <span class="hx-daily-score-label">HIGH SCORE</span>
+          <span class="hx-daily-score-value">${displayHighScore.toLocaleString()} pts</span>
+        </div>
       </div>
-      <div id="hx-daily-opt-wrap" style="margin-bottom:1rem;font-size:0.74rem;min-height:2rem;color:#cbd5e1;"></div>
-      <button id="hx-daily-opt-btn" class="hx-btn-primary" type="button">VIEW OPTIMAL SOLUTIONS</button>
+      <div class="hx-stats hx-stats--daily">
+        <div class="hx-stat-row"><span>Words Submitted</span><strong>${words.length}</strong></div>
+        <div class="hx-stat-row"><span>Total Word Score</span><strong>${wordTotal.toLocaleString()}</strong></div>
+        <div class="hx-stat-row"><span>Tiles Used</span><strong>${tilesUsed} / ${tilesTotal}</strong></div>
+        <div class="hx-stat-row"><span>Penalty</span><strong>-${penalty.toLocaleString()}</strong></div>
+      </div>
+      ${optimalHtml}
       <button id="hx-daily-leaderboard-btn" type="button">LEADERBOARD</button>
       <button id="hx-daily-again-btn" type="button">PLAY AGAIN</button>
       <button id="hx-daily-menu-btn" type="button">MAIN MENU</button>
@@ -4944,18 +4987,6 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
   `;
   document.body.appendChild(overlay);
 
-  document.getElementById('hx-daily-opt-btn')?.addEventListener('click', () => {
-    const wrap = document.getElementById('hx-daily-opt-wrap');
-    if (!wrap) return;
-    const strategies = (hxState.dailyMetadata?.optimalSolutions || []).slice(0, 3);
-    if (strategies.length === 0) {
-      wrap.textContent = 'No strategy data available.';
-      return;
-    }
-    wrap.innerHTML = strategies.map((s, i) =>
-      `<div style="text-align:left;margin:0.4rem 0;"><strong>#${i + 1}</strong> · ${(s.finalScore || 0).toLocaleString()} pts · ${(s.words || []).join(', ')}</div>`
-    ).join('');
-  });
   document.getElementById('hx-daily-leaderboard-btn')?.addEventListener('click', () => openLeaderboardsModal('daily'));
   document.getElementById('hx-daily-again-btn')?.addEventListener('click', () => {
     overlay.remove();
