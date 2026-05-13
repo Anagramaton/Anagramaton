@@ -74,8 +74,8 @@ const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
 const HX_DAILY_HUD_OPEN_KEY = 'hexacore_daily_hud_open';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
-let hxGameMode = null; // 'endless' | 'daily' | 'campaign'
-const HX_VALID_MODES = ['endless', 'daily', 'campaign'];
+let hxGameMode = null; // 'endless' | 'daily' | 'daily-unlimited' | 'campaign'
+const HX_VALID_MODES = ['endless', 'daily', 'daily-unlimited', 'campaign'];
 const HX_DAILY_MODE_ID = 'hexacore_daily';
 let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
@@ -1340,8 +1340,8 @@ function buildGrid(onReady, boardData = null) {
   // Processing ring by ring ensures each tile sees already-placed neighbors.
   const spiralCoords = [...byRing[0], ...byRing[1], ...byRing[2], ...byRing[3], ...byRing[4]];
 
-  // Endless/Campaign keep procedural generation. Daily uses prebuilt fixed letters.
-  const isDaily = hxGameMode === 'daily';
+  // Endless/Campaign keep procedural generation. Daily variants use prebuilt fixed letters.
+  const isDaily = hxGameMode === 'daily' || hxGameMode === 'daily-unlimited';
   const dailyGrid = (isDaily && boardData?.grid) ? boardData.grid : null;
 
   // Pre-designate vowel slots for endless/campaign generation
@@ -1931,7 +1931,7 @@ function buildTileGuide() {
   });
 
   // ── Daily mode: filter to only tiles present on the current board ─
-  const isDaily = hxGameMode === 'daily';
+  const isDaily = hxGameMode === 'daily' || hxGameMode === 'daily-unlimited';
   let SPECIAL_TILES = ALL_SPECIAL_TILES;
   let ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES;
   let GEM_TILES = ALL_GEM_TILES;
@@ -2069,7 +2069,7 @@ function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
   // Mode colors matching the mode-select screen
-  const HX_MODE_COLORS = { endless: '#f97316', daily: '#4cc9f0', campaign: '#a855f7' };
+  const HX_MODE_COLORS = { endless: '#f97316', daily: '#4cc9f0', 'daily-unlimited': '#10b981', campaign: '#a855f7' };
 
   // Score HUD — split into number + label spans, with a small mode color dot
   const hud = document.createElement('div');
@@ -5478,7 +5478,7 @@ export function startHexacore(mode) {
 
   const initBoard = async () => {
     let boardData = null;
-    if (hxGameMode === 'daily') {
+    if (hxGameMode === 'daily' || hxGameMode === 'daily-unlimited') {
       try {
         boardData = await loadDailyChallengeBoard(hxEasternDateStr());
         hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();
@@ -5487,7 +5487,9 @@ export function startHexacore(mode) {
       } catch (err) {
         console.warn('[hexacore] daily board load failed, falling back to procedural board:', err);
       }
-      hxState.dailyStartMs = Date.now();
+      if (hxGameMode === 'daily') {
+        hxState.dailyStartMs = Date.now();
+      }
     }
 
     buildGrid(() => {
@@ -5584,9 +5586,9 @@ export function startHexacore(mode) {
       showRestoredBanner(hxState.level, hxState.score);
     }
     updateDailyHud();
-    // Rebuild the tile guide after board is ready so daily mode shows only
+    // Rebuild the tile guide after board is ready so daily variants show only
     // the special tiles that actually appear on today's board.
-    if (hxGameMode === 'daily') buildTileGuide();
+    if (hxGameMode === 'daily' || hxGameMode === 'daily-unlimited') buildTileGuide();
   }, boardData);
   };
   void initBoard();
