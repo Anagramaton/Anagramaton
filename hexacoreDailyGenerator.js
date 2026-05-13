@@ -35,6 +35,7 @@ const GEM_MULTIPLIERS = {
 
 const DAILY_ROTATING_GEM_TYPES = ['gemEmerald', 'gemGold'];
 const DAILY_ROTATING_RUNE_TYPES = ['rune', 'amethyst'];
+const MAX_PORTAL_CANDIDATE_POOL = 12;
 
 // The 6 corner tiles of the radius-4 hex grid that may become portals
 const DAILY_PORTAL_CORNERS = [
@@ -411,7 +412,10 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     .filter(Boolean)
     .sort((a, b) => (b.weight || 0) - (a.weight || 0));
 
-  const firstPortal = shuffled(portalCandidates.slice(0, Math.min(12, portalCandidates.length)), rng)[0];
+  const firstPortal = shuffled(
+    portalCandidates.slice(0, Math.min(MAX_PORTAL_CANDIDATE_POOL, portalCandidates.length)),
+    rng,
+  )[0];
   if (firstPortal) {
     specials.push({ type: 'portal', role: 'entry', q: firstPortal.q, r: firstPortal.r });
     taken.add(firstPortal.key);
@@ -420,7 +424,10 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
       .filter(c => c.key !== firstPortal.key)
       .map(c => ({ ...c, weight: (c.weight || 0) + portalHexDistance(firstPortal, c) * 3 }))
       .sort((a, b) => (b.weight || 0) - (a.weight || 0));
-    const secondPortal = shuffled(secondPortalCandidates.slice(0, Math.min(12, secondPortalCandidates.length)), rng)[0];
+    const secondPortal = shuffled(
+      secondPortalCandidates.slice(0, Math.min(MAX_PORTAL_CANDIDATE_POOL, secondPortalCandidates.length)),
+      rng,
+    )[0];
     if (secondPortal) {
       specials.push({ type: 'portal', role: 'exit', q: secondPortal.q, r: secondPortal.r });
       taken.add(secondPortal.key);

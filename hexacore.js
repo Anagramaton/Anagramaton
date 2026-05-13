@@ -2119,7 +2119,6 @@ function ensureHud() {
     try {
       const savedHudOpen = localStorage.getItem(HX_DAILY_HUD_OPEN_KEY);
       if (savedHudOpen === 'open') hudOpen = true;
-      else if (savedHudOpen === 'closed') hudOpen = false;
     } catch (_) {}
     setDailyHudOpen(hudOpen);
 
