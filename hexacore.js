@@ -2029,7 +2029,7 @@ function buildTileGuide() {
   // Section 3 — Gems (multiplier only, no prose — both modes)
   if (GEM_TILES.length > 0) {
     if (!isDaily) {
-      body.appendChild(sectionHeader('Gems  (score \u00d7 multiplier)'));
+      body.appendChild(sectionHeader('Gems (score \u00d7 multiplier)'));
       GEM_TILES.forEach(t => {
         const row = tileRow(t.grad, t.name, `\u00d7${t.mult}`);
         row.classList.add('hx-guide-row--gem');
