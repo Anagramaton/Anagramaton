@@ -2,77 +2,77 @@
   "date": "unlimited-081",
   "grid": {
     "-1,1": "S",
-    "-1,2": "W",
-    "-2,2": "I",
-    "-2,1": "V",
-    "-1,0": "E",
+    "-2,1": "W",
+    "-2,0": "I",
+    "-1,0": "V",
+    "0,-1": "E",
     "0,0": "L",
-    "0,1": "B",
-    "1,0": "L",
-    "1,-1": "O",
-    "0,-1": "C",
-    "1,-2": "K",
-    "2,-2": "S",
-    "0,-3": "M",
-    "0,-2": "A",
-    "-1,-1": "X",
-    "-2,0": "W",
-    "2,-1": "S",
-    "1,3": "J",
-    "0,3": "O",
+    "1,0": "B",
+    "1,-1": "L",
+    "2,-1": "O",
+    "2,0": "C",
+    "1,1": "K",
+    "0,1": "S",
+    "1,-4": "M",
+    "1,-3": "A",
+    "0,-2": "X",
+    "1,-2": "W",
+    "2,2": "J",
+    "1,2": "O",
     "0,2": "Y",
-    "1,2": "F",
-    "1,1": "U",
-    "2,1": "L",
-    "2,0": "L",
-    "3,0": "Y",
-    "2,-4": "W",
-    "1,-3": "H",
-    "2,-3": "Y",
-    "-1,-3": "Q",
-    "-1,-2": "U",
-    "-4,3": "S",
-    "-3,3": "K",
-    "-3,2": "V",
-    "-3,1": "Y",
-    "-4,0": "U",
-    "-4,1": "T",
-    "-4,2": "A",
-    "-4,4": "I",
-    "-3,-1": "R",
-    "-3,0": "L",
-    "-3,4": "B",
-    "-2,-2": "E",
-    "-2,-1": "I",
-    "-2,3": "P",
-    "-2,4": "U",
-    "-1,3": "A",
-    "-1,4": "L",
-    "0,-4": "E",
-    "0,4": "O",
-    "1,-4": "E",
-    "2,2": "U",
-    "3,-4": "E",
+    "-1,3": "F",
+    "-1,2": "U",
+    "-2,3": "L",
+    "-2,2": "L",
+    "-3,3": "Y",
+    "-1,-2": "I",
+    "-1,-1": "E",
+    "-2,-1": "R",
+    "3,-4": "B",
     "3,-3": "O",
-    "3,-2": "N",
-    "3,-1": "O",
-    "3,1": "P",
-    "4,-4": "Y",
-    "4,-3": "A",
+    "2,-2": "R",
+    "3,-2": "Z",
+    "3,-1": "I",
+    "-3,4": "B",
+    "-3,2": "A",
+    "-4,0": "E",
+    "-4,1": "M",
+    "-4,2": "A",
+    "-4,3": "I",
+    "-4,4": "I",
+    "-3,-1": "A",
+    "-3,0": "D",
+    "-3,1": "A",
+    "-2,-2": "Z",
+    "-2,4": "E",
+    "-1,-3": "N",
+    "-1,4": "U",
+    "0,-4": "E",
+    "0,-3": "D",
+    "0,3": "W",
+    "0,4": "B",
+    "1,3": "O",
+    "2,-4": "H",
+    "2,-3": "A",
+    "2,1": "E",
+    "3,0": "A",
+    "3,1": "S",
+    "4,-4": "E",
+    "4,-3": "R",
     "4,-2": "M",
-    "4,-1": "Q",
-    "4,0": "E"
+    "4,-1": "C",
+    "4,0": "L"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": 0,
-      "r": -2
+      "q": 2,
+      "r": -1
     },
     {
-      "type": "gemEmerald",
-      "q": 1,
-      "r": -1
+      "type": "gemGold",
+      "q": 2,
+      "r": -2
     },
     {
       "type": "rune",
@@ -81,88 +81,230 @@
     },
     {
       "type": "digraph",
-      "q": -3,
+      "q": 0,
       "r": 3,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -2,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 1,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
       "digraph": "TH"
     },
     {
       "type": "digraph",
+      "q": -4,
+      "r": 0,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 0,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
       "q": -3,
-      "r": 1,
-      "digraph": "ER"
+      "r": 0,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -4,
+      "digraph": "AN"
     },
     {
       "type": "digraph",
       "q": -1,
       "r": -1,
-      "digraph": "ON"
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -3,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 2,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "WH"
     },
     {
       "type": "portal",
       "role": "entry",
       "q": 0,
-      "r": -1
+      "r": 1
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 1,
-      "r": 0
+      "q": -1,
+      "r": 1
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2036,
+    "maxPossibleScore": 2544,
     "minAchievableScore": 2544,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "SWIVELBLOCKS",
+          "BORZOI",
           "MAXWELLS",
-          "WHACKY",
-          "QUACKS",
           "JOYFULLY"
         ],
-        "wordTotal": 2852,
-        "penalty": 107,
-        "finalScore": 2745
+        "wordTotal": 2784,
+        "penalty": 110,
+        "finalScore": 2674
       },
       {
         "words": [
+          "BORZOI",
           "SWIVELBLOCKS",
           "MAXWELLS",
-          "WHACKY",
-          "QUACKS",
           "JOYFULLY"
         ],
-        "wordTotal": 2852,
-        "penalty": 107,
-        "finalScore": 2745
+        "wordTotal": 2784,
+        "penalty": 110,
+        "finalScore": 2674
       },
       {
         "words": [
           "SWIVELBLOCKS",
           "MAXWELLS",
           "JOYFULLY",
-          "WHACKY"
+          "BORZOI"
         ],
-        "wordTotal": 2504,
-        "penalty": 120,
-        "finalScore": 2384
+        "wordTotal": 2784,
+        "penalty": 110,
+        "finalScore": 2674
       }
     ],
     "difficulty": "easy",
     "optimalMoves": 6,
-    "averageWordLength": 7.2,
+    "averageWordLength": 6.7,
     "gemDensity": 0.016,
     "solutionPath": [
-      "SWIVELBLOCK",
-      "MAYFLY",
-      "MONOPULSES",
-      "BUPKIS",
-      "WHEAL",
-      "ULYIE"
+      "WARLOCKS",
+      "JOYFULLY",
+      "CASHABLE",
+      "SWIVED",
+      "BRAZA",
+      "BOWIE"
     ],
-    "generatedAt": "2026-05-13T11:49:24.984Z"
+    "generatedAt": "2026-05-13T11:52:43.715Z"
   }
 }

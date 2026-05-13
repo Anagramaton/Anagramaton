@@ -1,241 +1,250 @@
 {
   "date": "unlimited-094",
   "grid": {
-    "0,0": "O",
+    "-2,0": "O",
     "-1,0": "V",
-    "-2,1": "E",
-    "-1,1": "R",
-    "-2,2": "S",
-    "-1,2": "U",
-    "0,1": "B",
-    "1,1": "S",
-    "2,0": "C",
-    "1,0": "R",
-    "1,-1": "I",
-    "2,-2": "B",
+    "-1,-1": "E",
+    "0,-1": "R",
+    "0,0": "S",
+    "-1,1": "U",
+    "-1,2": "B",
+    "0,2": "S",
+    "1,1": "C",
+    "0,1": "R",
+    "1,0": "I",
+    "2,0": "B",
     "2,-1": "E",
+    "0,-3": "W",
+    "0,-2": "A",
+    "1,-3": "X",
     "1,-2": "W",
-    "0,-1": "A",
-    "0,-2": "X",
-    "-1,-1": "W",
-    "-2,0": "E",
-    "-3,2": "D",
-    "4,-2": "Z",
-    "3,-2": "E",
-    "3,0": "K",
-    "4,-4": "O",
-    "3,-3": "X",
-    "2,-3": "O",
-    "1,-3": "S",
-    "-2,-2": "T",
-    "-1,-2": "O",
-    "-2,-1": "Z",
-    "-3,0": "S",
-    "-1,3": "Z",
-    "0,2": "Z",
-    "1,2": "Y",
-    "-4,0": "Z",
-    "-4,1": "A",
-    "-4,2": "Y",
-    "-4,3": "R",
-    "-4,4": "U",
+    "2,-2": "E",
+    "1,-1": "D",
+    "3,-2": "Z",
+    "2,1": "E",
+    "1,2": "K",
+    "-4,1": "N",
+    "-3,1": "U",
+    "-2,1": "Z",
+    "-3,2": "Z",
+    "-2,2": "L",
+    "-3,3": "E",
+    "3,-1": "Y",
+    "-4,2": "P",
+    "-4,0": "A",
+    "-4,3": "E",
+    "-4,4": "Y",
     "-3,-1": "A",
-    "-3,1": "H",
-    "-3,3": "M",
-    "-3,4": "G",
-    "-2,3": "I",
-    "-2,4": "L",
-    "-1,-3": "K",
-    "-1,4": "A",
-    "0,-4": "I",
-    "0,-3": "R",
-    "0,3": "I",
-    "0,4": "E",
-    "1,-4": "K",
-    "1,3": "O",
-    "2,-4": "T",
-    "2,1": "I",
-    "2,2": "Y",
-    "3,-4": "O",
-    "3,-1": "E",
-    "3,1": "E",
-    "4,-3": "S",
-    "4,-1": "A",
-    "4,0": "A"
+    "-3,0": "O",
+    "-3,4": "A",
+    "-2,-2": "F",
+    "-2,-1": "I",
+    "-2,3": "N",
+    "-2,4": "N",
+    "-1,-3": "A",
+    "-1,-2": "D",
+    "-1,3": "U",
+    "-1,4": "R",
+    "0,-4": "E",
+    "0,3": "S",
+    "0,4": "S",
+    "1,-4": "D",
+    "1,3": "I",
+    "2,-4": "U",
+    "2,-3": "E",
+    "2,2": "R",
+    "3,-4": "C",
+    "3,-3": "E",
+    "3,0": "R",
+    "3,1": "S",
+    "4,-4": "R",
+    "4,-3": "P",
+    "4,-2": "U",
+    "4,-1": "T",
+    "4,0": "E"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": 2,
-      "r": -2
+      "q": -3,
+      "r": 3
     },
     {
       "type": "gemEmerald",
       "q": 1,
-      "r": -1
+      "r": -2
     },
     {
-      "type": "rune",
-      "q": -2,
-      "r": 0
-    },
-    {
-      "type": "digraph",
+      "type": "amethyst",
       "q": -3,
-      "r": 2,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -4,
-      "digraph": "NT"
+      "r": 4
     },
     {
       "type": "digraph",
       "q": -1,
-      "r": 1,
+      "r": 0,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -2,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
       "digraph": "LL"
     },
     {
       "type": "digraph",
-      "q": 2,
+      "q": 0,
       "r": 1,
-      "digraph": "GH"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": 1,
-      "digraph": "CO"
+      "digraph": "UN"
     },
     {
       "type": "digraph",
       "q": 1,
       "r": 3,
-      "digraph": "CH"
+      "digraph": "ES"
     },
     {
       "type": "digraph",
-      "q": -4,
-      "r": 1,
-      "digraph": "ST"
+      "q": -1,
+      "r": -2,
+      "digraph": "ON"
     },
     {
       "type": "digraph",
       "q": 1,
-      "r": -4,
-      "digraph": "WH"
+      "r": 1,
+      "digraph": "QU"
     },
     {
       "type": "digraph",
-      "q": 2,
-      "r": -1,
+      "q": 0,
+      "r": 0,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
       "digraph": "AL"
     },
     {
       "type": "digraph",
-      "q": 0,
-      "r": -1,
+      "q": -1,
+      "r": 3,
       "digraph": "EA"
     },
     {
       "type": "digraph",
-      "q": 4,
-      "r": -4,
-      "digraph": "TY"
+      "q": 1,
+      "r": -3,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 3,
+      "digraph": "LE"
     },
     {
       "type": "digraph",
       "q": -2,
       "r": -1,
-      "digraph": "LE"
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "AN"
     },
     {
       "type": "digraph",
       "q": 2,
-      "r": -3,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": 0,
-      "digraph": "CK"
+      "r": 1,
+      "digraph": "IN"
     },
     {
       "type": "digraph",
       "q": 0,
-      "r": -2,
-      "digraph": "IO"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -3,
-      "digraph": "ES"
+      "r": 2,
+      "digraph": "RE"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": -2,
-      "r": 2
+      "q": 2,
+      "r": 0
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 2,
-      "r": 0
+      "q": -2,
+      "r": 2
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2112,
-    "minAchievableScore": 5200,
+    "maxPossibleScore": 1971,
+    "minAchievableScore": 1312,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
+          "WAXWEEDS",
           "OVERSUBSCRIBE",
-          "OXBOWS",
-          "ZEBECK",
-          "WAXWEEDS"
+          "PUZZLE",
+          "NUZZLE"
         ],
-        "wordTotal": 3708,
-        "penalty": 131,
-        "finalScore": 3577
-      },
-      {
-        "words": [
-          "OVERSUBSCRIBE",
-          "OXBOWS",
-          "ZEBECK",
-          "WAXWEEDS"
-        ],
-        "wordTotal": 3708,
-        "penalty": 131,
-        "finalScore": 3577
+        "wordTotal": 2074,
+        "penalty": 114,
+        "finalScore": 1960
       },
       {
         "words": [
           "OVERSUBSCRIBE",
           "WAXWEEDS",
-          "OXBOWS",
-          "ZEBECK"
+          "PUZZLE",
+          "NUZZLE"
         ],
-        "wordTotal": 3708,
-        "penalty": 131,
-        "finalScore": 3577
+        "wordTotal": 2074,
+        "penalty": 114,
+        "finalScore": 1960
+      },
+      {
+        "words": [
+          "WAXWEEDS",
+          "PUZZLE",
+          "NUZZLE",
+          "DWEEBY"
+        ],
+        "wordTotal": 1760,
+        "penalty": 148,
+        "finalScore": 1612
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 3,
-    "averageWordLength": 8.7,
+    "optimalMoves": 6,
+    "averageWordLength": 7.5,
     "gemDensity": 0.016,
     "solutionPath": [
-      "SUBSCRIBES",
-      "SOZZLIER",
-      "WORKWEEK"
+      "WAXWEEDS",
+      "SUBSCRIBERS",
+      "PUZZLE",
+      "RUNOVERS",
+      "DUKERY",
+      "FAINED"
     ],
-    "generatedAt": "2026-05-13T11:49:25.397Z"
+    "generatedAt": "2026-05-13T11:52:44.072Z"
   }
 }

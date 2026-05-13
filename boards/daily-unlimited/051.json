@@ -1,209 +1,240 @@
 {
   "date": "unlimited-051",
   "grid": {
-    "-1,-1": "B",
-    "-1,0": "O",
-    "-2,1": "M",
-    "-1,1": "B",
-    "-1,2": "A",
-    "0,2": "S",
+    "2,-1": "P",
+    "1,-1": "O",
+    "1,-2": "D",
+    "0,-1": "Z",
+    "0,-2": "O",
+    "-1,-1": "L",
+    "-1,0": "I",
+    "0,0": "Z",
+    "0,1": "A",
     "1,1": "T",
-    "0,1": "I",
-    "1,0": "C",
-    "0,0": "A",
-    "0,-1": "L",
-    "1,-1": "L",
-    "1,-2": "Y",
-    "2,0": "K",
-    "3,-1": "W",
-    "2,-1": "O",
-    "2,-2": "R",
-    "3,-3": "K",
-    "-3,4": "B",
-    "-3,3": "E",
-    "-2,2": "W",
-    "-2,3": "R",
-    "-1,3": "P",
-    "-4,2": "B",
-    "-3,1": "A",
-    "-2,0": "W",
-    "0,-2": "E",
-    "-3,-1": "B",
-    "-2,-1": "I",
-    "-1,-2": "B",
-    "0,-3": "R",
-    "-2,-2": "J",
-    "-4,0": "R",
-    "-4,1": "R",
-    "-4,3": "S",
-    "-4,4": "H",
+    "0,2": "I",
+    "-1,2": "O",
+    "-1,1": "N",
+    "-3,-1": "W",
     "-3,0": "I",
-    "-3,2": "F",
-    "-2,4": "I",
-    "-1,-3": "E",
-    "-1,4": "A",
-    "0,-4": "Z",
-    "0,3": "I",
-    "0,4": "E",
-    "1,-4": "E",
-    "1,-3": "O",
-    "1,2": "A",
-    "1,3": "E",
-    "2,-4": "I",
-    "2,-3": "A",
-    "2,1": "G",
-    "2,2": "O",
-    "3,-4": "A",
-    "3,-2": "S",
-    "3,0": "O",
-    "3,1": "T",
-    "4,-4": "S",
-    "4,-3": "U",
-    "4,-2": "A",
-    "4,-1": "I",
-    "4,0": "L"
+    "-2,0": "C",
+    "-3,1": "K",
+    "-2,1": "Y",
+    "-3,2": "U",
+    "-2,2": "P",
+    "-2,3": "S",
+    "4,-1": "B",
+    "3,0": "U",
+    "2,0": "F",
+    "1,0": "F",
+    "2,-2": "S",
+    "3,-1": "I",
+    "-1,-2": "Y",
+    "1,-3": "G",
+    "-4,0": "I",
+    "-4,1": "M",
+    "-4,2": "I",
+    "-4,3": "E",
+    "-4,4": "I",
+    "-3,3": "W",
+    "-3,4": "O",
+    "-2,-2": "O",
+    "-2,-1": "A",
+    "-2,4": "A",
+    "-1,-3": "T",
+    "-1,3": "O",
+    "-1,4": "E",
+    "0,-4": "U",
+    "0,-3": "R",
+    "0,3": "L",
+    "0,4": "P",
+    "1,-4": "N",
+    "1,2": "W",
+    "1,3": "A",
+    "2,-4": "A",
+    "2,-3": "M",
+    "2,1": "I",
+    "2,2": "C",
+    "3,-4": "N",
+    "3,-3": "E",
+    "3,-2": "M",
+    "3,1": "R",
+    "4,-4": "E",
+    "4,-3": "I",
+    "4,-2": "O",
+    "4,0": "T"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": 0,
-      "r": 0
+      "q": -1,
+      "r": 1
     },
     {
       "type": "gemEmerald",
-      "q": 4,
-      "r": -3
+      "q": 1,
+      "r": 0
     },
     {
-      "type": "rune",
+      "type": "amethyst",
+      "q": 3,
+      "r": 1
+    },
+    {
+      "type": "digraph",
       "q": -2,
-      "r": -1
+      "r": -2,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "LE"
     },
     {
       "type": "digraph",
       "q": -3,
-      "r": 1,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": 4,
       "r": -1,
-      "digraph": "RE"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 3,
-      "digraph": "GH"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": -2,
-      "digraph": "ED"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -4,
-      "digraph": "QU"
+      "digraph": "CO"
     },
     {
       "type": "digraph",
       "q": 2,
       "r": -3,
-      "digraph": "TY"
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 0,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 3,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 1,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "RE"
     },
     {
       "type": "digraph",
       "q": 1,
       "r": -1,
-      "digraph": "NT"
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -3,
+      "digraph": "AL"
     },
     {
       "type": "digraph",
       "q": -1,
       "r": 0,
-      "digraph": "TH"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": 3,
-      "digraph": "CO"
+      "digraph": "EA"
     },
     {
       "type": "digraph",
       "q": -4,
-      "r": 4,
-      "digraph": "LL"
+      "r": 2,
+      "digraph": "ON"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": 0,
-      "r": 1
+      "q": 2,
+      "r": -1
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 0,
-      "r": 0
+      "q": 2,
+      "r": -2
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1200,
-    "minAchievableScore": 1248,
+    "maxPossibleScore": 2600,
+    "minAchievableScore": 2600,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "BOMBASTICALLY",
-          "BACKWORK",
-          "BAWBLE",
-          "JIBBER"
+          "PODZOLIZATION",
+          "GOZZAN",
+          "BUFFOS",
+          "BIFFOS",
+          "WICKYUPS"
         ],
-        "wordTotal": 1304,
-        "penalty": 116,
-        "finalScore": 1188
+        "wordTotal": 2652,
+        "penalty": 105,
+        "finalScore": 2547
       },
       {
         "words": [
-          "BOMBASTICALLY",
-          "BACKWORK",
-          "BAWBLE",
-          "JIBBER"
+          "PODZOLIZATION",
+          "GOZZAN",
+          "BUFFOS",
+          "BIFFOS",
+          "WICKYUPS"
         ],
-        "wordTotal": 1304,
-        "penalty": 116,
-        "finalScore": 1188
+        "wordTotal": 2652,
+        "penalty": 105,
+        "finalScore": 2547
       },
       {
         "words": [
-          "BOMBASTICALLY",
-          "BACKWORK",
-          "BAWBLE",
-          "JIBBER"
+          "PODZOLIZATION",
+          "WICKYUPS",
+          "GOZZAN",
+          "BUFFOS"
         ],
-        "wordTotal": 1304,
-        "penalty": 116,
-        "finalScore": 1188
+        "wordTotal": 2316,
+        "penalty": 107,
+        "finalScore": 2209
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 6.3,
+    "optimalMoves": 6,
+    "averageWordLength": 7.2,
     "gemDensity": 0.016,
     "solutionPath": [
-      "STICKWORKS",
-      "BRAMBLY",
-      "WOWFER",
-      "ZEREBA",
-      "PIBAL",
-      "TOGAE",
-      "AIOLI"
+      "LAICIZATION",
+      "BUFFI",
+      "WOODSMAN",
+      "LEASOWE",
+      "WIKIUP",
+      "CRIMEN"
     ],
-    "generatedAt": "2026-05-13T11:49:24.346Z"
+    "generatedAt": "2026-05-13T11:52:42.990Z"
   }
 }

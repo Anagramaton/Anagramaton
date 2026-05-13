@@ -1,227 +1,95 @@
 {
   "date": "unlimited-100",
   "grid": {
-    "1,1": "B",
+    "-1,0": "B",
+    "-1,1": "E",
+    "-2,2": "D",
+    "-1,2": "A",
+    "0,1": "Z",
+    "0,0": "Z",
+    "1,-1": "L",
     "1,0": "E",
-    "0,0": "D",
-    "0,1": "A",
-    "-1,2": "Z",
-    "-2,2": "Z",
-    "-1,1": "L",
-    "-2,1": "E",
-    "-2,0": "M",
-    "-1,0": "E",
-    "0,-1": "N",
-    "1,-1": "T",
-    "2,0": "C",
-    "2,-1": "O",
-    "3,-2": "X",
-    "2,-2": "S",
-    "2,-3": "W",
-    "1,-2": "A",
-    "0,-2": "I",
-    "-1,-1": "V",
-    "-2,4": "W",
-    "-2,3": "I",
-    "-1,3": "E",
-    "0,2": "N",
-    "1,2": "S",
-    "-3,4": "V",
-    "-3,2": "I",
-    "-4,2": "M",
-    "-4,0": "U",
-    "-4,1": "S",
-    "-4,3": "I",
-    "-4,4": "U",
-    "-3,-1": "H",
-    "-3,0": "O",
-    "-3,1": "B",
-    "-3,3": "R",
-    "-2,-2": "A",
-    "-2,-1": "H",
-    "-1,-3": "O",
-    "-1,-2": "E",
-    "-1,4": "A",
-    "0,-4": "T",
-    "0,-3": "L",
+    "2,-1": "M",
+    "2,0": "E",
+    "1,1": "N",
+    "1,2": "T",
+    "-2,0": "C",
+    "-2,-1": "O",
+    "-1,-1": "X",
+    "-1,-2": "S",
+    "0,-2": "W",
+    "0,-1": "A",
+    "1,-2": "I",
+    "2,-2": "N",
+    "-1,4": "P",
     "0,3": "A",
-    "0,4": "O",
-    "1,-4": "U",
-    "1,-3": "R",
-    "1,3": "Z",
-    "2,-4": "N",
-    "2,1": "O",
-    "2,2": "G",
-    "3,-4": "E",
-    "3,-3": "O",
-    "3,-1": "S",
-    "3,0": "D",
-    "3,1": "S",
-    "4,-4": "T",
-    "4,-3": "S",
+    "0,2": "X",
+    "-1,3": "W",
+    "-2,3": "X",
+    "-2,1": "J",
+    "-3,1": "E",
+    "-3,0": "T",
     "4,-2": "W",
-    "4,-1": "E",
-    "4,0": "O"
+    "3,-2": "O",
+    "3,-1": "B",
+    "2,1": "D",
+    "2,-3": "G",
+    "-4,0": "Y",
+    "-4,1": "H",
+    "-4,2": "E",
+    "-4,3": "O",
+    "-4,4": "Y",
+    "-3,-1": "W",
+    "-3,2": "H",
+    "-3,3": "E",
+    "-3,4": "I",
+    "-2,-2": "I",
+    "-2,4": "S",
+    "-1,-3": "S",
+    "0,-4": "O",
+    "0,-3": "M",
+    "0,4": "Y",
+    "1,-4": "E",
+    "1,-3": "U",
+    "1,3": "E",
+    "2,-4": "G",
+    "2,2": "T",
+    "3,-4": "A",
+    "3,-3": "V",
+    "3,0": "Y",
+    "3,1": "I",
+    "4,-4": "V",
+    "4,-3": "U",
+    "4,-1": "A",
+    "4,0": "T"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": -2,
-      "r": 1
+      "q": 0,
+      "r": -1
     },
     {
-      "type": "gemGold",
+      "type": "gemEmerald",
       "q": 4,
-      "r": -4
+      "r": -1
     },
     {
       "type": "rune",
-      "q": -1,
-      "r": 3
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": -4,
-      "digraph": "UN"
+      "q": 0,
+      "r": 2
     },
     {
       "type": "digraph",
       "q": 1,
       "r": -2,
-      "digraph": "ES"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": -1,
-      "digraph": "QU"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 4,
-      "digraph": "CH"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 1,
       "digraph": "NG"
     },
     {
       "type": "digraph",
-      "q": -3,
-      "r": -1,
-      "digraph": "ON"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": 2,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 2,
-      "digraph": "TH"
-    },
-    {
-      "type": "digraph",
       "q": 1,
-      "r": -1,
-      "digraph": "EA"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": -1,
-      "digraph": "CK"
-    },
-    {
-      "type": "digraph",
-      "q": 4,
-      "r": -3,
-      "digraph": "ST"
-    },
-    {
-      "type": "digraph",
-      "q": -4,
-      "r": 0,
-      "digraph": "LY"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -4,
-      "digraph": "CO"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
       "r": 3,
-      "digraph": "ER"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -2,
-      "digraph": "IN"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -3,
-      "digraph": "HE"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -3,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": 4,
-      "r": -2,
-      "digraph": "WH"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 2,
-      "digraph": "GH"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -4,
-      "digraph": "ED"
-    },
-    {
-      "type": "digraph",
-      "q": 4,
-      "r": 0,
-      "digraph": "AL"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": 0,
-      "digraph": "LL"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 2,
-      "digraph": "RE"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -4,
-      "digraph": "EN"
+      "digraph": "LE"
     },
     {
       "type": "digraph",
@@ -230,70 +98,74 @@
       "digraph": "IO"
     },
     {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "GH"
+    },
+    {
       "type": "portal",
       "role": "entry",
-      "q": -1,
-      "r": 1
+      "q": 2,
+      "r": 0
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 0,
+      "q": -1,
       "r": 0
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1986,
-    "minAchievableScore": 2544,
+    "maxPossibleScore": 1579,
+    "minAchievableScore": 1272,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "BEDAZZLEMENT",
-          "VIZZIE",
           "COXSWAIN",
-          "MIZZEN"
+          "ABJECT",
+          "BEZZLING"
         ],
-        "wordTotal": 2160,
-        "penalty": 127,
-        "finalScore": 2033
+        "wordTotal": 1876,
+        "penalty": 156,
+        "finalScore": 1720
+      },
+      {
+        "words": [
+          "COXSWAIN",
+          "ABJECT",
+          "BEDAZZLEMENT",
+          "BEZZLING"
+        ],
+        "wordTotal": 1876,
+        "penalty": 156,
+        "finalScore": 1720
       },
       {
         "words": [
           "BEDAZZLEMENT",
-          "VIZZIE",
           "COXSWAIN",
-          "MIZZEN"
+          "BEZZLING",
+          "ABJECT"
         ],
-        "wordTotal": 2160,
-        "penalty": 127,
-        "finalScore": 2033
-      },
-      {
-        "words": [
-          "BEDAZZLEMENT",
-          "COXSWAIN",
-          "VIZZIE",
-          "MIZZEN"
-        ],
-        "wordTotal": 2160,
-        "penalty": 127,
-        "finalScore": 2033
+        "wordTotal": 1876,
+        "penalty": 156,
+        "finalScore": 1720
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 6.7,
+    "optimalMoves": 5,
+    "averageWordLength": 7.2,
     "gemDensity": 0.016,
     "solutionPath": [
-      "DAZZLEMENTS",
-      "STOWN",
-      "BELIEVE",
-      "SARCODES",
-      "HIMBOS",
-      "RAHUI",
-      "GUANO"
+      "COXSWAIN",
+      "DAZZLEMENT",
+      "BOWAT",
+      "SOMEWAY",
+      "VAGGED"
     ],
-    "generatedAt": "2026-05-13T11:49:25.538Z"
+    "generatedAt": "2026-05-13T11:52:44.254Z"
   }
 }

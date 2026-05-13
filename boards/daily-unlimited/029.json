@@ -1,251 +1,191 @@
 {
   "date": "unlimited-029",
   "grid": {
+    "-3,3": "W",
+    "-2,2": "H",
+    "-1,2": "I",
+    "0,1": "T",
+    "-1,1": "E",
     "0,0": "W",
-    "0,1": "H",
-    "1,0": "I",
-    "1,-1": "T",
-    "2,-2": "E",
-    "1,-2": "W",
-    "0,-1": "A",
+    "-1,0": "A",
     "-1,-1": "S",
-    "-2,0": "H",
-    "-1,0": "I",
-    "-2,1": "N",
-    "-2,2": "G",
-    "-1,1": "S",
-    "3,-2": "P",
+    "0,-2": "H",
+    "1,-2": "I",
+    "0,-1": "N",
+    "1,-1": "G",
+    "1,0": "S",
+    "2,-2": "P",
     "2,-1": "O",
+    "3,-1": "Z",
     "2,0": "Z",
-    "1,1": "Z",
-    "1,2": "O",
-    "0,2": "L",
-    "-1,3": "A",
-    "-1,2": "N",
-    "0,-2": "J",
-    "4,0": "M",
-    "3,0": "U",
-    "0,3": "E",
-    "4,-1": "F",
-    "3,-1": "I",
-    "-4,0": "S",
-    "-4,1": "A",
-    "-4,2": "O",
-    "-4,3": "Q",
-    "-4,4": "T",
+    "2,1": "O",
+    "1,1": "L",
+    "1,2": "A",
+    "0,2": "N",
+    "-4,1": "B",
+    "-3,0": "A",
+    "-2,0": "F",
+    "-3,1": "F",
+    "-2,1": "E",
+    "-3,2": "D",
+    "-2,-2": "B",
+    "-2,-1": "O",
     "-3,-1": "F",
-    "-3,0": "H",
-    "-3,1": "M",
-    "-3,2": "T",
-    "-3,3": "I",
-    "-3,4": "R",
-    "-2,-2": "I",
-    "-2,-1": "P",
-    "-2,3": "L",
-    "-2,4": "C",
-    "-1,-3": "U",
-    "-1,-2": "E",
-    "-1,4": "E",
-    "0,-4": "S",
-    "0,-3": "S",
-    "0,4": "B",
-    "1,-4": "O",
-    "1,-3": "I",
+    "1,-4": "Q",
+    "1,-3": "U",
+    "2,-3": "P",
+    "3,-3": "Y",
+    "-4,0": "T",
+    "-4,2": "E",
+    "-4,3": "D",
+    "-4,4": "O",
+    "-3,4": "B",
+    "-2,3": "D",
+    "-2,4": "A",
+    "-1,-3": "Y",
+    "-1,-2": "M",
+    "-1,3": "K",
+    "-1,4": "M",
+    "0,-4": "I",
+    "0,-3": "I",
+    "0,3": "S",
+    "0,4": "N",
     "1,3": "S",
-    "2,-4": "J",
-    "2,-3": "C",
-    "2,1": "X",
-    "2,2": "L",
-    "3,-4": "I",
-    "3,-3": "S",
-    "3,1": "R",
-    "4,-4": "P",
-    "4,-3": "T",
-    "4,-2": "N"
+    "2,-4": "M",
+    "2,2": "W",
+    "3,-4": "O",
+    "3,-2": "B",
+    "3,0": "D",
+    "3,1": "L",
+    "4,-4": "A",
+    "4,-3": "O",
+    "4,-2": "P",
+    "4,-1": "E",
+    "4,0": "E"
   },
   "specialTiles": [
     {
       "type": "prism",
       "q": 1,
-      "r": 0
+      "r": -2
     },
     {
-      "type": "gemEmerald",
-      "q": 1,
-      "r": -4
+      "type": "gemGold",
+      "q": -1,
+      "r": 1
     },
     {
-      "type": "amethyst",
+      "type": "rune",
       "q": 1,
-      "r": -1
+      "r": -3
     },
     {
       "type": "digraph",
       "q": -4,
       "r": 1,
-      "digraph": "NT"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 0,
-      "digraph": "GH"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 4,
-      "digraph": "CK"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -2,
-      "digraph": "LL"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": -1,
-      "digraph": "EA"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -1,
       "digraph": "ON"
     },
     {
       "type": "digraph",
-      "q": 2,
-      "r": 2,
-      "digraph": "ED"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 2,
-      "digraph": "ER"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -4,
-      "digraph": "IO"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": -3,
-      "digraph": "LE"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": -1,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": 1,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
       "q": 4,
-      "r": 0,
-      "digraph": "HE"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 0,
-      "digraph": "AL"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": 1,
-      "digraph": "LY"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
       "r": -1,
       "digraph": "TH"
     },
     {
       "type": "digraph",
-      "q": -1,
-      "r": 2,
+      "q": 4,
+      "r": 0,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
       "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 4,
+      "digraph": "GH"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": 2,
+      "q": -1,
       "r": 0
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 0,
+      "q": 1,
       "r": 1
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1874,
-    "minAchievableScore": 2600,
+    "maxPossibleScore": 7800,
+    "minAchievableScore": 7800,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "WHITEWASHINGS",
-          "WHIZZO",
+          "QUIPPY",
           "POZZOLAN",
-          "FIZZLE"
+          "BAFFED"
         ],
-        "wordTotal": 2244,
-        "penalty": 149,
-        "finalScore": 2095
+        "wordTotal": 4718,
+        "penalty": 116,
+        "finalScore": 4602
       },
       {
         "words": [
           "WHITEWASHINGS",
-          "WHIZZO",
+          "QUIPPY",
           "POZZOLAN",
-          "FIZZLE"
+          "BAFFED"
         ],
-        "wordTotal": 2244,
-        "penalty": 149,
-        "finalScore": 2095
+        "wordTotal": 4718,
+        "penalty": 116,
+        "finalScore": 4602
       },
       {
         "words": [
           "WHITEWASHINGS",
           "POZZOLAN",
-          "WHIZZO",
-          "FIZZLE"
+          "QUIPPY",
+          "BAFFED"
         ],
-        "wordTotal": 2244,
-        "penalty": 149,
-        "finalScore": 2095
+        "wordTotal": 4718,
+        "penalty": 116,
+        "finalScore": 4602
       }
     ],
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 7,
+    "averageWordLength": 6.3,
     "gemDensity": 0.016,
     "solutionPath": [
-      "WHITEWASH",
-      "POCOSINS",
-      "FUZZLES",
-      "TRITOMAS",
-      "BOLIX",
-      "ENLACES",
-      "MINTS"
+      "PIGWEED",
+      "POZZOLANS",
+      "SOFABED",
+      "WHINS",
+      "BAHUTS",
+      "NIKAB",
+      "BEDEL"
     ],
-    "generatedAt": "2026-05-13T11:49:23.710Z"
+    "generatedAt": "2026-05-13T11:52:42.323Z"
   }
 }

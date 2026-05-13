@@ -1,167 +1,229 @@
 {
   "date": "unlimited-043",
   "grid": {
-    "0,0": "C",
-    "0,-1": "O",
-    "-1,0": "C",
-    "-2,0": "A",
-    "-2,1": "R",
-    "-1,1": "B",
-    "-1,2": "O",
-    "0,2": "X",
-    "0,1": "Y",
-    "1,0": "L",
-    "2,0": "A",
-    "3,-1": "S",
-    "2,-1": "E",
-    "2,-2": "S",
-    "3,-2": "P",
-    "1,-1": "T",
-    "1,-2": "Z",
-    "0,-2": "N",
-    "-1,-1": "A",
-    "-2,-1": "Z",
-    "-2,3": "W",
-    "-2,2": "E",
-    "-3,1": "M",
-    "3,0": "C",
-    "2,1": "R",
-    "1,1": "F",
-    "1,2": "O",
-    "-1,-3": "W",
-    "-1,-2": "I",
-    "2,-3": "E",
-    "0,-3": "A",
-    "-4,0": "E",
-    "-4,1": "T",
-    "-4,2": "G",
-    "-4,3": "E",
-    "-4,4": "L",
-    "-3,-1": "G",
-    "-3,0": "E",
-    "-3,2": "Y",
-    "-3,3": "E",
-    "-3,4": "I",
-    "-2,-2": "Z",
-    "-2,4": "M",
-    "-1,3": "R",
-    "-1,4": "I",
-    "0,-4": "S",
-    "0,3": "N",
-    "0,4": "O",
-    "1,-4": "R",
-    "1,-3": "E",
-    "1,3": "A",
-    "2,-4": "M",
-    "2,2": "R",
-    "3,-4": "H",
-    "3,-3": "A",
-    "3,1": "I",
-    "4,-4": "G",
-    "4,-3": "R",
-    "4,-2": "E",
-    "4,-1": "P",
-    "4,0": "C"
+    "-3,2": "C",
+    "-2,2": "O",
+    "-1,1": "C",
+    "-2,1": "A",
+    "-1,0": "R",
+    "-1,-1": "B",
+    "0,-2": "O",
+    "0,-1": "X",
+    "1,-1": "Y",
+    "0,0": "L",
+    "1,0": "A",
+    "0,1": "S",
+    "1,1": "E",
+    "0,2": "P",
+    "2,1": "T",
+    "2,0": "Z",
+    "3,-1": "N",
+    "2,-1": "A",
+    "3,-2": "Z",
+    "-1,4": "W",
+    "-1,3": "E",
+    "-1,2": "B",
+    "-2,0": "M",
+    "4,-4": "C",
+    "3,-3": "U",
+    "2,-2": "R",
+    "2,-3": "F",
+    "1,-2": "E",
+    "1,-3": "W",
+    "1,2": "U",
+    "-2,3": "L",
+    "-3,3": "W",
+    "0,-4": "B",
+    "0,-3": "L",
+    "-1,-2": "B",
+    "-2,-1": "Y",
+    "-4,0": "A",
+    "-4,1": "O",
+    "-4,2": "V",
+    "-4,3": "O",
+    "-4,4": "G",
+    "-3,-1": "M",
+    "-3,0": "Y",
+    "-3,1": "A",
+    "-3,4": "A",
+    "-2,-2": "E",
+    "-2,4": "T",
+    "-1,-3": "O",
+    "0,3": "J",
+    "0,4": "A",
+    "1,-4": "N",
+    "1,3": "I",
+    "2,-4": "A",
+    "2,2": "O",
+    "3,-4": "F",
+    "3,0": "U",
+    "3,1": "A",
+    "4,-3": "N",
+    "4,-2": "I",
+    "4,-1": "T",
+    "4,0": "Y"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": -1,
-      "r": 0
-    },
-    {
-      "type": "gemEmerald",
       "q": 0,
       "r": -2
     },
     {
+      "type": "gemGold",
+      "q": -2,
+      "r": 1
+    },
+    {
       "type": "amethyst",
       "q": 0,
-      "r": 2
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 0,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 1,
+      "digraph": "CR"
     },
     {
       "type": "digraph",
       "q": 1,
       "r": -1,
-      "digraph": "EN"
+      "digraph": "ES"
     },
     {
       "type": "digraph",
-      "q": 0,
-      "r": 4,
-      "digraph": "CR"
+      "q": -2,
+      "r": -2,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "GH"
     },
     {
       "type": "digraph",
       "q": 2,
-      "r": -1,
+      "r": -2,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 0,
       "digraph": "NT"
     },
     {
       "type": "portal",
       "role": "entry",
       "q": -1,
-      "r": -1
+      "r": 2
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 2,
-      "r": -1
+      "q": 1,
+      "r": 1
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1956,
-    "minAchievableScore": 2600,
+    "maxPossibleScore": 7800,
+    "minAchievableScore": 7800,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "COCARBOXYLASE",
-          "SPETZNAZ",
           "WEBCAM",
-          "WINZES"
+          "BLOBBY",
+          "SPETZNAZ",
+          "CURFEW"
         ],
-        "wordTotal": 2616,
-        "penalty": 117,
-        "finalScore": 2499
+        "wordTotal": 5278,
+        "penalty": 97,
+        "finalScore": 5181
+      },
+      {
+        "words": [
+          "COCARBOXYLASE",
+          "WEBCAM",
+          "BLOBBY",
+          "SPETZNAZ",
+          "CURFEW"
+        ],
+        "wordTotal": 5278,
+        "penalty": 97,
+        "finalScore": 5181
       },
       {
         "words": [
           "COCARBOXYLASE",
           "SPETZNAZ",
           "WEBCAM",
-          "WINZES"
+          "BLOBBY",
+          "CURFEW"
         ],
-        "wordTotal": 2616,
-        "penalty": 117,
-        "finalScore": 2499
-      },
-      {
-        "words": [
-          "COCARBOXYLASE",
-          "SPETZNAZ",
-          "WEBCAM",
-          "WINZES"
-        ],
-        "wordTotal": 2616,
-        "penalty": 117,
-        "finalScore": 2499
+        "wordTotal": 5278,
+        "penalty": 97,
+        "finalScore": 5181
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 7,
+    "optimalMoves": 6,
     "averageWordLength": 6.7,
     "gemDensity": 0.016,
     "solutionPath": [
       "CARBOXYLASE",
-      "PEZANTS",
-      "FORMERS",
-      "EYEWEAR",
-      "ZINCO",
-      "CAPER",
-      "GLIME"
+      "WELAWAY",
+      "BOMBLET",
+      "WANTY",
+      "AZURN",
+      "OUIJA"
     ],
-    "generatedAt": "2026-05-13T11:49:24.102Z"
+    "generatedAt": "2026-05-13T11:52:42.813Z"
   }
 }

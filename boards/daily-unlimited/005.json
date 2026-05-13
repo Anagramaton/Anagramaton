@@ -1,233 +1,204 @@
 {
   "date": "unlimited-005",
   "grid": {
-    "0,-1": "Q",
-    "1,-1": "U",
-    "1,0": "A",
-    "0,1": "R",
-    "0,0": "T",
-    "-1,0": "E",
-    "-1,-1": "R",
-    "-2,0": "S",
-    "-2,1": "T",
-    "-1,1": "A",
-    "-2,2": "F",
-    "-2,3": "F",
-    "-1,2": "S",
-    "1,-2": "S",
-    "2,-2": "F",
-    "2,-1": "F",
-    "3,-1": "I",
-    "2,0": "X",
-    "1,1": "L",
-    "1,3": "P",
-    "0,3": "U",
-    "0,2": "Z",
-    "1,2": "Z",
-    "2,1": "E",
-    "-1,4": "N",
-    "-1,3": "O",
-    "-1,-3": "Z",
-    "0,-3": "A",
-    "0,-2": "F",
-    "-1,-2": "F",
-    "-2,-1": "E",
-    "-4,0": "I",
-    "-4,1": "N",
-    "-4,2": "I",
-    "-4,3": "E",
-    "-4,4": "E",
-    "-3,-1": "R",
+    "1,1": "R",
+    "0,2": "U",
+    "-1,2": "B",
+    "0,1": "B",
+    "-1,1": "E",
+    "-1,0": "R",
+    "0,0": "N",
+    "0,-1": "E",
+    "1,-1": "C",
+    "1,-2": "K",
+    "2,-2": "E",
+    "2,-1": "R",
+    "1,0": "S",
+    "-2,2": "A",
+    "-2,1": "C",
+    "-3,1": "K",
+    "-2,0": "B",
+    "-2,-1": "A",
+    "-1,-1": "N",
+    "0,-2": "D",
+    "-3,2": "Z",
+    "-2,3": "M",
+    "-1,3": "K",
+    "-3,3": "J",
+    "0,3": "S",
+    "4,-2": "B",
+    "3,-1": "A",
+    "2,0": "W",
+    "2,1": "D",
+    "1,2": "Y",
+    "-4,0": "W",
     "-3,0": "E",
-    "-3,1": "U",
-    "-3,2": "N",
-    "-3,3": "N",
-    "-3,4": "D",
-    "-2,-2": "I",
-    "-2,4": "B",
-    "0,-4": "O",
-    "0,4": "I",
-    "1,-4": "T",
-    "1,-3": "R",
+    "-4,1": "D",
+    "-4,2": "E",
+    "-4,3": "N",
+    "-4,4": "I",
+    "-3,-1": "L",
+    "-3,4": "H",
+    "-2,-2": "N",
+    "-2,4": "T",
+    "-1,-3": "U",
+    "-1,-2": "E",
+    "-1,4": "I",
+    "0,-4": "A",
+    "0,-3": "L",
+    "0,4": "G",
+    "1,-4": "V",
+    "1,-3": "A",
+    "1,3": "A",
     "2,-4": "L",
-    "2,-3": "O",
-    "2,2": "T",
-    "3,-4": "M",
-    "3,-3": "I",
-    "3,-2": "S",
-    "3,0": "I",
-    "3,1": "T",
-    "4,-4": "H",
-    "4,-3": "E",
-    "4,-2": "A",
-    "4,-1": "T",
-    "4,0": "A"
+    "2,-3": "J",
+    "2,2": "Y",
+    "3,-4": "O",
+    "3,-3": "L",
+    "3,-2": "E",
+    "3,0": "R",
+    "3,1": "O",
+    "4,-4": "I",
+    "4,-3": "L",
+    "4,-1": "I",
+    "4,0": "S"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": 1,
+      "q": -2,
       "r": 2
     },
     {
-      "type": "gemEmerald",
-      "q": -1,
-      "r": 2
+      "type": "gemGold",
+      "q": 4,
+      "r": -1
     },
     {
       "type": "amethyst",
-      "q": 3,
-      "r": 1
+      "q": -1,
+      "r": 2
     },
     {
       "type": "digraph",
       "q": 0,
-      "r": 4,
-      "digraph": "TY"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -4,
-      "digraph": "UN"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": -1,
-      "digraph": "LE"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": -1,
-      "digraph": "QU"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
       "r": -2,
-      "digraph": "ST"
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 1,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "ES"
     },
     {
       "type": "digraph",
       "q": -2,
       "r": 0,
-      "digraph": "EN"
+      "digraph": "LE"
     },
     {
       "type": "digraph",
-      "q": 1,
-      "r": -4,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 0,
-      "digraph": "LY"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 1,
-      "digraph": "RE"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
+      "q": 3,
       "r": -1,
-      "digraph": "EA"
+      "digraph": "TY"
     },
     {
       "type": "digraph",
-      "q": -1,
-      "r": 0,
-      "digraph": "NG"
+      "q": -2,
+      "r": 3,
+      "digraph": "QU"
     },
     {
       "type": "digraph",
-      "q": 4,
-      "r": 0,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -3,
-      "digraph": "AL"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -2,
-      "digraph": "WH"
+      "q": -4,
+      "r": 1,
+      "digraph": "UN"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": 1,
-      "r": 0
+      "q": 0,
+      "r": 1
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": -1,
+      "q": 0,
       "r": 2
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1472,
-    "minAchievableScore": 1326,
+    "maxPossibleScore": 1852,
+    "minAchievableScore": 1274,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "QUARTERSTAFFS",
-          "PUZZLE",
-          "NUZZLE",
-          "NOZZLE"
+          "RUBBERNECKERS",
+          "BACKBAND",
+          "ZAMBUK",
+          "WEBCAM"
         ],
-        "wordTotal": 1791,
-        "penalty": 141,
-        "finalScore": 1650
+        "wordTotal": 1969,
+        "penalty": 128,
+        "finalScore": 1841
       },
       {
         "words": [
-          "PUZZLE",
-          "NUZZLE",
-          "NOZZLE",
-          "QUARTERSTAFFS"
+          "RUBBERNECKERS",
+          "BACKBAND",
+          "ZAMBUK",
+          "WEBCAM"
         ],
-        "wordTotal": 1791,
-        "penalty": 141,
-        "finalScore": 1650
+        "wordTotal": 1969,
+        "penalty": 128,
+        "finalScore": 1841
       },
       {
         "words": [
-          "QUARTERSTAFFS",
-          "SUFFIXAL",
-          "PUZZLE",
-          "NUZZLE"
+          "BACKBAND",
+          "ZAMBUK",
+          "WEBCAM",
+          "JAMBUS",
+          "BAWDRY"
         ],
-        "wordTotal": 1727,
-        "penalty": 114,
-        "finalScore": 1613
+        "wordTotal": 1854,
+        "penalty": 126,
+        "finalScore": 1728
       }
     ],
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 6.6,
+    "averageWordLength": 6.9,
     "gemDensity": 0.016,
     "solutionPath": [
-      "BOZZETTI",
-      "SUFFLATES",
-      "RAREFIER",
-      "AFTOSA",
-      "QUINS",
-      "INNED",
-      "EMAIL"
+      "BACKBAND",
+      "OILBIRD",
+      "VALENCES",
+      "KABUKIS",
+      "SOWARRY",
+      "GERMEN",
+      "NEELD"
     ],
-    "generatedAt": "2026-05-13T11:49:23.004Z"
+    "generatedAt": "2026-05-13T11:52:41.829Z"
   }
 }

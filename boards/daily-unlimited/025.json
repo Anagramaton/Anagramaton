@@ -1,125 +1,107 @@
 {
   "date": "unlimited-025",
   "grid": {
-    "2,-3": "D",
-    "1,-2": "O",
-    "2,-2": "O",
-    "1,-1": "M",
-    "0,-1": "W",
-    "0,0": "A",
-    "-1,0": "T",
-    "-2,1": "C",
-    "-2,2": "H",
-    "-1,2": "I",
-    "-1,1": "N",
-    "0,1": "G",
-    "1,0": "S",
+    "-1,-1": "D",
+    "-2,0": "O",
+    "-2,1": "O",
+    "-1,1": "M",
+    "-1,2": "W",
+    "0,2": "A",
+    "1,1": "T",
+    "1,0": "C",
+    "0,1": "H",
+    "0,0": "I",
+    "-1,0": "N",
+    "0,-1": "G",
+    "1,-1": "S",
     "2,-1": "Q",
-    "2,0": "U",
-    "2,1": "A",
-    "1,1": "B",
-    "1,2": "B",
-    "0,2": "E",
-    "0,3": "D",
-    "-4,1": "K",
-    "-3,0": "A",
-    "-2,0": "V",
-    "-2,-1": "A",
-    "-1,-1": "K",
-    "-1,-2": "A",
-    "0,-2": "V",
-    "0,-3": "A",
-    "2,2": "F",
-    "-1,3": "R",
-    "3,-1": "C",
-    "3,0": "F",
-    "-4,0": "G",
-    "-4,2": "M",
-    "-4,3": "G",
-    "-4,4": "A",
-    "-3,-1": "V",
-    "-3,1": "W",
-    "-3,2": "O",
-    "-3,3": "D",
+    "3,-2": "U",
+    "2,-2": "A",
+    "2,-3": "B",
+    "1,-2": "B",
+    "0,-2": "E",
+    "2,-4": "B",
+    "1,-3": "U",
+    "3,-3": "F",
+    "0,-3": "R",
     "-3,4": "B",
-    "-2,-2": "T",
-    "-2,3": "G",
-    "-2,4": "O",
-    "-1,-3": "G",
-    "-1,4": "S",
-    "0,-4": "E",
-    "0,4": "O",
-    "1,-4": "L",
-    "1,-3": "G",
-    "1,3": "U",
-    "2,-4": "O",
-    "3,-4": "R",
-    "3,-3": "O",
-    "3,-2": "I",
-    "3,1": "S",
-    "4,-4": "A",
-    "4,-3": "L",
-    "4,-2": "R",
-    "4,-1": "O",
-    "4,0": "I"
+    "-2,3": "O",
+    "-2,2": "F",
+    "-3,2": "F",
+    "-3,1": "S",
+    "3,-1": "U",
+    "2,0": "A",
+    "2,1": "R",
+    "1,2": "Z",
+    "-4,0": "A",
+    "-4,1": "M",
+    "-4,2": "G",
+    "-4,3": "O",
+    "-4,4": "H",
+    "-3,-1": "L",
+    "-3,0": "M",
+    "-3,3": "F",
+    "-2,-2": "A",
+    "-2,-1": "T",
+    "-2,4": "P",
+    "-1,-3": "V",
+    "-1,-2": "O",
+    "-1,3": "S",
+    "-1,4": "O",
+    "0,-4": "O",
+    "0,3": "R",
+    "0,4": "L",
+    "1,-4": "O",
+    "1,3": "I",
+    "2,2": "P",
+    "3,-4": "A",
+    "3,0": "A",
+    "3,1": "C",
+    "4,-4": "T",
+    "4,-3": "A",
+    "4,-2": "T",
+    "4,-1": "I",
+    "4,0": "L"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": 2,
-      "r": 0
-    },
-    {
-      "type": "gemGold",
-      "q": 2,
-      "r": 1
-    },
-    {
-      "type": "amethyst",
-      "q": -3,
+      "q": 1,
       "r": -1
     },
     {
-      "type": "digraph",
-      "q": 0,
-      "r": 1,
-      "digraph": "IO"
+      "type": "gemEmerald",
+      "q": 1,
+      "r": -2
     },
     {
-      "type": "digraph",
-      "q": -2,
-      "r": 4,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": 1,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": -1,
-      "digraph": "NT"
+      "type": "amethyst",
+      "q": 4,
+      "r": -2
     },
     {
       "type": "digraph",
       "q": -2,
       "r": 2,
-      "digraph": "QU"
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "ST"
     },
     {
       "type": "digraph",
       "q": -2,
-      "r": 1,
-      "digraph": "RE"
+      "r": -2,
+      "digraph": "LE"
     },
     {
       "type": "digraph",
       "q": -3,
-      "r": 2,
-      "digraph": "EA"
+      "r": 1,
+      "digraph": "AL"
     },
     {
       "type": "digraph",
@@ -129,88 +111,145 @@
     },
     {
       "type": "digraph",
-      "q": -3,
-      "r": 4,
+      "q": 4,
+      "r": 0,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 0,
       "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 2,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 0,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 3,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "GH"
     },
     {
       "type": "digraph",
       "q": 4,
       "r": -1,
-      "digraph": "GH"
+      "digraph": "NT"
     },
     {
       "type": "digraph",
-      "q": -4,
+      "q": -2,
       "r": 4,
-      "digraph": "ON"
+      "digraph": "CO"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": 1,
-      "r": 2
+      "q": -2,
+      "r": 1
     },
     {
       "type": "portal",
       "role": "exit",
       "q": -1,
-      "r": -2
+      "r": -1
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2552,
-    "minAchievableScore": 3648,
+    "maxPossibleScore": 2496,
+    "minAchievableScore": 2496,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "SQUABBED",
-          "DOOMWATCHINGS",
-          "FABBER",
-          "FUBBED",
-          "KAVAKAVA"
-        ],
-        "wordTotal": 3600,
-        "penalty": 104,
-        "finalScore": 3496
-      },
-      {
-        "words": [
-          "SQUABBED",
-          "FABBER",
-          "FUBBED",
-          "CUBBED",
-          "KAVAKAVA"
-        ],
-        "wordTotal": 3312,
-        "penalty": 144,
-        "finalScore": 3168
-      },
-      {
-        "words": [
           "DOOMWATCHINGS",
           "SQUABBED",
-          "KAVAKAVA",
+          "BUBBAS",
           "FABBER"
         ],
-        "wordTotal": 3240,
-        "penalty": 111,
-        "finalScore": 3129
+        "wordTotal": 3496,
+        "penalty": 140,
+        "finalScore": 3356
+      },
+      {
+        "words": [
+          "SQUABBED",
+          "BUBBAS",
+          "DOOMWATCHINGS",
+          "FABBER"
+        ],
+        "wordTotal": 3496,
+        "penalty": 140,
+        "finalScore": 3356
+      },
+      {
+        "words": [
+          "DOOMWATCHINGS",
+          "SQUABBED",
+          "BUBBAS",
+          "FABBER"
+        ],
+        "wordTotal": 3496,
+        "penalty": 140,
+        "finalScore": 3356
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 6,
-    "averageWordLength": 6.5,
+    "optimalMoves": 5,
+    "averageWordLength": 6.6,
     "gemDensity": 0.016,
     "solutionPath": [
       "SQUABBED",
-      "CHINWAGS",
-      "SFUMATO",
-      "GROVEL",
-      "LORIC",
-      "FIORD"
+      "WATCHING",
+      "BOFFOS",
+      "CRUORS",
+      "FLOTA"
     ],
-    "generatedAt": "2026-05-13T11:49:23.653Z"
+    "generatedAt": "2026-05-13T11:52:42.259Z"
   }
 }

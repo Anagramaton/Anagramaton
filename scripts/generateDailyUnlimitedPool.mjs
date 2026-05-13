@@ -107,6 +107,13 @@ for (let n = 1; n <= COUNT; n++) {
   // as a human-readable identifier without confusing it with a calendar date.
   board.date = boardSeed(n);
 
+  // Normalise metadata: ensure maxPossibleScore is never below minAchievableScore.
+  // The greedy simulation can under-estimate when time-limited, while the static
+  // validation estimate may be higher.  Both are informational only.
+  if (board.metadata && board.metadata.maxPossibleScore < board.metadata.minAchievableScore) {
+    board.metadata.maxPossibleScore = board.metadata.minAchievableScore;
+  }
+
   writeFileSync(filepath, JSON.stringify(board, null, 2), 'utf8');
   generated++;
 

@@ -1,191 +1,298 @@
 {
   "date": "unlimited-061",
   "grid": {
-    "-1,0": "B",
-    "-1,-1": "L",
-    "0,-2": "A",
-    "0,-1": "C",
-    "1,-2": "K",
-    "1,-1": "C",
-    "0,0": "U",
-    "0,1": "R",
-    "-1,1": "R",
-    "-1,2": "A",
-    "0,2": "N",
-    "1,1": "T",
-    "1,0": "S",
-    "-4,1": "G",
-    "-3,0": "R",
-    "-2,0": "I",
-    "-3,1": "Z",
-    "-2,1": "Z",
-    "-3,2": "L",
+    "0,-2": "B",
+    "0,-1": "L",
+    "-1,-1": "A",
+    "-2,0": "C",
+    "-1,0": "K",
+    "-1,1": "C",
+    "0,1": "U",
+    "0,2": "R",
+    "1,1": "R",
+    "1,0": "A",
+    "0,0": "N",
+    "1,-1": "T",
+    "1,-2": "S",
+    "2,1": "G",
+    "2,0": "I",
+    "3,-1": "Z",
+    "2,-1": "Z",
+    "3,-2": "L",
+    "2,-2": "E",
+    "3,-3": "R",
+    "-3,1": "B",
+    "-2,1": "L",
+    "-3,2": "U",
     "-2,2": "E",
-    "3,0": "B",
-    "2,0": "L",
-    "3,-1": "U",
-    "2,-1": "E",
-    "3,-2": "B",
-    "2,-2": "A",
-    "-1,4": "K",
-    "-1,3": "H",
-    "-2,3": "Z",
-    "-3,3": "N",
-    "-2,-1": "F",
-    "-2,-2": "C",
-    "-1,-2": "R",
-    "2,-3": "J",
-    "3,-3": "W",
-    "-4,0": "O",
-    "-4,2": "E",
-    "-4,3": "U",
-    "-4,4": "S",
-    "-3,-1": "S",
-    "-3,4": "E",
-    "-2,4": "O",
-    "-1,-3": "N",
-    "0,-4": "I",
-    "0,-3": "A",
-    "0,3": "I",
-    "0,4": "T",
-    "1,-4": "P",
-    "1,-3": "L",
+    "-2,3": "B",
+    "-1,2": "A",
     "1,2": "B",
-    "1,3": "M",
-    "2,-4": "O",
-    "2,1": "H",
-    "2,2": "U",
+    "2,-3": "D",
+    "1,-4": "J",
+    "0,-3": "U",
+    "-1,-2": "B",
+    "-2,-1": "H",
+    "-4,0": "U",
+    "-4,1": "Q",
+    "-4,2": "A",
+    "-4,3": "A",
+    "-4,4": "D",
+    "-3,-1": "W",
+    "-3,0": "I",
+    "-3,3": "H",
+    "-3,4": "I",
+    "-2,-2": "U",
+    "-2,4": "L",
+    "-1,-3": "D",
+    "-1,3": "H",
+    "-1,4": "O",
+    "0,-4": "A",
+    "0,3": "A",
+    "0,4": "U",
+    "1,-3": "E",
+    "1,3": "L",
+    "2,-4": "P",
+    "2,2": "I",
     "3,-4": "E",
-    "3,1": "A",
-    "4,-4": "A",
-    "4,-3": "Y",
-    "4,-2": "I",
-    "4,-1": "N",
-    "4,0": "G"
+    "3,0": "E",
+    "3,1": "Y",
+    "4,-4": "L",
+    "4,-3": "U",
+    "4,-2": "R",
+    "4,-1": "O",
+    "4,0": "W"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": -2,
-      "r": 2
+      "q": 2,
+      "r": 0
     },
     {
-      "type": "gemGold",
+      "type": "gemEmerald",
       "q": 1,
-      "r": -3
+      "r": 0
     },
     {
       "type": "amethyst",
-      "q": 3,
-      "r": -4
+      "q": 4,
+      "r": -3
     },
     {
       "type": "digraph",
-      "q": -3,
+      "q": 4,
       "r": -1,
-      "digraph": "LY"
+      "digraph": "ED"
     },
     {
       "type": "digraph",
-      "q": -3,
-      "r": 0,
+      "q": -2,
+      "r": 1,
       "digraph": "EN"
     },
     {
       "type": "digraph",
+      "q": 4,
+      "r": -4,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
       "q": -1,
-      "r": 1,
-      "digraph": "CK"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": 2,
-      "digraph": "NG"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": 0,
-      "digraph": "TY"
+      "r": -2,
+      "digraph": "ES"
     },
     {
       "type": "digraph",
       "q": -3,
       "r": 4,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -2,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 2,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
       "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 2,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 1,
+      "digraph": "LE"
     },
     {
       "type": "digraph",
       "q": 2,
       "r": -2,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 3,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -1,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
       "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 3,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "AL"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": 0,
-      "r": -1
+      "q": -1,
+      "r": 1
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": -2,
+      "q": 1,
       "r": 1
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2654,
-    "minAchievableScore": 1248,
+    "maxPossibleScore": 2496,
+    "minAchievableScore": 2496,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "BLACKCURRANTS",
           "GRIZZLER",
-          "FIZZLE",
-          "CRACKJAW"
+          "GIZZES",
+          "BRAZED"
         ],
-        "wordTotal": 1952,
-        "penalty": 122,
-        "finalScore": 1830
-      },
-      {
-        "words": [
-          "GRIZZLER",
-          "FIZZLE",
-          "KHAZEN",
-          "BLACKCURRANTS"
-        ],
-        "wordTotal": 1948,
-        "penalty": 127,
-        "finalScore": 1821
+        "wordTotal": 2548,
+        "penalty": 148,
+        "finalScore": 2400
       },
       {
         "words": [
           "BLACKCURRANTS",
           "GRIZZLER",
-          "CRACKJAW",
-          "BLUEBACK"
+          "GIZZES",
+          "BRAZED"
         ],
-        "wordTotal": 1824,
-        "penalty": 107,
-        "finalScore": 1717
+        "wordTotal": 2548,
+        "penalty": 148,
+        "finalScore": 2400
+      },
+      {
+        "words": [
+          "BLACKCURRANTS",
+          "GRIZZLER",
+          "BLUEBACK",
+          "GIZZES"
+        ],
+        "wordTotal": 2492,
+        "penalty": 135,
+        "finalScore": 2357
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 6.6,
+    "optimalMoves": 6,
+    "averageWordLength": 6.5,
     "gemDensity": 0.016,
     "solutionPath": [
-      "ALKALIZER",
-      "BRAZENS",
-      "BUBINGA",
-      "HUMINTS",
-      "CRIPE",
-      "BUCCAL",
-      "ERGOS"
+      "BRAIZES",
+      "BLUEBACK",
+      "JUBHAH",
+      "CHILDREN",
+      "WEDGY",
+      "ROZIT"
     ],
-    "generatedAt": "2026-05-13T11:49:24.537Z"
+    "generatedAt": "2026-05-13T11:52:43.266Z"
   }
 }

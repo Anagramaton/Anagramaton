@@ -1,143 +1,125 @@
 {
   "date": "unlimited-021",
   "grid": {
-    "-2,1": "S",
-    "-2,2": "T",
-    "-1,2": "O",
-    "-1,3": "C",
-    "0,2": "K",
-    "0,1": "J",
-    "1,1": "O",
-    "1,0": "B",
-    "0,0": "B",
-    "1,-1": "E",
-    "0,-1": "R",
-    "-1,0": "Y",
-    "4,-3": "E",
-    "3,-3": "X",
-    "2,-2": "C",
-    "2,-1": "A",
-    "2,0": "M",
-    "1,-2": "D",
-    "1,-4": "C",
-    "0,-3": "O",
-    "0,-2": "C",
-    "-1,-1": "C",
-    "-2,0": "X",
-    "-3,1": "E",
-    "1,2": "N",
-    "-1,1": "Y",
-    "2,1": "W",
-    "3,1": "J",
-    "3,0": "I",
-    "3,-1": "J",
-    "3,-2": "M",
+    "-2,-1": "S",
+    "-1,-1": "T",
+    "-1,0": "O",
+    "0,-1": "C",
+    "0,0": "K",
+    "1,0": "J",
+    "1,-1": "O",
+    "2,-1": "B",
+    "2,0": "B",
+    "1,1": "E",
+    "0,1": "R",
+    "-1,2": "Y",
+    "-4,2": "E",
+    "-3,2": "X",
+    "-2,2": "C",
+    "-1,1": "A",
+    "-2,1": "M",
+    "-3,1": "B",
+    "-2,0": "E",
+    "-3,0": "D",
+    "-4,4": "C",
+    "-3,3": "O",
+    "-2,3": "C",
+    "0,2": "X",
+    "2,1": "S",
+    "-1,-3": "M",
+    "0,-3": "E",
+    "0,-2": "Z",
+    "1,-2": "Z",
+    "2,-2": "S",
+    "1,-3": "U",
+    "2,-3": "A",
+    "4,-2": "B",
+    "3,-2": "O",
     "-4,0": "U",
-    "-4,1": "E",
-    "-4,2": "I",
-    "-4,3": "S",
-    "-4,4": "G",
-    "-3,-1": "O",
-    "-3,0": "T",
-    "-3,2": "C",
-    "-3,3": "Z",
-    "-3,4": "O",
-    "-2,-2": "N",
-    "-2,-1": "A",
-    "-2,3": "E",
+    "-4,1": "A",
+    "-4,3": "C",
+    "-3,-1": "R",
+    "-3,4": "R",
+    "-2,-2": "O",
     "-2,4": "I",
-    "-1,-3": "P",
     "-1,-2": "T",
-    "-1,4": "Y",
-    "0,-4": "E",
-    "0,3": "O",
-    "0,4": "T",
-    "1,-3": "I",
-    "1,3": "R",
+    "-1,3": "E",
+    "-1,4": "A",
+    "0,-4": "K",
+    "0,3": "A",
+    "0,4": "R",
+    "1,-4": "T",
+    "1,2": "G",
+    "1,3": "I",
     "2,-4": "W",
-    "2,-3": "V",
-    "2,2": "E",
-    "3,-4": "A",
-    "4,-4": "N",
-    "4,-2": "Y",
-    "4,-1": "E",
-    "4,0": "Z"
+    "2,2": "N",
+    "3,-4": "S",
+    "3,-3": "U",
+    "3,-1": "E",
+    "3,0": "M",
+    "3,1": "A",
+    "4,-4": "E",
+    "4,-3": "S",
+    "4,-1": "Y",
+    "4,0": "S"
   },
   "specialTiles": [
     {
       "type": "prism",
       "q": 0,
-      "r": 0
+      "r": -2
     },
     {
-      "type": "gemEmerald",
-      "q": 2,
-      "r": -4
+      "type": "gemGold",
+      "q": -4,
+      "r": 2
     },
     {
       "type": "amethyst",
-      "q": -3,
-      "r": 3
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 4,
-      "digraph": "LE"
-    },
-    {
-      "type": "digraph",
       "q": -1,
-      "r": -3,
-      "digraph": "IO"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 1,
-      "digraph": "LL"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": 4,
-      "digraph": "NG"
+      "r": 2
     },
     {
       "type": "digraph",
       "q": 0,
-      "r": -3,
-      "digraph": "CO"
-    },
-    {
-      "type": "digraph",
-      "q": -4,
-      "r": 0,
-      "digraph": "EN"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 1,
+      "r": 2,
       "digraph": "AN"
     },
     {
       "type": "digraph",
       "q": 1,
+      "r": 3,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 3,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
       "r": -2,
-      "digraph": "GH"
+      "digraph": "LL"
     },
     {
       "type": "digraph",
       "q": 3,
-      "r": -2,
-      "digraph": "HE"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": 1,
-      "digraph": "UN"
+      "r": -1,
+      "digraph": "ST"
     },
     {
       "type": "digraph",
@@ -147,51 +129,87 @@
     },
     {
       "type": "digraph",
-      "q": 1,
+      "q": -3,
       "r": 2,
-      "digraph": "ON"
+      "digraph": "CR"
     },
     {
       "type": "digraph",
-      "q": -1,
-      "r": 4,
-      "digraph": "WH"
+      "q": 1,
+      "r": 1,
+      "digraph": "CK"
     },
     {
       "type": "digraph",
       "q": -4,
-      "r": 4,
-      "digraph": "AL"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
       "r": 0,
       "digraph": "EA"
     },
     {
       "type": "digraph",
-      "q": -2,
-      "r": 2,
-      "digraph": "NT"
+      "q": 0,
+      "r": 0,
+      "digraph": "ER"
     },
     {
       "type": "digraph",
-      "q": 2,
-      "r": -3,
-      "digraph": "QU"
+      "q": -3,
+      "r": 1,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -1,
+      "digraph": "AL"
     },
     {
       "type": "digraph",
       "q": 1,
-      "r": -4,
-      "digraph": "CR"
+      "r": 2,
+      "digraph": "HE"
     },
     {
       "type": "digraph",
-      "q": 0,
+      "q": 4,
+      "r": -2,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
       "r": 4,
-      "digraph": "ST"
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "GH"
     },
     {
       "type": "digraph",
@@ -202,74 +220,92 @@
     {
       "type": "digraph",
       "q": 0,
+      "r": -3,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
       "r": 1,
-      "digraph": "ES"
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "LE"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": 1,
-      "r": 1
+      "q": 0,
+      "r": -1
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": -2,
-      "r": 1
+      "q": -3,
+      "r": 3
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1995,
-    "minAchievableScore": 2544,
+    "maxPossibleScore": 2147,
+    "minAchievableScore": 1776,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "STOCKJOBBERY",
-          "KNOBBY",
           "EXCAMBED",
-          "COCCYXES"
+          "STOCKJOBBERY",
+          "MEZZOS",
+          "MEZUZA"
         ],
-        "wordTotal": 2204,
-        "penalty": 143,
-        "finalScore": 2061
+        "wordTotal": 2292,
+        "penalty": 120,
+        "finalScore": 2172
       },
       {
         "words": [
-          "STOCKJOBBERY",
-          "KNOBBY",
           "EXCAMBED",
-          "COCCYXES"
+          "MEZZOS",
+          "MEZUZA",
+          "STOCKJOBBERY"
         ],
-        "wordTotal": 2204,
-        "penalty": 143,
-        "finalScore": 2061
+        "wordTotal": 2292,
+        "penalty": 120,
+        "finalScore": 2172
       },
       {
         "words": [
           "STOCKJOBBERY",
           "EXCAMBED",
           "COCCYXES",
-          "KNOBBY"
+          "MEZZOS"
         ],
-        "wordTotal": 2204,
-        "penalty": 143,
-        "finalScore": 2061
+        "wordTotal": 2196,
+        "penalty": 100,
+        "finalScore": 2096
       }
     ],
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 6.4,
+    "averageWordLength": 6.9,
     "gemDensity": 0.016,
     "solutionPath": [
-      "STOCKJOBBER",
-      "WAXEYE",
-      "JIMJAM",
-      "DIOECY",
-      "SCIENT",
-      "TRONC",
-      "GOETY"
+      "EXCAMBED",
+      "MEZUZAS",
+      "JOBBERY",
+      "MEBOSES",
+      "SCORIAE",
+      "TARINGS",
+      "CROOK"
     ],
-    "generatedAt": "2026-05-13T11:49:23.418Z"
+    "generatedAt": "2026-05-13T11:52:42.185Z"
   }
 }

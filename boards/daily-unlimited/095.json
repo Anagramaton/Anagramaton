@@ -1,287 +1,295 @@
 {
   "date": "unlimited-095",
   "grid": {
-    "0,-1": "J",
-    "0,0": "I",
-    "1,-1": "T",
-    "2,-1": "T",
-    "2,0": "E",
+    "2,-1": "J",
+    "1,-1": "I",
+    "1,-2": "T",
+    "0,-1": "T",
+    "0,0": "E",
     "1,0": "R",
     "1,1": "B",
-    "0,2": "U",
+    "0,1": "U",
     "-1,2": "G",
-    "-1,1": "G",
-    "-2,2": "I",
-    "-2,1": "N",
+    "-2,2": "G",
+    "-2,1": "I",
+    "-1,1": "N",
     "-1,0": "G",
-    "2,-2": "W",
-    "1,-2": "H",
-    "1,-3": "I",
-    "0,-2": "P",
-    "-1,-2": "W",
-    "-1,-1": "O",
-    "-2,-1": "R",
-    "-2,0": "M",
-    "0,1": "C",
-    "2,1": "B",
-    "3,0": "D",
-    "-4,2": "C",
-    "-3,1": "O",
-    "-3,2": "F",
-    "-3,3": "X",
-    "1,3": "B",
+    "-4,2": "W",
+    "-3,1": "H",
+    "-2,0": "P",
+    "-1,-1": "W",
+    "-1,-2": "O",
+    "0,-2": "R",
+    "0,-3": "M",
+    "3,-1": "B",
+    "2,0": "E",
+    "2,1": "M",
     "1,2": "I",
-    "-2,4": "J",
-    "-1,3": "I",
-    "-2,3": "J",
-    "-4,0": "E",
-    "-4,1": "I",
-    "-4,3": "E",
-    "-4,4": "A",
-    "-3,-1": "L",
-    "-3,0": "H",
-    "-3,4": "N",
-    "-2,-2": "O",
-    "-1,-3": "E",
-    "-1,4": "O",
-    "0,-4": "R",
-    "0,-3": "R",
-    "0,3": "N",
-    "0,4": "N",
-    "1,-4": "O",
-    "2,-4": "T",
-    "2,-3": "L",
-    "2,2": "Y",
-    "3,-4": "A",
-    "3,-3": "O",
-    "3,-2": "W",
-    "3,-1": "I",
-    "3,1": "O",
-    "4,-4": "R",
+    "0,2": "X",
+    "-3,-1": "B",
+    "-2,-1": "Y",
+    "1,-3": "K",
+    "-4,3": "J",
+    "-3,3": "I",
+    "-3,2": "J",
+    "2,2": "I",
+    "3,0": "X",
+    "-4,0": "I",
+    "-4,1": "N",
+    "-4,4": "W",
+    "-3,0": "U",
+    "-3,4": "T",
+    "-2,-2": "Q",
+    "-2,3": "A",
+    "-2,4": "S",
+    "-1,-3": "B",
+    "-1,3": "U",
+    "-1,4": "E",
+    "0,-4": "U",
+    "0,3": "M",
+    "0,4": "S",
+    "1,-4": "R",
+    "1,3": "R",
+    "2,-4": "A",
+    "2,-3": "D",
+    "2,-2": "R",
+    "3,-4": "R",
+    "3,-3": "A",
+    "3,-2": "J",
+    "3,1": "A",
+    "4,-4": "O",
     "4,-3": "G",
-    "4,-2": "M",
+    "4,-2": "A",
     "4,-1": "Y",
-    "4,0": "O"
+    "4,0": "F"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": -2,
-      "r": 2
-    },
-    {
-      "type": "gemEmerald",
-      "q": -3,
-      "r": 2
-    },
-    {
-      "type": "amethyst",
-      "q": 0,
+      "q": 2,
       "r": 1
     },
     {
-      "type": "digraph",
-      "q": 0,
-      "r": 4,
-      "digraph": "EA"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": 3,
-      "digraph": "HE"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -1,
-      "digraph": "NT"
-    },
-    {
-      "type": "digraph",
+      "type": "gemGold",
       "q": 4,
-      "r": -1,
-      "digraph": "LE"
+      "r": -4
     },
     {
-      "type": "digraph",
-      "q": -1,
-      "r": 3,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -1,
-      "digraph": "LL"
-    },
-    {
-      "type": "digraph",
+      "type": "rune",
       "q": 2,
-      "r": -1,
-      "digraph": "RE"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": 2,
-      "digraph": "TY"
+      "r": 0
     },
     {
       "type": "digraph",
       "q": 1,
-      "r": 0,
-      "digraph": "ES"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 1,
-      "digraph": "ER"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": 1,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -4,
-      "digraph": "UN"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": -1,
-      "digraph": "ED"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": -4,
-      "digraph": "GH"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": 3,
-      "digraph": "CO"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": 0,
-      "digraph": "IO"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 0,
+      "r": -2,
       "digraph": "CK"
     },
     {
       "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
       "q": -1,
+      "r": -2,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -2,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 3,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
       "r": -3,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
       "digraph": "IN"
     },
     {
       "type": "digraph",
       "q": 2,
-      "r": 1,
+      "r": -1,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
       "digraph": "AL"
     },
     {
       "type": "digraph",
-      "q": 4,
-      "r": 0,
-      "digraph": "ON"
+      "q": -4,
+      "r": 1,
+      "digraph": "ER"
     },
     {
       "type": "digraph",
-      "q": 2,
+      "q": -3,
+      "r": -1,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
       "r": -4,
-      "digraph": "NG"
+      "digraph": "EN"
     },
     {
       "type": "digraph",
       "q": -1,
-      "r": 4,
+      "r": 0,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 0,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 0,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -3,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
       "digraph": "TH"
     },
     {
       "type": "digraph",
       "q": 1,
-      "r": 1,
+      "r": 3,
       "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "LY"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": -1,
-      "r": 2
+      "q": 2,
+      "r": 0
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 0,
-      "r": -2
+      "q": -2,
+      "r": 1
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1547,
-    "minAchievableScore": 2548,
+    "maxPossibleScore": 1274,
+    "minAchievableScore": 1274,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "JITTERBUGGING",
-          "CONFIX",
-          "JIGJIG",
+          "BEMBIX",
+          "IMBREX",
           "WHIPWORM"
         ],
-        "wordTotal": 2642,
-        "penalty": 108,
-        "finalScore": 2534
+        "wordTotal": 1693,
+        "penalty": 145,
+        "finalScore": 1548
       },
       {
         "words": [
-          "CONFIX",
+          "BEMBIX",
+          "IMBREX",
           "JITTERBUGGING",
-          "JIGJIG",
           "WHIPWORM"
         ],
-        "wordTotal": 2642,
-        "penalty": 108,
-        "finalScore": 2534
+        "wordTotal": 1693,
+        "penalty": 145,
+        "finalScore": 1548
       },
       {
         "words": [
           "JITTERBUGGING",
           "WHIPWORM",
-          "CONFIX",
-          "JIGJIG"
+          "BEMBIX",
+          "IMBREX"
         ],
-        "wordTotal": 2642,
-        "penalty": 108,
-        "finalScore": 2534
+        "wordTotal": 1693,
+        "penalty": 145,
+        "finalScore": 1548
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 6,
+    "optimalMoves": 3,
+    "averageWordLength": 7.3,
     "gemDensity": 0.016,
     "solutionPath": [
-      "CONFIX",
-      "JITTERBUG",
-      "BICHIR",
-      "GROWL",
-      "BOODY",
-      "OGGIN",
-      "HELMER"
+      "MERENGUES",
+      "PIGBOATS",
+      "AGORA"
     ],
-    "generatedAt": "2026-05-13T11:49:25.423Z"
+    "generatedAt": "2026-05-13T11:52:44.103Z"
   }
 }

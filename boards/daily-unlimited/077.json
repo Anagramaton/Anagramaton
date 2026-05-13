@@ -1,186 +1,225 @@
 {
   "date": "unlimited-077",
   "grid": {
+    "-1,0": "O",
+    "0,-1": "V",
     "-1,-1": "O",
-    "-1,0": "V",
-    "-2,0": "O",
-    "-2,1": "V",
-    "-1,1": "I",
-    "0,0": "V",
-    "0,-1": "I",
-    "1,-2": "P",
-    "2,-2": "A",
-    "1,-1": "R",
-    "2,-1": "I",
-    "1,0": "T",
-    "1,1": "Y",
-    "0,2": "F",
-    "-1,3": "R",
-    "-1,2": "I",
-    "-2,3": "Z",
-    "-2,2": "Z",
-    "0,1": "L",
-    "3,1": "M",
-    "2,1": "O",
-    "2,0": "Z",
-    "3,-1": "Z",
-    "3,-2": "E",
-    "0,-3": "Z",
-    "0,-2": "U",
-    "-1,-2": "F",
-    "-2,-1": "L",
-    "4,-1": "V",
-    "3,0": "I",
-    "3,-3": "W",
-    "2,-3": "M",
-    "1,-3": "M",
-    "-4,0": "O",
-    "-4,1": "G",
-    "-4,2": "I",
-    "-4,3": "T",
-    "-4,4": "E",
-    "-3,-1": "V",
-    "-3,0": "I",
-    "-3,1": "W",
-    "-3,2": "G",
-    "-3,3": "E",
-    "-3,4": "W",
-    "-2,-2": "E",
-    "-2,4": "U",
-    "-1,-3": "L",
+    "0,-2": "V",
+    "1,-2": "I",
+    "2,-3": "V",
+    "2,-2": "I",
+    "1,-1": "P",
+    "2,-1": "A",
+    "1,0": "R",
+    "0,0": "I",
+    "-1,1": "T",
+    "0,1": "Y",
+    "2,0": "F",
+    "1,1": "I",
+    "0,2": "Z",
+    "-1,2": "Z",
+    "-2,3": "I",
+    "-2,2": "L",
+    "-3,3": "Y",
+    "-2,-1": "B",
+    "-2,1": "J",
+    "-3,1": "A",
+    "-2,0": "C",
+    "-3,0": "K",
+    "-2,4": "M",
+    "-1,3": "O",
+    "2,1": "E",
+    "4,-2": "F",
+    "3,-2": "L",
+    "3,-1": "F",
+    "3,0": "S",
+    "0,4": "D",
+    "0,3": "A",
+    "-3,2": "E",
+    "-4,0": "A",
+    "-4,1": "N",
+    "-4,2": "R",
+    "-4,3": "L",
+    "-4,4": "O",
+    "-3,-1": "T",
+    "-3,4": "F",
+    "-2,-2": "O",
+    "-1,-3": "S",
+    "-1,-2": "T",
     "-1,4": "I",
     "0,-4": "A",
-    "0,3": "L",
-    "0,4": "R",
-    "1,-4": "C",
-    "1,2": "N",
-    "1,3": "E",
-    "2,-4": "I",
-    "2,2": "G",
-    "3,-4": "D",
-    "4,-4": "O",
-    "4,-3": "U",
-    "4,-2": "G",
-    "4,0": "E"
+    "0,-3": "S",
+    "1,-4": "G",
+    "1,-3": "L",
+    "1,2": "C",
+    "1,3": "U",
+    "2,-4": "A",
+    "2,2": "N",
+    "3,-4": "P",
+    "3,-3": "Z",
+    "3,1": "S",
+    "4,-4": "S",
+    "4,-3": "E",
+    "4,-1": "I",
+    "4,0": "U"
   },
   "specialTiles": [
     {
       "type": "prism",
       "q": 1,
-      "r": -2
+      "r": 1
     },
     {
-      "type": "gemGold",
-      "q": -4,
-      "r": 3
+      "type": "gemEmerald",
+      "q": 2,
+      "r": -1
     },
     {
       "type": "amethyst",
+      "q": -3,
+      "r": 3
+    },
+    {
+      "type": "digraph",
       "q": 0,
-      "r": -4
+      "r": 2,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -3,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -4,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 2,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "TH"
     },
     {
       "type": "digraph",
       "q": 1,
       "r": 0,
-      "digraph": "EN"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": 1,
-      "digraph": "AL"
+      "digraph": "IN"
     },
     {
       "type": "digraph",
       "q": -4,
       "r": 1,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -2,
-      "digraph": "TH"
+      "digraph": "EN"
     },
     {
       "type": "digraph",
       "q": 0,
       "r": 3,
-      "digraph": "IO"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 2,
-      "digraph": "CO"
+      "digraph": "ON"
     },
     {
       "type": "portal",
       "role": "entry",
       "q": 2,
-      "r": 0
+      "r": -1
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 1,
-      "r": 1
+      "q": 2,
+      "r": 0
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2127,
-    "minAchievableScore": 2652,
+    "maxPossibleScore": 1651,
+    "minAchievableScore": 1326,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "OVOVIVIPARITY",
-          "WAMPUM",
           "FRIZZILY",
-          "VIZZIE"
+          "MOZZIE",
+          "BOOTJACK"
         ],
-        "wordTotal": 2206,
-        "penalty": 123,
-        "finalScore": 2083
+        "wordTotal": 1979,
+        "penalty": 114,
+        "finalScore": 1865
+      },
+      {
+        "words": [
+          "FRIZZILY",
+          "MOZZIE",
+          "OVOVIVIPARITY",
+          "BOOTJACK"
+        ],
+        "wordTotal": 1979,
+        "penalty": 114,
+        "finalScore": 1865
       },
       {
         "words": [
           "OVOVIVIPARITY",
-          "WAMPUM",
           "FRIZZILY",
-          "VIZZIE"
+          "BOOTJACK",
+          "MOZZIE"
         ],
-        "wordTotal": 2206,
-        "penalty": 123,
-        "finalScore": 2083
-      },
-      {
-        "words": [
-          "OVOVIVIPARITY",
-          "FRIZZILY",
-          "WAMPUM",
-          "VIZZIE"
-        ],
-        "wordTotal": 2206,
-        "penalty": 123,
-        "finalScore": 2083
+        "wordTotal": 1979,
+        "penalty": 114,
+        "finalScore": 1865
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 6.3,
+    "optimalMoves": 5,
+    "averageWordLength": 7.8,
     "gemDensity": 0.016,
     "solutionPath": [
-      "VIVIPARITY",
-      "FIZZGIG",
-      "TOILFUL",
-      "MOZZIE",
-      "VOWEL",
-      "IMMEW",
-      "ZORIL",
-      "ANGER"
+      "VIVIPARIES",
+      "BOOTJACK",
+      "DAZZLER",
+      "VOMITOS",
+      "SCLAFFS"
     ],
-    "generatedAt": "2026-05-13T11:49:24.916Z"
+    "generatedAt": "2026-05-13T11:52:43.637Z"
   }
 }

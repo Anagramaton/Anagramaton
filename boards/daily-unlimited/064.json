@@ -1,305 +1,185 @@
 {
   "date": "unlimited-064",
   "grid": {
-    "1,-1": "D",
-    "2,-2": "I",
-    "1,-2": "C",
-    "0,-1": "H",
-    "-1,-1": "O",
-    "-1,0": "T",
-    "0,0": "O",
-    "0,1": "M",
-    "-1,1": "I",
-    "-1,2": "Z",
-    "0,2": "I",
-    "1,1": "N",
-    "1,0": "G",
-    "4,-3": "B",
-    "3,-2": "E",
-    "2,-1": "V",
-    "3,-1": "V",
-    "2,0": "Y",
-    "2,1": "I",
-    "-3,4": "P",
-    "-2,3": "Y",
-    "-2,2": "X",
-    "-2,1": "D",
-    "-3,1": "I",
-    "-2,0": "U",
-    "-2,-1": "M",
-    "3,-3": "P",
-    "1,-3": "K",
-    "0,-2": "A",
-    "-1,-2": "X",
-    "2,2": "W",
-    "1,2": "H",
-    "-1,3": "Z",
-    "-4,0": "I",
-    "-4,1": "A",
-    "-4,2": "S",
+    "0,-1": "R",
+    "-1,0": "A",
+    "0,0": "Z",
+    "-1,1": "Z",
+    "-1,2": "A",
+    "0,2": "M",
+    "0,1": "A",
+    "1,0": "T",
+    "1,-1": "A",
+    "2,-1": "Z",
+    "2,0": "Z",
+    "-2,0": "F",
+    "-1,-1": "M",
+    "0,-2": "W",
+    "1,-2": "I",
+    "2,-3": "F",
+    "2,-2": "E",
+    "-3,2": "G",
+    "-2,1": "E",
+    "-2,2": "W",
+    "-2,3": "G",
+    "-1,3": "W",
+    "1,3": "F",
+    "1,2": "R",
+    "1,1": "A",
+    "2,1": "N",
+    "3,-1": "Y",
+    "3,-2": "L",
+    "4,-1": "M",
+    "3,0": "O",
+    "3,-3": "S",
+    "-4,0": "A",
+    "-4,1": "L",
+    "-4,2": "E",
     "-4,3": "E",
     "-4,4": "R",
-    "-3,-1": "T",
-    "-3,0": "A",
-    "-3,2": "A",
-    "-3,3": "S",
-    "-2,-2": "C",
-    "-2,4": "T",
-    "-1,-3": "O",
-    "-1,4": "A",
-    "0,-4": "P",
-    "0,-3": "S",
-    "0,3": "L",
-    "0,4": "Q",
-    "1,-4": "I",
-    "1,3": "E",
-    "2,-4": "H",
-    "2,-3": "I",
-    "3,-4": "F",
-    "3,0": "O",
-    "3,1": "T",
-    "4,-4": "U",
-    "4,-2": "U",
-    "4,-1": "L",
-    "4,0": "V"
+    "-3,-1": "N",
+    "-3,0": "N",
+    "-3,1": "Y",
+    "-3,3": "O",
+    "-3,4": "G",
+    "-2,-2": "N",
+    "-2,-1": "U",
+    "-2,4": "E",
+    "-1,-3": "I",
+    "-1,-2": "I",
+    "-1,4": "S",
+    "0,-4": "E",
+    "0,-3": "R",
+    "0,3": "A",
+    "0,4": "S",
+    "1,-4": "O",
+    "1,-3": "Y",
+    "2,-4": "N",
+    "2,2": "O",
+    "3,-4": "A",
+    "3,1": "O",
+    "4,-4": "M",
+    "4,-3": "I",
+    "4,-2": "N",
+    "4,0": "M"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": -1,
+      "q": 1,
       "r": 1
     },
     {
-      "type": "gemEmerald",
-      "q": 4,
-      "r": -3
+      "type": "gemGold",
+      "q": 0,
+      "r": 1
     },
     {
       "type": "rune",
       "q": 0,
-      "r": 1
+      "r": 0
     },
     {
       "type": "digraph",
       "q": 0,
       "r": -1,
-      "digraph": "NG"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -4,
-      "digraph": "LL"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 1,
-      "digraph": "IO"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": 0,
-      "digraph": "TY"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": -1,
-      "digraph": "QU"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -1,
-      "digraph": "CO"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": -2,
-      "digraph": "UN"
-    },
-    {
-      "type": "digraph",
-      "q": 4,
-      "r": -1,
-      "digraph": "NT"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 2,
-      "digraph": "EA"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 2,
-      "digraph": "LY"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -4,
-      "digraph": "AL"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": 2,
-      "digraph": "EN"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": -1,
-      "digraph": "CH"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 4,
-      "digraph": "TH"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 0,
-      "digraph": "GH"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -2,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 2,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": -4,
-      "r": 4,
-      "digraph": "ED"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 4,
-      "digraph": "CK"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 3,
-      "digraph": "RE"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 0,
       "digraph": "LE"
     },
     {
       "type": "digraph",
-      "q": -1,
-      "r": 4,
-      "digraph": "ST"
+      "q": 2,
+      "r": -4,
+      "digraph": "CR"
     },
     {
       "type": "digraph",
-      "q": -3,
-      "r": 1,
+      "q": -4,
+      "r": 3,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
       "digraph": "WH"
     },
     {
       "type": "digraph",
-      "q": 3,
-      "r": -3,
-      "digraph": "ON"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": -1,
-      "digraph": "ER"
+      "q": -1,
+      "r": 4,
+      "digraph": "EA"
     },
     {
       "type": "digraph",
       "q": -1,
-      "r": -3,
-      "digraph": "IN"
+      "r": 0,
+      "digraph": "ER"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": -2,
-      "r": 3
+      "q": -1,
+      "r": 1
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 1,
-      "r": -2
+      "q": -1,
+      "r": 0
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1564,
-    "minAchievableScore": 2496,
+    "maxPossibleScore": 4740,
+    "minAchievableScore": 3894,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "DICHOTOMIZING",
-          "BEVVYING",
-          "PYXIDIUM",
-          "ZIZITH"
+          "RAZZAMATAZZ",
+          "RAZZLE",
+          "FRANZY",
+          "FARMWIFE"
         ],
-        "wordTotal": 2788,
-        "penalty": 130,
-        "finalScore": 2658
+        "wordTotal": 2951,
+        "penalty": 121,
+        "finalScore": 2830
       },
       {
         "words": [
-          "DICHOTOMIZING",
-          "BEVVYING",
-          "PYXIDIUM",
-          "ZIZITH"
+          "RAZZAMATAZZ",
+          "RAZZLE",
+          "FRANZY",
+          "FARMWIFE"
         ],
-        "wordTotal": 2788,
-        "penalty": 130,
-        "finalScore": 2658
+        "wordTotal": 2951,
+        "penalty": 121,
+        "finalScore": 2830
       },
       {
         "words": [
-          "DICHOTOMIZING",
-          "BEVVYING",
-          "PYXIDIUM",
-          "ZIZITH"
+          "RAZZAMATAZZ",
+          "FARMWIFE",
+          "RAZZLE",
+          "FRANZY"
         ],
-        "wordTotal": 2788,
-        "penalty": 130,
-        "finalScore": 2658
+        "wordTotal": 2951,
+        "penalty": 121,
+        "finalScore": 2830
       }
     ],
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 6.3,
+    "averageWordLength": 6.9,
     "gemDensity": 0.016,
     "solutionPath": [
-      "MIZZLING",
-      "BEVVY",
-      "SPODIUM",
-      "WHIDAH",
-      "OPHITIC",
-      "TASERS",
-      "ATOKE"
+      "RAZZAMATAZZ",
+      "GEWGAWS",
+      "WAMEFOU",
+      "YIRRING",
+      "MASLIN",
+      "MONEY",
+      "LEERY"
     ],
-    "generatedAt": "2026-05-13T11:49:24.591Z"
+    "generatedAt": "2026-05-13T11:52:43.377Z"
   }
 }

@@ -1,275 +1,173 @@
 {
   "date": "unlimited-016",
   "grid": {
-    "0,2": "H",
-    "-1,2": "Y",
-    "0,1": "P",
-    "1,1": "E",
-    "2,0": "R",
-    "1,0": "G",
-    "1,-1": "L",
-    "0,-1": "Y",
-    "-1,0": "C",
-    "0,0": "E",
-    "-1,1": "M",
-    "-2,1": "I",
-    "-3,2": "C",
-    "-2,0": "H",
-    "-1,-1": "A",
-    "-1,-2": "Z",
-    "0,-2": "Z",
-    "1,-3": "A",
-    "1,-2": "N",
-    "2,-3": "S",
-    "4,-4": "J",
-    "3,-3": "I",
-    "2,-2": "V",
-    "3,-2": "I",
-    "2,-1": "N",
-    "3,-1": "G",
-    "-4,4": "F",
-    "-3,3": "U",
-    "-2,2": "Z",
-    "-2,3": "Z",
-    "-4,3": "B",
-    "0,-4": "G",
-    "0,-3": "O",
-    "-2,-1": "N",
+    "0,1": "H",
+    "-1,1": "Y",
+    "-1,0": "P",
+    "-2,1": "E",
+    "-2,0": "R",
+    "-1,-1": "G",
+    "0,-1": "L",
+    "0,-2": "Y",
+    "1,-2": "C",
+    "1,-1": "E",
+    "0,0": "M",
+    "1,0": "I",
+    "2,-1": "C",
+    "-1,2": "C",
+    "0,2": "A",
+    "1,2": "Z",
+    "1,1": "Z",
+    "2,1": "A",
+    "2,0": "N",
+    "3,-1": "S",
+    "-3,3": "W",
+    "-2,2": "Y",
+    "-3,2": "V",
+    "-3,0": "N",
+    "4,-3": "P",
+    "3,-2": "A",
+    "2,-2": "J",
+    "2,-3": "O",
+    "1,-3": "K",
+    "2,2": "T",
+    "-1,3": "S",
+    "1,3": "P",
+    "0,3": "Z",
     "-4,0": "A",
-    "-4,1": "E",
-    "-4,2": "E",
-    "-3,-1": "P",
-    "-3,0": "G",
-    "-3,1": "A",
-    "-3,4": "I",
-    "-2,-2": "D",
-    "-2,4": "Q",
-    "-1,-3": "N",
-    "-1,3": "W",
-    "-1,4": "I",
-    "0,3": "E",
-    "0,4": "O",
-    "1,-4": "F",
-    "1,2": "O",
-    "1,3": "C",
-    "2,-4": "A",
-    "2,1": "P",
-    "2,2": "C",
-    "3,-4": "N",
-    "3,0": "E",
-    "3,1": "E",
-    "4,-3": "I",
-    "4,-2": "D",
-    "4,-1": "U",
+    "-4,1": "M",
+    "-4,2": "A",
+    "-4,3": "I",
+    "-4,4": "I",
+    "-3,-1": "S",
+    "-3,1": "D",
+    "-3,4": "S",
+    "-2,-2": "Y",
+    "-2,-1": "E",
+    "-2,3": "I",
+    "-2,4": "H",
+    "-1,-3": "E",
+    "-1,-2": "D",
+    "-1,4": "A",
+    "0,-4": "H",
+    "0,-3": "A",
+    "0,4": "Y",
+    "1,-4": "A",
+    "2,-4": "N",
+    "3,-4": "L",
+    "3,-3": "R",
+    "3,0": "A",
+    "3,1": "D",
+    "4,-4": "U",
+    "4,-2": "I",
+    "4,-1": "D",
     "4,0": "D"
   },
   "specialTiles": [
     {
       "type": "prism",
-      "q": -3,
-      "r": 3
-    },
-    {
-      "type": "gemEmerald",
-      "q": -4,
+      "q": 1,
       "r": 1
     },
     {
+      "type": "gemEmerald",
+      "q": 4,
+      "r": 0
+    },
+    {
       "type": "amethyst",
-      "q": 3,
+      "q": 4,
       "r": -4
     },
     {
       "type": "digraph",
-      "q": 0,
-      "r": -3,
-      "digraph": "GH"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": 1,
-      "digraph": "WH"
-    },
-    {
-      "type": "digraph",
-      "q": 4,
-      "r": -4,
-      "digraph": "CR"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 3,
-      "digraph": "EN"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 1,
-      "digraph": "LE"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": -1,
-      "digraph": "CH"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": 2,
-      "digraph": "IO"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": -2,
-      "digraph": "ER"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -3,
-      "digraph": "ON"
-    },
-    {
-      "type": "digraph",
-      "q": 4,
-      "r": -2,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
+      "q": 1,
       "r": 0,
-      "digraph": "UN"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -1,
-      "digraph": "TH"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 4,
-      "digraph": "QU"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": -3,
-      "digraph": "CK"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": -2,
-      "digraph": "RE"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 1,
-      "digraph": "NT"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": -1,
-      "digraph": "HE"
-    },
-    {
-      "type": "digraph",
-      "q": 1,
-      "r": 3,
       "digraph": "LY"
     },
     {
       "type": "digraph",
-      "q": 1,
-      "r": -4,
-      "digraph": "EA"
+      "q": 2,
+      "r": 1,
+      "digraph": "ES"
     },
     {
       "type": "digraph",
-      "q": -1,
+      "q": -2,
+      "r": -2,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
       "r": 4,
-      "digraph": "TY"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -1,
-      "digraph": "LL"
+      "digraph": "CR"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": -2,
-      "r": 2
+      "q": 2,
+      "r": 1
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 1,
-      "r": -2
+      "q": -2,
+      "r": 0
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1242,
+    "maxPossibleScore": 1784,
     "minAchievableScore": 1248,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "HYPERGLYCEMIC",
-          "FUZZY",
-          "BUZZY",
           "CHAZZANS",
-          "JIVING"
+          "PZAZZ",
+          "TAZZAS"
         ],
-        "wordTotal": 1784,
-        "penalty": 106,
-        "finalScore": 1678
+        "wordTotal": 1978,
+        "penalty": 131,
+        "finalScore": 1847
       },
       {
         "words": [
-          "FUZZY",
-          "BUZZY",
-          "HYPERGLYCEMIC",
           "CHAZZANS",
-          "JIVING"
+          "PZAZZ",
+          "TAZZAS",
+          "HYPERGLYCEMIC"
         ],
-        "wordTotal": 1784,
-        "penalty": 106,
-        "finalScore": 1678
+        "wordTotal": 1978,
+        "penalty": 131,
+        "finalScore": 1847
       },
       {
         "words": [
           "HYPERGLYCEMIC",
           "CHAZZANS",
-          "GOZZAN",
-          "JIVING"
+          "TAZZAS",
+          "WYVERN"
         ],
-        "wordTotal": 1290,
-        "penalty": 134,
-        "finalScore": 1156
+        "wordTotal": 1782,
+        "penalty": 122,
+        "finalScore": 1660
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 5,
-    "averageWordLength": 6.2,
+    "optimalMoves": 7,
+    "averageWordLength": 6.6,
     "gemDensity": 0.016,
     "solutionPath": [
-      "REPECHAGE",
-      "BUZZY",
-      "GOZZAN",
-      "OPENLY",
-      "SANGH"
+      "CHAZZANIM",
+      "CADDIS",
+      "WYVERNS",
+      "PAJOCK",
+      "MAIDISH",
+      "ZELANT",
+      "HAYEY"
     ],
-    "generatedAt": "2026-05-13T11:49:23.322Z"
+    "generatedAt": "2026-05-13T11:52:42.052Z"
   }
 }

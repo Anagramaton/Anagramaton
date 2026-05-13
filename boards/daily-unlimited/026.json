@@ -1,67 +1,67 @@
 {
   "date": "unlimited-026",
   "grid": {
-    "-2,1": "D",
-    "-1,0": "E",
-    "-2,0": "C",
-    "-1,-1": "A",
-    "0,-1": "R",
-    "1,-2": "B",
-    "2,-2": "O",
-    "1,-1": "N",
-    "1,0": "I",
-    "0,1": "Z",
-    "0,0": "I",
-    "-1,1": "N",
-    "-1,2": "G",
-    "0,-2": "F",
-    "1,1": "Z",
-    "2,0": "L",
-    "2,-1": "Y",
-    "0,4": "F",
-    "0,3": "R",
-    "0,2": "O",
-    "1,2": "W",
-    "2,1": "Y",
-    "4,-2": "B",
-    "3,-2": "L",
-    "2,-3": "W",
-    "1,-3": "Y",
-    "-1,-2": "J",
-    "-3,1": "K",
-    "-3,2": "A",
-    "-2,2": "W",
-    "-3,3": "S",
-    "-4,0": "E",
-    "-4,1": "G",
-    "-4,2": "G",
-    "-4,3": "Q",
-    "-4,4": "U",
-    "-3,-1": "T",
-    "-3,0": "B",
-    "-3,4": "Y",
-    "-2,-2": "M",
-    "-2,-1": "R",
-    "-2,3": "U",
-    "-2,4": "U",
-    "-1,-3": "A",
-    "-1,3": "N",
-    "-1,4": "H",
-    "0,-4": "K",
-    "0,-3": "Y",
-    "1,-4": "I",
-    "1,3": "E",
-    "2,-4": "E",
-    "2,2": "A",
-    "3,-4": "D",
-    "3,-3": "E",
-    "3,-1": "O",
-    "3,0": "W",
-    "3,1": "N",
-    "4,-4": "T",
-    "4,-3": "E",
-    "4,-1": "R",
-    "4,0": "J"
+    "1,1": "D",
+    "1,0": "E",
+    "2,-1": "C",
+    "1,-1": "A",
+    "0,0": "R",
+    "0,1": "B",
+    "-1,2": "O",
+    "-2,2": "N",
+    "-1,1": "I",
+    "-1,0": "Z",
+    "-2,1": "I",
+    "-2,0": "N",
+    "-1,-1": "G",
+    "-4,1": "F",
+    "-3,1": "R",
+    "0,-1": "Z",
+    "0,-2": "I",
+    "1,-2": "L",
+    "2,-3": "Y",
+    "1,3": "K",
+    "0,3": "O",
+    "0,2": "W",
+    "-1,3": "T",
+    "-2,3": "W",
+    "3,0": "Q",
+    "2,0": "U",
+    "3,-1": "I",
+    "2,-2": "K",
+    "3,-2": "S",
+    "-3,-1": "B",
+    "-2,-1": "A",
+    "-1,-2": "W",
+    "1,-3": "G",
+    "0,-3": "V",
+    "-3,2": "E",
+    "-4,0": "A",
+    "-4,2": "D",
+    "-4,3": "S",
+    "-4,4": "S",
+    "-3,0": "I",
+    "-3,3": "Q",
+    "-3,4": "E",
+    "-2,-2": "C",
+    "-2,4": "Q",
+    "-1,-3": "O",
+    "-1,4": "I",
+    "0,-4": "H",
+    "0,4": "G",
+    "1,-4": "A",
+    "1,2": "C",
+    "2,-4": "A",
+    "2,1": "A",
+    "2,2": "O",
+    "3,-4": "Y",
+    "3,-3": "A",
+    "3,1": "C",
+    "4,-4": "B",
+    "4,-3": "S",
+    "4,-2": "I",
+    "4,-1": "E",
+    "4,0": "L"
   },
   "specialTiles": [
     {
@@ -70,240 +70,151 @@
       "r": -1
     },
     {
-      "type": "gemEmerald",
-      "q": 4,
-      "r": 0
+      "type": "gemGold",
+      "q": 1,
+      "r": -4
     },
     {
       "type": "amethyst",
-      "q": -1,
-      "r": 1
+      "q": 2,
+      "r": -3
     },
     {
       "type": "digraph",
-      "q": -3,
-      "r": 0,
-      "digraph": "CR"
+      "q": 4,
+      "r": -2,
+      "digraph": "IO"
     },
     {
       "type": "digraph",
       "q": 0,
       "r": -3,
-      "digraph": "CK"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": 4,
-      "digraph": "TH"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": -4,
-      "digraph": "LE"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": -1,
-      "digraph": "RE"
-    },
-    {
-      "type": "digraph",
-      "q": -4,
-      "r": 2,
-      "digraph": "EA"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -2,
-      "digraph": "ON"
-    },
-    {
-      "type": "digraph",
-      "q": 0,
-      "r": 0,
-      "digraph": "CH"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -4,
-      "digraph": "EN"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": 0,
-      "digraph": "LL"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": 4,
-      "digraph": "AN"
-    },
-    {
-      "type": "digraph",
-      "q": -3,
-      "r": -1,
-      "digraph": "GH"
-    },
-    {
-      "type": "digraph",
-      "q": -1,
-      "r": 0,
-      "digraph": "TY"
-    },
-    {
-      "type": "digraph",
-      "q": 4,
-      "r": -2,
-      "digraph": "UN"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 1,
       "digraph": "AL"
     },
     {
       "type": "digraph",
-      "q": -4,
-      "r": 0,
-      "digraph": "WH"
+      "q": -1,
+      "r": 4,
+      "digraph": "RE"
     },
     {
       "type": "digraph",
       "q": 0,
-      "r": 3,
-      "digraph": "ST"
+      "r": -1,
+      "digraph": "QU"
     },
     {
       "type": "digraph",
-      "q": 1,
-      "r": 0,
-      "digraph": "ED"
+      "q": -1,
+      "r": -3,
+      "digraph": "AN"
     },
     {
       "type": "digraph",
       "q": 3,
       "r": -1,
-      "digraph": "ES"
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -2,
+      "digraph": "CH"
     },
     {
       "type": "digraph",
       "q": 0,
       "r": -2,
-      "digraph": "ER"
+      "digraph": "CO"
     },
     {
       "type": "digraph",
       "q": 4,
       "r": -3,
-      "digraph": "CO"
+      "digraph": "EA"
     },
     {
       "type": "digraph",
-      "q": -1,
-      "r": -2,
-      "digraph": "NT"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": 4,
-      "digraph": "NG"
-    },
-    {
-      "type": "digraph",
-      "q": 2,
-      "r": -3,
-      "digraph": "IN"
-    },
-    {
-      "type": "digraph",
-      "q": 3,
-      "r": -3,
-      "digraph": "HE"
-    },
-    {
-      "type": "digraph",
-      "q": -2,
-      "r": -2,
-      "digraph": "QU"
+      "q": 0,
+      "r": -4,
+      "digraph": "UN"
     },
     {
       "type": "digraph",
       "q": 1,
-      "r": -2,
-      "digraph": "LY"
+      "r": -1,
+      "digraph": "WH"
     },
     {
       "type": "portal",
       "role": "entry",
-      "q": 1,
-      "r": 2
+      "q": 0,
+      "r": 0
     },
     {
       "type": "portal",
       "role": "exit",
-      "q": 0,
-      "r": 0
+      "q": -2,
+      "r": 2
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1621,
+    "maxPossibleScore": 2548,
     "minAchievableScore": 2548,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "DECARBONIZING",
-          "JACKDAWS",
+          "BAGWIG",
           "FRIZZILY",
-          "FROWZILY"
+          "VIZZIE"
         ],
-        "wordTotal": 2562,
-        "penalty": 138,
-        "finalScore": 2424
+        "wordTotal": 2142,
+        "penalty": 147,
+        "finalScore": 1995
       },
       {
         "words": [
           "DECARBONIZING",
-          "JACKDAWS",
+          "BAGWIG",
           "FRIZZILY",
-          "FROWZILY"
+          "VIZZIE"
         ],
-        "wordTotal": 2562,
-        "penalty": 138,
-        "finalScore": 2424
+        "wordTotal": 2142,
+        "penalty": 147,
+        "finalScore": 1995
       },
       {
         "words": [
           "DECARBONIZING",
-          "JACKDAWS",
           "FRIZZILY",
-          "FROWZILY"
+          "BAGWIG",
+          "VIZZIE"
         ],
-        "wordTotal": 2562,
-        "penalty": 138,
-        "finalScore": 2424
+        "wordTotal": 2142,
+        "penalty": 147,
+        "finalScore": 1995
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 5,
-    "averageWordLength": 7,
+    "optimalMoves": 6,
+    "averageWordLength": 6.7,
     "gemDensity": 0.016,
     "solutionPath": [
       "CARBONIZING",
-      "FROWZY",
-      "BOWLIKE",
-      "WEDELN",
-      "GAWSY"
+      "RECOILED",
+      "QUAKY",
+      "WAWES",
+      "ACOCK",
+      "ASIAGO"
     ],
-    "generatedAt": "2026-05-13T11:49:23.667Z"
+    "generatedAt": "2026-05-13T11:52:42.274Z"
   }
 }
