@@ -162,10 +162,12 @@
   animation: hx-digraph-spawn-anim 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* ── Rune tile — midnight indigo→electric violet ───────────────── */
+/* ── Rune tile — imperial amethyst with gold accents ───────────── */
 .hx-rune {
   fill: url(#hx-rune-gradient);
-  filter: drop-shadow(0 0 5px rgba(109, 40, 217, 0.8));
+  filter:
+    drop-shadow(0 0 8px rgba(250, 204, 21, 0.5))
+    drop-shadow(0 0 14px rgba(126, 34, 206, 0.75));
 }
 
 /* ── Hexacore HUD ──────────────────────────────────────────────── */
@@ -1144,7 +1146,6 @@ body.hx-active #hex-grid {
 .hx-gem-emerald {
   fill: url(#hx-gem-emerald-gradient);
   filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.85));
-  animation: hx-gem-emerald-pulse 1.6s ease-in-out infinite alternate;
 }
 @keyframes hx-gem-emerald-pulse {
   from { filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.7)); }
@@ -1154,7 +1155,7 @@ body.hx-active #hex-grid {
 /* ── Gold Gem — Tier 1: bright lemon yellow, slow subtle glow ─── */
 .hx-gem-gold {
   fill: url(#hx-gem-gold-gradient);
-  animation: hx-gem-gold-shimmer 2.2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 7px rgba(234, 179, 8, 0.95));
 }
 @keyframes hx-gem-gold-shimmer {
   from { filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.8)); }
@@ -1164,7 +1165,7 @@ body.hx-active #hex-grid {
 /* ── Sapphire Gem — Tier 1: blue glow, slow subtle pulse ─────── */
 .hx-gem-sapphire {
   fill: url(#hx-gem-sapphire-gradient);
-  animation: hx-gem-sapphire-shimmer 2.4s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.85));
 }
 @keyframes hx-gem-sapphire-shimmer {
   from { filter: drop-shadow(0 0 4px rgba(29, 78, 216, 0.8)); }
@@ -1174,9 +1175,7 @@ body.hx-active #hex-grid {
 /* ── Pearl Gem — Tier 2: soft glow + gentle scale ────────────── */
 .hx-gem-pearl {
   fill: url(#hx-gem-pearl-gradient);
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: hx-gem-pearl-pulse 2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.8));
 }
 @keyframes hx-gem-pearl-pulse {
   from { filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.7)); transform: scale(1); }
@@ -1186,9 +1185,7 @@ body.hx-active #hex-grid {
 /* ── Tanzanite Gem — Tier 2: navy blue glow + gentle scale ─────── */
 .hx-gem-tanzanite {
   fill: url(#hx-gem-tanzanite-gradient);
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: hx-gem-tanzanite-shimmer 1.8s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 9px rgba(59, 130, 246, 0.85));
 }
 @keyframes hx-gem-tanzanite-shimmer {
   from { filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.8)); transform: scale(1); }
@@ -5756,7 +5753,8 @@ body[data-theme="light"].hx-active .hx-prism {
 }
 body[data-theme="light"].hx-active .hx-rune {
   filter:
-    drop-shadow(0 0 10px rgba(34, 197, 94, 0.85))
+    drop-shadow(0 0 8px rgba(234, 179, 8, 0.55))
+    drop-shadow(0 0 12px rgba(126, 34, 206, 0.7))
     drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
 }
 body[data-theme="light"].hx-active .hx-digraph {
@@ -5854,11 +5852,23 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
 }
 
 /* Daily Challenge HUD + Results */
-#hx-daily-hud {
+#hx-daily-hud-shell {
   position: fixed;
   top: 6.2rem;
   right: 0.8rem;
   z-index: 950;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  pointer-events: none;
+}
+#hx-daily-hud-shell > * {
+  pointer-events: auto;
+}
+#hx-daily-hud {
+  position: relative;
+  top: auto;
+  right: auto;
   background: rgba(8, 12, 26, 0.86);
   border: 1px solid rgba(76, 201, 240, 0.55);
   border-radius: 10px;
@@ -5866,6 +5876,39 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   min-width: 180px;
   font-family: 'Black Han Sans', sans-serif;
   letter-spacing: 0.08em;
+  transition: transform 0.28s ease, opacity 0.28s ease;
+  transform: translateX(0);
+}
+#hx-daily-hud-shell.hx-daily-hud-collapsed #hx-daily-hud {
+  transform: translateX(calc(100% + 0.8rem));
+  opacity: 0;
+  pointer-events: none;
+}
+#hx-daily-hud-toggle {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(76, 201, 240, 0.55);
+  background: rgba(8, 12, 26, 0.92);
+  color: #67e8f9;
+  font-size: 1.1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#hx-daily-hud-toggle[aria-expanded="true"] {
+  background: rgba(76, 201, 240, 0.18);
+  border-color: rgba(76, 201, 240, 0.9);
+  box-shadow: 0 0 12px rgba(76, 201, 240, 0.3);
+}
+#hx-daily-hud-toggle:hover,
+#hx-daily-hud-toggle:focus-visible {
+  border-color: rgba(103, 232, 249, 0.95);
+  box-shadow: 0 0 10px rgba(103, 232, 249, 0.35);
+  outline: none;
 }
 .hx-daily-hud-row {
   display: flex;
@@ -6056,9 +6099,11 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
 /* ── Daily Challenge responsive breakpoints ───────────────────── */
 /* ≤768 px — small tablet / large mobile */
 @media (max-width: 768px) {
-  #hx-daily-hud {
+  #hx-daily-hud-shell {
     top: 5.6rem;
     right: 0.5rem;
+  }
+  #hx-daily-hud {
     min-width: 160px;
     padding: 0.4rem 0.5rem;
   }
@@ -6077,12 +6122,21 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
 
 /* ≤480 px — standard mobile */
 @media (max-width: 480px) {
-  #hx-daily-hud {
+  #hx-daily-hud-shell {
     top: 5rem;
     right: 0.35rem;
+    gap: 0.35rem;
+  }
+  #hx-daily-hud {
     min-width: 140px;
     padding: 0.35rem 0.45rem;
     border-radius: 8px;
+  }
+  #hx-daily-hud-toggle {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    font-size: 1rem;
   }
   .hx-daily-hud-row {
     font-size: 0.58rem;
@@ -6108,9 +6162,11 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
 
 /* ≤430 px — standard mobile portrait */
 @media (max-width: 430px) {
-  #hx-daily-hud {
+  #hx-daily-hud-shell {
     top: 4.8rem;
     right: 0.25rem;
+  }
+  #hx-daily-hud {
     min-width: 128px;
     font-size: 0.6rem;
   }
@@ -6128,8 +6184,10 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
 
 /* ≤375 px — small phone (iPhone SE etc.) */
 @media (max-width: 375px) {
-  #hx-daily-hud {
+  #hx-daily-hud-shell {
     top: 4.5rem;
+  }
+  #hx-daily-hud {
     min-width: 118px;
     padding: 0.3rem 0.4rem;
   }

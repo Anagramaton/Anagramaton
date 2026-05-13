@@ -19,6 +19,25 @@ function toIsoDate(d = new Date()) {
   return `${y}-${m}-${day}`;
 }
 
+function summarizeSpecials(board) {
+  const specials = Array.isArray(board?.specialTiles) ? board.specialTiles : [];
+  const countByType = new Map();
+  specials.forEach(s => countByType.set(s.type, (countByType.get(s.type) || 0) + 1));
+
+  const rotatingGem = specials.find(s => s.type === 'gemEmerald' || s.type === 'gemGold')?.type ?? 'none';
+  const rotatingSpecial = specials.find(s => s.type === 'rune' || s.type === 'amethyst')?.type ?? 'none';
+  const digraphs = specials
+    .filter(s => s.type === 'digraph')
+    .map(s => String(s.digraph || '').toUpperCase())
+    .filter(Boolean);
+  const portals = specials.filter(s => s.type === 'portal');
+  const portalSummary = portals.length >= 2
+    ? `${portals[0].q},${portals[0].r} -> ${portals[1].q},${portals[1].r}`
+    : 'missing';
+
+  console.log(`   specials: prism=${countByType.get('prism') || 0}, rotateGem=${rotatingGem}, rotateSpecial=${rotatingSpecial}, portals=${portals.length} (${portalSummary}), digraphs=${digraphs.length}${digraphs.length ? ` [${digraphs.join(', ')}]` : ''}`);
+}
+
 const args = parseArgs(process.argv);
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = join(root, 'boards', 'hexacoreDaily');
@@ -32,6 +51,7 @@ if (args.count && args.count > 1) {
     const fp = join(outDir, `${board.date}.json`);
     writeFileSync(fp, JSON.stringify(board, null, 2), 'utf8');
     console.log(`[${i + 1}/${boards.length}] ✓ ${board.date} (${board.metadata.maxPossibleScore} max est)`);
+    summarizeSpecials(board);
   });
   console.log(`✅ Wrote ${boards.length} board files to boards/hexacoreDaily`);
 } else {
@@ -43,4 +63,5 @@ if (args.count && args.count > 1) {
   console.log(`✅ Wrote ${fp}`);
   console.log(`   maxPossibleScore: ${board.metadata.maxPossibleScore}`);
   console.log(`   strategicPathCount: ${board.metadata.strategicPathCount}`);
+  summarizeSpecials(board);
 }
