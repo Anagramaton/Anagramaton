@@ -2090,10 +2090,15 @@ function ensureHud() {
     const dailyHud = document.createElement('div');
     dailyHud.id = 'hx-daily-hud';
     dailyHud.innerHTML = `
+      <div class="hx-daily-hud-header">
+        <span>Daily Board</span>
+        <button class="hx-daily-toggle-btn" type="button" aria-label="Toggle daily stats">▼</button>
+      </div>
       <div class="hx-daily-hud-row"><span>Tiles Left</span><strong id="hx-daily-tiles-left">61</strong></div>
       <div class="hx-daily-hud-row"><span>Word Total</span><strong id="hx-daily-word-total">0</strong></div>
       <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
       <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
+      <button class="hx-daily-settings-btn hx-daily-settings-btn--mobile" type="button" aria-label="Open settings">⚙ SETTINGS</button>
       <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
       <button id="hx-daily-reset-btn" type="button">RESET BOARD</button>
     `;
@@ -2103,6 +2108,16 @@ function ensureHud() {
       if (confirm('Reset the daily board? Your current progress will be lost.')) {
         startHexacore('daily');
       }
+    });
+    // Settings button embedded inside daily HUD (visible on mobile ≤900px)
+    dailyHud.querySelector('.hx-daily-settings-btn--mobile')?.addEventListener('click', () => {
+      document.getElementById('settings-btn')?.click();
+    });
+    // Expand/collapse toggle for mobile HUD
+    dailyHud.querySelector('.hx-daily-toggle-btn')?.addEventListener('click', () => {
+      const expanded = dailyHud.classList.toggle('hx-daily-hud--expanded');
+      const btn = dailyHud.querySelector('.hx-daily-toggle-btn');
+      if (btn) btn.textContent = expanded ? '▲' : '▼';
     });
   }
 
@@ -4353,7 +4368,9 @@ async function submitHexacoreWord() {
 
   if (!hxState.gameOver) {
     // Show all post-word UI feedback only after board settle
-    checkHexacoreRequirements(word, consumed, wordScore);
+    if (hxGameMode !== 'daily') {
+      checkHexacoreRequirements(word, consumed, wordScore);
+    }
     if (hxGameMode !== 'daily') {
       showXPGainToast(xpGain);
       if (leveledUp) showPlayerLevelUpBanner(newLevel);

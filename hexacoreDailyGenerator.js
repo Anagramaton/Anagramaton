@@ -123,6 +123,19 @@ const SHORT_RANKED = makeRanked([...wordList_5, ...wordList_6], 5, 6);
 const MEDIUM_RANKED = makeRanked([...wordList_7, ...wordList_8], 7, 8);
 const LONG_RANKED = makeRanked([...wordList_9, ...wordList_10, ...wordList_11, ...wordList_12, ...wordList_13], 9, 13);
 
+// Count high-value letters (Q, X, Z, J) in a word
+function countHighValueLetters(word) {
+  let n = 0;
+  for (const ch of word) if (HIGH_VALUE_LETTERS.has(ch)) n++;
+  return n;
+}
+
+// Daily-safe ranked lists: exclude words with 2+ high-value letters
+// to prevent boards flooded with Q/X/Z/J tiles.
+const DAILY_SHORT_RANKED  = SHORT_RANKED.filter(w => countHighValueLetters(w.word) <= 1);
+const DAILY_MEDIUM_RANKED = MEDIUM_RANKED.filter(w => countHighValueLetters(w.word) <= 1);
+const DAILY_LONG_RANKED   = LONG_RANKED.filter(w => countHighValueLetters(w.word) <= 1);
+
 function pickWordGroup(rng, ranked, count, window = 600) {
   const result = [];
   const used = new Set();
@@ -138,11 +151,23 @@ function pickWordGroup(rng, ranked, count, window = 600) {
 
 function chooseTargetWords(rng) {
   const shortCount = 3 + Math.floor(rng() * 3);
-  const words = [
-    ...pickWordGroup(rng, LONG_RANKED, 1, 700),
-    ...pickWordGroup(rng, MEDIUM_RANKED, 2, 900),
-    ...pickWordGroup(rng, SHORT_RANKED, shortCount, 1200),
+  // Use daily-safe lists and larger windows for more day-to-day variety.
+  const candidates = [
+    ...pickWordGroup(rng, DAILY_LONG_RANKED,   2,              Math.min(1500, DAILY_LONG_RANKED.length)),
+    ...pickWordGroup(rng, DAILY_MEDIUM_RANKED, 3,              Math.min(2000, DAILY_MEDIUM_RANKED.length)),
+    ...pickWordGroup(rng, DAILY_SHORT_RANKED,  shortCount + 2, Math.min(3000, DAILY_SHORT_RANKED.length)),
   ];
+  // Cap boards to at most 2 words that contain any Q/X/Z/J letter.
+  const words = [];
+  let highValueWordCount = 0;
+  for (const w of candidates) {
+    if (words.length >= 8) break;
+    if (countHighValueLetters(w) > 0) {
+      if (highValueWordCount >= 2) continue;
+      highValueWordCount++;
+    }
+    words.push(w);
+  }
   return words.slice(0, 8);
 }
 
@@ -249,6 +274,11 @@ function neighbors(q, r, radius) {
   return result;
 }
 
+/** Cube-coordinate distance between two hex positions. */
+function hexDist(a, b) {
+  return (Math.abs(a.q - b.q) + Math.abs(a.q + a.r - b.q - b.r) + Math.abs(a.r - b.r)) / 2;
+}
+
 function buildCoordStats(placements) {
   const coordToWords = new Map();
   const longMiddle = new Set();
@@ -292,19 +322,41 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     pathDensity.set(c.key, density);
   }
 
-  const placeType = (type, candidates, count, extra = {}) => {
+  const placeType = (type, candidates, count, extra = {}, minDist = 2) => {
     const ordered = candidates
       .filter(c => !taken.has(c.key) && !!grid[c.key])
       .sort((a, b) => (b.weight || 0) - (a.weight || 0));
     const picks = shuffled(ordered, rng);
+    let remaining = count;
+    // First pass: enforce minimum distance from already-placed specials.
     for (const c of picks) {
-      if (count <= 0) break;
+      if (remaining <= 0) break;
       if (taken.has(c.key) || !grid[c.key]) continue;
+      if (specials.some(s => hexDist(c, s) < minDist)) continue;
       specials.push({ type, q: c.q, r: c.r, ...extra });
       taken.add(c.key);
-      count -= 1;
+      remaining -= 1;
+    }
+    // Fallback: if first pass couldn't fill all slots, allow any non-taken tile.
+    if (remaining > 0) {
+      for (const c of picks) {
+        if (remaining <= 0) break;
+        if (taken.has(c.key) || !grid[c.key]) continue;
+        specials.push({ type, q: c.q, r: c.r, ...extra });
+        taken.add(c.key);
+        remaining -= 1;
+      }
     }
   };
+
+  // ── PORTAL — placed first to guarantee both tiles always spawn ───
+  // Portals use fixed corner positions and are pre-opened on daily boards.
+  const availableCorners = shuffled(DAILY_PORTAL_CORNERS, rng);
+  const portalPair = availableCorners.slice(0, 2);
+  for (const corner of portalPair) {
+    specials.push({ type: 'portal', q: corner.q, r: corner.r });
+    taken.add(hexKey(corner.q, corner.r));
+  }
 
   // ── 1 · PRISM — highest strategic overlap ────────────────────────
   const prismCandidates = allCoords
@@ -393,9 +445,8 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     placeType('digraph', digraphCandidates, 1, { digraph: dg });
   }
 
-  // ── 1 · AMETHYST ─────────────────────────────────────────────────
+  // Amethyst is excluded from daily boards — it only appears in endless/campaign.
   const denseCandidates = allCoords.map(c => ({ ...c, weight: pathDensity.get(c.key) || 0 }));
-  placeType('amethyst', denseCandidates, 1);
 
   // ── 1 · SELENITE ─────────────────────────────────────────────────
   placeType('selenite', denseCandidates, 1);
@@ -415,15 +466,6 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
       })
       .filter(Boolean);
     placeType('lodestone', lodestoneCandidates.length >= 1 ? lodestoneCandidates : denseCandidates, 1);
-  }
-
-  // ── 1 · PORTAL — 2 random corner tiles form a portal pair ────────
-  const availableCorners = shuffled(DAILY_PORTAL_CORNERS, rng);
-  for (let i = 0; i < Math.min(2, availableCorners.length); i++) {
-    const corner = availableCorners[i];
-    const key = hexKey(corner.q, corner.r);
-    specials.push({ type: 'portal', q: corner.q, r: corner.r });
-    taken.add(key);
   }
 
   return specials;
