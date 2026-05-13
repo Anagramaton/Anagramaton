@@ -4923,7 +4923,7 @@ async function completeDailyChallenge() {
 function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words }) {
   document.getElementById('hx-daily-result-overlay')?.remove();
   const allStrategies = hxState.dailyMetadata?.optimalSolutions || [];
-  const topStrategies = allStrategies.slice(0, 3);
+  const bestStrategy  = allStrategies[0] || null;
   const maxFromStrategies = allStrategies.reduce((maxScore, strategy) => {
     const candidate = Number(strategy?.finalScore);
     return Number.isFinite(candidate) ? Math.max(maxScore, candidate) : maxScore;
@@ -4933,6 +4933,28 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
     ? Math.max(maxFromMetadata, maxFromStrategies)
     : maxFromStrategies;
   const displayHighScore = highScore > 0 ? highScore : finalScore;
+
+  // Build the best-solution block (always visible, no button click required)
+  let optimalHtml = '';
+  if (bestStrategy) {
+    const wordsMarkup = (bestStrategy.words || [])
+      .map((word) => `<span class="hx-daily-opt-word">${escapeHtml(word)}</span>`)
+      .join('');
+    const bWordTotal = Number(bestStrategy.wordTotal || 0);
+    const bPenalty   = Number(bestStrategy.penalty   || 0);
+    const bFinal     = Number(bestStrategy.finalScore || 0);
+    optimalHtml = `
+      <div class="hx-daily-opt-section">
+        <div class="hx-daily-opt-heading">🏆 OPTIMAL SOLUTION</div>
+        <div class="hx-daily-opt-words">${wordsMarkup}</div>
+        <div class="hx-stats hx-stats--daily hx-stats--opt">
+          <div class="hx-stat-row"><span>Word Score</span><strong>${bWordTotal.toLocaleString()}</strong></div>
+          <div class="hx-stat-row"><span>Penalty</span><strong>-${bPenalty.toLocaleString()}</strong></div>
+          <div class="hx-stat-row hx-stat-row--highlight"><span>Final Score</span><strong>${bFinal.toLocaleString()} pts</strong></div>
+        </div>
+      </div>
+    `;
+  }
 
   const overlay = document.createElement('div');
   overlay.id = 'hx-daily-result-overlay';
@@ -4955,8 +4977,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
         <div class="hx-stat-row"><span>Tiles Used</span><strong>${tilesUsed} / ${tilesTotal}</strong></div>
         <div class="hx-stat-row"><span>Penalty</span><strong>-${penalty.toLocaleString()}</strong></div>
       </div>
-      <div id="hx-daily-opt-wrap" class="hx-daily-opt-wrap"></div>
-      <button id="hx-daily-opt-btn" class="hx-btn-primary" type="button">VIEW TOP 3 OPTIMAL SOLUTIONS</button>
+      ${optimalHtml}
       <button id="hx-daily-leaderboard-btn" type="button">LEADERBOARD</button>
       <button id="hx-daily-again-btn" type="button">PLAY AGAIN</button>
       <button id="hx-daily-menu-btn" type="button">MAIN MENU</button>
@@ -4964,33 +4985,6 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
   `;
   document.body.appendChild(overlay);
 
-  document.getElementById('hx-daily-opt-btn')?.addEventListener('click', () => {
-    const wrap = document.getElementById('hx-daily-opt-wrap');
-    if (!wrap) return;
-    if (topStrategies.length === 0) {
-      wrap.innerHTML = `<div class="hx-daily-opt-empty">No strategy data available.</div>`;
-      return;
-    }
-    wrap.innerHTML = `
-      <div class="hx-daily-opt-title">TOP 3 OPTIMAL SOLUTIONS</div>
-      <div class="hx-daily-opt-grid">
-        ${topStrategies.map((strategy, i) => {
-          const wordsMarkup = (strategy.words || [])
-            .map((word) => `<span class="hx-daily-opt-word">${escapeHtml(word)}</span>`)
-            .join('');
-          return `
-            <div class="hx-daily-opt-card">
-              <div class="hx-daily-opt-card-head">
-                <span class="hx-daily-opt-rank">#${i + 1}</span>
-                <span class="hx-daily-opt-score">${Number(strategy.finalScore || 0).toLocaleString()} pts</span>
-              </div>
-              <div class="hx-daily-opt-words">${wordsMarkup}</div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
-  });
   document.getElementById('hx-daily-leaderboard-btn')?.addEventListener('click', () => openLeaderboardsModal('daily'));
   document.getElementById('hx-daily-again-btn')?.addEventListener('click', () => {
     overlay.remove();
