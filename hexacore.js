@@ -4971,13 +4971,6 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
       wrap.innerHTML = `<div class="hx-daily-opt-empty">No strategy data available.</div>`;
       return;
     }
-    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;',
-    }[char]));
     wrap.innerHTML = `
       <div class="hx-daily-opt-title">TOP 3 OPTIMAL SOLUTIONS</div>
       <div class="hx-daily-opt-grid">
