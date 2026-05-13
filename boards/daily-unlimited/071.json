@@ -1,0 +1,293 @@
+{
+  "date": "unlimited-071",
+  "grid": {
+    "0,-1": "C",
+    "0,-2": "O",
+    "-1,-1": "M",
+    "-1,0": "P",
+    "-2,1": "U",
+    "-2,2": "T",
+    "-1,2": "E",
+    "-1,1": "R",
+    "0,0": "I",
+    "0,1": "Z",
+    "1,0": "I",
+    "1,-1": "N",
+    "2,-1": "G",
+    "2,1": "Q",
+    "2,0": "U",
+    "1,1": "A",
+    "1,2": "R",
+    "0,2": "T",
+    "-1,3": "S",
+    "3,-4": "F",
+    "3,-3": "U",
+    "2,-2": "Z",
+    "2,-3": "Z",
+    "1,-2": "E",
+    "1,-3": "S",
+    "-2,-2": "B",
+    "-1,-2": "E",
+    "-2,-1": "I",
+    "-2,0": "X",
+    "-3,0": "T",
+    "4,-3": "S",
+    "3,-2": "A",
+    "4,-4": "L",
+    "-4,0": "U",
+    "-4,1": "S",
+    "-4,2": "E",
+    "-4,3": "G",
+    "-4,4": "U",
+    "-3,-1": "O",
+    "-3,1": "L",
+    "-3,2": "R",
+    "-3,3": "E",
+    "-3,4": "H",
+    "-2,3": "V",
+    "-2,4": "A",
+    "-1,-3": "H",
+    "-1,4": "L",
+    "0,-4": "I",
+    "0,-3": "S",
+    "0,3": "E",
+    "0,4": "N",
+    "1,-4": "A",
+    "1,3": "O",
+    "2,-4": "E",
+    "2,2": "E",
+    "3,-1": "I",
+    "3,0": "H",
+    "3,1": "A",
+    "4,-2": "R",
+    "4,-1": "H",
+    "4,0": "T"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 2,
+      "r": -2
+    },
+    {
+      "type": "gemGold",
+      "q": -1,
+      "r": 0
+    },
+    {
+      "type": "amethyst",
+      "q": 4,
+      "r": -1
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 2,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 1,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 2,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 1,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -3,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 3,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -2,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -3,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 0,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 1,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "AL"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 2,
+      "r": -2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -1,
+      "r": 3
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2083,
+    "minAchievableScore": 3822,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "COMPUTERIZING",
+          "QUARTZES",
+          "FUZZES",
+          "LUZZES"
+        ],
+        "wordTotal": 2595,
+        "penalty": 111,
+        "finalScore": 2484
+      },
+      {
+        "words": [
+          "COMPUTERIZING",
+          "QUARTZES",
+          "FUZZES",
+          "LUZZES"
+        ],
+        "wordTotal": 2595,
+        "penalty": 111,
+        "finalScore": 2484
+      },
+      {
+        "words": [
+          "COMPUTERIZING",
+          "QUARTZES",
+          "FUZZES",
+          "LUZZES"
+        ],
+        "wordTotal": 2595,
+        "penalty": 111,
+        "finalScore": 2484
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 6.7,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "COMPRIZING",
+      "VALERATES",
+      "HUZZAS",
+      "EXILER",
+      "THESIS",
+      "FRUIT",
+      "THUGS"
+    ],
+    "generatedAt": "2026-05-13T11:49:24.799Z"
+  }
+}

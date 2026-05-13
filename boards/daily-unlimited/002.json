@@ -1,0 +1,279 @@
+{
+  "date": "unlimited-002",
+  "grid": {
+    "0,-2": "B",
+    "0,-1": "R",
+    "1,-2": "E",
+    "1,-1": "A",
+    "2,-1": "D",
+    "1,0": "C",
+    "0,0": "R",
+    "0,1": "U",
+    "-1,2": "M",
+    "-2,2": "B",
+    "-1,1": "I",
+    "-1,0": "N",
+    "-2,0": "G",
+    "2,0": "O",
+    "2,1": "V",
+    "1,1": "E",
+    "1,2": "R",
+    "0,2": "J",
+    "-1,3": "P",
+    "-1,-2": "K",
+    "-1,-1": "I",
+    "1,-3": "B",
+    "2,-2": "H",
+    "-4,4": "Z",
+    "-3,3": "I",
+    "-3,2": "E",
+    "-2,1": "T",
+    "-3,1": "S",
+    "2,-4": "O",
+    "2,-3": "W",
+    "0,-3": "Y",
+    "-2,-1": "B",
+    "-4,0": "A",
+    "-4,1": "N",
+    "-4,2": "E",
+    "-4,3": "O",
+    "-3,-1": "K",
+    "-3,0": "E",
+    "-3,4": "E",
+    "-2,-2": "O",
+    "-2,3": "T",
+    "-2,4": "U",
+    "-1,-3": "T",
+    "-1,4": "R",
+    "0,-4": "E",
+    "0,3": "O",
+    "0,4": "A",
+    "1,-4": "E",
+    "1,3": "E",
+    "2,2": "U",
+    "3,-4": "W",
+    "3,-3": "E",
+    "3,-2": "I",
+    "3,-1": "F",
+    "3,0": "R",
+    "3,1": "L",
+    "4,-4": "A",
+    "4,-3": "F",
+    "4,-2": "E",
+    "4,-1": "C",
+    "4,0": "I"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 0,
+      "r": 1
+    },
+    {
+      "type": "gemGold",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "rune",
+      "q": -3,
+      "r": 3
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -4,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 3,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -1,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 1,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -2,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 4,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 0,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 3,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "ON"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -1,
+      "r": 1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3124,
+    "minAchievableScore": 7800,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "BREADCRUMBING",
+          "OVERJUMP",
+          "KIBBEH",
+          "BIBBER"
+        ],
+        "wordTotal": 4828,
+        "penalty": 125,
+        "finalScore": 4703
+      },
+      {
+        "words": [
+          "BREADCRUMBING",
+          "OVERJUMP",
+          "KIBBEH",
+          "BIBBER"
+        ],
+        "wordTotal": 4828,
+        "penalty": 125,
+        "finalScore": 4703
+      },
+      {
+        "words": [
+          "BREADCRUMBING",
+          "OVERJUMP",
+          "KIBBEH",
+          "BIBBER"
+        ],
+        "wordTotal": 4828,
+        "penalty": 125,
+        "finalScore": 4703
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 5,
+    "averageWordLength": 7.4,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "BREADCRUMB",
+      "KINGSNAKE",
+      "BEHOVE",
+      "PITTITE",
+      "FORCE"
+    ],
+    "generatedAt": "2026-05-13T11:49:22.884Z"
+  }
+}

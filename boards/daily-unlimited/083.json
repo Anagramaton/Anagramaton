@@ -1,0 +1,213 @@
+{
+  "date": "unlimited-083",
+  "grid": {
+    "2,-1": "C",
+    "2,0": "O",
+    "1,0": "N",
+    "0,1": "V",
+    "1,1": "E",
+    "0,2": "Y",
+    "-1,2": "O",
+    "-1,1": "R",
+    "0,0": "I",
+    "0,-1": "Z",
+    "-1,-1": "I",
+    "-1,0": "N",
+    "-2,0": "G",
+    "-2,-2": "F",
+    "-1,-2": "A",
+    "0,-2": "R",
+    "1,-3": "M",
+    "1,-2": "W",
+    "2,-3": "O",
+    "2,-2": "R",
+    "1,-1": "K",
+    "-4,2": "S",
+    "-3,1": "U",
+    "-2,1": "F",
+    "-3,2": "F",
+    "-2,2": "I",
+    "-3,3": "X",
+    "4,-1": "B",
+    "3,-1": "I",
+    "1,2": "X",
+    "1,3": "S",
+    "0,3": "K",
+    "-1,3": "B",
+    "-2,3": "X",
+    "-4,0": "W",
+    "-4,1": "O",
+    "-4,3": "U",
+    "-4,4": "D",
+    "-3,-1": "E",
+    "-3,0": "H",
+    "-3,4": "I",
+    "-2,-1": "A",
+    "-2,4": "E",
+    "-1,-3": "E",
+    "-1,4": "V",
+    "0,-4": "A",
+    "0,-3": "H",
+    "0,4": "S",
+    "1,-4": "F",
+    "2,-4": "V",
+    "2,1": "L",
+    "2,2": "O",
+    "3,-4": "N",
+    "3,-3": "D",
+    "3,-2": "E",
+    "3,0": "S",
+    "3,1": "H",
+    "4,-4": "A",
+    "4,-3": "B",
+    "4,-2": "S",
+    "4,0": "U"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 0,
+      "r": 2
+    },
+    {
+      "type": "gemGold",
+      "q": 1,
+      "r": -3
+    },
+    {
+      "type": "amethyst",
+      "q": -3,
+      "r": 4
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 1,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 1,
+      "digraph": "UN"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 2,
+      "r": -1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": 2
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1634,
+    "minAchievableScore": 1776,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "FARMWORK",
+          "CONVEYORIZING",
+          "BICONVEX",
+          "SUFFIX"
+        ],
+        "wordTotal": 2042,
+        "penalty": 126,
+        "finalScore": 1916
+      },
+      {
+        "words": [
+          "FARMWORK",
+          "CONVEYORIZING",
+          "BICONVEX",
+          "SUFFIX"
+        ],
+        "wordTotal": 2042,
+        "penalty": 126,
+        "finalScore": 1916
+      },
+      {
+        "words": [
+          "CONVEYORIZING",
+          "FARMWORK",
+          "BICONVEX",
+          "SUFFIX"
+        ],
+        "wordTotal": 2042,
+        "penalty": 126,
+        "finalScore": 1916
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 5,
+    "averageWordLength": 7,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "FARMWORK",
+      "DEIONIZING",
+      "REAFFIX",
+      "BUHLS",
+      "SONCE"
+    ],
+    "generatedAt": "2026-05-13T11:49:25.036Z"
+  }
+}

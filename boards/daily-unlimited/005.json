@@ -1,0 +1,233 @@
+{
+  "date": "unlimited-005",
+  "grid": {
+    "0,-1": "Q",
+    "1,-1": "U",
+    "1,0": "A",
+    "0,1": "R",
+    "0,0": "T",
+    "-1,0": "E",
+    "-1,-1": "R",
+    "-2,0": "S",
+    "-2,1": "T",
+    "-1,1": "A",
+    "-2,2": "F",
+    "-2,3": "F",
+    "-1,2": "S",
+    "1,-2": "S",
+    "2,-2": "F",
+    "2,-1": "F",
+    "3,-1": "I",
+    "2,0": "X",
+    "1,1": "L",
+    "1,3": "P",
+    "0,3": "U",
+    "0,2": "Z",
+    "1,2": "Z",
+    "2,1": "E",
+    "-1,4": "N",
+    "-1,3": "O",
+    "-1,-3": "Z",
+    "0,-3": "A",
+    "0,-2": "F",
+    "-1,-2": "F",
+    "-2,-1": "E",
+    "-4,0": "I",
+    "-4,1": "N",
+    "-4,2": "I",
+    "-4,3": "E",
+    "-4,4": "E",
+    "-3,-1": "R",
+    "-3,0": "E",
+    "-3,1": "U",
+    "-3,2": "N",
+    "-3,3": "N",
+    "-3,4": "D",
+    "-2,-2": "I",
+    "-2,4": "B",
+    "0,-4": "O",
+    "0,4": "I",
+    "1,-4": "T",
+    "1,-3": "R",
+    "2,-4": "L",
+    "2,-3": "O",
+    "2,2": "T",
+    "3,-4": "M",
+    "3,-3": "I",
+    "3,-2": "S",
+    "3,0": "I",
+    "3,1": "T",
+    "4,-4": "H",
+    "4,-3": "E",
+    "4,-2": "A",
+    "4,-1": "T",
+    "4,0": "A"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 1,
+      "r": 2
+    },
+    {
+      "type": "gemEmerald",
+      "q": -1,
+      "r": 2
+    },
+    {
+      "type": "amethyst",
+      "q": 3,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 4,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -2,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 0,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 0,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -1,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -2,
+      "digraph": "WH"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -1,
+      "r": 2
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1472,
+    "minAchievableScore": 1326,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "QUARTERSTAFFS",
+          "PUZZLE",
+          "NUZZLE",
+          "NOZZLE"
+        ],
+        "wordTotal": 1791,
+        "penalty": 141,
+        "finalScore": 1650
+      },
+      {
+        "words": [
+          "PUZZLE",
+          "NUZZLE",
+          "NOZZLE",
+          "QUARTERSTAFFS"
+        ],
+        "wordTotal": 1791,
+        "penalty": 141,
+        "finalScore": 1650
+      },
+      {
+        "words": [
+          "QUARTERSTAFFS",
+          "SUFFIXAL",
+          "PUZZLE",
+          "NUZZLE"
+        ],
+        "wordTotal": 1727,
+        "penalty": 114,
+        "finalScore": 1613
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 6.6,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "BOZZETTI",
+      "SUFFLATES",
+      "RAREFIER",
+      "AFTOSA",
+      "QUINS",
+      "INNED",
+      "EMAIL"
+    ],
+    "generatedAt": "2026-05-13T11:49:23.004Z"
+  }
+}

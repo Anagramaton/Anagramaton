@@ -1,0 +1,232 @@
+{
+  "date": "unlimited-038",
+  "grid": {
+    "1,-1": "C",
+    "0,-1": "O",
+    "0,0": "C",
+    "-1,0": "K",
+    "-1,-1": "F",
+    "-2,0": "I",
+    "-2,1": "G",
+    "-1,1": "H",
+    "-1,2": "T",
+    "0,1": "I",
+    "1,1": "N",
+    "1,0": "G",
+    "2,-1": "S",
+    "-1,-2": "Z",
+    "0,-2": "A",
+    "1,-3": "M",
+    "1,-2": "B",
+    "2,-3": "U",
+    "2,-2": "C",
+    "3,-2": "K",
+    "3,-1": "F",
+    "2,0": "R",
+    "2,1": "E",
+    "1,2": "Z",
+    "0,2": "Y",
+    "3,1": "B",
+    "0,3": "L",
+    "-4,2": "P",
+    "-3,1": "E",
+    "-3,2": "B",
+    "-2,2": "O",
+    "-2,3": "X",
+    "0,-3": "W",
+    "-2,-1": "F",
+    "-4,0": "U",
+    "-4,1": "N",
+    "-4,3": "I",
+    "-4,4": "D",
+    "-3,-1": "N",
+    "-3,0": "R",
+    "-3,3": "N",
+    "-3,4": "A",
+    "-2,-2": "E",
+    "-2,4": "P",
+    "-1,-3": "M",
+    "-1,3": "I",
+    "-1,4": "R",
+    "0,-4": "Q",
+    "0,4": "A",
+    "1,-4": "U",
+    "1,3": "R",
+    "2,-4": "L",
+    "2,2": "R",
+    "3,-4": "B",
+    "3,-3": "O",
+    "3,0": "B",
+    "4,-4": "I",
+    "4,-3": "R",
+    "4,-2": "U",
+    "4,-1": "J",
+    "4,0": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": -2,
+      "r": 0
+    },
+    {
+      "type": "gemEmerald",
+      "q": 2,
+      "r": 0
+    },
+    {
+      "type": "rune",
+      "q": -2,
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 2,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 4,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 0,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 3,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -2,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -1,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 3,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "HE"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -3,
+      "r": 1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 1,
+      "r": 0
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1560,
+    "minAchievableScore": 2600,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "COCKFIGHTINGS",
+          "FRENZY",
+          "WAFFIE",
+          "ZAMBUCKS"
+        ],
+        "wordTotal": 2324,
+        "penalty": 134,
+        "finalScore": 2190
+      },
+      {
+        "words": [
+          "COCKFIGHTINGS",
+          "FRENZY",
+          "WAFFIE",
+          "ZAMBUCKS"
+        ],
+        "wordTotal": 2324,
+        "penalty": 134,
+        "finalScore": 2190
+      },
+      {
+        "words": [
+          "COCKFIGHTINGS",
+          "ZAMBUCKS",
+          "FRENZY",
+          "WAFFIE"
+        ],
+        "wordTotal": 2324,
+        "penalty": 134,
+        "finalScore": 2190
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 6.2,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "AFFRIGHTING",
+      "UMBRE",
+      "BOXILY",
+      "WOKEN",
+      "SCULK",
+      "PINED"
+    ],
+    "generatedAt": "2026-05-13T11:49:24.014Z"
+  }
+}

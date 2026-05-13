@@ -1,0 +1,237 @@
+{
+  "date": "unlimited-082",
+  "grid": {
+    "1,1": "D",
+    "1,0": "E",
+    "2,-1": "C",
+    "2,-2": "A",
+    "1,-1": "R",
+    "1,-2": "B",
+    "0,-1": "O",
+    "0,0": "X",
+    "-1,0": "Y",
+    "-2,1": "L",
+    "-2,2": "A",
+    "-1,2": "T",
+    "-1,1": "E",
+    "-1,-2": "S",
+    "0,-2": "N",
+    "-1,-1": "U",
+    "-2,-1": "Z",
+    "-2,0": "Z",
+    "0,1": "S",
+    "-4,1": "P",
+    "-3,0": "I",
+    "-3,1": "Z",
+    "-3,2": "E",
+    "2,1": "K",
+    "2,0": "U",
+    "1,2": "Z",
+    "0,2": "U",
+    "-3,-1": "Z",
+    "2,-4": "J",
+    "1,-3": "I",
+    "2,-3": "B",
+    "3,-2": "H",
+    "-4,0": "T",
+    "-4,2": "A",
+    "-4,3": "A",
+    "-4,4": "M",
+    "-3,3": "N",
+    "-3,4": "R",
+    "-2,-2": "I",
+    "-2,3": "T",
+    "-2,4": "V",
+    "-1,-3": "L",
+    "-1,3": "S",
+    "-1,4": "S",
+    "0,-4": "E",
+    "0,-3": "S",
+    "0,3": "W",
+    "0,4": "G",
+    "1,-4": "N",
+    "1,3": "E",
+    "2,2": "T",
+    "3,-4": "U",
+    "3,-3": "N",
+    "3,-1": "I",
+    "3,0": "E",
+    "3,1": "Y",
+    "4,-4": "N",
+    "4,-3": "D",
+    "4,-2": "E",
+    "4,-1": "E",
+    "4,0": "U"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 1,
+      "r": 1
+    },
+    {
+      "type": "gemEmerald",
+      "q": -1,
+      "r": -2
+    },
+    {
+      "type": "amethyst",
+      "q": -1,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 3,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 3,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -1,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 0,
+      "digraph": "CO"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -1,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 2,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1559,
+    "minAchievableScore": 2548,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "DECARBOXYLATE",
+          "SNUZZLES",
+          "KUDZUS",
+          "ZIZZLE"
+        ],
+        "wordTotal": 2436,
+        "penalty": 121,
+        "finalScore": 2315
+      },
+      {
+        "words": [
+          "DECARBOXYLATE",
+          "SNUZZLES",
+          "KUDZUS",
+          "ZIZZLE"
+        ],
+        "wordTotal": 2436,
+        "penalty": 121,
+        "finalScore": 2315
+      },
+      {
+        "words": [
+          "DECARBOXYLATE",
+          "SNUZZLES",
+          "KUDZUS",
+          "ZIZZLE"
+        ],
+        "wordTotal": 2436,
+        "penalty": 121,
+        "finalScore": 2315
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 5,
+    "averageWordLength": 7,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "DECARBONISE",
+      "SIZZLES",
+      "MANATUS",
+      "PERVY",
+      "UNDEE"
+    ],
+    "generatedAt": "2026-05-13T11:49:25.010Z"
+  }
+}

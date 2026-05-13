@@ -1,0 +1,183 @@
+{
+  "date": "unlimited-054",
+  "grid": {
+    "1,-1": "W",
+    "2,-2": "I",
+    "2,-1": "T",
+    "3,-1": "H",
+    "2,0": "D",
+    "1,0": "R",
+    "1,1": "A",
+    "0,1": "W",
+    "0,0": "N",
+    "-1,0": "N",
+    "-2,1": "E",
+    "-1,1": "S",
+    "-1,2": "S",
+    "1,-3": "P",
+    "0,-2": "O",
+    "1,-2": "X",
+    "0,-1": "V",
+    "-1,-1": "I",
+    "-2,-1": "R",
+    "-2,0": "U",
+    "-3,1": "S",
+    "3,1": "K",
+    "2,1": "W",
+    "1,2": "N",
+    "0,2": "Z",
+    "-1,3": "A",
+    "-3,4": "R",
+    "-3,3": "E",
+    "-2,2": "Z",
+    "-3,2": "Z",
+    "3,-2": "A",
+    "2,-3": "T",
+    "-2,4": "W",
+    "-2,3": "I",
+    "-4,0": "A",
+    "-4,1": "Y",
+    "-4,2": "O",
+    "-4,3": "S",
+    "-4,4": "S",
+    "-3,-1": "V",
+    "-3,0": "P",
+    "-2,-2": "E",
+    "-1,-3": "N",
+    "-1,-2": "P",
+    "-1,4": "U",
+    "0,-4": "A",
+    "0,-3": "L",
+    "0,3": "U",
+    "0,4": "I",
+    "1,-4": "C",
+    "1,3": "O",
+    "2,-4": "E",
+    "2,2": "E",
+    "3,-4": "A",
+    "3,-3": "S",
+    "3,0": "U",
+    "4,-4": "D",
+    "4,-3": "Y",
+    "4,-2": "S",
+    "4,-1": "A",
+    "4,0": "L"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "gemGold",
+      "q": 1,
+      "r": -1
+    },
+    {
+      "type": "amethyst",
+      "q": 3,
+      "r": -3
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 2,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -4,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -2,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 1,
+      "digraph": "GH"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -3,
+      "r": 2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 1,
+      "r": 1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1942,
+    "minAchievableScore": 7800,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "WITHDRAWNNESS",
+          "ATWIXT",
+          "WIZZEN",
+          "REZZES"
+        ],
+        "wordTotal": 5214,
+        "penalty": 141,
+        "finalScore": 5073
+      },
+      {
+        "words": [
+          "WITHDRAWNNESS",
+          "ATWIXT",
+          "WIZZEN",
+          "REZZES"
+        ],
+        "wordTotal": 5214,
+        "penalty": 141,
+        "finalScore": 5073
+      },
+      {
+        "words": [
+          "WITHDRAWNNESS",
+          "POXVIRUS",
+          "ATWIXT",
+          "WIZZEN"
+        ],
+        "wordTotal": 5142,
+        "penalty": 120,
+        "finalScore": 5022
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 5,
+    "averageWordLength": 6.8,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "WITHDRAWN",
+      "WIZZENS",
+      "POSSERS",
+      "SYVER",
+      "SALUTE"
+    ],
+    "generatedAt": "2026-05-13T11:49:24.393Z"
+  }
+}

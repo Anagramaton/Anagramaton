@@ -1,0 +1,284 @@
+{
+  "date": "unlimited-052",
+  "grid": {
+    "0,2": "S",
+    "1,1": "U",
+    "0,1": "B",
+    "-1,2": "J",
+    "-1,1": "E",
+    "0,0": "C",
+    "1,0": "T",
+    "1,-1": "I",
+    "0,-1": "V",
+    "0,-2": "I",
+    "-1,-1": "Z",
+    "-1,0": "E",
+    "-2,1": "S",
+    "1,-2": "H",
+    "2,-3": "A",
+    "2,-2": "W",
+    "3,-2": "K",
+    "2,-1": "B",
+    "2,0": "S",
+    "-2,-1": "Z",
+    "-2,0": "E",
+    "-3,0": "D",
+    "-1,-3": "J",
+    "-1,-2": "A",
+    "-3,1": "R",
+    "-3,2": "H",
+    "-2,2": "A",
+    "-2,3": "J",
+    "-1,3": "I",
+    "1,-4": "S",
+    "0,-3": "W",
+    "-4,0": "O",
+    "-4,1": "A",
+    "-4,2": "A",
+    "-4,3": "I",
+    "-4,4": "M",
+    "-3,-1": "P",
+    "-3,3": "S",
+    "-3,4": "O",
+    "-2,-2": "E",
+    "-2,4": "N",
+    "-1,4": "O",
+    "0,-4": "R",
+    "0,3": "W",
+    "0,4": "L",
+    "1,-3": "E",
+    "1,2": "I",
+    "1,3": "I",
+    "2,-4": "S",
+    "2,1": "E",
+    "2,2": "R",
+    "3,-4": "N",
+    "3,-3": "A",
+    "3,-1": "A",
+    "3,0": "I",
+    "3,1": "V",
+    "4,-4": "L",
+    "4,-3": "A",
+    "4,-2": "A",
+    "4,-1": "A",
+    "4,0": "B"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 0,
+      "r": -2
+    },
+    {
+      "type": "gemGold",
+      "q": 0,
+      "r": 3
+    },
+    {
+      "type": "rune",
+      "q": -2,
+      "r": -1
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 1,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 2,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -1,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 2,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -2,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -3,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 1,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 0,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 3,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "CO"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1658,
+    "minAchievableScore": 3068,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "SUBJECTIVIZES",
+          "HIZZED",
+          "SWIZZ",
+          "HAWKBITS"
+        ],
+        "wordTotal": 2546,
+        "penalty": 123,
+        "finalScore": 2423
+      },
+      {
+        "words": [
+          "SUBJECTIVIZES",
+          "SWIZZ",
+          "HIZZED",
+          "HAWKBITS"
+        ],
+        "wordTotal": 2546,
+        "penalty": 123,
+        "finalScore": 2423
+      },
+      {
+        "words": [
+          "SUBJECTIVIZES",
+          "HAWKBITS",
+          "HIZZED",
+          "JAZZER"
+        ],
+        "wordTotal": 2422,
+        "penalty": 121,
+        "finalScore": 2301
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 4,
+    "averageWordLength": 7.8,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "WHIZZERS",
+      "SUBJECTIVES",
+      "REWIRES",
+      "WINOS"
+    ],
+    "generatedAt": "2026-05-13T11:49:24.365Z"
+  }
+}

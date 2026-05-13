@@ -1,0 +1,167 @@
+{
+  "date": "unlimited-013",
+  "grid": {
+    "-1,0": "O",
+    "-1,-1": "V",
+    "-2,0": "E",
+    "-2,1": "R",
+    "-1,1": "D",
+    "0,0": "R",
+    "0,1": "A",
+    "-1,2": "M",
+    "0,2": "A",
+    "1,1": "T",
+    "1,0": "I",
+    "2,-1": "Z",
+    "1,-1": "E",
+    "-1,-2": "C",
+    "0,-2": "A",
+    "1,-3": "B",
+    "1,-2": "O",
+    "2,-3": "B",
+    "2,-2": "B",
+    "0,-1": "D",
+    "2,0": "O",
+    "3,-1": "W",
+    "3,1": "F",
+    "3,0": "R",
+    "-3,1": "A",
+    "-3,2": "W",
+    "-2,2": "A",
+    "-2,3": "X",
+    "2,1": "H",
+    "-4,0": "A",
+    "-4,1": "R",
+    "-4,2": "L",
+    "-4,3": "D",
+    "-4,4": "M",
+    "-3,-1": "D",
+    "-3,0": "X",
+    "-3,3": "J",
+    "-3,4": "O",
+    "-2,-2": "O",
+    "-2,-1": "T",
+    "-2,4": "O",
+    "-1,-3": "I",
+    "-1,3": "R",
+    "-1,4": "G",
+    "0,-4": "P",
+    "0,-3": "B",
+    "0,3": "T",
+    "0,4": "S",
+    "1,-4": "I",
+    "1,2": "P",
+    "1,3": "E",
+    "2,-4": "T",
+    "2,2": "E",
+    "3,-4": "S",
+    "3,-3": "F",
+    "3,-2": "I",
+    "4,-4": "U",
+    "4,-3": "M",
+    "4,-2": "D",
+    "4,-1": "E",
+    "4,0": "O"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "gemEmerald",
+      "q": -3,
+      "r": 2
+    },
+    {
+      "type": "rune",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 2,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 3,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "IO"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 1,
+      "r": -2
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1865,
+    "minAchievableScore": 2496,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "OVERDRAMATIZE",
+          "EARWAX",
+          "FROWZIER",
+          "CABOBBED"
+        ],
+        "wordTotal": 2512,
+        "penalty": 122,
+        "finalScore": 2390
+      },
+      {
+        "words": [
+          "EARWAX",
+          "OVERDRAMATIZE",
+          "FROWZIER",
+          "CABOBBED"
+        ],
+        "wordTotal": 2512,
+        "penalty": 122,
+        "finalScore": 2390
+      },
+      {
+        "words": [
+          "OVERDRAMATIZE",
+          "FROWZIER",
+          "CABOBBED",
+          "EARWAX"
+        ],
+        "wordTotal": 2512,
+        "penalty": 122,
+        "finalScore": 2390
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 6.9,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "DRAMATIZED",
+      "COTWAL",
+      "FORHOWED",
+      "BORATES",
+      "BIBBS",
+      "APPROVE",
+      "MUFTI"
+    ],
+    "generatedAt": "2026-05-13T11:49:23.239Z"
+  }
+}

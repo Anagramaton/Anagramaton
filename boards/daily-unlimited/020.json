@@ -1,0 +1,267 @@
+{
+  "date": "unlimited-020",
+  "grid": {
+    "2,-3": "I",
+    "1,-2": "M",
+    "1,-1": "P",
+    "0,0": "E",
+    "-1,0": "R",
+    "-2,1": "F",
+    "-1,1": "E",
+    "-1,2": "C",
+    "0,2": "T",
+    "1,1": "I",
+    "0,1": "B",
+    "1,0": "L",
+    "2,0": "E",
+    "0,-1": "M",
+    "0,-2": "U",
+    "-1,-2": "Z",
+    "-1,-1": "Z",
+    "-2,-1": "L",
+    "-2,0": "E",
+    "1,-4": "B",
+    "1,-3": "O",
+    "2,-2": "B",
+    "2,-1": "Y",
+    "3,-1": "X",
+    "-3,3": "B",
+    "-2,2": "A",
+    "-3,2": "F",
+    "-3,1": "L",
+    "0,-3": "B",
+    "-3,0": "S",
+    "-2,3": "W",
+    "-4,0": "I",
+    "-4,1": "S",
+    "-4,2": "L",
+    "-4,3": "N",
+    "-4,4": "E",
+    "-3,-1": "P",
+    "-3,4": "U",
+    "-2,-2": "E",
+    "-2,4": "I",
+    "-1,-3": "C",
+    "-1,3": "N",
+    "-1,4": "E",
+    "0,-4": "N",
+    "0,3": "E",
+    "0,4": "L",
+    "1,2": "A",
+    "1,3": "R",
+    "2,-4": "T",
+    "2,1": "U",
+    "2,2": "N",
+    "3,-4": "O",
+    "3,-3": "C",
+    "3,-2": "O",
+    "3,0": "S",
+    "3,1": "S",
+    "4,-4": "S",
+    "4,-3": "E",
+    "4,-2": "S",
+    "4,-1": "A",
+    "4,0": "J"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 0,
+      "r": -2
+    },
+    {
+      "type": "gemGold",
+      "q": 4,
+      "r": -3
+    },
+    {
+      "type": "rune",
+      "q": 2,
+      "r": -1
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 3,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 1,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 2,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -2,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 0,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -3,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "CO"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -3,
+      "r": 1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": 1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2455,
+    "minAchievableScore": 1344,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "BEMUZZLE",
+          "IMPERFECTIBLE",
+          "BUZZES",
+          "BOMBYX"
+        ],
+        "wordTotal": 1926,
+        "penalty": 119,
+        "finalScore": 1807
+      },
+      {
+        "words": [
+          "BEMUZZLE",
+          "BUZZES",
+          "IMPERFECTIBLE",
+          "BOMBYX"
+        ],
+        "wordTotal": 1926,
+        "penalty": 119,
+        "finalScore": 1807
+      },
+      {
+        "words": [
+          "IMPERFECTIBLE",
+          "BEMUZZLE",
+          "BUZZES",
+          "BOMBYX"
+        ],
+        "wordTotal": 1926,
+        "penalty": 119,
+        "finalScore": 1807
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 5,
+    "averageWordLength": 8.6,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "BEMUZZLES",
+      "PERFECTIBLE",
+      "SYMBIOSES",
+      "BAWNEEN",
+      "OCTOPUS"
+    ],
+    "generatedAt": "2026-05-13T11:49:23.403Z"
+  }
+}

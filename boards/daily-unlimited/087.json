@@ -1,0 +1,251 @@
+{
+  "date": "unlimited-087",
+  "grid": {
+    "1,-1": "Z",
+    "0,0": "O",
+    "1,0": "O",
+    "0,1": "P",
+    "0,2": "S",
+    "-1,2": "Y",
+    "-1,1": "C",
+    "-2,2": "H",
+    "-2,1": "O",
+    "-1,0": "L",
+    "-1,-1": "O",
+    "0,-1": "G",
+    "0,-2": "Y",
+    "2,-3": "Q",
+    "1,-2": "U",
+    "2,-2": "I",
+    "2,-1": "Z",
+    "2,0": "E",
+    "1,1": "R",
+    "2,1": "S",
+    "4,-3": "L",
+    "3,-2": "E",
+    "3,-1": "Z",
+    "3,-4": "P",
+    "3,-3": "H",
+    "-4,2": "S",
+    "-3,2": "W",
+    "-3,1": "W",
+    "-2,0": "N",
+    "-3,0": "D",
+    "1,-3": "P",
+    "3,0": "L",
+    "-4,0": "I",
+    "-4,1": "D",
+    "-4,3": "A",
+    "-4,4": "Y",
+    "-3,-1": "D",
+    "-3,3": "D",
+    "-3,4": "O",
+    "-2,-2": "E",
+    "-2,-1": "H",
+    "-2,3": "C",
+    "-2,4": "Q",
+    "-1,-3": "I",
+    "-1,-2": "L",
+    "-1,3": "I",
+    "-1,4": "O",
+    "0,-4": "G",
+    "0,-3": "I",
+    "0,3": "Y",
+    "0,4": "N",
+    "1,-4": "O",
+    "1,2": "E",
+    "1,3": "D",
+    "2,-4": "O",
+    "2,2": "O",
+    "3,1": "G",
+    "4,-4": "A",
+    "4,-2": "B",
+    "4,-1": "O",
+    "4,0": "D"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 2,
+      "r": 0
+    },
+    {
+      "type": "gemGold",
+      "q": -3,
+      "r": 4
+    },
+    {
+      "type": "rune",
+      "q": 2,
+      "r": -1
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 3,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -2,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -3,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 1,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 2,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 3,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 1,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 3,
+      "digraph": "ON"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": -1
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1836,
+    "minAchievableScore": 1376,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "QUIZZERS",
+          "ZOOPSYCHOLOGY",
+          "PUZZEL",
+          "LEZZES"
+        ],
+        "wordTotal": 2094,
+        "penalty": 133,
+        "finalScore": 1961
+      },
+      {
+        "words": [
+          "QUIZZERS",
+          "PUZZEL",
+          "LEZZES",
+          "ZOOPSYCHOLOGY"
+        ],
+        "wordTotal": 2094,
+        "penalty": 133,
+        "finalScore": 1961
+      },
+      {
+        "words": [
+          "ZOOPSYCHOLOGY",
+          "QUIZZERS",
+          "PUZZEL",
+          "LEZZES"
+        ],
+        "wordTotal": 2094,
+        "penalty": 133,
+        "finalScore": 1961
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 6.7,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "QUIZZERS",
+      "PSYCHOLOGY",
+      "ONIONY",
+      "LAPHELD",
+      "WHEWS",
+      "GEODIC",
+      "DADDY"
+    ],
+    "generatedAt": "2026-05-13T11:49:25.206Z"
+  }
+}

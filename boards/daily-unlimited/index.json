@@ -1,0 +1,706 @@
+{
+  "poolSize": 100,
+  "generatedAt": "2026-05-13T11:49:25.538Z",
+  "boards": [
+    {
+      "boardNum": 1,
+      "filename": "001.json",
+      "maxScore": 1453,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:22.848Z"
+    },
+    {
+      "boardNum": 2,
+      "filename": "002.json",
+      "maxScore": 3124,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:22.884Z"
+    },
+    {
+      "boardNum": 3,
+      "filename": "003.json",
+      "maxScore": 1811,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:22.898Z"
+    },
+    {
+      "boardNum": 4,
+      "filename": "004.json",
+      "maxScore": 1510,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:22.936Z"
+    },
+    {
+      "boardNum": 5,
+      "filename": "005.json",
+      "maxScore": 1472,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.004Z"
+    },
+    {
+      "boardNum": 6,
+      "filename": "006.json",
+      "maxScore": 2067,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.029Z"
+    },
+    {
+      "boardNum": 7,
+      "filename": "007.json",
+      "maxScore": 1266,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.049Z"
+    },
+    {
+      "boardNum": 8,
+      "filename": "008.json",
+      "maxScore": 1444,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.081Z"
+    },
+    {
+      "boardNum": 9,
+      "filename": "009.json",
+      "maxScore": 3550,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.097Z"
+    },
+    {
+      "boardNum": 10,
+      "filename": "010.json",
+      "maxScore": 1369,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.109Z"
+    },
+    {
+      "boardNum": 11,
+      "filename": "011.json",
+      "maxScore": 1779,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.175Z"
+    },
+    {
+      "boardNum": 12,
+      "filename": "012.json",
+      "maxScore": 1655,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.212Z"
+    },
+    {
+      "boardNum": 13,
+      "filename": "013.json",
+      "maxScore": 1865,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.239Z"
+    },
+    {
+      "boardNum": 14,
+      "filename": "014.json",
+      "maxScore": 1242,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.258Z"
+    },
+    {
+      "boardNum": 15,
+      "filename": "015.json",
+      "maxScore": 1625,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.309Z"
+    },
+    {
+      "boardNum": 16,
+      "filename": "016.json",
+      "maxScore": 1242,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.322Z"
+    },
+    {
+      "boardNum": 17,
+      "filename": "017.json",
+      "maxScore": 2155,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.347Z"
+    },
+    {
+      "boardNum": 18,
+      "filename": "018.json",
+      "maxScore": 1534,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.369Z"
+    },
+    {
+      "boardNum": 19,
+      "filename": "019.json",
+      "maxScore": 1602,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.386Z"
+    },
+    {
+      "boardNum": 20,
+      "filename": "020.json",
+      "maxScore": 2455,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.403Z"
+    },
+    {
+      "boardNum": 21,
+      "filename": "021.json",
+      "maxScore": 1995,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.418Z"
+    },
+    {
+      "boardNum": 22,
+      "filename": "022.json",
+      "maxScore": 1318,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.566Z"
+    },
+    {
+      "boardNum": 23,
+      "filename": "023.json",
+      "maxScore": 2077,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.582Z"
+    },
+    {
+      "boardNum": 24,
+      "filename": "024.json",
+      "maxScore": 1602,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.622Z"
+    },
+    {
+      "boardNum": 25,
+      "filename": "025.json",
+      "maxScore": 2552,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.653Z"
+    },
+    {
+      "boardNum": 26,
+      "filename": "026.json",
+      "maxScore": 1621,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.667Z"
+    },
+    {
+      "boardNum": 27,
+      "filename": "027.json",
+      "maxScore": 2128,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.682Z"
+    },
+    {
+      "boardNum": 28,
+      "filename": "028.json",
+      "maxScore": 1656,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.695Z"
+    },
+    {
+      "boardNum": 29,
+      "filename": "029.json",
+      "maxScore": 1874,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.710Z"
+    },
+    {
+      "boardNum": 30,
+      "filename": "030.json",
+      "maxScore": 1300,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.730Z"
+    },
+    {
+      "boardNum": 31,
+      "filename": "031.json",
+      "maxScore": 1981,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.781Z"
+    },
+    {
+      "boardNum": 32,
+      "filename": "032.json",
+      "maxScore": 2904,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.852Z"
+    },
+    {
+      "boardNum": 33,
+      "filename": "033.json",
+      "maxScore": 1536,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.915Z"
+    },
+    {
+      "boardNum": 34,
+      "filename": "034.json",
+      "maxScore": 2273,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.930Z"
+    },
+    {
+      "boardNum": 35,
+      "filename": "035.json",
+      "maxScore": 1782,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.951Z"
+    },
+    {
+      "boardNum": 36,
+      "filename": "036.json",
+      "maxScore": 2019,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.963Z"
+    },
+    {
+      "boardNum": 37,
+      "filename": "037.json",
+      "maxScore": 1625,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:23.987Z"
+    },
+    {
+      "boardNum": 38,
+      "filename": "038.json",
+      "maxScore": 1560,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.014Z"
+    },
+    {
+      "boardNum": 39,
+      "filename": "039.json",
+      "maxScore": 1596,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.028Z"
+    },
+    {
+      "boardNum": 40,
+      "filename": "040.json",
+      "maxScore": 1720,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.046Z"
+    },
+    {
+      "boardNum": 41,
+      "filename": "041.json",
+      "maxScore": 1618,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.057Z"
+    },
+    {
+      "boardNum": 42,
+      "filename": "042.json",
+      "maxScore": 1690,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.086Z"
+    },
+    {
+      "boardNum": 43,
+      "filename": "043.json",
+      "maxScore": 1956,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.102Z"
+    },
+    {
+      "boardNum": 44,
+      "filename": "044.json",
+      "maxScore": 1586,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.175Z"
+    },
+    {
+      "boardNum": 45,
+      "filename": "045.json",
+      "maxScore": 1275,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.204Z"
+    },
+    {
+      "boardNum": 46,
+      "filename": "046.json",
+      "maxScore": 1509,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.239Z"
+    },
+    {
+      "boardNum": 47,
+      "filename": "047.json",
+      "maxScore": 1491,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.263Z"
+    },
+    {
+      "boardNum": 48,
+      "filename": "048.json",
+      "maxScore": 1551,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.282Z"
+    },
+    {
+      "boardNum": 49,
+      "filename": "049.json",
+      "maxScore": 2042,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.294Z"
+    },
+    {
+      "boardNum": 50,
+      "filename": "050.json",
+      "maxScore": 2099,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.332Z"
+    },
+    {
+      "boardNum": 51,
+      "filename": "051.json",
+      "maxScore": 1200,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.346Z"
+    },
+    {
+      "boardNum": 52,
+      "filename": "052.json",
+      "maxScore": 1658,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.365Z"
+    },
+    {
+      "boardNum": 53,
+      "filename": "053.json",
+      "maxScore": 1759,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.382Z"
+    },
+    {
+      "boardNum": 54,
+      "filename": "054.json",
+      "maxScore": 1942,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.393Z"
+    },
+    {
+      "boardNum": 55,
+      "filename": "055.json",
+      "maxScore": 1630,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.411Z"
+    },
+    {
+      "boardNum": 56,
+      "filename": "056.json",
+      "maxScore": 1622,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.443Z"
+    },
+    {
+      "boardNum": 57,
+      "filename": "057.json",
+      "maxScore": 1914,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.462Z"
+    },
+    {
+      "boardNum": 58,
+      "filename": "058.json",
+      "maxScore": 2704,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.483Z"
+    },
+    {
+      "boardNum": 59,
+      "filename": "059.json",
+      "maxScore": 1464,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.501Z"
+    },
+    {
+      "boardNum": 60,
+      "filename": "060.json",
+      "maxScore": 2708,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.515Z"
+    },
+    {
+      "boardNum": 61,
+      "filename": "061.json",
+      "maxScore": 2654,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.537Z"
+    },
+    {
+      "boardNum": 62,
+      "filename": "062.json",
+      "maxScore": 1619,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.547Z"
+    },
+    {
+      "boardNum": 63,
+      "filename": "063.json",
+      "maxScore": 2512,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.567Z"
+    },
+    {
+      "boardNum": 64,
+      "filename": "064.json",
+      "maxScore": 1564,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.591Z"
+    },
+    {
+      "boardNum": 65,
+      "filename": "065.json",
+      "maxScore": 2103,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.638Z"
+    },
+    {
+      "boardNum": 66,
+      "filename": "066.json",
+      "maxScore": 1264,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.657Z"
+    },
+    {
+      "boardNum": 67,
+      "filename": "067.json",
+      "maxScore": 1967,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.692Z"
+    },
+    {
+      "boardNum": 68,
+      "filename": "068.json",
+      "maxScore": 1674,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.707Z"
+    },
+    {
+      "boardNum": 69,
+      "filename": "069.json",
+      "maxScore": 1458,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.726Z"
+    },
+    {
+      "boardNum": 70,
+      "filename": "070.json",
+      "maxScore": 1710,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.783Z"
+    },
+    {
+      "boardNum": 71,
+      "filename": "071.json",
+      "maxScore": 2083,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.799Z"
+    },
+    {
+      "boardNum": 72,
+      "filename": "072.json",
+      "maxScore": 1516,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.811Z"
+    },
+    {
+      "boardNum": 73,
+      "filename": "073.json",
+      "maxScore": 2183,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.824Z"
+    },
+    {
+      "boardNum": 74,
+      "filename": "074.json",
+      "maxScore": 1312,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.836Z"
+    },
+    {
+      "boardNum": 75,
+      "filename": "075.json",
+      "maxScore": 1598,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.853Z"
+    },
+    {
+      "boardNum": 76,
+      "filename": "076.json",
+      "maxScore": 1641,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.888Z"
+    },
+    {
+      "boardNum": 77,
+      "filename": "077.json",
+      "maxScore": 2127,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.916Z"
+    },
+    {
+      "boardNum": 78,
+      "filename": "078.json",
+      "maxScore": 1598,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.940Z"
+    },
+    {
+      "boardNum": 79,
+      "filename": "079.json",
+      "maxScore": 1180,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.952Z"
+    },
+    {
+      "boardNum": 80,
+      "filename": "080.json",
+      "maxScore": 1328,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.969Z"
+    },
+    {
+      "boardNum": 81,
+      "filename": "081.json",
+      "maxScore": 2036,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:24.984Z"
+    },
+    {
+      "boardNum": 82,
+      "filename": "082.json",
+      "maxScore": 1559,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.010Z"
+    },
+    {
+      "boardNum": 83,
+      "filename": "083.json",
+      "maxScore": 1634,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.036Z"
+    },
+    {
+      "boardNum": 84,
+      "filename": "084.json",
+      "maxScore": 1376,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.051Z"
+    },
+    {
+      "boardNum": 85,
+      "filename": "085.json",
+      "maxScore": 1820,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.075Z"
+    },
+    {
+      "boardNum": 86,
+      "filename": "086.json",
+      "maxScore": 1940,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.194Z"
+    },
+    {
+      "boardNum": 87,
+      "filename": "087.json",
+      "maxScore": 1836,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.206Z"
+    },
+    {
+      "boardNum": 88,
+      "filename": "088.json",
+      "maxScore": 1497,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.282Z"
+    },
+    {
+      "boardNum": 89,
+      "filename": "089.json",
+      "maxScore": 1877,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.296Z"
+    },
+    {
+      "boardNum": 90,
+      "filename": "090.json",
+      "maxScore": 1538,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.309Z"
+    },
+    {
+      "boardNum": 91,
+      "filename": "091.json",
+      "maxScore": 1634,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.325Z"
+    },
+    {
+      "boardNum": 92,
+      "filename": "092.json",
+      "maxScore": 1095,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.345Z"
+    },
+    {
+      "boardNum": 93,
+      "filename": "093.json",
+      "maxScore": 1964,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.387Z"
+    },
+    {
+      "boardNum": 94,
+      "filename": "094.json",
+      "maxScore": 2112,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.397Z"
+    },
+    {
+      "boardNum": 95,
+      "filename": "095.json",
+      "maxScore": 1547,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.423Z"
+    },
+    {
+      "boardNum": 96,
+      "filename": "096.json",
+      "maxScore": 1208,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.465Z"
+    },
+    {
+      "boardNum": 97,
+      "filename": "097.json",
+      "maxScore": 2077,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.483Z"
+    },
+    {
+      "boardNum": 98,
+      "filename": "098.json",
+      "maxScore": 1828,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.499Z"
+    },
+    {
+      "boardNum": 99,
+      "filename": "099.json",
+      "maxScore": 1551,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.524Z"
+    },
+    {
+      "boardNum": 100,
+      "filename": "100.json",
+      "maxScore": 1986,
+      "difficulty": "easy",
+      "generatedAt": "2026-05-13T11:49:25.538Z"
+    }
+  ]
+}

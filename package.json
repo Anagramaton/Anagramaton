@@ -8,6 +8,7 @@
     "generate:all": "npm run generate && npm run generate:unlimited",
     "generate:daily-hexacore": "node scripts/generateDailyHexacore.mjs",
     "generate:daily-hexacore-batch": "node scripts/generateDailyHexacore.mjs --count=30",
+    "generate:daily-unlimited-pool": "node scripts/generateDailyUnlimitedPool.mjs",
     "generate:daily-boards": "node scripts/generate-daily-boards.js",
     "generate:daily-boards:batch": "node scripts/generate-daily-boards.js --days=30",
     "clean-words": "node scripts/cleanWordLists.js"

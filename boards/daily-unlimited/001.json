@@ -1,0 +1,172 @@
+{
+  "date": "unlimited-001",
+  "grid": {
+    "0,-2": "C",
+    "0,-1": "O",
+    "1,-2": "M",
+    "2,-2": "M",
+    "1,-1": "O",
+    "2,-1": "D",
+    "2,0": "I",
+    "1,0": "T",
+    "1,1": "I",
+    "0,2": "Z",
+    "-1,2": "I",
+    "-1,1": "N",
+    "0,0": "G",
+    "-1,-2": "S",
+    "-1,-1": "H",
+    "-1,0": "W",
+    "-2,0": "O",
+    "-2,1": "F",
+    "-3,2": "F",
+    "-2,2": "S",
+    "-1,3": "F",
+    "0,1": "Z",
+    "1,2": "Y",
+    "2,2": "S",
+    "2,1": "W",
+    "-1,4": "F",
+    "0,3": "I",
+    "-2,3": "E",
+    "-3,3": "T",
+    "4,-1": "B",
+    "3,-1": "E",
+    "3,-2": "U",
+    "2,-3": "B",
+    "-4,0": "A",
+    "-4,1": "U",
+    "-4,2": "R",
+    "-4,3": "O",
+    "-4,4": "U",
+    "-3,-1": "T",
+    "-3,0": "M",
+    "-3,1": "A",
+    "-3,4": "T",
+    "-2,-2": "A",
+    "-2,-1": "O",
+    "-2,4": "M",
+    "-1,-3": "Z",
+    "0,-4": "O",
+    "0,-3": "O",
+    "0,4": "G",
+    "1,-4": "I",
+    "1,-3": "E",
+    "1,3": "H",
+    "2,-4": "C",
+    "3,-4": "A",
+    "3,-3": "A",
+    "3,0": "C",
+    "3,1": "X",
+    "4,-4": "O",
+    "4,-3": "R",
+    "4,-2": "T",
+    "4,0": "E"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 2,
+      "r": -2
+    },
+    {
+      "type": "gemEmerald",
+      "q": -3,
+      "r": 1
+    },
+    {
+      "type": "rune",
+      "q": -1,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 2,
+      "digraph": "CO"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": 2
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1453,
+    "minAchievableScore": 2548,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "COMMODITIZING",
+          "SWIZZING",
+          "BEDUMB",
+          "FIZZIEST"
+        ],
+        "wordTotal": 2266,
+        "penalty": 138,
+        "finalScore": 2128
+      },
+      {
+        "words": [
+          "COMMODITIZING",
+          "BEDUMB",
+          "SWIZZING",
+          "FIZZIEST"
+        ],
+        "wordTotal": 2266,
+        "penalty": 138,
+        "finalScore": 2128
+      },
+      {
+        "words": [
+          "COMMODITIZING",
+          "SWIZZING",
+          "FIZZIEST",
+          "SHOWOFFS"
+        ],
+        "wordTotal": 2226,
+        "penalty": 125,
+        "finalScore": 2101
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 6.8,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "COMMUTED",
+      "SWIZZING",
+      "OFFSHOOT",
+      "AURATE",
+      "MOTMOT",
+      "BOCCE"
+    ],
+    "generatedAt": "2026-05-13T11:49:22.848Z"
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "date": "unlimited-051",
+  "grid": {
+    "-1,-1": "B",
+    "-1,0": "O",
+    "-2,1": "M",
+    "-1,1": "B",
+    "-1,2": "A",
+    "0,2": "S",
+    "1,1": "T",
+    "0,1": "I",
+    "1,0": "C",
+    "0,0": "A",
+    "0,-1": "L",
+    "1,-1": "L",
+    "1,-2": "Y",
+    "2,0": "K",
+    "3,-1": "W",
+    "2,-1": "O",
+    "2,-2": "R",
+    "3,-3": "K",
+    "-3,4": "B",
+    "-3,3": "E",
+    "-2,2": "W",
+    "-2,3": "R",
+    "-1,3": "P",
+    "-4,2": "B",
+    "-3,1": "A",
+    "-2,0": "W",
+    "0,-2": "E",
+    "-3,-1": "B",
+    "-2,-1": "I",
+    "-1,-2": "B",
+    "0,-3": "R",
+    "-2,-2": "J",
+    "-4,0": "R",
+    "-4,1": "R",
+    "-4,3": "S",
+    "-4,4": "H",
+    "-3,0": "I",
+    "-3,2": "F",
+    "-2,4": "I",
+    "-1,-3": "E",
+    "-1,4": "A",
+    "0,-4": "Z",
+    "0,3": "I",
+    "0,4": "E",
+    "1,-4": "E",
+    "1,-3": "O",
+    "1,2": "A",
+    "1,3": "E",
+    "2,-4": "I",
+    "2,-3": "A",
+    "2,1": "G",
+    "2,2": "O",
+    "3,-4": "A",
+    "3,-2": "S",
+    "3,0": "O",
+    "3,1": "T",
+    "4,-4": "S",
+    "4,-3": "U",
+    "4,-2": "A",
+    "4,-1": "I",
+    "4,0": "L"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 0,
+      "r": 0
+    },
+    {
+      "type": "gemEmerald",
+      "q": 4,
+      "r": -3
+    },
+    {
+      "type": "rune",
+      "q": -2,
+      "r": -1
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 1,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -1,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 3,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 3,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "LL"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 0,
+      "r": 1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": 0
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1200,
+    "minAchievableScore": 1248,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "BOMBASTICALLY",
+          "BACKWORK",
+          "BAWBLE",
+          "JIBBER"
+        ],
+        "wordTotal": 1304,
+        "penalty": 116,
+        "finalScore": 1188
+      },
+      {
+        "words": [
+          "BOMBASTICALLY",
+          "BACKWORK",
+          "BAWBLE",
+          "JIBBER"
+        ],
+        "wordTotal": 1304,
+        "penalty": 116,
+        "finalScore": 1188
+      },
+      {
+        "words": [
+          "BOMBASTICALLY",
+          "BACKWORK",
+          "BAWBLE",
+          "JIBBER"
+        ],
+        "wordTotal": 1304,
+        "penalty": 116,
+        "finalScore": 1188
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 6.3,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "STICKWORKS",
+      "BRAMBLY",
+      "WOWFER",
+      "ZEREBA",
+      "PIBAL",
+      "TOGAE",
+      "AIOLI"
+    ],
+    "generatedAt": "2026-05-13T11:49:24.346Z"
+  }
+}

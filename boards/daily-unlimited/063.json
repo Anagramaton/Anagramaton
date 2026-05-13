@@ -1,0 +1,176 @@
+{
+  "date": "unlimited-063",
+  "grid": {
+    "-1,-1": "O",
+    "0,-1": "V",
+    "0,0": "E",
+    "1,0": "R",
+    "1,1": "E",
+    "0,2": "X",
+    "0,1": "C",
+    "-1,2": "I",
+    "-1,1": "T",
+    "-2,1": "A",
+    "-1,0": "B",
+    "-2,0": "L",
+    "-2,-1": "E",
+    "2,-3": "M",
+    "2,-2": "Y",
+    "3,-2": "X",
+    "2,-1": "A",
+    "1,-1": "M",
+    "3,1": "F",
+    "3,0": "U",
+    "2,0": "T",
+    "2,1": "Z",
+    "1,2": "D",
+    "-3,0": "C",
+    "-1,-2": "F",
+    "0,-2": "F",
+    "1,-3": "S",
+    "0,4": "C",
+    "0,3": "O",
+    "-2,3": "B",
+    "-2,2": "S",
+    "-4,3": "W",
+    "-3,2": "R",
+    "-3,1": "X",
+    "-4,0": "E",
+    "-4,1": "S",
+    "-4,2": "S",
+    "-4,4": "I",
+    "-3,-1": "E",
+    "-3,3": "S",
+    "-3,4": "N",
+    "-2,-2": "O",
+    "-2,4": "A",
+    "-1,-3": "D",
+    "-1,3": "C",
+    "-1,4": "W",
+    "0,-4": "O",
+    "0,-3": "Z",
+    "1,-4": "A",
+    "1,-2": "O",
+    "1,3": "E",
+    "2,-4": "O",
+    "2,2": "R",
+    "3,-4": "M",
+    "3,-3": "I",
+    "3,-1": "A",
+    "4,-4": "R",
+    "4,-3": "E",
+    "4,-2": "N",
+    "4,-1": "I",
+    "4,0": "N"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": 1,
+      "r": 1
+    },
+    {
+      "type": "gemGold",
+      "q": -1,
+      "r": 1
+    },
+    {
+      "type": "amethyst",
+      "q": 0,
+      "r": -4
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "LL"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -1,
+      "r": -1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -2,
+      "r": 0
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2512,
+    "minAchievableScore": 7956,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "OVEREXCITABLE",
+          "FUTZED",
+          "MYXAMEBA",
+          "COXIBS"
+        ],
+        "wordTotal": 4796,
+        "penalty": 129,
+        "finalScore": 4667
+      },
+      {
+        "words": [
+          "OVEREXCITABLE",
+          "FUTZED",
+          "MYXAMEBA",
+          "COXIBS"
+        ],
+        "wordTotal": 4796,
+        "penalty": 129,
+        "finalScore": 4667
+      },
+      {
+        "words": [
+          "OVEREXCITABLE",
+          "MYXAMEBA",
+          "FUTZED",
+          "COXIBS"
+        ],
+        "wordTotal": 4796,
+        "penalty": 129,
+        "finalScore": 4667
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 4,
+    "averageWordLength": 7.8,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "EXCITABLE",
+      "CERTAINER",
+      "BOFFOS",
+      "REDOWAS"
+    ],
+    "generatedAt": "2026-05-13T11:49:24.567Z"
+  }
+}

@@ -1,0 +1,316 @@
+{
+  "date": "unlimited-037",
+  "grid": {
+    "0,1": "Q",
+    "1,1": "U",
+    "2,0": "A",
+    "1,0": "D",
+    "2,-1": "R",
+    "1,-1": "I",
+    "1,-2": "V",
+    "0,-1": "A",
+    "0,0": "L",
+    "-1,1": "E",
+    "-2,1": "N",
+    "-1,0": "C",
+    "-2,0": "Y",
+    "-3,4": "M",
+    "-3,3": "I",
+    "-2,2": "Z",
+    "-2,3": "M",
+    "-1,2": "A",
+    "-1,3": "Z",
+    "0,2": "E",
+    "1,2": "S",
+    "1,-4": "U",
+    "0,-3": "P",
+    "0,-2": "B",
+    "-1,-2": "O",
+    "-1,-1": "W",
+    "-2,-1": "S",
+    "4,-2": "C",
+    "3,-2": "H",
+    "2,-2": "I",
+    "2,-3": "V",
+    "1,-3": "Y",
+    "-3,2": "S",
+    "-4,4": "W",
+    "-4,0": "U",
+    "-4,1": "V",
+    "-4,2": "J",
+    "-4,3": "L",
+    "-3,-1": "F",
+    "-3,0": "D",
+    "-3,1": "E",
+    "-2,-2": "U",
+    "-2,4": "O",
+    "-1,-3": "F",
+    "-1,4": "Y",
+    "0,-4": "A",
+    "0,3": "N",
+    "0,4": "U",
+    "1,3": "O",
+    "2,-4": "Q",
+    "2,1": "T",
+    "2,2": "A",
+    "3,-4": "O",
+    "3,-3": "I",
+    "3,-1": "A",
+    "3,0": "Y",
+    "3,1": "P",
+    "4,-4": "F",
+    "4,-3": "Y",
+    "4,-1": "I",
+    "4,0": "E"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "gemEmerald",
+      "q": 0,
+      "r": -3
+    },
+    {
+      "type": "rune",
+      "q": -3,
+      "r": 3
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 4,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 1,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -2,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -3,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -3,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 1,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 2,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 1,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -3,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 0,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -2,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 3,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 0,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -1,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 2,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 0,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "NG"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -1,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -1,
+      "r": 2
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1625,
+    "minAchievableScore": 2652,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "QUADRIVALENCY",
+          "ZAZENS",
+          "UPBOWS",
+          "WIZENS"
+        ],
+        "wordTotal": 2382,
+        "penalty": 145,
+        "finalScore": 2237
+      },
+      {
+        "words": [
+          "QUADRIVALENCY",
+          "ZAZENS",
+          "UPBOWS",
+          "WIZENS"
+        ],
+        "wordTotal": 2382,
+        "penalty": 145,
+        "finalScore": 2237
+      },
+      {
+        "words": [
+          "QUADRIVALENCY",
+          "MIZMAZES",
+          "ZAZENS",
+          "UPBOWS"
+        ],
+        "wordTotal": 2346,
+        "penalty": 139,
+        "finalScore": 2207
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 6.8,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "DIVALENCY",
+      "UPBOWS",
+      "MIZMAZES",
+      "UNFUSED",
+      "VIHARA",
+      "PATIO"
+    ],
+    "generatedAt": "2026-05-13T11:49:23.987Z"
+  }
+}

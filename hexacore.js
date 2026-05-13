@@ -1242,7 +1242,9 @@ function hxEasternDateOffset(daysBack) {
 
 const HX_DAILY_COMPLETED_KEY = 'hxDailyCompleted';
 const HX_DAILY_BOARD_CACHE_PREFIX = 'hxDailyBoardCache_';
+const HX_DAILY_UNLIMITED_POOL_SIZE = 100;
 let hxDailyManifestCache = null;
+let hxDailyUnlimitedPoolCache = null; // lazily loaded index for the pool
 
 async function hxLoadDailyManifest() {
   if (hxDailyManifestCache) return hxDailyManifestCache;
@@ -1290,6 +1292,39 @@ async function loadDailyChallengeBoard(dateStr) {
 
   // Cache so subsequent clicks (or page reloads) re-use the same board today.
   try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch (_) {}
+  return data;
+}
+
+/**
+ * Loads board N (1-based, cycles within 1–HX_DAILY_UNLIMITED_POOL_SIZE) from the
+ * pre-built pool at /boards/daily-unlimited/.
+ * Falls back to on-the-fly generation with a stable seed when the static file
+ * is unavailable (e.g. local dev before running the generator script).
+ */
+async function loadDailyUnlimitedPoolBoard(boardNum) {
+  const n    = ((boardNum - 1) % HX_DAILY_UNLIMITED_POOL_SIZE) + 1;
+  const file = String(n).padStart(3, '0');
+  const seed = `unlimited-${file}`;
+  const cacheKey = `hxDailyUnlimitedPool_${file}`;
+
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) return JSON.parse(cached);
+  } catch (_) {}
+
+  let data;
+  try {
+    const res = await fetch(`/boards/daily-unlimited/${file}.json`);
+    if (res.ok) data = await res.json();
+  } catch (_) {}
+
+  if (!data) {
+    const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
+    data = generateDailyHexacoreBoard({ date: seed });
+    if (data) data.date = seed;
+  }
+
+  try { if (data) localStorage.setItem(cacheKey, JSON.stringify(data)); } catch (_) {}
   return data;
 }
 
@@ -5087,19 +5122,16 @@ async function loadNextDailyUnlimitedBoard() {
 
   showDailyUnlimitedNextBoardToast(boardsCompleted);
 
-  // Compute the date for the next board
-  const nextDate = hxEasternDateOffset(boardsCompleted);
-
-  // Load next board data (falls back to procedural generation if no static file)
+  // Load the next board from the pre-built pool (cycles 1–100)
   let boardData = null;
   try {
-    boardData = await loadDailyChallengeBoard(nextDate);
-    hxState.dailyBoardDate = boardData?.date || nextDate;
+    boardData = await loadDailyUnlimitedPoolBoard(boardsCompleted);
+    hxState.dailyBoardDate = boardData?.date || `unlimited-${String(((boardsCompleted - 1) % HX_DAILY_UNLIMITED_POOL_SIZE) + 1).padStart(3, '0')}`;
     hxState.dailyMetadata = boardData?.metadata || null;
     hxState.dailySpecialTiles = boardData?.specialTiles || null;
   } catch (err) {
     console.warn('[hexacore] daily-unlimited: next board load failed:', err);
-    hxState.dailyBoardDate = nextDate;
+    hxState.dailyBoardDate = `unlimited-${boardsCompleted}`;
     hxState.dailyMetadata = null;
     hxState.dailySpecialTiles = null;
   }

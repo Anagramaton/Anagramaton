@@ -1,0 +1,286 @@
+{
+  "date": "unlimited-042",
+  "grid": {
+    "1,-2": "C",
+    "2,-2": "R",
+    "1,-1": "Y",
+    "1,0": "P",
+    "0,1": "T",
+    "-1,1": "O",
+    "0,0": "Z",
+    "-1,0": "O",
+    "0,-1": "O",
+    "-1,-1": "L",
+    "-1,-2": "O",
+    "0,-2": "G",
+    "1,-3": "Y",
+    "-2,-1": "W",
+    "-2,0": "I",
+    "-3,1": "R",
+    "-2,1": "E",
+    "-2,2": "W",
+    "-1,2": "R",
+    "0,2": "K",
+    "1,3": "B",
+    "1,2": "U",
+    "1,1": "F",
+    "2,1": "F",
+    "2,0": "E",
+    "3,-1": "R",
+    "2,-1": "E",
+    "3,-2": "D",
+    "-3,4": "W",
+    "-3,3": "O",
+    "-3,2": "F",
+    "3,0": "T",
+    "-2,4": "B",
+    "-2,3": "E",
+    "-1,3": "M",
+    "-4,0": "G",
+    "-4,1": "U",
+    "-4,2": "I",
+    "-4,3": "B",
+    "-4,4": "D",
+    "-3,-1": "E",
+    "-3,0": "L",
+    "-2,-2": "M",
+    "-1,-3": "T",
+    "-1,4": "I",
+    "0,-4": "R",
+    "0,-3": "T",
+    "0,3": "T",
+    "0,4": "S",
+    "1,-4": "U",
+    "2,-4": "R",
+    "2,-3": "I",
+    "2,2": "T",
+    "3,-4": "L",
+    "3,-3": "M",
+    "3,1": "A",
+    "4,-4": "E",
+    "4,-3": "Y",
+    "4,-2": "A",
+    "4,-1": "O",
+    "4,0": "L"
+  },
+  "specialTiles": [
+    {
+      "type": "prism",
+      "q": -1,
+      "r": 1
+    },
+    {
+      "type": "gemEmerald",
+      "q": 2,
+      "r": 2
+    },
+    {
+      "type": "amethyst",
+      "q": 2,
+      "r": -2
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 3,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 2,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -2,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -2,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 3,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 1,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -2,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 0,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 3,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 3,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -1,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 0,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 0,
+      "digraph": "LL"
+    },
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 2,
+      "r": 0
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 1,
+      "r": 3
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 1690,
+    "minAchievableScore": 2548,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "CRYPTOZOOLOGY",
+          "WIREWORK",
+          "BEWORM",
+          "BUFFERED"
+        ],
+        "wordTotal": 2466,
+        "penalty": 102,
+        "finalScore": 2364
+      },
+      {
+        "words": [
+          "CRYPTOZOOLOGY",
+          "WIREWORK",
+          "BEWORM",
+          "BUFFERED"
+        ],
+        "wordTotal": 2466,
+        "penalty": 102,
+        "finalScore": 2364
+      },
+      {
+        "words": [
+          "CRYPTOZOOLOGY",
+          "WIREWORK",
+          "BUFFERED",
+          "BEWORM"
+        ],
+        "wordTotal": 2466,
+        "penalty": 102,
+        "finalScore": 2364
+      }
+    ],
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 7.5,
+    "gemDensity": 0.016,
+    "solutionPath": [
+      "WIREWORK",
+      "REFUTAL",
+      "CRYPTOLOGY",
+      "TOTEMIST",
+      "BETRIM",
+      "MOBILE"
+    ],
+    "generatedAt": "2026-05-13T11:49:24.086Z"
+  }
+}
