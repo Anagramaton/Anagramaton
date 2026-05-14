@@ -28,30 +28,33 @@ export default async function handler(req, res) {
     process.env.SUPABASE_SERVICE_KEY
   );
 
-  const { error: tableProbeError } = await supabase
-    .from('scores')
-    .select('id', { head: true })
-    .limit(1);
+  const { data: columns, error: schemaProbeError } = await supabase
+    .from('information_schema.columns')
+    .select('column_name')
+    .eq('table_schema', 'public')
+    .eq('table_name', 'scores');
 
-  if (tableProbeError) {
-    const tableMissing = tableProbeError.code === '42P01';
+  if (schemaProbeError) {
     return res.status(200).json({
       configured: true,
-      connection: tableMissing ? 'ok' : 'error',
-      table: tableMissing ? 'missing' : 'error',
+      connection: 'error',
+      table: 'error',
       schema_version: 'unknown',
     });
   }
 
-  const { error: schemaError } = await supabase
-    .from('scores')
-    .select('daily_id,player_name,mode')
-    .limit(1);
+  const columnNames = new Set((columns || []).map((col) => col.column_name));
+  const tableExists = (columns || []).length > 0;
+  const hasModeSchema =
+    tableExists &&
+    columnNames.has('daily_id') &&
+    columnNames.has('player_name') &&
+    columnNames.has('mode');
 
   return res.status(200).json({
     configured: true,
     connection: 'ok',
-    table: 'exists',
-    schema_version: schemaError ? 'unknown' : 'v1_with_mode',
+    table: tableExists ? 'exists' : 'missing',
+    schema_version: hasModeSchema ? 'v1_with_mode' : 'unknown',
   });
 }

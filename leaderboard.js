@@ -33,6 +33,8 @@ function showSubmitError(message) {
 
   const el = document.createElement('div');
   el.id = id;
+  el.setAttribute('role', 'alert');
+  el.setAttribute('aria-live', 'polite');
   el.textContent = message;
   el.style.position = 'fixed';
   el.style.left = '50%';
@@ -52,7 +54,7 @@ function showSubmitError(message) {
   document.body.appendChild(el);
 
   setTimeout(() => {
-    el.remove();
+    if (el.parentNode) el.remove();
   }, SUBMIT_ERROR_DISPLAY_MS);
 }
 

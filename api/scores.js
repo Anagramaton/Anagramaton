@@ -163,7 +163,8 @@ export default async function handler(req, res) {
         penalty:     Number.isFinite(penalty) ? Math.max(0, Math.round(penalty)) : null,
         solve_time_seconds: Number.isFinite(solveTimeSeconds) ? Math.max(0, Math.round(solveTimeSeconds)) : null,
       },
-      // Unique index is (daily_id, player_name, mode) so each mode stores independent personal bests.
+      // Must match the table unique constraint columns (for example: scores_daily_player_mode_key).
+      // This allows independent personal bests per (daily_id, player_name, mode).
       { onConflict: 'daily_id,player_name,mode', ignoreDuplicates: false }
     );
 
