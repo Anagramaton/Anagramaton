@@ -163,6 +163,7 @@ export default async function handler(req, res) {
         penalty:     Number.isFinite(penalty) ? Math.max(0, Math.round(penalty)) : null,
         solve_time_seconds: Number.isFinite(solveTimeSeconds) ? Math.max(0, Math.round(solveTimeSeconds)) : null,
       },
+      // Unique index is (daily_id, player_name, mode) so each mode stores independent personal bests.
       { onConflict: 'daily_id,player_name,mode', ignoreDuplicates: false }
     );
 

@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
   const { error: tableProbeError } = await supabase
     .from('scores')
-    .select('id', { head: true, count: 'exact' })
+    .select('id', { head: true })
     .limit(1);
 
   if (tableProbeError) {

@@ -2,6 +2,7 @@
 
 const PLAYER_NAME_KEY = 'anagramaton_player_name';
 const LB_DEBUG_FLAG = '__ANAGRAMATON_LB_DEBUG__';
+const SUBMIT_ERROR_DISPLAY_MS = 3500;
 
 function isLeaderboardDebugEnabled() {
   return typeof window !== 'undefined' && window[LB_DEBUG_FLAG] === true;
@@ -52,7 +53,7 @@ function showSubmitError(message) {
 
   setTimeout(() => {
     el.remove();
-  }, 3500);
+  }, SUBMIT_ERROR_DISPLAY_MS);
 }
 
 /* ── Random name generator ─────────────────────────────────────── */
