@@ -1,6 +1,59 @@
 // leaderboard.js — frontend module for score submission and leaderboard display
 
 const PLAYER_NAME_KEY = 'anagramaton_player_name';
+const LB_DEBUG_FLAG = '__ANAGRAMATON_LB_DEBUG__';
+
+function isLeaderboardDebugEnabled() {
+  return typeof window !== 'undefined' && window[LB_DEBUG_FLAG] === true;
+}
+
+function leaderboardDebugLog(...args) {
+  if (isLeaderboardDebugEnabled()) {
+    console.log('[leaderboard:debug]', ...args);
+  }
+}
+
+export function setLeaderboardDebug(enabled = true) {
+  if (typeof window === 'undefined') return false;
+  window[LB_DEBUG_FLAG] = Boolean(enabled);
+  console.info(`[leaderboard] debug mode ${window[LB_DEBUG_FLAG] ? 'enabled' : 'disabled'}`);
+  return window[LB_DEBUG_FLAG];
+}
+
+if (typeof window !== 'undefined' && typeof window.setLeaderboardDebug !== 'function') {
+  window.setLeaderboardDebug = setLeaderboardDebug;
+}
+
+function showSubmitError(message) {
+  if (typeof document === 'undefined') return;
+  const id = 'lb-submit-error';
+  const existing = document.getElementById(id);
+  if (existing) existing.remove();
+
+  const el = document.createElement('div');
+  el.id = id;
+  el.textContent = message;
+  el.style.position = 'fixed';
+  el.style.left = '50%';
+  el.style.bottom = '20px';
+  el.style.transform = 'translateX(-50%)';
+  el.style.zIndex = '100000';
+  el.style.maxWidth = '90vw';
+  el.style.padding = '10px 12px';
+  el.style.borderRadius = '8px';
+  el.style.border = '1px solid rgba(239,68,68,0.7)';
+  el.style.background = 'rgba(17,24,39,0.95)';
+  el.style.color = '#fecaca';
+  el.style.fontFamily = "'Turret Road', 'Orbitron', monospace";
+  el.style.fontSize = '0.78rem';
+  el.style.letterSpacing = '0.04em';
+  el.style.textAlign = 'center';
+  document.body.appendChild(el);
+
+  setTimeout(() => {
+    el.remove();
+  }, 3500);
+}
 
 /* ── Random name generator ─────────────────────────────────────── */
 
@@ -237,7 +290,10 @@ export function promptSignOut() {
 
 export async function submitScore(dailyId, score, words, hintsUsed, mode = 'daily', metadata = null) {
   const playerName = getPlayerName();
-  if (!playerName) return null;
+  if (!playerName) {
+    leaderboardDebugLog('Skipped submitScore because no player name is set', { dailyId, mode });
+    return null;
+  }
   try {
     const payload = { dailyId, playerName, score, words, hintsUsed, mode };
     if (metadata && typeof metadata === 'object') {
@@ -245,16 +301,53 @@ export async function submitScore(dailyId, score, words, hintsUsed, mode = 'dail
       if (Number.isFinite(metadata.penalty)) payload.penalty = Math.round(metadata.penalty);
       if (Number.isFinite(metadata.solveTimeSeconds)) payload.solveTimeSeconds = Math.round(metadata.solveTimeSeconds);
     }
+    leaderboardDebugLog('Submitting score payload', {
+      dailyId: payload.dailyId,
+      mode: payload.mode,
+      playerName: payload.playerName,
+      score: payload.score,
+      wordsCount: Array.isArray(payload.words) ? payload.words.length : 0,
+      hintsUsed: payload.hintsUsed,
+      tilesUsed: payload.tilesUsed ?? null,
+      penalty: payload.penalty ?? null,
+      solveTimeSeconds: payload.solveTimeSeconds ?? null,
+    });
+
     const res = await fetch('/api/scores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) return null;
-    return await res.json();
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {
+      data = null;
+    }
+
+    if (!res.ok) {
+      console.error('[leaderboard] submitScore request failed:', {
+        status: res.status,
+        statusText: res.statusText,
+        response: data,
+        mode,
+        dailyId,
+      });
+      showSubmitError('Score submission failed. Please try again.');
+      return null;
+    }
+
+    leaderboardDebugLog('Score submission response', data);
+    return data;
   } catch (err) {
-    // Silently fail — offline or server error should not affect gameplay
-    console.warn('[leaderboard] submitScore failed:', err);
+    console.error('[leaderboard] submitScore failed:', {
+      error: err,
+      mode,
+      dailyId,
+      score,
+      wordsCount: Array.isArray(words) ? words.length : 0,
+    });
+    showSubmitError('Could not reach leaderboard. Check your connection and try again.');
     return null;
   }
 }
