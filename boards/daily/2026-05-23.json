@@ -140,12 +140,12 @@
     {
       "type": "portal",
       "q": 2,
-      "r": 4
+      "r": 2
     },
     {
       "type": "portal",
-      "q": -2,
-      "r": -4
+      "q": 4,
+      "r": 0
     }
   ],
   "metadata": {
