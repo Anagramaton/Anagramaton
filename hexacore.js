@@ -4481,10 +4481,21 @@ async function consumeAndRefill(tilesToRemove) {
   await advanceFireTiles();
   if (hxState.gameOver) return;
 
+  // Capture portal tile references again before the second gravity pass.
+  const preSecondGravityEntryTile = hxState.portalOpen && hxState.portalEntry
+    ? hxTileMap.get(hxKey(hxState.portalEntry.q, hxState.portalEntry.r))
+    : null;
+  const preSecondGravityExitTile = hxState.portalOpen && hxState.portalExit
+    ? hxTileMap.get(hxKey(hxState.portalExit.q, hxState.portalExit.r))
+    : null;
+
   // 4b. Gravity after ember advancement: tiles above vacated ember slots
   //     should cascade down naturally before the refill runs.
   await applyGravity();
   if (hxState.gameOver) return;
+  if (hxState.portalOpen) {
+    transferPortalIfMoved(preSecondGravityEntryTile, preSecondGravityExitTile);
+  }
 
   // 5. Refill empty columns (only the truly-topmost slots remain empty now)
   await refillGrid();
