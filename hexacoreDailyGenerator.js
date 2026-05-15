@@ -35,7 +35,6 @@ const GEM_MULTIPLIERS = {
 
 const DAILY_ROTATING_GEM_TYPES = ['gemEmerald', 'gemGold'];
 const DAILY_ROTATING_RUNE_TYPES = ['rune', 'amethyst'];
-const MAX_PORTAL_CANDIDATE_POOL = 12;
 
 // Edge-perimeter tiles on the upper/right side of the radius-4 hex grid used as portal entry fallbacks.
 const DAILY_PORTAL_ENTRY_CORNERS = [
@@ -302,6 +301,22 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   const { coordToWords, longMiddle } = buildCoordStats(placements);
 
   const allCoords = getAllCoordsWithKeys(radius);
+
+  // ── PORTALS: placed FIRST so no other tile type can occupy these positions ──
+  // Pick one entry and one exit at random from the fixed perimeter pools.
+  const entryPool = shuffled(DAILY_PORTAL_ENTRY_CORNERS.filter(c => !!grid[hexKey(c.q, c.r)]), rng);
+  const exitPool  = shuffled(DAILY_PORTAL_EXIT_CORNERS.filter(c => !!grid[hexKey(c.q, c.r)]), rng);
+  const chosenEntry = entryPool[0];
+  const chosenExit  = exitPool[0];
+  if (chosenEntry) {
+    specials.push({ type: 'portal', role: 'entry', q: chosenEntry.q, r: chosenEntry.r });
+    taken.add(hexKey(chosenEntry.q, chosenEntry.r));
+  }
+  if (chosenExit) {
+    specials.push({ type: 'portal', role: 'exit', q: chosenExit.q, r: chosenExit.r });
+    taken.add(hexKey(chosenExit.q, chosenExit.r));
+  }
+
   const pathDensity = new Map();
   for (const c of allCoords) {
     const n = neighbors(c.q, c.r, radius);
@@ -413,70 +428,6 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   const chosenDigraphs = shuffledDigraphs.slice(0, digraphCount);
   for (const dg of chosenDigraphs) {
     placeType('digraph', digraphCandidates, 1, { digraph: dg });
-  }
-
-  // ── 1 portal entry + 1 portal exit, weighted for strategic use ────
-  const portalHexDistance = (a, b) => Math.max(
-    Math.abs(a.q - b.q),
-    Math.abs(a.r - b.r),
-    Math.abs((a.q + a.r) - (b.q + b.r)),
-  );
-  // Portals must appear on the outer two rings so they are never placed in
-  // the middle of the board (ring >= radius - 1, i.e. rings 3 and 4 for the
-  // default radius-4 board).
-  const portalCandidates = allCoords
-    .filter(c => Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(-c.q - c.r)) >= radius - 1)
-    .map(c => {
-      const wordCount = coordToWords.get(c.key)?.size || 0;
-      if (wordCount < 1) return null;
-      return {
-        ...c,
-        weight: wordCount * 12 + (pathDensity.get(c.key) || 0) + (longPathCoords.has(c.key) ? 10 : 0),
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => (b.weight || 0) - (a.weight || 0));
-
-  const firstPortal = shuffled(
-    portalCandidates.slice(0, Math.min(MAX_PORTAL_CANDIDATE_POOL, portalCandidates.length)),
-    rng,
-  )[0];
-  if (firstPortal) {
-    specials.push({ type: 'portal', role: 'entry', q: firstPortal.q, r: firstPortal.r });
-    taken.add(firstPortal.key);
-
-    const secondPortalCandidates = portalCandidates
-      .filter(c => c.key !== firstPortal.key)
-      .map(c => ({ ...c, weight: (c.weight || 0) + portalHexDistance(firstPortal, c) * 3 }))
-      .sort((a, b) => (b.weight || 0) - (a.weight || 0));
-    const secondPortal = shuffled(
-      secondPortalCandidates.slice(0, Math.min(MAX_PORTAL_CANDIDATE_POOL, secondPortalCandidates.length)),
-      rng,
-    )[0];
-    if (secondPortal) {
-      specials.push({ type: 'portal', role: 'exit', q: secondPortal.q, r: secondPortal.r });
-      taken.add(secondPortal.key);
-    }
-  }
-
-  // Fallback to fixed edge positions if strategic placement failed to produce a pair.
-  if (specials.filter(s => s.type === 'portal').length < 2) {
-    const hasEntry = specials.some(s => s.type === 'portal' && s.role === 'entry');
-    const hasExit  = specials.some(s => s.type === 'portal' && s.role === 'exit');
-    if (!hasEntry) {
-      const entryCorner = shuffled(DAILY_PORTAL_ENTRY_CORNERS, rng).find(c => !taken.has(hexKey(c.q, c.r)));
-      if (entryCorner) {
-        specials.push({ type: 'portal', role: 'entry', q: entryCorner.q, r: entryCorner.r });
-        taken.add(hexKey(entryCorner.q, entryCorner.r));
-      }
-    }
-    if (!hasExit) {
-      const exitCorner = shuffled(DAILY_PORTAL_EXIT_CORNERS, rng).find(c => !taken.has(hexKey(c.q, c.r)));
-      if (exitCorner) {
-        specials.push({ type: 'portal', role: 'exit', q: exitCorner.q, r: exitCorner.r });
-        taken.add(hexKey(exitCorner.q, exitCorner.r));
-      }
-    }
   }
 
   return specials;
