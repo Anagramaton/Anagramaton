@@ -4319,19 +4319,22 @@ async function submitHexacoreWord() {
       seleniteCollected:   false,
     });
   }
-  updateAchievementProgress('wordSubmitted', {
-    word,
-    tiles: [...hxSelected],
-    score: wordScore,
-    portalUsed: portalUsedInWord,
-  });
-  updateStatTracking('wordSubmitted', {
-    word,
-    tiles: [...hxSelected],
-    score: wordScore,
-    portalUsed: portalUsedInWord,
-    gameLevel: currentPlayerLevel,
-  });
+  // Achievements, challenges, and stat tracking do not apply in daily mode.
+  if (!hxIsDailyMode()) {
+    updateAchievementProgress('wordSubmitted', {
+      word,
+      tiles: [...hxSelected],
+      score: wordScore,
+      portalUsed: portalUsedInWord,
+    });
+    updateStatTracking('wordSubmitted', {
+      word,
+      tiles: [...hxSelected],
+      score: wordScore,
+      portalUsed: portalUsedInWord,
+      gameLevel: currentPlayerLevel,
+    });
+  }
 
   // Campaign progress tracking
   if (hxGameMode === 'campaign') {
@@ -4421,7 +4424,10 @@ async function submitHexacoreWord() {
 
   if (!hxState.gameOver) {
     // Show all post-word UI feedback only after board settle
-    checkHexacoreRequirements(word, consumed, wordScore);
+    // Challenges do not apply in daily mode.
+    if (!hxIsDailyMode()) {
+      checkHexacoreRequirements(word, consumed, wordScore);
+    }
     if (!hxIsDailyMode()) {
       updateXPBarFn();
       // Show level-up banner now that tiles have finished refilling
@@ -4454,6 +4460,7 @@ async function submitHexacoreWord() {
         openPortal();
       }
     } else {
+      playSound('sfxGemCollect');
       updateDailyHud();
       if (!hasAnyDailyWordLeft()) {
         showDailyNoWordsPrompt();
@@ -5113,28 +5120,31 @@ function triggerGameOver() {
 
   removeHud();
 
-  // Update player profile stats
-  const playerLevel = getCurrentPlayerLevel();
-  updateProfile({
-    words:     hxState.words,
-    score:     hxState.score,
-    xpEarned:  0, // XP was already added incrementally
-    level:     playerLevel,
-  });
-  updateAchievementProgress('gameOver', {
-    score: hxState.score,
-    words: hxState.words.length,
-    level: playerLevel,
-  });
-  updateStatTracking('gameOver', { score: hxState.score, level: playerLevel });
-  saveSessionHistory({
-    score: hxState.score,
-    words: hxState.words.length,
-    level: playerLevel,
-    mode: hxGameMode,
-    date: new Date().toISOString(),
-  });
-  updateStats({ sessionScore: hxState.score, sessionWords: hxState.words.length });
+  // Profile updates, achievements, and stat tracking do not apply in daily mode.
+  if (!hxIsDailyMode()) {
+    // Update player profile stats
+    const playerLevel = getCurrentPlayerLevel();
+    updateProfile({
+      words:     hxState.words,
+      score:     hxState.score,
+      xpEarned:  0, // XP was already added incrementally
+      level:     playerLevel,
+    });
+    updateAchievementProgress('gameOver', {
+      score: hxState.score,
+      words: hxState.words.length,
+      level: playerLevel,
+    });
+    updateStatTracking('gameOver', { score: hxState.score, level: playerLevel });
+    saveSessionHistory({
+      score: hxState.score,
+      words: hxState.words.length,
+      level: playerLevel,
+      mode: hxGameMode,
+      date: new Date().toISOString(),
+    });
+    updateStats({ sessionScore: hxState.score, sessionWords: hxState.words.length });
+  }
 
   showGameOver();
 }
