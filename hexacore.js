@@ -1869,14 +1869,14 @@ function buildTileGuide() {
   let ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES;
   let GEM_TILES = ALL_GEM_TILES;
 
-  if (isDaily && hxState.dailySpecialTiles) {
-    const boardTypes = new Set(hxState.dailySpecialTiles.map(s => s.type));
-    // Portal appears as two tiles with the same type
-    SPECIAL_TILES = ALL_SPECIAL_TILES.filter(t => boardTypes.has(t.key));
-    ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES.filter(t => boardTypes.has(t.key));
+  if (isDaily) {
     GEM_TILES = []; // gems are not used in daily mode
-  } else if (isDaily) {
-    GEM_TILES = [];
+    if (hxState.dailySpecialTiles) {
+      const boardTypes = new Set(hxState.dailySpecialTiles.map(s => s.type));
+      // Portal appears as two tiles with the same type
+      SPECIAL_TILES = ALL_SPECIAL_TILES.filter(t => boardTypes.has(t.key));
+      ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES.filter(t => boardTypes.has(t.key));
+    }
   }
 
   // ── Helper: mini pointy-top hexagon ─────────────────────────────
