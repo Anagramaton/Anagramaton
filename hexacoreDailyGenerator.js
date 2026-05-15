@@ -35,17 +35,35 @@ const GEM_MULTIPLIERS = {
 
 const DAILY_ROTATING_GEM_TYPES = ['gemEmerald', 'gemGold'];
 const DAILY_ROTATING_RUNE_TYPES = ['rune', 'amethyst'];
-const MAX_PORTAL_CANDIDATE_POOL = 12;
 
-// The 6 outer-edge mid-point tiles of the radius-4 hex grid that may become portals.
-// All positions satisfy |q|≤4, |r|≤4, |s|≤4 (s = -q-r) so they exist on the board.
-const DAILY_PORTAL_CORNERS = [
-  { q: -2, r:  4 },  // lower-left  edge midpoint (s=-2)
-  { q:  2, r:  2 },  // lower-right edge midpoint (s=-4)  ← was (2,4) which is off-grid (s=-6)
-  { q:  4, r:  0 },  // right corner               (s=-4)
-  { q:  2, r: -4 },  // upper-right edge midpoint (s=2)
-  { q: -2, r: -2 },  // upper-left  edge midpoint (s=4)   ← was (-2,-4) which is off-grid (s=6)
-  { q: -4, r:  0 },  // left corner                (s=4)
+// Edge-perimeter tiles on the upper/right side of the radius-4 hex grid used as portal entry fallbacks.
+const DAILY_PORTAL_ENTRY_CORNERS = [
+  { q:  0, r: -4 },
+  { q:  1, r: -4 },
+  { q:  2, r: -4 },
+  { q:  3, r: -4 },
+  { q:  4, r: -4 },
+  { q: -1, r: -3 },
+  { q:  4, r: -3 },
+  { q: -2, r: -2 },
+  { q:  4, r: -2 },
+  { q: -3, r: -1 },
+  { q:  4, r: -1 },
+];
+
+// Edge-perimeter tiles on the lower/left side of the radius-4 hex grid used as portal exit fallbacks.
+const DAILY_PORTAL_EXIT_CORNERS = [
+  { q: -4, r:  1 },
+  { q:  3, r:  1 },
+  { q: -4, r:  2 },
+  { q:  2, r:  2 },
+  { q: -4, r:  3 },
+  { q:  1, r:  3 },
+  { q: -4, r:  4 },
+  { q: -3, r:  4 },
+  { q: -2, r:  4 },
+  { q: -1, r:  4 },
+  { q:  0, r:  4 },
 ];
 
 // Digraph combos eligible for daily board placement
@@ -283,6 +301,22 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   const { coordToWords, longMiddle } = buildCoordStats(placements);
 
   const allCoords = getAllCoordsWithKeys(radius);
+
+  // ── PORTALS: placed FIRST so no other tile type can occupy these positions ──
+  // Pick one entry and one exit at random from the fixed perimeter pools.
+  const entryPool = shuffled(DAILY_PORTAL_ENTRY_CORNERS.filter(c => !!grid[hexKey(c.q, c.r)]), rng);
+  const exitPool  = shuffled(DAILY_PORTAL_EXIT_CORNERS.filter(c => !!grid[hexKey(c.q, c.r)]), rng);
+  const chosenEntry = entryPool[0];
+  const chosenExit  = exitPool[0];
+  if (chosenEntry) {
+    specials.push({ type: 'portal', role: 'entry', q: chosenEntry.q, r: chosenEntry.r });
+    taken.add(hexKey(chosenEntry.q, chosenEntry.r));
+  }
+  if (chosenExit) {
+    specials.push({ type: 'portal', role: 'exit', q: chosenExit.q, r: chosenExit.r });
+    taken.add(hexKey(chosenExit.q, chosenExit.r));
+  }
+
   const pathDensity = new Map();
   for (const c of allCoords) {
     const n = neighbors(c.q, c.r, radius);
@@ -378,14 +412,15 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     placeType('amethyst', denseCandidates, 1);
   }
 
-  // ── DIGRAPHS: unique strings, variable count (no fixed cap) ──────
+  // ── DIGRAPHS: unique strings, capped at 5 tiles maximum ──────────
+  const DAILY_MAX_DIGRAPHS = 5;
   const shuffledDigraphs = shuffled(DAILY_DIGRAPH_OPTIONS, rng);
   const digraphCandidates = allCoords.map(c => ({
     ...c,
     weight: (longPathCoords.has(c.key) ? 14 : 0) + (pathDensity.get(c.key) || 0),
   }));
   const strategicDigraphSlots = digraphCandidates.filter(c => c.weight > 0).length;
-  const maxDigraphCount = Math.min(shuffledDigraphs.length, Math.max(0, strategicDigraphSlots));
+  const maxDigraphCount = Math.min(DAILY_MAX_DIGRAPHS, shuffledDigraphs.length, Math.max(0, strategicDigraphSlots));
   const minDigraphCount = Math.min(3, maxDigraphCount);
   const digraphCount = maxDigraphCount > 0
     ? minDigraphCount + Math.floor(rng() * (maxDigraphCount - minDigraphCount + 1))
@@ -393,61 +428,6 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   const chosenDigraphs = shuffledDigraphs.slice(0, digraphCount);
   for (const dg of chosenDigraphs) {
     placeType('digraph', digraphCandidates, 1, { digraph: dg });
-  }
-
-  // ── 1 portal entry + 1 portal exit, weighted for strategic use ────
-  const portalHexDistance = (a, b) => Math.max(
-    Math.abs(a.q - b.q),
-    Math.abs(a.r - b.r),
-    Math.abs((a.q + a.r) - (b.q + b.r)),
-  );
-  // Portals must appear on the outer two rings so they are never placed in
-  // the middle of the board (ring >= radius - 1, i.e. rings 3 and 4 for the
-  // default radius-4 board).
-  const portalCandidates = allCoords
-    .filter(c => Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(-c.q - c.r)) >= radius - 1)
-    .map(c => {
-      const wordCount = coordToWords.get(c.key)?.size || 0;
-      if (wordCount < 1) return null;
-      return {
-        ...c,
-        weight: wordCount * 12 + (pathDensity.get(c.key) || 0) + (longPathCoords.has(c.key) ? 10 : 0),
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => (b.weight || 0) - (a.weight || 0));
-
-  const firstPortal = shuffled(
-    portalCandidates.slice(0, Math.min(MAX_PORTAL_CANDIDATE_POOL, portalCandidates.length)),
-    rng,
-  )[0];
-  if (firstPortal) {
-    specials.push({ type: 'portal', role: 'entry', q: firstPortal.q, r: firstPortal.r });
-    taken.add(firstPortal.key);
-
-    const secondPortalCandidates = portalCandidates
-      .filter(c => c.key !== firstPortal.key)
-      .map(c => ({ ...c, weight: (c.weight || 0) + portalHexDistance(firstPortal, c) * 3 }))
-      .sort((a, b) => (b.weight || 0) - (a.weight || 0));
-    const secondPortal = shuffled(
-      secondPortalCandidates.slice(0, Math.min(MAX_PORTAL_CANDIDATE_POOL, secondPortalCandidates.length)),
-      rng,
-    )[0];
-    if (secondPortal) {
-      specials.push({ type: 'portal', role: 'exit', q: secondPortal.q, r: secondPortal.r });
-      taken.add(secondPortal.key);
-    }
-  }
-
-  // Fallback to corners if strategic placement failed to produce a pair.
-  if (specials.filter(s => s.type === 'portal').length < 2) {
-    const availableCorners = shuffled(DAILY_PORTAL_CORNERS, rng).filter(c => !taken.has(hexKey(c.q, c.r)));
-    for (const corner of availableCorners.slice(0, 2)) {
-      const role = specials.some(s => s.type === 'portal') ? 'exit' : 'entry';
-      const key = hexKey(corner.q, corner.r);
-      specials.push({ type: 'portal', role, q: corner.q, r: corner.r });
-      taken.add(key);
-    }
   }
 
   return specials;
@@ -830,12 +810,6 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
     const broadUses = scored.filter(w => w.path.some(c => c.key === key)).length;
     const minUses = s.type === 'rune' ? 1 : 2;
     if (uses < minUses && broadUses < minUses) return { valid: false, reason: `${s.type} lacks multi-word strategic use` };
-  }
-
-  for (const portal of portalTiles) {
-    const key = hexKey(portal.q, portal.r);
-    const uses = scored.filter(w => w.path.some(c => c.key === key)).length;
-    if (uses < 1) return { valid: false, reason: 'portal lacks strategic path coverage' };
   }
 
   const maxScore = Math.round(scored.slice(0, 3).reduce((sum, p) => sum + p.estimatedScore, 0) * MAX_SCORE_ESTIMATE_MULTIPLIER);

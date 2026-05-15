@@ -240,14 +240,34 @@ function randomDigraph() {
 }
 
 /* ── Portal system ─────────────────────────────────────────────── */
-/** The 6 corner tiles of the radius-4 hex grid that may become portals. */
-const HX_PORTAL_CORNERS = [
-  { q: -2, r:  4 },
-  { q:  2, r:  4 },
-  { q:  4, r:  0 },
+/** Edge-perimeter tiles on the upper/right side of the radius-4 hex grid that may become portal entries. */
+const HX_PORTAL_ENTRY_POOL = [
+  { q:  0, r: -4 },
+  { q:  1, r: -4 },
   { q:  2, r: -4 },
-  { q: -2, r: -4 },
-  { q: -4, r:  0 },
+  { q:  3, r: -4 },
+  { q:  4, r: -4 },
+  { q: -1, r: -3 },
+  { q:  4, r: -3 },
+  { q: -2, r: -2 },
+  { q:  4, r: -2 },
+  { q: -3, r: -1 },
+  { q:  4, r: -1 },
+];
+
+/** Edge-perimeter tiles on the lower/left side of the radius-4 hex grid that may become portal exits. */
+const HX_PORTAL_EXIT_POOL = [
+  { q: -4, r:  1 },
+  { q:  3, r:  1 },
+  { q: -4, r:  2 },
+  { q:  2, r:  2 },
+  { q: -4, r:  3 },
+  { q:  1, r:  3 },
+  { q: -4, r:  4 },
+  { q: -3, r:  4 },
+  { q: -2, r:  4 },
+  { q: -1, r:  4 },
+  { q:  0, r:  4 },
 ];
 
 /* ── Module-level state ────────────────────────────────────────── */
@@ -571,15 +591,17 @@ function updatePortalActiveState() {
 }
 
 /**
- * Randomly selects 2 of the 6 corner tiles and opens them as a portal pair.
- * Does nothing if fewer than 2 corner tiles exist on the board.
+ * Randomly selects one tile from the entry pool and one from the exit pool and
+ * opens them as a portal pair.  Does nothing if no tiles from either pool exist
+ * on the board.
  */
 function openPortal() {
   if (hxState.gameOver) return;
-  const available = HX_PORTAL_CORNERS.filter(pos => hxTileMap.has(hxKey(pos.q, pos.r)));
-  if (available.length < 2) return;
-  const shuffled = [...available].sort(() => Math.random() - 0.5);
-  const [ep, xp]  = shuffled;
+  const availableEntries = HX_PORTAL_ENTRY_POOL.filter(pos => hxTileMap.has(hxKey(pos.q, pos.r)));
+  const availableExits   = HX_PORTAL_EXIT_POOL.filter(pos => hxTileMap.has(hxKey(pos.q, pos.r)));
+  if (availableEntries.length < 1 || availableExits.length < 1) return;
+  const ep = availableEntries[Math.floor(Math.random() * availableEntries.length)];
+  const xp = availableExits[Math.floor(Math.random() * availableExits.length)];
   hxState.portalOpen  = true;
   hxState.portalUsed  = false;
   hxState.portalEntry = { q: ep.q, r: ep.r, s: -ep.q - ep.r };
