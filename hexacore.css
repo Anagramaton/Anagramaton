@@ -5937,6 +5937,109 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   cursor: pointer;
 }
 
+#hx-optimal-clues {
+  background: rgba(20, 20, 35, 0.95);
+  border: 2px solid rgba(76, 201, 240, 0.5);
+  border-radius: 12px;
+  padding: 0.7rem;
+  margin: 0.6rem 0 0.2rem;
+  font-family: 'Turret Road', 'Black Han Sans', monospace;
+  max-height: min(42vh, 320px);
+  overflow-y: auto;
+}
+.hx-clue-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(76, 201, 240, 0.3);
+}
+.hx-clue-title {
+  font-size: clamp(0.62rem, 0.9vw, 0.78rem);
+  letter-spacing: 0.08em;
+  color: #4cc9f0;
+  flex: 1;
+}
+.hx-clue-target {
+  font-size: clamp(0.56rem, 0.8vw, 0.72rem);
+  color: #f59e0b;
+}
+.hx-clue-item {
+  margin-bottom: 0.7rem;
+  padding: 0.55rem;
+  border-left: 3px solid rgba(76, 201, 240, 0.3);
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 6px;
+}
+.hx-clue-item.hx-clue-discovered {
+  border-left-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+.hx-clue-word-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.35rem;
+  font-size: clamp(0.52rem, 0.74vw, 0.66rem);
+  color: #bfdbfe;
+}
+.hx-clue-tier {
+  padding: 0.25rem 0;
+  font-size: clamp(0.56rem, 0.8vw, 0.72rem);
+  color: #e5e7eb;
+}
+.hx-clue-tier.hx-clue-locked {
+  color: #6b7280;
+  opacity: 0.75;
+}
+.hx-clue-hint-btn {
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.55rem;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid #f59e0b;
+  color: #f59e0b;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: clamp(0.53rem, 0.76vw, 0.68rem);
+  transition: all 0.2s;
+}
+.hx-clue-hint-btn:hover {
+  background: rgba(245, 158, 11, 0.3);
+}
+.hx-hint-reveal {
+  margin-top: 0.4rem;
+}
+.hx-hint-text {
+  padding: 0.4rem;
+  background: rgba(76, 201, 240, 0.1);
+  border-left: 2px solid #4cc9f0;
+  margin-top: 0.2rem;
+  font-size: clamp(0.56rem, 0.8vw, 0.72rem);
+}
+.hx-clue-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+.hx-clue-tag {
+  padding: 0.2rem 0.38rem;
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  border-radius: 4px;
+  font-size: clamp(0.5rem, 0.7vw, 0.62rem);
+  color: #c4b5fd;
+}
+.hx-clue-footer {
+  margin-top: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(76, 201, 240, 0.3);
+  text-align: center;
+  font-size: clamp(0.54rem, 0.78vw, 0.68rem);
+  color: #4cc9f0;
+}
+
 #hx-daily-no-words-overlay {
   position: fixed;
   inset: 0;
@@ -6113,6 +6216,22 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   }
 }
 
+@media (max-width: 900px) {
+  #hx-optimal-clues {
+    max-height: min(36vh, 270px);
+  }
+}
+
+@media (max-width: 640px) {
+  #hx-optimal-clues {
+    padding: 0.55rem;
+    margin-top: 0.45rem;
+  }
+  .hx-clue-item {
+    padding: 0.45rem;
+  }
+}
+
 /* ≤480 px — standard mobile */
 @media (max-width: 480px) {
   #hx-daily-hud-shell {
@@ -6151,6 +6270,9 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
     border-radius: 13px;
     max-height: 93dvh;
   }
+  #hx-optimal-clues {
+    max-height: min(34vh, 220px);
+  }
 }
 
 /* ≤430 px — standard mobile portrait */
@@ -6173,6 +6295,10 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
     font-size: 0.75rem;
     padding: 0.4rem 0.5rem;
   }
+  #hx-optimal-clues {
+    padding: 0.45rem;
+    border-radius: 9px;
+  }
 }
 
 /* ≤375 px — small phone (iPhone SE etc.) */
@@ -6192,6 +6318,9 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
     width: 98vw;
     padding: 0.75rem 0.6rem;
     max-height: 91dvh;
+  }
+  #hx-optimal-clues {
+    max-height: min(30vh, 190px);
   }
 }
 

@@ -784,8 +784,192 @@ function estimatePathScore(word, path, specialsByKey) {
   return base * lenMult * (hasPrism ? 2 : 1) * gemMult * Math.max(1, usedGems.size);
 }
 
+function isCommonWord(word) {
+  const upper = String(word || '').toUpperCase();
+  if (!upper) return false;
+
+  const rareCount = [...upper].filter(ch => ['Q', 'Z', 'X'].includes(ch)).length;
+  if (rareCount > 2) return false;
+
+  const archaic = ['ETH', 'EST'];
+  if (archaic.some(suffix => upper.endsWith(suffix) && upper.length > 6)) return false;
+
+  const technical = ['LEUKO', 'HEMATO', 'CARDIO', 'NEPHRO', 'OSTEO', 'CYTO'];
+  if (technical.some(prefix => upper.startsWith(prefix))) return false;
+
+  return true;
+}
+
+function getQuadrant(q, r) {
+  if (q >= 2 && r <= -2) return 'upper-right';
+  if (q >= 2 && r >= 2) return 'lower-right';
+  if (q <= -2 && r <= -2) return 'upper-left';
+  if (q <= -2 && r >= 2) return 'lower-left';
+  if (r <= -2) return 'top';
+  if (r >= 2) return 'bottom';
+  return 'center';
+}
+
+function formatSpecialName(type) {
+  if (!type) return '';
+  if (type === 'prism') return 'purple prism';
+  if (type === 'portal') return 'portal';
+  if (type === 'rune') return 'rune';
+  if (type === 'amethyst') return 'amethyst';
+  if (type === 'digraph') return 'digraph';
+  if (type.startsWith('gem')) return type.replace(/^gem/, '').replace(/([A-Z])/g, ' $1').trim().toLowerCase();
+  return type.toLowerCase();
+}
+
+function generatePositionalClue(word, path, grid, specialTiles) {
+  if (!Array.isArray(path) || path.length === 0) return `${word.length}-letter word near the center lanes`;
+  const specialsByKey = new Map((specialTiles || []).map(s => [hexKey(s.q, s.r), s]));
+  const hitSpecials = path.map(c => specialsByKey.get(c.key)).filter(Boolean);
+
+  const digraphTile = hitSpecials.find(s => s.type === 'digraph' && s.digraph);
+  if (digraphTile) {
+    return `A ${word.length}-letter word uses the ${String(digraphTile.digraph).toUpperCase()} digraph tile`;
+  }
+
+  if (hitSpecials.some(s => s.type === 'prism')) {
+    return `A ${word.length}-letter word routes through the purple prism`;
+  }
+
+  const gemTile = hitSpecials.find(s => s.type && s.type.startsWith('gem'));
+  if (gemTile) {
+    return `A ${word.length}-letter word passes through the ${formatSpecialName(gemTile.type)} gem`;
+  }
+
+  const start = path[0];
+  const end = path[path.length - 1];
+  const startQuadrant = getQuadrant(start.q, start.r);
+  const endQuadrant = getQuadrant(end.q, end.r);
+  if (startQuadrant === endQuadrant) {
+    return `A ${word.length}-letter word sits in the ${startQuadrant} quadrant`;
+  }
+  return `A ${word.length}-letter word runs from ${startQuadrant} toward ${endQuadrant}`;
+}
+
+function detectCompound(word) {
+  const starts = ['BACK', 'OVER', 'UNDER', 'OUT', 'UP', 'DOWN', 'AFTER', 'FORE', 'SIDE', 'HAND', 'HOME', 'WORK'];
+  const ends = ['ING', 'ED', 'ER', 'LY', 'SHIP', 'TIME', 'WORK', 'BOARD', 'LINE', 'WARD', 'HOUSE', 'LIKE'];
+  const upper = String(word || '').toUpperCase();
+  if (upper.length < 8) return false;
+  return starts.some(start => upper.startsWith(start)) || ends.some(end => upper.endsWith(end));
+}
+
+function generateCategoryClue(word) {
+  const upper = String(word || '').toUpperCase();
+  if (detectCompound(upper)) return `A compound-style word — ${upper.length} letters`;
+  if (/(ING|ED|IFY|IZE|ISE)$/.test(upper)) return `An action verb form — ${upper.length} letters`;
+  if (/(OUS|FUL|LESS|ABLE|IBLE|AL|IVE|IC|ARY)$/.test(upper)) return `A descriptive adjective — ${upper.length} letters`;
+  if (/(TION|SION|MENT|NESS|ITY|ISM|SHIP)$/.test(upper)) return `An abstract noun — ${upper.length} letters`;
+  if (/(ER|OR|IST|IAN)$/.test(upper)) return `A role/profession-style word — ${upper.length} letters`;
+  return `A familiar everyday word — ${upper.length} letters`;
+}
+
+function generateDefinitionClue(word) {
+  const upper = String(word || '').toUpperCase();
+  if (upper.startsWith('UN')) return `Something described as "not" or reversed (${upper.length} letters)`;
+  if (upper.startsWith('RE')) return `A word related to doing something again (${upper.length} letters)`;
+  if (upper.endsWith('ING')) return `A present-participle action word ending in -ING`;
+  if (upper.endsWith('NESS')) return `A quality/state noun ending in -NESS`;
+  if (upper.endsWith('TION') || upper.endsWith('SION')) return `A concept noun ending in -TION/-SION`;
+  if (upper.endsWith('LY')) return `A modifier/adverb style word ending in -LY`;
+  if (upper.endsWith('MENT')) return `A result/state noun ending in -MENT`;
+  const vowels = [...upper].filter(ch => 'AEIOU'.includes(ch)).length;
+  return `Pattern hint: ${upper.length} letters with ${vowels} vowel${vowels === 1 ? '' : 's'}`;
+}
+
+function generateProgressiveReveal(word, revealLevel) {
+  const upper = String(word || '').toUpperCase();
+  const len = upper.length;
+  if (!len) return '';
+  if (len <= 2) return upper;
+
+  if (revealLevel === 0) {
+    return `${upper[0]}${'_'.repeat(Math.max(0, len - 2))}${upper[len - 1]}`;
+  }
+  if (revealLevel === 1) {
+    if (len <= 4) return upper;
+    return `${upper.slice(0, 2)}${'_'.repeat(Math.max(0, len - 4))}${upper.slice(-2)}`;
+  }
+  if (revealLevel === 2) {
+    return [...upper].map(ch => ('AEIOU'.includes(ch) ? ch : '_')).join('');
+  }
+  if (revealLevel === 3) {
+    return [...upper].map((ch, i) => (i % 2 === 0 ? ch : '_')).join('');
+  }
+  if (revealLevel === 4) {
+    return `${upper.slice(0, -1)}_`;
+  }
+  return upper;
+}
+
+function generateFeatureHints(path, specialTiles) {
+  const specialsByKey = new Map((specialTiles || []).map(s => [hexKey(s.q, s.r), s]));
+  const hitSpecials = (path || []).map(c => specialsByKey.get(c.key)).filter(Boolean);
+  if (hitSpecials.length === 0) return [];
+
+  const out = [];
+  const gemHits = hitSpecials.filter(s => s.type && s.type.startsWith('gem'));
+  const uniqueGems = [...new Set(gemHits.map(s => s.type))];
+  const digraphHits = hitSpecials.filter(s => s.type === 'digraph');
+  const portalHits = hitSpecials.filter(s => s.type === 'portal').length;
+
+  if (hitSpecials.some(s => s.type === 'prism')) out.push('Uses prism for 2× multiplier');
+  if (uniqueGems.length >= 2) out.push('Chains multiple gems');
+  else if (uniqueGems.length === 1) out.push(`Uses ${formatSpecialName(uniqueGems[0])} gem`);
+  if (digraphHits.length > 0) out.push(`Uses ${digraphHits.length} digraph tile${digraphHits.length === 1 ? '' : 's'}`);
+  if (portalHits >= 2) out.push('Traverses both portal tiles');
+  else if (portalHits === 1) out.push('Uses a portal tile');
+
+  return out;
+}
+
+function generateOptimalPathClues(optimalSolutions, placements, grid, specialTiles) {
+  const bestStrategy = Array.isArray(optimalSolutions) ? optimalSolutions[0] : null;
+  if (!bestStrategy || !Array.isArray(bestStrategy.words)) return null;
+  const specialsByKey = new Map((specialTiles || []).map(s => [hexKey(s.q, s.r), s.type]));
+
+  const clues = bestStrategy.words.map((word, idx) => {
+    const placement = placements.find(p => p.word === word);
+    if (!placement) return null;
+    const estimatedPoints = Math.round(
+      placement.estimatedScore
+      || estimatePathScore(placement.word, placement.path, specialsByKey)
+      || 0,
+    );
+
+    return {
+      wordIndex: idx + 1,
+      length: word.length,
+      estimatedPoints,
+      positional: generatePositionalClue(word, placement.path, grid, specialTiles),
+      category: generateCategoryClue(word),
+      hints: [
+        { level: 1, text: generateDefinitionClue(word) },
+        { level: 2, text: generateProgressiveReveal(word, 0) },
+        { level: 3, text: generateProgressiveReveal(word, 1) },
+        { level: 4, text: generateProgressiveReveal(word, 2) },
+        { level: 5, text: generateProgressiveReveal(word, 4) },
+      ],
+      features: generateFeatureHints(placement.path, specialTiles),
+    };
+  }).filter(Boolean);
+
+  return {
+    strategy: 'optimal',
+    targetScore: bestStrategy.finalScore,
+    wordCount: bestStrategy.words.length,
+    clues,
+  };
+}
+
 function computeStrategies(placements, specialsByKey, grid) {
-  const scored = placements.map(p => ({ ...p, estimatedScore: estimatePathScore(p.word, p.path, specialsByKey) }));
+  const commonPlacements = placements.filter(p => isCommonWord(p.word));
+  const workingSet = commonPlacements.length >= 6 ? commonPlacements : placements;
+  const scored = workingSet.map(p => ({ ...p, estimatedScore: estimatePathScore(p.word, p.path, specialsByKey) }));
 
   const strategies = [];
   const strategyOrders = [
@@ -949,6 +1133,7 @@ export function generateDailyHexacoreBoard({
         minAchievableScore: validation.minScore,
         strategicPathCount: validation.strategicPaths,
         optimalSolutions: validation.strategies,
+        optimalPathClues: generateOptimalPathClues(validation.strategies, placements, grid, specialTiles),
         difficulty,
         optimalMoves: simData?.optimalMoves ?? null,
         averageWordLength: simData?.averageWordLength ?? null,
