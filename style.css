@@ -995,6 +995,8 @@ details#merged-words-details > summary {
   stroke-width: 1.8px;
   shape-rendering: geometricPrecision;
   transition: transform 160ms ease-out;
+  transform: translateZ(0);
+  will-change: transform;
 }
 .tile-letter, .tile-point {
   fill: var(--letter-fill);
@@ -1057,6 +1059,7 @@ body[data-theme="dark"] .tile-point {
   .tile:hover {
     /* Pulsing arcane glow — asynchronous with the scale breathe */
     animation: hx-tile-hover-glow 0.9s ease-in-out infinite alternate;
+    will-change: filter, box-shadow;
   }
 
   .tile:hover .hex-tile {
@@ -1069,6 +1072,7 @@ body[data-theme="dark"] .tile-point {
     animation:
       hx-tile-hover-breathe 1.3s ease-in-out infinite alternate,
       hx-tile-hover-fill    0.9s ease-in-out infinite alternate;
+    will-change: transform, filter, box-shadow;
   }
 
   .tile:hover .tile-letter {
@@ -1132,6 +1136,12 @@ body[data-theme="dark"] .tile-point {
   transform-box: fill-box;
   transform-origin: center;
   transform: scale(1.04);
+  will-change: transform, filter, box-shadow;
+}
+.tile.used .hex-tile,
+.tile .hex-tile.used {
+  transform: translateZ(0);
+  will-change: transform, filter, box-shadow;
 }
 .tile .tile-letter.selected, .tile .tile-point.selected {
   fill: #ffffff;

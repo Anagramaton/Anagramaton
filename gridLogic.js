@@ -442,7 +442,21 @@ function _generateBoard(gridRadius = DEFAULT_RADIUS, state = gameState) {
   const postLetters = Object.keys(grid).length;
   DEBUG && console.info(`[diag] post-Step2 letters=${postLetters}, suffixesPlaced=${placedSuffixes.length}`);
 
-  function coordKey(q, r) { return `${q},${r}`; }
+  // Cache coordinate keys used in hot path generation loops.
+  const coordKeyCache = new Map();
+  function coordKey(q, r) {
+    let byR = coordKeyCache.get(q);
+    if (!byR) {
+      byR = new Map();
+      coordKeyCache.set(q, byR);
+    }
+    let key = byR.get(r);
+    if (!key) {
+      key = `${q},${r}`;
+      byR.set(r, key);
+    }
+    return key;
+  }
 
   function hexDistance(q, r) {
     return (Math.abs(q) + Math.abs(r) + Math.abs(q + r)) / 2;

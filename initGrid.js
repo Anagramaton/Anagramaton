@@ -61,7 +61,9 @@ let lastHoverTile = null;
 // Throttle pointermove hit-testing — only re-check when finger moves 6px+
 let _lastMoveX = 0;
 let _lastMoveY = 0;
+let _lastMoveTs = 0;
 const MOVE_THRESHOLD = 6;
+const MOVE_INTERVAL_MS = 16;
 
 // ============================================================================
 // O(1) lookup instead of O(n) find
@@ -163,6 +165,7 @@ function handlePointerDown(e) {
   lastHoverTile = tile;
   _lastMoveX = e.clientX;
   _lastMoveY = e.clientY;
+  _lastMoveTs = e.timeStamp || performance.now();
 
   clearCurrentSelection();
   handleSwipeTileStep(tile);
@@ -170,14 +173,16 @@ function handlePointerDown(e) {
 
 function handlePointerMove(e) {
   if (!isDragging) return;
-  e.preventDefault();
 
   const dx = e.clientX - _lastMoveX;
   const dy = e.clientY - _lastMoveY;
   if (dx * dx + dy * dy < MOVE_THRESHOLD * MOVE_THRESHOLD) return;
+  const now = e.timeStamp || performance.now();
+  if (now - _lastMoveTs < MOVE_INTERVAL_MS) return;
 
   _lastMoveX = e.clientX;
   _lastMoveY = e.clientY;
+  _lastMoveTs = now;
 
   const tile = getTileAtPoint(e.clientX, e.clientY);
   if (!tile) return;
@@ -190,6 +195,7 @@ function handlePointerMove(e) {
 function handlePointerUp(e) {
   isDragging = false;
   lastHoverTile = null;
+  _lastMoveTs = 0;
   updateWordPreview();
   // Auto-submit when drag ends, if any tiles are selected
   if ((gameState.selectedTiles || []).length > 0) {
@@ -347,7 +353,7 @@ export async function initializeGrid() {
 
   if (!DOM.svg.dataset.swipeListeners) {
     DOM.svg.addEventListener('pointerdown', handlePointerDown, { passive: false });
-    DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: false });
+    DOM.svg.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('pointerup', handlePointerUp);
     DOM.svg.dataset.swipeListeners = 'true';
   }

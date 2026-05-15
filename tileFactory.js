@@ -82,14 +82,23 @@ g.append(outline, poly, tLetter, tPoint);
 
   setSelected(val) {
     const on = !!val;
-    g.classList.toggle('selected', on);
-    poly.classList.toggle('selected', on);
-    tLetter.classList.toggle('selected', on);
-    tPoint.classList.toggle('selected', on);
+    if (on) {
+      g.classList.add('selected');
+      poly.classList.add('selected');
+      tLetter.classList.add('selected');
+      tPoint.classList.add('selected');
+    } else {
+      g.classList.remove('selected');
+      poly.classList.remove('selected');
+      tLetter.classList.remove('selected');
+      tPoint.classList.remove('selected');
+    }
   },
   setUsed(val) {
-    poly.used = !!val;
-    g.classList.toggle('used', !!val);
+    const on = !!val;
+    poly.used = on;
+    if (on) g.classList.add('used');
+    else g.classList.remove('used');
   },
     setEnabled(val) {
       const on = val !== false;

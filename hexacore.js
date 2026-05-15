@@ -387,7 +387,20 @@ let hxSeleniteTargeting  = false; // true when waiting for 2 tile taps to swap
 let hxSeleniteFirstTile  = null;  // first tile selected in selenite swap
 
 /* ── Pure helpers ──────────────────────────────────────────────── */
-function hxKey(q, r) { return `${q},${r}`; }
+const _hxKeyCache = new Map();
+function hxKey(q, r) {
+  let byR = _hxKeyCache.get(q);
+  if (!byR) {
+    byR = new Map();
+    _hxKeyCache.set(q, byR);
+  }
+  let key = byR.get(r);
+  if (!key) {
+    key = `${q},${r}`;
+    byR.set(r, key);
+  }
+  return key;
+}
 
 function makeLayout() {
   return new Layout(
@@ -1596,6 +1609,11 @@ function animateScoreHud(oldScore, newScore) {
   const startTime = performance.now();
   function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
   function frame(now) {
+    if (document.hidden) {
+      numEl.textContent = newScore;
+      _scoreRafId = 0;
+      return;
+    }
     const elapsed  = now - startTime;
     const progress = Math.min(elapsed / SCORE_TICK_MS, 1);
     const current  = Math.round(oldScore + (newScore - oldScore) * easeOut(progress));

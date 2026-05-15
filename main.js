@@ -276,38 +276,51 @@ window.addEventListener('score:delta', (e) => {
 // Created once, reused for all text measurements — never touches the DOM
 const _measureCanvas = document.createElement('canvas');
 const _measureCtx    = _measureCanvas.getContext('2d');
+let _fitBaseFontPx = 0;
+let _fitFontFamily = "'Segoe UI', sans-serif";
+let _lastWordDisplayKey = '';
+let _lastWordDisplayText = '';
 
 function _measureTextWidth(text, fontSize) {
-  _measureCtx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
+  _measureCtx.font = `bold ${fontSize}px ${_fitFontFamily}`;
   return _measureCtx.measureText(text).width;
 }
+window.addEventListener('resize', () => { _fitBaseFontPx = 0; });
 
 function fitCurrentWord() {
   const display = document.getElementById('current-word-display');
   const word    = document.getElementById('current-word');
   if (!display || !word) return;
 
-  const text           = word.textContent || '';
-  const containerWidth = display.offsetWidth;   // one read
-  const maxSize        = parseFloat(getComputedStyle(display).fontSize); // one read
-  const minSize        = 10;
+  // Batch DOM reads first, then do a single transform write.
+  const text = word.textContent || '';
+  const containerWidth = display.offsetWidth;
+  if (!_fitBaseFontPx) {
+    const style = getComputedStyle(display);
+    _fitBaseFontPx = parseFloat(style.fontSize) || 16;
+    _fitFontFamily = style.fontFamily || "'Segoe UI', sans-serif";
+  }
+  const maxSize = _fitBaseFontPx;
+  const minSize = 10;
 
-  if (_measureTextWidth(text, maxSize) <= containerWidth) {
-    display.style.fontSize = '';  // one write — fits at natural size
+  if (!text || _measureTextWidth(text, maxSize) <= containerWidth) {
+    word.style.transformOrigin = 'center center';
+    word.style.transform = 'scale(1)';
     return;
   }
 
-  // Binary search — zero DOM involvement inside the loop
-  let lo = minSize, hi = maxSize;
+  // Binary search remains measurement-only (no layout writes in loop).
+  let lo = minSize;
+  let hi = maxSize;
   while (hi - lo > 0.5) {
     const mid = (lo + hi) / 2;
-    if (_measureTextWidth(text, mid) > containerWidth) {
-      hi = mid;
-    } else {
-      lo = mid;
-    }
+    if (_measureTextWidth(text, mid) > containerWidth) hi = mid;
+    else lo = mid;
   }
-  display.style.fontSize = `${lo}px`;  // one write at the end
+
+  const scale = Math.max(lo / maxSize, minSize / maxSize);
+  word.style.transformOrigin = 'center center';
+  word.style.transform = `scale(${scale})`;
 }
 
 function updateCurrentWordDisplay() {
@@ -317,11 +330,21 @@ function updateCurrentWordDisplay() {
   const el = document.getElementById('current-word');
   if (!el) return;
   const selectedTiles = gameState.selectedTiles || [];
-  const letters = selectedTiles
-    .map(t => String(t.letter || ''))
-    .join('')
-    .toUpperCase();
-  el.textContent = letters;
+  let letters = '';
+  let selectionKey = `${selectedTiles.length}|`;
+  for (let i = 0; i < selectedTiles.length; i++) {
+    const tile = selectedTiles[i];
+    const letter = String(tile?.letter || '').toUpperCase();
+    letters += letter;
+    selectionKey += `${tile?.key ?? i}:${letter}|`;
+  }
+  if (selectionKey === _lastWordDisplayKey) return;
+  _lastWordDisplayKey = selectionKey;
+
+  if (letters !== _lastWordDisplayText) {
+    el.textContent = letters;
+    _lastWordDisplayText = letters;
+  }
   fitCurrentWord();
 
   // Word score preview: show only when selection forms a valid word ≥4 letters
@@ -844,10 +867,13 @@ document.getElementById('new-game')?.addEventListener('click', async () => {
   window.dispatchEvent(new Event('selection:changed'));
 
   let _wordDisplayRafId = 0;
+  let _wordDisplayRafQueued = false;
   window.addEventListener('selection:changed', () => {
-    if (_wordDisplayRafId) return;
+    if (_wordDisplayRafQueued || _wordDisplayRafId) return;
+    _wordDisplayRafQueued = true;
     _wordDisplayRafId = requestAnimationFrame(() => {
       _wordDisplayRafId = 0;
+      _wordDisplayRafQueued = false;
       updateCurrentWordDisplay();
     });
   });

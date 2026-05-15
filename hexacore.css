@@ -39,6 +39,49 @@
   --hx-ui-letter-spacing: 0.15em;
 }
 
+/* Performance hints for frequently animated Hexacore elements. */
+.tile,
+.hx-tile-landing,
+.hx-tile-intro-landing,
+.hx-tile-removing,
+.hx-consumed-ember,
+.hx-consumed-prism,
+.hx-consumed-rune,
+[class*="hx-gem-"] {
+  transform: translateZ(0);
+}
+
+.hx-tile-landing,
+.hx-tile-intro-landing,
+.hx-tile-removing,
+.hx-consumed-ember,
+.hx-consumed-prism,
+.hx-consumed-rune,
+[class*="hx-gem-"],
+#hx-gameover-overlay,
+#hx-daily-no-words-overlay,
+#hx-daily-result-overlay,
+#hx-campaign-complete-overlay,
+.hx-lexicon-modal-overlay {
+  will-change: transform, opacity;
+}
+
+.hx-ember,
+.hx-prism,
+.hx-digraph,
+.hx-rune,
+.tile .hx-achievement-tile-letter,
+.tile:has(.hx-amethyst) .tile-letter,
+.tile-letter.hx-sparkle-amethyst,
+.tile:has(.hx-selenite) .tile-letter,
+.tile-letter.hx-sparkle-selenite,
+.tile:has(.hx-portal) .tile-letter,
+.tile-letter.hx-sparkle-portal,
+.tile:has(.hx-rune) .tile-letter,
+.tile-letter.hx-sparkle-rune {
+  will-change: filter, box-shadow;
+}
+
 /* ── Ember tile — INFERNO (unmistakably unique fire) ── */
 .hx-ember {
   fill: url(#hx-ember-gradient);
