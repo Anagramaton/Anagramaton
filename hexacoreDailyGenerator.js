@@ -37,14 +37,15 @@ const DAILY_ROTATING_GEM_TYPES = ['gemEmerald', 'gemGold'];
 const DAILY_ROTATING_RUNE_TYPES = ['rune', 'amethyst'];
 const MAX_PORTAL_CANDIDATE_POOL = 12;
 
-// The 6 corner tiles of the radius-4 hex grid that may become portals
+// The 6 outer-edge mid-point tiles of the radius-4 hex grid that may become portals.
+// All positions satisfy |q|≤4, |r|≤4, |s|≤4 (s = -q-r) so they exist on the board.
 const DAILY_PORTAL_CORNERS = [
-  { q: -2, r:  4 },
-  { q:  2, r:  4 },
-  { q:  4, r:  0 },
-  { q:  2, r: -4 },
-  { q: -2, r: -4 },
-  { q: -4, r:  0 },
+  { q: -2, r:  4 },  // lower-left  edge midpoint (s=-2)
+  { q:  2, r:  2 },  // lower-right edge midpoint (s=-4)  ← was (2,4) which is off-grid (s=-6)
+  { q:  4, r:  0 },  // right corner               (s=-4)
+  { q:  2, r: -4 },  // upper-right edge midpoint (s=2)
+  { q: -2, r: -2 },  // upper-left  edge midpoint (s=4)   ← was (-2,-4) which is off-grid (s=6)
+  { q: -4, r:  0 },  // left corner                (s=4)
 ];
 
 // Digraph combos eligible for daily board placement
