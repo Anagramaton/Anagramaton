@@ -373,6 +373,9 @@ let hxAmethystTargeting  = false; // true when waiting for tile tap to transmute
 let hxSeleniteTargeting  = false; // true when waiting for 2 tile taps to swap
 let hxSeleniteFirstTile  = null;  // first tile selected in selenite swap
 
+// Pending level-up level to show after refill animation completes
+let _pendingLevelUpLevel = null;
+
 /* ── Pure helpers ──────────────────────────────────────────────── */
 function hxKey(q, r) { return `${q},${r}`; }
 
@@ -803,6 +806,7 @@ function applyTileType(tile) {
   tile.element.querySelector('.hx-type-icon')?.remove();
   // Reset letter font size (may have been reduced for digraph)
   tile.textLetter.setAttribute('font-size', '28');
+  tile.textLetter.removeAttribute('dominant-baseline');
   tile.textLetter.classList.remove(
     'hx-achievement-tile-letter',
     'hx-sparkle-amethyst', 'hx-sparkle-selenite', 'hx-sparkle-rune',
@@ -858,22 +862,27 @@ function applyTileType(tile) {
   } else if (tile.tileType === 'oracle') {
     poly.classList.add('hx-oracle');
     tile.textLetter.classList.add('hx-achievement-tile-letter');
+    tile.textLetter.setAttribute('dominant-baseline', 'central');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'beacon') {
     poly.classList.add('hx-beacon');
     tile.textLetter.classList.add('hx-achievement-tile-letter');
+    tile.textLetter.setAttribute('dominant-baseline', 'central');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'eclipse') {
     poly.classList.add('hx-eclipse');
     tile.textLetter.classList.add('hx-achievement-tile-letter');
+    tile.textLetter.setAttribute('dominant-baseline', 'central');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'lodestone') {
     poly.classList.add('hx-lodestone');
     tile.textLetter.classList.add('hx-achievement-tile-letter');
+    tile.textLetter.setAttribute('dominant-baseline', 'central');
     tile.textPoint.textContent  = '';
   } else if (tile.tileType === 'lexicon') {
     poly.classList.add('hx-lexicon');
     tile.textLetter.classList.add('hx-achievement-tile-letter');
+    tile.textLetter.setAttribute('dominant-baseline', 'central');
     tile.textPoint.textContent  = '';
   }
 }
@@ -1416,6 +1425,9 @@ function buildGrid(onReady, boardData = null) {
         continue;
       }
 
+      // Gems are not used in daily mode — leave the tile as a normal letter tile
+      if (HX_GEM_TYPES.has(spec.type)) continue;
+
       if (!tile) continue;
 
       if (spec.type === 'digraph' && spec.digraph) {
@@ -1862,7 +1874,9 @@ function buildTileGuide() {
     // Portal appears as two tiles with the same type
     SPECIAL_TILES = ALL_SPECIAL_TILES.filter(t => boardTypes.has(t.key));
     ACHIEVEMENT_TILES = ALL_ACHIEVEMENT_TILES.filter(t => boardTypes.has(t.key));
-    GEM_TILES = ALL_GEM_TILES.filter(t => boardTypes.has(t.key));
+    GEM_TILES = []; // gems are not used in daily mode
+  } else if (isDaily) {
+    GEM_TILES = [];
   }
 
   // ── Helper: mini pointy-top hexagon ─────────────────────────────
@@ -4308,6 +4322,11 @@ async function submitHexacoreWord() {
     checkHexacoreRequirements(word, consumed, wordScore);
     if (hxGameMode !== 'daily') {
       updateXPBarFn();
+      // Show level-up banner now that tiles have finished refilling
+      if (_pendingLevelUpLevel !== null) {
+        showLevelUpBanner(_pendingLevelUpLevel);
+        _pendingLevelUpLevel = null;
+      }
     }
     pendingPowerUpToasts.forEach(type => showPowerUpCollectToast(type));
     // Show achievement toasts for newly spawned achievement tiles (staggered)
@@ -5735,6 +5754,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!Number.isFinite(xpAmount) || xpAmount <= 0) return null;
     const result = addXP(xpAmount);
     updateXPBarFn();
+    // Show level-up banner if XP claim triggered a level-up
+    if (_pendingLevelUpLevel !== null) {
+      showLevelUpBanner(_pendingLevelUpLevel);
+      _pendingLevelUpLevel = null;
+    }
     return result;
   };
 });
@@ -5742,7 +5766,13 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('hx:level-up', e => {
   const level = Number(e.detail?.level);
   if (!Number.isFinite(level) || level < 1) return;
-  showLevelUpBanner(level);
+  // If a word submission is in progress, defer the banner until after refill.
+  // Otherwise (e.g. quest XP claim) show immediately.
+  if (hxState.active && !hxState.gameOver) {
+    _pendingLevelUpLevel = level;
+  } else {
+    showLevelUpBanner(level);
+  }
 });
 
 function startHexacoreMode(mode) {
