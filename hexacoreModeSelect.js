@@ -9,7 +9,7 @@ const MODES = [
     color: '#f97316',
   },
   {
-    id:    'daily',
+    id:    'hexacoreDaily',
     icon:  '📅',
     title: 'DAILY',
     desc:  'Fixed daily board with no refills. Submit for the best final score.',

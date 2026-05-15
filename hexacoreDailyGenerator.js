@@ -401,7 +401,11 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     Math.abs(a.r - b.r),
     Math.abs((a.q + a.r) - (b.q + b.r)),
   );
+  // Portals must appear on the outer two rings so they are never placed in
+  // the middle of the board (ring >= radius - 1, i.e. rings 3 and 4 for the
+  // default radius-4 board).
   const portalCandidates = allCoords
+    .filter(c => Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(-c.q - c.r)) >= radius - 1)
     .map(c => {
       const wordCount = coordToWords.get(c.key)?.size || 0;
       if (wordCount < 1) return null;
@@ -927,12 +931,12 @@ export function generateDailyHexacoreBoard({
   throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);
 }
 
-export function generateDailyHexacoreBatch({ startDate = toIsoDate(), count = 1 } = {}) {
+export function generateDailyHexacoreBatch({ startDate = toIsoDate(), count = 1, includePlacements = false } = {}) {
   const out = [];
   const d = new Date(`${startDate}T00:00:00`);
   for (let i = 0; i < count; i++) {
     const date = toIsoDate(d);
-    out.push(generateDailyHexacoreBoard({ date }));
+    out.push(generateDailyHexacoreBoard({ date, includePlacements }));
     d.setDate(d.getDate() + 1);
   }
   return out;
