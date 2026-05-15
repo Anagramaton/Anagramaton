@@ -812,12 +812,6 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
     if (uses < minUses && broadUses < minUses) return { valid: false, reason: `${s.type} lacks multi-word strategic use` };
   }
 
-  for (const portal of portalTiles) {
-    const key = hexKey(portal.q, portal.r);
-    const uses = scored.filter(w => w.path.some(c => c.key === key)).length;
-    if (uses < 1) return { valid: false, reason: 'portal lacks strategic path coverage' };
-  }
-
   const maxScore = Math.round(scored.slice(0, 3).reduce((sum, p) => sum + p.estimatedScore, 0) * MAX_SCORE_ESTIMATE_MULTIPLIER);
   const minScore = Math.round(scored.slice(0, 1).reduce((sum, p) => sum + p.estimatedScore, 0) * MIN_SCORE_ESTIMATE_MULTIPLIER);
 
