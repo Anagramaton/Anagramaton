@@ -373,6 +373,12 @@ body[data-theme="dark"] #score-display {
 #game-container {
   flex: 1;
   height: 100dvh;
+  /* Reserve space for the fixed top-bar (~80 px) and bottom score/word area
+     (~165 px) so the board SVG sizes itself to the space between them.
+     Using vh keeps the insets proportional at every browser zoom level.  */
+  padding-top: clamp(75px, 11vh, 110px);
+  padding-bottom: clamp(140px, 21vh, 175px);
+  box-sizing: border-box;
   overflow: hidden;
   position: relative;
   background: transparent;

@@ -73,18 +73,14 @@ export function initSvg(
   const updateViewForBoard = (boardG) => {
     if (!(boardG instanceof SVGGElement)) return;
 
-    const isMobile = (window.innerWidth || 0) <= mobileBreakpoint;
-    if (isMobile) {
-      const b = boardG.getBBox();
-      const x = b.x - pad;
-      const y = b.y - pad;
-      const w = b.width  + pad * 2;
-      const h = b.height + pad * 2;
-      svg.setAttribute('viewBox', `${x} ${y} ${w} ${h}`);
-console.log('Updated SVG ViewBox:', svg.getAttribute('viewBox')); // DEBUG
-    } else {
-      svg.setAttribute('viewBox', defaultViewBox);
-    }
+    // Always fit the viewBox tightly around the board content so the board
+    // fills the available container space at every screen size and zoom level.
+    const b = boardG.getBBox();
+    const x = b.x - pad;
+    const y = b.y - pad;
+    const w = b.width  + pad * 2;
+    const h = b.height + pad * 2;
+    svg.setAttribute('viewBox', `${x} ${y} ${w} ${h}`);
   };
 
   // add listeners once per svg

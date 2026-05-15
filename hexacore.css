@@ -612,6 +612,13 @@ body.hx-active #word-score-preview   { display: none; }
 body.hx-active #left-panel-title,
 body.hx-active #right-panel-title    { display: none; }
 
+/* The Hexacore top-bar is taller than Anagramaton's (it adds an XP bar row
+   below the menu button). Increase the board container's top inset so the
+   board never slides under the HX UI elements.                              */
+body.hx-active #game-container {
+  padding-top: clamp(110px, 16vh, 155px);
+}
+
 /* ── #hx-top-bar: centered Hexacore action stack ─────────────────── */
 #hx-top-bar {
   position: fixed;

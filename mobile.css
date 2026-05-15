@@ -162,6 +162,17 @@
   touch-action: none;
 }
 
+/* ── Game container: reduce padding on small screens ───────────── */
+@media (max-width: 640px) {
+  #game-container {
+    padding-top: clamp(54px, 9vh, 76px);
+    padding-bottom: clamp(100px, 16vh, 130px);
+  }
+  body.hx-active #game-container {
+    padding-top: clamp(80px, 13vh, 110px);
+  }
+}
+
 /* ── Round-over modal: mobile tweaks ────────────────────────────── */
 @media (max-width: 640px) {
   .rom__dismiss-hint {
