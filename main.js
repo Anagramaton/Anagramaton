@@ -331,15 +331,15 @@ function updateCurrentWordDisplay() {
   if (!el) return;
   const selectedTiles = gameState.selectedTiles || [];
   let letters = '';
-  let selectionKey = `${selectedTiles.length}|`;
+  let wordDisplayCacheKey = `${selectedTiles.length}|`;
   for (let i = 0; i < selectedTiles.length; i++) {
     const tile = selectedTiles[i];
     const letter = String(tile?.letter || '').toUpperCase();
     letters += letter;
-    selectionKey += `${tile?.key ?? i}:${letter}|`;
+    wordDisplayCacheKey += `${tile?.key ?? i}:${letter}|`;
   }
-  if (selectionKey === _lastWordDisplayKey) return;
-  _lastWordDisplayKey = selectionKey;
+  if (wordDisplayCacheKey === _lastWordDisplayKey) return;
+  _lastWordDisplayKey = wordDisplayCacheKey;
 
   if (letters !== _lastWordDisplayText) {
     el.textContent = letters;
