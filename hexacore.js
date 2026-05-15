@@ -26,7 +26,7 @@ import { Hex, Layout, Point } from './gridLayout.js';
 import { OrientationPointy }  from './gridOrientation.js';
 import { initSvg }            from './svgKit.js';
 import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audioEngine.js';
-import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn, HX_MAX_LEVEL } from './hexacoreXP.js';
+import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn } from './hexacoreXP.js';
 import { getDailyQuests, getWeeklyQuest, updateQuestProgress, openQuestsModal, initQuests, showQuestCompleteToast } from './hexacoreQuests.js';
 import { openLeaderboardsModal } from './hexacoreLeaderboards.js';
 import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampaignProgress } from './hexacoreCampaign.js';
@@ -64,9 +64,6 @@ const TILE_SPACING             = 1.25;
 const INTRO_ARC_OFFSET         = 60;   // px: horizontal fan spread during pour-in arc
 const REFILL_STAGGER_MS        = 40;   // ms between each column's spawn delay
 
-/* ── Level thresholds ──────────────────────────────────────────── */
-const HX_LEVEL_THRESHOLDS = [0, 1000, 5000, 15000, 35000, 70000, 120000, 180000, 250000, 330000, 420000];
-
 /* ── localStorage save keys ────────────────────────────────────── */
 const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
@@ -85,15 +82,6 @@ const HX_GEM_TYPES = new Set([
   'gemPearl', 'gemTanzanite', 'gemRuby', 'gemDiamond',
   'gemAquamarine', 'gemTopaz', 'gemOpal', 'gemImperialJade', 'gemAlexandrite',
 ]);
-// Level 1 starts at 0, Level 2 at 1,000, Level 3 at 5,000, etc.
-// Beyond index 10 (Level 11), each additional level requires +100,000 pts from the previous threshold.
-
-function hxLevelThreshold(level) {
-  if (level <= HX_LEVEL_THRESHOLDS.length) return HX_LEVEL_THRESHOLDS[level - 1];
-  // Beyond defined thresholds: extrapolate +100000 per level
-  return HX_LEVEL_THRESHOLDS[HX_LEVEL_THRESHOLDS.length - 1] + (level - HX_LEVEL_THRESHOLDS.length) * 100000;
-}
-
 /* ── Animation timing constants (easy to tune) ─────────────────── */
 const WORD_TILE_STAGGER_MS      = 55;  // ms stagger between each consumed tile pop-out
 const REFILL_COL_TILE_STAGGER_MS = 40; // ms stagger between tiles within a refill column
@@ -261,7 +249,6 @@ const HX_PORTAL_CORNERS = [
 /* ── Module-level state ────────────────────────────────────────── */
 const hxState = {
   score:           0,
-  level:           1,
   words:           [],
   tiles:           [],
   emberTiles:      [],
@@ -1574,6 +1561,10 @@ function updateHud() {
   updateDailyHud();
 }
 
+function getCurrentPlayerLevel() {
+  return getXPData().level;
+}
+
 /* ── Animate the HUD score counting up from oldScore → newScore ── */
 let _scoreRafId = 0; // cancel any in-flight count-up before starting a new one
 function animateScoreHud(oldScore, newScore) {
@@ -1611,18 +1602,6 @@ function updateLevelHud() {
   if (!el) return;
   el.textContent = 'MENU';
   el.title = 'Open Hexacore settings';
-}
-
-function checkLevelUp(oldScore, newScore) {
-  let leveled = false;
-  while (newScore >= hxLevelThreshold(hxState.level + 1)) {
-    hxState.level++;
-    leveled = true;
-  }
-  if (leveled) {
-    updateLevelHud();
-    showLevelUpBanner(hxState.level);
-  }
 }
 
 function getLevelUpMessage(level) {
@@ -1805,64 +1784,6 @@ function showRestoredBanner(level, score) {
 
   banner.addEventListener('animationend', () => banner.remove(), { once: true });
   setTimeout(() => banner.remove(), 2500);
-}
-
-/* ── XP toast and player level-up banner ───────────────────────── */
-function showXPGainToast(xp) {
-  const toast = document.createElement('div');
-  toast.className = 'hx-xp-toast';
-  toast.textContent = `+${xp} XP`;
-  document.body.appendChild(toast);
-
-  requestAnimationFrame(() => toast.classList.add('hx-xp-toast-visible'));
-  setTimeout(() => {
-    toast.classList.remove('hx-xp-toast-visible');
-    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
-    setTimeout(() => toast.remove(), 600);
-  }, 1200);
-}
-
-function showPlayerLevelUpBanner(newLevel) {
-  document.getElementById('hx-player-levelup-banner')?.remove();
-
-  const isMax = newLevel >= HX_MAX_LEVEL;
-  const banner = document.createElement('div');
-  banner.id = 'hx-player-levelup-banner';
-  banner.innerHTML = `
-    <div class="hx-levelup-ring hx-levelup-ring--1 hx-levelup-ring--xp"></div>
-    <div class="hx-levelup-ring hx-levelup-ring--2 hx-levelup-ring--xp"></div>
-    <div class="hx-levelup-ring hx-levelup-ring--3 hx-levelup-ring--xp"></div>
-    <div class="hx-levelup-backdrop hx-levelup-backdrop--xp">
-      <div class="hx-levelup-stars hx-levelup-stars--xp" aria-hidden="true">
-        <span class="hx-levelup-star hx-levelup-star--xp" style="--star-i:0">✦</span>
-        <span class="hx-levelup-star hx-levelup-star--xp" style="--star-i:1">✦</span>
-        <span class="hx-levelup-star hx-levelup-star--xp" style="--star-i:2">✦</span>
-      </div>
-      <span class="hx-levelup-label hx-levelup-label--xp">PLAYER</span>
-      <span class="hx-levelup-title hx-levelup-title--xp">${isMax ? 'MAX LEVEL!' : 'LEVEL UP!'}</span>
-      <div class="hx-levelup-divider hx-levelup-divider--xp"></div>
-      <span class="hx-levelup-num hx-levelup-num--xp">${newLevel}</span>
-      <span class="hx-levelup-sub hx-levelup-sub--xp">${isMax ? 'LEGEND RANK ACHIEVED' : 'RANK INCREASED'}</span>
-      <button class="hx-levelup-ok-btn hx-levelup-ok-btn--xp" type="button" aria-label="Dismiss level-up banner">OK</button>
-    </div>
-  `;
-  document.body.appendChild(banner);
-
-  banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => banner.remove());
-
-  // LVL button badge-pop + XP bar glow sweep
-  const lvlBtn = document.getElementById('hx-level-hud');
-  const xpContainer = document.getElementById('hx-xp-bar-container');
-  if (lvlBtn) {
-    lvlBtn.classList.remove('hx-levelup-badge-pop');
-    requestAnimationFrame(() => lvlBtn.classList.add('hx-levelup-badge-pop'));
-    setTimeout(() => lvlBtn.classList.remove('hx-levelup-badge-pop'), 900);
-  }
-  if (xpContainer) {
-    xpContainer.classList.remove('hx-xp-bar-flash');
-    requestAnimationFrame(() => xpContainer.classList.add('hx-xp-bar-flash'));
-    setTimeout(() => xpContainer.classList.remove('hx-xp-bar-flash'), 1000);
-  }
 }
 
 /* ── Tile Reference Guide ──────────────────────────────────────── */
@@ -4253,13 +4174,11 @@ async function submitHexacoreWord() {
 
   // XP gain — compute the values now but defer the UI until after refill
   // (Daily mode does not award XP or track quests)
-  let xpGain = 0;
-  let leveledUp = false;
-  let newLevel = null;
   if (hxGameMode !== 'daily') {
-    xpGain = calcWordXP(word, [...hxSelected]);
-    ({ newLevel, leveledUp } = addXP(xpGain));
+    const xpGain = calcWordXP(word, [...hxSelected]);
+    addXP(xpGain);
   }
+  const currentPlayerLevel = getCurrentPlayerLevel();
 
   // Quest/portal tracking
   const gemsUsedInWord   = hxSelected.filter(t => t.tileType && t.tileType.startsWith('gem')).length;
@@ -4279,7 +4198,7 @@ async function submitHexacoreWord() {
       score:               hxState.score,
       gemsUsed:            gemsUsedInWord,
       portalUsed:          portalUsedInWord,
-      gameLevel:           hxState.level,
+      gameLevel:           currentPlayerLevel,
       amethystCollected:   false,
       seleniteCollected:   false,
     });
@@ -4295,7 +4214,7 @@ async function submitHexacoreWord() {
     tiles: [...hxSelected],
     score: wordScore,
     portalUsed: portalUsedInWord,
-    gameLevel: hxState.level,
+    gameLevel: currentPlayerLevel,
   });
 
   // Campaign progress tracking
@@ -4388,8 +4307,6 @@ async function submitHexacoreWord() {
     // Show all post-word UI feedback only after board settle
     checkHexacoreRequirements(word, consumed, wordScore);
     if (hxGameMode !== 'daily') {
-      showXPGainToast(xpGain);
-      if (leveledUp) showPlayerLevelUpBanner(newLevel);
       updateXPBarFn();
     }
     pendingPowerUpToasts.forEach(type => showPowerUpCollectToast(type));
@@ -4399,7 +4316,6 @@ async function submitHexacoreWord() {
     });
 
     if (hxGameMode !== 'daily') {
-      checkLevelUp(oldScore, hxState.score);
       playSound('sfxGemCollect');
       // Spawn gem reward based on word length
       spawnGemRewardForWord(word.length);
@@ -5063,23 +4979,23 @@ function triggerGameOver() {
   removeHud();
 
   // Update player profile stats
-  const { xp: xpNow } = getXPData();
+  const playerLevel = getCurrentPlayerLevel();
   updateProfile({
     words:     hxState.words,
     score:     hxState.score,
     xpEarned:  0, // XP was already added incrementally
-    level:     hxState.level,
+    level:     playerLevel,
   });
   updateAchievementProgress('gameOver', {
     score: hxState.score,
     words: hxState.words.length,
-    level: hxState.level,
+    level: playerLevel,
   });
-  updateStatTracking('gameOver', { score: hxState.score, level: hxState.level });
+  updateStatTracking('gameOver', { score: hxState.score, level: playerLevel });
   saveSessionHistory({
     score: hxState.score,
     words: hxState.words.length,
-    level: hxState.level,
+    level: playerLevel,
     mode: hxGameMode,
     date: new Date().toISOString(),
   });
@@ -5095,6 +5011,8 @@ async function showGameOver() {
     ? hxState.words.reduce((b, w) => w.score > b.score ? w : b)
     : null;
 
+  const playerLevel = getCurrentPlayerLevel();
+
   const overlay = document.createElement('div');
   overlay.id = 'hx-gameover-overlay';
   overlay.innerHTML = `
@@ -5102,7 +5020,7 @@ async function showGameOver() {
       <h2>HEXACORE OVER</h2>
       <div class="hx-final-score">${hxState.score}</div>
       <div class="hx-stats">
-        LEVEL ${hxState.level} &nbsp;&middot;&nbsp;
+        LEVEL ${playerLevel} &nbsp;&middot;&nbsp;
         ${hxState.words.length} WORD${hxState.words.length !== 1 ? 'S' : ''} FOUND
         ${best ? `&nbsp;&middot;&nbsp; BEST: ${escapeHtml(best.word)} (${best.score} pts)` : ''}
       </div>
@@ -5340,7 +5258,6 @@ function saveHexacoreProgress() {
 
   const save = {
     score:               hxState.score,
-    level:               hxState.level,
     words:               hxState.words,
     wordsSubmitted:      hxState.wordsSubmitted,
     wordCount:           hxWordCount,
@@ -5506,7 +5423,6 @@ export function startHexacore(mode) {
     const save = loadHexacoreProgress();
     if (save) {
       hxState.score          = save.score          ?? 0;
-      hxState.level          = save.level          ?? 1;
       hxState.words          = save.words          ?? [];
       hxState.wordsSubmitted = save.wordsSubmitted ?? 0;
       hxWordCount            = save.wordCount      ?? 0;
@@ -5592,7 +5508,7 @@ export function startHexacore(mode) {
       updateScoreDisplay();
       updatePowerUpBar();
 
-      showRestoredBanner(hxState.level, hxState.score);
+      showRestoredBanner(getCurrentPlayerLevel(), hxState.score);
     }
     updateDailyHud();
     // Rebuild the tile guide after board is ready so daily mode shows only
@@ -5821,6 +5737,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateXPBarFn();
     return result;
   };
+});
+
+document.addEventListener('hx:level-up', e => {
+  const level = Number(e.detail?.level);
+  if (!Number.isFinite(level) || level < 1) return;
+  showLevelUpBanner(level);
 });
 
 function startHexacoreMode(mode) {
