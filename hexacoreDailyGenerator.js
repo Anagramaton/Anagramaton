@@ -37,15 +37,34 @@ const DAILY_ROTATING_GEM_TYPES = ['gemEmerald', 'gemGold'];
 const DAILY_ROTATING_RUNE_TYPES = ['rune', 'amethyst'];
 const MAX_PORTAL_CANDIDATE_POOL = 12;
 
-// The 6 outer-edge mid-point tiles of the radius-4 hex grid that may become portals.
-// All positions satisfy |q|≤4, |r|≤4, |s|≤4 (s = -q-r) so they exist on the board.
-const DAILY_PORTAL_CORNERS = [
-  { q: -2, r:  4 },  // lower-left  edge midpoint (s=-2)
-  { q:  2, r:  2 },  // lower-right edge midpoint (s=-4)  ← was (2,4) which is off-grid (s=-6)
-  { q:  4, r:  0 },  // right corner               (s=-4)
-  { q:  2, r: -4 },  // upper-right edge midpoint (s=2)
-  { q: -2, r: -2 },  // upper-left  edge midpoint (s=4)   ← was (-2,-4) which is off-grid (s=6)
-  { q: -4, r:  0 },  // left corner                (s=4)
+// Edge-perimeter tiles on the upper/right side of the radius-4 hex grid used as portal entry fallbacks.
+const DAILY_PORTAL_ENTRY_CORNERS = [
+  { q:  0, r: -4 },
+  { q:  1, r: -4 },
+  { q:  2, r: -4 },
+  { q:  3, r: -4 },
+  { q:  4, r: -4 },
+  { q: -1, r: -3 },
+  { q:  4, r: -3 },
+  { q: -2, r: -2 },
+  { q:  4, r: -2 },
+  { q: -3, r: -1 },
+  { q:  4, r: -1 },
+];
+
+// Edge-perimeter tiles on the lower/left side of the radius-4 hex grid used as portal exit fallbacks.
+const DAILY_PORTAL_EXIT_CORNERS = [
+  { q: -4, r:  1 },
+  { q:  3, r:  1 },
+  { q: -4, r:  2 },
+  { q:  2, r:  2 },
+  { q: -4, r:  3 },
+  { q:  1, r:  3 },
+  { q: -4, r:  4 },
+  { q: -3, r:  4 },
+  { q: -2, r:  4 },
+  { q: -1, r:  4 },
+  { q:  0, r:  4 },
 ];
 
 // Digraph combos eligible for daily board placement
@@ -378,14 +397,15 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     placeType('amethyst', denseCandidates, 1);
   }
 
-  // ── DIGRAPHS: unique strings, variable count (no fixed cap) ──────
+  // ── DIGRAPHS: unique strings, capped at 5 tiles maximum ──────────
+  const DAILY_MAX_DIGRAPHS = 5;
   const shuffledDigraphs = shuffled(DAILY_DIGRAPH_OPTIONS, rng);
   const digraphCandidates = allCoords.map(c => ({
     ...c,
     weight: (longPathCoords.has(c.key) ? 14 : 0) + (pathDensity.get(c.key) || 0),
   }));
   const strategicDigraphSlots = digraphCandidates.filter(c => c.weight > 0).length;
-  const maxDigraphCount = Math.min(shuffledDigraphs.length, Math.max(0, strategicDigraphSlots));
+  const maxDigraphCount = Math.min(DAILY_MAX_DIGRAPHS, shuffledDigraphs.length, Math.max(0, strategicDigraphSlots));
   const minDigraphCount = Math.min(3, maxDigraphCount);
   const digraphCount = maxDigraphCount > 0
     ? minDigraphCount + Math.floor(rng() * (maxDigraphCount - minDigraphCount + 1))
@@ -439,14 +459,23 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     }
   }
 
-  // Fallback to corners if strategic placement failed to produce a pair.
+  // Fallback to fixed edge positions if strategic placement failed to produce a pair.
   if (specials.filter(s => s.type === 'portal').length < 2) {
-    const availableCorners = shuffled(DAILY_PORTAL_CORNERS, rng).filter(c => !taken.has(hexKey(c.q, c.r)));
-    for (const corner of availableCorners.slice(0, 2)) {
-      const role = specials.some(s => s.type === 'portal') ? 'exit' : 'entry';
-      const key = hexKey(corner.q, corner.r);
-      specials.push({ type: 'portal', role, q: corner.q, r: corner.r });
-      taken.add(key);
+    const hasEntry = specials.some(s => s.type === 'portal' && s.role === 'entry');
+    const hasExit  = specials.some(s => s.type === 'portal' && s.role === 'exit');
+    if (!hasEntry) {
+      const entryCorner = shuffled(DAILY_PORTAL_ENTRY_CORNERS, rng).find(c => !taken.has(hexKey(c.q, c.r)));
+      if (entryCorner) {
+        specials.push({ type: 'portal', role: 'entry', q: entryCorner.q, r: entryCorner.r });
+        taken.add(hexKey(entryCorner.q, entryCorner.r));
+      }
+    }
+    if (!hasExit) {
+      const exitCorner = shuffled(DAILY_PORTAL_EXIT_CORNERS, rng).find(c => !taken.has(hexKey(c.q, c.r)));
+      if (exitCorner) {
+        specials.push({ type: 'portal', role: 'exit', q: exitCorner.q, r: exitCorner.r });
+        taken.add(hexKey(exitCorner.q, exitCorner.r));
+      }
     }
   }
 
