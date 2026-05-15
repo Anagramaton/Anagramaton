@@ -153,13 +153,57 @@ function pickWordGroup(rng, ranked, count, window = 600) {
   return result;
 }
 
+function wordClearancePotential(word, usedLetters = new Set()) {
+  const letters = [...word];
+  const uniqueLetters = new Set(letters);
+  let freshLetters = 0;
+  uniqueLetters.forEach(ch => { if (!usedLetters.has(ch)) freshLetters += 1; });
+  const vowelCount = letters.reduce((sum, ch) => sum + ('AEIOU'.includes(ch) ? 1 : 0), 0);
+  const rareCount = letters.reduce((sum, ch) => sum + (HIGH_VALUE_LETTERS.has(ch) ? 1 : 0), 0);
+  const balancedVowels = vowelCount >= 2 && vowelCount <= Math.ceil(word.length / 2) ? 8 : 0;
+  return (word.length * 12) + (uniqueLetters.size * 5) + (freshLetters * 11) + balancedVowels - (rareCount * 6);
+}
+
+function pickCoverageWordGroup(rng, ranked, count, window, selectedWords, usedLetters) {
+  const maxIdx = Math.min(window, ranked.length);
+  const candidates = shuffled(ranked.slice(0, maxIdx), rng)
+    .filter(entry => !selectedWords.has(entry.word))
+    .map(entry => ({
+      word: entry.word,
+      metric: wordClearancePotential(entry.word, usedLetters) + entry.score * 0.03,
+    }))
+    .sort((a, b) => b.metric - a.metric);
+
+  const picks = [];
+  for (const item of candidates) {
+    if (picks.length >= count) break;
+    picks.push(item.word);
+    selectedWords.add(item.word);
+    [...item.word].forEach(ch => usedLetters.add(ch));
+  }
+  return picks;
+}
+
 function chooseTargetWords(rng) {
-  const shortCount = 3 + Math.floor(rng() * 3);
+  const shortCount = 2 + Math.floor(rng() * 2);
+  const selectedWords = new Set();
+  const usedLetters = new Set();
   const words = [
-    ...pickWordGroup(rng, LONG_RANKED, 1, 700),
-    ...pickWordGroup(rng, MEDIUM_RANKED, 2, 900),
-    ...pickWordGroup(rng, SHORT_RANKED, shortCount, 1200),
+    ...pickCoverageWordGroup(rng, LONG_RANKED, 2, 1400, selectedWords, usedLetters),
+    ...pickCoverageWordGroup(rng, MEDIUM_RANKED, 3, 1800, selectedWords, usedLetters),
+    ...pickCoverageWordGroup(rng, SHORT_RANKED, shortCount, 2400, selectedWords, usedLetters),
   ];
+
+  if (words.length < 8) {
+    const fallbackPools = shuffled([...LONG_RANKED, ...MEDIUM_RANKED, ...SHORT_RANKED], rng);
+    for (const entry of fallbackPools) {
+      if (words.length >= 8) break;
+      if (selectedWords.has(entry.word)) continue;
+      words.push(entry.word);
+      selectedWords.add(entry.word);
+    }
+  }
+
   return words.slice(0, 8);
 }
 
@@ -209,14 +253,19 @@ function placeWords(words, rng, radius) {
         0,
         new Set(),
         radius,
-        { allowZigZag: true, preferOverlap: true, maxStraight: 2, wallBuffer: 1, maxEdgeRun: 1 },
+        { allowZigZag: true, preferOverlap: false, maxStraight: 3, wallBuffer: 0, maxEdgeRun: 2 },
       );
       if (!path) continue;
       const normalizedPath = path.map(c => ({ ...c, key: coordKey(c) }));
 
       const overlap = pathOverlap(normalizedPath, grid, word);
-      const centerBias = normalizedPath.reduce((sum, c) => sum - Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)), 0);
-      const metric = overlap * 16 + centerBias;
+      const newTiles = normalizedPath.length - overlap;
+      const ringDepths = normalizedPath.map(c => Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)));
+      const maxRing = ringDepths.reduce((m, v) => Math.max(m, v), 0);
+      const minRing = ringDepths.reduce((m, v) => Math.min(m, v), Infinity);
+      const avgRing = ringDepths.reduce((sum, v) => sum + v, 0) / Math.max(1, ringDepths.length);
+      const ringSpread = maxRing - minRing;
+      const metric = (newTiles * 28) + (avgRing * 10) + (ringSpread * 14) - (overlap * 8);
       if (metric > bestMetric) {
         bestMetric = metric;
         best = normalizedPath;
@@ -646,7 +695,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
  * @param {Array}  specialTiles - Array of { type, q, r } from the board
  * @param {number} radius      - Board radius
  * @param {number} maxRounds   - Safety cap on simulation iterations
- * @returns {{ maxScore, optimalMoves, averageWordLength, gemDensity, solutionPath }}
+ * @returns {{ maxScore, optimalMoves, averageWordLength, gemDensity, solutionPath, tilesCleared, tilesRemaining, clearancePercent, fullyCleared }}
  */
 export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRounds = MAX_SIMULATION_ROUNDS) {
   // Build a combined simulation grid: { [key]: { letter, special } }
@@ -660,7 +709,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
   }
 
   const gemCount = specialTiles.filter(s => GEM_MULTIPLIERS[s.type]).length;
-  const totalTiles = Object.keys(simGrid).length;
+  const totalTiles = getAllCoords(radius).length;
 
   let totalScore = 0;
   const solutionPath = [];
@@ -688,11 +737,18 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
   }
 
   const totalWordLen = solutionPath.reduce((s, w) => s + w.length, 0);
+  const tilesRemaining = Object.keys(simGrid).length;
+  const tilesCleared = Math.max(0, totalTiles - tilesRemaining);
+  const clearancePercent = totalTiles > 0 ? Math.round((tilesCleared / totalTiles) * 1000) / 10 : 0;
   return {
     maxScore: totalScore,
     optimalMoves: solutionPath.length,
     averageWordLength: solutionPath.length > 0 ? Math.round((totalWordLen / solutionPath.length) * 10) / 10 : 0,
     gemDensity: totalTiles > 0 ? Math.round((gemCount / totalTiles) * 1000) / 1000 : 0,
+    tilesCleared,
+    tilesRemaining,
+    clearancePercent,
+    fullyCleared: tilesRemaining === 0,
     solutionPath,
   };
 }
@@ -778,10 +834,10 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
   const prismCount = typeCounts.get('prism') || 0;
   if (prismCount !== 1) return { valid: false, reason: `expected exactly 1 prism, got ${prismCount}` };
 
-  const rotatingGemCount = (typeCounts.get('gemEmerald') || 0) + (typeCounts.get('gemGold') || 0);
+  const rotatingGemCount = DAILY_ROTATING_GEM_TYPES.reduce((sum, type) => sum + (typeCounts.get(type) || 0), 0);
   if (rotatingGemCount !== 1) return { valid: false, reason: 'expected exactly 1 rotating gem (emerald or gold)' };
 
-  const rotatingSpecialCount = (typeCounts.get('rune') || 0) + (typeCounts.get('amethyst') || 0);
+  const rotatingSpecialCount = DAILY_ROTATING_RUNE_TYPES.reduce((sum, type) => sum + (typeCounts.get(type) || 0), 0);
   if (rotatingSpecialCount !== 1) return { valid: false, reason: 'expected exactly 1 rotating special (rune or amethyst)' };
 
   const portalTiles = specialTiles.filter(s => s.type === 'portal');
@@ -845,6 +901,9 @@ export function generateDailyHexacoreBoard({
 } = {}) {
   const seed = fnv1a32(String(date));
   let lastFailure = 'unknown';
+  let bestBoard = null;
+  let bestClearance = -1;
+  let bestScore = -1;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
@@ -894,14 +953,30 @@ export function generateDailyHexacoreBoard({
         optimalMoves: simData?.optimalMoves ?? null,
         averageWordLength: simData?.averageWordLength ?? null,
         gemDensity: simData?.gemDensity ?? null,
+        tilesCleared: simData?.tilesCleared ?? null,
+        tilesRemaining: simData?.tilesRemaining ?? null,
+        tileClearancePercent: simData?.clearancePercent ?? null,
+        fullClear: simData?.fullyCleared ?? null,
         solutionPath: simData?.solutionPath ?? null,
         generatedAt: new Date().toISOString(),
       },
     };
     if (includePlacements) board.placements = placements;
-    return board;
+
+    const attemptClearance = simData?.clearancePercent ?? 0;
+    const attemptScore = maxPossibleScore;
+    if (
+      !bestBoard
+      || attemptClearance > bestClearance
+      || (attemptClearance === bestClearance && attemptScore > bestScore)
+    ) {
+      bestBoard = board;
+      bestClearance = attemptClearance;
+      bestScore = attemptScore;
+    }
   }
 
+  if (bestBoard) return bestBoard;
   throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);
 }
 

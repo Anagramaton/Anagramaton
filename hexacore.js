@@ -534,13 +534,14 @@ function applyPortalVisuals() {
   if (!hxState.portalEntry || !hxState.portalExit) return;
   const entryTile = hxTileMap.get(hxKey(hxState.portalEntry.q, hxState.portalEntry.r));
   const exitTile  = hxTileMap.get(hxKey(hxState.portalExit.q,  hxState.portalExit.r));
+  // Both tiles show the same icon — either can serve as entry or exit.
   if (entryTile) {
     entryTile.element.querySelector('polygon')?.classList.add('hx-portal');
     _addPortalIcon(entryTile, '◈');
   }
   if (exitTile) {
     exitTile.element.querySelector('polygon')?.classList.add('hx-portal');
-    _addPortalIcon(exitTile, '◉');
+    _addPortalIcon(exitTile, '◈');
   }
 }
 
@@ -629,6 +630,42 @@ function closePortal() {
   hxState.portalEntry = null;
   hxState.portalExit  = null;
   hxState.portalWordsRemaining = 0;
+}
+
+/**
+ * In daily mode, closes the portal if either portal tile has shifted away from
+ * its designated coordinate after gravity.  Also strips any stale portal
+ * visuals from the moved tile(s) — since `closePortal` only clears at the
+ * (now-stale) coordinates, moved tiles need their classes removed explicitly.
+ *
+ * After `animateTileMoves` completes, a moved tile's `.q`/`.r` properties
+ * reflect its NEW position, so comparing them to the original portal coordinate
+ * correctly detects movement.
+ */
+function closeDailyPortalIfBroken(preGravityEntryTile, preGravityExitTile) {
+  if (!hxState.portalOpen) return;
+
+  const entryMoved = preGravityEntryTile && (
+    preGravityEntryTile.q !== hxState.portalEntry.q ||
+    preGravityEntryTile.r !== hxState.portalEntry.r
+  );
+  const exitMoved = preGravityExitTile && (
+    preGravityExitTile.q !== hxState.portalExit.q ||
+    preGravityExitTile.r !== hxState.portalExit.r
+  );
+
+  if (!entryMoved && !exitMoved) return;
+
+  // Strip portal CSS/icon from any tile that slid away (closePortal will clear
+  // the coordinate-based lookup, but not the physically-moved tile).
+  function stripPortalVisuals(tile) {
+    tile.element.querySelector('polygon')?.classList.remove('hx-portal', 'hx-portal-active');
+    tile.element.querySelector('.hx-portal-icon')?.remove();
+  }
+  if (entryMoved) stripPortalVisuals(preGravityEntryTile);
+  if (exitMoved)  stripPortalVisuals(preGravityExitTile);
+
+  closePortal();
 }
 
 /**
@@ -3043,6 +3080,12 @@ function updateWordScorePreview() {
   const countBonus = calcGemCountBonus(hxSelected);
   const lodestoneBoostPreview = hxState.lodestoneActive ? 1 : 0;
 
+  // Portal traversal preview: if both portal tiles are already selected, show the bonus.
+  const portalPreviewActive = hxState.portalOpen && hxState.portalEntry && hxState.portalExit &&
+    hxSelected.some(t => hxKey(t.q, t.r) === hxKey(hxState.portalEntry.q, hxState.portalEntry.r)) &&
+    hxSelected.some(t => hxKey(t.q, t.r) === hxKey(hxState.portalExit.q,  hxState.portalExit.r));
+  const portalMultPreview = portalPreviewActive ? Math.max(1, wordLength - 2) : 1;
+
   let previewBase = base;
   if (hxState.eclipseActive) {
     // Recalculate with inverted letter values for preview
@@ -3053,9 +3096,9 @@ function updateWordScorePreview() {
     });
   }
 
-  const preview = previewBase * lenMult * (hasPrism ? 2 : 1) * gemMult * (countBonus + lodestoneBoostPreview);
+  const preview = previewBase * lenMult * (hasPrism ? 2 : 1) * gemMult * (countBonus + lodestoneBoostPreview) * portalMultPreview;
   const runeNote = runeCount > 0 ? '~' : '';
-  const effectNote = (hxState.eclipseActive || hxState.lodestoneActive) ? '★' : '';
+  const effectNote = (hxState.eclipseActive || hxState.lodestoneActive || portalPreviewActive) ? '★' : '';
   el.textContent = `${effectNote}${runeNote}+${preview}`;
 }
 
@@ -4226,7 +4269,15 @@ async function submitHexacoreWord() {
   const lodestoneBoost = hxState.lodestoneActive ? 1 : 0;
   if (hxState.lodestoneActive) hxState.lodestoneActive = false;
 
-  const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult * (countBonus + lodestoneBoost);
+  // Portal traversal bonus: when BOTH portal tiles are in the word, score is
+  // multiplied by (word.length - 2).  This gives ×2 for 4-letter words,
+  // ×3 for 5-letter words, ×4 for 6-letter words, and so on.
+  const portalTraversedInWord = hxState.portalOpen && hxState.portalEntry && hxState.portalExit &&
+    hxSelected.some(t => hxKey(t.q, t.r) === hxKey(hxState.portalEntry.q, hxState.portalEntry.r)) &&
+    hxSelected.some(t => hxKey(t.q, t.r) === hxKey(hxState.portalExit.q,  hxState.portalExit.r));
+  const portalMult = portalTraversedInWord ? Math.max(1, word.length - 2) : 1;
+
+  const wordScore = base * lenMult * (hasPrism ? 2 : 1) * gemMult * (countBonus + lodestoneBoost) * portalMult;
 
   hxWordCount++;
   hxState.wordsSubmitted++;
@@ -4268,19 +4319,22 @@ async function submitHexacoreWord() {
       seleniteCollected:   false,
     });
   }
-  updateAchievementProgress('wordSubmitted', {
-    word,
-    tiles: [...hxSelected],
-    score: wordScore,
-    portalUsed: portalUsedInWord,
-  });
-  updateStatTracking('wordSubmitted', {
-    word,
-    tiles: [...hxSelected],
-    score: wordScore,
-    portalUsed: portalUsedInWord,
-    gameLevel: currentPlayerLevel,
-  });
+  // Achievements, challenges, and stat tracking do not apply in daily mode.
+  if (!hxIsDailyMode()) {
+    updateAchievementProgress('wordSubmitted', {
+      word,
+      tiles: [...hxSelected],
+      score: wordScore,
+      portalUsed: portalUsedInWord,
+    });
+    updateStatTracking('wordSubmitted', {
+      word,
+      tiles: [...hxSelected],
+      score: wordScore,
+      portalUsed: portalUsedInWord,
+      gameLevel: currentPlayerLevel,
+    });
+  }
 
   // Campaign progress tracking
   if (hxGameMode === 'campaign') {
@@ -4370,7 +4424,10 @@ async function submitHexacoreWord() {
 
   if (!hxState.gameOver) {
     // Show all post-word UI feedback only after board settle
-    checkHexacoreRequirements(word, consumed, wordScore);
+    // Challenges do not apply in daily mode.
+    if (!hxIsDailyMode()) {
+      checkHexacoreRequirements(word, consumed, wordScore);
+    }
     if (!hxIsDailyMode()) {
       updateXPBarFn();
       // Show level-up banner now that tiles have finished refilling
@@ -4403,6 +4460,7 @@ async function submitHexacoreWord() {
         openPortal();
       }
     } else {
+      playSound('sfxGemCollect');
       updateDailyHud();
       if (!hasAnyDailyWordLeft()) {
         showDailyNoWordsPrompt();
@@ -4440,7 +4498,21 @@ async function consumeAndRefill(tilesToRemove) {
   });
 
   if (hxIsDailyMode()) {
+    // Capture portal tile references before gravity so we can detect if either tile fell.
+    const preGravityEntryTile = hxState.portalOpen && hxState.portalEntry
+      ? hxTileMap.get(hxKey(hxState.portalEntry.q, hxState.portalEntry.r))
+      : null;
+    const preGravityExitTile = hxState.portalOpen && hxState.portalExit
+      ? hxTileMap.get(hxKey(hxState.portalExit.q, hxState.portalExit.r))
+      : null;
+
     await applyGravity();
+
+    // If a portal tile fell away from its position, deactivate both portal tiles.
+    if (hxState.portalOpen) {
+      closeDailyPortalIfBroken(preGravityEntryTile, preGravityExitTile);
+    }
+
     updateDailyHud();
     return;
   }
@@ -5048,28 +5120,31 @@ function triggerGameOver() {
 
   removeHud();
 
-  // Update player profile stats
-  const playerLevel = getCurrentPlayerLevel();
-  updateProfile({
-    words:     hxState.words,
-    score:     hxState.score,
-    xpEarned:  0, // XP was already added incrementally
-    level:     playerLevel,
-  });
-  updateAchievementProgress('gameOver', {
-    score: hxState.score,
-    words: hxState.words.length,
-    level: playerLevel,
-  });
-  updateStatTracking('gameOver', { score: hxState.score, level: playerLevel });
-  saveSessionHistory({
-    score: hxState.score,
-    words: hxState.words.length,
-    level: playerLevel,
-    mode: hxGameMode,
-    date: new Date().toISOString(),
-  });
-  updateStats({ sessionScore: hxState.score, sessionWords: hxState.words.length });
+  // Profile updates, achievements, and stat tracking do not apply in daily mode.
+  if (!hxIsDailyMode()) {
+    // Update player profile stats
+    const playerLevel = getCurrentPlayerLevel();
+    updateProfile({
+      words:     hxState.words,
+      score:     hxState.score,
+      xpEarned:  0, // XP was already added incrementally
+      level:     playerLevel,
+    });
+    updateAchievementProgress('gameOver', {
+      score: hxState.score,
+      words: hxState.words.length,
+      level: playerLevel,
+    });
+    updateStatTracking('gameOver', { score: hxState.score, level: playerLevel });
+    saveSessionHistory({
+      score: hxState.score,
+      words: hxState.words.length,
+      level: playerLevel,
+      mode: hxGameMode,
+      date: new Date().toISOString(),
+    });
+    updateStats({ sessionScore: hxState.score, sessionWords: hxState.words.length });
+  }
 
   showGameOver();
 }
