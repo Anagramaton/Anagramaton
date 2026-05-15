@@ -927,12 +927,12 @@ export function generateDailyHexacoreBoard({
   throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);
 }
 
-export function generateDailyHexacoreBatch({ startDate = toIsoDate(), count = 1 } = {}) {
+export function generateDailyHexacoreBatch({ startDate = toIsoDate(), count = 1, includePlacements = false } = {}) {
   const out = [];
   const d = new Date(`${startDate}T00:00:00`);
   for (let i = 0; i < count; i++) {
     const date = toIsoDate(d);
-    out.push(generateDailyHexacoreBoard({ date }));
+    out.push(generateDailyHexacoreBoard({ date, includePlacements }));
     d.setDate(d.getDate() + 1);
   }
   return out;

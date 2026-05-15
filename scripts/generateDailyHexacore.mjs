@@ -46,7 +46,7 @@ mkdirSync(outDir, { recursive: true });
 if (args.count && args.count > 1) {
   const startDate = args.date || toIsoDate();
   console.log(`📅 Generating ${args.count} Hexacore Daily Challenge boards from ${startDate}`);
-  const boards = generateDailyHexacoreBatch({ startDate, count: args.count });
+  const boards = generateDailyHexacoreBatch({ startDate, count: args.count, includePlacements: true });
   boards.forEach((board, i) => {
     const fp = join(outDir, `${board.date}.json`);
     writeFileSync(fp, JSON.stringify(board, null, 2), 'utf8');
@@ -57,7 +57,7 @@ if (args.count && args.count > 1) {
 } else {
   const date = args.date || toIsoDate();
   console.log(`📅 Generating Hexacore Daily Challenge board for ${date}`);
-  const board = generateDailyHexacoreBoard({ date });
+  const board = generateDailyHexacoreBoard({ date, includePlacements: true });
   const fp = join(outDir, `${date}.json`);
   writeFileSync(fp, JSON.stringify(board, null, 2), 'utf8');
   console.log(`✅ Wrote ${fp}`);
