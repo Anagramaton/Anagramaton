@@ -2097,7 +2097,7 @@ function ensureHud() {
     dailyHud.querySelector('#hx-daily-submit-btn')?.addEventListener('click', () => completeDailyChallenge());
     dailyHud.querySelector('#hx-daily-reset-btn')?.addEventListener('click', () => {
       if (confirm('Reset the daily board? Your current progress will be lost.')) {
-        startHexacore(hxGameMode === 'hexacoreDaily' ? 'hexacoreDaily' : 'daily');
+        startHexacore(hxGameMode);
       }
     });
   }
@@ -4998,7 +4998,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
   document.getElementById('hx-daily-leaderboard-btn')?.addEventListener('click', () => openLeaderboardsModal('daily'));
   document.getElementById('hx-daily-again-btn')?.addEventListener('click', () => {
     overlay.remove();
-    startHexacore(hxGameMode === 'hexacoreDaily' ? 'hexacoreDaily' : 'daily');
+    startHexacore(hxGameMode);
   });
   document.getElementById('hx-daily-menu-btn')?.addEventListener('click', () => window.location.reload());
 }
