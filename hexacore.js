@@ -1224,7 +1224,7 @@ function hxEasternDateStr() {
 
 const HX_DAILY_COMPLETED_KEY = 'hxDailyCompleted';
 const HX_DAILY_BOARD_CACHE_PREFIX = 'hxDailyBoardCache_';
-const HX_HEXACORE_DAILY_BOARD_CACHE_PREFIX = 'hxHexacoreDailyBoardCache_';
+const HX_HEXACORE_DAILY_BOARD_CACHE_PREFIX = 'hxHexacoreDailyBoardCacheV2_';
 let hxDailyManifestCache = null;
 
 async function hxLoadDailyManifest() {
@@ -5442,6 +5442,11 @@ export function startHexacore(mode) {
 
   // Remove any leftover overlay
   document.getElementById('hx-gameover-overlay')?.remove();
+
+  // Always rebuild the HUD from scratch for the new mode so that, e.g.,
+  // switching from endless (XP bar, no daily panel) to daily (no XP bar,
+  // daily panel) produces the correct layout every time.
+  removeHud();
 
   hxSvg = document.getElementById('hex-grid');
   if (!hxSvg) return;
