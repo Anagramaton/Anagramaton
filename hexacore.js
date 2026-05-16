@@ -337,6 +337,9 @@ const hxState = {
   dailyFinalScore: 0,
   dailyPenalty: 0,
   dailyTilesUsed: 0,
+  hintsUsed: 0,
+  discoveredOptimalWordIndices: [],
+  dailyHintState: {},
 };
 
 // Maps each tile object → the hxState type-array it belongs to (single O(1) lookup on removal)
@@ -391,6 +394,7 @@ let hxCompletedReqs     = new Set(); // IDs of completed requirements (persists 
 let hxIntroducedTileTypes = new Set();
 let hxQueuedTileIntros    = new Set();
 let hxAchievementLettersCollected = new Set();
+let hxDailyHintHandlerBound = false;
 
 // Power-up targeting mode state
 let hxAmethystTargeting  = false; // true when waiting for tile tap to transmute
@@ -1384,6 +1388,109 @@ function updateDailyHud() {
   document.getElementById('hx-daily-word-total')?.replaceChildren(document.createTextNode(wordTotal.toLocaleString()));
   document.getElementById('hx-daily-penalty')?.replaceChildren(document.createTextNode(penalty.toLocaleString()));
   document.getElementById('hx-daily-preview')?.replaceChildren(document.createTextNode(preview.toLocaleString()));
+  syncDiscoveredOptimalWords();
+  const clueRoot = document.getElementById('hx-daily-clue-container');
+  if (clueRoot) clueRoot.innerHTML = renderOptimalPathClues();
+}
+
+function isWordDiscovered(wordIdx) {
+  return (hxState.discoveredOptimalWordIndices || []).includes(wordIdx);
+}
+
+function syncDiscoveredOptimalWords() {
+  const bestWords = hxState.dailyMetadata?.optimalSolutions?.[0]?.words || [];
+  if (!Array.isArray(bestWords) || bestWords.length === 0) {
+    hxState.discoveredOptimalWordIndices = [];
+    return;
+  }
+  const submitted = new Set(hxState.words.map(w => String(w.word || '').toUpperCase()));
+  const discovered = [];
+  bestWords.forEach((word, idx) => {
+    if (submitted.has(String(word || '').toUpperCase())) discovered.push(idx);
+  });
+  hxState.discoveredOptimalWordIndices = discovered;
+}
+
+function getHintState(wordIdx) {
+  if (!hxState.dailyHintState || typeof hxState.dailyHintState !== 'object') {
+    hxState.dailyHintState = {};
+  }
+  if (!hxState.dailyHintState[wordIdx]) {
+    hxState.dailyHintState[wordIdx] = { nextLevel: 1, revealedLevels: [] };
+  }
+  return hxState.dailyHintState[wordIdx];
+}
+
+function renderOptimalPathClues() {
+  const pathClues = hxState.dailyMetadata?.optimalPathClues;
+  if (!pathClues || !Array.isArray(pathClues.clues) || pathClues.clues.length === 0) return '';
+
+  const wordsSubmitted = hxState.words.length;
+  const hintsUsed = hxState.hintsUsed || 0;
+  const hintsRemaining = Math.max(0, 3 - hintsUsed);
+  const discoveredCount = (hxState.discoveredOptimalWordIndices || []).length;
+
+  return `
+    <div id="hx-optimal-clues" class="hx-clue-panel">
+      <div class="hx-clue-header">
+        <span class="hx-clue-icon">🎯</span>
+        <span class="hx-clue-title">OPTIMAL PATH GUIDE</span>
+        <span class="hx-clue-target">Target: ${Number(pathClues.targetScore || 0).toLocaleString()} pts</span>
+      </div>
+
+      <div class="hx-clue-list">
+        ${pathClues.clues.map((clue, idx) => {
+          const discovered = isWordDiscovered(idx);
+          const wordHintState = getHintState(idx);
+          const nextLevel = Number(wordHintState.nextLevel || 1);
+          const hintLabel = wordHintState.revealedLevels.length > 0 ? '💡 Show Next Hint' : '💡 Show Hint';
+          const revealedHtml = (wordHintState.revealedLevels || [])
+            .map(level => clue.hints.find(h => h.level === level))
+            .filter(Boolean)
+            .map(h => `<div class="hx-hint-text">${escapeHtml(h.text)}</div>`)
+            .join('');
+
+          const showHintButton = wordsSubmitted > 0 && hintsRemaining > 0 && !discovered && nextLevel <= 5;
+          return `
+            <div class="hx-clue-item ${discovered ? 'hx-clue-discovered' : ''}">
+              <div class="hx-clue-word-header">
+                <span class="hx-clue-number">#${clue.wordIndex}</span>
+                <span class="hx-clue-length">${clue.length} letters</span>
+                <span class="hx-clue-points">~${Number(clue.estimatedPoints || 0).toLocaleString()} pts</span>
+              </div>
+
+              <div class="hx-clue-tier hx-clue-tier-1">
+                ${escapeHtml(clue.positional || '')}
+              </div>
+
+              <div class="hx-clue-tier hx-clue-tier-2 ${wordsSubmitted === 0 ? 'hx-clue-locked' : ''}">
+                ${wordsSubmitted === 0 ? '🔒 Submit a word to unlock' : escapeHtml(clue.category || '')}
+              </div>
+
+              ${showHintButton ? `
+                <button class="hx-clue-hint-btn" data-word-idx="${idx}" data-hint-level="${nextLevel}">
+                  ${hintLabel} (${hintsRemaining} remaining)
+                </button>
+              ` : ''}
+              <div id="hx-hint-${idx}" class="hx-hint-reveal">${revealedHtml}</div>
+
+              ${Array.isArray(clue.features) && clue.features.length > 0 ? `
+                <div class="hx-clue-features">
+                  ${clue.features.map(f => `<span class="hx-clue-tag">✨ ${escapeHtml(f)}</span>`).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <div class="hx-clue-footer">
+        <span class="hx-clue-progress">
+          ${discoveredCount} / ${Number(pathClues.wordCount || 0)} optimal words discovered
+        </span>
+      </div>
+    </div>
+  `;
 }
 
 function hasAnyDailyWordLeft() {
@@ -1663,6 +1770,36 @@ function updateHud() {
 
 function getCurrentPlayerLevel() {
   return getXPData().level;
+}
+
+function bindDailyHintHandler() {
+  if (hxDailyHintHandlerBound) return;
+  hxDailyHintHandlerBound = true;
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (!target.classList.contains('hx-clue-hint-btn')) return;
+
+    const wordIdx = Number.parseInt(target.dataset.wordIdx || '', 10);
+    const currentLevel = Number.parseInt(target.dataset.hintLevel || '', 10);
+    const pathClues = hxState.dailyMetadata?.optimalPathClues;
+    if (!pathClues || !Array.isArray(pathClues.clues)) return;
+    if (!Number.isInteger(wordIdx) || !Number.isInteger(currentLevel)) return;
+
+    const clue = pathClues.clues[wordIdx];
+    if (!clue || !Array.isArray(clue.hints)) return;
+    const hint = clue.hints.find(h => h.level === currentLevel);
+    if (!hint) return;
+    if ((hxState.hintsUsed || 0) >= 3) return;
+
+    const state = getHintState(wordIdx);
+    if (!(state.revealedLevels || []).includes(currentLevel)) {
+      state.revealedLevels.push(currentLevel);
+      state.nextLevel = currentLevel + 1;
+    }
+    hxState.hintsUsed = (hxState.hintsUsed || 0) + 1;
+    updateDailyHud();
+  });
 }
 
 /* ── Animate the HUD score counting up from oldScore → newScore ── */
@@ -2120,6 +2257,7 @@ function ensureHud() {
       <div class="hx-daily-hud-row"><span>Word Total</span><strong id="hx-daily-word-total">0</strong></div>
       <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
       <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
+      <div id="hx-daily-clue-container"></div>
       <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
       <button id="hx-daily-reset-btn" type="button">RESET BOARD</button>
     `;
@@ -5521,6 +5659,9 @@ export function startHexacore(mode) {
     dailyFinalScore: 0,
     dailyPenalty: 0,
     dailyTilesUsed: 0,
+    hintsUsed: 0,
+    discoveredOptimalWordIndices: [],
+    dailyHintState: {},
   });
   hxSelected           = [];
   hxPointerDown        = false;
@@ -5700,6 +5841,7 @@ export function startHexacore(mode) {
   updatePowerUpBar();
 
   setupPointerEvents();
+  bindDailyHintHandler();
   playSound('sfxUnlock');
   window.addEventListener('beforeunload', saveHexacoreProgress);
   window.addEventListener('pagehide',     saveHexacoreProgress);
