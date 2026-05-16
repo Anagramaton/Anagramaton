@@ -1379,15 +1379,29 @@ function updateDailyHud() {
   const root = document.getElementById('hx-daily-hud');
   if (!root) return;
 
+  const meta = hxState.dailyMetadata || {};
   const tilesLeft = hxState.tiles.length;
   const wordTotal = getDailyWordTotal();
   const penalty = getDailyUnusedPenalty();
   const preview = Math.max(0, wordTotal - penalty);
+  const isGuaranteed = Boolean(meta.guaranteedFullClearance || meta.fullClear);
+  const attempts = Number(meta.attempts) || 0;
+  const clearance = Number(meta.tileClearancePercent);
 
   document.getElementById('hx-daily-tiles-left')?.replaceChildren(document.createTextNode(String(tilesLeft)));
   document.getElementById('hx-daily-word-total')?.replaceChildren(document.createTextNode(wordTotal.toLocaleString()));
   document.getElementById('hx-daily-penalty')?.replaceChildren(document.createTextNode(penalty.toLocaleString()));
   document.getElementById('hx-daily-preview')?.replaceChildren(document.createTextNode(preview.toLocaleString()));
+  document.getElementById('hx-daily-clearance-guarantee')?.replaceChildren(
+    document.createTextNode(
+      isGuaranteed
+        ? `✅ 61/61${Number.isFinite(clearance) ? ` (${clearance.toFixed(1)}%)` : ''}`
+        : '⚠️ Not guaranteed',
+    ),
+  );
+  document.getElementById('hx-daily-attempts')?.replaceChildren(
+    document.createTextNode(attempts > 0 ? String(attempts) : '—'),
+  );
   syncDiscoveredOptimalWords();
   const clueRoot = document.getElementById('hx-daily-clue-container');
   if (clueRoot) clueRoot.innerHTML = renderOptimalPathClues();
@@ -2257,6 +2271,8 @@ function ensureHud() {
       <div class="hx-daily-hud-row"><span>Word Total</span><strong id="hx-daily-word-total">0</strong></div>
       <div class="hx-daily-hud-row"><span>Penalty</span><strong id="hx-daily-penalty">0</strong></div>
       <div class="hx-daily-hud-row"><span>Final Preview</span><strong id="hx-daily-preview">0</strong></div>
+      <div class="hx-daily-hud-row"><span>Clearance Guarantee</span><strong id="hx-daily-clearance-guarantee">—</strong></div>
+      <div class="hx-daily-hud-row"><span>Generation Attempts</span><strong id="hx-daily-attempts">—</strong></div>
       <div id="hx-daily-clue-container"></div>
       <button id="hx-daily-submit-btn" type="button">SUBMIT DAILY CHALLENGE</button>
       <button id="hx-daily-reset-btn" type="button">RESET BOARD</button>

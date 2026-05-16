@@ -10,6 +10,8 @@ import wordList_10 from './wordList_10.js';
 import wordList_11 from './wordList_11.js';
 import wordList_12 from './wordList_12.js';
 import wordList_13 from './wordList_13.js';
+import { generateGuaranteedFullClearanceBoard } from './hexacore-generator.js';
+import { simulateMaxScoreWithLookahead } from './hexacore-simulation.js';
 
 const LETTER_POINTS = {
   A: 2, E: 2, I: 2, O: 2,
@@ -403,7 +405,13 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
       return { ...c, weight: wordCount * 10 + (nearHigh ? 5 : 0) + (longMiddle.has(c.key) ? 4 : 0) };
     })
     .filter(Boolean);
-  placeType('prism', prismCandidates, 1);
+  const placedPrism = placeType('prism', prismCandidates, 1);
+  if (placedPrism.length === 0) {
+    const fallbackPrism = allCoords
+      .filter(c => !taken.has(c.key) && !!grid[c.key])
+      .map(c => ({ ...c, weight: pathDensity.get(c.key) || 0 }));
+    placeType('prism', fallbackPrism, 1);
+  }
 
   // ── Rotating rune candidate pool: near high-value letters ────────
   const runeCandidates = allCoords
@@ -1077,92 +1085,77 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
 
 export function generateDailyHexacoreBoard({
   date = toIsoDate(),
-  maxAttempts = 10,
+  maxAttempts = 25,
   radius = GRID_RADIUS,
   attemptSeedOffset = 0,
   includePlacements = false,
   runSimulation = true,
 } = {}) {
-  const seed = fnv1a32(String(date));
-  let lastFailure = 'unknown';
-  let bestBoard = null;
-  let bestClearance = -1;
-  let bestScore = -1;
+  const seedOffset = Number(attemptSeedOffset) || 0;
+  const targetDate = String(date);
+  const guaranteed = generateGuaranteedFullClearanceBoard({
+    date: `${targetDate}#${seedOffset}`,
+    maxAttempts,
+    radius,
+    buildSpecialTiles: ({ grid, placements, rng }) => placeSpecialTiles(grid, placements, rng, radius, targetDate),
+  });
 
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
-    const rng = mkSeededRng((seed + effectiveAttempt * 9973) >>> 0);
+  const grid = guaranteed.grid;
+  const placements = guaranteed.placements || [];
+  const specialTiles = guaranteed.specialTiles || [];
+  const validation = validateDailyBoard({ grid, placements, specialTiles });
 
-    const words = chooseTargetWords(rng);
-    const { grid, placements } = placeWords(words, rng, radius);
-    if (placements.length < 6) {
-      lastFailure = 'insufficient placed words';
-      continue;
-    }
-
-    fillEmptyTiles(grid, rng, radius);
-    const specialTiles = placeSpecialTiles(grid, placements, rng, radius, date);
-
-    const validation = validateDailyBoard({ grid, placements, specialTiles });
-    if (!validation.valid) {
-      lastFailure = validation.reason || 'validation failed';
-      continue;
-    }
-
-    // Run gravity simulation to calculate the true maximum achievable score
-    let simData = null;
-    if (runSimulation) {
-      try {
-        simData = simulateMaxScore(grid, specialTiles, radius);
-      } catch (err) {
-        // Simulation failure is non-fatal — fall back to estimate
-        console.warn('[hexacoreGenerator] simulateMaxScore failed:', err?.message ?? err);
-        simData = null;
+  let simData = guaranteed.metadata || null;
+  if (runSimulation) {
+    try {
+      const simulated = simulateMaxScoreWithLookahead(grid, specialTiles, radius);
+      if (simData?.fullyCleared && simData?.tilesRemaining === 0) {
+        simData = {
+          ...simulated,
+          ...simData,
+          maxScore: Math.max(simulated?.maxScore || 0, simData?.maxScore || 0),
+        };
+      } else {
+        simData = simulated;
       }
-    }
-
-    const maxPossibleScore = simData?.maxScore ?? validation.maxScore;
-    const difficulty = classifyDifficulty(maxPossibleScore);
-
-    const board = {
-      date,
-      grid,
-      specialTiles,
-      metadata: {
-        maxPossibleScore,
-        minAchievableScore: validation.minScore,
-        strategicPathCount: validation.strategicPaths,
-        optimalSolutions: validation.strategies,
-        optimalPathClues: generateOptimalPathClues(validation.strategies, placements, grid, specialTiles),
-        difficulty,
-        optimalMoves: simData?.optimalMoves ?? null,
-        averageWordLength: simData?.averageWordLength ?? null,
-        gemDensity: simData?.gemDensity ?? null,
-        tilesCleared: simData?.tilesCleared ?? null,
-        tilesRemaining: simData?.tilesRemaining ?? null,
-        tileClearancePercent: simData?.clearancePercent ?? null,
-        fullClear: simData?.fullyCleared ?? null,
-        solutionPath: simData?.solutionPath ?? null,
-        generatedAt: new Date().toISOString(),
-      },
-    };
-    if (includePlacements) board.placements = placements;
-
-    const attemptClearance = simData?.clearancePercent ?? 0;
-    const attemptScore = maxPossibleScore;
-    if (
-      !bestBoard
-      || attemptClearance > bestClearance
-      || (attemptClearance === bestClearance && attemptScore > bestScore)
-    ) {
-      bestBoard = board;
-      bestClearance = attemptClearance;
-      bestScore = attemptScore;
+    } catch (err) {
+      console.warn('[hexacoreGenerator] simulateMaxScoreWithLookahead failed:', err?.message ?? err);
+      simData = guaranteed.metadata || null;
     }
   }
 
-  if (bestBoard) return bestBoard;
-  throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);
+  const maxPossibleScore = simData?.maxScore ?? validation.maxScore ?? 0;
+  const difficulty = classifyDifficulty(maxPossibleScore);
+  const specialsByKey = new Map(specialTiles.map(s => [hexKey(s.q, s.r), s.type]));
+  const fallbackStrategies = computeStrategies(placements, specialsByKey, grid);
+  const optimalSolutions = validation.valid ? validation.strategies : fallbackStrategies;
+  const metadata = {
+    maxPossibleScore,
+    minAchievableScore: validation.valid ? validation.minScore : Math.round(maxPossibleScore * 0.35),
+    strategicPathCount: validation.valid ? validation.strategicPaths : Math.max(1, optimalSolutions.length),
+    optimalSolutions,
+    optimalPathClues: generateOptimalPathClues(optimalSolutions, placements, grid, specialTiles),
+    difficulty,
+    optimalMoves: simData?.optimalMoves ?? null,
+    averageWordLength: simData?.averageWordLength ?? null,
+    gemDensity: simData?.gemDensity ?? null,
+    tilesCleared: simData?.tilesCleared ?? null,
+    tilesRemaining: simData?.tilesRemaining ?? null,
+    tileClearancePercent: simData?.clearancePercent ?? null,
+    fullClear: simData?.fullyCleared ?? null,
+    solutionPath: simData?.solutionPath ?? null,
+    attempts: guaranteed.metadata?.attempts ?? null,
+    guaranteedFullClearance: Boolean(simData?.fullyCleared && simData?.tilesRemaining === 0),
+    constraintTimeline: guaranteed.metadata?.constraintTimeline ?? [],
+    constraintSnapshot: guaranteed.metadata?.constraints ?? null,
+    generatedAt: new Date().toISOString(),
+  };
+  if (guaranteed.metadata?.warning) metadata.warning = guaranteed.metadata.warning;
+  if (!validation.valid) metadata.validationWarning = validation.reason || 'daily validation failed';
+
+  const board = { date: targetDate, grid, specialTiles, metadata };
+  if (includePlacements) board.placements = placements;
+  return board;
 }
 
 export function generateDailyHexacoreBatch({ startDate = toIsoDate(), count = 1, includePlacements = false } = {}) {

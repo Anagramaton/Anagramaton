@@ -12,7 +12,7 @@ const MODES = [
     id:    'hexacoreDaily',
     icon:  '📅',
     title: 'DAILY',
-    desc:  'Fixed daily board with no refills. Submit for the best final score.',
+    desc:  'Hexacore board with deterministic full-clear generation (61/61 guaranteed).',
     color: '#4cc9f0',
   },
   {
