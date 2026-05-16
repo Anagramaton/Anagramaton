@@ -518,6 +518,8 @@ const MAX_SIMULATION_PATHS = 300;
 
 /** Maximum greedy-play rounds in simulateMaxScore (safety cap). */
 const MAX_SIMULATION_ROUNDS = 25;
+const LOOKAHEAD_DEPTH = 2;
+const MAX_LOOKAHEAD_CANDIDATES = 30;
 
 /** Score thresholds for difficulty classification. */
 const DIFFICULTY_EASY_THRESHOLD   = 15_000;
@@ -688,6 +690,30 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
 }
 
 /**
+ * Evaluates a candidate path with a 2-move lookahead:
+ * current move score + best immediate follow-up move score.
+ */
+function evaluateTwoMoveLookahead(currentPath, simGrid, radius = GRID_RADIUS) {
+  if (LOOKAHEAD_DEPTH <= 1) return currentPath.score;
+
+  const testGrid = {};
+  for (const [key, val] of Object.entries(simGrid)) {
+    testGrid[key] = { ...val };
+  }
+
+  for (const cell of currentPath.path) {
+    delete testGrid[cell.key];
+  }
+  applyGravity(testGrid, radius);
+
+  const followupPaths = findAllValidPaths(testGrid, radius, 50);
+  if (followupPaths.length === 0) return currentPath.score;
+
+  followupPaths.sort((a, b) => b.score - a.score);
+  return currentPath.score + followupPaths[0].score;
+}
+
+/**
  * Simulates a full greedy play-through: on each turn, plays the highest-scoring
  * available word, removes its tiles, applies gravity, then repeats.
  *
@@ -720,9 +746,17 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
     const paths = findAllValidPaths(simGrid, radius);
     if (paths.length === 0) break;
 
-    // Pick the highest-scoring path
+    // Rank by immediate score, then refine top candidates with 2-move lookahead
     paths.sort((a, b) => b.score - a.score);
-    const best = paths[0];
+    const candidateCount = Math.max(1, Math.min(MAX_LOOKAHEAD_CANDIDATES, paths.length));
+    const evaluatedTop = paths.slice(0, candidateCount).map(p => ({
+      ...p,
+      lookaheadScore: evaluateTwoMoveLookahead(p, simGrid, radius),
+    }));
+    const remaining = paths.slice(candidateCount).map(p => ({ ...p, lookaheadScore: p.score }));
+    const allEvaluated = [...evaluatedTop, ...remaining];
+    allEvaluated.sort((a, b) => b.lookaheadScore - a.lookaheadScore || b.score - a.score);
+    const best = allEvaluated[0];
 
     totalScore += best.score;
     solutionPath.push(best.word);
@@ -935,32 +969,40 @@ function generateOptimalPathClues(optimalSolutions, placements, grid, specialTil
   const clues = bestStrategy.words.map((word, idx) => {
     const placement = placements.find(p => p.word === word);
     if (!placement) return null;
+    const upperWord = String(word || '').toUpperCase();
     const estimatedPoints = Math.round(
       placement.estimatedScore
       || estimatePathScore(placement.word, placement.path, specialsByKey)
       || 0,
     );
+    const fallbackLen = Math.max(1, upperWord.length);
 
     return {
       wordIndex: idx + 1,
-      length: word.length,
+      length: upperWord.length,
       estimatedPoints,
-      positional: generatePositionalClue(word, placement.path, grid, specialTiles),
-      category: generateCategoryClue(word),
+      positional: generatePositionalClue(upperWord, placement.path, grid, specialTiles) || `${fallbackLen}-letter word`,
+      category: generateCategoryClue(upperWord) || `A ${fallbackLen}-letter word`,
       hints: [
-        { level: 1, text: generateDefinitionClue(word) },
-        { level: 2, text: generateProgressiveReveal(word, 0) },
-        { level: 3, text: generateProgressiveReveal(word, 1) },
-        { level: 4, text: generateProgressiveReveal(word, 2) },
-        { level: 5, text: generateProgressiveReveal(word, 4) },
+        { level: 1, text: generateDefinitionClue(upperWord) || `Pattern hint: ${fallbackLen} letters` },
+        { level: 2, text: generateProgressiveReveal(upperWord, 0) || `${upperWord[0] || ''}${'_'.repeat(Math.max(0, fallbackLen - 2))}${upperWord.length > 1 ? upperWord[upperWord.length - 1] : ''}` },
+        { level: 3, text: generateProgressiveReveal(upperWord, 1) || `${upperWord.slice(0, 2)}${'_'.repeat(Math.max(0, fallbackLen - 4))}${upperWord.slice(-2)}` },
+        { level: 4, text: generateProgressiveReveal(upperWord, 2) || [...upperWord].map(ch => ('AEIOU'.includes(ch) ? ch : '_')).join('') },
+        { level: 5, text: generateProgressiveReveal(upperWord, 4) || `${upperWord.slice(0, -1)}_` },
       ],
-      features: generateFeatureHints(placement.path, specialTiles),
+      features: generateFeatureHints(placement.path, specialTiles) || [],
+      word: upperWord,
+      path: (placement.path || []).map(c => ({ q: c.q, r: c.r })),
     };
   }).filter(Boolean);
 
+  if (clues.length !== bestStrategy.words.length) {
+    console.warn(`[generateOptimalPathClues] Missing clues: expected ${bestStrategy.words.length}, got ${clues.length}`);
+  }
+
   return {
     strategy: 'optimal',
-    targetScore: bestStrategy.finalScore,
+    targetScore: bestStrategy.finalScore || 0,
     wordCount: bestStrategy.words.length,
     clues,
   };
@@ -1124,6 +1166,21 @@ export function generateDailyHexacoreBoard({
     const maxPossibleScore = simData?.maxScore ?? validation.maxScore;
     const difficulty = classifyDifficulty(maxPossibleScore);
 
+    const optimalPathClues = generateOptimalPathClues(validation.strategies, placements, grid, specialTiles);
+    if (optimalPathClues && optimalPathClues.clues) {
+      const incompleteClues = optimalPathClues.clues.filter(clue => (
+        !clue.word
+        || !clue.path
+        || !clue.hints
+        || clue.hints.length !== 5
+        || !clue.positional
+        || !clue.category
+      ));
+      if (incompleteClues.length > 0) {
+        console.warn(`[generateDailyHexacoreBoard] ${incompleteClues.length} incomplete optimal path clues detected for ${date}`);
+      }
+    }
+
     const board = {
       date,
       grid,
@@ -1133,7 +1190,7 @@ export function generateDailyHexacoreBoard({
         minAchievableScore: validation.minScore,
         strategicPathCount: validation.strategicPaths,
         optimalSolutions: validation.strategies,
-        optimalPathClues: generateOptimalPathClues(validation.strategies, placements, grid, specialTiles),
+        optimalPathClues,
         difficulty,
         optimalMoves: simData?.optimalMoves ?? null,
         averageWordLength: simData?.averageWordLength ?? null,
