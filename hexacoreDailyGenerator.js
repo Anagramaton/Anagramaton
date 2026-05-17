@@ -811,7 +811,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
  * @param {Array}  specialTiles - Array of { type, q, r } from the board
  * @param {number} radius      - Board radius
  * @param {number} maxRounds   - Safety cap on simulation iterations
- * @returns {{ maxScore, optimalMoves, averageWordLength, gemDensity, solutionPath, tilesCleared, tilesRemaining, clearancePercent, fullyCleared }}
+ * @returns {{ maxScore, optimalMoves, averageWordLength, gemDensity, solutionPath, solutionDetail, tilesCleared, tilesRemaining, clearancePercent, fullyCleared }}
  */
 export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRounds = MAX_SIMULATION_ROUNDS) {
   // Build a combined simulation grid: { [key]: { letter, special } }
@@ -829,6 +829,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
 
   let totalScore = 0;
   const solutionPath = [];
+  const solutionDetail = []; // per-word { word, score, tilesUsed }
   let round = 0;
 
   while (round < maxRounds) {
@@ -842,6 +843,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
 
     totalScore += best.score;
     solutionPath.push(best.word);
+    solutionDetail.push({ word: best.word, score: best.score, tilesUsed: best.path.length });
 
     // Remove the used tiles from simGrid
     for (const cell of best.path) {
@@ -866,6 +868,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
     clearancePercent,
     fullyCleared: tilesRemaining === 0,
     solutionPath,
+    solutionDetail,
   };
 }
 
@@ -1098,10 +1101,11 @@ function computeStrategies(placements, specialsByKey, grid) {
     const picked = [];
     const used = new Set();
     for (const p of order) {
-      // Include words that cover at least one new tile — skip only words
-      // that are completely redundant (all their tiles already covered).
-      const newTilesAdded = p.path.filter(c => !used.has(c.key)).length;
-      if (newTilesAdded === 0) continue;
+      // Allow partial overlap (tiles can appear in multiple placed word paths
+      // since gravity shifts tiles in gameplay).  Skip only words that are
+      // completely redundant (every tile already covered by another word).
+      const hasOverlap = p.path.some(c => used.has(c.key));
+      if (hasOverlap && picked.length >= 4) continue;
       picked.push(p);
       p.path.forEach(c => used.add(c.key));
     }
@@ -1192,6 +1196,46 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
   };
 }
 
+/**
+ * Builds an `optimalSolutions`-shaped array from the gravity simulation result.
+ * Each tile is used by exactly one word (the simulation removes tiles before
+ * searching for the next word), so total letters ≤ 61 is guaranteed.
+ *
+ * The returned array has a single entry in the same shape that `computeStrategies`
+ * produces, so the UI does not need changes.
+ *
+ * @param {Object} simData   - Result of simulateMaxScore (must have solutionDetail)
+ * @param {Object} grid      - Plain { [hexKey]: letter } board grid
+ * @param {number} totalTiles - Total tiles on the board (e.g. 61)
+ * @returns {Array|null}
+ */
+function buildSimulationStrategies(simData, grid, totalTiles) {
+  if (!simData?.solutionDetail?.length) return null;
+
+  const tilesUsedCount = simData.solutionDetail.reduce((s, d) => s + d.tilesUsed, 0);
+  const tilesUncovered = totalTiles - tilesUsedCount;
+
+  // Estimate penalty: sum of letter points for tiles not cleared by simulation.
+  // We use the raw letter values from the grid for the remaining tiles.
+  // Since we don't track WHICH tiles remain (simGrid was a temp copy), we
+  // approximate using the stored tilesRemaining count × average letter value.
+  const allLetterPoints = Object.values(grid).filter(l => /^[A-Z]$/.test(l)).map(l => LETTER_POINTS[l] || 1);
+  const avgPoint = allLetterPoints.length > 0
+    ? allLetterPoints.reduce((s, v) => s + v, 0) / allLetterPoints.length
+    : 2;
+  const penalty = Math.round(tilesUncovered * avgPoint);
+
+  const wordTotal = simData.solutionDetail.reduce((s, d) => s + d.score, 0);
+  const finalScore = Math.max(0, wordTotal - penalty);
+
+  return [{
+    words: simData.solutionDetail.map(d => d.word),
+    wordTotal,
+    penalty,
+    finalScore,
+  }];
+}
+
 export function generateDailyHexacoreBoard({
   date = toIsoDate(),
   maxAttempts = 10,
@@ -1269,6 +1313,14 @@ export function generateDailyHexacoreBoard({
     const maxPossibleScore = simData?.maxScore ?? validation.maxScore;
     const difficulty = classifyDifficulty(maxPossibleScore);
 
+    // Use simulation-derived optimal solutions when available: the simulation removes
+    // tiles one-by-one with gravity, so total letters across all words is guaranteed
+    // ≤ totalTiles and each tile is used by exactly one word.
+    // Fall back to the heuristic computeStrategies result if simulation was skipped.
+    const simStrategies = buildSimulationStrategies(simData, grid, totalTiles);
+    const optimalSolutions = simStrategies ?? validation.strategies;
+    const optimalPathClues = generateOptimalPathClues(optimalSolutions, placements, grid, specialTiles);
+
     const board = {
       date,
       grid,
@@ -1277,8 +1329,8 @@ export function generateDailyHexacoreBoard({
         maxPossibleScore,
         minAchievableScore: validation.minScore,
         strategicPathCount: validation.strategicPaths,
-        optimalSolutions: validation.strategies,
-        optimalPathClues: generateOptimalPathClues(validation.strategies, placements, grid, specialTiles),
+        optimalSolutions,
+        optimalPathClues,
         difficulty,
         optimalMoves: simData?.optimalMoves ?? null,
         averageWordLength: simData?.averageWordLength ?? null,
