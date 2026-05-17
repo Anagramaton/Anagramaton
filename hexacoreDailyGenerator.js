@@ -132,14 +132,45 @@ function wordScore(word) {
   return score * Math.max(4, word.length);
 }
 
-function chooseTargetWords(rng) {
-  const candidates = ANAGRAMATON_DICTIONARY.filter(w => {
-    const len = w.length;
-    return len >= 5 && len <= 14 && /^[A-Z]+$/.test(w);
-  });
-  const shuffledCandidates = shuffled(candidates, rng);
-  const shortCount = 2 + Math.floor(rng() * 2);
-  return shuffledCandidates.slice(0, 7 + shortCount);
+/**
+ * Select a set of dictionary words whose letter counts sum to exactly `totalTiles`
+ * (61 for the standard board). Uses seeded-RNG DFS backtracking so the result is
+ * deterministic for a given seed.
+ *
+ * @param {Function} rng        - Seeded RNG (from mkSeededRng)
+ * @param {number}   totalTiles - Target tile count (default 61)
+ * @returns {string[]|null}     - Array of words summing to totalTiles, or null
+ */
+function selectWordSet(rng, totalTiles = 61) {
+  const MIN_WORD  = 5;
+  const MAX_WORD  = 13;
+  const MIN_WORDS = 5;
+  const MAX_WORDS = 11;
+  const POOL_SIZE = 800;
+  const MAX_NODES = 100_000;
+
+  const pool = shuffled(
+    ANAGRAMATON_DICTIONARY.filter(w => w.length >= MIN_WORD && w.length <= MAX_WORD && /^[A-Z]+$/.test(w)),
+    rng,
+  ).slice(0, POOL_SIZE);
+
+  const chosen = [];
+  let nodeCount = 0;
+
+  function dfs(idx, remaining) {
+    if (++nodeCount > MAX_NODES) return false;
+    if (remaining === 0 && chosen.length >= MIN_WORDS) return true;
+    if (remaining < MIN_WORD || chosen.length >= MAX_WORDS || idx >= pool.length) return false;
+    const w = pool[idx];
+    if (w.length <= remaining) {
+      chosen.push(w);
+      if (dfs(idx + 1, remaining - w.length)) return true;
+      chosen.pop();
+    }
+    return dfs(idx + 1, remaining);
+  }
+
+  return dfs(0, totalTiles) ? chosen.slice() : null;
 }
 
 function shuffled(list, rng) {
@@ -151,6 +182,74 @@ function shuffled(list, rng) {
   return arr;
 }
 
+/**
+ * Return a Hamiltonian path through all 61 hex tiles by zigzagging row by row
+ * (snake/boustrophedon traversal). Every consecutive pair is adjacent on the hex
+ * board, so any contiguous slice of this path forms a valid connected word-path.
+ *
+ * The path runs strictly from the top row (r = −radius) to the bottom row
+ * (r = +radius), so slicing it into word-length segments naturally places the
+ * first word at the top and the last word at the bottom — aligning with SE/SW
+ * gravity and ensuring earlier words are cleared before later words fall.
+ *
+ * @param {number}   radius
+ * @param {boolean}  [mirror=false] - If true, reverse the direction of even rows
+ *   to produce a mirrored layout.  Both orientations guarantee adjacency at every
+ *   row-to-row transition.
+ * @returns {Array<{q,r,key}>}
+ */
+function getSnakePath(radius, mirror = false) {
+  const path = [];
+  for (let r = -radius; r <= radius; r++) {
+    const qMin = Math.max(-radius, -r - radius);
+    const qMax = Math.min(radius, -r + radius);
+    const row = [];
+    for (let q = qMin; q <= qMax; q++) row.push({ q, r, key: hexKey(q, r) });
+    // Alternating direction each row so the last tile of row r is adjacent to
+    // the first tile of row r+1.  `mirror` flips the parity so we get a
+    // distinct but equally valid layout.
+    const rowIdx = r + radius;
+    const leftToRight = mirror ? rowIdx % 2 !== 0 : rowIdx % 2 === 0;
+    if (leftToRight) path.push(...row);
+    else path.push(...row.reverse());
+  }
+  return path;
+}
+
+/**
+ * Place a set of words (whose lengths sum to exactly the board tile count) by
+ * slicing the board's Hamiltonian snake-path into consecutive word-length
+ * segments.  Because the path is strictly top-to-bottom, word[0] (played first)
+ * occupies the topmost tiles and word[n-1] (played last) occupies the bottommost
+ * tiles — creating a gravity-natural play order with no filler tiles and no
+ * overlaps.
+ *
+ * @param {string[]} words  - Words in intended play order (words[0] played first)
+ * @param {Function} rng
+ * @param {number}   radius
+ * @returns {{ grid: Object, placements: Array }|null}  null on failure
+ */
+function placeWordSet(words, rng, radius = GRID_RADIUS) {
+  // Use the seeded RNG to choose between the two valid snake orientations so
+  // different date seeds produce distinct tile layouts.
+  const mirror = rng() < 0.5;
+  const snakePath = getSnakePath(radius, mirror);
+
+  const grid = {};
+  const placements = [];
+  let offset = 0;
+
+  for (const word of words) {
+    const segment = snakePath.slice(offset, offset + word.length);
+    if (segment.length < word.length) return null; // defensive: shouldn't happen
+    segment.forEach((cell, i) => { grid[cell.key] = word[i]; });
+    placements.push({ word, path: segment, score: wordScore(word) });
+    offset += word.length;
+  }
+
+  return { grid, placements };
+}
+
 function coordKey(cell) {
   if (cell?.key) return cell.key;
   return hexKey(cell.q, cell.r);
@@ -158,146 +257,6 @@ function coordKey(cell) {
 
 function getAllCoordsWithKeys(radius) {
   return getAllCoords(radius).map(c => ({ ...c, key: coordKey(c) }));
-}
-
-function pathOverlap(path, grid, word) {
-  let overlap = 0;
-  path.forEach((cell, i) => {
-    const existing = grid[coordKey(cell)];
-    if (existing && existing === word[i]) overlap += 1;
-  });
-  return overlap;
-}
-
-function placeWords(words, rng, radius) {
-  const coords = getAllCoords(radius);
-  const totalTiles = coords.length;
-  const grid = {};
-  const placements = [];
-
-  /**
-   * Try to place `word` on the grid using `sampleSize` candidate start positions.
-   * When `forCoverage` is true, 70 % of the sample budget is spent on tiles that
-   * are not yet occupied by any placed word, driving coverage toward uncovered areas.
-   */
-  const tryPlaceWord = (word, sampleSize = 180, forCoverage = false) => {
-    let best = null;
-    let bestMetric = -Infinity;
-
-    let starts;
-    if (forCoverage) {
-      const uncovered = coords.filter(c => !grid[coordKey(c)]);
-      const covered   = coords.filter(c =>  grid[coordKey(c)]);
-      const nUncov    = Math.min(Math.ceil(sampleSize * 0.7), uncovered.length);
-      const nCov      = Math.max(0, sampleSize - nUncov);
-      starts = [
-        ...shuffled(uncovered, rng).slice(0, nUncov),
-        ...shuffled(covered,   rng).slice(0, Math.min(nCov, covered.length)),
-      ];
-    } else {
-      starts = shuffled(coords, rng).slice(0, sampleSize);
-    }
-
-    for (const start of starts) {
-      const path = findPath(
-        grid,
-        word,
-        start.q,
-        start.r,
-        0,
-        new Set(),
-        radius,
-        { allowZigZag: true, preferOverlap: false, maxStraight: 3, wallBuffer: 0, maxEdgeRun: 2 },
-      );
-      if (!path) continue;
-      const normalizedPath = path.map(c => ({ ...c, key: coordKey(c) }));
-
-      const overlap = pathOverlap(normalizedPath, grid, word);
-      const newTiles = normalizedPath.length - overlap;
-      const ringDepths = normalizedPath.map(c => Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)));
-      const maxRing = ringDepths.reduce((m, v) => Math.max(m, v), 0);
-      const minRing = ringDepths.reduce((m, v) => Math.min(m, v), Infinity);
-      const avgRing = ringDepths.reduce((sum, v) => sum + v, 0) / Math.max(1, ringDepths.length);
-      const ringSpread = maxRing - minRing;
-      const metric = (newTiles * 28) + (avgRing * 10) + (ringSpread * 14) - (overlap * 8);
-      if (metric > bestMetric) {
-        bestMetric = metric;
-        best = normalizedPath;
-      }
-    }
-
-    if (!best) return false;
-
-    best.forEach((cell, i) => {
-      grid[coordKey(cell)] = word[i];
-    });
-    placements.push({ word, path: best, score: wordScore(word) });
-    return true;
-  };
-
-  // ── Phase 0: place the chosen target words (longest first) ───────────────────
-  const sortedWords = words.slice().sort((a, b) => b.length - a.length || wordScore(b) - wordScore(a));
-  for (const word of sortedWords) {
-    tryPlaceWord(word, 220);
-  }
-
-  // ── Phase 1: ensure at least 6 placements (original fallback) ────────────────
-  if (placements.length < 6) {
-    const fallback = shuffled(
-      ANAGRAMATON_DICTIONARY.filter(w => w.length >= 5 && w.length <= 8 && /^[A-Z]+$/.test(w)),
-      rng,
-    );
-    for (const word of fallback) {
-      if (placements.length >= 6) break;
-      if (placements.some(p => p.word === word)) continue;
-      tryPlaceWord(word, 120);
-    }
-  }
-
-  // ── Phase 2: coverage completion ─────────────────────────────────────────────
-  // Keep adding words, biased toward uncovered tiles, until every tile on the
-  // board belongs to at least one designed word path (zero orphaned filler tiles).
-  if (Object.keys(grid).length < totalTiles) {
-    const coveragePool = shuffled(
-      ANAGRAMATON_DICTIONARY.filter(w => w.length >= 5 && w.length <= 11 && /^[A-Z]+$/.test(w)),
-      rng,
-    ).slice(0, 1200);
-    for (const word of coveragePool) {
-      if (Object.keys(grid).length >= totalTiles) break;
-      if (placements.some(p => p.word === word)) continue;
-      tryPlaceWord(word, 150, true);
-    }
-  }
-
-  // ── Phase 3: last-resort coverage for stubborn isolated tiles ────────────────
-  // For any tile still uncovered after Phase 2, try every short dictionary word
-  // starting directly at that tile with fully-relaxed path constraints
-  // (no straight-run or wall-proximity limits).  This exhaustive per-tile search
-  // handles corner/edge tiles that the random sampling in Phase 2 misses.
-  if (Object.keys(grid).length < totalTiles) {
-    const lastResortPool = shuffled(
-      ANAGRAMATON_DICTIONARY.filter(w => w.length >= 5 && w.length <= 8 && /^[A-Z]+$/.test(w)),
-      rng,
-    ).slice(0, 800);
-    const relaxedOpts = { allowZigZag: true, preferOverlap: false, maxStraight: 99, wallBuffer: 0, maxEdgeRun: 99 };
-
-    for (const uncovCoord of coords.filter(c => !grid[coordKey(c)])) {
-      if (grid[coordKey(uncovCoord)]) continue; // may have been filled in an earlier iteration
-      for (const word of lastResortPool) {
-        if (placements.some(p => p.word === word)) continue;
-        const path = findPath(grid, word, uncovCoord.q, uncovCoord.r, 0, new Set(), radius, relaxedOpts);
-        if (!path) continue;
-        const normalizedPath = path.map(c => ({ ...c, key: coordKey(c) }));
-        // Only accept paths that actually cover this uncovered tile
-        if (!normalizedPath.some(c => c.key === coordKey(uncovCoord))) continue;
-        normalizedPath.forEach((cell, i) => { grid[coordKey(cell)] = word[i]; });
-        placements.push({ word, path: normalizedPath, score: wordScore(word) });
-        break; // move to next uncovered tile
-      }
-    }
-  }
-
-  return { grid, placements };
 }
 
 /**
@@ -501,18 +460,25 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     return placed;
   };
 
-  // ── 1 · PRISM — highest strategic overlap ────────────────────────
+  // ── 1 · PRISM — strategic tile on a long-word path ──────────────
+  // In solution-first boards each tile belongs to exactly one word, so the old
+  // "multi-word overlap" requirement (wordCount ≥ 2) is replaced by the weaker
+  // "tile is in at least one word's path and is strategically interesting".
   const prismCandidates = allCoords
     .map(c => {
       const wordCount = coordToWords.get(c.key)?.size || 0;
       const n = neighbors(c.q, c.r, radius);
       const nearHigh = n.some(nn => HIGH_VALUE_LETTERS.has(grid[nn.key]));
       const strategic = nearHigh || longMiddle.has(c.key);
-      if (wordCount < 2 || !strategic) return null;
+      if (wordCount < 1 || !strategic) return null;
       return { ...c, weight: wordCount * 10 + (nearHigh ? 5 : 0) + (longMiddle.has(c.key) ? 4 : 0) };
     })
     .filter(Boolean);
-  placeType('prism', prismCandidates, 1);
+  // Fallback: any occupied tile on a long-word path (in case all strategic tiles are taken)
+  const prismFallback = allCoords
+    .map(c => longMiddle.has(c.key) ? { ...c, weight: pathDensity.get(c.key) || 0 } : null)
+    .filter(Boolean);
+  placeType('prism', prismCandidates.length >= 1 ? prismCandidates : prismFallback, 1);
 
   // ── Rotating rune candidate pool: near high-value letters ────────
   const runeCandidates = allCoords
@@ -520,7 +486,9 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
       const n = neighbors(c.q, c.r, radius);
       const nearProblem = n.some(nn => HIGH_VALUE_LETTERS.has(grid[nn.key]));
       const options = n.reduce((acc, nn) => acc + (coordToWords.get(nn.key)?.size || 0), 0);
-      if (!nearProblem || options < 4) return null;
+      // Threshold lowered from 4 to 1: solution-first boards have no multi-word
+      // overlaps so each occupied neighbour contributes at most 1 to options.
+      if (!nearProblem || options < 1) return null;
       return { ...c, weight: options + 10 };
     })
     .filter(Boolean);
@@ -589,26 +557,6 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   }
 
   return specials;
-}
-
-function fillEmptyTiles(grid, rng, radius = GRID_RADIUS) {
-  const coords = getAllCoordsWithKeys(radius);
-  const pool = LETTER_POOL;
-
-  for (const c of coords) {
-    const key = c.key;
-    if (grid[key]) continue;
-
-    const near = neighbors(c.q, c.r, radius);
-    const nearLetters = near.map(n => grid[n.key]).filter(Boolean);
-    const nearVowels = nearLetters.filter(ch => 'AEIOU'.includes(ch)).length;
-
-    let letter = pool[Math.floor(rng() * pool.length)];
-    if (nearVowels === 0 && rng() < 0.75) {
-      letter = ['A', 'E', 'I', 'O', 'U'][Math.floor(rng() * 5)];
-    }
-    grid[key] = letter;
-  }
 }
 
 // ─── Maximum Score Simulation ────────────────────────────────────────────────
@@ -1169,7 +1117,7 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
     const key = hexKey(s.q, s.r);
     const uses = highValueWords.filter(w => w.path.some(c => c.key === key)).length;
     const broadUses = scored.filter(w => w.path.some(c => c.key === key)).length;
-    const minUses = s.type === 'rune' ? 1 : 2;
+    const minUses = 1; // solution-first boards: each tile belongs to one word, so min 1 word uses any given tile
     if (uses < minUses && broadUses < minUses) return { valid: false, reason: `${s.type} lacks multi-word strategic use` };
   }
 
@@ -1253,13 +1201,11 @@ export function generateDailyHexacoreBoard({
   /** Returns true if candidate metrics are strictly better than current best. */
   const isBetterBoard = (candidateMeta) => {
     if (!bestBoardMeta) return true;
-    // Priority 1: full tile coverage (61/61 > anything less)
-    if (candidateMeta.coverage !== bestBoardMeta.coverage) return candidateMeta.coverage > bestBoardMeta.coverage;
-    // Priority 2: gravity-validated play sequence
+    // Priority 1: gravity-validated play sequence (solution-first boards always have 61/61 coverage)
     if (candidateMeta.hasGravity !== bestBoardMeta.hasGravity) return candidateMeta.hasGravity;
-    // Priority 3: simulation clearance %
+    // Priority 2: simulation clearance %
     if (candidateMeta.clearance !== bestBoardMeta.clearance) return candidateMeta.clearance > bestBoardMeta.clearance;
-    // Priority 4: estimated max score
+    // Priority 3: estimated max score
     return candidateMeta.score > bestBoardMeta.score;
   };
 
@@ -1267,22 +1213,34 @@ export function generateDailyHexacoreBoard({
     const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
     const rng = mkSeededRng((seed + effectiveAttempt * 9973) >>> 0);
 
-    const words = chooseTargetWords(rng);
-    const { grid, placements } = placeWords(words, rng, radius);
-    if (placements.length < 6) {
-      lastFailure = 'insufficient placed words';
+    // ── Word selection: pick a set of words whose lengths sum to exactly 61 ─────
+    const words = selectWordSet(rng, totalTiles);
+    if (!words || words.length < 5) {
+      lastFailure = 'no word subset sums to 61 tiles';
       continue;
     }
 
-    // Measure how many of the 61 tiles are covered by designed word paths
-    // (before fillEmptyTiles adds random filler letters to the rest).
-    const wordPathCoverage = Object.keys(grid).length;
-    const fullyCoveredByWords = wordPathCoverage === totalTiles;
-    if (!fullyCoveredByWords) {
-      lastFailure = `incomplete tile coverage: ${wordPathCoverage}/${totalTiles} tiles covered by word paths`;
+    // ── Snake-path word placement: slice a top-to-bottom Hamiltonian path ───────
+    // Words are sorted longest-first (= play order: first word is the longest,
+    // at the top of the board).  The snake path visits all 61 tiles from top
+    // (r = −4) to bottom (r = +4), so slicing it into word-length segments
+    // places the first word at the top and the last word at the bottom.
+    // No filler tiles are needed — word lengths sum to exactly 61.
+    const orderedWords = words.slice().sort((a, b) => b.length - a.length || wordScore(b) - wordScore(a));
+    const placement = placeWordSet(orderedWords, rng, radius);
+    if (!placement) {
+      lastFailure = 'snake-path word placement failed';
+      continue;
+    }
+    const { grid, placements } = placement;
+    if (placements.length < 5) {
+      lastFailure = 'insufficient placements after backwards placement';
+      continue;
     }
 
-    fillEmptyTiles(grid, rng, radius);
+    // By construction: every tile is covered by exactly one word — no filler needed.
+    const wordPathCoverage = Object.keys(grid).length; // always === totalTiles
+    const fullyCoveredByWords = wordPathCoverage === totalTiles;
 
     // Validate that all designed words can be cleared in sequence using correct SE/SW gravity.
     const gravitySequence = findGravityPlaySequence(placements, grid, radius);
