@@ -1145,15 +1145,45 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
 }
 
 /**
+ * Builds an `optimalSolutions`-shaped array directly from the proven
+ * `gravitySequence` (the ordered list of all placed words that can be cleared
+ * one-by-one with correct SE/SW gravity).
+ *
+ * Because `placeWordSet` guarantees Σ word lengths === totalTiles, every tile is
+ * cleared by exactly one word → penalty is always 0.
+ *
+ * @param {string[]} gravitySequence - Ordered play sequence from findGravityPlaySequence
+ * @param {Array}    placements      - Array of { word, path, score } from placeWordSet
+ * @param {Map}      specialsByKey   - Map<hexKey, specialType> for score estimation
+ * @returns {Array|null}
+ */
+function buildGravityStrategies(gravitySequence, placements, specialsByKey) {
+  if (!gravitySequence?.length) return null;
+
+  const wordTotal = gravitySequence.reduce((sum, word) => {
+    const placement = placements.find(p => p.word === word);
+    if (!placement) return sum;
+    return sum + estimatePathScore(word, placement.path, specialsByKey);
+  }, 0);
+
+  // Every tile belongs to exactly one word, so no tiles are left uncleared.
+  const penalty = 0;
+  const finalScore = Math.round(wordTotal);
+
+  return [{
+    words: gravitySequence,
+    wordTotal: Math.round(wordTotal),
+    penalty,
+    finalScore,
+  }];
+}
+
+/**
  * Builds an `optimalSolutions`-shaped array from the gravity simulation result.
- * Each tile is used by exactly one word (the simulation removes tiles before
- * searching for the next word), so total letters ≤ 61 is guaranteed.
+ * Used as a fallback when gravitySequence is unavailable.
  *
- * The returned array has a single entry in the same shape that `computeStrategies`
- * produces, so the UI does not need changes.
- *
- * @param {Object} simData   - Result of simulateMaxScore (must have solutionDetail)
- * @param {Object} grid      - Plain { [hexKey]: letter } board grid
+ * @param {Object} simData    - Result of simulateMaxScore (must have solutionDetail)
+ * @param {Object} grid       - Plain { [hexKey]: letter } board grid
  * @param {number} totalTiles - Total tiles on the board (e.g. 61)
  * @returns {Array|null}
  */
@@ -1164,9 +1194,6 @@ function buildSimulationStrategies(simData, grid, totalTiles) {
   const tilesUncovered = totalTiles - tilesUsedCount;
 
   // Estimate penalty: sum of letter points for tiles not cleared by simulation.
-  // We use the raw letter values from the grid for the remaining tiles.
-  // Since we don't track WHICH tiles remain (simGrid was a temp copy), we
-  // approximate using the stored tilesRemaining count × average letter value.
   const allLetterPoints = Object.values(grid).filter(l => /^[A-Z]$/.test(l)).map(l => LETTER_POINTS[l] || 1);
   const avgPoint = allLetterPoints.length > 0
     ? allLetterPoints.reduce((s, v) => s + v, 0) / allLetterPoints.length
@@ -1271,12 +1298,16 @@ export function generateDailyHexacoreBoard({
     const maxPossibleScore = simData?.maxScore ?? validation.maxScore;
     const difficulty = classifyDifficulty(maxPossibleScore);
 
-    // Use simulation-derived optimal solutions when available: the simulation removes
-    // tiles one-by-one with gravity, so total letters across all words is guaranteed
-    // ≤ totalTiles and each tile is used by exactly one word.
-    // Fall back to the heuristic computeStrategies result if simulation was skipped.
+    // Build the displayed optimal solution from the proven gravitySequence:
+    // gravitySequence is the exact ordered list of all placed words that can be
+    // cleared with correct gravity — penalty is always 0 since placeWordSet
+    // guarantees Σ word lengths === totalTiles.
+    // Fall back to simulation-derived or heuristic strategies only when
+    // gravitySequence is unavailable (shouldn't happen in normal generation).
+    const specialsByKey = new Map((specialTiles || []).map(s => [hexKey(s.q, s.r), s.type]));
+    const gravityStrategies = buildGravityStrategies(gravitySequence, placements, specialsByKey);
     const simStrategies = buildSimulationStrategies(simData, grid, totalTiles);
-    const optimalSolutions = simStrategies ?? validation.strategies;
+    const optimalSolutions = gravityStrategies ?? simStrategies ?? validation.strategies;
     const optimalPathClues = generateOptimalPathClues(optimalSolutions, placements, grid, specialTiles);
 
     const board = {
