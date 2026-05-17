@@ -1,6 +1,5 @@
 import { GRID_RADIUS } from './constants.js';
 import { getAllCoords, hexKey, ADJ_DIRS, isValidCoord } from './gridCoords.js';
-import { findPath } from './pathfinding.js';
 import wordList_4 from './wordList_4.js';
 import wordList_5 from './wordList_5.js';
 import wordList_6 from './wordList_6.js';
@@ -132,16 +131,6 @@ function wordScore(word) {
   return score * Math.max(4, word.length);
 }
 
-function chooseTargetWords(rng) {
-  const candidates = ANAGRAMATON_DICTIONARY.filter(w => {
-    const len = w.length;
-    return len >= 5 && len <= 13 && /^[A-Z]+$/.test(w);
-  });
-  const shuffledCandidates = shuffled(candidates, rng);
-  const shortCount = 2 + Math.floor(rng() * 2);
-  return shuffledCandidates.slice(0, 7 + shortCount);
-}
-
 function shuffled(list, rng) {
   const arr = list.slice();
   for (let i = arr.length - 1; i > 0; i--) {
@@ -160,80 +149,50 @@ function getAllCoordsWithKeys(radius) {
   return getAllCoords(radius).map(c => ({ ...c, key: coordKey(c) }));
 }
 
-function pathOverlap(path, grid, word) {
-  let overlap = 0;
-  path.forEach((cell, i) => {
-    const existing = grid[coordKey(cell)];
-    if (existing && existing === word[i]) overlap += 1;
-  });
-  return overlap;
-}
-
-function placeWords(words, rng, radius) {
-  const coords = getAllCoords(radius);
+function generateLetterGrid(rng, radius = GRID_RADIUS) {
+  const coords = shuffled(getAllCoordsWithKeys(radius), rng);
   const grid = {};
-  const placements = [];
+  for (const c of coords) {
+    grid[c.key] = LETTER_POOL[Math.floor(rng() * LETTER_POOL.length)];
+  }
 
-  const tryPlaceWord = (word, sampleSize = 180) => {
-    let best = null;
-    let bestMetric = -Infinity;
+  const vowels = ['A', 'E', 'I', 'O', 'U'];
+  const consonants = ['R', 'S', 'T', 'L', 'N', 'D', 'H', 'G', 'Y', 'C', 'M', 'P'];
+  const isVowel = letter => vowels.includes(letter);
+  const minVowels = Math.floor(coords.length * 0.30);
+  const maxVowels = Math.ceil(coords.length * 0.44);
 
-    const starts = shuffled(coords, rng).slice(0, sampleSize);
-    for (const start of starts) {
-      const path = findPath(
-        grid,
-        word,
-        start.q,
-        start.r,
-        0,
-        new Set(),
-        radius,
-        { allowZigZag: true, preferOverlap: false, maxStraight: 3, wallBuffer: 0, maxEdgeRun: 2 },
-      );
-      if (!path) continue;
-      const normalizedPath = path.map(c => ({ ...c, key: coordKey(c) }));
-
-      const overlap = pathOverlap(normalizedPath, grid, word);
-      const newTiles = normalizedPath.length - overlap;
-      const ringDepths = normalizedPath.map(c => Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)));
-      const maxRing = ringDepths.reduce((m, v) => Math.max(m, v), 0);
-      const minRing = ringDepths.reduce((m, v) => Math.min(m, v), Infinity);
-      const avgRing = ringDepths.reduce((sum, v) => sum + v, 0) / Math.max(1, ringDepths.length);
-      const ringSpread = maxRing - minRing;
-      const metric = (newTiles * 28) + (avgRing * 10) + (ringSpread * 14) - (overlap * 8);
-      if (metric > bestMetric) {
-        bestMetric = metric;
-        best = normalizedPath;
+  const adjustVowelBalance = () => {
+    let vowelCount = coords.reduce((sum, c) => sum + (isVowel(grid[c.key]) ? 1 : 0), 0);
+    if (vowelCount < minVowels) {
+      const toConvert = shuffled(coords.filter(c => !isVowel(grid[c.key])), rng);
+      while (vowelCount < minVowels && toConvert.length > 0) {
+        const c = toConvert.pop();
+        grid[c.key] = vowels[Math.floor(rng() * vowels.length)];
+        vowelCount += 1;
+      }
+    } else if (vowelCount > maxVowels) {
+      const toConvert = shuffled(coords.filter(c => isVowel(grid[c.key])), rng);
+      while (vowelCount > maxVowels && toConvert.length > 0) {
+        const c = toConvert.pop();
+        grid[c.key] = consonants[Math.floor(rng() * consonants.length)];
+        vowelCount -= 1;
       }
     }
-
-    if (!best) return false;
-
-    best.forEach((cell, i) => {
-      grid[coordKey(cell)] = word[i];
-    });
-    placements.push({ word, path: best, score: wordScore(word) });
-    return true;
   };
 
-  const sortedWords = words.slice().sort((a, b) => b.length - a.length || wordScore(b) - wordScore(a));
-  for (const word of sortedWords) {
-    tryPlaceWord(word, 220);
-  }
+  adjustVowelBalance();
 
-  if (placements.length < 6) {
-    const fallback = shuffled(
-      ANAGRAMATON_DICTIONARY.filter(w => w.length >= 5 && w.length <= 8 && /^[A-Z]+$/.test(w)),
-      rng,
-    );
-    for (const word of fallback) {
-      if (placements.length >= 6) break;
-      if (placements.some(p => p.word === word)) continue;
-      tryPlaceWord(word, 120);
+  for (const c of coords) {
+    const near = neighbors(c.q, c.r, radius);
+    const nearLetters = near.map(n => grid[n.key]).filter(Boolean);
+    const nearVowels = nearLetters.filter(isVowel).length;
+    if (nearVowels === 0 && !isVowel(grid[c.key]) && rng() < 0.35) {
+      grid[c.key] = vowels[Math.floor(rng() * vowels.length)];
     }
   }
-
-  return { grid, placements };
+  adjustVowelBalance();
+  return grid;
 }
 
 function neighbors(q, r, radius) {
@@ -245,22 +204,6 @@ function neighbors(q, r, radius) {
     result.push({ q: nq, r: nr, key: hexKey(nq, nr) });
   }
   return result;
-}
-
-function buildCoordStats(placements) {
-  const coordToWords = new Map();
-  const longMiddle = new Set();
-
-  placements.forEach((p, idx) => {
-    p.path.forEach((c, i) => {
-      const key = c.key;
-      if (!coordToWords.has(key)) coordToWords.set(key, new Set());
-      coordToWords.get(key).add(idx);
-      if (p.word.length >= 9 && i >= 2 && i <= p.path.length - 3) longMiddle.add(key);
-    });
-  });
-
-  return { coordToWords, longMiddle };
 }
 
 function getCoordsWithinRadius(center, radius, boardRadius) {
@@ -276,12 +219,13 @@ function getCoordsWithinRadius(center, radius, boardRadius) {
   return out;
 }
 
-function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '') {
+function placeSpecialTiles(grid, rng, radius = GRID_RADIUS, date = '') {
   const specials = [];
   const taken = new Set();
-  const { coordToWords, longMiddle } = buildCoordStats(placements);
-
   const allCoords = getAllCoordsWithKeys(radius);
+  const dateSeed = fnv1a32(String(date || ''));
+  const isVowel = ch => 'AEIOU'.includes(ch || '');
+  const ringDepth = c => Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r));
 
   // ── PORTALS: placed FIRST so no other tile type can occupy these positions ──
   // Pick one entry and one exit at random from the fixed perimeter pools.
@@ -298,12 +242,17 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     taken.add(hexKey(chosenExit.q, chosenExit.r));
   }
 
-  const pathDensity = new Map();
+  const localDensity = new Map();
+  const localVowels = new Map();
+  const nearHighValue = new Map();
   for (const c of allCoords) {
     const n = neighbors(c.q, c.r, radius);
-    let density = (coordToWords.get(c.key)?.size || 0);
-    n.forEach(nn => { density += (coordToWords.get(nn.key)?.size || 0); });
-    pathDensity.set(c.key, density);
+    const around = [c, ...n];
+    const vowelCount = around.reduce((sum, cell) => sum + (isVowel(grid[cell.key]) ? 1 : 0), 0);
+    const highCount = around.reduce((sum, cell) => sum + (HIGH_VALUE_LETTERS.has(grid[cell.key]) ? 1 : 0), 0);
+    localVowels.set(c.key, vowelCount);
+    nearHighValue.set(c.key, highCount);
+    localDensity.set(c.key, around.length + (radius - ringDepth(c)));
   }
 
   const placeType = (type, candidates, count, extra = {}) => {
@@ -324,15 +273,15 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     return placed;
   };
 
-  // ── 1 · PRISM — highest strategic overlap ────────────────────────
+  // ── 1 · PRISM — central/high-connectivity anchor ──────────────────
   const prismCandidates = allCoords
     .map(c => {
-      const wordCount = coordToWords.get(c.key)?.size || 0;
-      const n = neighbors(c.q, c.r, radius);
-      const nearHigh = n.some(nn => HIGH_VALUE_LETTERS.has(grid[nn.key]));
-      const strategic = nearHigh || longMiddle.has(c.key);
-      if (wordCount < 2 || !strategic) return null;
-      return { ...c, weight: wordCount * 10 + (nearHigh ? 5 : 0) + (longMiddle.has(c.key) ? 4 : 0) };
+      const ring = ringDepth(c);
+      if (ring > radius - 1) return null;
+      return {
+        ...c,
+        weight: ((radius - ring) * 10) + (localDensity.get(c.key) || 0) + (localVowels.get(c.key) || 0),
+      };
     })
     .filter(Boolean);
   placeType('prism', prismCandidates, 1);
@@ -340,53 +289,40 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   // ── Rotating rune candidate pool: near high-value letters ────────
   const runeCandidates = allCoords
     .map(c => {
-      const n = neighbors(c.q, c.r, radius);
-      const nearProblem = n.some(nn => HIGH_VALUE_LETTERS.has(grid[nn.key]));
-      const options = n.reduce((acc, nn) => acc + (coordToWords.get(nn.key)?.size || 0), 0);
-      if (!nearProblem || options < 4) return null;
-      return { ...c, weight: options + 10 };
+      const highNear = nearHighValue.get(c.key) || 0;
+      if (highNear <= 0) return null;
+      return { ...c, weight: (highNear * 20) + (localDensity.get(c.key) || 0) };
     })
     .filter(Boolean);
   // ── Rotating gem candidate pool ───────────────────────────────────
-  const vowelRichness = (coord) => {
-    const around = getCoordsWithinRadius(coord, 2, radius);
-    let vowels = 0;
-    around.forEach(c => { if ('AEIOU'.includes(grid[c.key] || '')) vowels += 1; });
-    return vowels;
-  };
-
-  const longPathCoords = new Set();
-  const mediumPathCoords = new Set();
-  placements.forEach(p => {
-    if (p.word.length >= 7) p.path.forEach(c => longPathCoords.add(c.key));
-    if (p.word.length >= 6) p.path.forEach(c => mediumPathCoords.add(c.key));
-  });
+  const vowelRichness = coord => getCoordsWithinRadius(coord, 2, radius)
+    .reduce((sum, cell) => sum + (isVowel(grid[cell.key]) ? 1 : 0), 0);
 
   const gemCandidates = allCoords.map(c => {
     const key = c.key;
-    const wc7 = placements.filter(p => p.word.length >= 7 && p.path.some(pc => pc.key === key)).length;
-    const wc6 = placements.filter(p => p.word.length >= 6 && p.path.some(pc => pc.key === key)).length;
+    const ring = ringDepth(c);
     return {
       ...c,
-      wc7,
-      wc6,
       vowels: vowelRichness(c),
-      density: pathDensity.get(key) || 0,
-      inLong: longPathCoords.has(key),
-      inMedium: mediumPathCoords.has(key),
+      density: localDensity.get(key) || 0,
+      ring,
+      highNear: nearHighValue.get(key) || 0,
     };
   });
 
   // ── ROTATE 1 EMERALD OR 1 GOLD ────────────────────────────────────
-  const chosenGem = shuffled(DAILY_ROTATING_GEM_TYPES, rng)[0];
+  const chosenGem = DAILY_ROTATING_GEM_TYPES[dateSeed % DAILY_ROTATING_GEM_TYPES.length];
   const chosenGemMultiplier = GEM_MULTIPLIERS[chosenGem] || 1;
   const gemPlacementCandidates = gemCandidates
-    .map(c => ({ ...c, weight: c.density * chosenGemMultiplier + c.vowels + (c.inLong ? 8 : 0) + (c.inMedium ? 4 : 0) }));
+    .map(c => ({
+      ...c,
+      weight: (c.density * chosenGemMultiplier) + c.vowels + ((radius - c.ring) * 5) + c.highNear,
+    }));
   placeType(chosenGem, gemPlacementCandidates, 1);
 
   // ── ROTATE 1 RUNE OR 1 AMETHYST ───────────────────────────────────
-  const chosenRotatingSpecial = shuffled(DAILY_ROTATING_RUNE_TYPES, rng)[0];
-  const denseCandidates = allCoords.map(c => ({ ...c, weight: pathDensity.get(c.key) || 0 }));
+  const chosenRotatingSpecial = DAILY_ROTATING_RUNE_TYPES[(dateSeed >>> 1) % DAILY_ROTATING_RUNE_TYPES.length];
+  const denseCandidates = allCoords.map(c => ({ ...c, weight: localDensity.get(c.key) || 0 }));
   if (chosenRotatingSpecial === 'rune') {
     placeType('rune', runeCandidates.length >= 1 ? runeCandidates : denseCandidates, 1);
   } else {
@@ -398,9 +334,9 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
   const shuffledDigraphs = shuffled(DAILY_DIGRAPH_OPTIONS, rng);
   const digraphCandidates = allCoords.map(c => ({
     ...c,
-    weight: (longPathCoords.has(c.key) ? 14 : 0) + (pathDensity.get(c.key) || 0),
+    weight: (localDensity.get(c.key) || 0) + (isVowel(grid[c.key]) ? 0 : 3) + ((radius - ringDepth(c)) * 2),
   }));
-  const strategicDigraphSlots = digraphCandidates.filter(c => c.weight > 0).length;
+  const strategicDigraphSlots = digraphCandidates.filter(c => c.weight > 2).length;
   const maxDigraphCount = Math.min(DAILY_MAX_DIGRAPHS, shuffledDigraphs.length, Math.max(0, strategicDigraphSlots));
   const minDigraphCount = Math.min(3, maxDigraphCount);
   const digraphCount = maxDigraphCount > 0
@@ -939,8 +875,28 @@ function computeStrategies(placements, specialsByKey, grid) {
   return strategies.slice(0, 3);
 }
 
-export function validateDailyBoard({ grid, placements, specialTiles }) {
-  const specialsByKey = new Map(specialTiles.map(s => [hexKey(s.q, s.r), s.type]));
+export function validateDailyBoard({ grid, specialTiles, radius = GRID_RADIUS }) {
+  const allCoords = getAllCoordsWithKeys(radius);
+  for (const c of allCoords) {
+    const letter = grid[c.key];
+    if (!/^[A-Z]$/.test(letter || '')) {
+      return { valid: false, reason: `invalid or missing tile letter at ${c.key}` };
+    }
+  }
+
+  if (Object.keys(grid).length !== allCoords.length) {
+    return { valid: false, reason: `expected ${allCoords.length} filled tiles, got ${Object.keys(grid).length}` };
+  }
+
+  const occupiedSpecialKeys = new Set();
+  for (const s of specialTiles) {
+    if (!isValidCoord(s.q, s.r, radius)) return { valid: false, reason: `special tile out of bounds: ${s.type}` };
+    const key = hexKey(s.q, s.r);
+    if (!grid[key]) return { valid: false, reason: `special tile on empty coordinate: ${s.type}` };
+    if (occupiedSpecialKeys.has(key)) return { valid: false, reason: `multiple specials on same tile: ${key}` };
+    occupiedSpecialKeys.add(key);
+  }
+
   const typeCounts = new Map();
   specialTiles.forEach(s => typeCounts.set(s.type, (typeCounts.get(s.type) || 0) + 1));
 
@@ -965,42 +921,8 @@ export function validateDailyBoard({ grid, placements, specialTiles }) {
     return { valid: false, reason: 'duplicate digraph on board' };
   }
 
-  const scored = placements.map(p => ({ ...p, estimatedScore: estimatePathScore(p.word, p.path, specialsByKey) }));
-  scored.sort((a, b) => b.estimatedScore - a.estimatedScore);
-  if (scored.length < 3) return { valid: false, reason: 'not enough placed strategic words' };
-
-  const medianIdx = Math.floor(scored.length / 2);
-  const highValueCut = scored[medianIdx]?.estimatedScore || 0;
-  const highValueWords = scored.filter(s => s.word.length >= 7 || s.estimatedScore >= highValueCut);
-
-  for (const s of specialTiles.filter(x => x.type === 'prism' || x.type === 'rune')) {
-    const key = hexKey(s.q, s.r);
-    const uses = highValueWords.filter(w => w.path.some(c => c.key === key)).length;
-    const broadUses = scored.filter(w => w.path.some(c => c.key === key)).length;
-    const minUses = s.type === 'rune' ? 1 : 2;
-    if (uses < minUses && broadUses < minUses) return { valid: false, reason: `${s.type} lacks multi-word strategic use` };
-  }
-
-  const maxScore = Math.round(scored.slice(0, 3).reduce((sum, p) => sum + p.estimatedScore, 0) * MAX_SCORE_ESTIMATE_MULTIPLIER);
-  const minScore = Math.round(scored.slice(0, 1).reduce((sum, p) => sum + p.estimatedScore, 0) * MIN_SCORE_ESTIMATE_MULTIPLIER);
-
-  const nearOptimal = Math.max(3, scored.filter(s => s.estimatedScore >= scored[0].estimatedScore * 0.65).length);
-
-  const highTier = specialTiles.filter(s => HIGH_TIER_GEMS.has(s.type));
-  for (const gem of highTier) {
-    const key = hexKey(gem.q, gem.r);
-    const reachable = placements.some(p => p.word.length >= 7 && p.path.some(c => c.key === key));
-    if (!reachable) return { valid: false, reason: `${gem.type} unreachable by 7+ path` };
-  }
-
-  const strategies = computeStrategies(placements, specialsByKey, grid);
-
   return {
     valid: true,
-    strategicPaths: nearOptimal,
-    maxScore,
-    minScore,
-    strategies,
   };
 }
 
@@ -1022,17 +944,10 @@ export function generateDailyHexacoreBoard({
     const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
     const rng = mkSeededRng((seed + effectiveAttempt * 9973) >>> 0);
 
-    const words = chooseTargetWords(rng);
-    const { grid, placements } = placeWords(words, rng, radius);
-    if (placements.length < 6) {
-      lastFailure = 'insufficient placed words';
-      continue;
-    }
+    const grid = generateLetterGrid(rng, radius);
+    const specialTiles = placeSpecialTiles(grid, rng, radius, date);
 
-    fillEmptyTiles(grid, rng, radius);
-    const specialTiles = placeSpecialTiles(grid, placements, rng, radius, date);
-
-    const validation = validateDailyBoard({ grid, placements, specialTiles });
+    const validation = validateDailyBoard({ grid, specialTiles, radius });
     if (!validation.valid) {
       lastFailure = validation.reason || 'validation failed';
       continue;
@@ -1050,7 +965,7 @@ export function generateDailyHexacoreBoard({
       }
     }
 
-    const maxPossibleScore = simData?.maxScore ?? validation.maxScore;
+    const maxPossibleScore = simData?.maxScore ?? 0;
     const difficulty = classifyDifficulty(maxPossibleScore);
 
     const board = {
@@ -1059,10 +974,6 @@ export function generateDailyHexacoreBoard({
       specialTiles,
       metadata: {
         maxPossibleScore,
-        minAchievableScore: validation.minScore,
-        strategicPathCount: validation.strategicPaths,
-        optimalSolutions: validation.strategies,
-        optimalPathClues: generateOptimalPathClues(validation.strategies, placements, grid, specialTiles),
         difficulty,
         optimalMoves: simData?.optimalMoves ?? null,
         averageWordLength: simData?.averageWordLength ?? null,
@@ -1075,7 +986,7 @@ export function generateDailyHexacoreBoard({
         generatedAt: new Date().toISOString(),
       },
     };
-    if (includePlacements) board.placements = placements;
+    if (includePlacements) board.placements = [];
 
     const attemptClearance = simData?.clearancePercent ?? 0;
     const attemptScore = maxPossibleScore;
