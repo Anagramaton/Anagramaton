@@ -1,6 +1,7 @@
 import { GRID_RADIUS } from './constants.js';
 import { getAllCoords, hexKey, ADJ_DIRS, isValidCoord } from './gridCoords.js';
 import { findPath } from './pathfinding.js';
+import wordList_4 from './wordList_4.js';
 import wordList_5 from './wordList_5.js';
 import wordList_6 from './wordList_6.js';
 import wordList_7 from './wordList_7.js';
@@ -10,6 +11,9 @@ import wordList_10 from './wordList_10.js';
 import wordList_11 from './wordList_11.js';
 import wordList_12 from './wordList_12.js';
 import wordList_13 from './wordList_13.js';
+import wordList_14 from './wordList_14.js';
+import wordList_15 from './wordList_15.js';
+import wordList_16plus from './wordList_16plus.js';
 
 const LETTER_POINTS = {
   A: 2, E: 2, I: 2, O: 2,
@@ -115,96 +119,27 @@ export function mkSeededRng(seed) {
   return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 0x100000000;
 }
 
+const ANAGRAMATON_DICTIONARY = [
+  ...wordList_4, ...wordList_5, ...wordList_6, ...wordList_7,
+  ...wordList_8, ...wordList_9, ...wordList_10, ...wordList_11,
+  ...wordList_12, ...wordList_13, ...wordList_14, ...wordList_15,
+  ...wordList_16plus,
+].map(w => String(w || '').toUpperCase());
+
 function wordScore(word) {
   let score = 0;
   for (const ch of word) score += LETTER_POINTS[ch] || 1;
   return score * Math.max(4, word.length);
 }
 
-function makeRanked(words, minLen, maxLen) {
-  const uniq = new Set();
-  const out = [];
-  for (const raw of words) {
-    const w = String(raw || '').toUpperCase();
-    if (w.length < minLen || w.length > maxLen) continue;
-    if (!/^[A-Z]+$/.test(w)) continue;
-    if (uniq.has(w)) continue;
-    uniq.add(w);
-    out.push({ word: w, score: wordScore(w) });
-  }
-  out.sort((a, b) => b.score - a.score);
-  return out;
-}
-
-const SHORT_RANKED = makeRanked([...wordList_5, ...wordList_6], 5, 6);
-const MEDIUM_RANKED = makeRanked([...wordList_7, ...wordList_8], 7, 8);
-const LONG_RANKED = makeRanked([...wordList_9, ...wordList_10, ...wordList_11, ...wordList_12, ...wordList_13], 9, 13);
-
-function pickWordGroup(rng, ranked, count, window = 600) {
-  const result = [];
-  const used = new Set();
-  const maxIdx = Math.min(window, ranked.length);
-  while (result.length < count && used.size < maxIdx) {
-    const idx = Math.floor(rng() * maxIdx);
-    if (used.has(idx)) continue;
-    used.add(idx);
-    result.push(ranked[idx].word);
-  }
-  return result;
-}
-
-function wordClearancePotential(word, usedLetters = new Set()) {
-  const letters = [...word];
-  const uniqueLetters = new Set(letters);
-  let freshLetters = 0;
-  uniqueLetters.forEach(ch => { if (!usedLetters.has(ch)) freshLetters += 1; });
-  const vowelCount = letters.reduce((sum, ch) => sum + ('AEIOU'.includes(ch) ? 1 : 0), 0);
-  const rareCount = letters.reduce((sum, ch) => sum + (HIGH_VALUE_LETTERS.has(ch) ? 1 : 0), 0);
-  const balancedVowels = vowelCount >= 2 && vowelCount <= Math.ceil(word.length / 2) ? 8 : 0;
-  return (word.length * 12) + (uniqueLetters.size * 5) + (freshLetters * 11) + balancedVowels - (rareCount * 6);
-}
-
-function pickCoverageWordGroup(rng, ranked, count, window, selectedWords, usedLetters) {
-  const maxIdx = Math.min(window, ranked.length);
-  const candidates = shuffled(ranked.slice(0, maxIdx), rng)
-    .filter(entry => !selectedWords.has(entry.word))
-    .map(entry => ({
-      word: entry.word,
-      metric: wordClearancePotential(entry.word, usedLetters) + entry.score * 0.03,
-    }))
-    .sort((a, b) => b.metric - a.metric);
-
-  const picks = [];
-  for (const item of candidates) {
-    if (picks.length >= count) break;
-    picks.push(item.word);
-    selectedWords.add(item.word);
-    [...item.word].forEach(ch => usedLetters.add(ch));
-  }
-  return picks;
-}
-
 function chooseTargetWords(rng) {
+  const candidates = ANAGRAMATON_DICTIONARY.filter(w => {
+    const len = w.length;
+    return len >= 5 && len <= 13 && /^[A-Z]+$/.test(w);
+  });
+  const shuffledCandidates = shuffled(candidates, rng);
   const shortCount = 2 + Math.floor(rng() * 2);
-  const selectedWords = new Set();
-  const usedLetters = new Set();
-  const words = [
-    ...pickCoverageWordGroup(rng, LONG_RANKED, 2, 1400, selectedWords, usedLetters),
-    ...pickCoverageWordGroup(rng, MEDIUM_RANKED, 3, 1800, selectedWords, usedLetters),
-    ...pickCoverageWordGroup(rng, SHORT_RANKED, shortCount, 2400, selectedWords, usedLetters),
-  ];
-
-  if (words.length < 8) {
-    const fallbackPools = shuffled([...LONG_RANKED, ...MEDIUM_RANKED, ...SHORT_RANKED], rng);
-    for (const entry of fallbackPools) {
-      if (words.length >= 8) break;
-      if (selectedWords.has(entry.word)) continue;
-      words.push(entry.word);
-      selectedWords.add(entry.word);
-    }
-  }
-
-  return words.slice(0, 8);
+  return shuffledCandidates.slice(0, 7 + shortCount);
 }
 
 function shuffled(list, rng) {
@@ -288,10 +223,7 @@ function placeWords(words, rng, radius) {
 
   if (placements.length < 6) {
     const fallback = shuffled(
-      [
-        ...SHORT_RANKED.slice(0, 500).map(x => x.word),
-        ...MEDIUM_RANKED.slice(0, 300).map(x => x.word),
-      ],
+      ANAGRAMATON_DICTIONARY.filter(w => w.length >= 5 && w.length <= 8 && /^[A-Z]+$/.test(w)),
       rng,
     );
     for (const word of fallback) {
@@ -527,19 +459,16 @@ const DIFFICULTY_HARD_THRESHOLD   = 50_000;
 function getSimTrie() {
   if (_simTrie) return _simTrie;
   const trie = Object.create(null);
-  const LISTS = [wordList_5, wordList_6, wordList_7, wordList_8, wordList_9, wordList_10, wordList_11];
-  for (const list of LISTS) {
-    for (const rawWord of list) {
-      const word = String(rawWord).toUpperCase();
-      if (word.length < SIM_MIN_LEN || word.length > SIM_MAX_LEN) continue;
-      if (!/^[A-Z]+$/.test(word)) continue;
-      let node = trie;
-      for (const ch of word) {
-        if (!node[ch]) node[ch] = Object.create(null);
-        node = node[ch];
-      }
-      node.$ = word;
+  for (const rawWord of ANAGRAMATON_DICTIONARY) {
+    const word = String(rawWord).toUpperCase();
+    if (word.length < SIM_MIN_LEN || word.length > SIM_MAX_LEN) continue;
+    if (!/^[A-Z]+$/.test(word)) continue;
+    let node = trie;
+    for (const ch of word) {
+      if (!node[ch]) node[ch] = Object.create(null);
+      node = node[ch];
     }
+    node.$ = word;
   }
   _simTrie = trie;
   return trie;
