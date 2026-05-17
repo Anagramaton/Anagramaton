@@ -182,72 +182,237 @@ function shuffled(list, rng) {
   return arr;
 }
 
-/**
- * Return a Hamiltonian path through all 61 hex tiles by zigzagging row by row
- * (snake/boustrophedon traversal). Every consecutive pair is adjacent on the hex
- * board, so any contiguous slice of this path forms a valid connected word-path.
- *
- * The path runs strictly from the top row (r = −radius) to the bottom row
- * (r = +radius), so slicing it into word-length segments naturally places the
- * first word at the top and the last word at the bottom — aligning with SE/SW
- * gravity and ensuring earlier words are cleared before later words fall.
- *
- * @param {number}   radius
- * @param {boolean}  [mirror=false] - If true, reverse the direction of even rows
- *   to produce a mirrored layout.  Both orientations guarantee adjacency at every
- *   row-to-row transition.
- * @returns {Array<{q,r,key}>}
- */
-function getSnakePath(radius, mirror = false) {
-  const path = [];
-  for (let r = -radius; r <= radius; r++) {
-    const qMin = Math.max(-radius, -r - radius);
-    const qMax = Math.min(radius, -r + radius);
-    const row = [];
-    for (let q = qMin; q <= qMax; q++) row.push({ q, r, key: hexKey(q, r) });
-    // Alternating direction each row so the last tile of row r is adjacent to
-    // the first tile of row r+1.  `mirror` flips the parity so we get a
-    // distinct but equally valid layout.
-    const rowIdx = r + radius;
-    const leftToRight = mirror ? rowIdx % 2 !== 0 : rowIdx % 2 === 0;
-    if (leftToRight) path.push(...row);
-    else path.push(...row.reverse());
+function edgeDepth(q, r, radius) {
+  return radius - Math.max(Math.abs(q), Math.abs(r), Math.abs(q + r));
+}
+
+function rngShuffle(list, rng) {
+  const arr = list.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return path;
+  return arr;
+}
+
+function buildNeighborMap(coords, radius) {
+  const map = new Map();
+  for (const c of coords) {
+    const list = [];
+    for (let dirIdx = 0; dirIdx < ADJ_DIRS.length; dirIdx++) {
+      const [dq, dr] = ADJ_DIRS[dirIdx];
+      const nq = c.q + dq;
+      const nr = c.r + dr;
+      if (!isValidCoord(nq, nr, radius)) continue;
+      list.push({ q: nq, r: nr, key: hexKey(nq, nr), dirIdx });
+    }
+    map.set(c.key, list);
+  }
+  return map;
+}
+
+function collectPathCandidates({
+  availableSet,
+  allCoords,
+  neighborsByKey,
+  radius,
+  rng,
+  length,
+  targetR,
+  prevMeanR = null,
+  maxCandidates = 12,
+  maxNodes = 12000,
+}) {
+  if (length <= 0 || availableSet.size < length) return [];
+  const MAX_STRAIGHT = 4;
+  const WALL_BUFFER = 1;
+  const MAX_WALL_RUN = 99;
+  const candidates = [];
+  let nodeCount = 0;
+
+  const starts = rngShuffle(
+    allCoords.filter(c => availableSet.has(c.key)),
+    rng,
+  ).sort((a, b) => {
+    const aPrevPenalty = prevMeanR == null || a.r >= prevMeanR ? 0 : (prevMeanR - a.r);
+    const bPrevPenalty = prevMeanR == null || b.r >= prevMeanR ? 0 : (prevMeanR - b.r);
+    return (Math.abs(a.r - targetR) + aPrevPenalty) - (Math.abs(b.r - targetR) + bPrevPenalty);
+  });
+
+  const dfs = (path, visited, current, prevDirIdx, straightRun, wallRun) => {
+    if (candidates.length >= maxCandidates || nodeCount >= maxNodes) return;
+    nodeCount++;
+
+    if (path.length === length) {
+      candidates.push(path.slice());
+      return;
+    }
+
+    const currentDepth = edgeDepth(current.q, current.r, radius);
+    const options = [];
+    for (const n of neighborsByKey.get(current.key) || []) {
+      if (!availableSet.has(n.key) || visited.has(n.key)) continue;
+      const isStraight = prevDirIdx !== null && n.dirIdx === prevDirIdx;
+      if (isStraight && straightRun >= MAX_STRAIGHT) continue;
+
+      const nDepth = edgeDepth(n.q, n.r, radius);
+      const nearWall = nDepth <= WALL_BUFFER;
+      const nextWallRun = nearWall ? wallRun + 1 : 0;
+      const goesDeeper = nDepth > currentDepth;
+      if (nextWallRun > MAX_WALL_RUN && !goesDeeper) continue;
+
+      if (path.length + 1 < length) {
+        const hasOnward = (neighborsByKey.get(n.key) || []).some(nn => availableSet.has(nn.key) && !visited.has(nn.key));
+        if (!hasOnward) continue;
+      }
+
+      let score = 0;
+      score -= Math.abs(n.r - targetR);
+      if (prevMeanR != null && n.r < prevMeanR) score -= (prevMeanR - n.r) * 0.8;
+      if (!isStraight) score += 6;
+      if (nDepth > WALL_BUFFER) score += nDepth;
+      if (nearWall) score -= 2;
+      score += (rng() - 0.5) * 0.5;
+      options.push({ ...n, isStraight, nextWallRun, score });
+    }
+
+    options.sort((a, b) => b.score - a.score);
+    for (const n of options) {
+      visited.add(n.key);
+      path.push({ q: n.q, r: n.r, key: n.key });
+      dfs(path, visited, n, n.dirIdx, n.isStraight ? straightRun + 1 : 0, n.nextWallRun);
+      path.pop();
+      visited.delete(n.key);
+      if (candidates.length >= maxCandidates || nodeCount >= maxNodes) return;
+    }
+  };
+
+  const startLimit = Math.min(18, starts.length);
+  for (let i = 0; i < startLimit; i++) {
+    const start = starts[i];
+    const path = [{ q: start.q, r: start.r, key: start.key }];
+    const visited = new Set([start.key]);
+    const wallRun = edgeDepth(start.q, start.r, radius) <= WALL_BUFFER ? 1 : 0;
+    dfs(path, visited, start, null, 0, wallRun);
+    if (candidates.length >= maxCandidates || nodeCount >= maxNodes) break;
+  }
+
+  return rngShuffle(candidates, rng);
 }
 
 /**
- * Place a set of words (whose lengths sum to exactly the board tile count) by
- * slicing the board's Hamiltonian snake-path into consecutive word-length
- * segments.  Because the path is strictly top-to-bottom, word[0] (played first)
- * occupies the topmost tiles and word[n-1] (played last) occupies the bottommost
- * tiles — creating a gravity-natural play order with no filler tiles and no
- * overlaps.
- *
- * @param {string[]} words  - Words in intended play order (words[0] played first)
- * @param {Function} rng
- * @param {number}   radius
- * @returns {{ grid: Object, placements: Array }|null}  null on failure
+ * Organic adjacency-aware placement with backtracking:
+ * - each tile belongs to exactly one word
+ * - earlier words are biased toward top rows, later words toward lower rows
+ * - final word must consume every remaining tile as one connected path
  */
 function placeWordSet(words, rng, radius = GRID_RADIUS) {
-  // Use the seeded RNG to choose between the two valid snake orientations so
-  // different date seeds produce distinct tile layouts.
-  const mirror = rng() < 0.5;
-  const snakePath = getSnakePath(radius, mirror);
+  const allCoords = getAllCoordsWithKeys(radius);
+  const totalTiles = allCoords.length;
+  if (!Array.isArray(words) || words.length === 0) return null;
+  const totalLetters = words.reduce((sum, w) => sum + w.length, 0);
+  if (totalLetters !== totalTiles) return null;
 
-  const grid = {};
-  const placements = [];
-  let offset = 0;
+  const neighborsByKey = buildNeighborMap(allCoords, radius);
+  const wordOrder = words.slice();
+  const deadline = Date.now() + 3500;
+  const MAX_LAYOUT_ATTEMPTS = 220;
 
-  for (const word of words) {
-    const segment = snakePath.slice(offset, offset + word.length);
-    if (segment.length < word.length) return null; // defensive: shouldn't happen
-    segment.forEach((cell, i) => { grid[cell.key] = word[i]; });
-    placements.push({ word, path: segment, score: wordScore(word) });
-    offset += word.length;
+  for (let layoutAttempt = 0; layoutAttempt < MAX_LAYOUT_ATTEMPTS; layoutAttempt++) {
+    if (Date.now() > deadline) break;
+
+    const used = new Set();
+    const chosen = [];
+    let prevMeanR = null;
+    let failed = false;
+
+    for (let idx = 0; idx <= wordOrder.length - 3; idx++) {
+      const word = wordOrder[idx];
+      const availableSet = new Set(allCoords.filter(c => !used.has(c.key)).map(c => c.key));
+      const targetR = -radius + (2 * radius * idx) / Math.max(1, wordOrder.length - 1);
+      const candidates = collectPathCandidates({
+        availableSet,
+        allCoords,
+        neighborsByKey,
+        radius,
+        rng,
+        length: word.length,
+        targetR,
+        prevMeanR,
+        maxCandidates: 6,
+        maxNodes: 5000,
+      });
+      if (!candidates.length) { failed = true; break; }
+
+      const pick = candidates[0];
+      prevMeanR = pick.reduce((s, c) => s + c.r, 0) / pick.length;
+      chosen.push({ word, path: pick, score: wordScore(word), meanR: prevMeanR });
+      pick.forEach(c => used.add(c.key));
+    }
+    if (failed) continue;
+
+    const secondIdx = wordOrder.length - 2;
+    const lastIdx = wordOrder.length - 1;
+    const secondWord = wordOrder[secondIdx];
+    const lastWord = wordOrder[lastIdx];
+    const availableForSecond = new Set(allCoords.filter(c => !used.has(c.key)).map(c => c.key));
+    const targetRSecond = -radius + (2 * radius * secondIdx) / Math.max(1, wordOrder.length - 1);
+    const secondCandidates = collectPathCandidates({
+      availableSet: availableForSecond,
+      allCoords,
+      neighborsByKey,
+      radius,
+      rng,
+      length: secondWord.length,
+      targetR: targetRSecond,
+      prevMeanR,
+      maxCandidates: 32,
+      maxNodes: 20000,
+    });
+    if (!secondCandidates.length) continue;
+
+    let solved = false;
+    for (const secondPath of secondCandidates) {
+      secondPath.forEach(c => used.add(c.key));
+      const remainingSet = new Set(allCoords.filter(c => !used.has(c.key)).map(c => c.key));
+      if (remainingSet.size === lastWord.length) {
+        const lastCandidates = collectPathCandidates({
+          availableSet: remainingSet,
+          allCoords,
+          neighborsByKey,
+          radius,
+          rng,
+          length: lastWord.length,
+          targetR: radius,
+          prevMeanR: targetRSecond,
+          maxCandidates: 2,
+          maxNodes: 45000,
+        });
+        if (lastCandidates.length) {
+          const secondMeanR = secondPath.reduce((s, c) => s + c.r, 0) / secondPath.length;
+          chosen.push({ word: secondWord, path: secondPath, score: wordScore(secondWord), meanR: secondMeanR });
+          const lastPath = lastCandidates[0];
+          const lastMeanR = lastPath.reduce((s, c) => s + c.r, 0) / lastPath.length;
+          chosen.push({ word: lastWord, path: lastPath, score: wordScore(lastWord), meanR: lastMeanR });
+          solved = true;
+          break;
+        }
+      }
+      secondPath.forEach(c => used.delete(c.key));
+    }
+    if (!solved) continue;
+
+    const grid = {};
+    const placements = chosen.map(({ word, path, score }) => ({ word, path, score }));
+    for (const p of placements) {
+      p.path.forEach((cell, i) => { grid[cell.key] = p.word[i]; });
+    }
+    if (Object.keys(grid).length !== totalTiles) continue;
+    if (!findGravityPlaySequence(placements, grid, radius)) continue;
+    return { grid, placements };
   }
 
-  return { grid, placements };
+  return null;
 }
 
 function coordKey(cell) {
@@ -1247,16 +1412,13 @@ export function generateDailyHexacoreBoard({
       continue;
     }
 
-    // ── Snake-path word placement: slice a top-to-bottom Hamiltonian path ───────
-    // Words are sorted longest-first (= play order: first word is the longest,
-    // at the top of the board).  The snake path visits all 61 tiles from top
-    // (r = −4) to bottom (r = +4), so slicing it into word-length segments
-    // places the first word at the top and the last word at the bottom.
+    // ── Organic path placement: adjacency-aware word paths with backtracking ───
+    // Words are placed in selected play order with top→bottom curvature bias.
     // No filler tiles are needed — word lengths sum to exactly 61.
     const orderedWords = words.slice().sort((a, b) => b.length - a.length || wordScore(b) - wordScore(a));
     const placement = placeWordSet(orderedWords, rng, radius);
     if (!placement) {
-      lastFailure = 'snake-path word placement failed';
+      lastFailure = 'organic word placement failed';
       continue;
     }
     const { grid, placements } = placement;
@@ -1273,6 +1435,7 @@ export function generateDailyHexacoreBoard({
     const gravitySequence = findGravityPlaySequence(placements, grid, radius);
     if (!gravitySequence) {
       lastFailure = 'no valid gravity-aware play sequence';
+      continue;
     }
 
     const specialTiles = placeSpecialTiles(grid, placements, rng, radius, date);
