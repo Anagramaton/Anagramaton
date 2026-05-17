@@ -171,14 +171,33 @@ function pathOverlap(path, grid, word) {
 
 function placeWords(words, rng, radius) {
   const coords = getAllCoords(radius);
+  const totalTiles = coords.length;
   const grid = {};
   const placements = [];
 
-  const tryPlaceWord = (word, sampleSize = 180) => {
+  /**
+   * Try to place `word` on the grid using `sampleSize` candidate start positions.
+   * When `forCoverage` is true, 70 % of the sample budget is spent on tiles that
+   * are not yet occupied by any placed word, driving coverage toward uncovered areas.
+   */
+  const tryPlaceWord = (word, sampleSize = 180, forCoverage = false) => {
     let best = null;
     let bestMetric = -Infinity;
 
-    const starts = shuffled(coords, rng).slice(0, sampleSize);
+    let starts;
+    if (forCoverage) {
+      const uncovered = coords.filter(c => !grid[coordKey(c)]);
+      const covered   = coords.filter(c =>  grid[coordKey(c)]);
+      const nUncov    = Math.min(Math.ceil(sampleSize * 0.7), uncovered.length);
+      const nCov      = Math.max(0, sampleSize - nUncov);
+      starts = [
+        ...shuffled(uncovered, rng).slice(0, nUncov),
+        ...shuffled(covered,   rng).slice(0, Math.min(nCov, covered.length)),
+      ];
+    } else {
+      starts = shuffled(coords, rng).slice(0, sampleSize);
+    }
+
     for (const start of starts) {
       const path = findPath(
         grid,
@@ -216,11 +235,13 @@ function placeWords(words, rng, radius) {
     return true;
   };
 
+  // ── Phase 0: place the chosen target words (longest first) ───────────────────
   const sortedWords = words.slice().sort((a, b) => b.length - a.length || wordScore(b) - wordScore(a));
   for (const word of sortedWords) {
     tryPlaceWord(word, 220);
   }
 
+  // ── Phase 1: ensure at least 6 placements (original fallback) ────────────────
   if (placements.length < 6) {
     const fallback = shuffled(
       ANAGRAMATON_DICTIONARY.filter(w => w.length >= 5 && w.length <= 8 && /^[A-Z]+$/.test(w)),
@@ -230,6 +251,49 @@ function placeWords(words, rng, radius) {
       if (placements.length >= 6) break;
       if (placements.some(p => p.word === word)) continue;
       tryPlaceWord(word, 120);
+    }
+  }
+
+  // ── Phase 2: coverage completion ─────────────────────────────────────────────
+  // Keep adding words, biased toward uncovered tiles, until every tile on the
+  // board belongs to at least one designed word path (zero orphaned filler tiles).
+  if (Object.keys(grid).length < totalTiles) {
+    const coveragePool = shuffled(
+      ANAGRAMATON_DICTIONARY.filter(w => w.length >= 5 && w.length <= 11 && /^[A-Z]+$/.test(w)),
+      rng,
+    ).slice(0, 1200);
+    for (const word of coveragePool) {
+      if (Object.keys(grid).length >= totalTiles) break;
+      if (placements.some(p => p.word === word)) continue;
+      tryPlaceWord(word, 150, true);
+    }
+  }
+
+  // ── Phase 3: last-resort coverage for stubborn isolated tiles ────────────────
+  // For any tile still uncovered after Phase 2, try every short dictionary word
+  // starting directly at that tile with fully-relaxed path constraints
+  // (no straight-run or wall-proximity limits).  This exhaustive per-tile search
+  // handles corner/edge tiles that the random sampling in Phase 2 misses.
+  if (Object.keys(grid).length < totalTiles) {
+    const lastResortPool = shuffled(
+      ANAGRAMATON_DICTIONARY.filter(w => w.length >= 5 && w.length <= 8 && /^[A-Z]+$/.test(w)),
+      rng,
+    ).slice(0, 800);
+    const relaxedOpts = { allowZigZag: true, preferOverlap: false, maxStraight: 99, wallBuffer: 0, maxEdgeRun: 99 };
+
+    for (const uncovCoord of coords.filter(c => !grid[coordKey(c)])) {
+      if (grid[coordKey(uncovCoord)]) continue; // may have been filled in an earlier iteration
+      for (const word of lastResortPool) {
+        if (placements.some(p => p.word === word)) continue;
+        const path = findPath(grid, word, uncovCoord.q, uncovCoord.r, 0, new Set(), radius, relaxedOpts);
+        if (!path) continue;
+        const normalizedPath = path.map(c => ({ ...c, key: coordKey(c) }));
+        // Only accept paths that actually cover this uncovered tile
+        if (!normalizedPath.some(c => c.key === coordKey(uncovCoord))) continue;
+        normalizedPath.forEach((cell, i) => { grid[coordKey(cell)] = word[i]; });
+        placements.push({ word, path: normalizedPath, score: wordScore(word) });
+        break; // move to next uncovered tile
+      }
     }
   }
 
@@ -1019,9 +1083,9 @@ function generateOptimalPathClues(optimalSolutions, placements, grid, specialTil
 }
 
 function computeStrategies(placements, specialsByKey, grid) {
-  const commonPlacements = placements.filter(p => isCommonWord(p.word));
-  const workingSet = commonPlacements.length >= 6 ? commonPlacements : placements;
-  const scored = workingSet.map(p => ({ ...p, estimatedScore: estimatePathScore(p.word, p.path, specialsByKey) }));
+  // Use all placements — coverage words added in Phase 2/3 may be uncommon but
+  // are necessary to cover every tile; filtering them out causes a spurious penalty.
+  const scored = placements.map(p => ({ ...p, estimatedScore: estimatePathScore(p.word, p.path, specialsByKey) }));
 
   const strategies = [];
   const strategyOrders = [
@@ -1034,9 +1098,10 @@ function computeStrategies(placements, specialsByKey, grid) {
     const picked = [];
     const used = new Set();
     for (const p of order) {
-      if (picked.length >= 6) break;
-      const overlap = p.path.some(c => used.has(c.key));
-      if (overlap && picked.length >= 4) continue;
+      // Include words that cover at least one new tile — skip only words
+      // that are completely redundant (all their tiles already covered).
+      const newTilesAdded = p.path.filter(c => !used.has(c.key)).length;
+      if (newTilesAdded === 0) continue;
       picked.push(p);
       p.path.forEach(c => used.add(c.key));
     }
@@ -1136,13 +1201,23 @@ export function generateDailyHexacoreBoard({
   runSimulation = true,
 } = {}) {
   const seed = fnv1a32(String(date));
+  const totalTiles = getAllCoords(radius).length;
   let lastFailure = 'unknown';
   let bestBoard = null;
-  let bestClearance = -1;
-  let bestScore = -1;
-  let bestValidatedBoard = null;   // board with a confirmed gravity play sequence
-  let bestValidatedClearance = -1;
-  let bestValidatedScore = -1;
+  let bestBoardMeta = null; // { coverage, hasGravity, clearance, score }
+
+  /** Returns true if candidate metrics are strictly better than current best. */
+  const isBetterBoard = (candidateMeta) => {
+    if (!bestBoardMeta) return true;
+    // Priority 1: full tile coverage (61/61 > anything less)
+    if (candidateMeta.coverage !== bestBoardMeta.coverage) return candidateMeta.coverage > bestBoardMeta.coverage;
+    // Priority 2: gravity-validated play sequence
+    if (candidateMeta.hasGravity !== bestBoardMeta.hasGravity) return candidateMeta.hasGravity;
+    // Priority 3: simulation clearance %
+    if (candidateMeta.clearance !== bestBoardMeta.clearance) return candidateMeta.clearance > bestBoardMeta.clearance;
+    // Priority 4: estimated max score
+    return candidateMeta.score > bestBoardMeta.score;
+  };
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
@@ -1155,10 +1230,17 @@ export function generateDailyHexacoreBoard({
       continue;
     }
 
+    // Measure how many of the 61 tiles are covered by designed word paths
+    // (before fillEmptyTiles adds random filler letters to the rest).
+    const wordPathCoverage = Object.keys(grid).length;
+    const fullyCoveredByWords = wordPathCoverage === totalTiles;
+    if (!fullyCoveredByWords) {
+      lastFailure = `incomplete tile coverage: ${wordPathCoverage}/${totalTiles} tiles covered by word paths`;
+    }
+
     fillEmptyTiles(grid, rng, radius);
 
     // Validate that all designed words can be cleared in sequence using correct SE/SW gravity.
-    // Boards that pass this check are strongly preferred; others are kept as fallbacks.
     const gravitySequence = findGravityPlaySequence(placements, grid, radius);
     if (!gravitySequence) {
       lastFailure = 'no valid gravity-aware play sequence';
@@ -1206,41 +1288,27 @@ export function generateDailyHexacoreBoard({
         tileClearancePercent: simData?.clearancePercent ?? null,
         fullClear: simData?.fullyCleared ?? null,
         solutionPath: simData?.solutionPath ?? null,
+        wordPathCoverage,
+        fullyCoveredByWords,
         gravitySequence,
         generatedAt: new Date().toISOString(),
       },
     };
     if (includePlacements) board.placements = placements;
 
-    const attemptClearance = simData?.clearancePercent ?? 0;
-    const attemptScore = maxPossibleScore;
+    const attemptMeta = {
+      coverage: wordPathCoverage,
+      hasGravity: !!gravitySequence,
+      clearance: simData?.clearancePercent ?? 0,
+      score: maxPossibleScore,
+    };
 
-    if (gravitySequence) {
-      // Prefer boards with confirmed gravity play sequences
-      if (
-        !bestValidatedBoard
-        || attemptClearance > bestValidatedClearance
-        || (attemptClearance === bestValidatedClearance && attemptScore > bestValidatedScore)
-      ) {
-        bestValidatedBoard = board;
-        bestValidatedClearance = attemptClearance;
-        bestValidatedScore = attemptScore;
-      }
-    }
-
-    if (
-      !bestBoard
-      || attemptClearance > bestClearance
-      || (attemptClearance === bestClearance && attemptScore > bestScore)
-    ) {
+    if (isBetterBoard(attemptMeta)) {
       bestBoard = board;
-      bestClearance = attemptClearance;
-      bestScore = attemptScore;
+      bestBoardMeta = attemptMeta;
     }
   }
 
-  // Return a gravity-validated board if one was found; otherwise fall back to best available
-  if (bestValidatedBoard) return bestValidatedBoard;
   if (bestBoard) return bestBoard;
   throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);
 }
