@@ -135,7 +135,7 @@ function wordScore(word) {
 function chooseTargetWords(rng) {
   const candidates = ANAGRAMATON_DICTIONARY.filter(w => {
     const len = w.length;
-    return len >= 5 && len <= 13 && /^[A-Z]+$/.test(w);
+    return len >= 5 && len <= 14 && /^[A-Z]+$/.test(w);
   });
   const shuffledCandidates = shuffled(candidates, rng);
   const shortCount = 2 + Math.floor(rng() * 2);
@@ -235,6 +235,119 @@ function placeWords(words, rng, radius) {
 
   return { grid, placements };
 }
+
+/**
+ * DFS to check if `word` can be traced as a connected adjacent path in simGrid,
+ * with no tile reused. simGrid values are { letter, ... } objects.
+ *
+ * @param {string} word
+ * @param {Object} simGrid - { [hexKey]: { letter, ... } }
+ * @param {number} radius
+ * @returns {boolean}
+ */
+function wordExistsInGrid(word, simGrid, radius) {
+  function dfs(idx, q, r, visited) {
+    if (idx === word.length) return true;
+    const key = hexKey(q, r);
+    if (visited.has(key)) return false;
+    const entry = simGrid[key];
+    if (!entry || entry.letter !== word[idx]) return false;
+    visited.add(key);
+    for (const [dq, dr] of ADJ_DIRS) {
+      if (dfs(idx + 1, q + dq, r + dr, visited)) return true;
+    }
+    visited.delete(key);
+    return false;
+  }
+  for (const key of Object.keys(simGrid)) {
+    if (simGrid[key]?.letter !== word[0]) continue;
+    const [q, r] = key.split(',').map(Number);
+    if (dfs(0, q, r, new Set())) return true;
+  }
+  return false;
+}
+
+/**
+ * DFS to find `word` as a connected adjacent path in simGrid.
+ * On success, deletes the matched tiles from simGrid and returns true.
+ * simGrid values are { letter, ... } objects.
+ *
+ * @param {string} word
+ * @param {Object} simGrid - { [hexKey]: { letter, ... } } — modified in place on success
+ * @param {number} radius
+ * @returns {boolean}
+ */
+function removeWordFromGrid(word, simGrid, radius) {
+  function dfs(idx, q, r, visited, path) {
+    if (idx === word.length) return path.slice();
+    const key = hexKey(q, r);
+    if (visited.has(key)) return null;
+    const entry = simGrid[key];
+    if (!entry || entry.letter !== word[idx]) return null;
+    visited.add(key);
+    path.push(key);
+    for (const [dq, dr] of ADJ_DIRS) {
+      const result = dfs(idx + 1, q + dq, r + dr, visited, path);
+      if (result) return result;
+    }
+    path.pop();
+    visited.delete(key);
+    return null;
+  }
+  for (const key of Object.keys(simGrid)) {
+    if (simGrid[key]?.letter !== word[0]) continue;
+    const [q, r] = key.split(',').map(Number);
+    const path = dfs(0, q, r, new Set(), []);
+    if (path) {
+      for (const k of path) delete simGrid[k];
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Validates that all words in `placements` can be found and removed in sequence
+ * on the word-only grid after applying correct SE/SW gravity after each removal.
+ *
+ * @param {Array}  placements - Array of { word } objects (the target words)
+ * @param {Object} startGrid  - Plain { [hexKey]: letter } word grid (before fillEmptyTiles)
+ * @param {number} radius
+ * @returns {string[]|null} Ordered word sequence if all words are reachable, or null
+ */
+function findGravityPlaySequence(placements, startGrid, radius = GRID_RADIUS) {
+  // Convert plain { [key]: letter } to { [key]: { letter } } for gravity/DFS helpers
+  const simGrid = {};
+  for (const [key, letter] of Object.entries(startGrid)) {
+    simGrid[key] = { letter };
+  }
+
+  const remaining = placements.map(p => p.word);
+  const sequence = [];
+  const maxRounds = placements.length * 3;
+  let rounds = 0;
+
+  while (remaining.length > 0 && rounds < maxRounds) {
+    rounds++;
+    let found = false;
+    for (let i = 0; i < remaining.length; i++) {
+      const word = remaining[i];
+      if (wordExistsInGrid(word, simGrid, radius)) {
+        removeWordFromGrid(word, simGrid, radius);
+        applyGravity(simGrid, radius);
+        sequence.push(word);
+        remaining.splice(i, 1);
+        found = true;
+        break;
+      }
+    }
+    if (!found) return null;
+  }
+
+  if (remaining.length > 0) return null;
+  return sequence;
+}
+
 
 function neighbors(q, r, radius) {
   const result = [];
@@ -475,37 +588,47 @@ function getSimTrie() {
 }
 
 /**
- * Applies gravity to the simulation grid: tiles fall "downward" (increasing r)
+ * Applies gravity to the simulation grid using the same SE/SW diagonal cascade
+ * as the actual game in hexacore.js:
+ *   - Each pass sorts all occupied tiles by descending r (bottom-first)
+ *   - Each tile tries SE (q, r+1) first, then SW (q-1, r+1)
+ *   - All moves per pass are collected atomically then applied
+ *   - Repeats until no tile can move
  *
- * @param {Object} simGrid - { [hexKey]: { letter, special } } — modified in place
+ * @param {Object} simGrid - { [hexKey]: any } — modified in place
  * @param {number} radius  - board radius (default GRID_RADIUS)
  */
 function applyGravity(simGrid, radius = GRID_RADIUS) {
-  for (let q = -radius; q <= radius; q++) {
-    const rMin = Math.max(-radius, -q - radius);
-    const rMax = Math.min(radius, -q + radius);
+  let anyMoved = true;
+  while (anyMoved) {
+    anyMoved = false;
+    const entries = Object.keys(simGrid)
+      .map(key => { const [q, r] = key.split(',').map(Number); return { q, r, key }; })
+      .sort((a, b) => b.r - a.r);
 
-    // Collect all tile positions in this column, sorted ascending by r (top first)
-    const colPositions = [];
-    for (let r = rMin; r <= rMax; r++) {
-      colPositions.push({ r, key: hexKey(q, r) });
+    const moves = [];
+    const plannedDests = new Set();
+
+    for (const { q, r, key } of entries) {
+      const seKey = hexKey(q,     r + 1);
+      const swKey = hexKey(q - 1, r + 1);
+      const seOk  = isValidCoord(q,     r + 1, radius) && !simGrid[seKey] && !plannedDests.has(seKey);
+      const swOk  = isValidCoord(q - 1, r + 1, radius) && !simGrid[swKey] && !plannedDests.has(swKey);
+
+      if (seOk) {
+        moves.push({ from: key, to: seKey, value: simGrid[key] });
+        plannedDests.add(seKey);
+        anyMoved = true;
+      } else if (swOk) {
+        moves.push({ from: key, to: swKey, value: simGrid[key] });
+        plannedDests.add(swKey);
+        anyMoved = true;
+      }
     }
-
-    // Gather occupied tiles top-to-bottom
-    const tiles = colPositions
-      .filter(p => simGrid[p.key])
-      .map(p => simGrid[p.key]);
-
-    if (tiles.length === colPositions.length) continue; // nothing to do
-
-    // Clear the column
-    colPositions.forEach(p => delete simGrid[p.key]);
-
-    // Re-place tiles starting from the bottom of the column (largest r)
-    const offset = colPositions.length - tiles.length;
-    tiles.forEach((tile, i) => {
-      simGrid[colPositions[offset + i].key] = tile;
-    });
+    for (const { from, to, value } of moves) {
+      delete simGrid[from];
+      simGrid[to] = value;
+    }
   }
 }
 
@@ -1017,6 +1140,9 @@ export function generateDailyHexacoreBoard({
   let bestBoard = null;
   let bestClearance = -1;
   let bestScore = -1;
+  let bestValidatedBoard = null;   // board with a confirmed gravity play sequence
+  let bestValidatedClearance = -1;
+  let bestValidatedScore = -1;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
@@ -1030,6 +1156,14 @@ export function generateDailyHexacoreBoard({
     }
 
     fillEmptyTiles(grid, rng, radius);
+
+    // Validate that all designed words can be cleared in sequence using correct SE/SW gravity.
+    // Boards that pass this check are strongly preferred; others are kept as fallbacks.
+    const gravitySequence = findGravityPlaySequence(placements, grid, radius);
+    if (!gravitySequence) {
+      lastFailure = 'no valid gravity-aware play sequence';
+    }
+
     const specialTiles = placeSpecialTiles(grid, placements, rng, radius, date);
 
     const validation = validateDailyBoard({ grid, placements, specialTiles });
@@ -1072,6 +1206,7 @@ export function generateDailyHexacoreBoard({
         tileClearancePercent: simData?.clearancePercent ?? null,
         fullClear: simData?.fullyCleared ?? null,
         solutionPath: simData?.solutionPath ?? null,
+        gravitySequence,
         generatedAt: new Date().toISOString(),
       },
     };
@@ -1079,6 +1214,20 @@ export function generateDailyHexacoreBoard({
 
     const attemptClearance = simData?.clearancePercent ?? 0;
     const attemptScore = maxPossibleScore;
+
+    if (gravitySequence) {
+      // Prefer boards with confirmed gravity play sequences
+      if (
+        !bestValidatedBoard
+        || attemptClearance > bestValidatedClearance
+        || (attemptClearance === bestValidatedClearance && attemptScore > bestValidatedScore)
+      ) {
+        bestValidatedBoard = board;
+        bestValidatedClearance = attemptClearance;
+        bestValidatedScore = attemptScore;
+      }
+    }
+
     if (
       !bestBoard
       || attemptClearance > bestClearance
@@ -1090,6 +1239,8 @@ export function generateDailyHexacoreBoard({
     }
   }
 
+  // Return a gravity-validated board if one was found; otherwise fall back to best available
+  if (bestValidatedBoard) return bestValidatedBoard;
   if (bestBoard) return bestBoard;
   throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);
 }
