@@ -1,0 +1,417 @@
+{
+  "date": "2026-06-16",
+  "grid": {
+    "0,-4": "C",
+    "1,-4": "O",
+    "2,-4": "L",
+    "3,-4": "L",
+    "4,-4": "E",
+    "4,-3": "G",
+    "3,-3": "I",
+    "2,-3": "A",
+    "1,-3": "N",
+    "0,-3": "E",
+    "-1,-3": "R",
+    "-2,-2": "S",
+    "-1,-2": "H",
+    "0,-2": "A",
+    "1,-2": "B",
+    "2,-2": "I",
+    "3,-2": "T",
+    "4,-2": "U",
+    "4,-1": "D",
+    "3,-1": "I",
+    "2,-1": "N",
+    "1,-1": "A",
+    "0,-1": "L",
+    "-1,-1": "U",
+    "-2,-1": "P",
+    "-3,-1": "L",
+    "-4,0": "I",
+    "-3,0": "G",
+    "-2,0": "H",
+    "-1,0": "T",
+    "0,0": "E",
+    "1,0": "D",
+    "2,0": "D",
+    "3,0": "A",
+    "4,0": "N",
+    "3,1": "C",
+    "2,1": "I",
+    "1,1": "E",
+    "0,1": "S",
+    "-1,1": "T",
+    "-2,1": "I",
+    "-3,1": "N",
+    "-4,1": "J",
+    "-4,2": "O",
+    "-3,2": "I",
+    "-2,2": "N",
+    "-1,2": "T",
+    "0,2": "R",
+    "1,2": "E",
+    "2,2": "T",
+    "1,3": "O",
+    "0,3": "U",
+    "-1,3": "C",
+    "-2,3": "H",
+    "-3,3": "L",
+    "-4,3": "O",
+    "-4,4": "O",
+    "-3,4": "S",
+    "-2,4": "E",
+    "-1,4": "L",
+    "0,4": "Y"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 3,
+      "r": 1
+    },
+    {
+      "type": "prism",
+      "q": 4,
+      "r": -1
+    },
+    {
+      "type": "gemEmerald",
+      "q": 4,
+      "r": -4
+    },
+    {
+      "type": "rune",
+      "q": -3,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 3,
+      "digraph": "TH"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 4640,
+    "minAchievableScore": 1632,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "COLLEGIANERS",
+          "HABITUDINAL",
+          "UPLIGHTED",
+          "DANCIEST",
+          "INJOINT",
+          "RETOUCH",
+          "LOOSELY"
+        ],
+        "wordTotal": 2503,
+        "penalty": 0,
+        "finalScore": 2503
+      },
+      {
+        "words": [
+          "HABITUDINAL",
+          "COLLEGIANERS",
+          "UPLIGHTED",
+          "DANCIEST",
+          "INJOINT",
+          "RETOUCH",
+          "LOOSELY"
+        ],
+        "wordTotal": 2503,
+        "penalty": 0,
+        "finalScore": 2503
+      },
+      {
+        "words": [
+          "COLLEGIANERS",
+          "HABITUDINAL",
+          "UPLIGHTED",
+          "DANCIEST",
+          "INJOINT",
+          "RETOUCH",
+          "LOOSELY"
+        ],
+        "wordTotal": 2503,
+        "penalty": 0,
+        "finalScore": 2503
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2503,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 12,
+          "estimatedPoints": 816,
+          "positional": "A 12-letter word uses the LL digraph tile",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C__________S"
+            },
+            {
+              "level": 3,
+              "text": "CO________RS"
+            },
+            {
+              "level": 4,
+              "text": "_O__E_IA_E__"
+            },
+            {
+              "level": 5,
+              "text": "COLLEGIANER_"
+            }
+          ],
+          "features": [
+            "Uses emerald gem",
+            "Uses 2 digraph tiles",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 770,
+          "positional": "A 11-letter word routes through the purple prism",
+          "category": "A descriptive adjective — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H_________L"
+            },
+            {
+              "level": 3,
+              "text": "HA_______AL"
+            },
+            {
+              "level": 4,
+              "text": "_A_I_U_I_A_"
+            },
+            {
+              "level": 5,
+              "text": "HABITUDINA_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word sits in the center quadrant",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "U_______D"
+            },
+            {
+              "level": 3,
+              "text": "UP_____ED"
+            },
+            {
+              "level": 4,
+              "text": "U__I___E_"
+            },
+            {
+              "level": 5,
+              "text": "UPLIGHTE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D______T"
+            },
+            {
+              "level": 3,
+              "text": "DA____ST"
+            },
+            {
+              "level": 4,
+              "text": "_A__IE__"
+            },
+            {
+              "level": 5,
+              "text": "DANCIES_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 168,
+          "positional": "A 7-letter word runs from center toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I_____T"
+            },
+            {
+              "level": 3,
+              "text": "IN___NT"
+            },
+            {
+              "level": 4,
+              "text": "I__OI__"
+            },
+            {
+              "level": 5,
+              "text": "INJOIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 154,
+          "positional": "A 7-letter word uses the TH digraph tile",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A word related to doing something again (7 letters)"
+            },
+            {
+              "level": 2,
+              "text": "R_____H"
+            },
+            {
+              "level": 3,
+              "text": "RE___CH"
+            },
+            {
+              "level": 4,
+              "text": "_E_OU__"
+            },
+            {
+              "level": 5,
+              "text": "RETOUC_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 133,
+          "positional": "A 7-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "L_____Y"
+            },
+            {
+              "level": 3,
+              "text": "LO___LY"
+            },
+            {
+              "level": 4,
+              "text": "_OO_E__"
+            },
+            {
+              "level": 5,
+              "text": "LOOSEL_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 8.8,
+    "gemDensity": 0.016,
+    "tilesCleared": 53,
+    "tilesRemaining": 8,
+    "tileClearancePercent": 86.9,
+    "fullClear": false,
+    "solutionPath": [
+      "HABITUDINAL",
+      "GELIDEST",
+      "INJOINTED",
+      "UPLIGHTERS",
+      "RETOUCHES",
+      "LACILY"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "COLLEGIANERS",
+      "HABITUDINAL",
+      "UPLIGHTED",
+      "DANCIEST",
+      "INJOINT",
+      "RETOUCH",
+      "LOOSELY"
+    ],
+    "generatedAt": "2026-05-18T01:23:48.221Z"
+  }
+}
