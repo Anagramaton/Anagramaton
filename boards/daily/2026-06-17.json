@@ -1,0 +1,434 @@
+{
+  "date": "2026-06-17",
+  "grid": {
+    "0,-4": "E",
+    "1,-4": "L",
+    "2,-4": "E",
+    "3,-4": "C",
+    "4,-4": "T",
+    "4,-3": "R",
+    "3,-3": "O",
+    "2,-3": "F",
+    "1,-3": "O",
+    "0,-3": "R",
+    "-1,-3": "M",
+    "-2,-2": "E",
+    "-1,-2": "D",
+    "0,-2": "S",
+    "1,-2": "A",
+    "2,-2": "L",
+    "3,-2": "P",
+    "4,-2": "I",
+    "4,-1": "N",
+    "3,-1": "G",
+    "2,-1": "I",
+    "1,-1": "T",
+    "0,-1": "I",
+    "-1,-1": "D",
+    "-2,-1": "E",
+    "-3,-1": "S",
+    "-4,0": "B",
+    "-3,0": "R",
+    "-2,0": "E",
+    "-1,0": "C",
+    "0,0": "C",
+    "1,0": "I",
+    "2,0": "A",
+    "3,0": "S",
+    "4,0": "G",
+    "3,1": "U",
+    "2,1": "E",
+    "1,1": "S",
+    "0,1": "S",
+    "-1,1": "I",
+    "-2,1": "N",
+    "-3,1": "G",
+    "-4,1": "D",
+    "-4,2": "A",
+    "-3,2": "S",
+    "-2,2": "H",
+    "-1,2": "E",
+    "0,2": "E",
+    "1,2": "N",
+    "2,2": "S",
+    "1,3": "D",
+    "0,3": "E",
+    "-1,3": "M",
+    "-2,3": "A",
+    "-3,3": "N",
+    "-4,3": "S",
+    "-4,4": "A",
+    "-3,4": "B",
+    "-2,4": "O",
+    "-1,4": "M",
+    "0,4": "A"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -1,
+      "r": -3
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -2,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 1,
+      "r": -3
+    },
+    {
+      "type": "gemGold",
+      "q": -1,
+      "r": 0
+    },
+    {
+      "type": "rune",
+      "q": -4,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 3,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "RE"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 5770,
+    "minAchievableScore": 2236,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "ELECTROFORMED",
+          "BRECCIAS",
+          "SALPINGITIDES",
+          "GUESSING",
+          "DASHEENS",
+          "DEMANS",
+          "ABOMA"
+        ],
+        "wordTotal": 2888,
+        "penalty": 0,
+        "finalScore": 2888
+      },
+      {
+        "words": [
+          "BRECCIAS",
+          "ELECTROFORMED",
+          "SALPINGITIDES",
+          "GUESSING",
+          "DASHEENS",
+          "DEMANS",
+          "ABOMA"
+        ],
+        "wordTotal": 2888,
+        "penalty": 0,
+        "finalScore": 2888
+      },
+      {
+        "words": [
+          "ELECTROFORMED",
+          "SALPINGITIDES",
+          "BRECCIAS",
+          "GUESSING",
+          "DASHEENS",
+          "DEMANS",
+          "ABOMA"
+        ],
+        "wordTotal": 2888,
+        "penalty": 0,
+        "finalScore": 2888
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2888,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 1118,
+          "positional": "A 13-letter word routes through the purple prism",
+          "category": "A compound-style word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E___________D"
+            },
+            {
+              "level": 3,
+              "text": "EL_________ED"
+            },
+            {
+              "level": 4,
+              "text": "E_E___O_O__E_"
+            },
+            {
+              "level": 5,
+              "text": "ELECTROFORME_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 13,
+          "estimatedPoints": 494,
+          "positional": "A 13-letter word uses the IO digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S___________S"
+            },
+            {
+              "level": 3,
+              "text": "SA_________ES"
+            },
+            {
+              "level": 4,
+              "text": "_A__I__I_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "SALPINGITIDE_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 696,
+          "positional": "A 8-letter word uses the NT digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B______S"
+            },
+            {
+              "level": 3,
+              "text": "BR____AS"
+            },
+            {
+              "level": 4,
+              "text": "__E__IA_"
+            },
+            {
+              "level": 5,
+              "text": "BRECCIA_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word uses the LL digraph tile",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "G______G"
+            },
+            {
+              "level": 3,
+              "text": "GU____NG"
+            },
+            {
+              "level": 4,
+              "text": "_UE__I__"
+            },
+            {
+              "level": 5,
+              "text": "GUESSIN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 184,
+          "positional": "A 8-letter word runs from center toward lower-right",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D______S"
+            },
+            {
+              "level": 3,
+              "text": "DA____NS"
+            },
+            {
+              "level": 4,
+              "text": "_A__EE__"
+            },
+            {
+              "level": 5,
+              "text": "DASHEEN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 114,
+          "positional": "A 6-letter word uses the CR digraph tile",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D____S"
+            },
+            {
+              "level": 3,
+              "text": "DE__NS"
+            },
+            {
+              "level": 4,
+              "text": "_E_A__"
+            },
+            {
+              "level": 5,
+              "text": "DEMAN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 90,
+          "positional": "A 5-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A___A"
+            },
+            {
+              "level": 3,
+              "text": "AB_MA"
+            },
+            {
+              "level": 4,
+              "text": "A_O_A"
+            },
+            {
+              "level": 5,
+              "text": "ABOM_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8.3,
+    "gemDensity": 0.016,
+    "tilesCleared": 58,
+    "tilesRemaining": 3,
+    "tileClearancePercent": 95.1,
+    "fullClear": false,
+    "solutionPath": [
+      "ELECTROFORM",
+      "BRECCIAS",
+      "ASHAMEDNESS",
+      "BANTINGS",
+      "AMENAGES",
+      "LOIDED",
+      "SPIDES"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "ELECTROFORMED",
+      "SALPINGITIDES",
+      "BRECCIAS",
+      "GUESSING",
+      "DASHEENS",
+      "DEMANS",
+      "ABOMA"
+    ],
+    "generatedAt": "2026-05-19T01:23:42.110Z"
+  }
+}
