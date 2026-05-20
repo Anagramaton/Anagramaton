@@ -1,0 +1,390 @@
+{
+  "date": "2026-06-18",
+  "grid": {
+    "0,-4": "R",
+    "1,-4": "E",
+    "2,-4": "M",
+    "3,-4": "E",
+    "4,-4": "M",
+    "4,-3": "B",
+    "3,-3": "R",
+    "2,-3": "A",
+    "1,-3": "N",
+    "0,-3": "C",
+    "-1,-3": "E",
+    "-2,-2": "S",
+    "-1,-2": "B",
+    "0,-2": "I",
+    "1,-2": "O",
+    "2,-2": "G",
+    "3,-2": "R",
+    "4,-2": "A",
+    "4,-1": "P",
+    "3,-1": "H",
+    "2,-1": "I",
+    "1,-1": "S",
+    "0,-1": "E",
+    "-1,-1": "S",
+    "-2,-1": "C",
+    "-3,-1": "O",
+    "-4,0": "N",
+    "-3,0": "C",
+    "-2,0": "E",
+    "-1,0": "I",
+    "0,0": "T",
+    "1,0": "F",
+    "2,0": "U",
+    "3,0": "L",
+    "4,0": "P",
+    "3,1": "E",
+    "2,1": "L",
+    "1,1": "L",
+    "0,1": "U",
+    "-1,1": "C",
+    "-2,1": "I",
+    "-3,1": "D",
+    "-4,1": "L",
+    "-4,2": "Y",
+    "-3,2": "V",
+    "-2,2": "I",
+    "-1,2": "B",
+    "0,2": "R",
+    "1,2": "A",
+    "2,2": "C",
+    "1,3": "U",
+    "0,3": "L",
+    "-1,3": "A",
+    "-2,3": "F",
+    "-3,3": "L",
+    "-4,3": "I",
+    "-4,4": "S",
+    "-3,4": "K",
+    "-2,4": "I",
+    "-1,4": "N",
+    "0,4": "G"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 3,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 3,
+      "r": -2
+    },
+    {
+      "type": "gemGold",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "amethyst",
+      "q": 2,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 3,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 2,
+      "digraph": "EA"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 6225,
+    "minAchievableScore": 2100,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "CONCEITFUL",
+          "BIOGRAPHISES",
+          "REMEMBRANCES",
+          "PELLUCIDLY",
+          "VIBRACULA",
+          "FLISKING"
+        ],
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
+      },
+      {
+        "words": [
+          "CONCEITFUL",
+          "BIOGRAPHISES",
+          "REMEMBRANCES",
+          "VIBRACULA",
+          "PELLUCIDLY",
+          "FLISKING"
+        ],
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
+      },
+      {
+        "words": [
+          "BIOGRAPHISES",
+          "REMEMBRANCES",
+          "CONCEITFUL",
+          "PELLUCIDLY",
+          "VIBRACULA",
+          "FLISKING"
+        ],
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 3385,
+      "wordCount": 6,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 12,
+          "estimatedPoints": 504,
+          "positional": "A 12-letter word runs from top toward upper-left",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A word related to doing something again (12 letters)"
+            },
+            {
+              "level": 2,
+              "text": "R__________S"
+            },
+            {
+              "level": 3,
+              "text": "RE________ES"
+            },
+            {
+              "level": 4,
+              "text": "_E_E___A__E_"
+            },
+            {
+              "level": 5,
+              "text": "REMEMBRANCE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 12,
+          "estimatedPoints": 936,
+          "positional": "A 12-letter word uses the LE digraph tile",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B__________S"
+            },
+            {
+              "level": 3,
+              "text": "BI________ES"
+            },
+            {
+              "level": 4,
+              "text": "_IO__A__I_E_"
+            },
+            {
+              "level": 5,
+              "text": "BIOGRAPHISE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 1050,
+          "positional": "A 10-letter word passes through the gold gem",
+          "category": "A descriptive adjective — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C________L"
+            },
+            {
+              "level": 3,
+              "text": "CO______UL"
+            },
+            {
+              "level": 4,
+              "text": "_O__EI__U_"
+            },
+            {
+              "level": 5,
+              "text": "CONCEITFU_"
+            }
+          ],
+          "features": [
+            "Uses gold gem"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 10,
+          "estimatedPoints": 340,
+          "positional": "A 10-letter word runs from center toward lower-left",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "P________Y"
+            },
+            {
+              "level": 3,
+              "text": "PE______LY"
+            },
+            {
+              "level": 4,
+              "text": "_E__U_I___"
+            },
+            {
+              "level": 5,
+              "text": "PELLUCIDL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 315,
+          "positional": "A 9-letter word uses the LY digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "V_______A"
+            },
+            {
+              "level": 3,
+              "text": "VI_____LA"
+            },
+            {
+              "level": 4,
+              "text": "_I__A_U_A"
+            },
+            {
+              "level": 5,
+              "text": "VIBRACUL_"
+            }
+          ],
+          "features": [
+            "Uses 3 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 240,
+          "positional": "A 8-letter word runs from lower-left toward bottom",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "F______G"
+            },
+            {
+              "level": 3,
+              "text": "FL____NG"
+            },
+            {
+              "level": 4,
+              "text": "__I__I__"
+            },
+            {
+              "level": 5,
+              "text": "FLISKIN_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 9.5,
+    "gemDensity": 0.016,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
+    "fullClear": false,
+    "solutionPath": [
+      "CONCEITFUL",
+      "BIOGRAPHISE",
+      "PELLUCIDLY",
+      "VIBRACULA",
+      "FLISKING",
+      "EMBRACERS"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "REMEMBRANCES",
+      "BIOGRAPHISES",
+      "CONCEITFUL",
+      "PELLUCIDLY",
+      "VIBRACULA",
+      "FLISKING"
+    ],
+    "generatedAt": "2026-05-20T01:24:54.999Z"
+  }
+}
