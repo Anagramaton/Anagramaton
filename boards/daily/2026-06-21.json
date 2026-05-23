@@ -1,0 +1,432 @@
+{
+  "date": "2026-06-21",
+  "grid": {
+    "4,-4": "D",
+    "3,-4": "E",
+    "2,-4": "M",
+    "1,-4": "O",
+    "0,-4": "N",
+    "-1,-3": "S",
+    "0,-3": "T",
+    "1,-3": "R",
+    "2,-3": "A",
+    "3,-3": "T",
+    "4,-3": "E",
+    "4,-2": "E",
+    "3,-2": "N",
+    "2,-2": "O",
+    "1,-2": "R",
+    "0,-2": "M",
+    "-1,-2": "O",
+    "-2,-2": "U",
+    "-3,-1": "S",
+    "-2,-1": "L",
+    "-1,-1": "Y",
+    "0,-1": "A",
+    "1,-1": "S",
+    "2,-1": "S",
+    "3,-1": "I",
+    "4,-1": "G",
+    "4,0": "N",
+    "3,0": "I",
+    "2,0": "N",
+    "1,0": "G",
+    "0,0": "O",
+    "-1,0": "F",
+    "-2,0": "F",
+    "-3,0": "T",
+    "-4,0": "A",
+    "-4,1": "K",
+    "-3,1": "E",
+    "-2,1": "S",
+    "-1,1": "Z",
+    "0,1": "A",
+    "1,1": "P",
+    "2,1": "T",
+    "3,1": "I",
+    "2,2": "E",
+    "1,2": "H",
+    "0,2": "S",
+    "-1,2": "S",
+    "-2,2": "P",
+    "-3,2": "R",
+    "-4,2": "E",
+    "-4,3": "A",
+    "-3,3": "Z",
+    "-2,3": "E",
+    "-1,3": "S",
+    "0,3": "S",
+    "1,3": "T",
+    "0,4": "R",
+    "-1,4": "O",
+    "-2,4": "Y",
+    "-3,4": "E",
+    "-4,4": "R"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -1,
+      "r": -3
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 2,
+      "r": 2
+    },
+    {
+      "type": "prism",
+      "q": -1,
+      "r": -2
+    },
+    {
+      "type": "gemGold",
+      "q": 0,
+      "r": -3
+    },
+    {
+      "type": "amethyst",
+      "q": 1,
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -3,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "EA"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 4780,
+    "minAchievableScore": 2112,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "DEMONSTRATE",
+          "ENORMOUSLY",
+          "OFFTAKES",
+          "ZAPTIEHS",
+          "SPREAZES",
+          "ASSIGNING",
+          "STROYER"
+        ],
+        "wordTotal": 2774,
+        "penalty": 0,
+        "finalScore": 2774
+      },
+      {
+        "words": [
+          "DEMONSTRATE",
+          "ENORMOUSLY",
+          "OFFTAKES",
+          "ZAPTIEHS",
+          "SPREAZES",
+          "ASSIGNING",
+          "STROYER"
+        ],
+        "wordTotal": 2774,
+        "penalty": 0,
+        "finalScore": 2774
+      },
+      {
+        "words": [
+          "DEMONSTRATE",
+          "ENORMOUSLY",
+          "ASSIGNING",
+          "OFFTAKES",
+          "ZAPTIEHS",
+          "SPREAZES",
+          "STROYER"
+        ],
+        "wordTotal": 2774,
+        "penalty": 0,
+        "finalScore": 2774
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2774,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 1056,
+          "positional": "A 11-letter word uses the EA digraph tile",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D_________E"
+            },
+            {
+              "level": 3,
+              "text": "DE_______TE"
+            },
+            {
+              "level": 4,
+              "text": "_E_O____A_E"
+            },
+            {
+              "level": 5,
+              "text": "DEMONSTRAT_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses 3 digraph tiles",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 10,
+          "estimatedPoints": 600,
+          "positional": "A 10-letter word routes through the purple prism",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "E________Y"
+            },
+            {
+              "level": 3,
+              "text": "EN______LY"
+            },
+            {
+              "level": 4,
+              "text": "E_O__OU___"
+            },
+            {
+              "level": 5,
+              "text": "ENORMOUSL_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 234,
+          "positional": "A 9-letter word uses the TH digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "A_______G"
+            },
+            {
+              "level": 3,
+              "text": "AS_____NG"
+            },
+            {
+              "level": 4,
+              "text": "A__I__I__"
+            },
+            {
+              "level": 5,
+              "text": "ASSIGNIN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 256,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O______S"
+            },
+            {
+              "level": 3,
+              "text": "OF____ES"
+            },
+            {
+              "level": 4,
+              "text": "O___A_E_"
+            },
+            {
+              "level": 5,
+              "text": "OFFTAKE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 248,
+          "positional": "A 8-letter word runs from center toward bottom",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Z______S"
+            },
+            {
+              "level": 3,
+              "text": "ZA____HS"
+            },
+            {
+              "level": 4,
+              "text": "_A__IE__"
+            },
+            {
+              "level": 5,
+              "text": "ZAPTIEH_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 240,
+          "positional": "A 8-letter word uses the GH digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S______S"
+            },
+            {
+              "level": 3,
+              "text": "SP____ES"
+            },
+            {
+              "level": 4,
+              "text": "___EA_E_"
+            },
+            {
+              "level": 5,
+              "text": "SPREAZE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 140,
+          "positional": "A 7-letter word runs from bottom toward lower-left",
+          "category": "A role/profession-style word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_____R"
+            },
+            {
+              "level": 3,
+              "text": "ST___ER"
+            },
+            {
+              "level": 4,
+              "text": "___O_E_"
+            },
+            {
+              "level": 5,
+              "text": "STROYE_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8.3,
+    "gemDensity": 0.016,
+    "tilesCleared": 58,
+    "tilesRemaining": 3,
+    "tileClearancePercent": 95.1,
+    "fullClear": false,
+    "solutionPath": [
+      "DEMONSTRATE",
+      "ENORMOUSLY",
+      "OFFTAKES",
+      "ZAPTIEHS",
+      "SPREAZES",
+      "STRONGER",
+      "AYINS"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "DEMONSTRATE",
+      "ENORMOUSLY",
+      "ASSIGNING",
+      "OFFTAKES",
+      "ZAPTIEHS",
+      "SPREAZES",
+      "STROYER"
+    ],
+    "generatedAt": "2026-05-23T01:18:48.236Z"
+  }
+}
