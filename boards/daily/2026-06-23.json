@@ -1,0 +1,419 @@
+{
+  "date": "2026-06-23",
+  "grid": {
+    "0,-4": "G",
+    "1,-4": "R",
+    "2,-4": "A",
+    "3,-4": "P",
+    "4,-4": "H",
+    "4,-3": "O",
+    "3,-3": "P",
+    "2,-3": "H",
+    "1,-3": "O",
+    "0,-3": "B",
+    "-1,-3": "I",
+    "-2,-2": "A",
+    "-1,-2": "S",
+    "0,-2": "E",
+    "1,-2": "N",
+    "2,-2": "H",
+    "3,-2": "E",
+    "4,-2": "A",
+    "4,-1": "R",
+    "3,-1": "T",
+    "2,-1": "E",
+    "1,-1": "N",
+    "0,-1": "I",
+    "-1,-1": "N",
+    "-2,-1": "G",
+    "-3,-1": "D",
+    "-4,0": "U",
+    "-3,0": "S",
+    "-2,0": "T",
+    "-1,0": "P",
+    "0,0": "R",
+    "1,0": "O",
+    "2,0": "O",
+    "3,0": "F",
+    "4,0": "H",
+    "3,1": "A",
+    "2,1": "R",
+    "1,1": "B",
+    "0,1": "O",
+    "-1,1": "R",
+    "-2,1": "I",
+    "-3,1": "N",
+    "-4,1": "G",
+    "-4,2": "B",
+    "-3,2": "A",
+    "-2,2": "B",
+    "-1,2": "E",
+    "0,2": "S",
+    "1,2": "I",
+    "2,2": "A",
+    "1,3": "G",
+    "0,3": "R",
+    "-1,3": "E",
+    "-2,3": "E",
+    "-3,3": "D",
+    "-4,3": "S",
+    "-4,4": "C",
+    "-3,4": "R",
+    "-2,4": "A",
+    "-1,4": "Z",
+    "0,4": "E"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -3,
+      "r": -1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 3,
+      "r": 1
+    },
+    {
+      "type": "prism",
+      "q": 1,
+      "r": -1
+    },
+    {
+      "type": "gemGold",
+      "q": 0,
+      "r": -1
+    },
+    {
+      "type": "rune",
+      "q": -2,
+      "r": 4
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 1,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -3,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "NG"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 8123,
+    "minAchievableScore": 4752,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "ENHEARTENING",
+          "GRAPHOPHOBIAS",
+          "DUSTPROOF",
+          "HARBORING",
+          "BABESIA",
+          "CRAZE",
+          "GREEDS"
+        ],
+        "wordTotal": 3912,
+        "penalty": 0,
+        "finalScore": 3912
+      },
+      {
+        "words": [
+          "ENHEARTENING",
+          "GRAPHOPHOBIAS",
+          "DUSTPROOF",
+          "HARBORING",
+          "BABESIA",
+          "CRAZE",
+          "GREEDS"
+        ],
+        "wordTotal": 3912,
+        "penalty": 0,
+        "finalScore": 3912
+      },
+      {
+        "words": [
+          "GRAPHOPHOBIAS",
+          "ENHEARTENING",
+          "DUSTPROOF",
+          "HARBORING",
+          "BABESIA",
+          "GREEDS",
+          "CRAZE"
+        ],
+        "wordTotal": 3912,
+        "penalty": 0,
+        "finalScore": 3912
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 3912,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 585,
+          "positional": "A 13-letter word uses the ER digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G___________S"
+            },
+            {
+              "level": 3,
+              "text": "GR_________AS"
+            },
+            {
+              "level": 4,
+              "text": "__A__O__O_IA_"
+            },
+            {
+              "level": 5,
+              "text": "GRAPHOPHOBIA_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 12,
+          "estimatedPoints": 2376,
+          "positional": "A 12-letter word uses the NG digraph tile",
+          "category": "A compound-style word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "E__________G"
+            },
+            {
+              "level": 3,
+              "text": "EN________NG"
+            },
+            {
+              "level": 4,
+              "text": "E__EA__E_I__"
+            },
+            {
+              "level": 5,
+              "text": "ENHEARTENIN_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 288,
+          "positional": "A 9-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D_______F"
+            },
+            {
+              "level": 3,
+              "text": "DU_____OF"
+            },
+            {
+              "level": 4,
+              "text": "_U____OO_"
+            },
+            {
+              "level": 5,
+              "text": "DUSTPROO_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word uses the ON digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "H_______G"
+            },
+            {
+              "level": 3,
+              "text": "HA_____NG"
+            },
+            {
+              "level": 4,
+              "text": "_A__O_I__"
+            },
+            {
+              "level": 5,
+              "text": "HARBORIN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 175,
+          "positional": "A 7-letter word runs from lower-left toward lower-right",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B_____A"
+            },
+            {
+              "level": 3,
+              "text": "BA___IA"
+            },
+            {
+              "level": 4,
+              "text": "_A_E_IA"
+            },
+            {
+              "level": 5,
+              "text": "BABESI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 108,
+          "positional": "A 6-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G____S"
+            },
+            {
+              "level": 3,
+              "text": "GR__DS"
+            },
+            {
+              "level": 4,
+              "text": "__EE__"
+            },
+            {
+              "level": 5,
+              "text": "GREED_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 110,
+          "positional": "A 5-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C___E"
+            },
+            {
+              "level": 3,
+              "text": "CR_ZE"
+            },
+            {
+              "level": 4,
+              "text": "__A_E"
+            },
+            {
+              "level": 5,
+              "text": "CRAZ_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8,
+    "gemDensity": 0.016,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
+    "fullClear": false,
+    "solutionPath": [
+      "HEARTENING",
+      "DUSTPROOF",
+      "HARBORING",
+      "BENISEEDS",
+      "ZEREBAS",
+      "PHARAOH",
+      "CARAP"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "GRAPHOPHOBIAS",
+      "ENHEARTENING",
+      "DUSTPROOF",
+      "HARBORING",
+      "BABESIA",
+      "GREEDS",
+      "CRAZE"
+    ],
+    "generatedAt": "2026-05-25T01:26:16.008Z"
+  }
+}
