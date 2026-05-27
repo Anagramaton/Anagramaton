@@ -1,0 +1,398 @@
+{
+  "date": "2026-06-25",
+  "grid": {
+    "0,-4": "E",
+    "1,-4": "T",
+    "2,-4": "E",
+    "3,-4": "R",
+    "4,-4": "N",
+    "4,-3": "A",
+    "3,-3": "L",
+    "2,-3": "I",
+    "1,-3": "T",
+    "0,-3": "I",
+    "-1,-3": "E",
+    "-2,-2": "S",
+    "-1,-2": "D",
+    "0,-2": "I",
+    "1,-2": "S",
+    "2,-2": "B",
+    "3,-2": "E",
+    "4,-2": "L",
+    "4,-1": "I",
+    "3,-1": "E",
+    "2,-1": "V",
+    "1,-1": "E",
+    "0,-1": "S",
+    "-1,-1": "M",
+    "-2,-1": "I",
+    "-3,-1": "S",
+    "-4,0": "B",
+    "-3,0": "E",
+    "-2,0": "S",
+    "-1,0": "E",
+    "0,0": "E",
+    "1,0": "M",
+    "2,0": "E",
+    "3,0": "D",
+    "4,0": "T",
+    "3,1": "U",
+    "2,1": "M",
+    "1,1": "U",
+    "0,1": "L",
+    "-1,1": "T",
+    "-2,1": "U",
+    "-3,1": "A",
+    "-4,1": "T",
+    "-4,2": "E",
+    "-3,2": "D",
+    "-2,2": "O",
+    "-1,2": "V",
+    "0,2": "E",
+    "1,2": "R",
+    "2,2": "P",
+    "1,3": "R",
+    "0,3": "I",
+    "-1,3": "Z",
+    "-2,3": "E",
+    "-3,3": "D",
+    "-4,3": "E",
+    "-4,4": "O",
+    "-3,4": "C",
+    "-2,4": "E",
+    "-1,4": "N",
+    "0,4": "E"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 4,
+      "r": -2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": -4,
+      "r": 0
+    },
+    {
+      "type": "gemEmerald",
+      "q": -2,
+      "r": -1
+    },
+    {
+      "type": "amethyst",
+      "q": -1,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 2,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -3,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "AN"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 6140,
+    "minAchievableScore": 3256,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "MISBESEEMED",
+          "DISBELIEVES",
+          "OVERPRIZED",
+          "TUMULTUATED",
+          "ETERNALITIES",
+          "EOCENE"
+        ],
+        "wordTotal": 3286,
+        "penalty": 0,
+        "finalScore": 3286
+      },
+      {
+        "words": [
+          "MISBESEEMED",
+          "OVERPRIZED",
+          "DISBELIEVES",
+          "TUMULTUATED",
+          "ETERNALITIES",
+          "EOCENE"
+        ],
+        "wordTotal": 3286,
+        "penalty": 0,
+        "finalScore": 3286
+      },
+      {
+        "words": [
+          "ETERNALITIES",
+          "MISBESEEMED",
+          "DISBELIEVES",
+          "TUMULTUATED",
+          "OVERPRIZED",
+          "EOCENE"
+        ],
+        "wordTotal": 3286,
+        "penalty": 0,
+        "finalScore": 3286
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 3286,
+      "wordCount": 6,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 12,
+          "estimatedPoints": 360,
+          "positional": "A 12-letter word uses the HE digraph tile",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 6 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E__________S"
+            },
+            {
+              "level": 3,
+              "text": "ET________ES"
+            },
+            {
+              "level": 4,
+              "text": "E_E__A_I_IE_"
+            },
+            {
+              "level": 5,
+              "text": "ETERNALITIE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 418,
+          "positional": "A 11-letter word runs from top toward center",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D_________S"
+            },
+            {
+              "level": 3,
+              "text": "DI_______ES"
+            },
+            {
+              "level": 4,
+              "text": "_I__E_IE_E_"
+            },
+            {
+              "level": 5,
+              "text": "DISBELIEVE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 11,
+          "estimatedPoints": 1628,
+          "positional": "A 11-letter word routes through the purple prism",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M_________D"
+            },
+            {
+              "level": 3,
+              "text": "MI_______ED"
+            },
+            {
+              "level": 4,
+              "text": "_I__E_EE_E_"
+            },
+            {
+              "level": 5,
+              "text": "MISBESEEME_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses emerald gem"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 11,
+          "estimatedPoints": 374,
+          "positional": "A 11-letter word uses the WH digraph tile",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T_________D"
+            },
+            {
+              "level": 3,
+              "text": "TU_______ED"
+            },
+            {
+              "level": 4,
+              "text": "_U_U__UA_E_"
+            },
+            {
+              "level": 5,
+              "text": "TUMULTUATE_"
+            }
+          ],
+          "features": [
+            "Uses 3 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 10,
+          "estimatedPoints": 410,
+          "positional": "A 10-letter word uses the AN digraph tile",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O________D"
+            },
+            {
+              "level": 3,
+              "text": "OV______ED"
+            },
+            {
+              "level": 4,
+              "text": "O_E___I_E_"
+            },
+            {
+              "level": 5,
+              "text": "OVERPRIZE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 96,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E____E"
+            },
+            {
+              "level": 3,
+              "text": "EO__NE"
+            },
+            {
+              "level": 4,
+              "text": "EO_E_E"
+            },
+            {
+              "level": 5,
+              "text": "EOCEN_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 9,
+    "gemDensity": 0.016,
+    "tilesCleared": 54,
+    "tilesRemaining": 7,
+    "tileClearancePercent": 88.5,
+    "fullClear": false,
+    "solutionPath": [
+      "MISBESEEMED",
+      "DISBELIEVES",
+      "OVERPRIZED",
+      "TUMULTUATE",
+      "LINEATE",
+      "COEDS"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "ETERNALITIES",
+      "DISBELIEVES",
+      "MISBESEEMED",
+      "TUMULTUATED",
+      "OVERPRIZED",
+      "EOCENE"
+    ],
+    "generatedAt": "2026-05-27T01:26:20.596Z"
+  }
+}
