@@ -1,0 +1,434 @@
+{
+  "date": "2026-06-26",
+  "grid": {
+    "0,-4": "R",
+    "1,-4": "E",
+    "2,-4": "P",
+    "3,-4": "L",
+    "4,-4": "I",
+    "4,-3": "C",
+    "3,-3": "A",
+    "2,-3": "B",
+    "1,-3": "I",
+    "0,-3": "L",
+    "-1,-3": "I",
+    "-2,-2": "T",
+    "-1,-2": "Y",
+    "0,-2": "D",
+    "1,-2": "E",
+    "2,-2": "A",
+    "3,-2": "C",
+    "4,-2": "I",
+    "4,-1": "D",
+    "3,-1": "I",
+    "2,-1": "F",
+    "1,-1": "I",
+    "0,-1": "E",
+    "-1,-1": "S",
+    "-2,-1": "A",
+    "-3,-1": "N",
+    "-4,0": "T",
+    "-3,0": "I",
+    "-2,0": "P",
+    "-1,0": "A",
+    "0,0": "T",
+    "1,0": "H",
+    "2,0": "Y",
+    "3,0": "O",
+    "4,0": "U",
+    "3,1": "T",
+    "2,1": "H",
+    "1,1": "E",
+    "0,1": "A",
+    "-1,1": "R",
+    "-2,1": "D",
+    "-3,1": "B",
+    "-4,1": "A",
+    "-4,2": "F",
+    "-3,2": "F",
+    "-2,2": "L",
+    "-1,2": "E",
+    "0,2": "S",
+    "1,2": "N",
+    "2,2": "E",
+    "1,3": "T",
+    "0,3": "F",
+    "-1,3": "U",
+    "-2,3": "L",
+    "-3,3": "S",
+    "-4,3": "K",
+    "-4,4": "I",
+    "-3,4": "D",
+    "-2,4": "E",
+    "-1,4": "L",
+    "0,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -3,
+      "r": -1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 1
+    },
+    {
+      "type": "prism",
+      "q": -2,
+      "r": 0
+    },
+    {
+      "type": "gemGold",
+      "q": 2,
+      "r": -3
+    },
+    {
+      "type": "amethyst",
+      "q": -2,
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 0,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 4,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "NT"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 6415,
+    "minAchievableScore": 3354,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "REPLICABILITY",
+          "ANTIPATHY",
+          "DEACIDIFIES",
+          "BAFFLES",
+          "OUTHEARD",
+          "NETFULS",
+          "KIDELS"
+        ],
+        "wordTotal": 3255,
+        "penalty": 0,
+        "finalScore": 3255
+      },
+      {
+        "words": [
+          "REPLICABILITY",
+          "ANTIPATHY",
+          "DEACIDIFIES",
+          "BAFFLES",
+          "NETFULS",
+          "OUTHEARD",
+          "KIDELS"
+        ],
+        "wordTotal": 3255,
+        "penalty": 0,
+        "finalScore": 3255
+      },
+      {
+        "words": [
+          "REPLICABILITY",
+          "DEACIDIFIES",
+          "ANTIPATHY",
+          "OUTHEARD",
+          "BAFFLES",
+          "NETFULS",
+          "KIDELS"
+        ],
+        "wordTotal": 3255,
+        "penalty": 0,
+        "finalScore": 3255
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 3255,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 1677,
+          "positional": "A 13-letter word passes through the gold gem",
+          "category": "An abstract noun — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A word related to doing something again (13 letters)"
+            },
+            {
+              "level": 2,
+              "text": "R___________Y"
+            },
+            {
+              "level": 3,
+              "text": "RE_________TY"
+            },
+            {
+              "level": 4,
+              "text": "_E__I_A_I_I__"
+            },
+            {
+              "level": 5,
+              "text": "REPLICABILIT_"
+            }
+          ],
+          "features": [
+            "Uses gold gem"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 385,
+          "positional": "A 11-letter word uses the QU digraph tile",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 6 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D_________S"
+            },
+            {
+              "level": 3,
+              "text": "DE_______ES"
+            },
+            {
+              "level": 4,
+              "text": "_EA_I_I_IE_"
+            },
+            {
+              "level": 5,
+              "text": "DEACIDIFIE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 504,
+          "positional": "A 9-letter word uses the AN digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A_______Y"
+            },
+            {
+              "level": 3,
+              "text": "AN_____HY"
+            },
+            {
+              "level": 4,
+              "text": "A__I_A___"
+            },
+            {
+              "level": 5,
+              "text": "ANTIPATH_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 184,
+          "positional": "A 8-letter word uses the GH digraph tile",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O______D"
+            },
+            {
+              "level": 3,
+              "text": "OU____RD"
+            },
+            {
+              "level": 4,
+              "text": "OU__EA__"
+            },
+            {
+              "level": 5,
+              "text": "OUTHEAR_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 217,
+          "positional": "A 7-letter word runs from center toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B_____S"
+            },
+            {
+              "level": 3,
+              "text": "BA___ES"
+            },
+            {
+              "level": 4,
+              "text": "_A___E_"
+            },
+            {
+              "level": 5,
+              "text": "BAFFLE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 168,
+          "positional": "A 7-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "N_____S"
+            },
+            {
+              "level": 3,
+              "text": "NE___LS"
+            },
+            {
+              "level": 4,
+              "text": "_E__U__"
+            },
+            {
+              "level": 5,
+              "text": "NETFUL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 6,
+          "estimatedPoints": 120,
+          "positional": "A 6-letter word uses the NT digraph tile",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "K____S"
+            },
+            {
+              "level": 3,
+              "text": "KI__LS"
+            },
+            {
+              "level": 4,
+              "text": "_I_E__"
+            },
+            {
+              "level": 5,
+              "text": "KIDEL_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 7.9,
+    "gemDensity": 0.016,
+    "tilesCleared": 55,
+    "tilesRemaining": 6,
+    "tileClearancePercent": 90.2,
+    "fullClear": false,
+    "solutionPath": [
+      "PLACABILITY",
+      "ANTIPATHIES",
+      "RESENTFUL",
+      "DISLEAFED",
+      "DECRY",
+      "FILII",
+      "SHOED"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "REPLICABILITY",
+      "DEACIDIFIES",
+      "ANTIPATHY",
+      "OUTHEARD",
+      "BAFFLES",
+      "NETFULS",
+      "KIDELS"
+    ],
+    "generatedAt": "2026-05-28T01:18:19.138Z"
+  }
+}
