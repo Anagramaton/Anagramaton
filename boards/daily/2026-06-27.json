@@ -1,0 +1,425 @@
+{
+  "date": "2026-06-27",
+  "grid": {
+    "4,-4": "B",
+    "3,-4": "E",
+    "2,-4": "A",
+    "1,-4": "U",
+    "0,-4": "M",
+    "-1,-3": "O",
+    "0,-3": "N",
+    "1,-3": "T",
+    "2,-3": "A",
+    "3,-3": "G",
+    "4,-3": "U",
+    "4,-2": "E",
+    "3,-2": "S",
+    "2,-2": "H",
+    "1,-2": "O",
+    "0,-2": "L",
+    "-1,-2": "L",
+    "-2,-2": "O",
+    "-3,-1": "W",
+    "-2,-1": "W",
+    "-1,-1": "A",
+    "0,-1": "R",
+    "1,-1": "E",
+    "2,-1": "S",
+    "3,-1": "C",
+    "4,-1": "O",
+    "4,0": "C",
+    "3,0": "K",
+    "2,0": "T",
+    "1,0": "A",
+    "0,0": "I",
+    "-1,0": "L",
+    "-2,0": "I",
+    "-3,0": "N",
+    "-4,0": "G",
+    "-4,1": "R",
+    "-3,1": "E",
+    "-2,1": "V",
+    "-1,1": "E",
+    "0,1": "R",
+    "1,1": "I",
+    "2,1": "S",
+    "3,1": "T",
+    "2,2": "G",
+    "1,2": "I",
+    "0,2": "L",
+    "-1,2": "L",
+    "-2,2": "I",
+    "-3,2": "E",
+    "-4,2": "D",
+    "-4,3": "L",
+    "-3,3": "U",
+    "-2,3": "M",
+    "-1,3": "B",
+    "0,3": "E",
+    "1,3": "R",
+    "0,4": "T",
+    "-1,4": "H",
+    "-2,4": "R",
+    "-3,4": "E",
+    "-4,4": "W"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 4,
+      "r": -2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 2,
+      "r": 2
+    },
+    {
+      "type": "prism",
+      "q": 3,
+      "r": 0
+    },
+    {
+      "type": "gemGold",
+      "q": -4,
+      "r": 4
+    },
+    {
+      "type": "rune",
+      "q": 4,
+      "r": -4
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 4,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": -1,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -2,
+      "digraph": "IN"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 4523,
+    "minAchievableScore": 1628,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "COCKTAILING",
+          "BEAUMONTAGUES",
+          "HOLLOWWARES",
+          "THREW",
+          "REVERIST",
+          "GILLIED",
+          "LUMBER"
+        ],
+        "wordTotal": 2610,
+        "penalty": 0,
+        "finalScore": 2610
+      },
+      {
+        "words": [
+          "COCKTAILING",
+          "THREW",
+          "HOLLOWWARES",
+          "BEAUMONTAGUES",
+          "REVERIST",
+          "LUMBER",
+          "GILLIED"
+        ],
+        "wordTotal": 2610,
+        "penalty": 0,
+        "finalScore": 2610
+      },
+      {
+        "words": [
+          "BEAUMONTAGUES",
+          "COCKTAILING",
+          "HOLLOWWARES",
+          "REVERIST",
+          "GILLIED",
+          "LUMBER",
+          "THREW"
+        ],
+        "wordTotal": 2610,
+        "penalty": 0,
+        "finalScore": 2610
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2610,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 533,
+          "positional": "A 13-letter word sits in the upper-right quadrant",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 7 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___________S"
+            },
+            {
+              "level": 3,
+              "text": "BE_________ES"
+            },
+            {
+              "level": 4,
+              "text": "_EAU_O__A_UE_"
+            },
+            {
+              "level": 5,
+              "text": "BEAUMONTAGUE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 462,
+          "positional": "A 11-letter word uses the IN digraph tile",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H_________S"
+            },
+            {
+              "level": 3,
+              "text": "HO_______ES"
+            },
+            {
+              "level": 4,
+              "text": "_O__O__A_E_"
+            },
+            {
+              "level": 5,
+              "text": "HOLLOWWARE_"
+            }
+          ],
+          "features": [
+            "Uses 3 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 11,
+          "estimatedPoints": 814,
+          "positional": "A 11-letter word routes through the purple prism",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "C_________G"
+            },
+            {
+              "level": 3,
+              "text": "CO_______NG"
+            },
+            {
+              "level": 4,
+              "text": "_O___AI_I__"
+            },
+            {
+              "level": 5,
+              "text": "COCKTAILIN_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 208,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A role/profession-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A word related to doing something again (8 letters)"
+            },
+            {
+              "level": 2,
+              "text": "R______T"
+            },
+            {
+              "level": 3,
+              "text": "RE____ST"
+            },
+            {
+              "level": 4,
+              "text": "_E_E_I__"
+            },
+            {
+              "level": 5,
+              "text": "REVERIS_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 140,
+          "positional": "A 7-letter word runs from lower-right toward lower-left",
+          "category": "An action verb form — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G_____D"
+            },
+            {
+              "level": 3,
+              "text": "GI___ED"
+            },
+            {
+              "level": 4,
+              "text": "_I__IE_"
+            },
+            {
+              "level": 5,
+              "text": "GILLIE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 138,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "category": "A role/profession-style word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L____R"
+            },
+            {
+              "level": 3,
+              "text": "LU__ER"
+            },
+            {
+              "level": 4,
+              "text": "_U__E_"
+            },
+            {
+              "level": 5,
+              "text": "LUMBE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 315,
+          "positional": "A 5-letter word uses the NT digraph tile",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "T___W"
+            },
+            {
+              "level": 3,
+              "text": "TH_EW"
+            },
+            {
+              "level": 4,
+              "text": "___E_"
+            },
+            {
+              "level": 5,
+              "text": "THRE_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 7.9,
+    "gemDensity": 0.016,
+    "tilesCleared": 55,
+    "tilesRemaining": 6,
+    "tileClearancePercent": 90.2,
+    "fullClear": false,
+    "solutionPath": [
+      "COCKTAILING",
+      "HOLLOWWARES",
+      "MEWLED",
+      "VERLIGTES",
+      "REBOANT",
+      "THAGIS",
+      "RULER"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "BEAUMONTAGUES",
+      "HOLLOWWARES",
+      "COCKTAILING",
+      "REVERIST",
+      "GILLIED",
+      "LUMBER",
+      "THREW"
+    ],
+    "generatedAt": "2026-05-29T01:25:58.764Z"
+  }
+}
