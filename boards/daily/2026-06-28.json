@@ -1,0 +1,468 @@
+{
+  "date": "2026-06-28",
+  "grid": {
+    "4,-4": "C",
+    "3,-4": "R",
+    "2,-4": "E",
+    "1,-4": "A",
+    "0,-4": "T",
+    "-1,-3": "I",
+    "0,-3": "O",
+    "1,-3": "N",
+    "2,-3": "I",
+    "3,-3": "S",
+    "4,-3": "T",
+    "4,-2": "A",
+    "3,-2": "D",
+    "2,-2": "O",
+    "1,-2": "N",
+    "0,-2": "I",
+    "-1,-2": "Z",
+    "-2,-2": "E",
+    "-3,-1": "D",
+    "-2,-1": "F",
+    "-1,-1": "E",
+    "0,-1": "T",
+    "1,-1": "I",
+    "2,-1": "D",
+    "3,-1": "I",
+    "4,-1": "T",
+    "4,0": "Y",
+    "3,0": "C",
+    "2,0": "H",
+    "1,0": "O",
+    "0,0": "U",
+    "-1,0": "L",
+    "-2,0": "T",
+    "-3,0": "R",
+    "-4,0": "Y",
+    "-4,1": "P",
+    "-3,1": "A",
+    "-2,1": "R",
+    "-1,1": "A",
+    "0,1": "N",
+    "1,1": "O",
+    "2,1": "I",
+    "3,1": "D",
+    "2,2": "T",
+    "1,2": "U",
+    "0,2": "M",
+    "-1,2": "U",
+    "-2,2": "L",
+    "-3,2": "U",
+    "-4,2": "S",
+    "-4,3": "F",
+    "-3,3": "R",
+    "-2,3": "A",
+    "-1,3": "I",
+    "0,3": "L",
+    "1,3": "S",
+    "0,4": "S",
+    "-1,4": "L",
+    "-2,4": "I",
+    "-3,4": "P",
+    "-4,4": "T"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -2,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 1,
+      "r": -3
+    },
+    {
+      "type": "gemEmerald",
+      "q": 1,
+      "r": 3
+    },
+    {
+      "type": "amethyst",
+      "q": 2,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -2,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "CK"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2830,
+    "minAchievableScore": 1320,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "CREATIONIST",
+          "FRAILS",
+          "ADONIZED",
+          "FETIDITY",
+          "CHOULTRY",
+          "PARANOID",
+          "TUMULUS",
+          "SLIPT"
+        ],
+        "wordTotal": 1989,
+        "penalty": 0,
+        "finalScore": 1989
+      },
+      {
+        "words": [
+          "CREATIONIST",
+          "FRAILS",
+          "ADONIZED",
+          "FETIDITY",
+          "CHOULTRY",
+          "PARANOID",
+          "TUMULUS",
+          "SLIPT"
+        ],
+        "wordTotal": 1989,
+        "penalty": 0,
+        "finalScore": 1989
+      },
+      {
+        "words": [
+          "CREATIONIST",
+          "ADONIZED",
+          "FETIDITY",
+          "CHOULTRY",
+          "PARANOID",
+          "TUMULUS",
+          "FRAILS",
+          "SLIPT"
+        ],
+        "wordTotal": 1989,
+        "penalty": 0,
+        "finalScore": 1989
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 1989,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 660,
+          "positional": "A 11-letter word uses the CK digraph tile",
+          "category": "A role/profession-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_________T"
+            },
+            {
+              "level": 3,
+              "text": "CR_______ST"
+            },
+            {
+              "level": 4,
+              "text": "__EA_IO_I__"
+            },
+            {
+              "level": 5,
+              "text": "CREATIONIS_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 2 digraph tiles",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 8,
+          "estimatedPoints": 232,
+          "positional": "A 8-letter word uses the ES digraph tile",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A______D"
+            },
+            {
+              "level": 3,
+              "text": "AD____ED"
+            },
+            {
+              "level": 4,
+              "text": "A_O_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "ADONIZE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 216,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "An abstract noun — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F______Y"
+            },
+            {
+              "level": 3,
+              "text": "FE____TY"
+            },
+            {
+              "level": 4,
+              "text": "_E_I_I__"
+            },
+            {
+              "level": 5,
+              "text": "FETIDIT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 216,
+          "positional": "A 8-letter word uses the QU digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C______Y"
+            },
+            {
+              "level": 3,
+              "text": "CH____RY"
+            },
+            {
+              "level": 4,
+              "text": "__OU____"
+            },
+            {
+              "level": 5,
+              "text": "CHOULTR_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 184,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P______D"
+            },
+            {
+              "level": 3,
+              "text": "PA____ID"
+            },
+            {
+              "level": 4,
+              "text": "_A_A_OI_"
+            },
+            {
+              "level": 5,
+              "text": "PARANOI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 161,
+          "positional": "A 7-letter word runs from lower-right toward lower-left",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T_____S"
+            },
+            {
+              "level": 3,
+              "text": "TU___US"
+            },
+            {
+              "level": 4,
+              "text": "_U_U_U_"
+            },
+            {
+              "level": 5,
+              "text": "TUMULU_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 6,
+          "estimatedPoints": 240,
+          "positional": "A 6-letter word passes through the emerald gem",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F____S"
+            },
+            {
+              "level": 3,
+              "text": "FR__LS"
+            },
+            {
+              "level": 4,
+              "text": "__AI__"
+            },
+            {
+              "level": 5,
+              "text": "FRAIL_"
+            }
+          ],
+          "features": [
+            "Uses emerald gem"
+          ]
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 80,
+          "positional": "A 5-letter word uses the EA digraph tile",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "S___T"
+            },
+            {
+              "level": 3,
+              "text": "SL_PT"
+            },
+            {
+              "level": 4,
+              "text": "__I__"
+            },
+            {
+              "level": 5,
+              "text": "SLIP_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 8,
+    "averageWordLength": 7.4,
+    "gemDensity": 0.016,
+    "tilesCleared": 59,
+    "tilesRemaining": 2,
+    "tileClearancePercent": 96.7,
+    "fullClear": false,
+    "solutionPath": [
+      "CREATIONIST",
+      "LUSTIHOOD",
+      "ADONIZED",
+      "UNICITY",
+      "PATELLAR",
+      "FRAIMS",
+      "TURFS",
+      "TULIP"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "CREATIONIST",
+      "ADONIZED",
+      "FETIDITY",
+      "CHOULTRY",
+      "PARANOID",
+      "TUMULUS",
+      "FRAILS",
+      "SLIPT"
+    ],
+    "generatedAt": "2026-05-30T01:21:34.880Z"
+  }
+}
