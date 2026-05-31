@@ -1,0 +1,426 @@
+{
+  "date": "2026-06-29",
+  "grid": {
+    "0,-4": "P",
+    "1,-4": "E",
+    "2,-4": "N",
+    "3,-4": "T",
+    "4,-4": "A",
+    "4,-3": "S",
+    "3,-3": "Y",
+    "2,-3": "L",
+    "1,-3": "L",
+    "0,-3": "A",
+    "-1,-3": "B",
+    "-2,-2": "I",
+    "-1,-2": "C",
+    "0,-2": "M",
+    "1,-2": "U",
+    "2,-2": "L",
+    "3,-2": "T",
+    "4,-2": "I",
+    "4,-1": "P",
+    "3,-1": "L",
+    "2,-1": "E",
+    "1,-1": "X",
+    "0,-1": "O",
+    "-1,-1": "R",
+    "-2,-1": "M",
+    "-3,-1": "A",
+    "-4,0": "C",
+    "-3,0": "R",
+    "-2,0": "O",
+    "-1,0": "P",
+    "0,0": "H",
+    "1,0": "Y",
+    "2,0": "T",
+    "3,0": "I",
+    "4,0": "C",
+    "3,1": "B",
+    "2,1": "A",
+    "1,1": "R",
+    "0,1": "O",
+    "-1,1": "S",
+    "-2,1": "A",
+    "-3,1": "U",
+    "-4,1": "R",
+    "-4,2": "S",
+    "-3,2": "H",
+    "-2,2": "E",
+    "-1,2": "W",
+    "0,2": "I",
+    "1,2": "N",
+    "2,2": "G",
+    "1,3": "P",
+    "0,3": "H",
+    "-1,3": "A",
+    "-2,3": "S",
+    "-3,3": "E",
+    "-4,3": "S",
+    "-4,4": "M",
+    "-3,4": "E",
+    "-2,4": "Z",
+    "-1,4": "Z",
+    "0,4": "E"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -2,
+      "r": -2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 4,
+      "r": -3
+    },
+    {
+      "type": "gemGold",
+      "q": 2,
+      "r": -4
+    },
+    {
+      "type": "rune",
+      "q": -2,
+      "r": 4
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -2,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "IO"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 10808,
+    "minAchievableScore": 6864,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "PENTASYLLABIC",
+          "MULTIPLEXOR",
+          "MACROPHYTIC",
+          "BAROSAURS",
+          "MEZZE",
+          "HEWING",
+          "PHASES"
+        ],
+        "wordTotal": 4978,
+        "penalty": 0,
+        "finalScore": 4978
+      },
+      {
+        "words": [
+          "PENTASYLLABIC",
+          "MULTIPLEXOR",
+          "MACROPHYTIC",
+          "MEZZE",
+          "BAROSAURS",
+          "HEWING",
+          "PHASES"
+        ],
+        "wordTotal": 4978,
+        "penalty": 0,
+        "finalScore": 4978
+      },
+      {
+        "words": [
+          "PENTASYLLABIC",
+          "MULTIPLEXOR",
+          "MACROPHYTIC",
+          "BAROSAURS",
+          "HEWING",
+          "PHASES",
+          "MEZZE"
+        ],
+        "wordTotal": 4978,
+        "penalty": 0,
+        "finalScore": 4978
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 4978,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 3432,
+          "positional": "A 13-letter word routes through the purple prism",
+          "category": "A descriptive adjective — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P___________C"
+            },
+            {
+              "level": 3,
+              "text": "PE_________IC"
+            },
+            {
+              "level": 4,
+              "text": "_E__A____A_I_"
+            },
+            {
+              "level": 5,
+              "text": "PENTASYLLABI_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses gold gem",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 451,
+          "positional": "A 11-letter word uses the CR digraph tile",
+          "category": "A role/profession-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M_________R"
+            },
+            {
+              "level": 3,
+              "text": "MU_______OR"
+            },
+            {
+              "level": 4,
+              "text": "_U__I__E_O_"
+            },
+            {
+              "level": 5,
+              "text": "MULTIPLEXO_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 11,
+          "estimatedPoints": 440,
+          "positional": "A 11-letter word sits in the center quadrant",
+          "category": "A descriptive adjective — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M_________C"
+            },
+            {
+              "level": 3,
+              "text": "MA_______IC"
+            },
+            {
+              "level": 4,
+              "text": "_A__O____I_"
+            },
+            {
+              "level": 5,
+              "text": "MACROPHYTI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 252,
+          "positional": "A 9-letter word uses the IO digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B_______S"
+            },
+            {
+              "level": 3,
+              "text": "BA_____RS"
+            },
+            {
+              "level": 4,
+              "text": "_A_O_AU__"
+            },
+            {
+              "level": 5,
+              "text": "BAROSAUR_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 144,
+          "positional": "A 6-letter word uses the CH digraph tile",
+          "category": "An action verb form — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "H____G"
+            },
+            {
+              "level": 3,
+              "text": "HE__NG"
+            },
+            {
+              "level": 4,
+              "text": "_E_I__"
+            },
+            {
+              "level": 5,
+              "text": "HEWIN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 114,
+          "positional": "A 6-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P____S"
+            },
+            {
+              "level": 3,
+              "text": "PH__ES"
+            },
+            {
+              "level": 4,
+              "text": "__A_E_"
+            },
+            {
+              "level": 5,
+              "text": "PHASE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 145,
+          "positional": "A 5-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M___E"
+            },
+            {
+              "level": 3,
+              "text": "ME_ZE"
+            },
+            {
+              "level": 4,
+              "text": "_E__E"
+            },
+            {
+              "level": 5,
+              "text": "MEZZ_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 7.4,
+    "gemDensity": 0.016,
+    "tilesCleared": 52,
+    "tilesRemaining": 9,
+    "tileClearancePercent": 85.2,
+    "fullClear": false,
+    "solutionPath": [
+      "PENTASTYLE",
+      "MACROPHYTIC",
+      "SEESAWING",
+      "MEZZE",
+      "ARMOURS",
+      "CIBOL",
+      "PALPI"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "PENTASYLLABIC",
+      "MULTIPLEXOR",
+      "MACROPHYTIC",
+      "BAROSAURS",
+      "HEWING",
+      "PHASES",
+      "MEZZE"
+    ],
+    "generatedAt": "2026-05-31T01:29:37.541Z"
+  }
+}
