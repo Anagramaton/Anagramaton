@@ -1,0 +1,397 @@
+{
+  "date": "2026-06-30",
+  "grid": {
+    "4,-4": "P",
+    "3,-4": "H",
+    "2,-4": "I",
+    "1,-4": "L",
+    "0,-4": "O",
+    "-1,-3": "S",
+    "0,-3": "O",
+    "1,-3": "P",
+    "2,-3": "H",
+    "3,-3": "I",
+    "4,-3": "Z",
+    "4,-2": "E",
+    "3,-2": "R",
+    "2,-2": "C",
+    "1,-2": "O",
+    "0,-2": "N",
+    "-1,-2": "T",
+    "-2,-2": "R",
+    "-3,-1": "I",
+    "-2,-1": "V",
+    "-1,-1": "A",
+    "0,-1": "N",
+    "1,-1": "C",
+    "2,-1": "E",
+    "3,-1": "B",
+    "4,-1": "E",
+    "4,0": "A",
+    "3,0": "D",
+    "2,0": "S",
+    "1,0": "W",
+    "0,0": "O",
+    "-1,0": "M",
+    "-2,0": "E",
+    "-3,0": "N",
+    "-4,0": "B",
+    "-4,1": "U",
+    "-3,1": "N",
+    "-2,1": "C",
+    "-1,1": "H",
+    "0,1": "I",
+    "1,1": "N",
+    "2,1": "E",
+    "3,1": "S",
+    "2,2": "S",
+    "1,2": "V",
+    "0,2": "A",
+    "-1,2": "C",
+    "-2,2": "U",
+    "-3,2": "I",
+    "-4,2": "T",
+    "-4,3": "I",
+    "-3,3": "E",
+    "-2,3": "S",
+    "-1,3": "J",
+    "0,3": "E",
+    "1,3": "W",
+    "0,4": "E",
+    "-1,4": "L",
+    "-2,4": "E",
+    "-3,4": "R",
+    "-4,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 4,
+      "r": -2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 2
+    },
+    {
+      "type": "prism",
+      "q": 1,
+      "r": -3
+    },
+    {
+      "type": "gemEmerald",
+      "q": -3,
+      "r": 0
+    },
+    {
+      "type": "rune",
+      "q": -1,
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "AL"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 1,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "EA"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 6050,
+    "minAchievableScore": 2444,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "PHILOSOPHIZER",
+          "BEADSWOMEN",
+          "CONTRIVANCE",
+          "BUNCHINESS",
+          "VACUITIES",
+          "JEWELERS"
+        ],
+        "wordTotal": 3304,
+        "penalty": 0,
+        "finalScore": 3304
+      },
+      {
+        "words": [
+          "PHILOSOPHIZER",
+          "BEADSWOMEN",
+          "CONTRIVANCE",
+          "BUNCHINESS",
+          "JEWELERS",
+          "VACUITIES"
+        ],
+        "wordTotal": 3304,
+        "penalty": 0,
+        "finalScore": 3304
+      },
+      {
+        "words": [
+          "PHILOSOPHIZER",
+          "CONTRIVANCE",
+          "BEADSWOMEN",
+          "BUNCHINESS",
+          "VACUITIES",
+          "JEWELERS"
+        ],
+        "wordTotal": 3304,
+        "penalty": 0,
+        "finalScore": 3304
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 3304,
+      "wordCount": 6,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 1222,
+          "positional": "A 13-letter word uses the EA digraph tile",
+          "category": "A compound-style word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P___________R"
+            },
+            {
+              "level": 3,
+              "text": "PH_________ER"
+            },
+            {
+              "level": 4,
+              "text": "__I_O_O__I_E_"
+            },
+            {
+              "level": 5,
+              "text": "PHILOSOPHIZE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 418,
+          "positional": "A 11-letter word runs from upper-right toward center",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_________E"
+            },
+            {
+              "level": 3,
+              "text": "CO_______CE"
+            },
+            {
+              "level": 4,
+              "text": "_O___I_A__E"
+            },
+            {
+              "level": 5,
+              "text": "CONTRIVANC_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 780,
+          "positional": "A 10-letter word passes through the emerald gem",
+          "category": "A familiar everyday word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B________N"
+            },
+            {
+              "level": 3,
+              "text": "BE______EN"
+            },
+            {
+              "level": 4,
+              "text": "_EA___O_E_"
+            },
+            {
+              "level": 5,
+              "text": "BEADSWOME_"
+            }
+          ],
+          "features": [
+            "Uses emerald gem"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 10,
+          "estimatedPoints": 350,
+          "positional": "A 10-letter word uses the IO digraph tile",
+          "category": "An abstract noun — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A quality/state noun ending in -NESS"
+            },
+            {
+              "level": 2,
+              "text": "B________S"
+            },
+            {
+              "level": 3,
+              "text": "BU______SS"
+            },
+            {
+              "level": 4,
+              "text": "_U___I_E__"
+            },
+            {
+              "level": 5,
+              "text": "BUNCHINES_"
+            }
+          ],
+          "features": [
+            "Uses 3 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "V_______S"
+            },
+            {
+              "level": 3,
+              "text": "VA_____ES"
+            },
+            {
+              "level": 4,
+              "text": "_A_UI_IE_"
+            },
+            {
+              "level": 5,
+              "text": "VACUITIE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 264,
+          "positional": "A 8-letter word uses the NG digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "J______S"
+            },
+            {
+              "level": 3,
+              "text": "JE____RS"
+            },
+            {
+              "level": 4,
+              "text": "_E_E_E__"
+            },
+            {
+              "level": 5,
+              "text": "JEWELER_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 9.2,
+    "gemDensity": 0.016,
+    "tilesCleared": 55,
+    "tilesRemaining": 6,
+    "tileClearancePercent": 90.2,
+    "fullClear": false,
+    "solutionPath": [
+      "PHILOSOPHIC",
+      "BEADSWOMEN",
+      "UNCANNINESS",
+      "VACUITIES",
+      "JEWELERS",
+      "ZEROTH"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "PHILOSOPHIZER",
+      "CONTRIVANCE",
+      "BEADSWOMEN",
+      "BUNCHINESS",
+      "VACUITIES",
+      "JEWELERS"
+    ],
+    "generatedAt": "2026-06-01T01:33:09.557Z"
+  }
+}
