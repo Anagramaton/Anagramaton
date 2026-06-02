@@ -21,7 +21,19 @@ let _dictionarySet = null;
 
 export function getDictionarySet() {
   if (!_dictionarySet) {
-    _dictionarySet = new Set(wordList.map(word => word.toUpperCase()));
+    const badEntries = wordList.filter(w => typeof w !== 'string' || !/^[a-z]+$/i.test(w));
+    if (badEntries.length > 0) {
+      console.error(
+        `[getDictionarySet] ${badEntries.length} invalid word list entries found and skipped:`,
+        badEntries.slice(0, 10),
+      );
+    }
+
+    _dictionarySet = new Set(
+      wordList
+        .filter(w => typeof w === 'string' && w.length > 0)
+        .map(word => word.toUpperCase())
+    );
   }
   return _dictionarySet;
 }
