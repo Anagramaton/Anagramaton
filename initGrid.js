@@ -132,24 +132,25 @@ function handleSwipeTileStep(tile) {
       selectedTiles.pop();
     }
 
-    updateWordPreview();
-
     const index = Math.min(selectedTiles.length, 25);
     if (index > 0) {
       playSound(`sfxSwipe${index}`);
     }
+
+    updateWordPreview();
     return;
   }
 
   if (selectedTiles.length === 0 || areAxialNeighbors(selectedTiles[selectedTiles.length - 1], tile)) {
     tile.setSelected(true);
     selectedTiles.push(tile);
-    updateWordPreview();
 
     const index = Math.min(selectedTiles.length, 25);
     if (index > 0) {
       playSound(`sfxSwipe${index}`);
     }
+
+    updateWordPreview();
   }
 }
 
@@ -190,9 +191,16 @@ function handlePointerMove(e) {
 function handlePointerUp(e) {
   isDragging = false;
   lastHoverTile = null;
-  updateWordPreview();
+  const hasSelection = (gameState.selectedTiles || []).length > 0;
+
+  try {
+    updateWordPreview();
+  } catch (err) {
+    console.error('[handlePointerUp] updateWordPreview failed:', err);
+  }
+
   // Auto-submit when drag ends, if any tiles are selected
-  if ((gameState.selectedTiles || []).length > 0) {
+  if (hasSelection) {
     window.dispatchEvent(new Event('word:autosubmit'));
   }
 }
