@@ -2278,7 +2278,6 @@ body.hx-active #hex-grid {
   font-weight: 900;
   paint-order: stroke fill;
   letter-spacing: 0.04em;
-  animation: hx-sparkle-achievement 3s ease-in-out infinite;
 }
 
 /* ── Amethyst tile letters — purple/pink tones ──────────────────── */
@@ -2380,7 +2379,6 @@ body.hx-active #hex-grid {
 .tile:has(.hx-rune) .tile-letter,
 .tile-letter.hx-sparkle-rune {
   /* 1.2 s delay staggers rune last in the four-type sequence */
-  animation: hx-sparkle-rune 2.8s ease-in-out infinite 1.2s;
 }
 
 /* ── Reduced motion override ────────────────────────────────────── */
