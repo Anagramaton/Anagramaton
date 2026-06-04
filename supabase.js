@@ -2,15 +2,36 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl     = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Prefer values injected by a bundler (e.g. Vite). If running without a build step
+// these will be undefined, and _loadConfig() will fetch them from /api/config instead.
+let _supabaseUrl     = import.meta.env?.VITE_SUPABASE_URL     ?? null;
+let _supabaseAnonKey = import.meta.env?.VITE_SUPABASE_ANON_KEY ?? null;
+
+// Lazy-fetch public config from the server API when env vars are not bundled.
+let _configPromise = null;
+function _loadConfig() {
+  if (_configPromise) return _configPromise;
+  if (_supabaseUrl && _supabaseAnonKey) {
+    _configPromise = Promise.resolve();
+    return _configPromise;
+  }
+  _configPromise = fetch('/api/config')
+    .then(r => (r.ok ? r.json() : {}))
+    .then(c => {
+      _supabaseUrl     = _supabaseUrl     || c.supabaseUrl     || null;
+      _supabaseAnonKey = _supabaseAnonKey || c.supabaseAnonKey || null;
+    })
+    .catch(() => {});
+  return _configPromise;
+}
 
 let _supabase = null;
 
-function getSupabase() {
-  if (!supabaseUrl || !supabaseAnonKey) return null;
+async function getSupabase() {
+  await _loadConfig();
+  if (!_supabaseUrl || !_supabaseAnonKey) return null;
   if (!_supabase) {
-    _supabase = createClient(supabaseUrl, supabaseAnonKey);
+    _supabase = createClient(_supabaseUrl, _supabaseAnonKey);
   }
   return _supabase;
 }
@@ -18,7 +39,7 @@ function getSupabase() {
 /* \u2500\u2500 Session management \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 
 export async function ensureAuthSession() {
-  const sb = getSupabase();
+  const sb = await getSupabase();
   if (!sb) return null;
 
   const { data: { session } } = await sb.auth.getSession();
@@ -34,7 +55,7 @@ export async function ensureAuthSession() {
 }
 
 export async function signOut() {
-  const sb = getSupabase();
+  const sb = await getSupabase();
   if (!sb) return;
   await sb.auth.signOut();
   _profileCache = null;
@@ -45,7 +66,7 @@ export async function signOut() {
 let _profileCache = null; // in-memory cache: { screen_name: string } | null
 
 export async function getPlayerProfile() {
-  const sb = getSupabase();
+  const sb = await getSupabase();
   if (!sb) return null;
 
   if (_profileCache !== null) return _profileCache.screen_name;
@@ -69,7 +90,7 @@ export async function getPlayerProfile() {
 }
 
 export async function setPlayerScreenName(screenName) {
-  const sb = getSupabase();
+  const sb = await getSupabase();
   if (!sb) throw new Error('Supabase not configured');
 
   const session = await ensureAuthSession();
