@@ -5987,30 +5987,28 @@ export function stopHexacore() {
 
 /* ── Splash screen wiring (on module load) ─────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('splash-hexacore-play-btn')?.addEventListener('click', () => {
+  async function ensurePlayerNameForHexacorePlay() {
+    let playerName = await getPlayerName();
+    if (!playerName) {
+      await promptPlayerName();
+      playerName = await getPlayerName();
+      const nameBtn = document.getElementById('set-name-btn');
+      if (nameBtn) {
+        const label = nameBtn.querySelector('.setting-label');
+        if (label) label.textContent = playerName ? playerName.toUpperCase() : 'SET NAME';
+      }
+    }
+    return Boolean(playerName);
+  }
+
+  document.getElementById('splash-hexacore-play-btn')?.addEventListener('click', async () => {
+    if (!await ensurePlayerNameForHexacorePlay()) return;
     document.getElementById('splash-hexacore-btn')?.click();
   });
 
   document.getElementById('splash-hexacore-btn')?.addEventListener('click', async () => {
+    if (!await ensurePlayerNameForHexacorePlay()) return;
     document.getElementById('splash-screen')?.classList.add('hidden');
-
-    // Require sign-up before playing
-    if (!await getPlayerName()) {
-      await promptPlayerName();
-      const saved = await getPlayerName();
-      const nameBtn = document.getElementById('set-name-btn');
-      if (nameBtn) {
-        const label = nameBtn.querySelector('.setting-label');
-        if (label) label.textContent = saved ? saved.toUpperCase() : 'SET NAME';
-      }
-      const splashSignupBtn = document.getElementById('splash-signup-btn');
-      if (splashSignupBtn) {
-        if (saved) {
-          splashSignupBtn.disabled = true;
-          splashSignupBtn.textContent = `✓ SIGNED IN AS ${saved.toUpperCase()}`;
-        }
-      }
-    }
 
     openModeSelectModal(
       mode => startHexacoreMode(mode),

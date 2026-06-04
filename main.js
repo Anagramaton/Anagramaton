@@ -126,20 +126,6 @@ function updateNameBtnText(btn, name) {
   }
 }
 
-/** Updates the splash sign-up button state based on whether a player name is saved. */
-function updateSplashSignupBtn(btn, name) {
-  if (!btn) return;
-  if (name) {
-    btn.disabled = true;
-    btn.classList.add('splash-signup--signed-in');
-    btn.textContent = `✓ SIGNED IN AS ${name.toUpperCase()}`;
-  } else {
-    btn.disabled = false;
-    btn.classList.remove('splash-signup--signed-in');
-    btn.textContent = '✨ SIGN UP';
-  }
-}
-
 // ===== GAME MODE (daily | unlimited) via URL param =====
 const _params = new URLSearchParams(typeof location !== 'undefined' ? location.search : "");
 gameState.mode = _params.get('mode') === 'daily' ? 'daily' : 'unlimited';
@@ -562,7 +548,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ============================
   const splashScreen   = document.getElementById('splash-screen');
   const splashPlayBtn  = document.getElementById('splash-play-btn');
-  const splashSignupBtn = document.getElementById('splash-signup-btn');
 
   const VISITED_KEY = 'anagramaton_visited';
   const isFirstVisit = !localStorage.getItem(VISITED_KEY);
@@ -571,6 +556,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!isFirstVisit) return;
     localStorage.setItem(VISITED_KEY, '1');
     setTimeout(() => window.howto?.open(), delay);
+  }
+
+  async function ensurePlayerNameForPlay() {
+    let playerName = await getPlayerName();
+    if (!playerName) {
+      await promptPlayerName();
+      playerName = await getPlayerName();
+      updateNameBtnText(document.getElementById('set-name-btn'), playerName);
+    }
+    return Boolean(playerName);
   }
 
   if (splashPlayBtn && splashScreen) {
@@ -589,12 +584,7 @@ window.addEventListener('grid:ready', () => {
     const bufferTimeout = new Promise(resolve => setTimeout(resolve, 1500));
     Promise.race([audioReadyPromise, bufferTimeout]).then(async () => {
       // Require sign-up before playing
-      if (!await getPlayerName()) {
-        await promptPlayerName();
-        const saved = await getPlayerName();
-        updateNameBtnText(document.getElementById('set-name-btn'), saved);
-        updateSplashSignupBtn(splashSignupBtn, saved);
-      }
+      if (!await ensurePlayerNameForPlay()) return;
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
       openHowtoIfFirstVisit(300);
@@ -618,40 +608,17 @@ window.addEventListener('grid:ready', () => {
       if (!gameState.gridReady) return;
 
       // Require sign-up before playing
-      if (!await getPlayerName()) {
-        signUpInProgress = true;
-        await promptPlayerName();
+      signUpInProgress = true;
+      let canStart = false;
+      try {
+        canStart = await ensurePlayerNameForPlay();
+      } finally {
         signUpInProgress = false;
-        const saved = await getPlayerName();
-        updateNameBtnText(document.getElementById('set-name-btn'), saved);
-        updateSplashSignupBtn(splashSignupBtn, saved);
       }
+      if (!canStart) return;
 
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
-      openHowtoIfFirstVisit(300);
-    });
-  }
-
-  // SIGN UP button on splash screen
-  if (splashSignupBtn) {
-    // Reflect current sign-in state immediately
-    getPlayerName().then(name => updateSplashSignupBtn(splashSignupBtn, name));
-
-    splashSignupBtn.addEventListener('click', async () => {
-      if (!audioUnlocked) {
-        audioUnlocked = true;
-        unlockAudioContext();
-        audioReadyPromise = preloadBuffers();
-      }
-      playSound('sfxUnlock');
-      await promptPlayerName();
-      const saved = await getPlayerName();
-      const nameBtn = document.getElementById('set-name-btn');
-      updateNameBtnText(nameBtn, saved);
-      updateSplashSignupBtn(splashSignupBtn, saved);
-      // Hide splash and open how-to on first visit
-      splashScreen?.classList.add('hidden');
       openHowtoIfFirstVisit(300);
     });
   }
@@ -720,7 +687,8 @@ window.addEventListener('grid:ready', () => {
   // ============================
   const setNameBtn = document.getElementById('set-name-btn');
   if (setNameBtn) {
-    getPlayerName().then(existingName => updateNameBtnText(setNameBtn, existingName));
+    const existingName = await getPlayerName();
+    updateNameBtnText(setNameBtn, existingName);
 
     setNameBtn.addEventListener('click', async () => {
       settingsMenu.hidden = true;
@@ -732,14 +700,12 @@ window.addEventListener('grid:ready', () => {
         const confirmedSignOut = await promptSignOut();
         if (confirmedSignOut) {
           updateNameBtnText(setNameBtn, null);
-          updateSplashSignupBtn(document.getElementById('splash-signup-btn'), null);
         }
       } else {
         // No name yet — let player sign up
         await promptPlayerName();
         const saved = await getPlayerName();
         updateNameBtnText(setNameBtn, saved);
-        updateSplashSignupBtn(document.getElementById('splash-signup-btn'), saved);
       }
     });
   }
