@@ -136,23 +136,11 @@
   100% { filter: brightness(1) contrast(1.1) drop-shadow(0 0 6px rgba(219, 39, 119, 0.7)) drop-shadow(0 0 3px rgba(124, 58, 237, 0.6)); }
 }
 
-/* ── Digraph tile — navy→blue ───────────────────────────────────── */
-.hx-digraph {
-  fill: url(#hx-digraph-gradient);
-  filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.85));
-}
-@keyframes hx-digraph-pulse {
-  from { filter: drop-shadow(0 0 4px rgba(15, 23, 42, 0.75)); }
-  to   { filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.95)); }
-}
-
+/* ── Digraph tile — no special color ────────────────────────────── */
 @keyframes hx-digraph-spawn-anim {
-  0%   { opacity: 0.2; transform: scale(0.4);
-         filter: drop-shadow(0 0 0px transparent); }
-  50%  { opacity: 1;   transform: scale(1.25);
-         filter: brightness(2.5) drop-shadow(0 0 20px rgba(59, 130, 246, 1)); }
-  100% { opacity: 1;   transform: scale(1.0);
-         filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.85)); }
+  0%   { opacity: 0.2; transform: scale(0.4); }
+  50%  { opacity: 1;   transform: scale(1.25); }
+  100% { opacity: 1;   transform: scale(1.0); }
 }
 .hx-digraph-spawn {
   transform-box: fill-box;
@@ -5735,11 +5723,6 @@ body[data-theme="light"].hx-active .hx-rune {
   filter:
     drop-shadow(0 0 8px rgba(234, 179, 8, 0.55))
     drop-shadow(0 0 12px rgba(126, 34, 206, 0.7))
-    drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
-}
-body[data-theme="light"].hx-active .hx-digraph {
-  filter:
-    drop-shadow(0 0 10px rgba(251, 191, 36, 0.85))
     drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
 }
 

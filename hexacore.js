@@ -1017,8 +1017,6 @@ function injectSvgDefs(svg) {
   }
   // Prism: deep violet → electric rose
   ensureLinearGradient('hx-prism-gradient',    '#1a0040', '#db2777');
-  // Digraph: dark navy → blue
-  ensureLinearGradient('hx-digraph-gradient',  '#0f172a', '#3b82f6');
   // Portal: midnight → vivid violet → magenta
   ensureLinearGradient('hx-portal-gradient',   '#1a003f', '#7c3aed');
   // Rune: imperial violet base with gilded highlights
@@ -2057,7 +2055,7 @@ function buildTileGuide() {
     { key: 'ember',    name: 'Ember',    grad: ['#b91c1c','#fbbf24'], desc: 'Advances downward each turn \u2014 use it before it falls off.' },
     { key: 'prism',    name: 'Prism',    grad: ['#7c1a85','#db2777'], desc: 'Doubles the total score of any word it joins.' },
     { key: 'rune',     name: 'Rune',     grad: ['#312e81','#6d28d9'], desc: 'Wildcard \u2014 pick any letter when you play it.' },
-    { key: 'digraph',  name: 'Digraph',  grad: ['#022c22','#34d399'], desc: 'Two letters in one tile; both count toward the word.' },
+    { key: 'digraph',  name: 'Digraph',  grad: ['#9ca3af','#e5e7eb'], desc: 'Two letters in one tile; both count toward the word.' },
     { key: 'portal',   name: 'Portal',   grad: ['#3b0764','#7c3aed'], desc: 'Two linked corner tiles \u2014 include both in one word.' },
   ];
 
