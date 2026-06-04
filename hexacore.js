@@ -1017,8 +1017,8 @@ function injectSvgDefs(svg) {
   }
   // Prism: deep violet → electric rose
   ensureLinearGradient('hx-prism-gradient',    '#1a0040', '#db2777');
-  // Digraph: deep teal → emerald
-  ensureLinearGradient('hx-digraph-gradient',  '#022c22', '#34d399');
+  // Digraph: dark navy → blue
+  ensureLinearGradient('hx-digraph-gradient',  '#0f172a', '#3b82f6');
   // Portal: midnight → vivid violet → magenta
   ensureLinearGradient('hx-portal-gradient',   '#1a003f', '#7c3aed');
   // Rune: imperial violet base with gilded highlights

@@ -136,23 +136,23 @@
   100% { filter: brightness(1) contrast(1.1) drop-shadow(0 0 6px rgba(219, 39, 119, 0.7)) drop-shadow(0 0 3px rgba(124, 58, 237, 0.6)); }
 }
 
-/* ── Digraph tile — teal→emerald pulse ─────────────────────────── */
+/* ── Digraph tile — navy→blue ───────────────────────────────────── */
 .hx-digraph {
   fill: url(#hx-digraph-gradient);
-  filter: drop-shadow(0 0 6px rgba(5, 150, 105, 0.85));
+  filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.85));
 }
 @keyframes hx-digraph-pulse {
-  from { filter: drop-shadow(0 0 4px rgba(2, 44, 34, 0.75)); }
-  to   { filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.95)); }
+  from { filter: drop-shadow(0 0 4px rgba(15, 23, 42, 0.75)); }
+  to   { filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.95)); }
 }
 
 @keyframes hx-digraph-spawn-anim {
   0%   { opacity: 0.2; transform: scale(0.4);
          filter: drop-shadow(0 0 0px transparent); }
   50%  { opacity: 1;   transform: scale(1.25);
-         filter: brightness(2.5) drop-shadow(0 0 20px rgba(52, 211, 153, 1)); }
+         filter: brightness(2.5) drop-shadow(0 0 20px rgba(59, 130, 246, 1)); }
   100% { opacity: 1;   transform: scale(1.0);
-         filter: drop-shadow(0 0 6px rgba(5, 150, 105, 0.85)); }
+         filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.85)); }
 }
 .hx-digraph-spawn {
   transform-box: fill-box;
@@ -2240,7 +2240,6 @@ body.hx-active #hex-grid {
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-oracle-shimmer 3.5s ease-in-out infinite;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2353,7 +2352,7 @@ body.hx-active #hex-grid {
 .tile:has(.hx-portal) .tile-letter,
 .tile-letter.hx-sparkle-portal {
   /* 0.8 s delay staggers portal relative to amethyst (0 s) and selenite (0.4 s) */
-  animation: hx-sparkle-portal 2.2s ease-in-out infinite 0.8s;
+  animation: hx-sparkle-portal 5s ease-in-out infinite 0.8s;
 }
 
 /* ── Rune tile letters — deep purple tones ──────────────────────── */
@@ -2447,7 +2446,6 @@ body.hx-active #hex-grid {
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-beacon-pulse 2.8s ease-in-out infinite;
 }
 @keyframes hx-beacon-pulse {
   0%, 100% {
@@ -2492,7 +2490,6 @@ body.hx-active #hex-grid {
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-eclipse-pulse 4s ease-in-out infinite;
 }
 @keyframes hx-eclipse-pulse {
   0%, 100% {
@@ -2536,7 +2533,6 @@ body.hx-active #hex-grid {
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-lodestone-shimmer 3s ease-in-out infinite;
 }
 @keyframes hx-lodestone-shimmer {
   0%, 100% {
@@ -2581,7 +2577,6 @@ body.hx-active #hex-grid {
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-lexicon-rainbow 2.5s linear infinite;
 }
 @keyframes hx-lexicon-rainbow {
   0%   { filter: drop-shadow(0 0 10px rgba(220,  38,  38, 0.9)) brightness(1.1); }
