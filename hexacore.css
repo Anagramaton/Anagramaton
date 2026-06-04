@@ -129,7 +129,6 @@
 /* ── Prism tile — violet→rose shimmer ──────────────────────────── */
 .hx-prism {
   fill: url(#hx-prism-gradient);
-  animation: hx-prism-shimmer 1s linear infinite;
 }
 @keyframes hx-prism-shimmer {
   0%   { filter: brightness(1) contrast(1.1) drop-shadow(0 0 6px rgba(219, 39, 119, 0.7)) drop-shadow(0 0 3px rgba(124, 58, 237, 0.6)); }
@@ -141,7 +140,6 @@
 .hx-digraph {
   fill: url(#hx-digraph-gradient);
   filter: drop-shadow(0 0 6px rgba(5, 150, 105, 0.85));
-  animation: hx-digraph-pulse 1s ease-in-out infinite alternate;
 }
 @keyframes hx-digraph-pulse {
   from { filter: drop-shadow(0 0 4px rgba(2, 44, 34, 0.75)); }
@@ -2101,7 +2099,6 @@ body.hx-active #hex-grid {
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-amethyst-shimmer 3s ease-in-out infinite;
 }
 
 @keyframes hx-amethyst-shimmer {
@@ -2168,7 +2165,6 @@ body.hx-active #hex-grid {
   stroke-width: 1.5;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-selenite-pulse 2.5s ease-in-out infinite;
 }
 
 @keyframes hx-selenite-pulse {
@@ -2307,7 +2303,6 @@ body.hx-active #hex-grid {
 }
 .tile:has(.hx-amethyst) .tile-letter,
 .tile-letter.hx-sparkle-amethyst {
-  animation: hx-sparkle-amethyst 2.5s ease-in-out infinite;
 }
 
 /* ── Selenite tile letters — ice-blue/white tones ───────────────── */
@@ -2334,7 +2329,6 @@ body.hx-active #hex-grid {
 .tile-letter.hx-sparkle-selenite {
   /* 0.4 s delay staggers selenite relative to amethyst (0 s) so simultaneous
      tiles don't all flash in unison */
-  animation: hx-sparkle-selenite 3.2s ease-in-out infinite 0.4s;
 }
 
 /* ── Portal tile letters (open portals) — violet/white tones ───── */
