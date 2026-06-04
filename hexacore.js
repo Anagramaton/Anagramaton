@@ -5128,7 +5128,7 @@ async function completeDailyChallenge() {
   hxState.dailyTilesUsed = tilesUsed;
   const submissionDate = hxState.dailyBoardDate || null;
 
-  let name = getPlayerName();
+  let name = await getPlayerName();
   if (!name) {
     name = await promptPlayerName();
   }
@@ -5328,7 +5328,7 @@ async function showGameOver() {
   });
 
   // Auto-submit if player already has a name, otherwise load leaderboard in background
-  if (getPlayerName()) {
+  if (await getPlayerName()) {
     handleSubmitScore();
   } else {
     loadLeaderboard();
@@ -5341,7 +5341,7 @@ async function handleSubmitScore() {
   btn.disabled    = true;
   btn.textContent = '⏳ Submitting…';
 
-  let name = getPlayerName();
+  let name = await getPlayerName();
   if (!name) name = await promptPlayerName();
   if (!name) {
     btn.disabled    = false;
@@ -5369,7 +5369,7 @@ async function loadLeaderboard(submitResult) {
     return;
   }
 
-  const currentPlayer = getPlayerName();
+  const currentPlayer = await getPlayerName();
   const entries = result.entries.slice(0, 20);
   let playerRank = -1;
 
@@ -5943,7 +5943,7 @@ export function stopHexacore() {
       return;
     }
 
-    const currentPlayer = getPlayerName();
+    const currentPlayer = await getPlayerName();
     const entries = result.entries.slice(0, 20);
     let playerRank = -1;
 
@@ -5995,9 +5995,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('splash-screen')?.classList.add('hidden');
 
     // Require sign-up before playing
-    if (!getPlayerName()) {
+    if (!await getPlayerName()) {
       await promptPlayerName();
-      const saved = getPlayerName();
+      const saved = await getPlayerName();
       const nameBtn = document.getElementById('set-name-btn');
       if (nameBtn) {
         const label = nameBtn.querySelector('.setting-label');

@@ -180,6 +180,119 @@ import { gameState } from './gameState.js';
   }
 
   /* ── Render a leaderboard panel ─────────────────────────── */
+  /* ── Word-list popup ─────────────────────────────────────── */
+  function showWordListModal(playerName, words, totalScore) {
+    const existing = document.getElementById('lb-word-list-modal');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'lb-word-list-modal';
+
+    const wordRows = words.map((word, i) => {
+      const w = typeof word === 'string' ? word : String(word);
+      return `<div class="wlm__word"><span class="wlm__rank">${i + 1}.</span><span class="wlm__text">${w.toUpperCase()}</span></div>`;
+    }).join('');
+
+    const safeName = String(playerName || 'Anonymous').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const scoreStr = Number(totalScore).toLocaleString();
+
+    overlay.innerHTML = `
+      <div class="wlm__box" role="dialog" aria-modal="true" aria-label="${safeName}'s words">
+        <h3 class="wlm__title">${safeName}'s Words &mdash; ${scoreStr} pts</h3>
+        <div class="wlm__list">${wordRows || '<p style="opacity:0.5;text-align:center">No words recorded.</p>'}</div>
+        <button type="button" class="wlm__close">CLOSE</button>
+      </div>`;
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.wlm__close').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+    overlay.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.remove(); });
+
+    // Inject styles once
+    if (!document.getElementById('lb-wlm-styles')) {
+      const style = document.createElement('style');
+      style.id = 'lb-wlm-styles';
+      style.textContent = `
+        #lb-word-list-modal {
+          position: fixed;
+          inset: 0;
+          z-index: 199999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.8);
+        }
+        .wlm__box {
+          min-width: 280px;
+          max-width: 380px;
+          width: 90%;
+          padding: 1.75rem 1.5rem 1.5rem;
+          border-radius: 12px;
+          background: linear-gradient(135deg, rgba(20,20,35,0.97), rgba(35,10,45,0.97));
+          border: 2px solid rgba(76,201,240,0.7);
+          box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 25px rgba(76,201,240,0.35);
+          color: #f1f5f9;
+          font-family: 'Turret Road', 'Orbitron', monospace;
+        }
+        .wlm__title {
+          margin: 0 0 1rem;
+          font-size: 0.9rem;
+          font-weight: 400;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #4cc9f0;
+          text-align: center;
+        }
+        .wlm__list {
+          max-height: 360px;
+          overflow-y: auto;
+          margin-bottom: 1.25rem;
+        }
+        .wlm__word {
+          display: flex;
+          gap: 0.5rem;
+          padding: 0.45rem 0.25rem;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          font-size: 0.85rem;
+          letter-spacing: 0.08em;
+        }
+        .wlm__rank { opacity: 0.45; min-width: 1.4rem; }
+        .wlm__text { color: #f1f5f9; }
+        .wlm__close {
+          display: block;
+          width: 100%;
+          padding: 0.65rem;
+          border: 1px solid rgba(76,201,240,0.7);
+          background: rgba(76,201,240,0.1);
+          color: #4cc9f0;
+          border-radius: 6px;
+          cursor: pointer;
+          font-family: inherit;
+          font-size: 0.85rem;
+          letter-spacing: 0.1em;
+          transition: background 0.15s;
+        }
+        .wlm__close:hover { background: rgba(76,201,240,0.22); }
+        .rom__view-words-btn {
+          padding: 0.2rem 0.45rem;
+          border: 1px solid rgba(76,201,240,0.5);
+          background: rgba(76,201,240,0.08);
+          color: #4cc9f0;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.72rem;
+          font-family: inherit;
+          letter-spacing: 0.05em;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .rom__view-words-btn:hover { background: rgba(76,201,240,0.2); }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+
   function renderPanel(panel, { configured, entries }, tabName) {
     if (!configured) {
       panel.innerHTML = `
@@ -190,8 +303,9 @@ import { gameState } from './gameState.js';
              rel="noopener noreferrer" style="color:inherit;text-decoration:underline">Vercel project settings</a>:
         </p>
         <ul style="font-size:0.82em;color:var(--rom-muted);padding-left:1.2em;line-height:1.8">
+          <li><code>VITE_SUPABASE_URL</code></li>
+          <li><code>VITE_SUPABASE_ANON_KEY</code></li>
           <li><code>SUPABASE_URL</code></li>
-          <li><code>SUPABASE_ANON_KEY</code></li>
           <li><code>SUPABASE_SERVICE_KEY</code></li>
         </ul>
         <p style="font-size:0.8em;color:var(--rom-muted)">See the <strong>README</strong> for full setup instructions.</p>
@@ -205,17 +319,40 @@ import { gameState } from './gameState.js';
       panel.innerHTML = `<p class="lb-modal__note">${msg}</p>`;
       return;
     }
-    const playerName = getPlayerName();
+
+    // getPlayerName() is now async — use a cached synchronous comparison via data attribute
+    const youAttr = panel.closest('#lb-scores-modal')?.dataset.currentPlayer || '';
+
     panel.innerHTML = entries.map((entry, idx) => {
-      const isYou = playerName && entry.player_name === playerName;
+      const isYou = youAttr && entry.player_name === youAttr;
       const encodedName = encodeURIComponent(entry.player_name || 'Anonymous');
       const nameHtml = `<a class="lb-player-link" href="/player.html?name=${encodedName}" target="_self">${String(entry.player_name || 'Anonymous')}</a>`;
+      const wordCount = Array.isArray(entry.words) ? entry.words.length : 0;
+      const viewBtn = wordCount > 0
+        ? `<button type="button" class="rom__view-words-btn" data-player="${String(entry.player_name || 'Anonymous').replace(/"/g, '&quot;')}" data-score="${Number(entry.score) || 0}" data-idx="${idx}">[View ${wordCount}]</button>`
+        : '';
       return `
         <div class="rom__row${isYou ? ' rom__row--you' : ''}">
           <span class="rom__word">${idx + 1}. ${nameHtml}</span>
           <span class="rom__score-chip">${Number(entry.score) || 0}</span>
+          ${viewBtn}
         </div>`;
     }).join('');
+
+    // Store words data for click handlers (avoid inline JSON in data attributes)
+    const wordMap = {};
+    entries.forEach((entry, idx) => {
+      wordMap[idx] = Array.isArray(entry.words) ? entry.words : [];
+    });
+
+    panel.querySelectorAll('.rom__view-words-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const playerName = btn.dataset.player;
+        const score = btn.dataset.score;
+        const idx = Number(btn.dataset.idx);
+        showWordListModal(playerName, wordMap[idx] || [], score);
+      });
+    });
   }
 
   /* ── Focus trap ─────────────────────────────────────────── */
@@ -233,9 +370,14 @@ import { gameState } from './gameState.js';
   }
 
   /* ── Open ───────────────────────────────────────────────── */
-  function open() {
+  async function open() {
     buildModal();
     lastFocused = document.activeElement;
+
+    // Fetch current player name asynchronously and cache on the modal element
+    const playerName = await getPlayerName();
+    if (modal) modal.dataset.currentPlayer = playerName || '';
+
     modal.classList.remove('rom--hidden');
     document.body.classList.add('lb-modal-open');
 
