@@ -522,10 +522,10 @@ async function handleSubmitList() {
 
     // Submit score to leaderboard (fire-and-forget)
     (async () => {
-      let playerName = getPlayerName();
+      let playerName = await getPlayerName();
       if (!playerName) {
         await promptPlayerName();
-        playerName = getPlayerName();
+        playerName = await getPlayerName();
         // Update set-name-btn text after name is set
         const nameBtn = document.getElementById('set-name-btn');
         updateNameBtnText(nameBtn, playerName);
@@ -538,10 +538,10 @@ async function handleSubmitList() {
 
   if (gameState.mode === 'unlimited') {
     (async () => {
-      let playerName = getPlayerName();
+      let playerName = await getPlayerName();
       if (!playerName) {
         await promptPlayerName();
-        playerName = getPlayerName();
+        playerName = await getPlayerName();
         const nameBtn = document.getElementById('set-name-btn');
         updateNameBtnText(nameBtn, playerName);
       }
@@ -589,9 +589,9 @@ window.addEventListener('grid:ready', () => {
     const bufferTimeout = new Promise(resolve => setTimeout(resolve, 1500));
     Promise.race([audioReadyPromise, bufferTimeout]).then(async () => {
       // Require sign-up before playing
-      if (!getPlayerName()) {
+      if (!await getPlayerName()) {
         await promptPlayerName();
-        const saved = getPlayerName();
+        const saved = await getPlayerName();
         updateNameBtnText(document.getElementById('set-name-btn'), saved);
         updateSplashSignupBtn(splashSignupBtn, saved);
       }
@@ -618,11 +618,11 @@ window.addEventListener('grid:ready', () => {
       if (!gameState.gridReady) return;
 
       // Require sign-up before playing
-      if (!getPlayerName()) {
+      if (!await getPlayerName()) {
         signUpInProgress = true;
         await promptPlayerName();
         signUpInProgress = false;
-        const saved = getPlayerName();
+        const saved = await getPlayerName();
         updateNameBtnText(document.getElementById('set-name-btn'), saved);
         updateSplashSignupBtn(splashSignupBtn, saved);
       }
@@ -636,7 +636,7 @@ window.addEventListener('grid:ready', () => {
   // SIGN UP button on splash screen
   if (splashSignupBtn) {
     // Reflect current sign-in state immediately
-    updateSplashSignupBtn(splashSignupBtn, getPlayerName());
+    getPlayerName().then(name => updateSplashSignupBtn(splashSignupBtn, name));
 
     splashSignupBtn.addEventListener('click', async () => {
       if (!audioUnlocked) {
@@ -646,7 +646,7 @@ window.addEventListener('grid:ready', () => {
       }
       playSound('sfxUnlock');
       await promptPlayerName();
-      const saved = getPlayerName();
+      const saved = await getPlayerName();
       const nameBtn = document.getElementById('set-name-btn');
       updateNameBtnText(nameBtn, saved);
       updateSplashSignupBtn(splashSignupBtn, saved);
@@ -703,7 +703,7 @@ window.addEventListener('grid:ready', () => {
       settingsWrap.classList.remove('menu-open');
       if (document.body.classList.contains('hx-active')) {
         // Submit current score to leaderboard on intentional exit (fire-and-forget)
-        const playerName = getPlayerName();
+        const playerName = await getPlayerName();
         const currentScore = getHexacoreScore();
         if (playerName && currentScore > 0) {
           submitScore('hexacore', currentScore, [], 0, 'hexacore').catch(() => {});
@@ -720,14 +720,13 @@ window.addEventListener('grid:ready', () => {
   // ============================
   const setNameBtn = document.getElementById('set-name-btn');
   if (setNameBtn) {
-    const existingName = getPlayerName();
-    updateNameBtnText(setNameBtn, existingName);
+    getPlayerName().then(existingName => updateNameBtnText(setNameBtn, existingName));
 
     setNameBtn.addEventListener('click', async () => {
       settingsMenu.hidden = true;
       settingsWrap.classList.remove('menu-open');
 
-      const currentName = getPlayerName();
+      const currentName = await getPlayerName();
       if (currentName) {
         // Player already signed in — show sign-out modal
         const confirmedSignOut = await promptSignOut();
@@ -738,7 +737,7 @@ window.addEventListener('grid:ready', () => {
       } else {
         // No name yet — let player sign up
         await promptPlayerName();
-        const saved = getPlayerName();
+        const saved = await getPlayerName();
         updateNameBtnText(setNameBtn, saved);
         updateSplashSignupBtn(document.getElementById('splash-signup-btn'), saved);
       }

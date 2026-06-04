@@ -1,8 +1,14 @@
 // leaderboard.js — frontend module for score submission and leaderboard display
 
-const PLAYER_NAME_KEY = 'anagramaton_player_name';
+import {
+  getPlayerProfile,
+  setPlayerScreenName,
+  signOut,
+  submitScore as sbSubmitScore,
+  fetchLeaderboard as sbFetchLeaderboard,
+} from './supabase.js';
 
-/* ── Random name generator ─────────────────────────────────────── */
+/* ── Random name generator ─────────────────────────────────── */
 
 const ADJECTIVES = ['SWIFT','BOLD','LUNAR','COSMIC','NEON','SONIC','JADE','IRON','STORM','BLAZE','PIXEL','TURBO','HYPER','ULTRA','OMEGA'];
 const NOUNS      = ['FOX','WOLF','HAWK','LYNX','BEAR','ROOK','SAGE','VOLT','WREN','APEX','ECHO','FLUX','GLYPH','NODE','ZEAL'];
@@ -11,112 +17,131 @@ function generateRandomName() {
   const adj  = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
   const noun = NOUNS[Math.floor(Math.random() * NOUNS.length)];
   const num  = Math.floor(Math.random() * 900) + 100; // 100–999
-  return `${adj}${noun}${num}`;
+  return adj + noun + num;
 }
 
-/* ── Player Name helpers ───────────────────────────────────────── */
+/* ── Player Name helpers (now async via Supabase) ───────────────── */
 
-export function getPlayerName() {
-  return localStorage.getItem(PLAYER_NAME_KEY) || null;
+export async function getPlayerName() {
+  return await getPlayerProfile();
 }
 
-export function setPlayerName(name) {
+export async function setPlayerName(name) {
   if (typeof name !== 'string') return null;
   const trimmed = name.trim();
-  if (trimmed.length === 0 || trimmed.length > 30) return null;
-  localStorage.setItem(PLAYER_NAME_KEY, trimmed);
-  return trimmed;
+  if (trimmed.length < 5 || trimmed.length > 15) return null;
+  try {
+    return await setPlayerScreenName(trimmed);
+  } catch (err) {
+    // Duplicate name error from Supabase (unique constraint)
+    if (err?.code === '23505' || (err?.message && err.message.includes('unique'))) {
+      return 'DUPLICATE';
+    }
+    console.warn('[leaderboard] setPlayerName failed:', err);
+    return null;
+  }
 }
 
-export function clearPlayerName() {
-  localStorage.removeItem(PLAYER_NAME_KEY);
+export async function clearPlayerName() {
+  await signOut();
 }
 
-/* ── Name prompt modal ─────────────────────────────────────────── */
+/* ── Name prompt modal ───────────────────────────────────────── */
 
 function injectModalStyles() {
   if (document.getElementById('lb-modal-styles')) return;
   const style = document.createElement('style');
   style.id = 'lb-modal-styles';
-  style.textContent = `
-    #lb-name-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 99999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.7);
-    }
-    #lb-name-modal.lb-hidden { display: none; }
-    #lb-name-box {
-      position: relative;
-      min-width: 280px;
-      max-width: 360px;
-      width: 90%;
-      padding: 2rem 1.75rem 1.5rem;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--alert-box-grad-1, rgba(20,20,35,0.96)), var(--alert-box-grad-2, rgba(35,10,45,0.96)));
-      border: 2px solid var(--alert-box-border, rgba(76,201,240,0.7));
-      box-shadow:
-        0 0 0 1px var(--alert-box-shadow-1, rgba(255,255,255,0.06)),
-        0 12px 30px var(--alert-box-shadow-2, rgba(0,0,0,0.7)),
-        0 0 25px var(--alert-box-shadow-3, rgba(76,201,240,0.55));
-      color: var(--rom-ink, #f1f5f9);
-      font-family: 'Turret Road', 'Orbitron', monospace;
-      text-align: center;
-    }
-    #lb-name-box p {
-      margin: 0 0 1rem;
-      font-size: 0.95rem;
-      letter-spacing: 0.05em;
-    }
-    #lb-name-input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 0.5rem 0.75rem;
-      border-radius: 6px;
-      border: 1px solid var(--alert-box-border, rgba(76,201,240,0.7));
-      background: rgba(255,255,255,0.07);
-      color: var(--rom-ink, #f1f5f9);
-      font-family: inherit;
-      font-size: 1rem;
-      text-align: center;
-      margin-bottom: 1rem;
-      outline: none;
-    }
-    #lb-name-input:focus {
-      border-color: var(--rom-you, #f59e0b);
-    }
-    .lb-name-btns {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-    }
-    .lb-name-btns button {
-      padding: 0.45rem 1.2rem;
-      border-radius: 6px;
-      border: 1px solid var(--alert-box-border, rgba(76,201,240,0.7));
-      background: rgba(76,201,240,0.1);
-      color: var(--rom-ink, #f1f5f9);
-      font-family: inherit;
-      font-size: 0.85rem;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .lb-name-btns button:hover {
-      background: rgba(76,201,240,0.25);
-    }
-    .lb-name-btns button#lb-name-ok {
-      border-color: var(--rom-you, #f59e0b);
-      background: rgba(245,158,11,0.15);
-      color: var(--rom-you, #f59e0b);
-    }
-    .lb-name-btns button#lb-name-ok:hover {
-      background: rgba(245,158,11,0.3);
-    }
-  `;
+  style.textContent = [
+    '#lb-name-modal {',
+    '  position: fixed;',
+    '  inset: 0;',
+    '  z-index: 99999;',
+    '  display: flex;',
+    '  align-items: center;',
+    '  justify-content: center;',
+    '  background: rgba(0, 0, 0, 0.7);',
+    '}',
+    '#lb-name-modal.lb-hidden { display: none; }',
+    '#lb-name-box {',
+    '  position: relative;',
+    '  min-width: 280px;',
+    '  max-width: 360px;',
+    '  width: 90%;',
+    '  padding: 2rem 1.75rem 1.5rem;',
+    '  border-radius: 12px;',
+    '  background: linear-gradient(135deg, var(--alert-box-grad-1, rgba(20,20,35,0.96)), var(--alert-box-grad-2, rgba(35,10,45,0.96)));',
+    '  border: 2px solid var(--alert-box-border, rgba(76,201,240,0.7));',
+    '  box-shadow:',
+    '    0 0 0 1px var(--alert-box-shadow-1, rgba(255,255,255,0.06)),',
+    '    0 12px 30px var(--alert-box-shadow-2, rgba(0,0,0,0.7)),',
+    '    0 0 25px var(--alert-box-shadow-3, rgba(76,201,240,0.55));',
+    '  color: var(--rom-ink, #f1f5f9);',
+    "  font-family: 'Turret Road', 'Orbitron', monospace;",
+    '  text-align: center;',
+    '}',
+    '#lb-name-box p {',
+    '  margin: 0 0 1rem;',
+    '  font-size: 0.95rem;',
+    '  letter-spacing: 0.05em;',
+    '}',
+    '#lb-name-input {',
+    '  width: 100%;',
+    '  box-sizing: border-box;',
+    '  padding: 0.5rem 0.75rem;',
+    '  border-radius: 6px;',
+    '  border: 1px solid var(--alert-box-border, rgba(76,201,240,0.7));',
+    '  background: rgba(255,255,255,0.07);',
+    '  color: var(--rom-ink, #f1f5f9);',
+    '  font-family: inherit;',
+    '  font-size: 1rem;',
+    '  text-align: center;',
+    '  margin-bottom: 0.5rem;',
+    '  outline: none;',
+    '}',
+    '#lb-name-input:focus {',
+    '  border-color: var(--rom-you, #f59e0b);',
+    '}',
+    '#lb-name-error {',
+    '  min-height: 1.2em;',
+    '  font-size: 0.8rem;',
+    '  color: #ef4444;',
+    '  margin-bottom: 0.75rem;',
+    '  letter-spacing: 0.03em;',
+    '}',
+    '.lb-name-btns {',
+    '  display: flex;',
+    '  gap: 0.75rem;',
+    '  justify-content: center;',
+    '}',
+    '.lb-name-btns button {',
+    '  padding: 0.45rem 1.2rem;',
+    '  border-radius: 6px;',
+    '  border: 1px solid var(--alert-box-border, rgba(76,201,240,0.7));',
+    '  background: rgba(76,201,240,0.1);',
+    '  color: var(--rom-ink, #f1f5f9);',
+    '  font-family: inherit;',
+    '  font-size: 0.85rem;',
+    '  letter-spacing: 0.06em;',
+    '  cursor: pointer;',
+    '  transition: background 0.15s;',
+    '}',
+    '.lb-name-btns button:hover {',
+    '  background: rgba(76,201,240,0.25);',
+    '}',
+    '.lb-name-btns button#lb-name-ok {',
+    '  border-color: var(--rom-you, #f59e0b);',
+    '  background: rgba(245,158,11,0.15);',
+    '  color: var(--rom-you, #f59e0b);',
+    '}',
+    '.lb-name-btns button#lb-name-ok:hover {',
+    '  background: rgba(245,158,11,0.3);',
+    '}',
+    '.lb-name-btns button:disabled {',
+    '  opacity: 0.5;',
+    '  cursor: not-allowed;',
+    '}',
+  ].join('\n');
   document.head.appendChild(style);
 }
 
@@ -132,35 +157,41 @@ function ensureNameModal() {
   modal.setAttribute('role', 'dialog');
   modal.setAttribute('aria-modal', 'true');
   modal.setAttribute('aria-labelledby', 'lb-name-title');
-  modal.innerHTML = `
-    <div id="lb-name-box">
-      <p id="lb-name-title">👤 SET DISPLAY NAME</p>
-      <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.75rem;">Enter your name or tap PICK FOR ME — we'll choose one for you!</p>
-      <input id="lb-name-input" type="text" maxlength="30" placeholder="Enter your name…" autocomplete="off" />
-      <div class="lb-name-btns">
-        <button type="button" id="lb-name-cancel">PICK FOR ME</button>
-        <button type="button" id="lb-name-ok">SAVE</button>
-      </div>
-    </div>
-  `;
+  modal.innerHTML = [
+    '<div id="lb-name-box">',
+    '  <p id="lb-name-title">👤 SET GAMER TAG</p>',
+    '  <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.75rem;">Choose a unique name (5–15 characters) or tap PICK FOR ME!</p>',
+    '  <input id="lb-name-input" type="text" maxlength="15" placeholder="Your gamer tag (5-15 chars)…" autocomplete="off" />',
+    '  <p id="lb-name-error"></p>',
+    '  <div class="lb-name-btns">',
+    '    <button type="button" id="lb-name-cancel">PICK FOR ME</button>',
+    '    <button type="button" id="lb-name-ok">CONTINUE</button>',
+    '  </div>',
+    '</div>',
+  ].join('\n');
   document.body.appendChild(modal);
   return modal;
 }
 
 export function promptPlayerName() {
   return new Promise((resolve) => {
-    const modal = ensureNameModal();
-    const input = document.getElementById('lb-name-input');
-    const okBtn = document.getElementById('lb-name-ok');
+    const modal   = ensureNameModal();
+    const input   = document.getElementById('lb-name-input');
+    const okBtn   = document.getElementById('lb-name-ok');
     const cancelBtn = document.getElementById('lb-name-cancel');
+    const errorEl = document.getElementById('lb-name-error');
 
-    // Pre-fill with existing name
-    input.value = getPlayerName() || '';
+    input.value = '';
+    errorEl.textContent = '';
     modal.classList.remove('lb-hidden');
     setTimeout(() => input.focus(), 50);
 
     const ac = new AbortController();
     const { signal } = ac;
+
+    function setError(msg) {
+      errorEl.textContent = msg || '';
+    }
 
     function finish(value) {
       modal.classList.add('lb-hidden');
@@ -168,47 +199,98 @@ export function promptPlayerName() {
       resolve(value);
     }
 
-    function handleOk() {
+    async function handleOk() {
       const raw = input.value.trim();
-      const saved = raw.length > 0 ? setPlayerName(raw) : null;
-      finish(saved);
+      if (raw.length < 5) {
+        setError('Name must be at least 5 characters.');
+        return;
+      }
+      if (raw.length > 15) {
+        setError('Name must be 15 characters or fewer.');
+        return;
+      }
+      setError('');
+      okBtn.disabled = true;
+      cancelBtn.disabled = true;
+      okBtn.textContent = 'SAVING…';
+
+      const result = await setPlayerName(raw);
+      okBtn.disabled = false;
+      cancelBtn.disabled = false;
+      okBtn.textContent = 'CONTINUE';
+
+      if (result === 'DUPLICATE') {
+        setError('That name is taken. Try another!');
+        input.focus();
+        return;
+      }
+      if (!result) {
+        setError('Could not save name. Try again.');
+        input.focus();
+        return;
+      }
+      finish(result);
     }
 
-    function handleCancel() {
-      let name = getPlayerName();
+    async function handlePickForMe() {
+      let name = null;
+      cancelBtn.disabled = true;
+      okBtn.disabled = true;
+      cancelBtn.textContent = 'PICKING…';
+
+      // Try up to 5 random names until one is unique
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const candidate = generateRandomName();
+        const result = await setPlayerName(candidate);
+        if (result && result !== 'DUPLICATE') {
+          name = result;
+          break;
+        }
+      }
+
+      cancelBtn.disabled = false;
+      okBtn.disabled = false;
+      cancelBtn.textContent = 'PICK FOR ME';
+
       if (!name) {
-        name = generateRandomName();
-        setPlayerName(name);
+        setError('Could not pick a name. Please type one.');
+        input.focus();
+        return;
       }
       finish(name);
     }
 
     okBtn.addEventListener('click', handleOk, { signal });
-    cancelBtn.addEventListener('click', handleCancel, { signal });
+    cancelBtn.addEventListener('click', handlePickForMe, { signal });
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') handleOk();
-      if (e.key === 'Escape') handleCancel();
+      // No Escape — name is required
     }, { signal });
   });
 }
 
 /* ── Sign-out prompt ───────────────────────────────────────────── */
 
-export function promptSignOut() {
+export async function promptSignOut() {
+  const currentName = await getPlayerName();
   return new Promise((resolve) => {
-    const currentName = getPlayerName();
     const modal = ensureNameModal();
-    const box = document.getElementById('lb-name-box');
+    const box   = document.getElementById('lb-name-box');
     const savedHTML = box.innerHTML;
 
-    box.innerHTML = `
-      <p id="lb-name-title">👤 ${String(currentName || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
-      <p style="font-size:0.8rem;opacity:0.7;margin-bottom:1.25rem;">Your name &amp; stats are saved on this device.<br>Sign out to remove your name from this device.</p>
-      <div class="lb-name-btns">
-        <button type="button" id="lb-name-cancel">CANCEL</button>
-        <button type="button" id="lb-name-ok" style="border-color:#ef4444;background:rgba(239,68,68,0.15);color:#ef4444;">SIGN OUT</button>
-      </div>
-    `;
+    const safeName = String(currentName || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    box.innerHTML = [
+      '<p id="lb-name-title">👤 ' + safeName + '</p>',
+      '<p style="font-size:0.8rem;opacity:0.7;margin-bottom:1.25rem;">Sign out to remove your name from this device.<br>You will need to create a new gamer tag to play again.</p>',
+      '<div class="lb-name-btns">',
+      '  <button type="button" id="lb-name-cancel">CANCEL</button>',
+      '  <button type="button" id="lb-name-ok" style="border-color:#ef4444;background:rgba(239,68,68,0.15);color:#ef4444;">SIGN OUT</button>',
+      '</div>',
+    ].join('\n');
 
     modal.classList.remove('lb-hidden');
 
@@ -222,8 +304,8 @@ export function promptSignOut() {
       resolve(signedOut);
     }
 
-    document.getElementById('lb-name-ok').addEventListener('click', () => {
-      clearPlayerName();
+    document.getElementById('lb-name-ok').addEventListener('click', async () => {
+      await clearPlayerName();
       finish(true);
     }, { signal });
     document.getElementById('lb-name-cancel').addEventListener('click', () => finish(false), { signal });
@@ -233,48 +315,21 @@ export function promptSignOut() {
   });
 }
 
-/* ── Score submission ──────────────────────────────────────────── */
+/* ── Score submission ─────────────────────────────────────────────── */
 
 export async function submitScore(dailyId, score, words, hintsUsed, mode = 'daily', metadata = null) {
-  const playerName = getPlayerName();
+  const playerName = await getPlayerName();
   if (!playerName) return null;
   try {
-    const payload = { dailyId, playerName, score, words, hintsUsed, mode };
-    if (metadata && typeof metadata === 'object') {
-      if (Number.isFinite(metadata.tilesUsed)) payload.tilesUsed = Math.round(metadata.tilesUsed);
-      if (Number.isFinite(metadata.penalty)) payload.penalty = Math.round(metadata.penalty);
-      if (Number.isFinite(metadata.solveTimeSeconds)) payload.solveTimeSeconds = Math.round(metadata.solveTimeSeconds);
-    }
-    const res = await fetch('/api/scores', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) return null;
-    return await res.json();
+    return await sbSubmitScore(dailyId, score, words, hintsUsed, mode, metadata);
   } catch (err) {
-    // Silently fail — offline or server error should not affect gameplay
     console.warn('[leaderboard] submitScore failed:', err);
     return null;
   }
 }
 
-/* ── Leaderboard fetch ─────────────────────────────────────────── */
+/* ── Leaderboard fetch ────────────────────────────────────────────── */
 
 export async function fetchLeaderboard(dailyId, mode = 'daily') {
-  try {
-    const url = dailyId
-      ? `/api/leaderboard?dailyId=${encodeURIComponent(dailyId)}&mode=${encodeURIComponent(mode)}`
-      : `/api/leaderboard?mode=${encodeURIComponent(mode)}`;
-    const res = await fetch(url);
-    if (!res.ok) return { configured: true, entries: [] };
-    const data = await res.json();
-    return {
-      configured: data.configured !== false,
-      entries: Array.isArray(data.leaderboard) ? data.leaderboard : [],
-    };
-  } catch (err) {
-    console.warn('[leaderboard] fetchLeaderboard failed:', err);
-    return { configured: true, entries: [] };
-  }
+  return sbFetchLeaderboard(dailyId, mode);
 }

@@ -66,7 +66,7 @@ function renderTable(entries, currentPlayer) {
 /* ── Tab rendering ───────────────────────────────────────────────── */
 
 async function loadTab(tabId, contentEl) {
-  const currentPlayer = getPlayerName();
+  const currentPlayer = await getPlayerName();
   contentEl.innerHTML = '<div style="text-align:center;opacity:0.5;padding:1rem">Loading…</div>';
 
   try {
