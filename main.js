@@ -587,14 +587,7 @@ window.addEventListener('grid:ready', () => {
   if (playerClickedPlay) {
     // Wait for buffers, but cap at 1.5s so slow connections never block the transition
     const bufferTimeout = new Promise(resolve => setTimeout(resolve, 1500));
-    Promise.race([audioReadyPromise, bufferTimeout]).then(async () => {
-      // Require sign-up before playing
-      if (!await getPlayerName()) {
-        await promptPlayerName();
-        const saved = await getPlayerName();
-        updateNameBtnText(document.getElementById('set-name-btn'), saved);
-        updateSplashSignupBtn(splashSignupBtn, saved);
-      }
+    Promise.race([audioReadyPromise, bufferTimeout]).then(() => {
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
       openHowtoIfFirstVisit(300);
@@ -602,9 +595,7 @@ window.addEventListener('grid:ready', () => {
   }
 }, { once: true });
 
-    let signUpInProgress = false;
-    splashPlayBtn.addEventListener('click', async () => {
-      if (signUpInProgress) return;
+    splashPlayBtn.addEventListener('click', () => {
       playerClickedPlay = true;
 
 
@@ -616,16 +607,6 @@ window.addEventListener('grid:ready', () => {
 
 
       if (!gameState.gridReady) return;
-
-      // Require sign-up before playing
-      if (!await getPlayerName()) {
-        signUpInProgress = true;
-        await promptPlayerName();
-        signUpInProgress = false;
-        const saved = await getPlayerName();
-        updateNameBtnText(document.getElementById('set-name-btn'), saved);
-        updateSplashSignupBtn(splashSignupBtn, saved);
-      }
 
       playSound('sfxUnlock');
       splashScreen.classList.add('hidden');
