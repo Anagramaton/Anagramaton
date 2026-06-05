@@ -34,27 +34,46 @@ Click the **HOW TO PLAY** button on the start screen (or the 🎮 icon in the se
 
 ---
 
-## Local development
+## Local Development
 
-```bash
-# Install dependencies (only needed for the Supabase API routes)
-npm install
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-# Serve the frontend (no API features)
-npx serve .
-# or: python3 -m http.server 3000
+2. Create a `.env` file (copy from `.env.example`):
+   ```bash
+   cp .env.example .env
+   ```
 
-# To test the API routes locally, use the Vercel CLI:
-npx vercel dev
-```
+3. Add your Supabase credentials to `.env`:
+   ```env
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key-here
+   ```
 
-> The game is fully playable in a plain static server. API/leaderboard features only work when the Supabase environment variables are set (see below).
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open http://localhost:5173 in your browser
+
+> API/leaderboard features only work when the Supabase environment variables are set (see below).
+
+---
+
+## Deployment
+
+The project is configured for Vercel deployment:
+- Set environment variables in Vercel dashboard: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`
+- Vercel will automatically run `npm run build` and deploy from the `dist` folder
 
 ---
 
 ## Deploying to Vercel
 
-The project is pre-configured for [Vercel](https://vercel.com) — just import the GitHub repository and Vercel will detect the `api/` serverless functions automatically.
+The project is pre-configured for [Vercel](https://vercel.com) — just import the GitHub repository. Vercel will run `npm run build` (via `vercel.json`) and serve the bundled output from the `dist` folder.
 
 ### Enabling the leaderboard (Supabase setup)
 
