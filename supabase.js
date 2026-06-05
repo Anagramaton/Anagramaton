@@ -1,4 +1,4 @@
-// supabase.js — frontend Supabase client for anonymous auth & player profile management
+// supabase.js — frontend Supabase client for email/password auth & player profile management
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -6,11 +6,19 @@ const supabaseUrl     = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 let _supabase = null;
+let _authListenerBound = false;
+let _profileCache = null; // in-memory cache: { screen_name: string } | null
 
 function getSupabase() {
   if (!supabaseUrl || !supabaseAnonKey) return null;
   if (!_supabase) {
     _supabase = createClient(supabaseUrl, supabaseAnonKey);
+  }
+  if (!_authListenerBound) {
+    _supabase.auth.onAuthStateChange(() => {
+      _profileCache = null;
+    });
+    _authListenerBound = true;
   }
   return _supabase;
 }
@@ -22,15 +30,33 @@ export async function ensureAuthSession() {
   if (!sb) return null;
 
   const { data: { session } } = await sb.auth.getSession();
-  if (session) return session;
+  return session || null;
+}
 
-  // No existing session — create a new anonymous user
-  const { data, error } = await sb.auth.signInAnonymously();
-  if (error) {
-    console.warn('[supabase] signInAnonymously failed:', error.message);
-    return null;
-  }
-  return data.session;
+export async function signUpWithEmailPassword(email, password) {
+  const sb = getSupabase();
+  if (!sb) throw new Error('Supabase not configured');
+
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password,
+  });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function signInWithEmailPassword(email, password) {
+  const sb = getSupabase();
+  if (!sb) throw new Error('Supabase not configured');
+
+  const { data, error } = await sb.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) throw error;
+  return data;
 }
 
 export async function signOut() {
@@ -41,8 +67,6 @@ export async function signOut() {
 }
 
 /* \u2500\u2500 Player profile \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-
-let _profileCache = null; // in-memory cache: { screen_name: string } | null
 
 export async function getPlayerProfile() {
   const sb = getSupabase();
