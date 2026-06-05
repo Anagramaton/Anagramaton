@@ -3,6 +3,8 @@
 import {
   getPlayerProfile,
   setPlayerScreenName,
+  signUpWithEmailPassword,
+  signInWithEmailPassword,
   signOut,
   submitScore as sbSubmitScore,
   fetchLeaderboard as sbFetchLeaderboard,
@@ -12,6 +14,8 @@ import {
 
 const ADJECTIVES = ['SWIFT','BOLD','LUNAR','COSMIC','NEON','SONIC','JADE','IRON','STORM','BLAZE','PIXEL','TURBO','HYPER','ULTRA','OMEGA'];
 const NOUNS      = ['FOX','WOLF','HAWK','LYNX','BEAR','ROOK','SAGE','VOLT','WREN','APEX','ECHO','FLUX','GLYPH','NODE','ZEAL'];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const LAST_EMAIL_KEY = 'anagramaton_last_auth_email';
 
 function generateRandomName() {
   const adj  = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
@@ -85,7 +89,7 @@ function injectModalStyles() {
     '  font-size: 0.95rem;',
     '  letter-spacing: 0.05em;',
     '}',
-    '#lb-name-input {',
+    '.lb-auth-input {',
     '  width: 100%;',
     '  box-sizing: border-box;',
     '  padding: 0.5rem 0.75rem;',
@@ -99,9 +103,15 @@ function injectModalStyles() {
     '  margin-bottom: 0.5rem;',
     '  outline: none;',
     '}',
-    '#lb-name-input:focus {',
+    '.lb-auth-input:focus {',
     '  border-color: var(--rom-you, #f59e0b);',
     '}',
+    '#lb-name-subtitle {',
+    '  font-size: 0.8rem;',
+    '  opacity: 0.7;',
+    '  margin-bottom: 0.75rem;',
+    '}',
+    '.lb-hidden-field { display: none; }',
     '#lb-name-error {',
     '  min-height: 1.2em;',
     '  font-size: 0.8rem;',
@@ -141,6 +151,19 @@ function injectModalStyles() {
     '  opacity: 0.5;',
     '  cursor: not-allowed;',
     '}',
+    '#lb-auth-toggle {',
+    '  margin-top: 0.8rem;',
+    '  border: 0;',
+    '  background: transparent;',
+    '  color: var(--alert-box-border, rgba(76,201,240,0.9));',
+    '  text-decoration: underline;',
+    '  font: inherit;',
+    '  font-size: 0.8rem;',
+    '  cursor: pointer;',
+    '}',
+    '#lb-auth-toggle:hover {',
+    '  color: var(--rom-you, #f59e0b);',
+    '}',
   ].join('\n');
   document.head.appendChild(style);
 }
@@ -159,14 +182,17 @@ function ensureNameModal() {
   modal.setAttribute('aria-labelledby', 'lb-name-title');
   modal.innerHTML = [
     '<div id="lb-name-box">',
-    '  <p id="lb-name-title">👤 SET GAMER TAG</p>',
-    '  <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.75rem;">Choose a unique name (5–15 characters) or tap PICK FOR ME!</p>',
-    '  <input id="lb-name-input" type="text" maxlength="15" placeholder="Your gamer tag (5-15 chars)…" autocomplete="off" />',
+    '  <p id="lb-name-title">👤 CREATE ACCOUNT</p>',
+    '  <p id="lb-name-subtitle">Use email + password, then choose a gamer tag.</p>',
+    '  <input id="lb-email-input" class="lb-auth-input" type="email" placeholder="Email" autocomplete="email" />',
+    '  <input id="lb-password-input" class="lb-auth-input" type="password" minlength="6" placeholder="Password (min 6 chars)" autocomplete="current-password" />',
+    '  <input id="lb-name-input" class="lb-auth-input" type="text" maxlength="15" placeholder="Your gamer tag (5-15 chars)…" autocomplete="off" />',
     '  <p id="lb-name-error"></p>',
     '  <div class="lb-name-btns">',
     '    <button type="button" id="lb-name-cancel">PICK FOR ME</button>',
-    '    <button type="button" id="lb-name-ok">CONTINUE</button>',
+    '    <button type="button" id="lb-name-ok">SIGN UP</button>',
     '  </div>',
+    '  <button type="button" id="lb-auth-toggle">Already have an account? SIGN IN</button>',
     '</div>',
   ].join('\n');
   document.body.appendChild(modal);
@@ -175,16 +201,25 @@ function ensureNameModal() {
 
 export function promptPlayerName() {
   return new Promise((resolve) => {
-    const modal   = ensureNameModal();
-    const input   = document.getElementById('lb-name-input');
-    const okBtn   = document.getElementById('lb-name-ok');
+    const modal = ensureNameModal();
+    const emailInput = document.getElementById('lb-email-input');
+    const passwordInput = document.getElementById('lb-password-input');
+    const nameInput = document.getElementById('lb-name-input');
+    const titleEl = document.getElementById('lb-name-title');
+    const subtitleEl = document.getElementById('lb-name-subtitle');
+    const okBtn = document.getElementById('lb-name-ok');
     const cancelBtn = document.getElementById('lb-name-cancel');
     const errorEl = document.getElementById('lb-name-error');
+    const toggleBtn = document.getElementById('lb-auth-toggle');
 
-    input.value = '';
+    let mode = 'signup'; // signup | signin | profile
+
+    emailInput.value = localStorage.getItem(LAST_EMAIL_KEY) || '';
+    passwordInput.value = '';
+    nameInput.value = '';
     errorEl.textContent = '';
     modal.classList.remove('lb-hidden');
-    setTimeout(() => input.focus(), 50);
+    setTimeout(() => (emailInput.value ? passwordInput : emailInput).focus(), 50);
 
     const ac = new AbortController();
     const { signal } = ac;
@@ -199,70 +234,182 @@ export function promptPlayerName() {
       resolve(value);
     }
 
-    async function handleOk() {
-      const raw = input.value.trim();
+    function validateName(raw) {
       if (raw.length < 5) {
         setError('Name must be at least 5 characters.');
-        return;
+        return false;
       }
       if (raw.length > 15) {
         setError('Name must be 15 characters or fewer.');
-        return;
+        return false;
       }
+      return true;
+    }
+
+    function validateEmail(raw) {
+      if (!raw) {
+        setError('Email is required.');
+        return false;
+      }
+      if (!EMAIL_RE.test(raw)) {
+        setError('Enter a valid email address.');
+        return false;
+      }
+      return true;
+    }
+
+    function validatePassword(raw) {
+      if (!raw) {
+        setError('Password is required.');
+        return false;
+      }
+      if (raw.length < 6) {
+        setError('Password must be at least 6 characters.');
+        return false;
+      }
+      return true;
+    }
+
+    function setMode(nextMode) {
+      mode = nextMode;
+      const inSignIn = mode === 'signin';
+      const inProfile = mode === 'profile';
+
+      titleEl.textContent = inSignIn ? '👤 SIGN IN' : (inProfile ? '👤 CHOOSE GAMER TAG' : '👤 CREATE ACCOUNT');
+      subtitleEl.textContent = inSignIn
+        ? 'Sign in with your existing email account.'
+        : (inProfile
+          ? 'Signed in! Choose your gamer tag to finish setup.'
+          : 'Use email + password, then choose a gamer tag.');
+
+      nameInput.classList.toggle('lb-hidden-field', inSignIn);
+      cancelBtn.classList.toggle('lb-hidden-field', inSignIn);
+      toggleBtn.classList.toggle('lb-hidden-field', inProfile);
+
+      okBtn.textContent = inSignIn ? 'SIGN IN' : (inProfile ? 'SAVE TAG' : 'SIGN UP');
+      toggleBtn.textContent = inSignIn
+        ? "Don't have an account? SIGN UP"
+        : 'Already have an account? SIGN IN';
+
+      passwordInput.autocomplete = inSignIn ? 'current-password' : 'new-password';
       setError('');
-      okBtn.disabled = true;
-      cancelBtn.disabled = true;
-      okBtn.textContent = 'SAVING…';
+    }
 
-      const result = await setPlayerName(raw);
-      okBtn.disabled = false;
-      cancelBtn.disabled = false;
-      okBtn.textContent = 'CONTINUE';
+    function mapAuthError(err, currentMode) {
+      const message = String(err?.message || '').toLowerCase();
+      if (currentMode === 'signup' && (message.includes('already registered') || message.includes('already exists'))) {
+        return 'Email already exists. Try SIGN IN instead.';
+      }
+      if (currentMode === 'signin' && (message.includes('invalid login credentials') || message.includes('invalid credentials'))) {
+        return 'Invalid email or password.';
+      }
+      if (message.includes('failed to fetch') || message.includes('network')) {
+        return 'Network error. Please check your connection and try again.';
+      }
+      return err?.message || 'Authentication failed. Please try again.';
+    }
 
+    async function saveGamerTag(rawName) {
+      const result = await setPlayerName(rawName);
       if (result === 'DUPLICATE') {
         setError('That name is taken. Try another!');
-        input.focus();
-        return;
+        nameInput.focus();
+        return null;
       }
       if (!result) {
         setError('Could not save name. Try again.');
-        input.focus();
-        return;
+        nameInput.focus();
+        return null;
       }
-      finish(result);
+      return result;
     }
 
-    async function handlePickForMe() {
-      let name = null;
-      cancelBtn.disabled = true;
-      okBtn.disabled = true;
-      cancelBtn.textContent = 'PICKING…';
+    async function handleSignUp() {
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+      const rawName = nameInput.value.trim();
+      if (!validateEmail(email) || !validatePassword(password) || !validateName(rawName)) return;
 
-      // Try up to 5 random names until one is unique
-      for (let attempt = 0; attempt < 5; attempt++) {
-        const candidate = generateRandomName();
-        const result = await setPlayerName(candidate);
-        if (result && result !== 'DUPLICATE') {
-          name = result;
-          break;
+      localStorage.setItem(LAST_EMAIL_KEY, email);
+      try {
+        const data = await signUpWithEmailPassword(email, password);
+        if (!data?.session) {
+          await signInWithEmailPassword(email, password);
         }
-      }
-
-      cancelBtn.disabled = false;
-      okBtn.disabled = false;
-      cancelBtn.textContent = 'PICK FOR ME';
-
-      if (!name) {
-        setError('Could not pick a name. Please type one.');
-        input.focus();
+      } catch (err) {
+        setError(mapAuthError(err, 'signup'));
         return;
       }
-      finish(name);
+      const savedName = await saveGamerTag(rawName);
+      if (savedName) finish(savedName);
     }
 
+    async function handleSignIn() {
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+      if (!validateEmail(email) || !validatePassword(password)) return;
+
+      localStorage.setItem(LAST_EMAIL_KEY, email);
+      try {
+        await signInWithEmailPassword(email, password);
+      } catch (err) {
+        setError(mapAuthError(err, 'signin'));
+        return;
+      }
+
+      const existingName = await getPlayerName();
+      if (existingName) {
+        finish(existingName);
+        return;
+      }
+      setMode('profile');
+      nameInput.focus();
+    }
+
+    async function handleProfile() {
+      const rawName = nameInput.value.trim();
+      if (!validateName(rawName)) return;
+      const savedName = await saveGamerTag(rawName);
+      if (savedName) finish(savedName);
+    }
+
+    async function handleOk() {
+      setError('');
+      okBtn.disabled = true;
+      cancelBtn.disabled = true;
+      toggleBtn.disabled = true;
+      okBtn.textContent = mode === 'signin' ? 'SIGNING IN…' : (mode === 'profile' ? 'SAVING…' : 'SIGNING UP…');
+
+      if (mode === 'signin') await handleSignIn();
+      else if (mode === 'profile') await handleProfile();
+      else await handleSignUp();
+
+      okBtn.disabled = false;
+      cancelBtn.disabled = false;
+      toggleBtn.disabled = false;
+      okBtn.textContent = mode === 'signin' ? 'SIGN IN' : (mode === 'profile' ? 'SAVE TAG' : 'SIGN UP');
+    }
+
+    function handlePickForMe() {
+      nameInput.value = generateRandomName().slice(0, 15);
+      setError('');
+      nameInput.focus();
+    }
+
+    function handleToggleMode() {
+      setMode(mode === 'signin' ? 'signup' : 'signin');
+      if (mode === 'signin') {
+        passwordInput.focus();
+      } else {
+        nameInput.focus();
+      }
+    }
+
+    setMode('signup');
     okBtn.addEventListener('click', handleOk, { signal });
     cancelBtn.addEventListener('click', handlePickForMe, { signal });
-    input.addEventListener('keydown', (e) => {
+    toggleBtn.addEventListener('click', handleToggleMode, { signal });
+    modal.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') handleOk();
       // No Escape — name is required
     }, { signal });
