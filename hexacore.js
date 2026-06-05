@@ -5994,24 +5994,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('splash-hexacore-btn')?.addEventListener('click', async () => {
     document.getElementById('splash-screen')?.classList.add('hidden');
 
-    // Require sign-up before playing
-    if (!await getPlayerName()) {
-      await promptPlayerName();
-      const saved = await getPlayerName();
-      const nameBtn = document.getElementById('set-name-btn');
-      if (nameBtn) {
-        const label = nameBtn.querySelector('.setting-label');
-        if (label) label.textContent = saved ? saved.toUpperCase() : 'SET NAME';
-      }
-      const splashSignupBtn = document.getElementById('splash-signup-btn');
-      if (splashSignupBtn) {
-        if (saved) {
-          splashSignupBtn.disabled = true;
-          splashSignupBtn.textContent = `✓ SIGNED IN AS ${saved.toUpperCase()}`;
-        }
-      }
-    }
-
     openModeSelectModal(
       mode => startHexacoreMode(mode),
       () => document.getElementById('splash-screen')?.classList.remove('hidden'),
