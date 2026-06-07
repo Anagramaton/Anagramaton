@@ -1,0 +1,430 @@
+{
+  "date": "2026-07-06",
+  "grid": {
+    "0,-4": "O",
+    "1,-4": "V",
+    "2,-4": "E",
+    "3,-4": "R",
+    "4,-4": "B",
+    "4,-3": "A",
+    "3,-3": "L",
+    "2,-3": "A",
+    "1,-3": "N",
+    "0,-3": "C",
+    "-1,-3": "I",
+    "-2,-2": "N",
+    "-1,-2": "G",
+    "0,-2": "D",
+    "1,-2": "E",
+    "2,-2": "P",
+    "3,-2": "R",
+    "4,-2": "I",
+    "4,-1": "V",
+    "3,-1": "E",
+    "2,-1": "M",
+    "1,-1": "E",
+    "0,-1": "N",
+    "-1,-1": "T",
+    "-2,-1": "B",
+    "-3,-1": "E",
+    "-4,0": "L",
+    "-3,0": "L",
+    "-2,0": "Y",
+    "-1,0": "A",
+    "0,0": "C",
+    "1,0": "H",
+    "2,0": "E",
+    "3,0": "R",
+    "4,0": "N",
+    "3,1": "O",
+    "2,1": "M",
+    "1,1": "O",
+    "0,1": "L",
+    "-1,1": "O",
+    "-2,1": "G",
+    "-3,1": "I",
+    "-4,1": "S",
+    "-4,2": "T",
+    "-3,2": "G",
+    "-2,2": "A",
+    "-1,2": "N",
+    "0,2": "S",
+    "1,2": "E",
+    "2,2": "Y",
+    "1,3": "S",
+    "0,3": "O",
+    "-1,3": "F",
+    "-2,3": "T",
+    "-3,3": "E",
+    "-4,3": "N",
+    "-4,4": "G",
+    "-3,4": "O",
+    "-2,4": "O",
+    "-1,4": "N",
+    "0,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -2,
+      "r": -2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 2,
+      "r": 2
+    },
+    {
+      "type": "prism",
+      "q": -1,
+      "r": -3
+    },
+    {
+      "type": "gemGold",
+      "q": 2,
+      "r": -4
+    },
+    {
+      "type": "rune",
+      "q": 3,
+      "r": -2
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 1,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "NG"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 10918,
+    "minAchievableScore": 7176,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "OVERBALANCING",
+          "DEPRIVEMENT",
+          "BELLYACHER",
+          "NOMOLOGIST",
+          "GANSEYS",
+          "OFTEN",
+          "GOONS"
+        ],
+        "wordTotal": 4959,
+        "penalty": 0,
+        "finalScore": 4959
+      },
+      {
+        "words": [
+          "OVERBALANCING",
+          "DEPRIVEMENT",
+          "BELLYACHER",
+          "NOMOLOGIST",
+          "GANSEYS",
+          "OFTEN",
+          "GOONS"
+        ],
+        "wordTotal": 4959,
+        "penalty": 0,
+        "finalScore": 4959
+      },
+      {
+        "words": [
+          "OVERBALANCING",
+          "DEPRIVEMENT",
+          "BELLYACHER",
+          "NOMOLOGIST",
+          "GANSEYS",
+          "OFTEN",
+          "GOONS"
+        ],
+        "wordTotal": 4959,
+        "penalty": 0,
+        "finalScore": 4959
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 4959,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 3588,
+          "positional": "A 13-letter word routes through the purple prism",
+          "category": "A compound-style word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "O___________G"
+            },
+            {
+              "level": 3,
+              "text": "OV_________NG"
+            },
+            {
+              "level": 4,
+              "text": "O_E__A_A__I__"
+            },
+            {
+              "level": 5,
+              "text": "OVERBALANCIN_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses gold gem",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 429,
+          "positional": "A 11-letter word uses the UN digraph tile",
+          "category": "An abstract noun — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A result/state noun ending in -MENT"
+            },
+            {
+              "level": 2,
+              "text": "D_________T"
+            },
+            {
+              "level": 3,
+              "text": "DE_______NT"
+            },
+            {
+              "level": 4,
+              "text": "_E__I_E_E__"
+            },
+            {
+              "level": 5,
+              "text": "DEPRIVEMEN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 350,
+          "positional": "A 10-letter word sits in the center quadrant",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B________R"
+            },
+            {
+              "level": 3,
+              "text": "BE______ER"
+            },
+            {
+              "level": 4,
+              "text": "_E___A__E_"
+            },
+            {
+              "level": 5,
+              "text": "BELLYACHE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 10,
+          "estimatedPoints": 290,
+          "positional": "A 10-letter word uses the TY digraph tile",
+          "category": "A role/profession-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "N________T"
+            },
+            {
+              "level": 3,
+              "text": "NO______ST"
+            },
+            {
+              "level": 4,
+              "text": "_O_O_O_I__"
+            },
+            {
+              "level": 5,
+              "text": "NOMOLOGIS_"
+            }
+          ],
+          "features": [
+            "Uses 4 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 147,
+          "positional": "A 7-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G_____S"
+            },
+            {
+              "level": 3,
+              "text": "GA___YS"
+            },
+            {
+              "level": 4,
+              "text": "_A__E__"
+            },
+            {
+              "level": 5,
+              "text": "GANSEY_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 85,
+          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O___N"
+            },
+            {
+              "level": 3,
+              "text": "OF_EN"
+            },
+            {
+              "level": 4,
+              "text": "O__E_"
+            },
+            {
+              "level": 5,
+              "text": "OFTE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 70,
+          "positional": "A 5-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G___S"
+            },
+            {
+              "level": 3,
+              "text": "GO_NS"
+            },
+            {
+              "level": 4,
+              "text": "_OO__"
+            },
+            {
+              "level": 5,
+              "text": "GOON_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8,
+    "gemDensity": 0.016,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
+    "fullClear": false,
+    "solutionPath": [
+      "RENVOI",
+      "DEPRIVEMENT",
+      "BELLYACHER",
+      "GEOTAGGING",
+      "CASEMAN",
+      "STOLONS",
+      "BOYOS"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "OVERBALANCING",
+      "DEPRIVEMENT",
+      "BELLYACHER",
+      "NOMOLOGIST",
+      "GANSEYS",
+      "OFTEN",
+      "GOONS"
+    ],
+    "generatedAt": "2026-06-07T01:31:36.167Z"
+  }
+}
