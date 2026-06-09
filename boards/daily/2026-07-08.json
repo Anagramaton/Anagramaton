@@ -1,0 +1,461 @@
+{
+  "date": "2026-07-08",
+  "grid": {
+    "4,-4": "P",
+    "3,-4": "L",
+    "2,-4": "A",
+    "1,-4": "N",
+    "0,-4": "T",
+    "-1,-3": "L",
+    "0,-3": "I",
+    "1,-3": "K",
+    "2,-3": "E",
+    "3,-3": "A",
+    "4,-3": "T",
+    "4,-2": "H",
+    "3,-2": "E",
+    "2,-2": "T",
+    "1,-2": "O",
+    "0,-2": "S",
+    "-1,-2": "E",
+    "-2,-2": "S",
+    "-3,-1": "M",
+    "-2,-1": "I",
+    "-1,-1": "G",
+    "0,-1": "H",
+    "1,-1": "T",
+    "2,-1": "F",
+    "3,-1": "U",
+    "4,-1": "L",
+    "4,0": "C",
+    "3,0": "R",
+    "2,0": "I",
+    "1,0": "M",
+    "0,0": "M",
+    "-1,0": "E",
+    "-2,0": "R",
+    "-3,0": "S",
+    "-4,0": "S",
+    "-4,1": "A",
+    "-3,1": "B",
+    "-2,1": "O",
+    "-1,1": "T",
+    "0,1": "A",
+    "1,1": "G",
+    "2,1": "E",
+    "3,1": "D",
+    "2,2": "O",
+    "1,2": "O",
+    "0,2": "K",
+    "-1,2": "I",
+    "-2,2": "N",
+    "-3,2": "G",
+    "-4,2": "S",
+    "-4,3": "E",
+    "-3,3": "C",
+    "-2,3": "T",
+    "-1,3": "O",
+    "0,3": "R",
+    "1,3": "S",
+    "0,4": "O",
+    "-1,4": "S",
+    "-2,4": "T",
+    "-3,4": "I",
+    "-4,4": "A"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -3,
+      "r": -1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -3,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": -1,
+      "r": -3
+    },
+    {
+      "type": "gemEmerald",
+      "q": 2,
+      "r": -4
+    },
+    {
+      "type": "rune",
+      "q": 1,
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 1,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 2,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 1,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "CH"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3790,
+    "minAchievableScore": 2088,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "PLANTLIKE",
+          "MIGHTFUL",
+          "CRIMMERS",
+          "ATHETOSES",
+          "SABOTAGE",
+          "DOOKING",
+          "SECTORS",
+          "OSTIA"
+        ],
+        "wordTotal": 2300,
+        "penalty": 0,
+        "finalScore": 2300
+      },
+      {
+        "words": [
+          "PLANTLIKE",
+          "MIGHTFUL",
+          "CRIMMERS",
+          "SABOTAGE",
+          "ATHETOSES",
+          "DOOKING",
+          "SECTORS",
+          "OSTIA"
+        ],
+        "wordTotal": 2300,
+        "penalty": 0,
+        "finalScore": 2300
+      },
+      {
+        "words": [
+          "PLANTLIKE",
+          "ATHETOSES",
+          "MIGHTFUL",
+          "CRIMMERS",
+          "SABOTAGE",
+          "DOOKING",
+          "SECTORS",
+          "OSTIA"
+        ],
+        "wordTotal": 2300,
+        "penalty": 0,
+        "finalScore": 2300
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2300,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 9,
+          "estimatedPoints": 1044,
+          "positional": "A 9-letter word routes through the purple prism",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P_______E"
+            },
+            {
+              "level": 3,
+              "text": "PL_____KE"
+            },
+            {
+              "level": 4,
+              "text": "__A___I_E"
+            },
+            {
+              "level": 5,
+              "text": "PLANTLIK_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses emerald gem"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 9,
+          "estimatedPoints": 216,
+          "positional": "A 9-letter word uses the CH digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A_______S"
+            },
+            {
+              "level": 3,
+              "text": "AT_____ES"
+            },
+            {
+              "level": 4,
+              "text": "A__E_O_E_"
+            },
+            {
+              "level": 5,
+              "text": "ATHETOSE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 248,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A descriptive adjective — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M______L"
+            },
+            {
+              "level": 3,
+              "text": "MI____UL"
+            },
+            {
+              "level": 4,
+              "text": "_I____U_"
+            },
+            {
+              "level": 5,
+              "text": "MIGHTFU_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 224,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C______S"
+            },
+            {
+              "level": 3,
+              "text": "CR____RS"
+            },
+            {
+              "level": 4,
+              "text": "__I__E__"
+            },
+            {
+              "level": 5,
+              "text": "CRIMMER_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 200,
+          "positional": "A 8-letter word uses the AN digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S______E"
+            },
+            {
+              "level": 3,
+              "text": "SA____GE"
+            },
+            {
+              "level": 4,
+              "text": "_A_O_A_E"
+            },
+            {
+              "level": 5,
+              "text": "SABOTAG_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 161,
+          "positional": "A 7-letter word uses the IN digraph tile",
+          "category": "An action verb form — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "D_____G"
+            },
+            {
+              "level": 3,
+              "text": "DO___NG"
+            },
+            {
+              "level": 4,
+              "text": "_OO_I__"
+            },
+            {
+              "level": 5,
+              "text": "DOOKIN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 147,
+          "positional": "A 7-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_____S"
+            },
+            {
+              "level": 3,
+              "text": "SE___RS"
+            },
+            {
+              "level": 4,
+              "text": "_E__O__"
+            },
+            {
+              "level": 5,
+              "text": "SECTOR_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 60,
+          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O___A"
+            },
+            {
+              "level": 3,
+              "text": "OS_IA"
+            },
+            {
+              "level": 4,
+              "text": "O__IA"
+            },
+            {
+              "level": 5,
+              "text": "OSTI_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8,
+    "gemDensity": 0.016,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
+    "fullClear": false,
+    "solutionPath": [
+      "PLANTLIKE",
+      "SHOTMAKINGS",
+      "BRETTICE",
+      "ASTEISMS",
+      "FORGOER",
+      "OSTOMATE",
+      "LOUIS"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "PLANTLIKE",
+      "ATHETOSES",
+      "MIGHTFUL",
+      "CRIMMERS",
+      "SABOTAGE",
+      "DOOKING",
+      "SECTORS",
+      "OSTIA"
+    ],
+    "generatedAt": "2026-06-09T01:22:29.926Z"
+  }
+}
