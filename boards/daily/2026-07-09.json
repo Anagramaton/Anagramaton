@@ -1,0 +1,462 @@
+{
+  "date": "2026-07-09",
+  "grid": {
+    "4,-4": "O",
+    "3,-4": "E",
+    "2,-4": "D",
+    "1,-4": "E",
+    "0,-4": "M",
+    "-1,-3": "A",
+    "0,-3": "T",
+    "1,-3": "O",
+    "2,-3": "S",
+    "3,-3": "E",
+    "4,-3": "S",
+    "4,-2": "P",
+    "3,-2": "R",
+    "2,-2": "E",
+    "1,-2": "A",
+    "0,-2": "Z",
+    "-1,-2": "I",
+    "-2,-2": "N",
+    "-3,-1": "G",
+    "-2,-1": "U",
+    "-1,-1": "N",
+    "0,-1": "F",
+    "1,-1": "O",
+    "2,-1": "U",
+    "3,-1": "N",
+    "4,-1": "D",
+    "4,0": "E",
+    "3,0": "D",
+    "2,0": "E",
+    "1,0": "M",
+    "0,0": "B",
+    "-1,0": "O",
+    "-2,0": "S",
+    "-3,0": "S",
+    "-4,0": "E",
+    "-4,1": "S",
+    "-3,1": "P",
+    "-2,1": "A",
+    "-1,1": "T",
+    "0,1": "Z",
+    "1,1": "E",
+    "2,1": "R",
+    "3,1": "S",
+    "2,2": "M",
+    "1,2": "E",
+    "0,2": "S",
+    "-1,2": "S",
+    "-2,2": "I",
+    "-3,2": "E",
+    "-4,2": "R",
+    "-4,3": "P",
+    "-3,3": "O",
+    "-2,3": "B",
+    "-1,3": "O",
+    "0,3": "Y",
+    "1,3": "S",
+    "0,4": "P",
+    "-1,4": "A",
+    "-2,4": "R",
+    "-3,4": "C",
+    "-4,4": "H"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 4,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -1,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 0,
+      "r": -2
+    },
+    {
+      "type": "gemGold",
+      "q": -3,
+      "r": 0
+    },
+    {
+      "type": "rune",
+      "q": 0,
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 1,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "IN"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3848,
+    "minAchievableScore": 1296,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "EMBOSSES",
+          "SPREAZING",
+          "UNFOUNDED",
+          "OEDEMATOSE",
+          "PATZERS",
+          "MESSIER",
+          "POBOYS",
+          "PARCH"
+        ],
+        "wordTotal": 2378,
+        "penalty": 0,
+        "finalScore": 2378
+      },
+      {
+        "words": [
+          "EMBOSSES",
+          "SPREAZING",
+          "UNFOUNDED",
+          "PATZERS",
+          "OEDEMATOSE",
+          "POBOYS",
+          "MESSIER",
+          "PARCH"
+        ],
+        "wordTotal": 2378,
+        "penalty": 0,
+        "finalScore": 2378
+      },
+      {
+        "words": [
+          "OEDEMATOSE",
+          "SPREAZING",
+          "UNFOUNDED",
+          "EMBOSSES",
+          "PATZERS",
+          "MESSIER",
+          "POBOYS",
+          "PARCH"
+        ],
+        "wordTotal": 2378,
+        "penalty": 0,
+        "finalScore": 2378
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2378,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 10,
+          "estimatedPoints": 270,
+          "positional": "A 10-letter word sits in the upper-right quadrant",
+          "category": "A familiar everyday word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 6 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O________E"
+            },
+            {
+              "level": 3,
+              "text": "OE______SE"
+            },
+            {
+              "level": 4,
+              "text": "OE_E_A_O_E"
+            },
+            {
+              "level": 5,
+              "text": "OEDEMATOS_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 9,
+          "estimatedPoints": 612,
+          "positional": "A 9-letter word uses the IO digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "S_______G"
+            },
+            {
+              "level": 3,
+              "text": "SP_____NG"
+            },
+            {
+              "level": 4,
+              "text": "___EA_I__"
+            },
+            {
+              "level": 5,
+              "text": "SPREAZIN_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 279,
+          "positional": "A 9-letter word uses the ED digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Something described as \"not\" or reversed (9 letters)"
+            },
+            {
+              "level": 2,
+              "text": "U_______D"
+            },
+            {
+              "level": 3,
+              "text": "UN_____ED"
+            },
+            {
+              "level": 4,
+              "text": "U__OU__E_"
+            },
+            {
+              "level": 5,
+              "text": "UNFOUNDE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 648,
+          "positional": "A 8-letter word passes through the gold gem",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E______S"
+            },
+            {
+              "level": 3,
+              "text": "EM____ES"
+            },
+            {
+              "level": 4,
+              "text": "E__O__E_"
+            },
+            {
+              "level": 5,
+              "text": "EMBOSSE_"
+            }
+          ],
+          "features": [
+            "Uses gold gem"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 196,
+          "positional": "A 7-letter word uses the LE digraph tile",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P_____S"
+            },
+            {
+              "level": 3,
+              "text": "PA___RS"
+            },
+            {
+              "level": 4,
+              "text": "_A__E__"
+            },
+            {
+              "level": 5,
+              "text": "PATZER_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 140,
+          "positional": "A 7-letter word runs from lower-right toward lower-left",
+          "category": "A role/profession-style word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M_____R"
+            },
+            {
+              "level": 3,
+              "text": "ME___ER"
+            },
+            {
+              "level": 4,
+              "text": "_E__IE_"
+            },
+            {
+              "level": 5,
+              "text": "MESSIE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 6,
+          "estimatedPoints": 138,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P____S"
+            },
+            {
+              "level": 3,
+              "text": "PO__YS"
+            },
+            {
+              "level": 4,
+              "text": "_O_O__"
+            },
+            {
+              "level": 5,
+              "text": "POBOY_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 95,
+          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "P___H"
+            },
+            {
+              "level": 3,
+              "text": "PA_CH"
+            },
+            {
+              "level": 4,
+              "text": "_A___"
+            },
+            {
+              "level": 5,
+              "text": "PARC_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 8,
+    "averageWordLength": 7,
+    "gemDensity": 0.016,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
+    "fullClear": false,
+    "solutionPath": [
+      "DOZINGS",
+      "EMBOUNDED",
+      "SPREAZES",
+      "FORAYERS",
+      "PSOATIC",
+      "EUPHON",
+      "STEEPS",
+      "MARSE"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "OEDEMATOSE",
+      "SPREAZING",
+      "UNFOUNDED",
+      "EMBOSSES",
+      "PATZERS",
+      "MESSIER",
+      "POBOYS",
+      "PARCH"
+    ],
+    "generatedAt": "2026-06-10T01:27:45.181Z"
+  }
+}
