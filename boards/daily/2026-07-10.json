@@ -1,0 +1,419 @@
+{
+  "date": "2026-07-10",
+  "grid": {
+    "4,-4": "N",
+    "3,-4": "O",
+    "2,-4": "N",
+    "1,-4": "T",
+    "0,-4": "R",
+    "-1,-3": "A",
+    "0,-3": "N",
+    "1,-3": "S",
+    "2,-3": "I",
+    "3,-3": "T",
+    "4,-3": "I",
+    "4,-2": "V",
+    "3,-2": "E",
+    "2,-2": "P",
+    "1,-2": "O",
+    "0,-2": "S",
+    "-1,-2": "T",
+    "-2,-2": "D",
+    "-3,-1": "O",
+    "-2,-1": "C",
+    "-1,-1": "T",
+    "0,-1": "O",
+    "1,-1": "R",
+    "2,-1": "A",
+    "3,-1": "T",
+    "4,-1": "E",
+    "4,0": "M",
+    "3,0": "U",
+    "2,0": "L",
+    "1,0": "T",
+    "0,0": "I",
+    "-1,0": "L",
+    "-2,0": "O",
+    "-3,0": "Q",
+    "-4,0": "U",
+    "-4,1": "I",
+    "-3,1": "E",
+    "-2,1": "S",
+    "-1,1": "C",
+    "0,1": "R",
+    "1,1": "U",
+    "2,1": "N",
+    "3,1": "K",
+    "2,2": "S",
+    "1,2": "T",
+    "0,2": "I",
+    "-1,2": "S",
+    "-2,2": "W",
+    "-3,2": "A",
+    "-4,2": "S",
+    "-4,3": "D",
+    "-3,3": "U",
+    "-2,3": "L",
+    "-1,3": "L",
+    "0,3": "E",
+    "1,3": "R",
+    "0,4": "R",
+    "-1,4": "A",
+    "-2,4": "L",
+    "-3,4": "E",
+    "-4,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 0,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -3,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": -3,
+      "r": 0
+    },
+    {
+      "type": "gemGold",
+      "q": 2,
+      "r": 1
+    },
+    {
+      "type": "amethyst",
+      "q": 0,
+      "r": -1
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 2,
+      "digraph": "HE"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": 1,
+      "digraph": "EA"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 4995,
+    "minAchievableScore": 1968,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "MULTILOQUIES",
+          "NONTRANSITIVE",
+          "POSTDOCTORATE",
+          "CRUNKS",
+          "TISWAS",
+          "DULLER",
+          "RALES"
+        ],
+        "wordTotal": 2717,
+        "penalty": 0,
+        "finalScore": 2717
+      },
+      {
+        "words": [
+          "MULTILOQUIES",
+          "CRUNKS",
+          "NONTRANSITIVE",
+          "POSTDOCTORATE",
+          "TISWAS",
+          "DULLER",
+          "RALES"
+        ],
+        "wordTotal": 2717,
+        "penalty": 0,
+        "finalScore": 2717
+      },
+      {
+        "words": [
+          "NONTRANSITIVE",
+          "POSTDOCTORATE",
+          "MULTILOQUIES",
+          "CRUNKS",
+          "TISWAS",
+          "DULLER",
+          "RALES"
+        ],
+        "wordTotal": 2717,
+        "penalty": 0,
+        "finalScore": 2717
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2717,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 507,
+          "positional": "A 13-letter word uses the EN digraph tile",
+          "category": "A descriptive adjective — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "N___________E"
+            },
+            {
+              "level": 3,
+              "text": "NO_________VE"
+            },
+            {
+              "level": 4,
+              "text": "_O___A__I_I_E"
+            },
+            {
+              "level": 5,
+              "text": "NONTRANSITIV_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 13,
+          "estimatedPoints": 507,
+          "positional": "A 13-letter word runs from upper-right toward center",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P___________E"
+            },
+            {
+              "level": 3,
+              "text": "PO_________TE"
+            },
+            {
+              "level": 4,
+              "text": "_O___O__O_A_E"
+            },
+            {
+              "level": 5,
+              "text": "POSTDOCTORAT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 12,
+          "estimatedPoints": 984,
+          "positional": "A 12-letter word routes through the purple prism",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 6 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M__________S"
+            },
+            {
+              "level": 3,
+              "text": "MU________ES"
+            },
+            {
+              "level": 4,
+              "text": "_U__I_O_UIE_"
+            },
+            {
+              "level": 5,
+              "text": "MULTILOQUIE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 6,
+          "estimatedPoints": 414,
+          "positional": "A 6-letter word uses the EA digraph tile",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "C____S"
+            },
+            {
+              "level": 3,
+              "text": "CR__KS"
+            },
+            {
+              "level": 4,
+              "text": "__U___"
+            },
+            {
+              "level": 5,
+              "text": "CRUNK_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 132,
+          "positional": "A 6-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T____S"
+            },
+            {
+              "level": 3,
+              "text": "TI__AS"
+            },
+            {
+              "level": 4,
+              "text": "_I__A_"
+            },
+            {
+              "level": 5,
+              "text": "TISWA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 108,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "category": "A role/profession-style word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D____R"
+            },
+            {
+              "level": 3,
+              "text": "DU__ER"
+            },
+            {
+              "level": 4,
+              "text": "_U__E_"
+            },
+            {
+              "level": 5,
+              "text": "DULLE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 65,
+          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "R___S"
+            },
+            {
+              "level": 3,
+              "text": "RA_ES"
+            },
+            {
+              "level": 4,
+              "text": "_A_E_"
+            },
+            {
+              "level": 5,
+              "text": "RALE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 8,
+    "averageWordLength": 6.8,
+    "gemDensity": 0.016,
+    "tilesCleared": 54,
+    "tilesRemaining": 7,
+    "tileClearancePercent": 88.5,
+    "fullClear": false,
+    "solutionPath": [
+      "SCRUNTIER",
+      "STEPSONS",
+      "CROQUIS",
+      "OVATION",
+      "DUELLI",
+      "WALDOES",
+      "LURKS",
+      "ARMET"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "NONTRANSITIVE",
+      "POSTDOCTORATE",
+      "MULTILOQUIES",
+      "CRUNKS",
+      "TISWAS",
+      "DULLER",
+      "RALES"
+    ],
+    "generatedAt": "2026-06-11T01:30:29.017Z"
+  }
+}
