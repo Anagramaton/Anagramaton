@@ -1,0 +1,495 @@
+{
+  "date": "2026-07-11",
+  "grid": {
+    "0,-4": "W",
+    "1,-4": "H",
+    "2,-4": "E",
+    "3,-4": "R",
+    "4,-4": "E",
+    "4,-3": "W",
+    "3,-3": "I",
+    "2,-3": "T",
+    "1,-3": "H",
+    "0,-3": "G",
+    "-1,-3": "R",
+    "-2,-2": "A",
+    "-1,-2": "N",
+    "0,-2": "U",
+    "1,-2": "L",
+    "2,-2": "O",
+    "3,-2": "M",
+    "4,-2": "A",
+    "4,-1": "C",
+    "3,-1": "U",
+    "2,-1": "T",
+    "1,-1": "O",
+    "0,-1": "F",
+    "-1,-1": "F",
+    "-2,-1": "S",
+    "-3,-1": "I",
+    "-4,0": "N",
+    "-3,0": "V",
+    "-2,0": "O",
+    "-1,0": "I",
+    "0,0": "C",
+    "1,0": "E",
+    "2,0": "H",
+    "3,0": "E",
+    "4,0": "L",
+    "3,1": "C",
+    "2,1": "O",
+    "1,1": "I",
+    "0,1": "D",
+    "-1,1": "D",
+    "-2,1": "U",
+    "-3,1": "O",
+    "-4,1": "D",
+    "-4,2": "E",
+    "-3,2": "N",
+    "-2,2": "A",
+    "-1,2": "B",
+    "0,2": "R",
+    "1,2": "A",
+    "2,2": "I",
+    "1,3": "D",
+    "0,3": "P",
+    "-1,3": "Y",
+    "-2,3": "O",
+    "-3,3": "T",
+    "-4,3": "S",
+    "-4,4": "I",
+    "-3,4": "N",
+    "-2,4": "P",
+    "-1,4": "U",
+    "0,4": "T"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 4,
+      "r": -3
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 1
+    },
+    {
+      "type": "prism",
+      "q": 2,
+      "r": -4
+    },
+    {
+      "type": "gemGold",
+      "q": -4,
+      "r": 4
+    },
+    {
+      "type": "rune",
+      "q": 2,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -3,
+      "digraph": "TH"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -2,
+      "digraph": "IO"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 2918,
+    "minAchievableScore": 1368,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "WHEREWITH",
+          "GRANULOMA",
+          "INPUT",
+          "CUTOFFS",
+          "INVOICE",
+          "HELCOID",
+          "DUODENA",
+          "BRAID",
+          "PYOTS"
+        ],
+        "wordTotal": 2014,
+        "penalty": 0,
+        "finalScore": 2014
+      },
+      {
+        "words": [
+          "WHEREWITH",
+          "INPUT",
+          "CUTOFFS",
+          "GRANULOMA",
+          "INVOICE",
+          "HELCOID",
+          "DUODENA",
+          "BRAID",
+          "PYOTS"
+        ],
+        "wordTotal": 2014,
+        "penalty": 0,
+        "finalScore": 2014
+      },
+      {
+        "words": [
+          "WHEREWITH",
+          "GRANULOMA",
+          "CUTOFFS",
+          "INVOICE",
+          "HELCOID",
+          "DUODENA",
+          "INPUT",
+          "BRAID",
+          "PYOTS"
+        ],
+        "wordTotal": 2014,
+        "penalty": 0,
+        "finalScore": 2014
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2014,
+      "wordCount": 9,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 9,
+          "estimatedPoints": 684,
+          "positional": "A 9-letter word routes through the purple prism",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W_______H"
+            },
+            {
+              "level": 3,
+              "text": "WH_____TH"
+            },
+            {
+              "level": 4,
+              "text": "__E_E_I__"
+            },
+            {
+              "level": 5,
+              "text": "WHEREWIT_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 9,
+          "estimatedPoints": 243,
+          "positional": "A 9-letter word uses the TH digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G_______A"
+            },
+            {
+              "level": 3,
+              "text": "GR_____MA"
+            },
+            {
+              "level": 4,
+              "text": "__A_U_O_A"
+            },
+            {
+              "level": 5,
+              "text": "GRANULOM_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 7,
+          "estimatedPoints": 210,
+          "positional": "A 7-letter word uses the CH digraph tile",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_____S"
+            },
+            {
+              "level": 3,
+              "text": "CU___FS"
+            },
+            {
+              "level": 4,
+              "text": "_U_O___"
+            },
+            {
+              "level": 5,
+              "text": "CUTOFF_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 168,
+          "positional": "A 7-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I_____E"
+            },
+            {
+              "level": 3,
+              "text": "IN___CE"
+            },
+            {
+              "level": 4,
+              "text": "I__OI_E"
+            },
+            {
+              "level": 5,
+              "text": "INVOIC_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 154,
+          "positional": "A 7-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H_____D"
+            },
+            {
+              "level": 3,
+              "text": "HE___ID"
+            },
+            {
+              "level": 4,
+              "text": "_E__OI_"
+            },
+            {
+              "level": 5,
+              "text": "HELCOI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 140,
+          "positional": "A 7-letter word runs from center toward lower-left",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D_____A"
+            },
+            {
+              "level": 3,
+              "text": "DU___NA"
+            },
+            {
+              "level": 4,
+              "text": "_UO_E_A"
+            },
+            {
+              "level": 5,
+              "text": "DUODEN_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 85,
+          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "P___S"
+            },
+            {
+              "level": 3,
+              "text": "PY_TS"
+            },
+            {
+              "level": 4,
+              "text": "__O__"
+            },
+            {
+              "level": 5,
+              "text": "PYOT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 90,
+          "positional": "A 5-letter word sits in the bottom quadrant",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___D"
+            },
+            {
+              "level": 3,
+              "text": "BR_ID"
+            },
+            {
+              "level": 4,
+              "text": "__AI_"
+            },
+            {
+              "level": 5,
+              "text": "BRAI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 9,
+          "length": 5,
+          "estimatedPoints": 240,
+          "positional": "A 5-letter word passes through the gold gem",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I___T"
+            },
+            {
+              "level": 3,
+              "text": "IN_UT"
+            },
+            {
+              "level": 4,
+              "text": "I__U_"
+            },
+            {
+              "level": 5,
+              "text": "INPU_"
+            }
+          ],
+          "features": [
+            "Uses gold gem"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 9,
+    "averageWordLength": 6.4,
+    "gemDensity": 0.016,
+    "tilesCleared": 58,
+    "tilesRemaining": 3,
+    "tileClearancePercent": 95.1,
+    "fullClear": false,
+    "solutionPath": [
+      "WHEREWITH",
+      "BONIST",
+      "OFFICIARY",
+      "DICHTED",
+      "COUPON",
+      "GRINDS",
+      "PULMO",
+      "ANODE",
+      "VAUTE"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "WHEREWITH",
+      "GRANULOMA",
+      "CUTOFFS",
+      "INVOICE",
+      "HELCOID",
+      "DUODENA",
+      "PYOTS",
+      "BRAID",
+      "INPUT"
+    ],
+    "generatedAt": "2026-06-12T01:33:35.282Z"
+  }
+}
