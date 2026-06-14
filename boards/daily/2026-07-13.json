@@ -1,0 +1,420 @@
+{
+  "date": "2026-07-13",
+  "grid": {
+    "4,-4": "I",
+    "3,-4": "N",
+    "2,-4": "N",
+    "1,-4": "O",
+    "0,-4": "M",
+    "-1,-3": "I",
+    "0,-3": "N",
+    "1,-3": "A",
+    "2,-3": "B",
+    "3,-3": "L",
+    "4,-3": "E",
+    "4,-2": "S",
+    "3,-2": "S",
+    "2,-2": "U",
+    "1,-2": "P",
+    "0,-2": "E",
+    "-1,-2": "R",
+    "-2,-2": "A",
+    "-3,-1": "C",
+    "-2,-1": "U",
+    "-1,-1": "T",
+    "0,-1": "E",
+    "1,-1": "E",
+    "2,-1": "X",
+    "3,-1": "P",
+    "4,-1": "L",
+    "4,0": "O",
+    "3,0": "I",
+    "2,0": "T",
+    "1,0": "S",
+    "0,0": "C",
+    "-1,0": "H",
+    "-2,0": "A",
+    "-3,0": "N",
+    "-4,0": "T",
+    "-4,1": "O",
+    "-3,1": "R",
+    "-2,1": "S",
+    "-1,1": "S",
+    "0,1": "P",
+    "1,1": "O",
+    "2,1": "U",
+    "3,1": "S",
+    "2,2": "A",
+    "1,2": "G",
+    "0,2": "E",
+    "-1,2": "T",
+    "-2,2": "U",
+    "-3,2": "T",
+    "-4,2": "O",
+    "-4,3": "R",
+    "-3,3": "I",
+    "-2,3": "S",
+    "-1,3": "E",
+    "0,3": "S",
+    "1,3": "K",
+    "0,4": "I",
+    "-1,4": "R",
+    "-2,4": "R",
+    "-3,4": "E",
+    "-4,4": "D"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -3,
+      "r": -1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -1,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "gemGold",
+      "q": 3,
+      "r": 0
+    },
+    {
+      "type": "rune",
+      "q": 2,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "AN"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -3,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -1,
+      "digraph": "ON"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 5485,
+    "minAchievableScore": 2880,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "EXPLOITS",
+          "INNOMINABLES",
+          "SUPERACUTE",
+          "CHANTORS",
+          "SPOUSAGE",
+          "TUTORISE",
+          "SKIRRED"
+        ],
+        "wordTotal": 2915,
+        "penalty": 0,
+        "finalScore": 2915
+      },
+      {
+        "words": [
+          "EXPLOITS",
+          "INNOMINABLES",
+          "SUPERACUTE",
+          "CHANTORS",
+          "SPOUSAGE",
+          "SKIRRED",
+          "TUTORISE"
+        ],
+        "wordTotal": 2915,
+        "penalty": 0,
+        "finalScore": 2915
+      },
+      {
+        "words": [
+          "INNOMINABLES",
+          "SUPERACUTE",
+          "EXPLOITS",
+          "CHANTORS",
+          "SPOUSAGE",
+          "TUTORISE",
+          "SKIRRED"
+        ],
+        "wordTotal": 2915,
+        "penalty": 0,
+        "finalScore": 2915
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2915,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 12,
+          "estimatedPoints": 444,
+          "positional": "A 12-letter word uses the IN digraph tile",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I__________S"
+            },
+            {
+              "level": 3,
+              "text": "IN________ES"
+            },
+            {
+              "level": 4,
+              "text": "I__O_I_A__E_"
+            },
+            {
+              "level": 5,
+              "text": "INNOMINABLE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 10,
+          "estimatedPoints": 310,
+          "positional": "A 10-letter word uses the ON digraph tile",
+          "category": "A familiar everyday word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S________E"
+            },
+            {
+              "level": 3,
+              "text": "SU______TE"
+            },
+            {
+              "level": 4,
+              "text": "_U_E_A_U_E"
+            },
+            {
+              "level": 5,
+              "text": "SUPERACUT_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 1440,
+          "positional": "A 8-letter word uses the AN digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E______S"
+            },
+            {
+              "level": 3,
+              "text": "EX____TS"
+            },
+            {
+              "level": 4,
+              "text": "E___OI__"
+            },
+            {
+              "level": 5,
+              "text": "EXPLOIT_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 200,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C______S"
+            },
+            {
+              "level": 3,
+              "text": "CH____RS"
+            },
+            {
+              "level": 4,
+              "text": "__A__O__"
+            },
+            {
+              "level": 5,
+              "text": "CHANTOR_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word runs from center toward bottom",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S______E"
+            },
+            {
+              "level": 3,
+              "text": "SP____GE"
+            },
+            {
+              "level": 4,
+              "text": "__OU_A_E"
+            },
+            {
+              "level": 5,
+              "text": "SPOUSAG_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 168,
+          "positional": "A 8-letter word sits in the bottom quadrant",
+          "category": "An action verb form — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T______E"
+            },
+            {
+              "level": 3,
+              "text": "TU____SE"
+            },
+            {
+              "level": 4,
+              "text": "_U_O_I_E"
+            },
+            {
+              "level": 5,
+              "text": "TUTORIS_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 161,
+          "positional": "A 7-letter word runs from bottom toward lower-left",
+          "category": "An action verb form — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_____D"
+            },
+            {
+              "level": 3,
+              "text": "SK___ED"
+            },
+            {
+              "level": 4,
+              "text": "__I__E_"
+            },
+            {
+              "level": 5,
+              "text": "SKIRRE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 8,
+    "averageWordLength": 7.1,
+    "gemDensity": 0.016,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
+    "fullClear": false,
+    "solutionPath": [
+      "EXPLOITS",
+      "SARTORIUSES",
+      "REPOUSSES",
+      "MINETTES",
+      "KANBAN",
+      "CURCH",
+      "PUGIL",
+      "REDON"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "INNOMINABLES",
+      "SUPERACUTE",
+      "EXPLOITS",
+      "CHANTORS",
+      "SPOUSAGE",
+      "TUTORISE",
+      "SKIRRED"
+    ],
+    "generatedAt": "2026-06-14T01:34:13.972Z"
+  }
+}
