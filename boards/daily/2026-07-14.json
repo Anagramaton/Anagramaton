@@ -1,0 +1,398 @@
+{
+  "date": "2026-07-14",
+  "grid": {
+    "0,-4": "P",
+    "1,-4": "R",
+    "2,-4": "E",
+    "3,-4": "C",
+    "4,-4": "O",
+    "4,-3": "G",
+    "3,-3": "N",
+    "2,-3": "I",
+    "1,-3": "T",
+    "0,-3": "I",
+    "-1,-3": "O",
+    "-2,-2": "N",
+    "-1,-2": "S",
+    "0,-2": "C",
+    "1,-2": "O",
+    "2,-2": "N",
+    "3,-2": "G",
+    "4,-2": "L",
+    "4,-1": "O",
+    "3,-1": "M",
+    "2,-1": "E",
+    "1,-1": "R",
+    "0,-1": "A",
+    "-1,-1": "T",
+    "-2,-1": "O",
+    "-3,-1": "R",
+    "-4,0": "R",
+    "-3,0": "E",
+    "-2,0": "V",
+    "-1,0": "E",
+    "0,0": "A",
+    "1,0": "L",
+    "2,0": "M",
+    "3,0": "E",
+    "4,0": "N",
+    "3,1": "T",
+    "2,1": "L",
+    "1,1": "I",
+    "0,1": "B",
+    "-1,1": "E",
+    "-2,1": "R",
+    "-3,1": "T",
+    "-4,1": "I",
+    "-4,2": "N",
+    "-3,2": "E",
+    "-2,2": "E",
+    "-1,2": "N",
+    "0,2": "T",
+    "1,2": "R",
+    "2,2": "E",
+    "1,3": "P",
+    "0,3": "O",
+    "-1,3": "T",
+    "-2,3": "S",
+    "-3,3": "S",
+    "-4,3": "H",
+    "-4,4": "R",
+    "-3,4": "I",
+    "-2,4": "M",
+    "-1,4": "P",
+    "0,4": "Y"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 0,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 4,
+      "r": -3
+    },
+    {
+      "type": "gemEmerald",
+      "q": 2,
+      "r": -4
+    },
+    {
+      "type": "rune",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": 0,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -4,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -4,
+      "digraph": "RE"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 7163,
+    "minAchievableScore": 4056,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "PRECOGNITIONS",
+          "CONGLOMERATOR",
+          "REVEALMENT",
+          "LIBERTINE",
+          "ENTREPOTS",
+          "SHRIMPY"
+        ],
+        "wordTotal": 3524,
+        "penalty": 0,
+        "finalScore": 3524
+      },
+      {
+        "words": [
+          "PRECOGNITIONS",
+          "CONGLOMERATOR",
+          "REVEALMENT",
+          "LIBERTINE",
+          "ENTREPOTS",
+          "SHRIMPY"
+        ],
+        "wordTotal": 3524,
+        "penalty": 0,
+        "finalScore": 3524
+      },
+      {
+        "words": [
+          "PRECOGNITIONS",
+          "CONGLOMERATOR",
+          "REVEALMENT",
+          "LIBERTINE",
+          "ENTREPOTS",
+          "SHRIMPY"
+        ],
+        "wordTotal": 3524,
+        "penalty": 0,
+        "finalScore": 3524
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 3524,
+      "wordCount": 6,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 2028,
+          "positional": "A 13-letter word uses the RE digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P___________S"
+            },
+            {
+              "level": 3,
+              "text": "PR_________NS"
+            },
+            {
+              "level": 4,
+              "text": "__E_O__I_IO__"
+            },
+            {
+              "level": 5,
+              "text": "PRECOGNITION_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses emerald gem",
+            "Uses 2 digraph tiles",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 13,
+          "estimatedPoints": 507,
+          "positional": "A 13-letter word uses the WH digraph tile",
+          "category": "A role/profession-style word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C___________R"
+            },
+            {
+              "level": 3,
+              "text": "CO_________OR"
+            },
+            {
+              "level": 4,
+              "text": "_O___O_E_A_O_"
+            },
+            {
+              "level": 5,
+              "text": "CONGLOMERATO_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 330,
+          "positional": "A 10-letter word uses the UN digraph tile",
+          "category": "An abstract noun — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A word related to doing something again (10 letters)"
+            },
+            {
+              "level": 2,
+              "text": "R________T"
+            },
+            {
+              "level": 3,
+              "text": "RE______NT"
+            },
+            {
+              "level": 4,
+              "text": "_E_EA__E__"
+            },
+            {
+              "level": 5,
+              "text": "REVEALMEN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 243,
+          "positional": "A 9-letter word runs from center toward lower-left",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L_______E"
+            },
+            {
+              "level": 3,
+              "text": "LI_____NE"
+            },
+            {
+              "level": 4,
+              "text": "_I_E__I_E"
+            },
+            {
+              "level": 5,
+              "text": "LIBERTIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 234,
+          "positional": "A 9-letter word sits in the lower-left quadrant",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E_______S"
+            },
+            {
+              "level": 3,
+              "text": "EN_____TS"
+            },
+            {
+              "level": 4,
+              "text": "E___E_O__"
+            },
+            {
+              "level": 5,
+              "text": "ENTREPOT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 182,
+          "positional": "A 7-letter word uses the EN digraph tile",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "S_____Y"
+            },
+            {
+              "level": 3,
+              "text": "SH___PY"
+            },
+            {
+              "level": 4,
+              "text": "___I___"
+            },
+            {
+              "level": 5,
+              "text": "SHRIMP_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8.1,
+    "gemDensity": 0.016,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
+    "fullClear": false,
+    "solutionPath": [
+      "RECOGNITION",
+      "REVEALMENT",
+      "MISENTREATS",
+      "TROPEOLIN",
+      "RIPEST",
+      "PREMY",
+      "CROON"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "PRECOGNITIONS",
+      "CONGLOMERATOR",
+      "REVEALMENT",
+      "LIBERTINE",
+      "ENTREPOTS",
+      "SHRIMPY"
+    ],
+    "generatedAt": "2026-06-15T01:36:40.077Z"
+  }
+}
