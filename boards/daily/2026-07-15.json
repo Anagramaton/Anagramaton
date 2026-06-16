@@ -1,0 +1,433 @@
+{
+  "date": "2026-07-15",
+  "grid": {
+    "4,-4": "W",
+    "3,-4": "O",
+    "2,-4": "R",
+    "1,-4": "K",
+    "0,-4": "A",
+    "-1,-3": "H",
+    "0,-3": "O",
+    "1,-3": "L",
+    "2,-3": "I",
+    "3,-3": "C",
+    "4,-3": "S",
+    "4,-2": "C",
+    "3,-2": "U",
+    "2,-2": "P",
+    "1,-2": "I",
+    "0,-2": "D",
+    "-1,-2": "I",
+    "-2,-2": "N",
+    "-3,-1": "O",
+    "-2,-1": "U",
+    "-1,-1": "S",
+    "0,-1": "S",
+    "1,-1": "O",
+    "2,-1": "U",
+    "3,-1": "N",
+    "4,-1": "D",
+    "4,0": "I",
+    "3,0": "N",
+    "2,0": "G",
+    "1,0": "L",
+    "0,0": "Y",
+    "-1,0": "S",
+    "-2,0": "P",
+    "-3,0": "L",
+    "-4,0": "O",
+    "-4,1": "S",
+    "-3,1": "H",
+    "-2,1": "I",
+    "-1,1": "N",
+    "0,1": "G",
+    "1,1": "O",
+    "2,1": "V",
+    "3,1": "E",
+    "2,2": "R",
+    "1,2": "S",
+    "0,2": "E",
+    "-1,2": "W",
+    "-2,2": "G",
+    "-3,2": "R",
+    "-4,2": "A",
+    "-4,3": "T",
+    "-3,3": "I",
+    "-2,3": "F",
+    "-1,3": "Y",
+    "0,3": "I",
+    "1,3": "D",
+    "0,4": "I",
+    "-1,4": "O",
+    "-2,4": "T",
+    "-3,4": "I",
+    "-4,4": "C"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 4,
+      "r": -1
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -3,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 0,
+      "r": -3
+    },
+    {
+      "type": "gemGold",
+      "q": 2,
+      "r": -3
+    },
+    {
+      "type": "rune",
+      "q": -2,
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "WH"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 0,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -4,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 1,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 0,
+      "digraph": "NT"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 8340,
+    "minAchievableScore": 5412,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "WORKAHOLICS",
+          "CUPIDINOUS",
+          "SOUNDINGLY",
+          "SPLOSHING",
+          "OVERSEW",
+          "GRATIFY",
+          "IDIOTIC"
+        ],
+        "wordTotal": 4115,
+        "penalty": 0,
+        "finalScore": 4115
+      },
+      {
+        "words": [
+          "WORKAHOLICS",
+          "CUPIDINOUS",
+          "SOUNDINGLY",
+          "SPLOSHING",
+          "OVERSEW",
+          "GRATIFY",
+          "IDIOTIC"
+        ],
+        "wordTotal": 4115,
+        "penalty": 0,
+        "finalScore": 4115
+      },
+      {
+        "words": [
+          "WORKAHOLICS",
+          "CUPIDINOUS",
+          "SOUNDINGLY",
+          "SPLOSHING",
+          "OVERSEW",
+          "GRATIFY",
+          "IDIOTIC"
+        ],
+        "wordTotal": 4115,
+        "penalty": 0,
+        "finalScore": 4115
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 4115,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 2706,
+          "positional": "A 11-letter word uses the ON digraph tile",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W_________S"
+            },
+            {
+              "level": 3,
+              "text": "WO_______CS"
+            },
+            {
+              "level": 4,
+              "text": "_O__A_O_I__"
+            },
+            {
+              "level": 5,
+              "text": "WORKAHOLIC_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 10,
+          "estimatedPoints": 320,
+          "positional": "A 10-letter word runs from upper-right toward center",
+          "category": "A descriptive adjective — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C________S"
+            },
+            {
+              "level": 3,
+              "text": "CU______US"
+            },
+            {
+              "level": 4,
+              "text": "_U_I_I_OU_"
+            },
+            {
+              "level": 5,
+              "text": "CUPIDINOU_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 310,
+          "positional": "A 10-letter word uses the CO digraph tile",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "S________Y"
+            },
+            {
+              "level": 3,
+              "text": "SO______LY"
+            },
+            {
+              "level": 4,
+              "text": "_OU__I____"
+            },
+            {
+              "level": 5,
+              "text": "SOUNDINGL_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 261,
+          "positional": "A 9-letter word uses the NT digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "S_______G"
+            },
+            {
+              "level": 3,
+              "text": "SP_____NG"
+            },
+            {
+              "level": 4,
+              "text": "___O__I__"
+            },
+            {
+              "level": 5,
+              "text": "SPLOSHIN_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 203,
+          "positional": "A 7-letter word uses the WH digraph tile",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O_____W"
+            },
+            {
+              "level": 3,
+              "text": "OV___EW"
+            },
+            {
+              "level": 4,
+              "text": "O_E__E_"
+            },
+            {
+              "level": 5,
+              "text": "OVERSE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 175,
+          "positional": "A 7-letter word runs from lower-left toward bottom",
+          "category": "An action verb form — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G_____Y"
+            },
+            {
+              "level": 3,
+              "text": "GR___FY"
+            },
+            {
+              "level": 4,
+              "text": "__A_I__"
+            },
+            {
+              "level": 5,
+              "text": "GRATIF_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 140,
+          "positional": "A 7-letter word runs from bottom toward lower-left",
+          "category": "A descriptive adjective — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I_____C"
+            },
+            {
+              "level": 3,
+              "text": "ID___IC"
+            },
+            {
+              "level": 4,
+              "text": "I_IO_I_"
+            },
+            {
+              "level": 5,
+              "text": "IDIOTI_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8.7,
+    "gemDensity": 0.016,
+    "tilesCleared": 61,
+    "tilesRemaining": 0,
+    "tileClearancePercent": 100,
+    "fullClear": true,
+    "solutionPath": [
+      "WORKAHOLICS",
+      "CUPIDINOUS",
+      "SOUNDINGLY",
+      "SPLOSHING",
+      "OVERSEW",
+      "GRATIFY",
+      "IDIOTIC"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "WORKAHOLICS",
+      "CUPIDINOUS",
+      "SOUNDINGLY",
+      "SPLOSHING",
+      "OVERSEW",
+      "GRATIFY",
+      "IDIOTIC"
+    ],
+    "generatedAt": "2026-06-16T01:36:39.664Z"
+  }
+}
