@@ -1,0 +1,434 @@
+{
+  "date": "2026-07-19",
+  "grid": {
+    "4,-4": "A",
+    "3,-4": "L",
+    "2,-4": "L",
+    "1,-4": "E",
+    "0,-4": "V",
+    "-1,-3": "I",
+    "0,-3": "A",
+    "1,-3": "T",
+    "2,-3": "I",
+    "3,-3": "V",
+    "4,-3": "E",
+    "4,-2": "D",
+    "3,-2": "I",
+    "2,-2": "S",
+    "1,-2": "C",
+    "0,-2": "R",
+    "-1,-2": "E",
+    "-2,-2": "E",
+    "-3,-1": "T",
+    "-2,-1": "L",
+    "-1,-1": "Y",
+    "0,-1": "E",
+    "1,-1": "Q",
+    "2,-1": "U",
+    "3,-1": "I",
+    "4,-1": "M",
+    "4,0": "O",
+    "3,0": "L",
+    "2,0": "A",
+    "1,0": "R",
+    "0,0": "R",
+    "-1,0": "E",
+    "-2,0": "F",
+    "-3,0": "O",
+    "-4,0": "R",
+    "-4,1": "G",
+    "-3,1": "I",
+    "-2,1": "N",
+    "-1,1": "G",
+    "0,1": "G",
+    "1,1": "O",
+    "2,1": "O",
+    "3,1": "D",
+    "2,2": "F",
+    "1,2": "E",
+    "0,2": "L",
+    "-1,2": "L",
+    "-2,2": "A",
+    "-3,2": "B",
+    "-4,2": "L",
+    "-4,3": "I",
+    "-3,3": "P",
+    "-2,3": "P",
+    "-1,3": "I",
+    "0,3": "N",
+    "1,3": "G",
+    "0,4": "O",
+    "-1,4": "S",
+    "-2,4": "M",
+    "-3,4": "O",
+    "-4,4": "L"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 1,
+      "r": -2
+    },
+    {
+      "type": "gemEmerald",
+      "q": -3,
+      "r": -1
+    },
+    {
+      "type": "amethyst",
+      "q": 3,
+      "r": -1
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 3,
+      "digraph": "TY"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": -1,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -1,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 2,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -2,
+      "digraph": "IO"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 4838,
+    "minAchievableScore": 2480,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "DISCREETLY",
+          "ALLEVIATIVE",
+          "EQUIMOLAR",
+          "REFORGING",
+          "GOODFELLA",
+          "BLIPPING",
+          "OSMOL"
+        ],
+        "wordTotal": 2789,
+        "penalty": 0,
+        "finalScore": 2789
+      },
+      {
+        "words": [
+          "DISCREETLY",
+          "ALLEVIATIVE",
+          "EQUIMOLAR",
+          "BLIPPING",
+          "REFORGING",
+          "GOODFELLA",
+          "OSMOL"
+        ],
+        "wordTotal": 2789,
+        "penalty": 0,
+        "finalScore": 2789
+      },
+      {
+        "words": [
+          "ALLEVIATIVE",
+          "DISCREETLY",
+          "EQUIMOLAR",
+          "REFORGING",
+          "GOODFELLA",
+          "BLIPPING",
+          "OSMOL"
+        ],
+        "wordTotal": 2789,
+        "penalty": 0,
+        "finalScore": 2789
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2789,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 407,
+          "positional": "A 11-letter word sits in the upper-right quadrant",
+          "category": "A descriptive adjective — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 6 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A_________E"
+            },
+            {
+              "level": 3,
+              "text": "AL_______VE"
+            },
+            {
+              "level": 4,
+              "text": "A__E_IA_I_E"
+            },
+            {
+              "level": 5,
+              "text": "ALLEVIATIV_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 10,
+          "estimatedPoints": 1240,
+          "positional": "A 10-letter word uses the IO digraph tile",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "D________Y"
+            },
+            {
+              "level": 3,
+              "text": "DI______LY"
+            },
+            {
+              "level": 4,
+              "text": "_I___EE___"
+            },
+            {
+              "level": 5,
+              "text": "DISCREETL_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses emerald gem",
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 288,
+          "positional": "A 9-letter word uses the NT digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E_______R"
+            },
+            {
+              "level": 3,
+              "text": "EQ_____AR"
+            },
+            {
+              "level": 4,
+              "text": "E_UI_O_A_"
+            },
+            {
+              "level": 5,
+              "text": "EQUIMOLA_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word sits in the center quadrant",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A word related to doing something again (9 letters)"
+            },
+            {
+              "level": 2,
+              "text": "R_______G"
+            },
+            {
+              "level": 3,
+              "text": "RE_____NG"
+            },
+            {
+              "level": 4,
+              "text": "_E_O__I__"
+            },
+            {
+              "level": 5,
+              "text": "REFORGIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 261,
+          "positional": "A 9-letter word uses the ED digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G_______A"
+            },
+            {
+              "level": 3,
+              "text": "GO_____LA"
+            },
+            {
+              "level": 4,
+              "text": "_OO__E__A"
+            },
+            {
+              "level": 5,
+              "text": "GOODFELL_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 248,
+          "positional": "A 8-letter word uses the TY digraph tile",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "B______G"
+            },
+            {
+              "level": 3,
+              "text": "BL____NG"
+            },
+            {
+              "level": 4,
+              "text": "__I__I__"
+            },
+            {
+              "level": 5,
+              "text": "BLIPPIN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 75,
+          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O___L"
+            },
+            {
+              "level": 3,
+              "text": "OS_OL"
+            },
+            {
+              "level": 4,
+              "text": "O__O_"
+            },
+            {
+              "level": 5,
+              "text": "OSMO_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8.7,
+    "gemDensity": 0.016,
+    "tilesCleared": 61,
+    "tilesRemaining": 0,
+    "tileClearancePercent": 100,
+    "fullClear": true,
+    "solutionPath": [
+      "DISCREETLY",
+      "EQUIMOLAR",
+      "REFORGING",
+      "GOODFELLA",
+      "ALLEVIATIVE",
+      "BLIPPING",
+      "OSMOL"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "ALLEVIATIVE",
+      "DISCREETLY",
+      "EQUIMOLAR",
+      "REFORGING",
+      "GOODFELLA",
+      "BLIPPING",
+      "OSMOL"
+    ],
+    "generatedAt": "2026-06-20T01:26:49.170Z"
+  }
+}
