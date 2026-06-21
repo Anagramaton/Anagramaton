@@ -1,0 +1,420 @@
+{
+  "date": "2026-07-20",
+  "grid": {
+    "0,-4": "T",
+    "1,-4": "R",
+    "2,-4": "I",
+    "3,-4": "M",
+    "4,-4": "E",
+    "4,-3": "T",
+    "3,-3": "H",
+    "2,-3": "Y",
+    "1,-3": "L",
+    "0,-3": "E",
+    "-1,-3": "N",
+    "-2,-2": "E",
+    "-1,-2": "S",
+    "0,-2": "O",
+    "1,-2": "R",
+    "2,-2": "T",
+    "3,-2": "H",
+    "4,-2": "O",
+    "4,-1": "G",
+    "3,-1": "R",
+    "2,-1": "A",
+    "1,-1": "P",
+    "0,-1": "H",
+    "-1,-1": "I",
+    "-2,-1": "E",
+    "-3,-1": "S",
+    "-4,0": "S",
+    "-3,0": "T",
+    "-2,0": "E",
+    "-1,0": "P",
+    "0,0": "S",
+    "1,0": "I",
+    "2,0": "S",
+    "3,0": "T",
+    "4,0": "E",
+    "3,1": "R",
+    "2,1": "H",
+    "1,1": "E",
+    "0,1": "R",
+    "-1,1": "P",
+    "-2,1": "T",
+    "-3,1": "I",
+    "-4,1": "L",
+    "-4,2": "E",
+    "-3,2": "W",
+    "-2,2": "A",
+    "-1,2": "M",
+    "0,2": "P",
+    "1,2": "E",
+    "2,2": "E",
+    "1,3": "S",
+    "0,3": "E",
+    "-1,3": "Q",
+    "-2,3": "U",
+    "-3,3": "E",
+    "-4,3": "L",
+    "-4,4": "H",
+    "-3,4": "A",
+    "-2,4": "F",
+    "-1,4": "T",
+    "0,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 0,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 3
+    },
+    {
+      "type": "prism",
+      "q": 4,
+      "r": -4
+    },
+    {
+      "type": "gemGold",
+      "q": -1,
+      "r": 3
+    },
+    {
+      "type": "rune",
+      "q": -1,
+      "r": 4
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "LY"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "RE"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "CO"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 4838,
+    "minAchievableScore": 2028,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "TRIMETHYLENES",
+          "ORTHOGRAPHIES",
+          "SEQUEL",
+          "STEPSISTER",
+          "HERPTILE",
+          "WAMPEE",
+          "HAFTS"
+        ],
+        "wordTotal": 2662,
+        "penalty": 0,
+        "finalScore": 2662
+      },
+      {
+        "words": [
+          "TRIMETHYLENES",
+          "SEQUEL",
+          "ORTHOGRAPHIES",
+          "STEPSISTER",
+          "WAMPEE",
+          "HERPTILE",
+          "HAFTS"
+        ],
+        "wordTotal": 2662,
+        "penalty": 0,
+        "finalScore": 2662
+      },
+      {
+        "words": [
+          "TRIMETHYLENES",
+          "ORTHOGRAPHIES",
+          "STEPSISTER",
+          "HERPTILE",
+          "SEQUEL",
+          "WAMPEE",
+          "HAFTS"
+        ],
+        "wordTotal": 2662,
+        "penalty": 0,
+        "finalScore": 2662
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2662,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 1014,
+          "positional": "A 13-letter word uses the LY digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T___________S"
+            },
+            {
+              "level": 3,
+              "text": "TR_________ES"
+            },
+            {
+              "level": 4,
+              "text": "__I_E____E_E_"
+            },
+            {
+              "level": 5,
+              "text": "TRIMETHYLENE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 13,
+          "estimatedPoints": 507,
+          "positional": "A 13-letter word uses the RE digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O___________S"
+            },
+            {
+              "level": 3,
+              "text": "OR_________ES"
+            },
+            {
+              "level": 4,
+              "text": "O___O__A__IE_"
+            },
+            {
+              "level": 5,
+              "text": "ORTHOGRAPHIE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 290,
+          "positional": "A 10-letter word sits in the center quadrant",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S________R"
+            },
+            {
+              "level": 3,
+              "text": "ST______ER"
+            },
+            {
+              "level": 4,
+              "text": "__E__I__E_"
+            },
+            {
+              "level": 5,
+              "text": "STEPSISTE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word runs from center toward lower-left",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H______E"
+            },
+            {
+              "level": 3,
+              "text": "HE____LE"
+            },
+            {
+              "level": 4,
+              "text": "_E___I_E"
+            },
+            {
+              "level": 5,
+              "text": "HERPTIL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 150,
+          "positional": "A 6-letter word runs from lower-left toward lower-right",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W____E"
+            },
+            {
+              "level": 3,
+              "text": "WA__EE"
+            },
+            {
+              "level": 4,
+              "text": "_A__EE"
+            },
+            {
+              "level": 5,
+              "text": "WAMPE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 414,
+          "positional": "A 6-letter word passes through the gold gem",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S____L"
+            },
+            {
+              "level": 3,
+              "text": "SE__EL"
+            },
+            {
+              "level": 4,
+              "text": "_E_UE_"
+            },
+            {
+              "level": 5,
+              "text": "SEQUE_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 95,
+          "positional": "A 5-letter word uses the CO digraph tile",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "H___S"
+            },
+            {
+              "level": 3,
+              "text": "HA_TS"
+            },
+            {
+              "level": 4,
+              "text": "_A___"
+            },
+            {
+              "level": 5,
+              "text": "HAFT_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 8,
+    "averageWordLength": 7.3,
+    "gemDensity": 0.016,
+    "tilesCleared": 58,
+    "tilesRemaining": 3,
+    "tileClearancePercent": 95.1,
+    "fullClear": false,
+    "solutionPath": [
+      "METHYLENES",
+      "SEQUEL",
+      "APPETITES",
+      "MESOPHILE",
+      "SHRIFTS",
+      "GOTHITE",
+      "SWART",
+      "PARER"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "TRIMETHYLENES",
+      "ORTHOGRAPHIES",
+      "STEPSISTER",
+      "HERPTILE",
+      "WAMPEE",
+      "SEQUEL",
+      "HAFTS"
+    ],
+    "generatedAt": "2026-06-21T01:36:33.165Z"
+  }
+}
