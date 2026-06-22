@@ -1,0 +1,432 @@
+{
+  "date": "2026-07-21",
+  "grid": {
+    "4,-4": "C",
+    "3,-4": "L",
+    "2,-4": "A",
+    "1,-4": "P",
+    "0,-4": "P",
+    "-1,-3": "E",
+    "0,-3": "R",
+    "1,-3": "C",
+    "2,-3": "L",
+    "3,-3": "A",
+    "4,-3": "W",
+    "4,-2": "B",
+    "3,-2": "U",
+    "2,-2": "L",
+    "1,-2": "L",
+    "0,-2": "W",
+    "-1,-2": "A",
+    "-2,-2": "D",
+    "-3,-1": "D",
+    "-2,-1": "I",
+    "-1,-1": "E",
+    "0,-1": "S",
+    "1,-1": "I",
+    "2,-1": "N",
+    "3,-1": "O",
+    "4,-1": "C",
+    "4,0": "U",
+    "3,0": "L",
+    "2,0": "A",
+    "1,0": "T",
+    "0,0": "O",
+    "-1,0": "R",
+    "-2,0": "P",
+    "-3,0": "A",
+    "-4,0": "R",
+    "-4,1": "A",
+    "-3,1": "G",
+    "-2,1": "O",
+    "-1,1": "N",
+    "0,1": "S",
+    "1,1": "L",
+    "2,1": "O",
+    "3,1": "E",
+    "2,2": "S",
+    "1,2": "S",
+    "0,2": "I",
+    "-1,2": "A",
+    "-2,2": "L",
+    "-3,2": "B",
+    "-4,2": "A",
+    "-4,3": "F",
+    "-3,3": "F",
+    "-2,3": "I",
+    "-1,3": "N",
+    "0,3": "G",
+    "1,3": "T",
+    "0,4": "A",
+    "-1,4": "I",
+    "-2,4": "N",
+    "-3,4": "T",
+    "-4,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 3,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -3,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 1,
+      "r": 0
+    },
+    {
+      "type": "gemGold",
+      "q": 4,
+      "r": -2
+    },
+    {
+      "type": "amethyst",
+      "q": -3,
+      "r": 0
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -1,
+      "digraph": "CR"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -1,
+      "digraph": "ST"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 3,
+      "digraph": "CH"
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -2,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 4,
+      "digraph": "HE"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 6075,
+    "minAchievableScore": 2772,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "BULLWADDIES",
+          "INOCULATOR",
+          "CLAPPERCLAW",
+          "BAFFING",
+          "PARAGONS",
+          "LOESSIAL",
+          "TAINTS"
+        ],
+        "wordTotal": 3102,
+        "penalty": 0,
+        "finalScore": 3102
+      },
+      {
+        "words": [
+          "BULLWADDIES",
+          "INOCULATOR",
+          "CLAPPERCLAW",
+          "BAFFING",
+          "PARAGONS",
+          "LOESSIAL",
+          "TAINTS"
+        ],
+        "wordTotal": 3102,
+        "penalty": 0,
+        "finalScore": 3102
+      },
+      {
+        "words": [
+          "BULLWADDIES",
+          "CLAPPERCLAW",
+          "INOCULATOR",
+          "PARAGONS",
+          "LOESSIAL",
+          "BAFFING",
+          "TAINTS"
+        ],
+        "wordTotal": 3102,
+        "penalty": 0,
+        "finalScore": 3102
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 3102,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 484,
+          "positional": "A 11-letter word sits in the upper-right quadrant",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_________W"
+            },
+            {
+              "level": 3,
+              "text": "CL_______AW"
+            },
+            {
+              "level": 4,
+              "text": "__A__E___A_"
+            },
+            {
+              "level": 5,
+              "text": "CLAPPERCLA_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 1386,
+          "positional": "A 11-letter word uses the ED digraph tile",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B_________S"
+            },
+            {
+              "level": 3,
+              "text": "BU_______ES"
+            },
+            {
+              "level": 4,
+              "text": "_U___A__IE_"
+            },
+            {
+              "level": 5,
+              "text": "BULLWADDIE_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 560,
+          "positional": "A 10-letter word uses the ST digraph tile",
+          "category": "A role/profession-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I________R"
+            },
+            {
+              "level": 3,
+              "text": "IN______OR"
+            },
+            {
+              "level": 4,
+              "text": "I_O_U_A_O_"
+            },
+            {
+              "level": 5,
+              "text": "INOCULATO_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P______S"
+            },
+            {
+              "level": 3,
+              "text": "PA____NS"
+            },
+            {
+              "level": 4,
+              "text": "_A_A_O__"
+            },
+            {
+              "level": 5,
+              "text": "PARAGON_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 160,
+          "positional": "A 8-letter word runs from center toward lower-left",
+          "category": "A descriptive adjective — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L______L"
+            },
+            {
+              "level": 3,
+              "text": "LO____AL"
+            },
+            {
+              "level": 4,
+              "text": "_OE__IA_"
+            },
+            {
+              "level": 5,
+              "text": "LOESSIA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 224,
+          "positional": "A 7-letter word uses the CH digraph tile",
+          "category": "An action verb form — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "B_____G"
+            },
+            {
+              "level": 3,
+              "text": "BA___NG"
+            },
+            {
+              "level": 4,
+              "text": "_A__I__"
+            },
+            {
+              "level": 5,
+              "text": "BAFFIN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 6,
+          "estimatedPoints": 96,
+          "positional": "A 6-letter word uses the HE digraph tile",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T____S"
+            },
+            {
+              "level": 3,
+              "text": "TA__TS"
+            },
+            {
+              "level": 4,
+              "text": "_AI___"
+            },
+            {
+              "level": 5,
+              "text": "TAINT_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 8.7,
+    "gemDensity": 0.016,
+    "tilesCleared": 52,
+    "tilesRemaining": 9,
+    "tileClearancePercent": 85.2,
+    "fullClear": false,
+    "solutionPath": [
+      "BULLWADDIES",
+      "INOCULATOR",
+      "BAFFLING",
+      "PAGANISTS",
+      "CALCARS",
+      "LIONETS"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "CLAPPERCLAW",
+      "BULLWADDIES",
+      "INOCULATOR",
+      "PARAGONS",
+      "LOESSIAL",
+      "BAFFING",
+      "TAINTS"
+    ],
+    "generatedAt": "2026-06-22T01:36:40.746Z"
+  }
+}
