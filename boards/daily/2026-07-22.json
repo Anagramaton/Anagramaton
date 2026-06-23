@@ -1,0 +1,435 @@
+{
+  "date": "2026-07-22",
+  "grid": {
+    "0,-4": "M",
+    "1,-4": "O",
+    "2,-4": "N",
+    "3,-4": "A",
+    "4,-4": "R",
+    "4,-3": "C",
+    "3,-3": "H",
+    "2,-3": "I",
+    "1,-3": "S",
+    "0,-3": "M",
+    "-1,-3": "S",
+    "-2,-2": "S",
+    "-1,-2": "T",
+    "0,-2": "R",
+    "1,-2": "I",
+    "2,-2": "N",
+    "3,-2": "G",
+    "4,-2": "E",
+    "4,-1": "N",
+    "3,-1": "T",
+    "2,-1": "L",
+    "1,-1": "Y",
+    "0,-1": "C",
+    "-1,-1": "O",
+    "-2,-1": "W",
+    "-3,-1": "F",
+    "-4,0": "E",
+    "-3,0": "E",
+    "-2,0": "D",
+    "-1,0": "E",
+    "0,0": "R",
+    "1,0": "B",
+    "2,0": "R",
+    "3,0": "O",
+    "4,0": "W",
+    "3,1": "S",
+    "2,1": "I",
+    "1,1": "E",
+    "0,1": "S",
+    "-1,1": "T",
+    "-2,1": "S",
+    "-3,1": "T",
+    "-4,1": "R",
+    "-4,2": "E",
+    "-3,2": "L",
+    "-2,2": "I",
+    "-1,2": "T",
+    "0,2": "Z",
+    "1,2": "I",
+    "2,2": "S",
+    "1,3": "U",
+    "0,3": "L",
+    "-1,3": "T",
+    "-2,3": "A",
+    "-3,3": "N",
+    "-4,3": "A",
+    "-4,4": "Q",
+    "-3,4": "U",
+    "-2,4": "I",
+    "-1,4": "D",
+    "0,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 0,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 3
+    },
+    {
+      "type": "prism",
+      "q": 4,
+      "r": -2
+    },
+    {
+      "type": "gemGold",
+      "q": -4,
+      "r": 0
+    },
+    {
+      "type": "rune",
+      "q": 0,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 0,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 0,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 4,
+      "digraph": "UN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 2,
+      "digraph": "IO"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 0,
+      "digraph": "LL"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 5263,
+    "minAchievableScore": 1944,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "COWFEEDER",
+          "STRINGENTLY",
+          "MONARCHISMS",
+          "BROWSIEST",
+          "STRELITZI",
+          "SULTANA",
+          "QUIDS"
+        ],
+        "wordTotal": 2933,
+        "penalty": 0,
+        "finalScore": 2933
+      },
+      {
+        "words": [
+          "COWFEEDER",
+          "STRINGENTLY",
+          "MONARCHISMS",
+          "BROWSIEST",
+          "STRELITZI",
+          "QUIDS",
+          "SULTANA"
+        ],
+        "wordTotal": 2933,
+        "penalty": 0,
+        "finalScore": 2933
+      },
+      {
+        "words": [
+          "STRINGENTLY",
+          "MONARCHISMS",
+          "COWFEEDER",
+          "BROWSIEST",
+          "STRELITZI",
+          "SULTANA",
+          "QUIDS"
+        ],
+        "wordTotal": 2933,
+        "penalty": 0,
+        "finalScore": 2933
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2933,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 407,
+          "positional": "A 11-letter word sits in the top quadrant",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M_________S"
+            },
+            {
+              "level": 3,
+              "text": "MO_______MS"
+            },
+            {
+              "level": 4,
+              "text": "_O_A___I___"
+            },
+            {
+              "level": 5,
+              "text": "MONARCHISM_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 726,
+          "positional": "A 11-letter word routes through the purple prism",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "S_________Y"
+            },
+            {
+              "level": 3,
+              "text": "ST_______LY"
+            },
+            {
+              "level": 4,
+              "text": "___I__E____"
+            },
+            {
+              "level": 5,
+              "text": "STRINGENTL_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 972,
+          "positional": "A 9-letter word uses the EN digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_______R"
+            },
+            {
+              "level": 3,
+              "text": "CO_____ER"
+            },
+            {
+              "level": 4,
+              "text": "_O__EE_E_"
+            },
+            {
+              "level": 5,
+              "text": "COWFEEDE_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 306,
+          "positional": "A 9-letter word uses the LL digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B_______T"
+            },
+            {
+              "level": 3,
+              "text": "BR_____ST"
+            },
+            {
+              "level": 4,
+              "text": "__O__IE__"
+            },
+            {
+              "level": 5,
+              "text": "BROWSIES_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 279,
+          "positional": "A 9-letter word uses the IO digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_______I"
+            },
+            {
+              "level": 3,
+              "text": "ST_____ZI"
+            },
+            {
+              "level": 4,
+              "text": "___E_I__I"
+            },
+            {
+              "level": 5,
+              "text": "STRELITZ_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 133,
+          "positional": "A 7-letter word runs from lower-right toward lower-left",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_____A"
+            },
+            {
+              "level": 3,
+              "text": "SU___NA"
+            },
+            {
+              "level": 4,
+              "text": "_U__A_A"
+            },
+            {
+              "level": 5,
+              "text": "SULTAN_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 110,
+          "positional": "A 5-letter word uses the UN digraph tile",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Q___S"
+            },
+            {
+              "level": 3,
+              "text": "QU_DS"
+            },
+            {
+              "level": 4,
+              "text": "_UI__"
+            },
+            {
+              "level": 5,
+              "text": "QUID_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 7.9,
+    "gemDensity": 0.016,
+    "tilesCleared": 55,
+    "tilesRemaining": 6,
+    "tileClearancePercent": 90.2,
+    "fullClear": false,
+    "solutionPath": [
+      "COWFEEDERS",
+      "STRINGENT",
+      "STRELITZI",
+      "SULTANAS",
+      "CALIBRED",
+      "MUSMON",
+      "SHIRS"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "MONARCHISMS",
+      "STRINGENTLY",
+      "COWFEEDER",
+      "BROWSIEST",
+      "STRELITZI",
+      "SULTANA",
+      "QUIDS"
+    ],
+    "generatedAt": "2026-06-23T01:21:29.304Z"
+  }
+}
