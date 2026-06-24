@@ -1,0 +1,420 @@
+{
+  "date": "2026-07-23",
+  "grid": {
+    "4,-4": "E",
+    "3,-4": "M",
+    "2,-4": "B",
+    "1,-4": "L",
+    "0,-4": "E",
+    "-1,-3": "M",
+    "0,-3": "A",
+    "1,-3": "T",
+    "2,-3": "I",
+    "3,-3": "S",
+    "4,-3": "T",
+    "4,-2": "S",
+    "3,-2": "L",
+    "2,-2": "O",
+    "1,-2": "G",
+    "0,-2": "O",
+    "-1,-2": "M",
+    "-2,-2": "A",
+    "-3,-1": "C",
+    "-2,-1": "H",
+    "-1,-1": "I",
+    "0,-1": "S",
+    "1,-1": "T",
+    "2,-1": "U",
+    "3,-1": "N",
+    "4,-1": "C",
+    "4,0": "O",
+    "3,0": "B",
+    "2,0": "B",
+    "1,0": "L",
+    "0,0": "E",
+    "-1,0": "D",
+    "-2,0": "A",
+    "-3,0": "C",
+    "-4,0": "C",
+    "-4,1": "I",
+    "-3,1": "D",
+    "-2,1": "E",
+    "-1,1": "N",
+    "0,1": "T",
+    "1,1": "F",
+    "2,1": "O",
+    "3,1": "O",
+    "2,2": "T",
+    "1,2": "P",
+    "0,2": "A",
+    "-1,2": "D",
+    "-2,2": "M",
+    "-3,2": "I",
+    "-4,2": "R",
+    "-4,3": "K",
+    "-3,3": "I",
+    "-2,3": "L",
+    "-1,3": "Y",
+    "0,3": "L",
+    "1,3": "O",
+    "0,4": "L",
+    "-1,4": "I",
+    "-2,4": "G",
+    "-3,4": "O",
+    "-4,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -1,
+      "r": -3
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 2
+    },
+    {
+      "type": "prism",
+      "q": -1,
+      "r": -2
+    },
+    {
+      "type": "gemEmerald",
+      "q": 1,
+      "r": 3
+    },
+    {
+      "type": "amethyst",
+      "q": 0,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 1,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 0,
+      "digraph": "ES"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "ER"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3935,
+    "minAchievableScore": 1540,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "LOGOMACHIST",
+          "EMBLEMATISTS",
+          "UNCOBBLED",
+          "LOLIGOS",
+          "ACCIDENT",
+          "FOOTPAD",
+          "MIRKILY"
+        ],
+        "wordTotal": 2398,
+        "penalty": 0,
+        "finalScore": 2398
+      },
+      {
+        "words": [
+          "LOGOMACHIST",
+          "EMBLEMATISTS",
+          "LOLIGOS",
+          "UNCOBBLED",
+          "ACCIDENT",
+          "FOOTPAD",
+          "MIRKILY"
+        ],
+        "wordTotal": 2398,
+        "penalty": 0,
+        "finalScore": 2398
+      },
+      {
+        "words": [
+          "EMBLEMATISTS",
+          "LOGOMACHIST",
+          "UNCOBBLED",
+          "ACCIDENT",
+          "LOLIGOS",
+          "FOOTPAD",
+          "MIRKILY"
+        ],
+        "wordTotal": 2398,
+        "penalty": 0,
+        "finalScore": 2398
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2398,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 12,
+          "estimatedPoints": 480,
+          "positional": "A 12-letter word sits in the upper-right quadrant",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E__________S"
+            },
+            {
+              "level": 3,
+              "text": "EM________TS"
+            },
+            {
+              "level": 4,
+              "text": "E___E_A_I___"
+            },
+            {
+              "level": 5,
+              "text": "EMBLEMATIST_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 770,
+          "positional": "A 11-letter word routes through the purple prism",
+          "category": "A role/profession-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L_________T"
+            },
+            {
+              "level": 3,
+              "text": "LO_______ST"
+            },
+            {
+              "level": 4,
+              "text": "_O_O_A__I__"
+            },
+            {
+              "level": 5,
+              "text": "LOGOMACHIS_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 324,
+          "positional": "A 9-letter word uses the ES digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Something described as \"not\" or reversed (9 letters)"
+            },
+            {
+              "level": 2,
+              "text": "U_______D"
+            },
+            {
+              "level": 3,
+              "text": "UN_____ED"
+            },
+            {
+              "level": 4,
+              "text": "U__O___E_"
+            },
+            {
+              "level": 5,
+              "text": "UNCOBBLE_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 208,
+          "positional": "A 8-letter word uses the EA digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A______T"
+            },
+            {
+              "level": 3,
+              "text": "AC____NT"
+            },
+            {
+              "level": 4,
+              "text": "A__I_E__"
+            },
+            {
+              "level": 5,
+              "text": "ACCIDEN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 175,
+          "positional": "A 7-letter word runs from center toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F_____D"
+            },
+            {
+              "level": 3,
+              "text": "FO___AD"
+            },
+            {
+              "level": 4,
+              "text": "_OO__A_"
+            },
+            {
+              "level": 5,
+              "text": "FOOTPA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 175,
+          "positional": "A 7-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "M_____Y"
+            },
+            {
+              "level": 3,
+              "text": "MI___LY"
+            },
+            {
+              "level": 4,
+              "text": "_I__I__"
+            },
+            {
+              "level": 5,
+              "text": "MIRKIL_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 266,
+          "positional": "A 7-letter word passes through the emerald gem",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L_____S"
+            },
+            {
+              "level": 3,
+              "text": "LO___OS"
+            },
+            {
+              "level": 4,
+              "text": "_O_I_O_"
+            },
+            {
+              "level": 5,
+              "text": "LOLIGO_"
+            }
+          ],
+          "features": [
+            "Uses emerald gem"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8.1,
+    "gemDensity": 0.016,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
+    "fullClear": false,
+    "solutionPath": [
+      "LOGOMACHIST",
+      "UNCOBBLED",
+      "ACCIDENTAL",
+      "FOOTIEST",
+      "MIRKILY",
+      "AMBLES",
+      "PILOTS"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "EMBLEMATISTS",
+      "LOGOMACHIST",
+      "UNCOBBLED",
+      "ACCIDENT",
+      "FOOTPAD",
+      "MIRKILY",
+      "LOLIGOS"
+    ],
+    "generatedAt": "2026-06-24T01:19:13.798Z"
+  }
+}
