@@ -1,0 +1,428 @@
+{
+  "date": "2026-07-26",
+  "grid": {
+    "0,-4": "P",
+    "1,-4": "R",
+    "2,-4": "E",
+    "3,-4": "P",
+    "4,-4": "O",
+    "4,-3": "T",
+    "3,-3": "E",
+    "2,-3": "N",
+    "1,-3": "T",
+    "0,-3": "L",
+    "-1,-3": "Y",
+    "-2,-2": "D",
+    "-1,-2": "E",
+    "0,-2": "B",
+    "1,-2": "R",
+    "2,-2": "I",
+    "3,-2": "D",
+    "4,-2": "I",
+    "4,-1": "N",
+    "3,-1": "G",
+    "2,-1": "D",
+    "1,-1": "E",
+    "0,-1": "V",
+    "-1,-1": "E",
+    "-2,-1": "I",
+    "-3,-1": "N",
+    "-4,0": "I",
+    "-3,0": "N",
+    "-2,0": "G",
+    "-1,0": "U",
+    "0,0": "N",
+    "1,0": "F",
+    "2,0": "A",
+    "3,0": "I",
+    "4,0": "R",
+    "3,1": "I",
+    "2,1": "N",
+    "1,1": "G",
+    "0,1": "B",
+    "-1,1": "O",
+    "-2,1": "U",
+    "-3,1": "N",
+    "-4,1": "T",
+    "-4,2": "I",
+    "-3,2": "E",
+    "-2,2": "D",
+    "-1,2": "O",
+    "0,2": "N",
+    "1,2": "Y",
+    "2,2": "C",
+    "1,3": "H",
+    "0,3": "I",
+    "-1,3": "A",
+    "-2,3": "S",
+    "-3,3": "A",
+    "-4,3": "M",
+    "-4,4": "O",
+    "-3,4": "K",
+    "-2,4": "U",
+    "-1,4": "R",
+    "0,4": "A"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 1,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 3
+    },
+    {
+      "type": "prism",
+      "q": 3,
+      "r": -2
+    },
+    {
+      "type": "gemEmerald",
+      "q": 3,
+      "r": -3
+    },
+    {
+      "type": "amethyst",
+      "q": 0,
+      "r": 3
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 1,
+      "digraph": "EN"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 2,
+      "digraph": "NT"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 1,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "AN"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3995,
+    "minAchievableScore": 1540,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "PREPOTENTLY",
+          "DEBRIDING",
+          "DEVEINING",
+          "UNFAIRING",
+          "BOUNTIED",
+          "ONYCHIAS",
+          "AMOKURA"
+        ],
+        "wordTotal": 2428,
+        "penalty": 0,
+        "finalScore": 2428
+      },
+      {
+        "words": [
+          "PREPOTENTLY",
+          "DEBRIDING",
+          "DEVEINING",
+          "UNFAIRING",
+          "BOUNTIED",
+          "ONYCHIAS",
+          "AMOKURA"
+        ],
+        "wordTotal": 2428,
+        "penalty": 0,
+        "finalScore": 2428
+      },
+      {
+        "words": [
+          "PREPOTENTLY",
+          "DEBRIDING",
+          "DEVEINING",
+          "UNFAIRING",
+          "BOUNTIED",
+          "ONYCHIAS",
+          "AMOKURA"
+        ],
+        "wordTotal": 2428,
+        "penalty": 0,
+        "finalScore": 2428
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2428,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 770,
+          "positional": "A 11-letter word passes through the emerald gem",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "P_________Y"
+            },
+            {
+              "level": 3,
+              "text": "PR_______LY"
+            },
+            {
+              "level": 4,
+              "text": "__E_O_E____"
+            },
+            {
+              "level": 5,
+              "text": "PREPOTENTL_"
+            }
+          ],
+          "features": [
+            "Uses emerald gem",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 9,
+          "estimatedPoints": 558,
+          "positional": "A 9-letter word routes through the purple prism",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "D_______G"
+            },
+            {
+              "level": 3,
+              "text": "DE_____NG"
+            },
+            {
+              "level": 4,
+              "text": "_E__I_I__"
+            },
+            {
+              "level": 5,
+              "text": "DEBRIDIN_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word uses the AN digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "D_______G"
+            },
+            {
+              "level": 3,
+              "text": "DE_____NG"
+            },
+            {
+              "level": 4,
+              "text": "_E_EI_I__"
+            },
+            {
+              "level": 5,
+              "text": "DEVEININ_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 261,
+          "positional": "A 9-letter word sits in the center quadrant",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Something described as \"not\" or reversed (9 letters)"
+            },
+            {
+              "level": 2,
+              "text": "U_______G"
+            },
+            {
+              "level": 3,
+              "text": "UN_____NG"
+            },
+            {
+              "level": 4,
+              "text": "U__AI_I__"
+            },
+            {
+              "level": 5,
+              "text": "UNFAIRIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 208,
+          "positional": "A 8-letter word uses the LE digraph tile",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B______D"
+            },
+            {
+              "level": 3,
+              "text": "BO____ED"
+            },
+            {
+              "level": 4,
+              "text": "_OU__IE_"
+            },
+            {
+              "level": 5,
+              "text": "BOUNTIE_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 200,
+          "positional": "A 8-letter word uses the NT digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O______S"
+            },
+            {
+              "level": 3,
+              "text": "ON____AS"
+            },
+            {
+              "level": 4,
+              "text": "O____IA_"
+            },
+            {
+              "level": 5,
+              "text": "ONYCHIA_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 161,
+          "positional": "A 7-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A_____A"
+            },
+            {
+              "level": 3,
+              "text": "AM___RA"
+            },
+            {
+              "level": 4,
+              "text": "A_O_U_A"
+            },
+            {
+              "level": 5,
+              "text": "AMOKUR_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 8,
+    "averageWordLength": 7.1,
+    "gemDensity": 0.016,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
+    "fullClear": false,
+    "solutionPath": [
+      "UNVEINED",
+      "MEASURING",
+      "PETTEDLY",
+      "DAYBOOK",
+      "HANDGRIP",
+      "FIREBUG",
+      "RICIN",
+      "NINON"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "PREPOTENTLY",
+      "DEBRIDING",
+      "DEVEINING",
+      "UNFAIRING",
+      "BOUNTIED",
+      "ONYCHIAS",
+      "AMOKURA"
+    ],
+    "generatedAt": "2026-06-27T01:21:42.555Z"
+  }
+}
