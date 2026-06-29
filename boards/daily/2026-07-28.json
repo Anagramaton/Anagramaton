@@ -1,0 +1,424 @@
+{
+  "date": "2026-07-28",
+  "grid": {
+    "0,-4": "C",
+    "1,-4": "U",
+    "2,-4": "S",
+    "3,-4": "T",
+    "4,-4": "O",
+    "4,-3": "M",
+    "3,-3": "I",
+    "2,-3": "Z",
+    "1,-3": "I",
+    "0,-3": "N",
+    "-1,-3": "G",
+    "-2,-2": "C",
+    "-1,-2": "R",
+    "0,-2": "I",
+    "1,-2": "T",
+    "2,-2": "I",
+    "3,-2": "C",
+    "4,-2": "I",
+    "4,-1": "Z",
+    "3,-1": "E",
+    "2,-1": "D",
+    "1,-1": "S",
+    "0,-1": "E",
+    "-1,-1": "E",
+    "-2,-1": "D",
+    "-3,-1": "E",
+    "-4,0": "A",
+    "-3,0": "T",
+    "-2,0": "E",
+    "-1,0": "R",
+    "0,0": "S",
+    "1,0": "V",
+    "2,0": "E",
+    "3,0": "R",
+    "4,0": "N",
+    "3,1": "A",
+    "2,1": "L",
+    "1,1": "I",
+    "0,1": "T",
+    "-1,1": "Y",
+    "-2,1": "P",
+    "-3,1": "A",
+    "-4,1": "T",
+    "-4,2": "T",
+    "-3,2": "E",
+    "-2,2": "R",
+    "-1,2": "N",
+    "0,2": "S",
+    "1,2": "K",
+    "2,2": "A",
+    "1,3": "C",
+    "0,3": "H",
+    "-1,3": "I",
+    "-2,3": "N",
+    "-3,3": "A",
+    "-4,3": "O",
+    "-4,4": "M",
+    "-3,4": "N",
+    "-2,4": "I",
+    "-1,4": "F",
+    "0,4": "Y"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 0,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": 1,
+      "r": 3
+    },
+    {
+      "type": "prism",
+      "q": -3,
+      "r": 0
+    },
+    {
+      "type": "gemEmerald",
+      "q": 2,
+      "r": -2
+    },
+    {
+      "type": "rune",
+      "q": 1,
+      "r": -3
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": -4,
+      "digraph": "EA"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "ON"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": -4,
+      "digraph": "NG"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 4355,
+    "minAchievableScore": 1520,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "CRITICIZED",
+          "SEEDEATERS",
+          "CUSTOMIZING",
+          "VERNALITY",
+          "PATTERNS",
+          "KACHINA",
+          "OMNIFY"
+        ],
+        "wordTotal": 2510,
+        "penalty": 0,
+        "finalScore": 2510
+      },
+      {
+        "words": [
+          "CRITICIZED",
+          "SEEDEATERS",
+          "CUSTOMIZING",
+          "VERNALITY",
+          "PATTERNS",
+          "KACHINA",
+          "OMNIFY"
+        ],
+        "wordTotal": 2510,
+        "penalty": 0,
+        "finalScore": 2510
+      },
+      {
+        "words": [
+          "CUSTOMIZING",
+          "CRITICIZED",
+          "SEEDEATERS",
+          "VERNALITY",
+          "PATTERNS",
+          "KACHINA",
+          "OMNIFY"
+        ],
+        "wordTotal": 2510,
+        "penalty": 0,
+        "finalScore": 2510
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2510,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 462,
+          "positional": "A 11-letter word uses the NG digraph tile",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "C_________G"
+            },
+            {
+              "level": 3,
+              "text": "CU_______NG"
+            },
+            {
+              "level": 4,
+              "text": "_U__O_I_I__"
+            },
+            {
+              "level": 5,
+              "text": "CUSTOMIZIN_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 10,
+          "estimatedPoints": 760,
+          "positional": "A 10-letter word passes through the emerald gem",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C________D"
+            },
+            {
+              "level": 3,
+              "text": "CR______ED"
+            },
+            {
+              "level": 4,
+              "text": "__I_I_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "CRITICIZE_"
+            }
+          ],
+          "features": [
+            "Uses emerald gem"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 520,
+          "positional": "A 10-letter word uses the ER digraph tile",
+          "category": "A familiar everyday word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S________S"
+            },
+            {
+              "level": 3,
+              "text": "SE______RS"
+            },
+            {
+              "level": 4,
+              "text": "_EE_EA_E__"
+            },
+            {
+              "level": 5,
+              "text": "SEEDEATER_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word sits in the center quadrant",
+          "category": "An abstract noun — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "V_______Y"
+            },
+            {
+              "level": 3,
+              "text": "VE_____TY"
+            },
+            {
+              "level": 4,
+              "text": "_E__A_I__"
+            },
+            {
+              "level": 5,
+              "text": "VERNALIT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word runs from center toward bottom",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P______S"
+            },
+            {
+              "level": 3,
+              "text": "PA____NS"
+            },
+            {
+              "level": 4,
+              "text": "_A__E___"
+            },
+            {
+              "level": 5,
+              "text": "PATTERN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 168,
+          "positional": "A 7-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "K_____A"
+            },
+            {
+              "level": 3,
+              "text": "KA___NA"
+            },
+            {
+              "level": 4,
+              "text": "_A__I_A"
+            },
+            {
+              "level": 5,
+              "text": "KACHIN_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 6,
+          "estimatedPoints": 138,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "category": "An action verb form — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O____Y"
+            },
+            {
+              "level": 3,
+              "text": "OM__FY"
+            },
+            {
+              "level": 4,
+              "text": "O__I__"
+            },
+            {
+              "level": 5,
+              "text": "OMNIF_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8.7,
+    "gemDensity": 0.016,
+    "tilesCleared": 61,
+    "tilesRemaining": 0,
+    "tileClearancePercent": 100,
+    "fullClear": true,
+    "solutionPath": [
+      "CRITICIZING",
+      "SEEDEATERS",
+      "CUSTOMIZED",
+      "VERNALITY",
+      "PATTERNS",
+      "KACHINA",
+      "OMNIFY"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "CUSTOMIZING",
+      "CRITICIZED",
+      "SEEDEATERS",
+      "VERNALITY",
+      "PATTERNS",
+      "KACHINA",
+      "OMNIFY"
+    ],
+    "generatedAt": "2026-06-29T01:29:01.658Z"
+  }
+}
