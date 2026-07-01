@@ -1,0 +1,432 @@
+{
+  "date": "2026-07-30",
+  "grid": {
+    "0,-4": "E",
+    "1,-4": "U",
+    "2,-4": "C",
+    "3,-4": "A",
+    "4,-4": "L",
+    "4,-3": "Y",
+    "3,-3": "P",
+    "2,-3": "T",
+    "1,-3": "U",
+    "0,-3": "S",
+    "-1,-3": "C",
+    "-2,-2": "U",
+    "-1,-2": "T",
+    "0,-2": "C",
+    "1,-2": "H",
+    "2,-2": "E",
+    "3,-2": "R",
+    "4,-2": "I",
+    "4,-1": "E",
+    "3,-1": "S",
+    "2,-1": "O",
+    "1,-1": "V",
+    "0,-1": "E",
+    "-1,-1": "R",
+    "-2,-1": "S",
+    "-3,-1": "E",
+    "-4,0": "E",
+    "-3,0": "I",
+    "-2,0": "N",
+    "-1,0": "G",
+    "0,0": "E",
+    "1,0": "X",
+    "2,0": "T",
+    "3,0": "E",
+    "4,0": "R",
+    "3,1": "I",
+    "2,1": "O",
+    "1,1": "R",
+    "0,1": "P",
+    "-1,1": "O",
+    "-2,1": "R",
+    "-3,1": "T",
+    "-4,1": "A",
+    "-4,2": "S",
+    "-3,2": "E",
+    "-2,2": "S",
+    "-1,2": "L",
+    "0,2": "I",
+    "1,2": "M",
+    "2,2": "A",
+    "1,3": "T",
+    "0,3": "I",
+    "-1,3": "O",
+    "-2,3": "N",
+    "-3,3": "N",
+    "-4,3": "O",
+    "-4,4": "T",
+    "-3,4": "A",
+    "-2,4": "B",
+    "-1,4": "L",
+    "0,4": "Y"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 2,
+      "r": -4
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -2,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 2,
+      "r": -3
+    },
+    {
+      "type": "gemGold",
+      "q": -4,
+      "r": 3
+    },
+    {
+      "type": "rune",
+      "q": 2,
+      "r": -1
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 1,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 0,
+      "digraph": "ER"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": -1,
+      "digraph": "QU"
+    },
+    {
+      "type": "digraph",
+      "q": 4,
+      "r": -3,
+      "digraph": "CK"
+    },
+    {
+      "type": "digraph",
+      "q": 1,
+      "r": 3,
+      "digraph": "LL"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3710,
+    "minAchievableScore": 1320,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "EUCALYPTUS",
+          "NOTABLY",
+          "CUTCHERIES",
+          "OVERSEEING",
+          "EXTERIOR",
+          "PORTASES",
+          "LIMATION"
+        ],
+        "wordTotal": 2370,
+        "penalty": 0,
+        "finalScore": 2370
+      },
+      {
+        "words": [
+          "NOTABLY",
+          "EUCALYPTUS",
+          "CUTCHERIES",
+          "OVERSEEING",
+          "EXTERIOR",
+          "PORTASES",
+          "LIMATION"
+        ],
+        "wordTotal": 2370,
+        "penalty": 0,
+        "finalScore": 2370
+      },
+      {
+        "words": [
+          "EUCALYPTUS",
+          "CUTCHERIES",
+          "OVERSEEING",
+          "EXTERIOR",
+          "PORTASES",
+          "LIMATION",
+          "NOTABLY"
+        ],
+        "wordTotal": 2370,
+        "penalty": 0,
+        "finalScore": 2370
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2370,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 10,
+          "estimatedPoints": 660,
+          "positional": "A 10-letter word uses the CK digraph tile",
+          "category": "A familiar everyday word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E________S"
+            },
+            {
+              "level": 3,
+              "text": "EU______US"
+            },
+            {
+              "level": 4,
+              "text": "EU_A____U_"
+            },
+            {
+              "level": 5,
+              "text": "EUCALYPTU_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 10,
+          "estimatedPoints": 320,
+          "positional": "A 10-letter word runs from top toward center",
+          "category": "A familiar everyday word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C________S"
+            },
+            {
+              "level": 3,
+              "text": "CU______ES"
+            },
+            {
+              "level": 4,
+              "text": "_U___E_IE_"
+            },
+            {
+              "level": 5,
+              "text": "CUTCHERIE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 310,
+          "positional": "A 10-letter word uses the QU digraph tile",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "O________G"
+            },
+            {
+              "level": 3,
+              "text": "OV______NG"
+            },
+            {
+              "level": 4,
+              "text": "O_E__EEI__"
+            },
+            {
+              "level": 5,
+              "text": "OVERSEEIN_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 216,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A role/profession-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E______R"
+            },
+            {
+              "level": 3,
+              "text": "EX____OR"
+            },
+            {
+              "level": 4,
+              "text": "E__E_IO_"
+            },
+            {
+              "level": 5,
+              "text": "EXTERIO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 184,
+          "positional": "A 8-letter word uses the GH digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P______S"
+            },
+            {
+              "level": 3,
+              "text": "PO____ES"
+            },
+            {
+              "level": 4,
+              "text": "_O__A_E_"
+            },
+            {
+              "level": 5,
+              "text": "PORTASE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 176,
+          "positional": "A 8-letter word uses the LL digraph tile",
+          "category": "An abstract noun — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A concept noun ending in -TION/-SION"
+            },
+            {
+              "level": 2,
+              "text": "L______N"
+            },
+            {
+              "level": 3,
+              "text": "LI____ON"
+            },
+            {
+              "level": 4,
+              "text": "_I_A_IO_"
+            },
+            {
+              "level": 5,
+              "text": "LIMATIO_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 504,
+          "positional": "A 7-letter word passes through the gold gem",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "N_____Y"
+            },
+            {
+              "level": 3,
+              "text": "NO___LY"
+            },
+            {
+              "level": 4,
+              "text": "_O_A___"
+            },
+            {
+              "level": 5,
+              "text": "NOTABL_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 6,
+    "averageWordLength": 9.3,
+    "gemDensity": 0.016,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
+    "fullClear": false,
+    "solutionPath": [
+      "EUCALYPTUS",
+      "REEXPORTING",
+      "SEASONABLY",
+      "CHROMATES",
+      "VOLITIONS",
+      "REERECT"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "EUCALYPTUS",
+      "CUTCHERIES",
+      "OVERSEEING",
+      "EXTERIOR",
+      "PORTASES",
+      "LIMATION",
+      "NOTABLY"
+    ],
+    "generatedAt": "2026-07-01T01:29:49.365Z"
+  }
+}
