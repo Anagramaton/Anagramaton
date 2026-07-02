@@ -1,0 +1,467 @@
+{
+  "date": "2026-07-31",
+  "grid": {
+    "4,-4": "S",
+    "3,-4": "L",
+    "2,-4": "A",
+    "1,-4": "N",
+    "0,-4": "T",
+    "-1,-3": "I",
+    "0,-3": "N",
+    "1,-3": "G",
+    "2,-3": "W",
+    "3,-3": "A",
+    "4,-3": "Y",
+    "4,-2": "S",
+    "3,-2": "B",
+    "2,-2": "A",
+    "1,-2": "R",
+    "0,-2": "T",
+    "-1,-2": "E",
+    "-2,-2": "N",
+    "-3,-1": "D",
+    "-2,-1": "E",
+    "-1,-1": "D",
+    "0,-1": "U",
+    "1,-1": "N",
+    "2,-1": "M",
+    "3,-1": "I",
+    "4,-1": "S",
+    "4,0": "S",
+    "3,0": "E",
+    "2,0": "D",
+    "1,0": "E",
+    "0,0": "P",
+    "-1,0": "I",
+    "-2,0": "Z",
+    "-3,0": "O",
+    "-4,0": "O",
+    "-4,1": "N",
+    "-3,1": "A",
+    "-2,1": "L",
+    "-1,1": "I",
+    "0,1": "A",
+    "1,1": "S",
+    "2,1": "E",
+    "3,1": "S",
+    "2,2": "S",
+    "1,2": "L",
+    "0,2": "A",
+    "-1,2": "V",
+    "-2,2": "E",
+    "-3,2": "R",
+    "-4,2": "S",
+    "-4,3": "N",
+    "-3,3": "A",
+    "-2,3": "K",
+    "-1,3": "E",
+    "0,3": "D",
+    "1,3": "L",
+    "0,4": "O",
+    "-1,4": "O",
+    "-2,4": "E",
+    "-3,4": "Y",
+    "-4,4": "S"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": 4,
+      "r": -2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -4,
+      "r": 3
+    },
+    {
+      "type": "prism",
+      "q": -2,
+      "r": 1
+    },
+    {
+      "type": "gemEmerald",
+      "q": -3,
+      "r": 1
+    },
+    {
+      "type": "amethyst",
+      "q": -1,
+      "r": 2
+    },
+    {
+      "type": "digraph",
+      "q": 3,
+      "r": -1,
+      "digraph": "LE"
+    },
+    {
+      "type": "digraph",
+      "q": 0,
+      "r": 4,
+      "digraph": "GH"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 0,
+      "digraph": "ED"
+    },
+    {
+      "type": "digraph",
+      "q": -4,
+      "r": 4,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": 2,
+      "r": 1,
+      "digraph": "CK"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 3095,
+    "minAchievableScore": 984,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "SLANTINGWAYS",
+          "ALIASES",
+          "BARTENDED",
+          "UNMISSED",
+          "EPIZOON",
+          "SLAVER",
+          "SNAKED",
+          "LOOEYS"
+        ],
+        "wordTotal": 1962,
+        "penalty": 0,
+        "finalScore": 1962
+      },
+      {
+        "words": [
+          "ALIASES",
+          "SLANTINGWAYS",
+          "BARTENDED",
+          "EPIZOON",
+          "UNMISSED",
+          "SLAVER",
+          "SNAKED",
+          "LOOEYS"
+        ],
+        "wordTotal": 1962,
+        "penalty": 0,
+        "finalScore": 1962
+      },
+      {
+        "words": [
+          "SLANTINGWAYS",
+          "BARTENDED",
+          "UNMISSED",
+          "ALIASES",
+          "EPIZOON",
+          "SLAVER",
+          "SNAKED",
+          "LOOEYS"
+        ],
+        "wordTotal": 1962,
+        "penalty": 0,
+        "finalScore": 1962
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 1962,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 12,
+          "estimatedPoints": 492,
+          "positional": "A 12-letter word sits in the upper-right quadrant",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S__________S"
+            },
+            {
+              "level": 3,
+              "text": "SL________YS"
+            },
+            {
+              "level": 4,
+              "text": "__A__I___A__"
+            },
+            {
+              "level": 5,
+              "text": "SLANTINGWAY_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word runs from upper-right toward center",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B_______D"
+            },
+            {
+              "level": 3,
+              "text": "BA_____ED"
+            },
+            {
+              "level": 4,
+              "text": "_A__E__E_"
+            },
+            {
+              "level": 5,
+              "text": "BARTENDE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 200,
+          "positional": "A 8-letter word uses the LE digraph tile",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Something described as \"not\" or reversed (8 letters)"
+            },
+            {
+              "level": 2,
+              "text": "U______D"
+            },
+            {
+              "level": 3,
+              "text": "UN____ED"
+            },
+            {
+              "level": 4,
+              "text": "U__I__E_"
+            },
+            {
+              "level": 5,
+              "text": "UNMISSE_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 182,
+          "positional": "A 7-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E_____N"
+            },
+            {
+              "level": 3,
+              "text": "EP___ON"
+            },
+            {
+              "level": 4,
+              "text": "E_I_OO_"
+            },
+            {
+              "level": 5,
+              "text": "EPIZOO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 476,
+          "positional": "A 7-letter word uses the CK digraph tile",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A_____S"
+            },
+            {
+              "level": 3,
+              "text": "AL___ES"
+            },
+            {
+              "level": 4,
+              "text": "A_IA_E_"
+            },
+            {
+              "level": 5,
+              "text": "ALIASE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses emerald gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 126,
+          "positional": "A 6-letter word runs from lower-right toward lower-left",
+          "category": "A role/profession-style word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S____R"
+            },
+            {
+              "level": 3,
+              "text": "SL__ER"
+            },
+            {
+              "level": 4,
+              "text": "__A_E_"
+            },
+            {
+              "level": 5,
+              "text": "SLAVE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 6,
+          "estimatedPoints": 120,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "category": "An action verb form — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S____D"
+            },
+            {
+              "level": 3,
+              "text": "SN__ED"
+            },
+            {
+              "level": 4,
+              "text": "__A_E_"
+            },
+            {
+              "level": 5,
+              "text": "SNAKE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 8,
+          "length": 6,
+          "estimatedPoints": 96,
+          "positional": "A 6-letter word uses the GH digraph tile",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L____S"
+            },
+            {
+              "level": 3,
+              "text": "LO__YS"
+            },
+            {
+              "level": 4,
+              "text": "_OOE__"
+            },
+            {
+              "level": 5,
+              "text": "LOOEY_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 8,
+    "averageWordLength": 7,
+    "gemDensity": 0.016,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
+    "fullClear": false,
+    "solutionPath": [
+      "ALIPEDS",
+      "MISAWARDED",
+      "UNITIZERS",
+      "DEVALLS",
+      "GANSEYS",
+      "SNAKEY",
+      "BLENT",
+      "OOSES"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "SLANTINGWAYS",
+      "BARTENDED",
+      "UNMISSED",
+      "EPIZOON",
+      "ALIASES",
+      "SLAVER",
+      "SNAKED",
+      "LOOEYS"
+    ],
+    "generatedAt": "2026-07-02T01:23:18.285Z"
+  }
+}
