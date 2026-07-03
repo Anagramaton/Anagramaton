@@ -1,6 +1,5 @@
 import { GRID_RADIUS } from './constants.js';
 import { getAllCoords, hexKey, ADJ_DIRS, isValidCoord } from './gridCoords.js';
-import { findPath } from './pathfinding.js';
 import wordList_4 from './wordList_4.js';
 import wordList_5 from './wordList_5.js';
 import wordList_6 from './wordList_6.js';
@@ -77,15 +76,6 @@ const DAILY_DIGRAPH_OPTIONS = [
   'LE', 'ED', 'ES', 'UN', 'GH', 'CR', 'WH', 'NT', 'NG', 'TY',
 ];
 
-// Minimum gem multiplier threshold to consider a gem "high-tier" for validation
-const HIGH_TIER_GEM_MULTIPLIER = 6;
-// Derived from GEM_MULTIPLIERS so the list stays in sync automatically
-const HIGH_TIER_GEMS = new Set(
-  Object.entries(GEM_MULTIPLIERS)
-    .filter(([, mult]) => mult >= HIGH_TIER_GEM_MULTIPLIER)
-    .map(([type]) => type),
-);
-
 const LETTER_POOL = [
   ...Array(12).fill('E'), ...Array(9).fill('A'), ...Array(8).fill('I'), ...Array(8).fill('O'), ...Array(4).fill('U'),
   ...Array(7).fill('R'), ...Array(7).fill('S'), ...Array(7).fill('T'), ...Array(6).fill('L'), ...Array(6).fill('N'),
@@ -94,9 +84,6 @@ const LETTER_POOL = [
   'K', 'J', 'Q', 'X', 'Z',
 ];
 
-const HIGH_VALUE_LETTERS = new Set(['Q', 'Z', 'X', 'J']);
-const MAX_SCORE_ESTIMATE_MULTIPLIER = 2.5;
-const MIN_SCORE_ESTIMATE_MULTIPLIER = 2.0;
 
 function toIsoDate(d = new Date()) {
   const y = d.getFullYear();
@@ -126,53 +113,6 @@ const ANAGRAMATON_DICTIONARY = [
   ...wordList_16plus,
 ].map(w => String(w || '').toUpperCase());
 
-function wordScore(word) {
-  let score = 0;
-  for (const ch of word) score += LETTER_POINTS[ch] || 1;
-  return score * Math.max(4, word.length);
-}
-
-/**
- * Select a set of dictionary words whose letter counts sum to exactly `totalTiles`
- * (61 for the standard board). Uses seeded-RNG DFS backtracking so the result is
- * deterministic for a given seed.
- *
- * @param {Function} rng        - Seeded RNG (from mkSeededRng)
- * @param {number}   totalTiles - Target tile count (default 61)
- * @returns {string[]|null}     - Array of words summing to totalTiles, or null
- */
-function selectWordSet(rng, totalTiles = 61) {
-  const MIN_WORD  = 5;
-  const MAX_WORD  = 13;
-  const MIN_WORDS = 5;
-  const MAX_WORDS = 11;
-  const POOL_SIZE = 800;
-  const MAX_NODES = 100_000;
-
-  const pool = shuffled(
-    ANAGRAMATON_DICTIONARY.filter(w => w.length >= MIN_WORD && w.length <= MAX_WORD && /^[A-Z]+$/.test(w)),
-    rng,
-  ).slice(0, POOL_SIZE);
-
-  const chosen = [];
-  let nodeCount = 0;
-
-  function dfs(idx, remaining) {
-    if (++nodeCount > MAX_NODES) return false;
-    if (remaining === 0 && chosen.length >= MIN_WORDS) return true;
-    if (remaining < MIN_WORD || chosen.length >= MAX_WORDS || idx >= pool.length) return false;
-    const w = pool[idx];
-    if (w.length <= remaining) {
-      chosen.push(w);
-      if (dfs(idx + 1, remaining - w.length)) return true;
-      chosen.pop();
-    }
-    return dfs(idx + 1, remaining);
-  }
-
-  return dfs(0, totalTiles) ? chosen.slice() : null;
-}
-
 function shuffled(list, rng) {
   const arr = list.slice();
   for (let i = arr.length - 1; i > 0; i--) {
@@ -180,74 +120,6 @@ function shuffled(list, rng) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
-
-/**
- * Return a Hamiltonian path through all 61 hex tiles by zigzagging row by row
- * (snake/boustrophedon traversal). Every consecutive pair is adjacent on the hex
- * board, so any contiguous slice of this path forms a valid connected word-path.
- *
- * The path runs strictly from the top row (r = −radius) to the bottom row
- * (r = +radius), so slicing it into word-length segments naturally places the
- * first word at the top and the last word at the bottom — aligning with SE/SW
- * gravity and ensuring earlier words are cleared before later words fall.
- *
- * @param {number}   radius
- * @param {boolean}  [mirror=false] - If true, reverse the direction of even rows
- *   to produce a mirrored layout.  Both orientations guarantee adjacency at every
- *   row-to-row transition.
- * @returns {Array<{q,r,key}>}
- */
-function getSnakePath(radius, mirror = false) {
-  const path = [];
-  for (let r = -radius; r <= radius; r++) {
-    const qMin = Math.max(-radius, -r - radius);
-    const qMax = Math.min(radius, -r + radius);
-    const row = [];
-    for (let q = qMin; q <= qMax; q++) row.push({ q, r, key: hexKey(q, r) });
-    // Alternating direction each row so the last tile of row r is adjacent to
-    // the first tile of row r+1.  `mirror` flips the parity so we get a
-    // distinct but equally valid layout.
-    const rowIdx = r + radius;
-    const leftToRight = mirror ? rowIdx % 2 !== 0 : rowIdx % 2 === 0;
-    if (leftToRight) path.push(...row);
-    else path.push(...row.reverse());
-  }
-  return path;
-}
-
-/**
- * Place a set of words (whose lengths sum to exactly the board tile count) by
- * slicing the board's Hamiltonian snake-path into consecutive word-length
- * segments.  Because the path is strictly top-to-bottom, word[0] (played first)
- * occupies the topmost tiles and word[n-1] (played last) occupies the bottommost
- * tiles — creating a gravity-natural play order with no filler tiles and no
- * overlaps.
- *
- * @param {string[]} words  - Words in intended play order (words[0] played first)
- * @param {Function} rng
- * @param {number}   radius
- * @returns {{ grid: Object, placements: Array }|null}  null on failure
- */
-function placeWordSet(words, rng, radius = GRID_RADIUS) {
-  // Use the seeded RNG to choose between the two valid snake orientations so
-  // different date seeds produce distinct tile layouts.
-  const mirror = rng() < 0.5;
-  const snakePath = getSnakePath(radius, mirror);
-
-  const grid = {};
-  const placements = [];
-  let offset = 0;
-
-  for (const word of words) {
-    const segment = snakePath.slice(offset, offset + word.length);
-    if (segment.length < word.length) return null; // defensive: shouldn't happen
-    segment.forEach((cell, i) => { grid[cell.key] = word[i]; });
-    placements.push({ word, path: segment, score: wordScore(word) });
-    offset += word.length;
-  }
-
-  return { grid, placements };
 }
 
 function coordKey(cell) {
@@ -259,164 +131,9 @@ function getAllCoordsWithKeys(radius) {
   return getAllCoords(radius).map(c => ({ ...c, key: coordKey(c) }));
 }
 
-/**
- * DFS to check if `word` can be traced as a connected adjacent path in simGrid,
- * with no tile reused. simGrid values are { letter, ... } objects.
- *
- * @param {string} word
- * @param {Object} simGrid - { [hexKey]: { letter, ... } }
- * @param {number} radius
- * @returns {boolean}
- */
-function wordExistsInGrid(word, simGrid, radius) {
-  function dfs(idx, q, r, visited) {
-    if (idx === word.length) return true;
-    const key = hexKey(q, r);
-    if (visited.has(key)) return false;
-    const entry = simGrid[key];
-    if (!entry || entry.letter !== word[idx]) return false;
-    visited.add(key);
-    for (const [dq, dr] of ADJ_DIRS) {
-      if (dfs(idx + 1, q + dq, r + dr, visited)) return true;
-    }
-    visited.delete(key);
-    return false;
-  }
-  for (const key of Object.keys(simGrid)) {
-    if (simGrid[key]?.letter !== word[0]) continue;
-    const [q, r] = key.split(',').map(Number);
-    if (dfs(0, q, r, new Set())) return true;
-  }
-  return false;
-}
-
-/**
- * DFS to find `word` as a connected adjacent path in simGrid.
- * On success, deletes the matched tiles from simGrid and returns true.
- * simGrid values are { letter, ... } objects.
- *
- * @param {string} word
- * @param {Object} simGrid - { [hexKey]: { letter, ... } } — modified in place on success
- * @param {number} radius
- * @returns {boolean}
- */
-function removeWordFromGrid(word, simGrid, radius) {
-  function dfs(idx, q, r, visited, path) {
-    if (idx === word.length) return path.slice();
-    const key = hexKey(q, r);
-    if (visited.has(key)) return null;
-    const entry = simGrid[key];
-    if (!entry || entry.letter !== word[idx]) return null;
-    visited.add(key);
-    path.push(key);
-    for (const [dq, dr] of ADJ_DIRS) {
-      const result = dfs(idx + 1, q + dq, r + dr, visited, path);
-      if (result) return result;
-    }
-    path.pop();
-    visited.delete(key);
-    return null;
-  }
-  for (const key of Object.keys(simGrid)) {
-    if (simGrid[key]?.letter !== word[0]) continue;
-    const [q, r] = key.split(',').map(Number);
-    const path = dfs(0, q, r, new Set(), []);
-    if (path) {
-      for (const k of path) delete simGrid[k];
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Validates that all words in `placements` can be found and removed in sequence
- * on the word-only grid after applying correct SE/SW gravity after each removal.
- *
- * @param {Array}  placements - Array of { word } objects (the target words)
- * @param {Object} startGrid  - Plain { [hexKey]: letter } word grid (before fillEmptyTiles)
- * @param {number} radius
- * @returns {string[]|null} Ordered word sequence if all words are reachable, or null
- */
-function findGravityPlaySequence(placements, startGrid, radius = GRID_RADIUS) {
-  // Convert plain { [key]: letter } to { [key]: { letter } } for gravity/DFS helpers
-  const simGrid = {};
-  for (const [key, letter] of Object.entries(startGrid)) {
-    simGrid[key] = { letter };
-  }
-
-  const remaining = placements.map(p => p.word);
-  const sequence = [];
-  const maxRounds = placements.length * 3;
-  let rounds = 0;
-
-  while (remaining.length > 0 && rounds < maxRounds) {
-    rounds++;
-    let found = false;
-    for (let i = 0; i < remaining.length; i++) {
-      const word = remaining[i];
-      if (wordExistsInGrid(word, simGrid, radius)) {
-        removeWordFromGrid(word, simGrid, radius);
-        applyGravity(simGrid, radius);
-        sequence.push(word);
-        remaining.splice(i, 1);
-        found = true;
-        break;
-      }
-    }
-    if (!found) return null;
-  }
-
-  if (remaining.length > 0) return null;
-  return sequence;
-}
-
-
-function neighbors(q, r, radius) {
-  const result = [];
-  for (const [dq, dr] of ADJ_DIRS) {
-    const nq = q + dq;
-    const nr = r + dr;
-    if (!isValidCoord(nq, nr, radius)) continue;
-    result.push({ q: nq, r: nr, key: hexKey(nq, nr) });
-  }
-  return result;
-}
-
-function buildCoordStats(placements) {
-  const coordToWords = new Map();
-  const longMiddle = new Set();
-
-  placements.forEach((p, idx) => {
-    p.path.forEach((c, i) => {
-      const key = c.key;
-      if (!coordToWords.has(key)) coordToWords.set(key, new Set());
-      coordToWords.get(key).add(idx);
-      if (p.word.length >= 9 && i >= 2 && i <= p.path.length - 3) longMiddle.add(key);
-    });
-  });
-
-  return { coordToWords, longMiddle };
-}
-
-function getCoordsWithinRadius(center, radius, boardRadius) {
-  const out = [];
-  for (let dq = -radius; dq <= radius; dq++) {
-    for (let dr = -radius; dr <= radius; dr++) {
-      const q = center.q + dq;
-      const r = center.r + dr;
-      if (!isValidCoord(q, r, boardRadius)) continue;
-      if (Math.max(Math.abs(dq), Math.abs(dr), Math.abs(dq + dr)) <= radius) out.push({ q, r, key: hexKey(q, r) });
-    }
-  }
-  return out;
-}
-
-function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '') {
+function placeSpecialTiles(grid, rng, radius = GRID_RADIUS) {
   const specials = [];
   const taken = new Set();
-  const { coordToWords, longMiddle } = buildCoordStats(placements);
-
   const allCoords = getAllCoordsWithKeys(radius);
 
   // ── PORTALS: placed FIRST so no other tile type can occupy these positions ──
@@ -434,126 +151,34 @@ function placeSpecialTiles(grid, placements, rng, radius = GRID_RADIUS, date = '
     taken.add(hexKey(chosenExit.q, chosenExit.r));
   }
 
-  const pathDensity = new Map();
-  for (const c of allCoords) {
-    const n = neighbors(c.q, c.r, radius);
-    let density = (coordToWords.get(c.key)?.size || 0);
-    n.forEach(nn => { density += (coordToWords.get(nn.key)?.size || 0); });
-    pathDensity.set(c.key, density);
-  }
-
-  const placeType = (type, candidates, count, extra = {}) => {
-    const placed = [];
-    const ordered = candidates
-      .filter(c => !taken.has(c.key) && !!grid[c.key])
-      .sort((a, b) => (b.weight || 0) - (a.weight || 0));
-    const picks = shuffled(ordered, rng);
-    for (const c of picks) {
-      if (count <= 0) break;
-      if (taken.has(c.key) || !grid[c.key]) continue;
-      const placedTile = { type, q: c.q, r: c.r, ...extra };
-      specials.push(placedTile);
-      placed.push(placedTile);
-      taken.add(c.key);
-      count -= 1;
+  // Helper: pick count random unoccupied tiles and push specials of a given type.
+  const pickRandom = (type, count, extra = {}) => {
+    const pool = shuffled(allCoords.filter(c => !taken.has(c.key) && !!grid[c.key]), rng);
+    for (let i = 0; i < count && i < pool.length; i++) {
+      specials.push({ type, q: pool[i].q, r: pool[i].r, ...extra });
+      taken.add(pool[i].key);
     }
-    return placed;
   };
 
-  // ── 1 · PRISM — strategic tile on a long-word path ──────────────
-  // In solution-first boards each tile belongs to exactly one word, so the old
-  // "multi-word overlap" requirement (wordCount ≥ 2) is replaced by the weaker
-  // "tile is in at least one word's path and is strategically interesting".
-  const prismCandidates = allCoords
-    .map(c => {
-      const wordCount = coordToWords.get(c.key)?.size || 0;
-      const n = neighbors(c.q, c.r, radius);
-      const nearHigh = n.some(nn => HIGH_VALUE_LETTERS.has(grid[nn.key]));
-      const strategic = nearHigh || longMiddle.has(c.key);
-      if (wordCount < 1 || !strategic) return null;
-      return { ...c, weight: wordCount * 10 + (nearHigh ? 5 : 0) + (longMiddle.has(c.key) ? 4 : 0) };
-    })
-    .filter(Boolean);
-  // Fallback: any occupied tile on a long-word path (in case all strategic tiles are taken)
-  const prismFallback = allCoords
-    .map(c => longMiddle.has(c.key) ? { ...c, weight: pathDensity.get(c.key) || 0 } : null)
-    .filter(Boolean);
-  placeType('prism', prismCandidates.length >= 1 ? prismCandidates : prismFallback, 1);
-
-  // ── Rotating rune candidate pool: near high-value letters ────────
-  const runeCandidates = allCoords
-    .map(c => {
-      const n = neighbors(c.q, c.r, radius);
-      const nearProblem = n.some(nn => HIGH_VALUE_LETTERS.has(grid[nn.key]));
-      const options = n.reduce((acc, nn) => acc + (coordToWords.get(nn.key)?.size || 0), 0);
-      // Threshold lowered from 4 to 1: solution-first boards have no multi-word
-      // overlaps so each occupied neighbour contributes at most 1 to options.
-      if (!nearProblem || options < 1) return null;
-      return { ...c, weight: options + 10 };
-    })
-    .filter(Boolean);
-  // ── Rotating gem candidate pool ───────────────────────────────────
-  const vowelRichness = (coord) => {
-    const around = getCoordsWithinRadius(coord, 2, radius);
-    let vowels = 0;
-    around.forEach(c => { if ('AEIOU'.includes(grid[c.key] || '')) vowels += 1; });
-    return vowels;
-  };
-
-  const longPathCoords = new Set();
-  const mediumPathCoords = new Set();
-  placements.forEach(p => {
-    if (p.word.length >= 7) p.path.forEach(c => longPathCoords.add(c.key));
-    if (p.word.length >= 6) p.path.forEach(c => mediumPathCoords.add(c.key));
-  });
-
-  const gemCandidates = allCoords.map(c => {
-    const key = c.key;
-    const wc7 = placements.filter(p => p.word.length >= 7 && p.path.some(pc => pc.key === key)).length;
-    const wc6 = placements.filter(p => p.word.length >= 6 && p.path.some(pc => pc.key === key)).length;
-    return {
-      ...c,
-      wc7,
-      wc6,
-      vowels: vowelRichness(c),
-      density: pathDensity.get(key) || 0,
-      inLong: longPathCoords.has(key),
-      inMedium: mediumPathCoords.has(key),
-    };
-  });
+  // ── PRISM ─────────────────────────────────────────────────────────
+  pickRandom('prism', 1);
 
   // ── ROTATE 1 EMERALD OR 1 GOLD ────────────────────────────────────
-  const chosenGem = shuffled(DAILY_ROTATING_GEM_TYPES, rng)[0];
-  const chosenGemMultiplier = GEM_MULTIPLIERS[chosenGem] || 1;
-  const gemPlacementCandidates = gemCandidates
-    .map(c => ({ ...c, weight: c.density * chosenGemMultiplier + c.vowels + (c.inLong ? 8 : 0) + (c.inMedium ? 4 : 0) }));
-  placeType(chosenGem, gemPlacementCandidates, 1);
+  pickRandom(shuffled(DAILY_ROTATING_GEM_TYPES, rng)[0], 1);
 
   // ── ROTATE 1 RUNE OR 1 AMETHYST ───────────────────────────────────
-  const chosenRotatingSpecial = shuffled(DAILY_ROTATING_RUNE_TYPES, rng)[0];
-  const denseCandidates = allCoords.map(c => ({ ...c, weight: pathDensity.get(c.key) || 0 }));
-  if (chosenRotatingSpecial === 'rune') {
-    placeType('rune', runeCandidates.length >= 1 ? runeCandidates : denseCandidates, 1);
-  } else {
-    placeType('amethyst', denseCandidates, 1);
-  }
+  pickRandom(shuffled(DAILY_ROTATING_RUNE_TYPES, rng)[0], 1);
 
-  // ── DIGRAPHS: unique strings, capped at 5 tiles maximum ──────────
+  // ── DIGRAPHS: 3–5 random unoccupied tiles, unique digraph strings ─
+  const DAILY_MIN_DIGRAPHS = 3;
   const DAILY_MAX_DIGRAPHS = 5;
+  const digraphCount = DAILY_MIN_DIGRAPHS + Math.floor(rng() * (DAILY_MAX_DIGRAPHS - DAILY_MIN_DIGRAPHS + 1));
   const shuffledDigraphs = shuffled(DAILY_DIGRAPH_OPTIONS, rng);
-  const digraphCandidates = allCoords.map(c => ({
-    ...c,
-    weight: (longPathCoords.has(c.key) ? 14 : 0) + (pathDensity.get(c.key) || 0),
-  }));
-  const strategicDigraphSlots = digraphCandidates.filter(c => c.weight > 0).length;
-  const maxDigraphCount = Math.min(DAILY_MAX_DIGRAPHS, shuffledDigraphs.length, Math.max(0, strategicDigraphSlots));
-  const minDigraphCount = Math.min(3, maxDigraphCount);
-  const digraphCount = maxDigraphCount > 0
-    ? minDigraphCount + Math.floor(rng() * (maxDigraphCount - minDigraphCount + 1))
-    : 0;
-  const chosenDigraphs = shuffledDigraphs.slice(0, digraphCount);
-  for (const dg of chosenDigraphs) {
-    placeType('digraph', digraphCandidates, 1, { digraph: dg });
+  const digraphPool = shuffled(allCoords.filter(c => !taken.has(c.key) && !!grid[c.key]), rng);
+  const actualDigraphCount = Math.min(digraphCount, shuffledDigraphs.length, digraphPool.length);
+  for (let i = 0; i < actualDigraphCount; i++) {
+    specials.push({ type: 'digraph', q: digraphPool[i].q, r: digraphPool[i].r, digraph: shuffledDigraphs[i] });
+    taken.add(digraphPool[i].key);
   }
 
   return specials;
@@ -830,42 +455,6 @@ function classifyDifficulty(maxScore) {
   return 'expert';
 }
 
-function estimatePathScore(word, path, specialsByKey) {
-  let base = 0;
-  for (const ch of word) base += LETTER_POINTS[ch] || 1;
-  const lenMult = Math.max(4, word.length);
-
-  let gemMult = 1;
-  let hasPrism = false;
-  const usedGems = new Set();
-
-  path.forEach(c => {
-    const type = specialsByKey.get(c.key);
-    if (type === 'prism') hasPrism = true;
-    if (type && GEM_MULTIPLIERS[type]) {
-      gemMult *= GEM_MULTIPLIERS[type];
-      usedGems.add(type);
-    }
-  });
-
-  return base * lenMult * (hasPrism ? 2 : 1) * gemMult * Math.max(1, usedGems.size);
-}
-
-function isCommonWord(word) {
-  const upper = String(word || '').toUpperCase();
-  if (!upper) return false;
-
-  const rareCount = [...upper].filter(ch => ['Q', 'Z', 'X'].includes(ch)).length;
-  if (rareCount > 2) return false;
-
-  const archaic = ['ETH', 'EST'];
-  if (archaic.some(suffix => upper.endsWith(suffix) && upper.length > 6)) return false;
-
-  const technical = ['LEUKO', 'HEMATO', 'CARDIO', 'NEPHRO', 'OSTEO', 'CYTO'];
-  if (technical.some(prefix => upper.startsWith(prefix))) return false;
-
-  return true;
-}
 
 function getQuadrant(q, r) {
   if (q >= 2 && r <= -2) return 'upper-right';
@@ -994,36 +583,25 @@ function generateFeatureHints(path, specialTiles) {
   return out;
 }
 
-function generateOptimalPathClues(optimalSolutions, placements, grid, specialTiles) {
+function generateOptimalPathClues(optimalSolutions, grid, specialTiles) {
   const bestStrategy = Array.isArray(optimalSolutions) ? optimalSolutions[0] : null;
   if (!bestStrategy || !Array.isArray(bestStrategy.words)) return null;
-  const specialsByKey = new Map((specialTiles || []).map(s => [hexKey(s.q, s.r), s.type]));
 
-  const clues = bestStrategy.words.map((word, idx) => {
-    const placement = placements.find(p => p.word === word);
-    if (!placement) return null;
-    const estimatedPoints = Math.round(
-      placement.estimatedScore
-      || estimatePathScore(placement.word, placement.path, specialsByKey)
-      || 0,
-    );
-
-    return {
-      wordIndex: idx + 1,
-      length: word.length,
-      estimatedPoints,
-      positional: generatePositionalClue(word, placement.path, grid, specialTiles),
-      category: generateCategoryClue(word),
-      hints: [
-        { level: 1, text: generateDefinitionClue(word) },
-        { level: 2, text: generateProgressiveReveal(word, 0) },
-        { level: 3, text: generateProgressiveReveal(word, 1) },
-        { level: 4, text: generateProgressiveReveal(word, 2) },
-        { level: 5, text: generateProgressiveReveal(word, 4) },
-      ],
-      features: generateFeatureHints(placement.path, specialTiles),
-    };
-  }).filter(Boolean);
+  const clues = bestStrategy.words.map((word, idx) => ({
+    wordIndex: idx + 1,
+    length: word.length,
+    estimatedPoints: 0,
+    positional: generatePositionalClue(word, [], grid, specialTiles),
+    category: generateCategoryClue(word),
+    hints: [
+      { level: 1, text: generateDefinitionClue(word) },
+      { level: 2, text: generateProgressiveReveal(word, 0) },
+      { level: 3, text: generateProgressiveReveal(word, 1) },
+      { level: 4, text: generateProgressiveReveal(word, 2) },
+      { level: 5, text: generateProgressiveReveal(word, 4) },
+    ],
+    features: [],
+  }));
 
   return {
     strategy: 'optimal',
@@ -1033,154 +611,8 @@ function generateOptimalPathClues(optimalSolutions, placements, grid, specialTil
   };
 }
 
-function computeStrategies(placements, specialsByKey, grid) {
-  // Use all placements — coverage words added in Phase 2/3 may be uncommon but
-  // are necessary to cover every tile; filtering them out causes a spurious penalty.
-  const scored = placements.map(p => ({ ...p, estimatedScore: estimatePathScore(p.word, p.path, specialsByKey) }));
-
-  const strategies = [];
-  const strategyOrders = [
-    scored.slice().sort((a, b) => b.estimatedScore - a.estimatedScore),
-    scored.slice().sort((a, b) => (b.estimatedScore / b.word.length) - (a.estimatedScore / a.word.length)),
-    scored.slice().sort((a, b) => b.word.length - a.word.length || b.estimatedScore - a.estimatedScore),
-  ];
-
-  for (const order of strategyOrders) {
-    const picked = [];
-    const used = new Set();
-    for (const p of order) {
-      // Allow partial overlap (tiles can appear in multiple placed word paths
-      // since gravity shifts tiles in gameplay).  Skip only words that are
-      // completely redundant (every tile already covered by another word).
-      const hasOverlap = p.path.some(c => used.has(c.key));
-      if (hasOverlap && picked.length >= 4) continue;
-      picked.push(p);
-      p.path.forEach(c => used.add(c.key));
-    }
-
-    const wordTotal = picked.reduce((sum, p) => sum + p.estimatedScore, 0);
-    let penalty = 0;
-    Object.entries(grid).forEach(([key, letter]) => {
-      if (used.has(key)) return;
-      if (!/^[A-Z]$/.test(letter)) return;
-      penalty += LETTER_POINTS[letter] || 1;
-    });
-
-    const finalScore = Math.max(0, Math.round(wordTotal - penalty));
-    strategies.push({
-      words: picked.map(p => p.word),
-      wordTotal: Math.round(wordTotal),
-      penalty,
-      finalScore,
-    });
-  }
-
-  strategies.sort((a, b) => b.finalScore - a.finalScore);
-  return strategies.slice(0, 3);
-}
-
-export function validateDailyBoard({ grid, placements, specialTiles }) {
-  const specialsByKey = new Map(specialTiles.map(s => [hexKey(s.q, s.r), s.type]));
-  const typeCounts = new Map();
-  specialTiles.forEach(s => typeCounts.set(s.type, (typeCounts.get(s.type) || 0) + 1));
-
-  const prismCount = typeCounts.get('prism') || 0;
-  if (prismCount !== 1) return { valid: false, reason: `expected exactly 1 prism, got ${prismCount}` };
-
-  const rotatingGemCount = DAILY_ROTATING_GEM_TYPES.reduce((sum, type) => sum + (typeCounts.get(type) || 0), 0);
-  if (rotatingGemCount !== 1) return { valid: false, reason: 'expected exactly 1 rotating gem (emerald or gold)' };
-
-  const rotatingSpecialCount = DAILY_ROTATING_RUNE_TYPES.reduce((sum, type) => sum + (typeCounts.get(type) || 0), 0);
-  if (rotatingSpecialCount !== 1) return { valid: false, reason: 'expected exactly 1 rotating special (rune or amethyst)' };
-
-  const portalTiles = specialTiles.filter(s => s.type === 'portal');
-  if (portalTiles.length !== 2) return { valid: false, reason: `expected exactly 2 portal tiles, got ${portalTiles.length}` };
-
-  const digraphTiles = specialTiles.filter(s => s.type === 'digraph');
-  const normalizedDigraphs = digraphTiles.map(s => String(s.digraph || '').toUpperCase());
-  if (normalizedDigraphs.some(dg => !dg || dg.length !== 2)) {
-    return { valid: false, reason: 'digraph tile missing valid digraph text' };
-  }
-  if (new Set(normalizedDigraphs).size !== normalizedDigraphs.length) {
-    return { valid: false, reason: 'duplicate digraph on board' };
-  }
-
-  const scored = placements.map(p => ({ ...p, estimatedScore: estimatePathScore(p.word, p.path, specialsByKey) }));
-  scored.sort((a, b) => b.estimatedScore - a.estimatedScore);
-  if (scored.length < 3) return { valid: false, reason: 'not enough placed strategic words' };
-
-  const medianIdx = Math.floor(scored.length / 2);
-  const highValueCut = scored[medianIdx]?.estimatedScore || 0;
-  const highValueWords = scored.filter(s => s.word.length >= 7 || s.estimatedScore >= highValueCut);
-
-  for (const s of specialTiles.filter(x => x.type === 'prism' || x.type === 'rune')) {
-    const key = hexKey(s.q, s.r);
-    const uses = highValueWords.filter(w => w.path.some(c => c.key === key)).length;
-    const broadUses = scored.filter(w => w.path.some(c => c.key === key)).length;
-    const minUses = 1; // solution-first boards: each tile belongs to one word, so min 1 word uses any given tile
-    if (uses < minUses && broadUses < minUses) return { valid: false, reason: `${s.type} lacks multi-word strategic use` };
-  }
-
-  const maxScore = Math.round(scored.slice(0, 3).reduce((sum, p) => sum + p.estimatedScore, 0) * MAX_SCORE_ESTIMATE_MULTIPLIER);
-  const minScore = Math.round(scored.slice(0, 1).reduce((sum, p) => sum + p.estimatedScore, 0) * MIN_SCORE_ESTIMATE_MULTIPLIER);
-
-  const nearOptimal = Math.max(3, scored.filter(s => s.estimatedScore >= scored[0].estimatedScore * 0.65).length);
-
-  const highTier = specialTiles.filter(s => HIGH_TIER_GEMS.has(s.type));
-  for (const gem of highTier) {
-    const key = hexKey(gem.q, gem.r);
-    const reachable = placements.some(p => p.word.length >= 7 && p.path.some(c => c.key === key));
-    if (!reachable) return { valid: false, reason: `${gem.type} unreachable by 7+ path` };
-  }
-
-  const strategies = computeStrategies(placements, specialsByKey, grid);
-
-  return {
-    valid: true,
-    strategicPaths: nearOptimal,
-    maxScore,
-    minScore,
-    strategies,
-  };
-}
-
-/**
- * Builds an `optimalSolutions`-shaped array directly from the proven
- * `gravitySequence` (the ordered list of all placed words that can be cleared
- * one-by-one with correct SE/SW gravity).
- *
- * Because `placeWordSet` guarantees Σ word lengths === totalTiles, every tile is
- * cleared by exactly one word → penalty is always 0.
- *
- * @param {string[]} gravitySequence - Ordered play sequence from findGravityPlaySequence
- * @param {Array}    placements      - Array of { word, path, score } from placeWordSet
- * @param {Map}      specialsByKey   - Map<hexKey, specialType> for score estimation
- * @returns {Array|null}
- */
-function buildGravityStrategies(gravitySequence, placements, specialsByKey) {
-  if (!gravitySequence?.length) return null;
-
-  const wordTotal = gravitySequence.reduce((sum, word) => {
-    const placement = placements.find(p => p.word === word);
-    if (!placement) return sum;
-    return sum + estimatePathScore(word, placement.path, specialsByKey);
-  }, 0);
-
-  // Every tile belongs to exactly one word, so no tiles are left uncleared.
-  const penalty = 0;
-  const finalScore = Math.round(wordTotal);
-
-  return [{
-    words: gravitySequence,
-    wordTotal: Math.round(wordTotal),
-    penalty,
-    finalScore,
-  }];
-}
-
 /**
  * Builds an `optimalSolutions`-shaped array from the gravity simulation result.
- * Used as a fallback when gravitySequence is unavailable.
  *
  * @param {Object} simData    - Result of simulateMaxScore (must have solutionDetail)
  * @param {Object} grid       - Plain { [hexKey]: letter } board grid
@@ -1216,23 +648,20 @@ export function generateDailyHexacoreBoard({
   maxAttempts = 10,
   radius = GRID_RADIUS,
   attemptSeedOffset = 0,
-  includePlacements = false,
   runSimulation = true,
 } = {}) {
   const seed = fnv1a32(String(date));
-  const totalTiles = getAllCoords(radius).length;
-  let lastFailure = 'unknown';
+  const allCoords = getAllCoordsWithKeys(radius);
+  const totalTiles = allCoords.length;
   let bestBoard = null;
-  let bestBoardMeta = null; // { coverage, hasGravity, clearance, score }
+  let bestBoardMeta = null; // { clearance, score }
 
   /** Returns true if candidate metrics are strictly better than current best. */
   const isBetterBoard = (candidateMeta) => {
     if (!bestBoardMeta) return true;
-    // Priority 1: gravity-validated play sequence (solution-first boards always have 61/61 coverage)
-    if (candidateMeta.hasGravity !== bestBoardMeta.hasGravity) return candidateMeta.hasGravity;
-    // Priority 2: simulation clearance %
+    // Priority 1: simulation clearance %
     if (candidateMeta.clearance !== bestBoardMeta.clearance) return candidateMeta.clearance > bestBoardMeta.clearance;
-    // Priority 3: estimated max score
+    // Priority 2: estimated max score
     return candidateMeta.score > bestBoardMeta.score;
   };
 
@@ -1240,75 +669,29 @@ export function generateDailyHexacoreBoard({
     const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
     const rng = mkSeededRng((seed + effectiveAttempt * 9973) >>> 0);
 
-    // ── Word selection: pick a set of words whose lengths sum to exactly 61 ─────
-    const words = selectWordSet(rng, totalTiles);
-    if (!words || words.length < 5) {
-      lastFailure = 'no word subset sums to 61 tiles';
-      continue;
-    }
+    // ── Fill all tiles with randomly drawn letters from LETTER_POOL ─────────────
+    const letters = shuffled(LETTER_POOL, rng).slice(0, totalTiles);
+    const grid = {};
+    allCoords.forEach((c, i) => { grid[c.key] = letters[i]; });
 
-    // ── Snake-path word placement: slice a top-to-bottom Hamiltonian path ───────
-    // Words are sorted longest-first (= play order: first word is the longest,
-    // at the top of the board).  The snake path visits all 61 tiles from top
-    // (r = −4) to bottom (r = +4), so slicing it into word-length segments
-    // places the first word at the top and the last word at the bottom.
-    // No filler tiles are needed — word lengths sum to exactly 61.
-    const orderedWords = words.slice().sort((a, b) => b.length - a.length || wordScore(b) - wordScore(a));
-    const placement = placeWordSet(orderedWords, rng, radius);
-    if (!placement) {
-      lastFailure = 'snake-path word placement failed';
-      continue;
-    }
-    const { grid, placements } = placement;
-    if (placements.length < 5) {
-      lastFailure = 'insufficient placements after backwards placement';
-      continue;
-    }
+    const specialTiles = placeSpecialTiles(grid, rng, radius);
 
-    // By construction: every tile is covered by exactly one word — no filler needed.
-    const wordPathCoverage = Object.keys(grid).length; // always === totalTiles
-    const fullyCoveredByWords = wordPathCoverage === totalTiles;
-
-    // Validate that all designed words can be cleared in sequence using correct SE/SW gravity.
-    const gravitySequence = findGravityPlaySequence(placements, grid, radius);
-    if (!gravitySequence) {
-      lastFailure = 'no valid gravity-aware play sequence';
-    }
-
-    const specialTiles = placeSpecialTiles(grid, placements, rng, radius, date);
-
-    const validation = validateDailyBoard({ grid, placements, specialTiles });
-    if (!validation.valid) {
-      lastFailure = validation.reason || 'validation failed';
-      continue;
-    }
-
-    // Run gravity simulation to calculate the true maximum achievable score
+    // Run gravity simulation to find the optimal play sequence and max score
     let simData = null;
     if (runSimulation) {
       try {
         simData = simulateMaxScore(grid, specialTiles, radius);
       } catch (err) {
-        // Simulation failure is non-fatal — fall back to estimate
         console.warn('[hexacoreGenerator] simulateMaxScore failed:', err?.message ?? err);
         simData = null;
       }
     }
 
-    const maxPossibleScore = simData?.maxScore ?? validation.maxScore;
+    const maxPossibleScore = simData?.maxScore ?? 0;
     const difficulty = classifyDifficulty(maxPossibleScore);
 
-    // Build the displayed optimal solution from the proven gravitySequence:
-    // gravitySequence is the exact ordered list of all placed words that can be
-    // cleared with correct gravity — penalty is always 0 since placeWordSet
-    // guarantees Σ word lengths === totalTiles.
-    // Fall back to simulation-derived or heuristic strategies only when
-    // gravitySequence is unavailable (shouldn't happen in normal generation).
-    const specialsByKey = new Map((specialTiles || []).map(s => [hexKey(s.q, s.r), s.type]));
-    const gravityStrategies = buildGravityStrategies(gravitySequence, placements, specialsByKey);
-    const simStrategies = buildSimulationStrategies(simData, grid, totalTiles);
-    const optimalSolutions = gravityStrategies ?? simStrategies ?? validation.strategies;
-    const optimalPathClues = generateOptimalPathClues(optimalSolutions, placements, grid, specialTiles);
+    const optimalSolutions = buildSimulationStrategies(simData, grid, totalTiles);
+    const optimalPathClues = generateOptimalPathClues(optimalSolutions, grid, specialTiles);
 
     const board = {
       date,
@@ -1316,8 +699,6 @@ export function generateDailyHexacoreBoard({
       specialTiles,
       metadata: {
         maxPossibleScore,
-        minAchievableScore: validation.minScore,
-        strategicPathCount: validation.strategicPaths,
         optimalSolutions,
         optimalPathClues,
         difficulty,
@@ -1329,17 +710,11 @@ export function generateDailyHexacoreBoard({
         tileClearancePercent: simData?.clearancePercent ?? null,
         fullClear: simData?.fullyCleared ?? null,
         solutionPath: simData?.solutionPath ?? null,
-        wordPathCoverage,
-        fullyCoveredByWords,
-        gravitySequence,
         generatedAt: new Date().toISOString(),
       },
     };
-    if (includePlacements) board.placements = placements;
 
     const attemptMeta = {
-      coverage: wordPathCoverage,
-      hasGravity: !!gravitySequence,
       clearance: simData?.clearancePercent ?? 0,
       score: maxPossibleScore,
     };
@@ -1351,15 +726,15 @@ export function generateDailyHexacoreBoard({
   }
 
   if (bestBoard) return bestBoard;
-  throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts (last failure: ${lastFailure})`);
+  throw new Error(`Unable to generate a valid daily board for ${date} after ${maxAttempts} attempts`);
 }
 
-export function generateDailyHexacoreBatch({ startDate = toIsoDate(), count = 1, includePlacements = false } = {}) {
+export function generateDailyHexacoreBatch({ startDate = toIsoDate(), count = 1 } = {}) {
   const out = [];
   const d = new Date(`${startDate}T00:00:00`);
   for (let i = 0; i < count; i++) {
     const date = toIsoDate(d);
-    out.push(generateDailyHexacoreBoard({ date, includePlacements }));
+    out.push(generateDailyHexacoreBoard({ date }));
     d.setDate(d.getDate() + 1);
   }
   return out;
