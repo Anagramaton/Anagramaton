@@ -5128,10 +5128,7 @@ async function completeDailyChallenge() {
   hxState.dailyTilesUsed = tilesUsed;
   const submissionDate = hxState.dailyBoardDate || null;
 
-  let name = await getPlayerName();
-  if (!name) {
-    name = await promptPlayerName();
-  }
+  const name = await getPlayerName();
   if (name && submissionDate) {
     await submitScore(
       submissionDate,
