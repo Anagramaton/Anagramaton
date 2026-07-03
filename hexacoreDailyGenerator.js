@@ -284,7 +284,7 @@ function applyGravity(simGrid, radius = GRID_RADIUS) {
 // Mirrors HX_LENGTH_MULTIPLIERS in hexacore.js — single source of truth for simulation scoring.
 const LENGTH_MULT_TABLE = { 4: 2, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12, 13: 13 };
 
-function calculatePathScore(word, path, simGrid) {
+function calculatePathScore(word, path, simGrid, portalEntryKey = null, portalExitKey = null) {
   let base = 0;
   for (const ch of word) base += LETTER_POINTS[ch] || 1;
 
@@ -306,7 +306,16 @@ function calculatePathScore(word, path, simGrid) {
   }
 
   const countBonus = Math.max(1, uniqueGems.size);
-  return Math.round(base * actualLenMult * (hasPrism ? 2 : 1) * gemMult * countBonus);
+
+  let portalMult = 1;
+  if (portalEntryKey && portalExitKey) {
+    const pathKeys = new Set(path.map(c => c.key));
+    if (pathKeys.has(portalEntryKey) && pathKeys.has(portalExitKey)) {
+      portalMult = Math.max(1, word.length - 2);
+    }
+  }
+
+  return Math.round(base * actualLenMult * (hasPrism ? 2 : 1) * gemMult * countBonus * portalMult);
 }
 
 /**
@@ -320,7 +329,7 @@ function calculatePathScore(word, path, simGrid) {
  * @param {number} radius        - Grid radius
  * @param {number} maxPathfinds  - Maximum pathfinding attempts (performance cap)
  */
-function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMULATION_PATHS) {
+function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMULATION_PATHS, portalEntryKey = null, portalExitKey = null) {
   const trie = getSimTrie();
 
   const foundWords = new Set();
@@ -334,7 +343,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
     if (trieNode.$ && word.length >= SIM_MIN_LEN && !foundWords.has(trieNode.$)) {
       const completedWord = trieNode.$;
       foundWords.add(completedWord);
-      results.push({ word: completedWord, path: path.slice(), score: calculatePathScore(completedWord, path, simGrid) });
+      results.push({ word: completedWord, path: path.slice(), score: calculatePathScore(completedWord, path, simGrid, portalEntryKey, portalExitKey) });
     }
 
     if (word.length >= SIM_MAX_LEN) return;
@@ -350,27 +359,43 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
       if (!ncell) continue;
 
       const letter = ncell.letter.toUpperCase();
+      const isRune = ncell.special === 'rune';
 
-      // Digraph tiles contribute two characters but occupy a single tile.
-      // Traverse two trie steps for one tile so the simulation finds words that
-      // are actually playable on the board.
-      let nextNode;
-      if (letter.length === 2) {
-        if (word.length + 2 > SIM_MAX_LEN) continue;
-        const mid = trieNode[letter[0]];
-        if (!mid) continue;
-        nextNode = mid[letter[1]];
-        if (!nextNode) continue;
+      if (isRune) {
+        // Rune is a wildcard — try all 26 letters at the current trie node
+        visited.add(nkey);
+        path.push({ key: nkey, q: nq, r: nr });
+        for (const ch of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+          const nextNode = trieNode[ch];
+          if (!nextNode) continue;
+          dfs(nq, nr, nextNode, word + ch, path, visited);
+          if (results.length >= maxResults) break;
+        }
+        path.pop();
+        visited.delete(nkey);
+        if (results.length >= maxResults) return;
       } else {
-        nextNode = trieNode[letter];
-        if (!nextNode) continue; // Trie pruning — no words down this branch
-      }
+        // Digraph tiles contribute two characters but occupy a single tile.
+        // Traverse two trie steps for one tile so the simulation finds words that
+        // are actually playable on the board.
+        let nextNode;
+        if (letter.length === 2) {
+          if (word.length + 2 > SIM_MAX_LEN) continue;
+          const mid = trieNode[letter[0]];
+          if (!mid) continue;
+          nextNode = mid[letter[1]];
+          if (!nextNode) continue;
+        } else {
+          nextNode = trieNode[letter];
+          if (!nextNode) continue; // Trie pruning — no words down this branch
+        }
 
-      visited.add(nkey);
-      path.push({ key: nkey, q: nq, r: nr });
-      dfs(nq, nr, nextNode, word + letter, path, visited);
-      path.pop();
-      visited.delete(nkey);
+        visited.add(nkey);
+        path.push({ key: nkey, q: nq, r: nr });
+        dfs(nq, nr, nextNode, word + letter, path, visited);
+        path.pop();
+        visited.delete(nkey);
+      }
     }
   }
 
@@ -379,21 +404,33 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
     if (!cell) continue;
     const letter = cell.letter.toUpperCase();
 
-    let trieRoot;
-    if (letter.length === 2) {
-      // Digraph starting tile: advance through both characters to find the trie entry point
-      const mid = trie[letter[0]];
-      if (!mid) continue;
-      trieRoot = mid[letter[1]];
-      if (!trieRoot) continue;
-    } else {
-      trieRoot = trie[letter];
-      if (!trieRoot) continue;
-    }
-
     const [q, r] = key.split(',').map(Number);
-    const visited = new Set([key]);
-    dfs(q, r, trieRoot, letter, [{ key, q, r }], visited);
+
+    if (cell.special === 'rune') {
+      // Rune starting tile: try all 26 trie roots as the first letter
+      for (const ch of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+        if (results.length >= maxResults) break;
+        const trieRoot = trie[ch];
+        if (!trieRoot) continue;
+        const visited = new Set([key]);
+        dfs(q, r, trieRoot, ch, [{ key, q, r }], visited);
+      }
+    } else {
+      let trieRoot;
+      if (letter.length === 2) {
+        // Digraph starting tile: advance through both characters to find the trie entry point
+        const mid = trie[letter[0]];
+        if (!mid) continue;
+        trieRoot = mid[letter[1]];
+        if (!trieRoot) continue;
+      } else {
+        trieRoot = trie[letter];
+        if (!trieRoot) continue;
+      }
+
+      const visited = new Set([key]);
+      dfs(q, r, trieRoot, letter, [{ key, q, r }], visited);
+    }
   }
 
   return results;
@@ -434,8 +471,23 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
     }
   }
 
+  // Extract portal entry/exit keys so the scoring formula can apply the portal multiplier
+  const portalEntry = specialTiles.find(s => s.type === 'portal' && s.role === 'entry');
+  const portalExit  = specialTiles.find(s => s.type === 'portal' && s.role === 'exit');
+  const portalEntryKey = portalEntry ? hexKey(portalEntry.q, portalEntry.r) : null;
+  const portalExitKey  = portalExit  ? hexKey(portalExit.q,  portalExit.r)  : null;
+
   const gemCount = specialTiles.filter(s => GEM_MULTIPLIERS[s.type]).length;
   const totalTiles = getAllCoords(radius).length;
+
+  /** Computes exact penalty (sum of letter point values) for remaining tiles in a simGrid. */
+  function computeExactPenalty(simGrid) {
+    return Object.values(simGrid).reduce((sum, cell) => {
+      const letter = (cell.letter || '').toUpperCase();
+      if (letter.length === 2) return sum + (LETTER_POINTS[letter[0]] || 1) + (LETTER_POINTS[letter[1]] || 1);
+      return sum + (LETTER_POINTS[letter] || 1);
+    }, 0);
+  }
 
   /**
    * Runs one greedy pass with the given sort function applied to paths each round.
@@ -450,7 +502,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
 
     while (round < maxRounds) {
       round++;
-      const paths = findAllValidPaths(simGrid, radius);
+      const paths = findAllValidPaths(simGrid, radius, MAX_SIMULATION_PATHS, portalEntryKey, portalExitKey);
       if (paths.length === 0) break;
 
       paths.sort(sortFn);
@@ -487,19 +539,9 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
     return b.score - a.score;
   });
 
-  // Compute finalScore (word total minus estimated penalty) for each pass and pick the best
-  const allLetterPointsBase = Object.values(grid).filter(l => /^[A-Z]$/.test(l)).map(l => LETTER_POINTS[l] || 1);
-  const avgPointBase = allLetterPointsBase.length > 0
-    ? allLetterPointsBase.reduce((s, v) => s + v, 0) / allLetterPointsBase.length
-    : 2;
-
+  // Compute finalScore (word total minus exact penalty) for each pass and pick the best
   function computeFinalScore(pass) {
-    const tilesUncovered = Object.keys(pass.simGrid).length;
-    const allLetterPoints = Object.values(pass.simGrid).map(c => LETTER_POINTS[c.letter] || 1);
-    const avgPoint = allLetterPoints.length > 0
-      ? allLetterPoints.reduce((s, v) => s + v, 0) / allLetterPoints.length
-      : avgPointBase;
-    const penalty = Math.round(tilesUncovered * avgPoint);
+    const penalty = computeExactPenalty(pass.simGrid);
     return Math.max(0, pass.totalScore - penalty);
   }
 
@@ -515,12 +557,14 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
   }
 
   const { simGrid: finalSimGrid, totalScore, solutionPath, solutionDetail } = bestPass;
+  const exactPenalty = computeExactPenalty(finalSimGrid);
   const totalWordLen = solutionPath.reduce((s, w) => s + w.length, 0);
   const tilesRemaining = Object.keys(finalSimGrid).length;
   const tilesCleared = Math.max(0, totalTiles - tilesRemaining);
   const clearancePercent = totalTiles > 0 ? Math.round((tilesCleared / totalTiles) * 1000) / 10 : 0;
   return {
     maxScore: totalScore,
+    exactPenalty,
     optimalMoves: solutionPath.length,
     averageWordLength: solutionPath.length > 0 ? Math.round((totalWordLen / solutionPath.length) * 10) / 10 : 0,
     gemDensity: totalTiles > 0 ? Math.round((gemCount / totalTiles) * 1000) / 1000 : 0,
@@ -710,15 +754,9 @@ export function generateOptimalPathClues(optimalSolutions, grid, specialTiles) {
 function buildSimulationStrategies(simData, grid, totalTiles) {
   if (!simData?.solutionDetail?.length) return null;
 
-  const tilesUsedCount = simData.solutionDetail.reduce((s, d) => s + d.tilesUsed, 0);
-  const tilesUncovered = totalTiles - tilesUsedCount;
-
-  // Estimate penalty: sum of letter points for tiles not cleared by simulation.
-  const allLetterPoints = Object.values(grid).filter(l => /^[A-Z]$/.test(l)).map(l => LETTER_POINTS[l] || 1);
-  const avgPoint = allLetterPoints.length > 0
-    ? allLetterPoints.reduce((s, v) => s + v, 0) / allLetterPoints.length
-    : 2;
-  const penalty = Math.round(tilesUncovered * avgPoint);
+  // Use the exact penalty computed from remaining tile letter values in simulateMaxScore,
+  // falling back to a rough estimate if unavailable.
+  const penalty = Number.isFinite(simData.exactPenalty) ? simData.exactPenalty : Math.round((totalTiles - simData.solutionDetail.reduce((s, d) => s + d.tilesUsed, 0)) * 2);
 
   const wordTotal = simData.solutionDetail.reduce((s, d) => s + d.score, 0);
   const finalScore = Math.max(0, wordTotal - penalty);

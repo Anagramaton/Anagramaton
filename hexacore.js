@@ -5190,7 +5190,12 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
     const wordsMarkup = (bestStrategy.words || []).map((word, i) => {
       const detail = (simData?.solutionDetail || [])[i];
       const pts = detail?.score ? `<span class="hx-daily-opt-word-score">+${detail.score.toLocaleString()}</span>` : '';
-      return `<span class="hx-daily-opt-word">${escapeHtml(word)}${pts}</span>`;
+      return `
+          <div class="hx-daily-your-word-row">
+            <span class="hx-daily-your-word-num">${i + 1}.</span>
+            <span class="hx-daily-your-word-text">${escapeHtml(word)}</span>
+            ${pts}
+          </div>`;
     }).join('');
     const bWordTotal = Number(bestStrategy.wordTotal || 0);
     const bPenalty   = Number(bestStrategy.penalty   || 0);
@@ -5198,7 +5203,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
     optimalHtml = `
       <div class="hx-daily-opt-section">
         <div class="hx-daily-opt-heading">🏆 OPTIMAL SOLUTION</div>
-        <div class="hx-daily-opt-words">${wordsMarkup}</div>
+        <div class="hx-daily-your-words-list">${wordsMarkup}</div>
         <div class="hx-stats hx-stats--daily hx-stats--opt">
           <div class="hx-stat-row"><span>Word Score</span><strong>${bWordTotal.toLocaleString()}</strong></div>
           <div class="hx-stat-row"><span>Penalty</span><strong>-${bPenalty.toLocaleString()}</strong></div>
