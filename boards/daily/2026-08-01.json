@@ -1,0 +1,434 @@
+{
+  "date": "2026-08-01",
+  "grid": {
+    "0,-4": "H",
+    "1,-4": "A",
+    "2,-4": "E",
+    "3,-4": "M",
+    "4,-4": "O",
+    "4,-3": "S",
+    "3,-3": "T",
+    "2,-3": "A",
+    "1,-3": "T",
+    "0,-3": "S",
+    "-1,-3": "P",
+    "-2,-2": "R",
+    "-1,-2": "E",
+    "0,-2": "C",
+    "1,-2": "L",
+    "2,-2": "U",
+    "3,-2": "D",
+    "4,-2": "E",
+    "4,-1": "D",
+    "3,-1": "E",
+    "2,-1": "U",
+    "1,-1": "C",
+    "0,-1": "A",
+    "-1,-1": "L",
+    "-2,-1": "Y",
+    "-3,-1": "P",
+    "-4,0": "T",
+    "-3,0": "I",
+    "-2,0": "P",
+    "-1,0": "R",
+    "0,0": "E",
+    "1,0": "T",
+    "2,0": "T",
+    "3,0": "Y",
+    "4,0": "I",
+    "3,1": "S",
+    "2,1": "H",
+    "1,1": "T",
+    "0,1": "E",
+    "-1,1": "N",
+    "-2,1": "U",
+    "-3,1": "I",
+    "-4,1": "T",
+    "-4,2": "I",
+    "-3,2": "E",
+    "-2,2": "S",
+    "-1,2": "G",
+    "0,2": "L",
+    "1,2": "A",
+    "2,2": "D",
+    "1,3": "D",
+    "0,3": "I",
+    "-1,3": "E",
+    "-2,3": "S",
+    "-3,3": "T",
+    "-4,3": "R",
+    "-4,4": "U",
+    "-3,4": "N",
+    "-2,4": "C",
+    "-1,4": "A",
+    "0,4": "L"
+  },
+  "specialTiles": [
+    {
+      "type": "portal",
+      "role": "entry",
+      "q": -2,
+      "r": -2
+    },
+    {
+      "type": "portal",
+      "role": "exit",
+      "q": -3,
+      "r": 4
+    },
+    {
+      "type": "prism",
+      "q": 3,
+      "r": -2
+    },
+    {
+      "type": "gemGold",
+      "q": 3,
+      "r": -3
+    },
+    {
+      "type": "amethyst",
+      "q": 2,
+      "r": 1
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": 2,
+      "digraph": "LL"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 2,
+      "digraph": "IN"
+    },
+    {
+      "type": "digraph",
+      "q": -2,
+      "r": 4,
+      "digraph": "CO"
+    },
+    {
+      "type": "digraph",
+      "q": -1,
+      "r": -1,
+      "digraph": "NG"
+    },
+    {
+      "type": "digraph",
+      "q": -3,
+      "r": 0,
+      "digraph": "EA"
+    }
+  ],
+  "metadata": {
+    "maxPossibleScore": 4223,
+    "minAchievableScore": 1740,
+    "strategicPathCount": 3,
+    "optimalSolutions": [
+      {
+        "words": [
+          "HAEMOSTATS",
+          "PRECLUDED",
+          "EUCALYPTI",
+          "PRETTYISH",
+          "TENUITIES",
+          "GLADDIES",
+          "TRUNCAL"
+        ],
+        "wordTotal": 2503,
+        "penalty": 0,
+        "finalScore": 2503
+      },
+      {
+        "words": [
+          "HAEMOSTATS",
+          "PRECLUDED",
+          "EUCALYPTI",
+          "PRETTYISH",
+          "GLADDIES",
+          "TENUITIES",
+          "TRUNCAL"
+        ],
+        "wordTotal": 2503,
+        "penalty": 0,
+        "finalScore": 2503
+      },
+      {
+        "words": [
+          "HAEMOSTATS",
+          "PRECLUDED",
+          "EUCALYPTI",
+          "PRETTYISH",
+          "TENUITIES",
+          "GLADDIES",
+          "TRUNCAL"
+        ],
+        "wordTotal": 2503,
+        "penalty": 0,
+        "finalScore": 2503
+      }
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2503,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 10,
+          "estimatedPoints": 870,
+          "positional": "A 10-letter word passes through the gold gem",
+          "category": "A familiar everyday word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H________S"
+            },
+            {
+              "level": 3,
+              "text": "HA______TS"
+            },
+            {
+              "level": 4,
+              "text": "_AE_O__A__"
+            },
+            {
+              "level": 5,
+              "text": "HAEMOSTAT_"
+            }
+          ],
+          "features": [
+            "Uses gold gem"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 9,
+          "estimatedPoints": 558,
+          "positional": "A 9-letter word routes through the purple prism",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P_______D"
+            },
+            {
+              "level": 3,
+              "text": "PR_____ED"
+            },
+            {
+              "level": 4,
+              "text": "__E__U_E_"
+            },
+            {
+              "level": 5,
+              "text": "PRECLUDE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 261,
+          "positional": "A 9-letter word uses the NG digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E_______I"
+            },
+            {
+              "level": 3,
+              "text": "EU_____TI"
+            },
+            {
+              "level": 4,
+              "text": "EU_A____I"
+            },
+            {
+              "level": 5,
+              "text": "EUCALYPT_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 261,
+          "positional": "A 9-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P_______H"
+            },
+            {
+              "level": 3,
+              "text": "PR_____SH"
+            },
+            {
+              "level": 4,
+              "text": "__E___I__"
+            },
+            {
+              "level": 5,
+              "text": "PRETTYIS_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 207,
+          "positional": "A 9-letter word uses the IN digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T_______S"
+            },
+            {
+              "level": 3,
+              "text": "TE_____ES"
+            },
+            {
+              "level": 4,
+              "text": "_E_UI_IE_"
+            },
+            {
+              "level": 5,
+              "text": "TENUITIE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word uses the LL digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G______S"
+            },
+            {
+              "level": 3,
+              "text": "GL____ES"
+            },
+            {
+              "level": 4,
+              "text": "__A__IE_"
+            },
+            {
+              "level": 5,
+              "text": "GLADDIE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 154,
+          "positional": "A 7-letter word uses the CO digraph tile",
+          "category": "A descriptive adjective — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T_____L"
+            },
+            {
+              "level": 3,
+              "text": "TR___AL"
+            },
+            {
+              "level": 4,
+              "text": "__U__A_"
+            },
+            {
+              "level": 5,
+              "text": "TRUNCA_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        }
+      ]
+    },
+    "difficulty": "easy",
+    "optimalMoves": 7,
+    "averageWordLength": 8.1,
+    "gemDensity": 0.016,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
+    "fullClear": false,
+    "solutionPath": [
+      "HAEMOSTATS",
+      "PRECLUDED",
+      "EUCALYPTI",
+      "PRETTYISH",
+      "GLADLIEST",
+      "UNCATE",
+      "TIRES"
+    ],
+    "wordPathCoverage": 61,
+    "fullyCoveredByWords": true,
+    "gravitySequence": [
+      "HAEMOSTATS",
+      "PRECLUDED",
+      "EUCALYPTI",
+      "PRETTYISH",
+      "TENUITIES",
+      "GLADDIES",
+      "TRUNCAL"
+    ],
+    "generatedAt": "2026-07-03T01:06:09.081Z"
+  }
+}
