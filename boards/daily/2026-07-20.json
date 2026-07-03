@@ -111,41 +111,130 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1990,
+    "maxPossibleScore": 4838,
     "minAchievableScore": 2028,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "METHYLENES",
+          "TRIMETHYLENES",
+          "ORTHOGRAPHIES",
           "SEQUEL",
-          "THRESHERS",
-          "PROPHETESS",
-          "EGOITIES",
-          "WAPITI",
-          "FLYTE"
+          "STEPSISTER",
+          "HERPTILE",
+          "WAMPEE",
+          "HAFTS"
         ],
-        "wordTotal": 1990,
-        "penalty": 29,
-        "finalScore": 1961,
-        "scoreTiers": {
-          "good": 784,
-          "great": 1275,
-          "superb": 1667
-        }
+        "wordTotal": 2662,
+        "penalty": 0,
+        "finalScore": 2662
+      },
+      {
+        "words": [
+          "TRIMETHYLENES",
+          "SEQUEL",
+          "ORTHOGRAPHIES",
+          "STEPSISTER",
+          "WAMPEE",
+          "HERPTILE",
+          "HAFTS"
+        ],
+        "wordTotal": 2662,
+        "penalty": 0,
+        "finalScore": 2662
+      },
+      {
+        "words": [
+          "TRIMETHYLENES",
+          "ORTHOGRAPHIES",
+          "STEPSISTER",
+          "HERPTILE",
+          "SEQUEL",
+          "WAMPEE",
+          "HAFTS"
+        ],
+        "wordTotal": 2662,
+        "penalty": 0,
+        "finalScore": 2662
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 1961,
+      "targetScore": 2662,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 1014,
+          "positional": "A 13-letter word uses the LY digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T___________S"
+            },
+            {
+              "level": 3,
+              "text": "TR_________ES"
+            },
+            {
+              "level": 4,
+              "text": "__I_E____E_E_"
+            },
+            {
+              "level": 5,
+              "text": "TRIMETHYLENE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 13,
+          "estimatedPoints": 507,
+          "positional": "A 13-letter word uses the RE digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O___________S"
+            },
+            {
+              "level": 3,
+              "text": "OR_________ES"
+            },
+            {
+              "level": 4,
+              "text": "O___O__A__IE_"
+            },
+            {
+              "level": 5,
+              "text": "ORTHOGRAPHIE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
-          "category": "A familiar everyday word — 10 letters",
+          "estimatedPoints": 290,
+          "positional": "A 10-letter word sits in the center quadrant",
+          "category": "A compound-style word — 10 letters",
           "hints": [
             {
               "level": 1,
@@ -153,28 +242,88 @@
             },
             {
               "level": 2,
-              "text": "M________S"
+              "text": "S________R"
             },
             {
               "level": 3,
-              "text": "ME______ES"
+              "text": "ST______ER"
             },
             {
               "level": 4,
-              "text": "_E____E_E_"
+              "text": "__E__I__E_"
             },
             {
               "level": 5,
-              "text": "METHYLENE_"
+              "text": "STEPSISTE_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 2,
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word runs from center toward lower-left",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H______E"
+            },
+            {
+              "level": 3,
+              "text": "HE____LE"
+            },
+            {
+              "level": 4,
+              "text": "_E___I_E"
+            },
+            {
+              "level": 5,
+              "text": "HERPTIL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
+          "estimatedPoints": 150,
+          "positional": "A 6-letter word runs from lower-left toward lower-right",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W____E"
+            },
+            {
+              "level": 3,
+              "text": "WA__EE"
+            },
+            {
+              "level": 4,
+              "text": "_A__EE"
+            },
+            {
+              "level": 5,
+              "text": "WAMPE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 414,
+          "positional": "A 6-letter word passes through the gold gem",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
@@ -198,133 +347,16 @@
               "text": "SEQUE_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A familiar everyday word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 9 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "T_______S"
-            },
-            {
-              "level": 3,
-              "text": "TH_____RS"
-            },
-            {
-              "level": 4,
-              "text": "___E__E__"
-            },
-            {
-              "level": 5,
-              "text": "THRESHER_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
-          "category": "A familiar everyday word — 10 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 10 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P________S"
-            },
-            {
-              "level": 3,
-              "text": "PR______SS"
-            },
-            {
-              "level": 4,
-              "text": "__O__E_E__"
-            },
-            {
-              "level": 5,
-              "text": "PROPHETES_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E______S"
-            },
-            {
-              "level": 3,
-              "text": "EG____ES"
-            },
-            {
-              "level": 4,
-              "text": "E_OI_IE_"
-            },
-            {
-              "level": 5,
-              "text": "EGOITIE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W____I"
-            },
-            {
-              "level": 3,
-              "text": "WA__TI"
-            },
-            {
-              "level": 4,
-              "text": "_A_I_I"
-            },
-            {
-              "level": 5,
-              "text": "WAPIT_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses gold gem",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 7,
           "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
+          "estimatedPoints": 95,
+          "positional": "A 5-letter word uses the CO digraph tile",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -333,41 +365,44 @@
             },
             {
               "level": 2,
-              "text": "F___E"
+              "text": "H___S"
             },
             {
               "level": 3,
-              "text": "FL_TE"
+              "text": "HA_TS"
             },
             {
               "level": 4,
-              "text": "____E"
+              "text": "_A___"
             },
             {
               "level": 5,
-              "text": "FLYT_"
+              "text": "HAFT_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 7.7,
+    "optimalMoves": 8,
+    "averageWordLength": 7.3,
     "gemDensity": 0.016,
-    "tilesCleared": 52,
-    "tilesRemaining": 9,
-    "tileClearancePercent": 85.2,
+    "tilesCleared": 58,
+    "tilesRemaining": 3,
+    "tileClearancePercent": 95.1,
     "fullClear": false,
     "solutionPath": [
       "METHYLENES",
       "SEQUEL",
-      "THRESHERS",
-      "PROPHETESS",
-      "EGOITIES",
-      "WAPITI",
-      "FLYTE"
+      "APPETITES",
+      "MESOPHILE",
+      "SHRIFTS",
+      "GOTHITE",
+      "SWART",
+      "PARER"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -380,6 +415,6 @@
       "SEQUEL",
       "HAFTS"
     ],
-    "generatedAt": "2026-07-03T12:53:56.380Z"
+    "generatedAt": "2026-06-21T01:36:33.165Z"
   }
 }

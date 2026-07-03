@@ -111,40 +111,63 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2084,
+    "maxPossibleScore": 4105,
     "minAchievableScore": 1584,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "MOROSENESSES",
+          "BESHINING",
           "CANEPHORES",
-          "INHALES",
           "LACONISMS",
-          "SHIDDERS",
-          "SEJANT",
+          "DROSTDIES",
+          "RAJAHS",
           "CELEBS"
         ],
-        "wordTotal": 2084,
-        "penalty": 16,
-        "finalScore": 2068,
-        "scoreTiers": {
-          "good": 827,
-          "great": 1344,
-          "superb": 1758
-        }
+        "wordTotal": 2398,
+        "penalty": 0,
+        "finalScore": 2398
+      },
+      {
+        "words": [
+          "MOROSENESSES",
+          "BESHINING",
+          "CANEPHORES",
+          "LACONISMS",
+          "DROSTDIES",
+          "RAJAHS",
+          "CELEBS"
+        ],
+        "wordTotal": 2398,
+        "penalty": 0,
+        "finalScore": 2398
+      },
+      {
+        "words": [
+          "MOROSENESSES",
+          "CANEPHORES",
+          "BESHINING",
+          "LACONISMS",
+          "DROSTDIES",
+          "RAJAHS",
+          "CELEBS"
+        ],
+        "wordTotal": 2398,
+        "penalty": 0,
+        "finalScore": 2398
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2068,
+      "targetScore": 2398,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 12,
-          "estimatedPoints": 0,
-          "positional": "12-letter word near the center lanes",
+          "estimatedPoints": 792,
+          "positional": "A 12-letter word passes through the emerald gem",
           "category": "A familiar everyday word — 12 letters",
           "hints": [
             {
@@ -168,13 +191,16 @@
               "text": "MOROSENESSE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses emerald gem",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 310,
+          "positional": "A 10-letter word runs from upper-right toward center",
           "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
@@ -202,39 +228,42 @@
         },
         {
           "wordIndex": 3,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 9,
+          "estimatedPoints": 540,
+          "positional": "A 9-letter word uses the IO digraph tile",
+          "category": "A compound-style word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
+              "text": "A present-participle action word ending in -ING"
             },
             {
               "level": 2,
-              "text": "I_____S"
+              "text": "B_______G"
             },
             {
               "level": 3,
-              "text": "IN___ES"
+              "text": "BE_____NG"
             },
             {
               "level": 4,
-              "text": "I__A_E_"
+              "text": "_E__I_I__"
             },
             {
               "level": 5,
-              "text": "INHALE_"
+              "text": "BESHININ_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 2 digraph tiles"
+          ]
         },
         {
           "wordIndex": 4,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 252,
+          "positional": "A 9-letter word sits in the center quadrant",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -262,39 +291,41 @@
         },
         {
           "wordIndex": 5,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
+          "length": 9,
+          "estimatedPoints": 234,
+          "positional": "A 9-letter word uses the ES digraph tile",
+          "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
+              "text": "Pattern hint: 9 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "S______S"
+              "text": "D_______S"
             },
             {
               "level": 3,
-              "text": "SH____RS"
+              "text": "DR_____ES"
             },
             {
               "level": 4,
-              "text": "__I__E__"
+              "text": "__O___IE_"
             },
             {
               "level": 5,
-              "text": "SHIDDER_"
+              "text": "DROSTDIE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 6,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
+          "estimatedPoints": 138,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
@@ -303,19 +334,19 @@
             },
             {
               "level": 2,
-              "text": "S____T"
+              "text": "R____S"
             },
             {
               "level": 3,
-              "text": "SE__NT"
+              "text": "RA__HS"
             },
             {
               "level": 4,
-              "text": "_E_A__"
+              "text": "_A_A__"
             },
             {
               "level": 5,
-              "text": "SEJAN_"
+              "text": "RAJAH_"
             }
           ],
           "features": []
@@ -323,8 +354,8 @@
         {
           "wordIndex": 7,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
+          "estimatedPoints": 132,
+          "positional": "A 6-letter word runs from bottom toward lower-left",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
@@ -348,25 +379,27 @@
               "text": "CELEB_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 8.3,
+    "averageWordLength": 8.4,
     "gemDensity": 0.016,
-    "tilesCleared": 56,
-    "tilesRemaining": 5,
-    "tileClearancePercent": 91.8,
+    "tilesCleared": 59,
+    "tilesRemaining": 2,
+    "tileClearancePercent": 96.7,
     "fullClear": false,
     "solutionPath": [
-      "MOROSENESSES",
-      "CANEPHORES",
-      "INHALES",
+      "MOROSENESS",
+      "BESHINING",
       "LACONISMS",
-      "SHIDDERS",
-      "SEJANT",
+      "CANEPHORES",
+      "DROSTDIES",
+      "RAJAHS",
       "CELEBS"
     ],
     "wordPathCoverage": 61,
@@ -380,6 +413,6 @@
       "RAJAHS",
       "CELEBS"
     ],
-    "generatedAt": "2026-07-03T12:53:56.280Z"
+    "generatedAt": "2026-06-19T01:39:02.578Z"
   }
 }

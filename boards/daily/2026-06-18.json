@@ -117,40 +117,60 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2489,
+    "maxPossibleScore": 6225,
     "minAchievableScore": 2100,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
+          "CONCEITFUL",
+          "BIOGRAPHISES",
+          "REMEMBRANCES",
+          "PELLUCIDLY",
+          "VIBRACULA",
+          "FLISKING"
+        ],
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
+      },
+      {
+        "words": [
+          "CONCEITFUL",
+          "BIOGRAPHISES",
+          "REMEMBRANCES",
+          "VIBRACULA",
+          "PELLUCIDLY",
+          "FLISKING"
+        ],
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
+      },
+      {
+        "words": [
+          "BIOGRAPHISES",
           "REMEMBRANCES",
           "CONCEITFUL",
           "PELLUCIDLY",
-          "FLISKING",
-          "VISIES",
-          "PARGO",
-          "LINAC"
+          "VIBRACULA",
+          "FLISKING"
         ],
-        "wordTotal": 2489,
-        "penalty": 21,
-        "finalScore": 2468,
-        "scoreTiers": {
-          "good": 987,
-          "great": 1604,
-          "superb": 2098
-        }
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2468,
-      "wordCount": 7,
+      "targetScore": 3385,
+      "wordCount": 6,
       "clues": [
         {
           "wordIndex": 1,
           "length": 12,
-          "estimatedPoints": 0,
-          "positional": "12-letter word near the center lanes",
+          "estimatedPoints": 504,
+          "positional": "A 12-letter word runs from top toward upper-left",
           "category": "A familiar everyday word — 12 letters",
           "hints": [
             {
@@ -174,13 +194,48 @@
               "text": "REMEMBRANCE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
+          "length": 12,
+          "estimatedPoints": 936,
+          "positional": "A 12-letter word uses the LE digraph tile",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B__________S"
+            },
+            {
+              "level": 3,
+              "text": "BI________ES"
+            },
+            {
+              "level": 4,
+              "text": "_IO__A__I_E_"
+            },
+            {
+              "level": 5,
+              "text": "BIOGRAPHISE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 3,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 1050,
+          "positional": "A 10-letter word passes through the gold gem",
           "category": "A descriptive adjective — 10 letters",
           "hints": [
             {
@@ -204,13 +259,15 @@
               "text": "CONCEITFU_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses gold gem"
+          ]
         },
         {
-          "wordIndex": 3,
+          "wordIndex": 4,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 340,
+          "positional": "A 10-letter word runs from center toward lower-left",
           "category": "A compound-style word — 10 letters",
           "hints": [
             {
@@ -237,10 +294,42 @@
           "features": []
         },
         {
-          "wordIndex": 4,
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 315,
+          "positional": "A 9-letter word uses the LY digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "V_______A"
+            },
+            {
+              "level": 3,
+              "text": "VI_____LA"
+            },
+            {
+              "level": 4,
+              "text": "_I__A_U_A"
+            },
+            {
+              "level": 5,
+              "text": "VIBRACUL_"
+            }
+          ],
+          "features": [
+            "Uses 3 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 6,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 240,
+          "positional": "A 8-letter word runs from lower-left toward bottom",
           "category": "A compound-style word — 8 letters",
           "hints": [
             {
@@ -264,116 +353,27 @@
               "text": "FLISKIN_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V____S"
-            },
-            {
-              "level": 3,
-              "text": "VI__ES"
-            },
-            {
-              "level": 4,
-              "text": "_I_IE_"
-            },
-            {
-              "level": 5,
-              "text": "VISIE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P___O"
-            },
-            {
-              "level": 3,
-              "text": "PA_GO"
-            },
-            {
-              "level": 4,
-              "text": "_A__O"
-            },
-            {
-              "level": 5,
-              "text": "PARG_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "L___C"
-            },
-            {
-              "level": 3,
-              "text": "LI_AC"
-            },
-            {
-              "level": 4,
-              "text": "_I_A_"
-            },
-            {
-              "level": 5,
-              "text": "LINA_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 8,
+    "optimalMoves": 6,
+    "averageWordLength": 9.5,
     "gemDensity": 0.016,
-    "tilesCleared": 55,
-    "tilesRemaining": 6,
-    "tileClearancePercent": 90.2,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
     "fullClear": false,
     "solutionPath": [
-      "REMEMBRANCES",
       "CONCEITFUL",
+      "BIOGRAPHISE",
       "PELLUCIDLY",
+      "VIBRACULA",
       "FLISKING",
-      "VISIES",
-      "PARGO",
-      "LINAC"
+      "EMBRACERS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -385,6 +385,6 @@
       "VIBRACULA",
       "FLISKING"
     ],
-    "generatedAt": "2026-07-03T12:53:54.743Z"
+    "generatedAt": "2026-05-20T01:24:54.999Z"
   }
 }

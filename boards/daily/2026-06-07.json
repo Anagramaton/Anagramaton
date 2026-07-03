@@ -144,327 +144,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 113790,
+    "maxPossibleScore": 355110,
     "minAchievableScore": 222768,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "TACHYPHYLAXES",
-          "FUZZIER",
-          "WIZIER",
-          "VILEST",
-          "VERTU",
-          "BLENNY",
-          "TIZZY",
-          "HEALD",
-          "PIECE"
+          "MIZZLY",
+          "FUZZLE",
+          "BLINTZ"
         ],
-        "wordTotal": 113790,
-        "penalty": 25,
-        "finalScore": 113765,
-        "scoreTiers": {
-          "good": 45506,
-          "great": 73947,
-          "superb": 96700
-        }
+        "wordTotal": 142548,
+        "penalty": 139,
+        "finalScore": 142409
+      },
+      {
+        "words": [
+          "TACHYPHYLAXES",
+          "MIZZLY",
+          "FUZZLE",
+          "BLINTZ"
+        ],
+        "wordTotal": 142548,
+        "penalty": 139,
+        "finalScore": 142409
+      },
+      {
+        "words": [
+          "TACHYPHYLAXES",
+          "MIZZLY",
+          "FUZZLE",
+          "BLINTZ"
+        ],
+        "wordTotal": 142548,
+        "penalty": 139,
+        "finalScore": 142409
       }
     ],
-    "generatedAt": "2026-07-03T12:53:54.295Z",
-    "optimalMoves": 9,
-    "averageWordLength": 6.4,
-    "gemDensity": 0.082,
-    "tilesCleared": 55,
-    "tilesRemaining": 6,
-    "tileClearancePercent": 90.2,
-    "fullClear": false,
-    "solutionPath": [
-      "TACHYPHYLAXES",
-      "FUZZIER",
-      "WIZIER",
-      "VILEST",
-      "VERTU",
-      "BLENNY",
-      "TIZZY",
-      "HEALD",
-      "PIECE"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 113765,
-      "wordCount": 9,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 13,
-          "estimatedPoints": 0,
-          "positional": "13-letter word near the center lanes",
-          "category": "A familiar everyday word — 13 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 13 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "T___________S"
-            },
-            {
-              "level": 3,
-              "text": "TA_________ES"
-            },
-            {
-              "level": 4,
-              "text": "_A_______A_E_"
-            },
-            {
-              "level": 5,
-              "text": "TACHYPHYLAXE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A role/profession-style word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "F_____R"
-            },
-            {
-              "level": 3,
-              "text": "FU___ER"
-            },
-            {
-              "level": 4,
-              "text": "_U__IE_"
-            },
-            {
-              "level": 5,
-              "text": "FUZZIE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A role/profession-style word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W____R"
-            },
-            {
-              "level": 3,
-              "text": "WI__ER"
-            },
-            {
-              "level": 4,
-              "text": "_I_IE_"
-            },
-            {
-              "level": 5,
-              "text": "WIZIE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V____T"
-            },
-            {
-              "level": 3,
-              "text": "VI__ST"
-            },
-            {
-              "level": 4,
-              "text": "_I_E__"
-            },
-            {
-              "level": 5,
-              "text": "VILES_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V___U"
-            },
-            {
-              "level": 3,
-              "text": "VE_TU"
-            },
-            {
-              "level": 4,
-              "text": "_E__U"
-            },
-            {
-              "level": 5,
-              "text": "VERT_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "B____Y"
-            },
-            {
-              "level": 3,
-              "text": "BL__NY"
-            },
-            {
-              "level": 4,
-              "text": "__E___"
-            },
-            {
-              "level": 5,
-              "text": "BLENN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "T___Y"
-            },
-            {
-              "level": 3,
-              "text": "TI_ZY"
-            },
-            {
-              "level": 4,
-              "text": "_I___"
-            },
-            {
-              "level": 5,
-              "text": "TIZZ_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "H___D"
-            },
-            {
-              "level": 3,
-              "text": "HE_LD"
-            },
-            {
-              "level": 4,
-              "text": "_EA__"
-            },
-            {
-              "level": 5,
-              "text": "HEAL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 9,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P___E"
-            },
-            {
-              "level": 3,
-              "text": "PI_CE"
-            },
-            {
-              "level": 4,
-              "text": "_IE_E"
-            },
-            {
-              "level": 5,
-              "text": "PIEC_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.882Z"
   }
 }

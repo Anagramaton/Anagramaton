@@ -123,7 +123,7 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2815,
+    "maxPossibleScore": 6140,
     "minAchievableScore": 3256,
     "strategicPathCount": 3,
     "optimalSolutions": [
@@ -131,63 +131,84 @@
         "words": [
           "MISBESEEMED",
           "DISBELIEVES",
-          "WHUMP",
-          "ANECDOTES",
-          "CREOLE",
-          "RELEARNT",
-          "THETA",
-          "URINE"
+          "OVERPRIZED",
+          "TUMULTUATED",
+          "ETERNALITIES",
+          "EOCENE"
         ],
-        "wordTotal": 2815,
-        "penalty": 19,
-        "finalScore": 2796,
-        "scoreTiers": {
-          "good": 1118,
-          "great": 1817,
-          "superb": 2377
-        }
+        "wordTotal": 3286,
+        "penalty": 0,
+        "finalScore": 3286
+      },
+      {
+        "words": [
+          "MISBESEEMED",
+          "OVERPRIZED",
+          "DISBELIEVES",
+          "TUMULTUATED",
+          "ETERNALITIES",
+          "EOCENE"
+        ],
+        "wordTotal": 3286,
+        "penalty": 0,
+        "finalScore": 3286
+      },
+      {
+        "words": [
+          "ETERNALITIES",
+          "MISBESEEMED",
+          "DISBELIEVES",
+          "TUMULTUATED",
+          "OVERPRIZED",
+          "EOCENE"
+        ],
+        "wordTotal": 3286,
+        "penalty": 0,
+        "finalScore": 3286
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2796,
-      "wordCount": 8,
+      "targetScore": 3286,
+      "wordCount": 6,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 11,
-          "estimatedPoints": 0,
-          "positional": "11-letter word near the center lanes",
-          "category": "A compound-style word — 11 letters",
+          "length": 12,
+          "estimatedPoints": 360,
+          "positional": "A 12-letter word uses the HE digraph tile",
+          "category": "A familiar everyday word — 12 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 11 letters with 5 vowels"
+              "text": "Pattern hint: 12 letters with 6 vowels"
             },
             {
               "level": 2,
-              "text": "M_________D"
+              "text": "E__________S"
             },
             {
               "level": 3,
-              "text": "MI_______ED"
+              "text": "ET________ES"
             },
             {
               "level": 4,
-              "text": "_I__E_EE_E_"
+              "text": "E_E__A_I_IE_"
             },
             {
               "level": 5,
-              "text": "MISBESEEME_"
+              "text": "ETERNALITIE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 2,
           "length": 11,
-          "estimatedPoints": 0,
-          "positional": "11-letter word near the center lanes",
+          "estimatedPoints": 418,
+          "positional": "A 11-letter word runs from top toward center",
           "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
@@ -211,207 +232,156 @@
               "text": "DISBELIEVE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 3,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
+          "length": 11,
+          "estimatedPoints": 1628,
+          "positional": "A 11-letter word routes through the purple prism",
+          "category": "A compound-style word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
+              "text": "Pattern hint: 11 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "W___P"
+              "text": "M_________D"
             },
             {
               "level": 3,
-              "text": "WH_MP"
+              "text": "MI_______ED"
             },
             {
               "level": 4,
-              "text": "__U__"
+              "text": "_I__E_EE_E_"
             },
             {
               "level": 5,
-              "text": "WHUM_"
+              "text": "MISBESEEME_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses emerald gem"
+          ]
         },
         {
           "wordIndex": 4,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A familiar everyday word — 9 letters",
+          "length": 11,
+          "estimatedPoints": 374,
+          "positional": "A 11-letter word uses the WH digraph tile",
+          "category": "A compound-style word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
+              "text": "Pattern hint: 11 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "A_______S"
+              "text": "T_________D"
             },
             {
               "level": 3,
-              "text": "AN_____ES"
+              "text": "TU_______ED"
             },
             {
               "level": 4,
-              "text": "A_E__O_E_"
+              "text": "_U_U__UA_E_"
             },
             {
               "level": 5,
-              "text": "ANECDOTE_"
+              "text": "TUMULTUATE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 3 digraph tiles"
+          ]
         },
         {
           "wordIndex": 5,
+          "length": 10,
+          "estimatedPoints": 410,
+          "positional": "A 10-letter word uses the AN digraph tile",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O________D"
+            },
+            {
+              "level": 3,
+              "text": "OV______ED"
+            },
+            {
+              "level": 4,
+              "text": "O_E___I_E_"
+            },
+            {
+              "level": 5,
+              "text": "OVERPRIZE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
+          "estimatedPoints": 96,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
+              "text": "Pattern hint: 6 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "C____E"
+              "text": "E____E"
             },
             {
               "level": 3,
-              "text": "CR__LE"
+              "text": "EO__NE"
             },
             {
               "level": 4,
-              "text": "__EO_E"
+              "text": "EO_E_E"
             },
             {
               "level": 5,
-              "text": "CREOL_"
+              "text": "EOCEN_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A word related to doing something again (8 letters)"
-            },
-            {
-              "level": 2,
-              "text": "R______T"
-            },
-            {
-              "level": 3,
-              "text": "RE____NT"
-            },
-            {
-              "level": 4,
-              "text": "_E_EA___"
-            },
-            {
-              "level": 5,
-              "text": "RELEARN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "T___A"
-            },
-            {
-              "level": 3,
-              "text": "TH_TA"
-            },
-            {
-              "level": 4,
-              "text": "__E_A"
-            },
-            {
-              "level": 5,
-              "text": "THET_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "U___E"
-            },
-            {
-              "level": 3,
-              "text": "UR_NE"
-            },
-            {
-              "level": 4,
-              "text": "U_I_E"
-            },
-            {
-              "level": 5,
-              "text": "URIN_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7.5,
+    "optimalMoves": 6,
+    "averageWordLength": 9,
     "gemDensity": 0.016,
-    "tilesCleared": 55,
-    "tilesRemaining": 6,
-    "tileClearancePercent": 90.2,
+    "tilesCleared": 54,
+    "tilesRemaining": 7,
+    "tileClearancePercent": 88.5,
     "fullClear": false,
     "solutionPath": [
       "MISBESEEMED",
       "DISBELIEVES",
-      "WHUMP",
-      "ANECDOTES",
-      "CREOLE",
-      "RELEARNT",
-      "THETA",
-      "URINE"
+      "OVERPRIZED",
+      "TUMULTUATE",
+      "LINEATE",
+      "COEDS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -423,6 +393,6 @@
       "OVERPRIZED",
       "EOCENE"
     ],
-    "generatedAt": "2026-07-03T12:53:55.113Z"
+    "generatedAt": "2026-05-27T01:26:20.596Z"
   }
 }

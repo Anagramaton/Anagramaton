@@ -149,7 +149,7 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 969377,
+    "maxPossibleScore": 2424570,
     "minAchievableScore": 1935360,
     "strategicPathCount": 3,
     "optimalSolutions": [
@@ -157,223 +157,36 @@
         "words": [
           "FOXSKINS",
           "MYCOBACTERIUM",
-          "VIBRIO",
-          "BAIZA",
-          "DAYCH",
-          "VIGAS"
+          "ZINCKY",
+          "KWACHA"
         ],
-        "wordTotal": 969377,
-        "penalty": 83,
-        "finalScore": 969294,
-        "scoreTiers": {
-          "good": 387718,
-          "great": 630041,
-          "superb": 823900
-        }
+        "wordTotal": 970164,
+        "penalty": 134,
+        "finalScore": 970030
+      },
+      {
+        "words": [
+          "FOXSKINS",
+          "ZINCKY",
+          "MYCOBACTERIUM",
+          "KWACHA"
+        ],
+        "wordTotal": 970164,
+        "penalty": 134,
+        "finalScore": 970030
+      },
+      {
+        "words": [
+          "MYCOBACTERIUM",
+          "FOXSKINS",
+          "ZINCKY",
+          "KWACHA"
+        ],
+        "wordTotal": 970164,
+        "penalty": 134,
+        "finalScore": 970030
       }
     ],
-    "generatedAt": "2026-07-03T12:53:54.051Z",
-    "optimalMoves": 6,
-    "averageWordLength": 7,
-    "gemDensity": 0.082,
-    "tilesCleared": 41,
-    "tilesRemaining": 20,
-    "tileClearancePercent": 67.2,
-    "fullClear": false,
-    "solutionPath": [
-      "FOXSKINS",
-      "MYCOBACTERIUM",
-      "VIBRIO",
-      "BAIZA",
-      "DAYCH",
-      "VIGAS"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 969294,
-      "wordCount": 6,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "F______S"
-            },
-            {
-              "level": 3,
-              "text": "FO____NS"
-            },
-            {
-              "level": 4,
-              "text": "_O___I__"
-            },
-            {
-              "level": 5,
-              "text": "FOXSKIN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 13,
-          "estimatedPoints": 0,
-          "positional": "13-letter word near the center lanes",
-          "category": "A familiar everyday word — 13 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 13 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "M___________M"
-            },
-            {
-              "level": 3,
-              "text": "MY_________UM"
-            },
-            {
-              "level": 4,
-              "text": "___O_A__E_IU_"
-            },
-            {
-              "level": 5,
-              "text": "MYCOBACTERIU_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V____O"
-            },
-            {
-              "level": 3,
-              "text": "VI__IO"
-            },
-            {
-              "level": 4,
-              "text": "_I__IO"
-            },
-            {
-              "level": 5,
-              "text": "VIBRI_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B___A"
-            },
-            {
-              "level": 3,
-              "text": "BA_ZA"
-            },
-            {
-              "level": 4,
-              "text": "_AI_A"
-            },
-            {
-              "level": 5,
-              "text": "BAIZ_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "D___H"
-            },
-            {
-              "level": 3,
-              "text": "DA_CH"
-            },
-            {
-              "level": 4,
-              "text": "_A___"
-            },
-            {
-              "level": 5,
-              "text": "DAYC_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V___S"
-            },
-            {
-              "level": 3,
-              "text": "VI_AS"
-            },
-            {
-              "level": 4,
-              "text": "_I_A_"
-            },
-            {
-              "level": 5,
-              "text": "VIGA_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.799Z"
   }
 }

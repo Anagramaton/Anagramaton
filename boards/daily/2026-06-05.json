@@ -144,295 +144,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 28119,
+    "maxPossibleScore": 88990,
     "minAchievableScore": 51200,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "CHEQUES",
-          "DWINED",
-          "DIZAIN",
-          "HERBALS",
-          "PARLAYS",
-          "CRACKY",
-          "VIOLA",
-          "WAGYU"
+          "FRAWZEYS",
+          "CARNIVALESQUE",
+          "QUACKY",
+          "SPIVVY"
         ],
-        "wordTotal": 28119,
-        "penalty": 56,
-        "finalScore": 28063,
-        "scoreTiers": {
-          "good": 11225,
-          "great": 18241,
-          "superb": 23854
-        }
+        "wordTotal": 35956,
+        "penalty": 111,
+        "finalScore": 35845
+      },
+      {
+        "words": [
+          "FRAWZEYS",
+          "CARNIVALESQUE",
+          "QUACKY",
+          "SPIVVY"
+        ],
+        "wordTotal": 35956,
+        "penalty": 111,
+        "finalScore": 35845
+      },
+      {
+        "words": [
+          "CARNIVALESQUE",
+          "FRAWZEYS",
+          "QUACKY",
+          "SPIVVY"
+        ],
+        "wordTotal": 35956,
+        "penalty": 111,
+        "finalScore": 35845
       }
     ],
-    "generatedAt": "2026-07-03T12:53:54.233Z",
-    "optimalMoves": 8,
-    "averageWordLength": 6.1,
-    "gemDensity": 0.082,
-    "tilesCleared": 46,
-    "tilesRemaining": 15,
-    "tileClearancePercent": 75.4,
-    "fullClear": false,
-    "solutionPath": [
-      "CHEQUES",
-      "DWINED",
-      "DIZAIN",
-      "HERBALS",
-      "PARLAYS",
-      "CRACKY",
-      "VIOLA",
-      "WAGYU"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 28063,
-      "wordCount": 8,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C_____S"
-            },
-            {
-              "level": 3,
-              "text": "CH___ES"
-            },
-            {
-              "level": 4,
-              "text": "__E_UE_"
-            },
-            {
-              "level": 5,
-              "text": "CHEQUE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "An action verb form — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "D____D"
-            },
-            {
-              "level": 3,
-              "text": "DW__ED"
-            },
-            {
-              "level": 4,
-              "text": "__I_E_"
-            },
-            {
-              "level": 5,
-              "text": "DWINE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "D____N"
-            },
-            {
-              "level": 3,
-              "text": "DI__IN"
-            },
-            {
-              "level": 4,
-              "text": "_I_AI_"
-            },
-            {
-              "level": 5,
-              "text": "DIZAI_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "H_____S"
-            },
-            {
-              "level": 3,
-              "text": "HE___LS"
-            },
-            {
-              "level": 4,
-              "text": "_E__A__"
-            },
-            {
-              "level": 5,
-              "text": "HERBAL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P_____S"
-            },
-            {
-              "level": 3,
-              "text": "PA___YS"
-            },
-            {
-              "level": 4,
-              "text": "_A__A__"
-            },
-            {
-              "level": 5,
-              "text": "PARLAY_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "C____Y"
-            },
-            {
-              "level": 3,
-              "text": "CR__KY"
-            },
-            {
-              "level": 4,
-              "text": "__A___"
-            },
-            {
-              "level": 5,
-              "text": "CRACK_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V___A"
-            },
-            {
-              "level": 3,
-              "text": "VI_LA"
-            },
-            {
-              "level": 4,
-              "text": "_IO_A"
-            },
-            {
-              "level": 5,
-              "text": "VIOL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W___U"
-            },
-            {
-              "level": 3,
-              "text": "WA_YU"
-            },
-            {
-              "level": 4,
-              "text": "_A__U"
-            },
-            {
-              "level": 5,
-              "text": "WAGY_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.861Z"
   }
 }

@@ -138,264 +138,58 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 28736,
+    "maxPossibleScore": 269040,
     "minAchievableScore": 104832,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
+          "UNPUZZLE",
+          "RAZZLE",
           "SHADOWBOXING",
-          "MEAZEL",
-          "BUNTAL",
-          "VIZZIES",
-          "POMPOON",
-          "TYPHUSES",
-          "ECLAIR"
+          "EMBOWS"
         ],
-        "wordTotal": 28736,
-        "penalty": 44,
-        "finalScore": 28692,
-        "scoreTiers": {
-          "good": 11477,
-          "great": 18650,
-          "superb": 24388
-        }
+        "wordTotal": 108456,
+        "penalty": 143,
+        "finalScore": 108313
+      },
+      {
+        "words": [
+          "UNPUZZLE",
+          "RAZZLE",
+          "SHADOWBOXING",
+          "EMBOWS"
+        ],
+        "wordTotal": 108456,
+        "penalty": 143,
+        "finalScore": 108313
+      },
+      {
+        "words": [
+          "SHADOWBOXING",
+          "UNPUZZLE",
+          "RAZZLE",
+          "EMBOWS"
+        ],
+        "wordTotal": 108456,
+        "penalty": 143,
+        "finalScore": 108313
       }
     ],
     "difficulty": "expert",
-    "optimalMoves": 7,
-    "averageWordLength": 7.4,
+    "optimalMoves": 8,
+    "averageWordLength": 6.1,
     "gemDensity": 0.082,
     "solutionPath": [
-      "SHADOWBOXING",
-      "MEAZEL",
-      "BUNTAL",
-      "VIZZIES",
-      "POMPOON",
-      "TYPHUSES",
-      "ECLAIR"
+      "BEMUZZLE",
+      "BUZZY",
+      "CHALET",
+      "PEROXIDS",
+      "SPINARS",
+      "VOWEL",
+      "MOPSY",
+      "BIGAE"
     ],
-    "generatedAt": "2026-07-03T12:53:54.437Z",
-    "tilesCleared": 50,
-    "tilesRemaining": 11,
-    "tileClearancePercent": 82,
-    "fullClear": false,
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 28692,
-      "wordCount": 7,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 12,
-          "estimatedPoints": 0,
-          "positional": "12-letter word near the center lanes",
-          "category": "A compound-style word — 12 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A present-participle action word ending in -ING"
-            },
-            {
-              "level": 2,
-              "text": "S__________G"
-            },
-            {
-              "level": 3,
-              "text": "SH________NG"
-            },
-            {
-              "level": 4,
-              "text": "__A_O__O_I__"
-            },
-            {
-              "level": 5,
-              "text": "SHADOWBOXIN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "M____L"
-            },
-            {
-              "level": 3,
-              "text": "ME__EL"
-            },
-            {
-              "level": 4,
-              "text": "_EA_E_"
-            },
-            {
-              "level": 5,
-              "text": "MEAZE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A descriptive adjective — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B____L"
-            },
-            {
-              "level": 3,
-              "text": "BU__AL"
-            },
-            {
-              "level": 4,
-              "text": "_U__A_"
-            },
-            {
-              "level": 5,
-              "text": "BUNTA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V_____S"
-            },
-            {
-              "level": 3,
-              "text": "VI___ES"
-            },
-            {
-              "level": 4,
-              "text": "_I__IE_"
-            },
-            {
-              "level": 5,
-              "text": "VIZZIE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P_____N"
-            },
-            {
-              "level": 3,
-              "text": "PO___ON"
-            },
-            {
-              "level": 4,
-              "text": "_O__OO_"
-            },
-            {
-              "level": 5,
-              "text": "POMPOO_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "T______S"
-            },
-            {
-              "level": 3,
-              "text": "TY____ES"
-            },
-            {
-              "level": 4,
-              "text": "____U_E_"
-            },
-            {
-              "level": 5,
-              "text": "TYPHUSE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E____R"
-            },
-            {
-              "level": 3,
-              "text": "EC__IR"
-            },
-            {
-              "level": 4,
-              "text": "E__AI_"
-            },
-            {
-              "level": 5,
-              "text": "ECLAI_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-13T00:20:05.710Z"
   }
 }

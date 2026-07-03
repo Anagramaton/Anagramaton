@@ -111,296 +111,63 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1843,
+    "maxPossibleScore": 6265,
     "minAchievableScore": 2496,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "ABORTIVELY",
-          "REGROWS",
-          "COKES",
-          "BACKFLOW",
-          "SMEATH",
-          "COWAN",
-          "DUCHY",
-          "CRANTS"
+          "CONSUMPTIVELY",
+          "FLOWCHARTINGS",
+          "BACKDOWN",
+          "WATERLOG",
+          "BACKWORD"
         ],
-        "wordTotal": 1843,
-        "penalty": 48,
-        "finalScore": 1795,
-        "scoreTiers": {
-          "good": 718,
-          "great": 1167,
-          "superb": 1526
-        }
+        "wordTotal": 3258,
+        "penalty": 47,
+        "finalScore": 3211
+      },
+      {
+        "words": [
+          "CONSUMPTIVELY",
+          "BACKDOWN",
+          "WATERLOG",
+          "FLOWCHARTINGS",
+          "BACKWORD"
+        ],
+        "wordTotal": 3258,
+        "penalty": 47,
+        "finalScore": 3211
+      },
+      {
+        "words": [
+          "CONSUMPTIVELY",
+          "FLOWCHARTINGS",
+          "BACKDOWN",
+          "WATERLOG",
+          "BACKWORD"
+        ],
+        "wordTotal": 3258,
+        "penalty": 47,
+        "finalScore": 3211
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 6.5,
+    "optimalMoves": 6,
+    "averageWordLength": 7.8,
     "gemDensity": 0.016,
-    "tilesCleared": 49,
-    "tilesRemaining": 12,
-    "tileClearancePercent": 80.3,
+    "tilesCleared": 47,
+    "tilesRemaining": 14,
+    "tileClearancePercent": 77,
     "fullClear": false,
     "solutionPath": [
-      "ABORTIVELY",
-      "REGROWS",
-      "COKES",
-      "BACKFLOW",
-      "SMEATH",
-      "COWAN",
-      "DUCHY",
-      "CRANTS"
+      "CONSUMPTIVE",
+      "COCHAIRING",
+      "DOWNFLOW",
+      "AFAWLD",
+      "KABELE",
+      "KRAUTS"
     ],
-    "generatedAt": "2026-07-03T12:53:54.534Z",
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 1795,
-      "wordCount": 8,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
-          "category": "A compound-style word — 10 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A modifier/adverb style word ending in -LY"
-            },
-            {
-              "level": 2,
-              "text": "A________Y"
-            },
-            {
-              "level": 3,
-              "text": "AB______LY"
-            },
-            {
-              "level": 4,
-              "text": "A_O__I_E__"
-            },
-            {
-              "level": 5,
-              "text": "ABORTIVEL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A word related to doing something again (7 letters)"
-            },
-            {
-              "level": 2,
-              "text": "R_____S"
-            },
-            {
-              "level": 3,
-              "text": "RE___WS"
-            },
-            {
-              "level": 4,
-              "text": "_E__O__"
-            },
-            {
-              "level": 5,
-              "text": "REGROW_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C___S"
-            },
-            {
-              "level": 3,
-              "text": "CO_ES"
-            },
-            {
-              "level": 4,
-              "text": "_O_E_"
-            },
-            {
-              "level": 5,
-              "text": "COKE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A compound-style word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B______W"
-            },
-            {
-              "level": 3,
-              "text": "BA____OW"
-            },
-            {
-              "level": 4,
-              "text": "_A____O_"
-            },
-            {
-              "level": 5,
-              "text": "BACKFLO_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S____H"
-            },
-            {
-              "level": 3,
-              "text": "SM__TH"
-            },
-            {
-              "level": 4,
-              "text": "__EA__"
-            },
-            {
-              "level": 5,
-              "text": "SMEAT_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C___N"
-            },
-            {
-              "level": 3,
-              "text": "CO_AN"
-            },
-            {
-              "level": 4,
-              "text": "_O_A_"
-            },
-            {
-              "level": 5,
-              "text": "COWA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "D___Y"
-            },
-            {
-              "level": 3,
-              "text": "DU_HY"
-            },
-            {
-              "level": 4,
-              "text": "_U___"
-            },
-            {
-              "level": 5,
-              "text": "DUCH_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "C____S"
-            },
-            {
-              "level": 3,
-              "text": "CR__TS"
-            },
-            {
-              "level": 4,
-              "text": "__A___"
-            },
-            {
-              "level": 5,
-              "text": "CRANT_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-16T01:13:02.474Z"
   }
 }

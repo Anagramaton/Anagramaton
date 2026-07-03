@@ -138,231 +138,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 21301,
+    "maxPossibleScore": 32890,
     "minAchievableScore": 20384,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "SNEAKISH",
-          "UNVIABLE",
-          "CENTAI",
-          "BIBBLE",
-          "BUMPILY",
-          "WILJA"
+          "UNCONCEIVABLY",
+          "SHOWJUMP",
+          "QUEBEC",
+          "BIBBLE"
         ],
-        "wordTotal": 21301,
-        "penalty": 88,
-        "finalScore": 21213,
-        "scoreTiers": {
-          "good": 8485,
-          "great": 13788,
-          "superb": 18031
-        }
+        "wordTotal": 13996,
+        "penalty": 133,
+        "finalScore": 13863
+      },
+      {
+        "words": [
+          "UNCONCEIVABLY",
+          "SHOWJUMP",
+          "QUEBEC",
+          "BIBBLE"
+        ],
+        "wordTotal": 13996,
+        "penalty": 133,
+        "finalScore": 13863
+      },
+      {
+        "words": [
+          "UNCONCEIVABLY",
+          "SHOWJUMP",
+          "QUEBEC",
+          "BIBBLE"
+        ],
+        "wordTotal": 13996,
+        "penalty": 133,
+        "finalScore": 13863
       }
     ],
-    "generatedAt": "2026-07-03T12:53:53.519Z",
-    "optimalMoves": 6,
-    "averageWordLength": 6.7,
-    "gemDensity": 0.082,
-    "tilesCleared": 40,
-    "tilesRemaining": 21,
-    "tileClearancePercent": 65.6,
-    "fullClear": false,
-    "solutionPath": [
-      "SNEAKISH",
-      "UNVIABLE",
-      "CENTAI",
-      "BIBBLE",
-      "BUMPILY",
-      "WILJA"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 21213,
-      "wordCount": 6,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S______H"
-            },
-            {
-              "level": 3,
-              "text": "SN____SH"
-            },
-            {
-              "level": 4,
-              "text": "__EA_I__"
-            },
-            {
-              "level": 5,
-              "text": "SNEAKIS_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A descriptive adjective — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Something described as \"not\" or reversed (8 letters)"
-            },
-            {
-              "level": 2,
-              "text": "U______E"
-            },
-            {
-              "level": 3,
-              "text": "UN____LE"
-            },
-            {
-              "level": 4,
-              "text": "U__IA__E"
-            },
-            {
-              "level": 5,
-              "text": "UNVIABL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C____I"
-            },
-            {
-              "level": 3,
-              "text": "CE__AI"
-            },
-            {
-              "level": 4,
-              "text": "_E__AI"
-            },
-            {
-              "level": 5,
-              "text": "CENTA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B____E"
-            },
-            {
-              "level": 3,
-              "text": "BI__LE"
-            },
-            {
-              "level": 4,
-              "text": "_I___E"
-            },
-            {
-              "level": 5,
-              "text": "BIBBL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A modifier/adverb style word ending in -LY"
-            },
-            {
-              "level": 2,
-              "text": "B_____Y"
-            },
-            {
-              "level": 3,
-              "text": "BU___LY"
-            },
-            {
-              "level": 4,
-              "text": "_U__I__"
-            },
-            {
-              "level": 5,
-              "text": "BUMPIL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W___A"
-            },
-            {
-              "level": 3,
-              "text": "WI_JA"
-            },
-            {
-              "level": 4,
-              "text": "_I__A"
-            },
-            {
-              "level": 5,
-              "text": "WILJ_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.570Z"
   }
 }

@@ -143,263 +143,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 152420,
+    "maxPossibleScore": 1238910,
     "minAchievableScore": 960960,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "SLUFFING",
-          "MATJES",
-          "NUZZER",
-          "VENENATES",
-          "UNOWED",
-          "GONEF",
-          "EMCEE"
+          "KATZENJAMMERS",
+          "FLUFFING",
+          "JAMJAR",
+          "JAZZES"
         ],
-        "wordTotal": 152420,
-        "penalty": 75,
-        "finalScore": 152345,
-        "scoreTiers": {
-          "good": 60938,
-          "great": 99024,
-          "superb": 129493
-        }
+        "wordTotal": 496428,
+        "penalty": 127,
+        "finalScore": 496301
+      },
+      {
+        "words": [
+          "KATZENJAMMERS",
+          "FLUFFING",
+          "JAMJAR",
+          "JAZZES"
+        ],
+        "wordTotal": 496428,
+        "penalty": 127,
+        "finalScore": 496301
+      },
+      {
+        "words": [
+          "KATZENJAMMERS",
+          "FLUFFING",
+          "JAMJAR",
+          "JAZZES"
+        ],
+        "wordTotal": 496428,
+        "penalty": 127,
+        "finalScore": 496301
       }
     ],
-    "generatedAt": "2026-07-03T12:53:54.190Z",
-    "optimalMoves": 7,
-    "averageWordLength": 6.4,
-    "gemDensity": 0.082,
-    "tilesCleared": 43,
-    "tilesRemaining": 18,
-    "tileClearancePercent": 70.5,
-    "fullClear": false,
-    "solutionPath": [
-      "SLUFFING",
-      "MATJES",
-      "NUZZER",
-      "VENENATES",
-      "UNOWED",
-      "GONEF",
-      "EMCEE"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 152345,
-      "wordCount": 7,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A compound-style word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A present-participle action word ending in -ING"
-            },
-            {
-              "level": 2,
-              "text": "S______G"
-            },
-            {
-              "level": 3,
-              "text": "SL____NG"
-            },
-            {
-              "level": 4,
-              "text": "__U__I__"
-            },
-            {
-              "level": 5,
-              "text": "SLUFFIN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "M____S"
-            },
-            {
-              "level": 3,
-              "text": "MA__ES"
-            },
-            {
-              "level": 4,
-              "text": "_A__E_"
-            },
-            {
-              "level": 5,
-              "text": "MATJE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A role/profession-style word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "N____R"
-            },
-            {
-              "level": 3,
-              "text": "NU__ER"
-            },
-            {
-              "level": 4,
-              "text": "_U__E_"
-            },
-            {
-              "level": 5,
-              "text": "NUZZE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A familiar everyday word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V_______S"
-            },
-            {
-              "level": 3,
-              "text": "VE_____ES"
-            },
-            {
-              "level": 4,
-              "text": "_E_E_A_E_"
-            },
-            {
-              "level": 5,
-              "text": "VENENATE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "An action verb form — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Something described as \"not\" or reversed (6 letters)"
-            },
-            {
-              "level": 2,
-              "text": "U____D"
-            },
-            {
-              "level": 3,
-              "text": "UN__ED"
-            },
-            {
-              "level": 4,
-              "text": "U_O_E_"
-            },
-            {
-              "level": 5,
-              "text": "UNOWE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "G___F"
-            },
-            {
-              "level": 3,
-              "text": "GO_EF"
-            },
-            {
-              "level": 4,
-              "text": "_O_E_"
-            },
-            {
-              "level": 5,
-              "text": "GONE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E___E"
-            },
-            {
-              "level": 3,
-              "text": "EM_EE"
-            },
-            {
-              "level": 4,
-              "text": "E__EE"
-            },
-            {
-              "level": 5,
-              "text": "EMCE_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.839Z"
   }
 }

@@ -117,41 +117,63 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2171,
+    "maxPossibleScore": 4498,
     "minAchievableScore": 1520,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "JACKETLESS",
-          "PANZER",
+          "MENOPAUSE",
+          "REOVIRUSES",
           "SWABBING",
-          "CREESHIER",
-          "MESSAN",
-          "STEANED",
-          "CHIVS",
-          "GURNS"
+          "ECTOZOANS",
+          "SCRITCHED",
+          "NURSES"
         ],
-        "wordTotal": 2171,
-        "penalty": 31,
-        "finalScore": 2140,
-        "scoreTiers": {
-          "good": 856,
-          "great": 1391,
-          "superb": 1819
-        }
+        "wordTotal": 2764,
+        "penalty": 0,
+        "finalScore": 2764
+      },
+      {
+        "words": [
+          "MENOPAUSE",
+          "JACKETLESS",
+          "SWABBING",
+          "ECTOZOANS",
+          "REOVIRUSES",
+          "SCRITCHED",
+          "NURSES"
+        ],
+        "wordTotal": 2764,
+        "penalty": 0,
+        "finalScore": 2764
+      },
+      {
+        "words": [
+          "JACKETLESS",
+          "REOVIRUSES",
+          "MENOPAUSE",
+          "ECTOZOANS",
+          "SCRITCHED",
+          "SWABBING",
+          "NURSES"
+        ],
+        "wordTotal": 2764,
+        "penalty": 0,
+        "finalScore": 2764
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2140,
-      "wordCount": 8,
+      "targetScore": 2764,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 760,
+          "positional": "A 10-letter word routes through the purple prism",
           "category": "A descriptive adjective — 10 letters",
           "hints": [
             {
@@ -175,43 +197,144 @@
               "text": "JACKETLES_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
         },
         {
           "wordIndex": 2,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A role/profession-style word — 6 letters",
+          "length": 10,
+          "estimatedPoints": 310,
+          "positional": "A 10-letter word runs from top toward center",
+          "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
+              "text": "A word related to doing something again (10 letters)"
             },
             {
               "level": 2,
-              "text": "P____R"
+              "text": "R________S"
             },
             {
               "level": 3,
-              "text": "PA__ER"
+              "text": "RE______ES"
             },
             {
               "level": 4,
-              "text": "_A__E_"
+              "text": "_EO_I_U_E_"
             },
             {
               "level": 5,
-              "text": "PANZE_"
+              "text": "REOVIRUSE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 288,
+          "positional": "A 9-letter word uses the EA digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E_______S"
+            },
+            {
+              "level": 3,
+              "text": "EC_____NS"
+            },
+            {
+              "level": 4,
+              "text": "E__O_OA__"
+            },
+            {
+              "level": 5,
+              "text": "ECTOZOAN_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 279,
+          "positional": "A 9-letter word uses the CH digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_______D"
+            },
+            {
+              "level": 3,
+              "text": "SC_____ED"
+            },
+            {
+              "level": 4,
+              "text": "___I___E_"
+            },
+            {
+              "level": 5,
+              "text": "SCRITCHE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 729,
+          "positional": "A 9-letter word uses the AN digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M_______E"
+            },
+            {
+              "level": 3,
+              "text": "ME_____SE"
+            },
+            {
+              "level": 4,
+              "text": "_E_O_AU_E"
+            },
+            {
+              "level": 5,
+              "text": "MENOPAUS_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 296,
+          "positional": "A 8-letter word runs from bottom toward lower-left",
           "category": "A compound-style word — 8 letters",
           "hints": [
             {
@@ -238,40 +361,10 @@
           "features": []
         },
         {
-          "wordIndex": 4,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A compound-style word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C_______R"
-            },
-            {
-              "level": 3,
-              "text": "CR_____ER"
-            },
-            {
-              "level": 4,
-              "text": "__EE__IE_"
-            },
-            {
-              "level": 5,
-              "text": "CREESHIE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
+          "wordIndex": 7,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
+          "estimatedPoints": 102,
+          "positional": "A 6-letter word uses the NG digraph tile",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
@@ -280,132 +373,45 @@
             },
             {
               "level": 2,
-              "text": "M____N"
+              "text": "N____S"
             },
             {
               "level": 3,
-              "text": "ME__AN"
+              "text": "NU__ES"
             },
             {
               "level": 4,
-              "text": "_E__A_"
+              "text": "_U__E_"
             },
             {
               "level": 5,
-              "text": "MESSA_"
+              "text": "NURSE_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "An action verb form — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S_____D"
-            },
-            {
-              "level": 3,
-              "text": "ST___ED"
-            },
-            {
-              "level": 4,
-              "text": "__EA_E_"
-            },
-            {
-              "level": 5,
-              "text": "STEANE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "C___S"
-            },
-            {
-              "level": 3,
-              "text": "CH_VS"
-            },
-            {
-              "level": 4,
-              "text": "__I__"
-            },
-            {
-              "level": 5,
-              "text": "CHIV_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "G___S"
-            },
-            {
-              "level": 3,
-              "text": "GU_NS"
-            },
-            {
-              "level": 4,
-              "text": "_U___"
-            },
-            {
-              "level": 5,
-              "text": "GURN_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 8,
-    "averageWordLength": 7,
+    "averageWordLength": 7.1,
     "gemDensity": 0.016,
-    "tilesCleared": 52,
-    "tilesRemaining": 9,
-    "tileClearancePercent": 85.2,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
     "fullClear": false,
     "solutionPath": [
-      "JACKETLESS",
-      "PANZER",
-      "SWABBING",
-      "CREESHIER",
-      "MESSAN",
-      "STEANED",
-      "CHIVS",
-      "GURNS"
+      "MENOPAUSES",
+      "CALIVERS",
+      "REHABBING",
+      "TUCKETS",
+      "SWEDES",
+      "CISCOES",
+      "RUNTS",
+      "ARSON"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -418,6 +424,6 @@
       "SWABBING",
       "NURSES"
     ],
-    "generatedAt": "2026-07-03T12:53:55.546Z"
+    "generatedAt": "2026-06-05T01:27:46.397Z"
   }
 }

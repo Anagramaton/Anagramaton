@@ -123,93 +123,119 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1800,
+    "maxPossibleScore": 3095,
     "minAchievableScore": 984,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "VERLANS",
-          "GNAWABLE",
-          "CONODONT",
-          "SARDINE",
-          "LAIKED",
-          "MEDALS",
-          "PEYSES",
-          "ZAYIN",
-          "LUCKS"
+          "SLANTINGWAYS",
+          "ALIASES",
+          "BARTENDED",
+          "UNMISSED",
+          "EPIZOON",
+          "SLAVER",
+          "SNAKED",
+          "LOOEYS"
         ],
-        "wordTotal": 1800,
-        "penalty": 22,
-        "finalScore": 1778,
-        "scoreTiers": {
-          "good": 711,
-          "great": 1156,
-          "superb": 1511
-        }
+        "wordTotal": 1962,
+        "penalty": 0,
+        "finalScore": 1962
+      },
+      {
+        "words": [
+          "ALIASES",
+          "SLANTINGWAYS",
+          "BARTENDED",
+          "EPIZOON",
+          "UNMISSED",
+          "SLAVER",
+          "SNAKED",
+          "LOOEYS"
+        ],
+        "wordTotal": 1962,
+        "penalty": 0,
+        "finalScore": 1962
+      },
+      {
+        "words": [
+          "SLANTINGWAYS",
+          "BARTENDED",
+          "UNMISSED",
+          "ALIASES",
+          "EPIZOON",
+          "SLAVER",
+          "SNAKED",
+          "LOOEYS"
+        ],
+        "wordTotal": 1962,
+        "penalty": 0,
+        "finalScore": 1962
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 1778,
-      "wordCount": 9,
+      "targetScore": 1962,
+      "wordCount": 8,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 12,
+          "estimatedPoints": 492,
+          "positional": "A 12-letter word sits in the upper-right quadrant",
+          "category": "A familiar everyday word — 12 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 12 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "V_____S"
+              "text": "S__________S"
             },
             {
               "level": 3,
-              "text": "VE___NS"
+              "text": "SL________YS"
             },
             {
               "level": 4,
-              "text": "_E__A__"
+              "text": "__A__I___A__"
             },
             {
               "level": 5,
-              "text": "VERLAN_"
+              "text": "SLANTINGWAY_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A descriptive adjective — 8 letters",
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word runs from upper-right toward center",
+          "category": "A compound-style word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
+              "text": "Pattern hint: 9 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "G______E"
+              "text": "B_______D"
             },
             {
               "level": 3,
-              "text": "GN____LE"
+              "text": "BA_____ED"
             },
             {
               "level": 4,
-              "text": "__A_A__E"
+              "text": "_A__E__E_"
             },
             {
               "level": 5,
-              "text": "GNAWABL_"
+              "text": "BARTENDE_"
             }
           ],
           "features": []
@@ -217,99 +243,105 @@
         {
           "wordIndex": 3,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
+          "estimatedPoints": 200,
+          "positional": "A 8-letter word uses the LE digraph tile",
+          "category": "A compound-style word — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
+              "text": "Something described as \"not\" or reversed (8 letters)"
             },
             {
               "level": 2,
-              "text": "C______T"
+              "text": "U______D"
             },
             {
               "level": 3,
-              "text": "CO____NT"
+              "text": "UN____ED"
             },
             {
               "level": 4,
-              "text": "_O_O_O__"
+              "text": "U__I__E_"
             },
             {
               "level": 5,
-              "text": "CONODON_"
+              "text": "UNMISSE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
         },
         {
           "wordIndex": 4,
           "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
+          "estimatedPoints": 182,
+          "positional": "A 7-letter word sits in the center quadrant",
           "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
+              "text": "Pattern hint: 7 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "S_____E"
+              "text": "E_____N"
             },
             {
               "level": 3,
-              "text": "SA___NE"
+              "text": "EP___ON"
             },
             {
               "level": 4,
-              "text": "_A__I_E"
+              "text": "E_I_OO_"
             },
             {
               "level": 5,
-              "text": "SARDIN_"
+              "text": "EPIZOO_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "An action verb form — 6 letters",
+          "length": 7,
+          "estimatedPoints": 476,
+          "positional": "A 7-letter word uses the CK digraph tile",
+          "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
+              "text": "Pattern hint: 7 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "L____D"
+              "text": "A_____S"
             },
             {
               "level": 3,
-              "text": "LA__ED"
+              "text": "AL___ES"
             },
             {
               "level": 4,
-              "text": "_AI_E_"
+              "text": "A_IA_E_"
             },
             {
               "level": 5,
-              "text": "LAIKE_"
+              "text": "ALIASE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses emerald gem",
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 6,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
+          "estimatedPoints": 126,
+          "positional": "A 6-letter word runs from lower-right toward lower-left",
+          "category": "A role/profession-style word — 6 letters",
           "hints": [
             {
               "level": 1,
@@ -317,19 +349,19 @@
             },
             {
               "level": 2,
-              "text": "M____S"
+              "text": "S____R"
             },
             {
               "level": 3,
-              "text": "ME__LS"
+              "text": "SL__ER"
             },
             {
               "level": 4,
-              "text": "_E_A__"
+              "text": "__A_E_"
             },
             {
               "level": 5,
-              "text": "MEDAL_"
+              "text": "SLAVE_"
             }
           ],
           "features": []
@@ -337,9 +369,9 @@
         {
           "wordIndex": 7,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
+          "estimatedPoints": 120,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "category": "An action verb form — 6 letters",
           "hints": [
             {
               "level": 1,
@@ -347,103 +379,76 @@
             },
             {
               "level": 2,
-              "text": "P____S"
+              "text": "S____D"
             },
             {
               "level": 3,
-              "text": "PE__ES"
+              "text": "SN__ED"
             },
             {
               "level": 4,
-              "text": "_E__E_"
+              "text": "__A_E_"
             },
             {
               "level": 5,
-              "text": "PEYSE_"
+              "text": "SNAKE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
+          "length": 6,
+          "estimatedPoints": 96,
+          "positional": "A 6-letter word uses the GH digraph tile",
+          "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
+              "text": "Pattern hint: 6 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "Z___N"
+              "text": "L____S"
             },
             {
               "level": 3,
-              "text": "ZA_IN"
+              "text": "LO__YS"
             },
             {
               "level": 4,
-              "text": "_A_I_"
+              "text": "_OOE__"
             },
             {
               "level": 5,
-              "text": "ZAYI_"
+              "text": "LOOEY_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 9,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "L___S"
-            },
-            {
-              "level": 3,
-              "text": "LU_KS"
-            },
-            {
-              "level": 4,
-              "text": "_U___"
-            },
-            {
-              "level": 5,
-              "text": "LUCK_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 9,
-    "averageWordLength": 6.4,
+    "optimalMoves": 8,
+    "averageWordLength": 7,
     "gemDensity": 0.016,
-    "tilesCleared": 54,
-    "tilesRemaining": 7,
-    "tileClearancePercent": 88.5,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
     "fullClear": false,
     "solutionPath": [
-      "VERLANS",
-      "GNAWABLE",
-      "CONODONT",
-      "SARDINE",
-      "LAIKED",
-      "MEDALS",
-      "PEYSES",
-      "ZAYIN",
-      "LUCKS"
+      "ALIPEDS",
+      "MISAWARDED",
+      "UNITIZERS",
+      "DEVALLS",
+      "GANSEYS",
+      "SNAKEY",
+      "BLENT",
+      "OOSES"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -457,6 +462,6 @@
       "SNAKED",
       "LOOEYS"
     ],
-    "generatedAt": "2026-07-03T12:53:56.901Z"
+    "generatedAt": "2026-07-02T01:23:18.285Z"
   }
 }

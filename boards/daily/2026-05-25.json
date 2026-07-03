@@ -149,263 +149,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 840821,
+    "maxPossibleScore": 2150160,
     "minAchievableScore": 1677312,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "FEBRIFACIENTS",
-          "BLEMISH",
-          "FAZENDAS",
-          "OILCUP",
-          "FLEURON",
-          "ROCOCO",
-          "EMONG"
+          "EFFLUX",
+          "ZAFFER",
+          "PUFFBALL"
         ],
-        "wordTotal": 840821,
-        "penalty": 42,
-        "finalScore": 840779,
-        "scoreTiers": {
-          "good": 336312,
-          "great": 546506,
-          "superb": 714662
-        }
+        "wordTotal": 861840,
+        "penalty": 138,
+        "finalScore": 861702
+      },
+      {
+        "words": [
+          "FEBRIFACIENTS",
+          "EFFLUX",
+          "ZAFFER",
+          "PUFFBALL"
+        ],
+        "wordTotal": 861840,
+        "penalty": 138,
+        "finalScore": 861702
+      },
+      {
+        "words": [
+          "FEBRIFACIENTS",
+          "PUFFBALL",
+          "EFFLUX",
+          "ZAFFER"
+        ],
+        "wordTotal": 861840,
+        "penalty": 138,
+        "finalScore": 861702
       }
     ],
-    "generatedAt": "2026-07-03T12:53:53.845Z",
-    "optimalMoves": 7,
-    "averageWordLength": 7.4,
-    "gemDensity": 0.082,
-    "tilesCleared": 50,
-    "tilesRemaining": 11,
-    "tileClearancePercent": 82,
-    "fullClear": false,
-    "solutionPath": [
-      "FEBRIFACIENTS",
-      "BLEMISH",
-      "FAZENDAS",
-      "OILCUP",
-      "FLEURON",
-      "ROCOCO",
-      "EMONG"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 840779,
-      "wordCount": 7,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 13,
-          "estimatedPoints": 0,
-          "positional": "13-letter word near the center lanes",
-          "category": "A familiar everyday word — 13 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 13 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "F___________S"
-            },
-            {
-              "level": 3,
-              "text": "FE_________TS"
-            },
-            {
-              "level": 4,
-              "text": "_E__I_A_IE___"
-            },
-            {
-              "level": 5,
-              "text": "FEBRIFACIENT_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B_____H"
-            },
-            {
-              "level": 3,
-              "text": "BL___SH"
-            },
-            {
-              "level": 4,
-              "text": "__E_I__"
-            },
-            {
-              "level": 5,
-              "text": "BLEMIS_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "F______S"
-            },
-            {
-              "level": 3,
-              "text": "FA____AS"
-            },
-            {
-              "level": 4,
-              "text": "_A_E__A_"
-            },
-            {
-              "level": 5,
-              "text": "FAZENDA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "O____P"
-            },
-            {
-              "level": 3,
-              "text": "OI__UP"
-            },
-            {
-              "level": 4,
-              "text": "OI__U_"
-            },
-            {
-              "level": 5,
-              "text": "OILCU_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "F_____N"
-            },
-            {
-              "level": 3,
-              "text": "FL___ON"
-            },
-            {
-              "level": 4,
-              "text": "__EU_O_"
-            },
-            {
-              "level": 5,
-              "text": "FLEURO_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "R____O"
-            },
-            {
-              "level": 3,
-              "text": "RO__CO"
-            },
-            {
-              "level": 4,
-              "text": "_O_O_O"
-            },
-            {
-              "level": 5,
-              "text": "ROCOC_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E___G"
-            },
-            {
-              "level": 3,
-              "text": "EM_NG"
-            },
-            {
-              "level": 4,
-              "text": "E_O__"
-            },
-            {
-              "level": 5,
-              "text": "EMON_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.721Z"
   }
 }

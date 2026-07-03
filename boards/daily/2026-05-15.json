@@ -143,231 +143,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 10336,
+    "maxPossibleScore": 49380,
     "minAchievableScore": 29952,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "ZIZYPHUSES",
-          "SEMINAL",
-          "WABAINS",
-          "OZALID",
-          "TABUN",
-          "LOGANS"
+          "EXPANSIVENESS",
+          "ZIZYPHUS",
+          "JAMBES",
+          "SWIZZ"
         ],
-        "wordTotal": 10336,
-        "penalty": 87,
-        "finalScore": 10249,
-        "scoreTiers": {
-          "good": 4100,
-          "great": 6662,
-          "superb": 8712
-        }
+        "wordTotal": 20092,
+        "penalty": 118,
+        "finalScore": 19974
+      },
+      {
+        "words": [
+          "EXPANSIVENESS",
+          "ZIZYPHUS",
+          "JAMBES",
+          "WINZES"
+        ],
+        "wordTotal": 20100,
+        "penalty": 131,
+        "finalScore": 19969
+      },
+      {
+        "words": [
+          "EXPANSIVENESS",
+          "ZIZYPHUS",
+          "JAMBES",
+          "WINZES"
+        ],
+        "wordTotal": 20100,
+        "penalty": 131,
+        "finalScore": 19969
       }
     ],
-    "generatedAt": "2026-07-03T12:53:53.482Z",
-    "optimalMoves": 6,
-    "averageWordLength": 6.8,
-    "gemDensity": 0.082,
-    "tilesCleared": 40,
-    "tilesRemaining": 21,
-    "tileClearancePercent": 65.6,
-    "fullClear": false,
-    "solutionPath": [
-      "ZIZYPHUSES",
-      "SEMINAL",
-      "WABAINS",
-      "OZALID",
-      "TABUN",
-      "LOGANS"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 10249,
-      "wordCount": 6,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
-          "category": "A familiar everyday word — 10 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 10 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "Z________S"
-            },
-            {
-              "level": 3,
-              "text": "ZI______ES"
-            },
-            {
-              "level": 4,
-              "text": "_I____U_E_"
-            },
-            {
-              "level": 5,
-              "text": "ZIZYPHUSE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A descriptive adjective — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S_____L"
-            },
-            {
-              "level": 3,
-              "text": "SE___AL"
-            },
-            {
-              "level": 4,
-              "text": "_E_I_A_"
-            },
-            {
-              "level": 5,
-              "text": "SEMINA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W_____S"
-            },
-            {
-              "level": 3,
-              "text": "WA___NS"
-            },
-            {
-              "level": 4,
-              "text": "_A_AI__"
-            },
-            {
-              "level": 5,
-              "text": "WABAIN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "O____D"
-            },
-            {
-              "level": 3,
-              "text": "OZ__ID"
-            },
-            {
-              "level": 4,
-              "text": "O_A_I_"
-            },
-            {
-              "level": 5,
-              "text": "OZALI_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "T___N"
-            },
-            {
-              "level": 3,
-              "text": "TA_UN"
-            },
-            {
-              "level": 4,
-              "text": "_A_U_"
-            },
-            {
-              "level": 5,
-              "text": "TABU_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "L____S"
-            },
-            {
-              "level": 3,
-              "text": "LO__NS"
-            },
-            {
-              "level": 4,
-              "text": "_O_A__"
-            },
-            {
-              "level": 5,
-              "text": "LOGAN_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.561Z"
   }
 }

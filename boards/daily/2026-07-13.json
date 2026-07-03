@@ -111,101 +111,129 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1994,
+    "maxPossibleScore": 5485,
     "minAchievableScore": 2880,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "CESTUIS",
-          "SARTORIUSES",
-          "SUPPERED",
-          "ABSTRICT",
-          "STRIGINE",
-          "PANINO",
-          "AKENE"
+          "EXPLOITS",
+          "INNOMINABLES",
+          "SUPERACUTE",
+          "CHANTORS",
+          "SPOUSAGE",
+          "TUTORISE",
+          "SKIRRED"
         ],
-        "wordTotal": 1994,
-        "penalty": 31,
-        "finalScore": 1963,
-        "scoreTiers": {
-          "good": 785,
-          "great": 1276,
-          "superb": 1669
-        }
+        "wordTotal": 2915,
+        "penalty": 0,
+        "finalScore": 2915
+      },
+      {
+        "words": [
+          "EXPLOITS",
+          "INNOMINABLES",
+          "SUPERACUTE",
+          "CHANTORS",
+          "SPOUSAGE",
+          "SKIRRED",
+          "TUTORISE"
+        ],
+        "wordTotal": 2915,
+        "penalty": 0,
+        "finalScore": 2915
+      },
+      {
+        "words": [
+          "INNOMINABLES",
+          "SUPERACUTE",
+          "EXPLOITS",
+          "CHANTORS",
+          "SPOUSAGE",
+          "TUTORISE",
+          "SKIRRED"
+        ],
+        "wordTotal": 2915,
+        "penalty": 0,
+        "finalScore": 2915
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 1963,
+      "targetScore": 2915,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 12,
+          "estimatedPoints": 444,
+          "positional": "A 12-letter word uses the IN digraph tile",
+          "category": "A familiar everyday word — 12 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
+              "text": "Pattern hint: 12 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "C_____S"
+              "text": "I__________S"
             },
             {
               "level": 3,
-              "text": "CE___IS"
+              "text": "IN________ES"
             },
             {
               "level": 4,
-              "text": "_E__UI_"
+              "text": "I__O_I_A__E_"
             },
             {
               "level": 5,
-              "text": "CESTUI_"
+              "text": "INNOMINABLE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 2,
-          "length": 11,
-          "estimatedPoints": 0,
-          "positional": "11-letter word near the center lanes",
-          "category": "A familiar everyday word — 11 letters",
+          "length": 10,
+          "estimatedPoints": 310,
+          "positional": "A 10-letter word uses the ON digraph tile",
+          "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 11 letters with 5 vowels"
+              "text": "Pattern hint: 10 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "S_________S"
+              "text": "S________E"
             },
             {
               "level": 3,
-              "text": "SA_______ES"
+              "text": "SU______TE"
             },
             {
               "level": 4,
-              "text": "_A__O_IU_E_"
+              "text": "_U_E_A_U_E"
             },
             {
               "level": 5,
-              "text": "SARTORIUSE_"
+              "text": "SUPERACUT_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 3,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A compound-style word — 8 letters",
+          "estimatedPoints": 1440,
+          "positional": "A 8-letter word uses the AN digraph tile",
+          "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
               "level": 1,
@@ -213,28 +241,32 @@
             },
             {
               "level": 2,
-              "text": "S______D"
+              "text": "E______S"
             },
             {
               "level": 3,
-              "text": "SU____ED"
+              "text": "EX____TS"
             },
             {
               "level": 4,
-              "text": "_U__E_E_"
+              "text": "E___OI__"
             },
             {
               "level": 5,
-              "text": "SUPPERE_"
+              "text": "EXPLOIT_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 4,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 200,
+          "positional": "A 8-letter word sits in the center quadrant",
           "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
@@ -243,19 +275,19 @@
             },
             {
               "level": 2,
-              "text": "A______T"
+              "text": "C______S"
             },
             {
               "level": 3,
-              "text": "AB____CT"
+              "text": "CH____RS"
             },
             {
               "level": 4,
-              "text": "A____I__"
+              "text": "__A__O__"
             },
             {
               "level": 5,
-              "text": "ABSTRIC_"
+              "text": "CHANTOR_"
             }
           ],
           "features": []
@@ -263,13 +295,13 @@
         {
           "wordIndex": 5,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word runs from center toward bottom",
           "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
+              "text": "Pattern hint: 8 letters with 4 vowels"
             },
             {
               "level": 2,
@@ -277,97 +309,100 @@
             },
             {
               "level": 3,
-              "text": "ST____NE"
+              "text": "SP____GE"
             },
             {
               "level": 4,
-              "text": "___I_I_E"
+              "text": "__OU_A_E"
             },
             {
               "level": 5,
-              "text": "STRIGIN_"
+              "text": "SPOUSAG_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
+          "length": 8,
+          "estimatedPoints": 168,
+          "positional": "A 8-letter word sits in the bottom quadrant",
+          "category": "An action verb form — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
+              "text": "Pattern hint: 8 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "P____O"
+              "text": "T______E"
             },
             {
               "level": 3,
-              "text": "PA__NO"
+              "text": "TU____SE"
             },
             {
               "level": 4,
-              "text": "_A_I_O"
+              "text": "_U_O_I_E"
             },
             {
               "level": 5,
-              "text": "PANIN_"
+              "text": "TUTORIS_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
+          "length": 7,
+          "estimatedPoints": 161,
+          "positional": "A 7-letter word runs from bottom toward lower-left",
+          "category": "An action verb form — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
+              "text": "Pattern hint: 7 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "A___E"
+              "text": "S_____D"
             },
             {
               "level": 3,
-              "text": "AK_NE"
+              "text": "SK___ED"
             },
             {
               "level": 4,
-              "text": "A_E_E"
+              "text": "__I__E_"
             },
             {
               "level": 5,
-              "text": "AKEN_"
+              "text": "SKIRRE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 7.6,
+    "optimalMoves": 8,
+    "averageWordLength": 7.1,
     "gemDensity": 0.016,
-    "tilesCleared": 51,
-    "tilesRemaining": 10,
-    "tileClearancePercent": 83.6,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
     "fullClear": false,
     "solutionPath": [
-      "CESTUIS",
+      "EXPLOITS",
       "SARTORIUSES",
-      "SUPPERED",
-      "ABSTRICT",
-      "STRIGINE",
-      "PANINO",
-      "AKENE"
+      "REPOUSSES",
+      "MINETTES",
+      "KANBAN",
+      "CURCH",
+      "PUGIL",
+      "REDON"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -380,6 +415,6 @@
       "TUTORISE",
       "SKIRRED"
     ],
-    "generatedAt": "2026-07-03T12:53:55.984Z"
+    "generatedAt": "2026-06-14T01:34:13.972Z"
   }
 }

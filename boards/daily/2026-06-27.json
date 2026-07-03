@@ -117,40 +117,127 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2205,
+    "maxPossibleScore": 4523,
     "minAchievableScore": 1628,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "COCKTAILING",
-          "MEWLED",
-          "VERLIGTES",
-          "WINNABLE",
-          "MATHESIS",
-          "WHORL",
-          "BERTHA"
+          "BEAUMONTAGUES",
+          "HOLLOWWARES",
+          "THREW",
+          "REVERIST",
+          "GILLIED",
+          "LUMBER"
         ],
-        "wordTotal": 2205,
-        "penalty": 34,
-        "finalScore": 2171,
-        "scoreTiers": {
-          "good": 868,
-          "great": 1411,
-          "superb": 1845
-        }
+        "wordTotal": 2610,
+        "penalty": 0,
+        "finalScore": 2610
+      },
+      {
+        "words": [
+          "COCKTAILING",
+          "THREW",
+          "HOLLOWWARES",
+          "BEAUMONTAGUES",
+          "REVERIST",
+          "LUMBER",
+          "GILLIED"
+        ],
+        "wordTotal": 2610,
+        "penalty": 0,
+        "finalScore": 2610
+      },
+      {
+        "words": [
+          "BEAUMONTAGUES",
+          "COCKTAILING",
+          "HOLLOWWARES",
+          "REVERIST",
+          "GILLIED",
+          "LUMBER",
+          "THREW"
+        ],
+        "wordTotal": 2610,
+        "penalty": 0,
+        "finalScore": 2610
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2171,
+      "targetScore": 2610,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 533,
+          "positional": "A 13-letter word sits in the upper-right quadrant",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 7 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___________S"
+            },
+            {
+              "level": 3,
+              "text": "BE_________ES"
+            },
+            {
+              "level": 4,
+              "text": "_EAU_O__A_UE_"
+            },
+            {
+              "level": 5,
+              "text": "BEAUMONTAGUE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
           "length": 11,
-          "estimatedPoints": 0,
-          "positional": "11-letter word near the center lanes",
+          "estimatedPoints": 462,
+          "positional": "A 11-letter word uses the IN digraph tile",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H_________S"
+            },
+            {
+              "level": 3,
+              "text": "HO_______ES"
+            },
+            {
+              "level": 4,
+              "text": "_O__O__A_E_"
+            },
+            {
+              "level": 5,
+              "text": "HOLLOWWARE_"
+            }
+          ],
+          "features": [
+            "Uses 3 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 11,
+          "estimatedPoints": 814,
+          "positional": "A 11-letter word routes through the purple prism",
           "category": "A compound-style word — 11 letters",
           "hints": [
             {
@@ -174,14 +261,78 @@
               "text": "COCKTAILIN_"
             }
           ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 208,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A role/profession-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A word related to doing something again (8 letters)"
+            },
+            {
+              "level": 2,
+              "text": "R______T"
+            },
+            {
+              "level": 3,
+              "text": "RE____ST"
+            },
+            {
+              "level": 4,
+              "text": "_E_E_I__"
+            },
+            {
+              "level": 5,
+              "text": "REVERIS_"
+            }
+          ],
           "features": []
         },
         {
-          "wordIndex": 2,
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 140,
+          "positional": "A 7-letter word runs from lower-right toward lower-left",
+          "category": "An action verb form — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G_____D"
+            },
+            {
+              "level": 3,
+              "text": "GI___ED"
+            },
+            {
+              "level": 4,
+              "text": "_I__IE_"
+            },
+            {
+              "level": 5,
+              "text": "GILLIE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "An action verb form — 6 letters",
+          "estimatedPoints": 138,
+          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "category": "A role/profession-style word — 6 letters",
           "hints": [
             {
               "level": 1,
@@ -189,118 +340,28 @@
             },
             {
               "level": 2,
-              "text": "M____D"
+              "text": "L____R"
             },
             {
               "level": 3,
-              "text": "ME__ED"
+              "text": "LU__ER"
             },
             {
               "level": 4,
-              "text": "_E__E_"
+              "text": "_U__E_"
             },
             {
               "level": 5,
-              "text": "MEWLE_"
+              "text": "LUMBE_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 3,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A familiar everyday word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 9 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V_______S"
-            },
-            {
-              "level": 3,
-              "text": "VE_____ES"
-            },
-            {
-              "level": 4,
-              "text": "_E__I__E_"
-            },
-            {
-              "level": 5,
-              "text": "VERLIGTE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A descriptive adjective — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W______E"
-            },
-            {
-              "level": 3,
-              "text": "WI____LE"
-            },
-            {
-              "level": 4,
-              "text": "_I__A__E"
-            },
-            {
-              "level": 5,
-              "text": "WINNABL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "M______S"
-            },
-            {
-              "level": 3,
-              "text": "MA____IS"
-            },
-            {
-              "level": 4,
-              "text": "_A__E_I_"
-            },
-            {
-              "level": 5,
-              "text": "MATHESI_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
+          "wordIndex": 7,
           "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
+          "estimatedPoints": 315,
+          "positional": "A 5-letter word uses the NT digraph tile",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -309,71 +370,44 @@
             },
             {
               "level": 2,
-              "text": "W___L"
+              "text": "T___W"
             },
             {
               "level": 3,
-              "text": "WH_RL"
+              "text": "TH_EW"
             },
             {
               "level": 4,
-              "text": "__O__"
+              "text": "___E_"
             },
             {
               "level": 5,
-              "text": "WHOR_"
+              "text": "THRE_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B____A"
-            },
-            {
-              "level": 3,
-              "text": "BE__HA"
-            },
-            {
-              "level": 4,
-              "text": "_E___A"
-            },
-            {
-              "level": 5,
-              "text": "BERTH_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 7.6,
+    "averageWordLength": 7.9,
     "gemDensity": 0.016,
-    "tilesCleared": 51,
-    "tilesRemaining": 10,
-    "tileClearancePercent": 83.6,
+    "tilesCleared": 55,
+    "tilesRemaining": 6,
+    "tileClearancePercent": 90.2,
     "fullClear": false,
     "solutionPath": [
       "COCKTAILING",
+      "HOLLOWWARES",
       "MEWLED",
       "VERLIGTES",
-      "WINNABLE",
-      "MATHESIS",
-      "WHORL",
-      "BERTHA"
+      "REBOANT",
+      "THAGIS",
+      "RULER"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -386,6 +420,6 @@
       "LUMBER",
       "THREW"
     ],
-    "generatedAt": "2026-07-03T12:53:55.214Z"
+    "generatedAt": "2026-05-29T01:25:58.764Z"
   }
 }

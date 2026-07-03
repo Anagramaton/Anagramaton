@@ -150,231 +150,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 55463,
+    "maxPossibleScore": 369160,
     "minAchievableScore": 291200,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "RUSMA",
-          "QUAINT",
-          "BACULIFORM",
-          "EPIZOANS",
-          "AURAL",
-          "GUANACO"
+          "UMBRACULIFORM",
+          "JAMBUS",
+          "VIZSLA",
+          "QUATCH"
         ],
-        "wordTotal": 55463,
-        "penalty": 86,
-        "finalScore": 55377,
-        "scoreTiers": {
-          "good": 22151,
-          "great": 35995,
-          "superb": 47070
-        }
+        "wordTotal": 148150,
+        "penalty": 144,
+        "finalScore": 148006
+      },
+      {
+        "words": [
+          "UMBRACULIFORM",
+          "JAMBUS",
+          "VIZSLA",
+          "QUATCH"
+        ],
+        "wordTotal": 148150,
+        "penalty": 144,
+        "finalScore": 148006
+      },
+      {
+        "words": [
+          "UMBRACULIFORM",
+          "POZZOLAN",
+          "JAMBUS",
+          "VIZSLA"
+        ],
+        "wordTotal": 147960,
+        "penalty": 131,
+        "finalScore": 147829
       }
     ],
-    "generatedAt": "2026-07-03T12:53:53.665Z",
-    "optimalMoves": 6,
-    "averageWordLength": 6.8,
-    "gemDensity": 0.082,
-    "tilesCleared": 40,
-    "tilesRemaining": 21,
-    "tileClearancePercent": 65.6,
-    "fullClear": false,
-    "solutionPath": [
-      "RUSMA",
-      "QUAINT",
-      "BACULIFORM",
-      "EPIZOANS",
-      "AURAL",
-      "GUANACO"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 55377,
-      "wordCount": 6,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "R___A"
-            },
-            {
-              "level": 3,
-              "text": "RU_MA"
-            },
-            {
-              "level": 4,
-              "text": "_U__A"
-            },
-            {
-              "level": 5,
-              "text": "RUSM_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "Q____T"
-            },
-            {
-              "level": 3,
-              "text": "QU__NT"
-            },
-            {
-              "level": 4,
-              "text": "_UAI__"
-            },
-            {
-              "level": 5,
-              "text": "QUAIN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
-          "category": "A familiar everyday word — 10 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 10 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B________M"
-            },
-            {
-              "level": 3,
-              "text": "BA______RM"
-            },
-            {
-              "level": 4,
-              "text": "_A_U_I_O__"
-            },
-            {
-              "level": 5,
-              "text": "BACULIFOR_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E______S"
-            },
-            {
-              "level": 3,
-              "text": "EP____NS"
-            },
-            {
-              "level": 4,
-              "text": "E_I_OA__"
-            },
-            {
-              "level": 5,
-              "text": "EPIZOAN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A descriptive adjective — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "A___L"
-            },
-            {
-              "level": 3,
-              "text": "AU_AL"
-            },
-            {
-              "level": 4,
-              "text": "AU_A_"
-            },
-            {
-              "level": 5,
-              "text": "AURA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "G_____O"
-            },
-            {
-              "level": 3,
-              "text": "GU___CO"
-            },
-            {
-              "level": 4,
-              "text": "_UA_A_O"
-            },
-            {
-              "level": 5,
-              "text": "GUANAC_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.662Z"
   }
 }

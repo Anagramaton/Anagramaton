@@ -138,263 +138,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 919801,
+    "maxPossibleScore": 2304480,
     "minAchievableScore": 1834560,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "DISEMVOWELLED",
-          "CERNED",
-          "BOWWOW",
-          "OVIBOS",
-          "WADMEL",
-          "PROKE",
-          "ENVOI"
+          "BIVALVES",
+          "WIDOWMEN",
+          "BOWMEN"
         ],
-        "wordTotal": 919801,
-        "penalty": 54,
-        "finalScore": 919747,
-        "scoreTiers": {
-          "good": 367899,
-          "great": 597836,
-          "superb": 781785
-        }
+        "wordTotal": 922464,
+        "penalty": 121,
+        "finalScore": 922343
+      },
+      {
+        "words": [
+          "DISEMVOWELLED",
+          "BIVALVES",
+          "WIDOWMEN",
+          "BOWMEN"
+        ],
+        "wordTotal": 922464,
+        "penalty": 121,
+        "finalScore": 922343
+      },
+      {
+        "words": [
+          "DISEMVOWELLED",
+          "BIVALVES",
+          "WIDOWMEN",
+          "BOWMEN"
+        ],
+        "wordTotal": 922464,
+        "penalty": 121,
+        "finalScore": 922343
       }
     ],
-    "generatedAt": "2026-07-03T12:53:54.401Z",
-    "optimalMoves": 7,
-    "averageWordLength": 6.7,
-    "gemDensity": 0.082,
-    "tilesCleared": 47,
-    "tilesRemaining": 14,
-    "tileClearancePercent": 77,
-    "fullClear": false,
-    "solutionPath": [
-      "DISEMVOWELLED",
-      "CERNED",
-      "BOWWOW",
-      "OVIBOS",
-      "WADMEL",
-      "PROKE",
-      "ENVOI"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 919747,
-      "wordCount": 7,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 13,
-          "estimatedPoints": 0,
-          "positional": "13-letter word near the center lanes",
-          "category": "A compound-style word — 13 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 13 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "D___________D"
-            },
-            {
-              "level": 3,
-              "text": "DI_________ED"
-            },
-            {
-              "level": 4,
-              "text": "_I_E__O_E__E_"
-            },
-            {
-              "level": 5,
-              "text": "DISEMVOWELLE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "An action verb form — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C____D"
-            },
-            {
-              "level": 3,
-              "text": "CE__ED"
-            },
-            {
-              "level": 4,
-              "text": "_E__E_"
-            },
-            {
-              "level": 5,
-              "text": "CERNE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B____W"
-            },
-            {
-              "level": 3,
-              "text": "BO__OW"
-            },
-            {
-              "level": 4,
-              "text": "_O__O_"
-            },
-            {
-              "level": 5,
-              "text": "BOWWO_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "O____S"
-            },
-            {
-              "level": 3,
-              "text": "OV__OS"
-            },
-            {
-              "level": 4,
-              "text": "O_I_O_"
-            },
-            {
-              "level": 5,
-              "text": "OVIBO_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W____L"
-            },
-            {
-              "level": 3,
-              "text": "WA__EL"
-            },
-            {
-              "level": 4,
-              "text": "_A__E_"
-            },
-            {
-              "level": 5,
-              "text": "WADME_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P___E"
-            },
-            {
-              "level": 3,
-              "text": "PR_KE"
-            },
-            {
-              "level": 4,
-              "text": "__O_E"
-            },
-            {
-              "level": 5,
-              "text": "PROK_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E___I"
-            },
-            {
-              "level": 3,
-              "text": "EN_OI"
-            },
-            {
-              "level": 4,
-              "text": "E__OI"
-            },
-            {
-              "level": 5,
-              "text": "ENVO_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.924Z"
   }
 }

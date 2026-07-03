@@ -138,327 +138,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 7765,
+    "maxPossibleScore": 65170,
     "minAchievableScore": 37888,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "MODII",
-          "KBARS",
-          "UNSNAP",
-          "VASTS",
-          "SOZZLE",
-          "BUBALE",
-          "WETLY",
-          "UNLAW",
-          "CLEAT"
+          "BROWBAND",
+          "SOMNILOQUIZES",
+          "GUZZLING",
+          "FUZZLE"
         ],
-        "wordTotal": 7765,
-        "penalty": 60,
-        "finalScore": 7705,
-        "scoreTiers": {
-          "good": 3082,
-          "great": 5008,
-          "superb": 6549
-        }
+        "wordTotal": 26278,
+        "penalty": 135,
+        "finalScore": 26143
+      },
+      {
+        "words": [
+          "BROWBAND",
+          "SOMNILOQUIZES",
+          "GUZZLING",
+          "FUZZLE"
+        ],
+        "wordTotal": 26278,
+        "penalty": 135,
+        "finalScore": 26143
+      },
+      {
+        "words": [
+          "SOMNILOQUIZES",
+          "BROWBAND",
+          "GUZZLING",
+          "FUZZLE"
+        ],
+        "wordTotal": 26278,
+        "penalty": 135,
+        "finalScore": 26143
       }
     ],
-    "generatedAt": "2026-07-03T12:53:53.744Z",
-    "optimalMoves": 9,
-    "averageWordLength": 5.3,
-    "gemDensity": 0.082,
-    "tilesCleared": 47,
-    "tilesRemaining": 14,
-    "tileClearancePercent": 77,
-    "fullClear": false,
-    "solutionPath": [
-      "MODII",
-      "KBARS",
-      "UNSNAP",
-      "VASTS",
-      "SOZZLE",
-      "BUBALE",
-      "WETLY",
-      "UNLAW",
-      "CLEAT"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 7705,
-      "wordCount": 9,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "M___I"
-            },
-            {
-              "level": 3,
-              "text": "MO_II"
-            },
-            {
-              "level": 4,
-              "text": "_O_II"
-            },
-            {
-              "level": 5,
-              "text": "MODI_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "K___S"
-            },
-            {
-              "level": 3,
-              "text": "KB_RS"
-            },
-            {
-              "level": 4,
-              "text": "__A__"
-            },
-            {
-              "level": 5,
-              "text": "KBAR_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Something described as \"not\" or reversed (6 letters)"
-            },
-            {
-              "level": 2,
-              "text": "U____P"
-            },
-            {
-              "level": 3,
-              "text": "UN__AP"
-            },
-            {
-              "level": 4,
-              "text": "U___A_"
-            },
-            {
-              "level": 5,
-              "text": "UNSNA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "V___S"
-            },
-            {
-              "level": 3,
-              "text": "VA_TS"
-            },
-            {
-              "level": 4,
-              "text": "_A___"
-            },
-            {
-              "level": 5,
-              "text": "VAST_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S____E"
-            },
-            {
-              "level": 3,
-              "text": "SO__LE"
-            },
-            {
-              "level": 4,
-              "text": "_O___E"
-            },
-            {
-              "level": 5,
-              "text": "SOZZL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B____E"
-            },
-            {
-              "level": 3,
-              "text": "BU__LE"
-            },
-            {
-              "level": 4,
-              "text": "_U_A_E"
-            },
-            {
-              "level": 5,
-              "text": "BUBAL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A modifier/adverb style word ending in -LY"
-            },
-            {
-              "level": 2,
-              "text": "W___Y"
-            },
-            {
-              "level": 3,
-              "text": "WE_LY"
-            },
-            {
-              "level": 4,
-              "text": "_E___"
-            },
-            {
-              "level": 5,
-              "text": "WETL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Something described as \"not\" or reversed (5 letters)"
-            },
-            {
-              "level": 2,
-              "text": "U___W"
-            },
-            {
-              "level": 3,
-              "text": "UN_AW"
-            },
-            {
-              "level": 4,
-              "text": "U__A_"
-            },
-            {
-              "level": 5,
-              "text": "UNLA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 9,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C___T"
-            },
-            {
-              "level": 3,
-              "text": "CL_AT"
-            },
-            {
-              "level": 4,
-              "text": "__EA_"
-            },
-            {
-              "level": 5,
-              "text": "CLEA_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.682Z"
   }
 }

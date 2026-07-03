@@ -117,42 +117,69 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1915,
+    "maxPossibleScore": 2918,
     "minAchievableScore": 1368,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "WHEREWITH",
-          "BONIST",
-          "OFFICIARY",
-          "THIGS",
-          "EPODIC",
-          "CHELA",
-          "PANED",
-          "VODOU",
-          "QUOTH"
+          "GRANULOMA",
+          "INPUT",
+          "CUTOFFS",
+          "INVOICE",
+          "HELCOID",
+          "DUODENA",
+          "BRAID",
+          "PYOTS"
         ],
-        "wordTotal": 1915,
-        "penalty": 31,
-        "finalScore": 1884,
-        "scoreTiers": {
-          "good": 754,
-          "great": 1225,
-          "superb": 1601
-        }
+        "wordTotal": 2014,
+        "penalty": 0,
+        "finalScore": 2014
+      },
+      {
+        "words": [
+          "WHEREWITH",
+          "INPUT",
+          "CUTOFFS",
+          "GRANULOMA",
+          "INVOICE",
+          "HELCOID",
+          "DUODENA",
+          "BRAID",
+          "PYOTS"
+        ],
+        "wordTotal": 2014,
+        "penalty": 0,
+        "finalScore": 2014
+      },
+      {
+        "words": [
+          "WHEREWITH",
+          "GRANULOMA",
+          "CUTOFFS",
+          "INVOICE",
+          "HELCOID",
+          "DUODENA",
+          "INPUT",
+          "BRAID",
+          "PYOTS"
+        ],
+        "wordTotal": 2014,
+        "penalty": 0,
+        "finalScore": 2014
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 1884,
+      "targetScore": 2014,
       "wordCount": 9,
       "clues": [
         {
           "wordIndex": 1,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 684,
+          "positional": "A 9-letter word routes through the purple prism",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -176,44 +203,17 @@
               "text": "WHEREWIT_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A role/profession-style word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B____T"
-            },
-            {
-              "level": 3,
-              "text": "BO__ST"
-            },
-            {
-              "level": 4,
-              "text": "_O_I__"
-            },
-            {
-              "level": 5,
-              "text": "BONIS_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A descriptive adjective — 9 letters",
+          "estimatedPoints": 243,
+          "positional": "A 9-letter word uses the TH digraph tile",
+          "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
               "level": 1,
@@ -221,28 +221,154 @@
             },
             {
               "level": 2,
-              "text": "O_______Y"
+              "text": "G_______A"
             },
             {
               "level": 3,
-              "text": "OF_____RY"
+              "text": "GR_____MA"
             },
             {
               "level": 4,
-              "text": "O__I_IA__"
+              "text": "__A_U_O_A"
             },
             {
               "level": 5,
-              "text": "OFFICIAR_"
+              "text": "GRANULOM_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 3,
+          "length": 7,
+          "estimatedPoints": 210,
+          "positional": "A 7-letter word uses the CH digraph tile",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_____S"
+            },
+            {
+              "level": 3,
+              "text": "CU___FS"
+            },
+            {
+              "level": 4,
+              "text": "_U_O___"
+            },
+            {
+              "level": 5,
+              "text": "CUTOFF_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 168,
+          "positional": "A 7-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I_____E"
+            },
+            {
+              "level": 3,
+              "text": "IN___CE"
+            },
+            {
+              "level": 4,
+              "text": "I__OI_E"
+            },
+            {
+              "level": 5,
+              "text": "INVOIC_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 4,
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 154,
+          "positional": "A 7-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H_____D"
+            },
+            {
+              "level": 3,
+              "text": "HE___ID"
+            },
+            {
+              "level": 4,
+              "text": "_E__OI_"
+            },
+            {
+              "level": 5,
+              "text": "HELCOI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 140,
+          "positional": "A 7-letter word runs from center toward lower-left",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D_____A"
+            },
+            {
+              "level": 3,
+              "text": "DU___NA"
+            },
+            {
+              "level": 4,
+              "text": "_UO_E_A"
+            },
+            {
+              "level": 5,
+              "text": "DUODEN_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
           "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
+          "estimatedPoints": 85,
+          "positional": "A 5-letter word runs from bottom toward lower-left",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -251,109 +377,19 @@
             },
             {
               "level": 2,
-              "text": "T___S"
+              "text": "P___S"
             },
             {
               "level": 3,
-              "text": "TH_GS"
+              "text": "PY_TS"
             },
             {
               "level": 4,
-              "text": "__I__"
+              "text": "__O__"
             },
             {
               "level": 5,
-              "text": "THIG_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A descriptive adjective — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E____C"
-            },
-            {
-              "level": 3,
-              "text": "EP__IC"
-            },
-            {
-              "level": 4,
-              "text": "E_O_I_"
-            },
-            {
-              "level": 5,
-              "text": "EPODI_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C___A"
-            },
-            {
-              "level": 3,
-              "text": "CH_LA"
-            },
-            {
-              "level": 4,
-              "text": "__E_A"
-            },
-            {
-              "level": 5,
-              "text": "CHEL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "An action verb form — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P___D"
-            },
-            {
-              "level": 3,
-              "text": "PA_ED"
-            },
-            {
-              "level": 4,
-              "text": "_A_E_"
-            },
-            {
-              "level": 5,
-              "text": "PANE_"
+              "text": "PYOT_"
             }
           ],
           "features": []
@@ -361,38 +397,8 @@
         {
           "wordIndex": 8,
           "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V___U"
-            },
-            {
-              "level": 3,
-              "text": "VO_OU"
-            },
-            {
-              "level": 4,
-              "text": "_O_OU"
-            },
-            {
-              "level": 5,
-              "text": "VODO_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 9,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
+          "estimatedPoints": 90,
+          "positional": "A 5-letter word sits in the bottom quadrant",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -401,43 +407,75 @@
             },
             {
               "level": 2,
-              "text": "Q___H"
+              "text": "B___D"
             },
             {
               "level": 3,
-              "text": "QU_TH"
+              "text": "BR_ID"
             },
             {
               "level": 4,
-              "text": "_UO__"
+              "text": "__AI_"
             },
             {
               "level": 5,
-              "text": "QUOT_"
+              "text": "BRAI_"
             }
           ],
           "features": []
+        },
+        {
+          "wordIndex": 9,
+          "length": 5,
+          "estimatedPoints": 240,
+          "positional": "A 5-letter word passes through the gold gem",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I___T"
+            },
+            {
+              "level": 3,
+              "text": "IN_UT"
+            },
+            {
+              "level": 4,
+              "text": "I__U_"
+            },
+            {
+              "level": 5,
+              "text": "INPU_"
+            }
+          ],
+          "features": [
+            "Uses gold gem"
+          ]
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 9,
-    "averageWordLength": 6.1,
+    "averageWordLength": 6.4,
     "gemDensity": 0.016,
-    "tilesCleared": 52,
-    "tilesRemaining": 9,
-    "tileClearancePercent": 85.2,
+    "tilesCleared": 58,
+    "tilesRemaining": 3,
+    "tileClearancePercent": 95.1,
     "fullClear": false,
     "solutionPath": [
       "WHEREWITH",
       "BONIST",
       "OFFICIARY",
-      "THIGS",
-      "EPODIC",
-      "CHELA",
-      "PANED",
-      "VODOU",
-      "QUOTH"
+      "DICHTED",
+      "COUPON",
+      "GRINDS",
+      "PULMO",
+      "ANODE",
+      "VAUTE"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -452,6 +490,6 @@
       "BRAID",
       "INPUT"
     ],
-    "generatedAt": "2026-07-03T12:53:55.883Z"
+    "generatedAt": "2026-06-12T01:33:35.282Z"
   }
 }

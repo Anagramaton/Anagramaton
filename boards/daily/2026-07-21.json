@@ -123,130 +123,221 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2493,
+    "maxPossibleScore": 6075,
     "minAchievableScore": 2772,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "CLAPPERCLAWED",
-          "PROSAISTS",
-          "COBALTS",
-          "GOLFING",
-          "BILLETS",
-          "DACHA",
-          "INWARD"
+          "BULLWADDIES",
+          "INOCULATOR",
+          "CLAPPERCLAW",
+          "BAFFING",
+          "PARAGONS",
+          "LOESSIAL",
+          "TAINTS"
         ],
-        "wordTotal": 2493,
-        "penalty": 30,
-        "finalScore": 2463,
-        "scoreTiers": {
-          "good": 985,
-          "great": 1601,
-          "superb": 2094
-        }
+        "wordTotal": 3102,
+        "penalty": 0,
+        "finalScore": 3102
+      },
+      {
+        "words": [
+          "BULLWADDIES",
+          "INOCULATOR",
+          "CLAPPERCLAW",
+          "BAFFING",
+          "PARAGONS",
+          "LOESSIAL",
+          "TAINTS"
+        ],
+        "wordTotal": 3102,
+        "penalty": 0,
+        "finalScore": 3102
+      },
+      {
+        "words": [
+          "BULLWADDIES",
+          "CLAPPERCLAW",
+          "INOCULATOR",
+          "PARAGONS",
+          "LOESSIAL",
+          "BAFFING",
+          "TAINTS"
+        ],
+        "wordTotal": 3102,
+        "penalty": 0,
+        "finalScore": 3102
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2463,
+      "targetScore": 3102,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 13,
-          "estimatedPoints": 0,
-          "positional": "13-letter word near the center lanes",
-          "category": "A compound-style word — 13 letters",
+          "length": 11,
+          "estimatedPoints": 484,
+          "positional": "A 11-letter word sits in the upper-right quadrant",
+          "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 13 letters with 4 vowels"
+              "text": "Pattern hint: 11 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "C___________D"
+              "text": "C_________W"
             },
             {
               "level": 3,
-              "text": "CL_________ED"
+              "text": "CL_______AW"
             },
             {
               "level": 4,
-              "text": "__A__E___A_E_"
+              "text": "__A__E___A_"
             },
             {
               "level": 5,
-              "text": "CLAPPERCLAWE_"
+              "text": "CLAPPERCLA_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A familiar everyday word — 9 letters",
+          "length": 11,
+          "estimatedPoints": 1386,
+          "positional": "A 11-letter word uses the ED digraph tile",
+          "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 3 vowels"
+              "text": "Pattern hint: 11 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "P_______S"
+              "text": "B_________S"
             },
             {
               "level": 3,
-              "text": "PR_____TS"
+              "text": "BU_______ES"
             },
             {
               "level": 4,
-              "text": "__O_AI___"
+              "text": "_U___A__IE_"
             },
             {
               "level": 5,
-              "text": "PROSAIST_"
+              "text": "BULLWADDIE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 3,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 10,
+          "estimatedPoints": 560,
+          "positional": "A 10-letter word uses the ST digraph tile",
+          "category": "A role/profession-style word — 10 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 10 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "C_____S"
+              "text": "I________R"
             },
             {
               "level": 3,
-              "text": "CO___TS"
+              "text": "IN______OR"
             },
             {
               "level": 4,
-              "text": "_O_A___"
+              "text": "I_O_U_A_O_"
             },
             {
               "level": 5,
-              "text": "COBALT_"
+              "text": "INOCULATO_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P______S"
+            },
+            {
+              "level": 3,
+              "text": "PA____NS"
+            },
+            {
+              "level": 4,
+              "text": "_A_A_O__"
+            },
+            {
+              "level": 5,
+              "text": "PARAGON_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 4,
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 160,
+          "positional": "A 8-letter word runs from center toward lower-left",
+          "category": "A descriptive adjective — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L______L"
+            },
+            {
+              "level": 3,
+              "text": "LO____AL"
+            },
+            {
+              "level": 4,
+              "text": "_OE__IA_"
+            },
+            {
+              "level": 5,
+              "text": "LOESSIA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
           "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
+          "estimatedPoints": 224,
+          "positional": "A 7-letter word uses the CH digraph tile",
           "category": "An action verb form — 7 letters",
           "hints": [
             {
@@ -255,88 +346,30 @@
             },
             {
               "level": 2,
-              "text": "G_____G"
+              "text": "B_____G"
             },
             {
               "level": 3,
-              "text": "GO___NG"
+              "text": "BA___NG"
             },
             {
               "level": 4,
-              "text": "_O__I__"
+              "text": "_A__I__"
             },
             {
               "level": 5,
-              "text": "GOLFIN_"
+              "text": "BAFFIN_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B_____S"
-            },
-            {
-              "level": 3,
-              "text": "BI___TS"
-            },
-            {
-              "level": 4,
-              "text": "_I__E__"
-            },
-            {
-              "level": 5,
-              "text": "BILLET_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "D___A"
-            },
-            {
-              "level": 3,
-              "text": "DA_HA"
-            },
-            {
-              "level": 4,
-              "text": "_A__A"
-            },
-            {
-              "level": 5,
-              "text": "DACH_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 7,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
+          "estimatedPoints": 96,
+          "positional": "A 6-letter word uses the HE digraph tile",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
@@ -345,41 +378,43 @@
             },
             {
               "level": 2,
-              "text": "I____D"
+              "text": "T____S"
             },
             {
               "level": 3,
-              "text": "IN__RD"
+              "text": "TA__TS"
             },
             {
               "level": 4,
-              "text": "I__A__"
+              "text": "_AI___"
             },
             {
               "level": 5,
-              "text": "INWAR_"
+              "text": "TAINT_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 7.7,
+    "optimalMoves": 6,
+    "averageWordLength": 8.7,
     "gemDensity": 0.016,
     "tilesCleared": 52,
     "tilesRemaining": 9,
     "tileClearancePercent": 85.2,
     "fullClear": false,
     "solutionPath": [
-      "CLAPPERCLAWED",
-      "PROSAISTS",
-      "COBALTS",
-      "GOLFING",
-      "BILLETS",
-      "DACHA",
-      "INWARD"
+      "BULLWADDIES",
+      "INOCULATOR",
+      "BAFFLING",
+      "PAGANISTS",
+      "CALCARS",
+      "LIONETS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -392,6 +427,6 @@
       "BAFFING",
       "TAINTS"
     ],
-    "generatedAt": "2026-07-03T12:53:56.437Z"
+    "generatedAt": "2026-06-22T01:36:40.746Z"
   }
 }

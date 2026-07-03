@@ -138,263 +138,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 17285,
+    "maxPossibleScore": 44555,
     "minAchievableScore": 24960,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "EMERITUS",
-          "VENDEES",
-          "FACILITY",
-          "SHAFT",
-          "SMUGLY",
-          "HELOT",
-          "PYXIE"
+          "MEZUZAHS",
+          "JUSTIFICATORY",
+          "JAZZY",
+          "FUZZY"
         ],
-        "wordTotal": 17285,
-        "penalty": 69,
-        "finalScore": 17216,
-        "scoreTiers": {
-          "good": 6886,
-          "great": 11190,
-          "superb": 14634
-        }
+        "wordTotal": 18162,
+        "penalty": 128,
+        "finalScore": 18034
+      },
+      {
+        "words": [
+          "MEZUZAHS",
+          "JUSTIFICATORY",
+          "JAZZY",
+          "FUZZY"
+        ],
+        "wordTotal": 18162,
+        "penalty": 128,
+        "finalScore": 18034
+      },
+      {
+        "words": [
+          "JUSTIFICATORY",
+          "MEZUZAHS",
+          "PREFIX",
+          "JIVERS"
+        ],
+        "wordTotal": 17808,
+        "penalty": 115,
+        "finalScore": 17693
       }
     ],
-    "generatedAt": "2026-07-03T12:53:54.365Z",
-    "optimalMoves": 7,
-    "averageWordLength": 6.3,
-    "gemDensity": 0.082,
-    "tilesCleared": 43,
-    "tilesRemaining": 18,
-    "tileClearancePercent": 70.5,
-    "fullClear": false,
-    "solutionPath": [
-      "EMERITUS",
-      "VENDEES",
-      "FACILITY",
-      "SHAFT",
-      "SMUGLY",
-      "HELOT",
-      "PYXIE"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 17216,
-      "wordCount": 7,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E______S"
-            },
-            {
-              "level": 3,
-              "text": "EM____US"
-            },
-            {
-              "level": 4,
-              "text": "E_E_I_U_"
-            },
-            {
-              "level": 5,
-              "text": "EMERITU_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V_____S"
-            },
-            {
-              "level": 3,
-              "text": "VE___ES"
-            },
-            {
-              "level": 4,
-              "text": "_E__EE_"
-            },
-            {
-              "level": 5,
-              "text": "VENDEE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "An abstract noun — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "F______Y"
-            },
-            {
-              "level": 3,
-              "text": "FA____TY"
-            },
-            {
-              "level": 4,
-              "text": "_A_I_I__"
-            },
-            {
-              "level": 5,
-              "text": "FACILIT_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "S___T"
-            },
-            {
-              "level": 3,
-              "text": "SH_FT"
-            },
-            {
-              "level": 4,
-              "text": "__A__"
-            },
-            {
-              "level": 5,
-              "text": "SHAF_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A modifier/adverb style word ending in -LY"
-            },
-            {
-              "level": 2,
-              "text": "S____Y"
-            },
-            {
-              "level": 3,
-              "text": "SM__LY"
-            },
-            {
-              "level": 4,
-              "text": "__U___"
-            },
-            {
-              "level": 5,
-              "text": "SMUGL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "H___T"
-            },
-            {
-              "level": 3,
-              "text": "HE_OT"
-            },
-            {
-              "level": 4,
-              "text": "_E_O_"
-            },
-            {
-              "level": 5,
-              "text": "HELO_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P___E"
-            },
-            {
-              "level": 3,
-              "text": "PY_IE"
-            },
-            {
-              "level": 4,
-              "text": "___IE"
-            },
-            {
-              "level": 5,
-              "text": "PYXI_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.902Z"
   }
 }

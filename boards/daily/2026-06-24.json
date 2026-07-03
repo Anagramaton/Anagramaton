@@ -111,39 +111,95 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2173,
+    "maxPossibleScore": 3893,
     "minAchievableScore": 1320,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "GUIDEWORDS",
           "SUBARCUATE",
+          "PHEEZING",
+          "SPHACELATED",
+          "GUIDEWORDS",
+          "ABBACIES",
+          "GOETHITES",
+          "LOGES"
+        ],
+        "wordTotal": 2452,
+        "penalty": 0,
+        "finalScore": 2452
+      },
+      {
+        "words": [
+          "SUBARCUATE",
+          "PHEEZING",
+          "GUIDEWORDS",
+          "SPHACELATED",
+          "ABBACIES",
+          "GOETHITES",
+          "LOGES"
+        ],
+        "wordTotal": 2452,
+        "penalty": 0,
+        "finalScore": 2452
+      },
+      {
+        "words": [
+          "SPHACELATED",
+          "SUBARCUATE",
+          "GUIDEWORDS",
           "GOETHITES",
           "PHEEZING",
           "ABBACIES",
-          "UNELATED"
+          "LOGES"
         ],
-        "wordTotal": 2173,
-        "penalty": 30,
-        "finalScore": 2143,
-        "scoreTiers": {
-          "good": 857,
-          "great": 1393,
-          "superb": 1822
-        }
+        "wordTotal": 2452,
+        "penalty": 0,
+        "finalScore": 2452
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2143,
-      "wordCount": 6,
+      "targetScore": 2452,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
+          "length": 11,
+          "estimatedPoints": 385,
+          "positional": "A 11-letter word uses the CK digraph tile",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_________D"
+            },
+            {
+              "level": 3,
+              "text": "SP_______ED"
+            },
+            {
+              "level": 4,
+              "text": "___A_E_A_E_"
+            },
+            {
+              "level": 5,
+              "text": "SPHACELATE_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 2,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 360,
+          "positional": "A 10-letter word runs from upper-right toward center",
           "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
@@ -167,13 +223,15 @@
               "text": "GUIDEWORD_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
-          "wordIndex": 2,
+          "wordIndex": 3,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 660,
+          "positional": "A 10-letter word passes through the emerald gem",
           "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
@@ -197,13 +255,15 @@
               "text": "SUBARCUAT_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses emerald gem"
+          ]
         },
         {
-          "wordIndex": 3,
+          "wordIndex": 4,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 225,
+          "positional": "A 9-letter word sits in the center quadrant",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -230,10 +290,10 @@
           "features": []
         },
         {
-          "wordIndex": 4,
+          "wordIndex": 5,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 512,
+          "positional": "A 8-letter word routes through the purple prism",
           "category": "A compound-style word — 8 letters",
           "hints": [
             {
@@ -257,13 +317,16 @@
               "text": "PHEEZIN_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses a portal tile"
+          ]
         },
         {
-          "wordIndex": 5,
+          "wordIndex": 6,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 240,
+          "positional": "A 8-letter word runs from lower-left toward bottom",
           "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
@@ -290,52 +353,55 @@
           "features": []
         },
         {
-          "wordIndex": 6,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A compound-style word — 8 letters",
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 70,
+          "positional": "A 5-letter word uses the UN digraph tile",
+          "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Something described as \"not\" or reversed (8 letters)"
+              "text": "Pattern hint: 5 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "U______D"
+              "text": "L___S"
             },
             {
               "level": 3,
-              "text": "UN____ED"
+              "text": "LO_ES"
             },
             {
               "level": 4,
-              "text": "U_E_A_E_"
+              "text": "_O_E_"
             },
             {
               "level": 5,
-              "text": "UNELATE_"
+              "text": "LOGE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 6,
-    "averageWordLength": 8.8,
+    "optimalMoves": 7,
+    "averageWordLength": 8.1,
     "gemDensity": 0.016,
-    "tilesCleared": 52,
-    "tilesRemaining": 9,
-    "tileClearancePercent": 85.2,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
     "fullClear": false,
     "solutionPath": [
-      "GUIDEWORDS",
       "SUBARCUATE",
-      "GOETHITES",
       "PHEEZING",
       "ABBACIES",
-      "UNELATED"
+      "DISGUSTED",
+      "GOETHITES",
+      "ALLEGED",
+      "PHOCAE"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -348,6 +414,6 @@
       "ABBACIES",
       "LOGES"
     ],
-    "generatedAt": "2026-07-03T12:53:55.063Z"
+    "generatedAt": "2026-05-26T01:21:27.346Z"
   }
 }

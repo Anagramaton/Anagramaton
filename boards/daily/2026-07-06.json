@@ -123,41 +123,63 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 4708,
+    "maxPossibleScore": 10918,
     "minAchievableScore": 7176,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "OVERBALANCING",
-          "VIREMENT",
-          "CONTENTS",
+          "DEPRIVEMENT",
           "BELLYACHER",
-          "MOSEYS",
-          "TYPOS",
-          "GOGGA",
-          "DINGO"
+          "NOMOLOGIST",
+          "GANSEYS",
+          "OFTEN",
+          "GOONS"
         ],
-        "wordTotal": 4708,
-        "penalty": 13,
-        "finalScore": 4695,
-        "scoreTiers": {
-          "good": 1878,
-          "great": 3052,
-          "superb": 3991
-        }
+        "wordTotal": 4959,
+        "penalty": 0,
+        "finalScore": 4959
+      },
+      {
+        "words": [
+          "OVERBALANCING",
+          "DEPRIVEMENT",
+          "BELLYACHER",
+          "NOMOLOGIST",
+          "GANSEYS",
+          "OFTEN",
+          "GOONS"
+        ],
+        "wordTotal": 4959,
+        "penalty": 0,
+        "finalScore": 4959
+      },
+      {
+        "words": [
+          "OVERBALANCING",
+          "DEPRIVEMENT",
+          "BELLYACHER",
+          "NOMOLOGIST",
+          "GANSEYS",
+          "OFTEN",
+          "GOONS"
+        ],
+        "wordTotal": 4959,
+        "penalty": 0,
+        "finalScore": 4959
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 4695,
-      "wordCount": 8,
+      "targetScore": 4959,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 13,
-          "estimatedPoints": 0,
-          "positional": "13-letter word near the center lanes",
+          "estimatedPoints": 3588,
+          "positional": "A 13-letter word routes through the purple prism",
           "category": "A compound-style word — 13 letters",
           "hints": [
             {
@@ -181,14 +203,18 @@
               "text": "OVERBALANCIN_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses gold gem",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "An abstract noun — 8 letters",
+          "length": 11,
+          "estimatedPoints": 429,
+          "positional": "A 11-letter word uses the UN digraph tile",
+          "category": "An abstract noun — 11 letters",
           "hints": [
             {
               "level": 1,
@@ -196,58 +222,30 @@
             },
             {
               "level": 2,
-              "text": "V______T"
+              "text": "D_________T"
             },
             {
               "level": 3,
-              "text": "VI____NT"
+              "text": "DE_______NT"
             },
             {
               "level": 4,
-              "text": "_I_E_E__"
+              "text": "_E__I_E_E__"
             },
             {
               "level": 5,
-              "text": "VIREMEN_"
+              "text": "DEPRIVEMEN_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 3,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C______S"
-            },
-            {
-              "level": 3,
-              "text": "CO____TS"
-            },
-            {
-              "level": 4,
-              "text": "_O__E___"
-            },
-            {
-              "level": 5,
-              "text": "CONTENT_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 350,
+          "positional": "A 10-letter word sits in the center quadrant",
           "category": "A compound-style word — 10 letters",
           "hints": [
             {
@@ -274,61 +272,95 @@
           "features": []
         },
         {
-          "wordIndex": 5,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
+          "wordIndex": 4,
+          "length": 10,
+          "estimatedPoints": 290,
+          "positional": "A 10-letter word uses the TY digraph tile",
+          "category": "A role/profession-style word — 10 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
+              "text": "Pattern hint: 10 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "M____S"
+              "text": "N________T"
             },
             {
               "level": 3,
-              "text": "MO__YS"
+              "text": "NO______ST"
             },
             {
               "level": 4,
-              "text": "_O_E__"
+              "text": "_O_O_O_I__"
             },
             {
               "level": 5,
-              "text": "MOSEY_"
+              "text": "NOMOLOGIS_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 4 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 147,
+          "positional": "A 7-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G_____S"
+            },
+            {
+              "level": 3,
+              "text": "GA___YS"
+            },
+            {
+              "level": 4,
+              "text": "_A__E__"
+            },
+            {
+              "level": 5,
+              "text": "GANSEY_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 6,
           "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
+          "estimatedPoints": 85,
+          "positional": "A 5-letter word runs from bottom toward lower-left",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
+              "text": "Pattern hint: 5 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "T___S"
+              "text": "O___N"
             },
             {
               "level": 3,
-              "text": "TY_OS"
+              "text": "OF_EN"
             },
             {
               "level": 4,
-              "text": "___O_"
+              "text": "O__E_"
             },
             {
               "level": 5,
-              "text": "TYPO_"
+              "text": "OFTE_"
             }
           ],
           "features": []
@@ -336,8 +368,8 @@
         {
           "wordIndex": 7,
           "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
+          "estimatedPoints": 70,
+          "positional": "A 5-letter word runs from lower-left toward bottom",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -346,49 +378,19 @@
             },
             {
               "level": 2,
-              "text": "G___A"
+              "text": "G___S"
             },
             {
               "level": 3,
-              "text": "GO_GA"
+              "text": "GO_NS"
             },
             {
               "level": 4,
-              "text": "_O__A"
+              "text": "_OO__"
             },
             {
               "level": 5,
-              "text": "GOGG_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "D___O"
-            },
-            {
-              "level": 3,
-              "text": "DI_GO"
-            },
-            {
-              "level": 4,
-              "text": "_I__O"
-            },
-            {
-              "level": 5,
-              "text": "DING_"
+              "text": "GOON_"
             }
           ],
           "features": []
@@ -396,22 +398,21 @@
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7.5,
+    "optimalMoves": 7,
+    "averageWordLength": 8,
     "gemDensity": 0.016,
-    "tilesCleared": 57,
-    "tilesRemaining": 4,
-    "tileClearancePercent": 93.4,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
     "fullClear": false,
     "solutionPath": [
-      "OVERBALANCING",
-      "VIREMENT",
-      "CONTENTS",
+      "RENVOI",
+      "DEPRIVEMENT",
       "BELLYACHER",
-      "MOSEYS",
-      "TYPOS",
-      "GOGGA",
-      "DINGO"
+      "GEOTAGGING",
+      "CASEMAN",
+      "STOLONS",
+      "BOYOS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -424,6 +425,6 @@
       "OFTEN",
       "GOONS"
     ],
-    "generatedAt": "2026-07-03T12:53:55.629Z"
+    "generatedAt": "2026-06-07T01:31:36.167Z"
   }
 }

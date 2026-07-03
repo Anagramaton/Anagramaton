@@ -150,327 +150,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 933900,
+    "maxPossibleScore": 224540,
     "minAchievableScore": 102400,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "BULLIONS",
-          "BUZZERS",
-          "DIOECIES",
-          "WEAZENS",
-          "OCTAPLA",
-          "SIZISM",
-          "PUNTER",
-          "NOBLY",
-          "PITHY"
+          "JUMBOIZE",
+          "COLLECTIVIZED",
+          "MOZZIE",
+          "MOZZES"
         ],
-        "wordTotal": 933900,
-        "penalty": 20,
-        "finalScore": 933880,
-        "scoreTiers": {
-          "good": 373552,
-          "great": 607022,
-          "superb": 793798
-        }
+        "wordTotal": 90200,
+        "penalty": 129,
+        "finalScore": 90071
+      },
+      {
+        "words": [
+          "JUMBOIZE",
+          "COLLECTIVIZED",
+          "MOZZIE",
+          "MOZZES"
+        ],
+        "wordTotal": 90200,
+        "penalty": 129,
+        "finalScore": 90071
+      },
+      {
+        "words": [
+          "COLLECTIVIZED",
+          "JUMBOIZE",
+          "MOZZIE",
+          "MOZZES"
+        ],
+        "wordTotal": 90200,
+        "penalty": 129,
+        "finalScore": 90071
       }
     ],
-    "generatedAt": "2026-07-03T12:53:54.022Z",
-    "optimalMoves": 9,
-    "averageWordLength": 6.6,
-    "gemDensity": 0.082,
-    "tilesCleared": 56,
-    "tilesRemaining": 5,
-    "tileClearancePercent": 91.8,
-    "fullClear": false,
-    "solutionPath": [
-      "BULLIONS",
-      "BUZZERS",
-      "DIOECIES",
-      "WEAZENS",
-      "OCTAPLA",
-      "SIZISM",
-      "PUNTER",
-      "NOBLY",
-      "PITHY"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 933880,
-      "wordCount": 9,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B______S"
-            },
-            {
-              "level": 3,
-              "text": "BU____NS"
-            },
-            {
-              "level": 4,
-              "text": "_U__IO__"
-            },
-            {
-              "level": 5,
-              "text": "BULLION_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B_____S"
-            },
-            {
-              "level": 3,
-              "text": "BU___RS"
-            },
-            {
-              "level": 4,
-              "text": "_U__E__"
-            },
-            {
-              "level": 5,
-              "text": "BUZZER_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "D______S"
-            },
-            {
-              "level": 3,
-              "text": "DI____ES"
-            },
-            {
-              "level": 4,
-              "text": "_IOE_IE_"
-            },
-            {
-              "level": 5,
-              "text": "DIOECIE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W_____S"
-            },
-            {
-              "level": 3,
-              "text": "WE___NS"
-            },
-            {
-              "level": 4,
-              "text": "_EA_E__"
-            },
-            {
-              "level": 5,
-              "text": "WEAZEN_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "O_____A"
-            },
-            {
-              "level": 3,
-              "text": "OC___LA"
-            },
-            {
-              "level": 4,
-              "text": "O__A__A"
-            },
-            {
-              "level": 5,
-              "text": "OCTAPL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "An abstract noun — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S____M"
-            },
-            {
-              "level": 3,
-              "text": "SI__SM"
-            },
-            {
-              "level": 4,
-              "text": "_I_I__"
-            },
-            {
-              "level": 5,
-              "text": "SIZIS_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A role/profession-style word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P____R"
-            },
-            {
-              "level": 3,
-              "text": "PU__ER"
-            },
-            {
-              "level": 4,
-              "text": "_U__E_"
-            },
-            {
-              "level": 5,
-              "text": "PUNTE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A modifier/adverb style word ending in -LY"
-            },
-            {
-              "level": 2,
-              "text": "N___Y"
-            },
-            {
-              "level": 3,
-              "text": "NO_LY"
-            },
-            {
-              "level": 4,
-              "text": "_O___"
-            },
-            {
-              "level": 5,
-              "text": "NOBL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 9,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "P___Y"
-            },
-            {
-              "level": 3,
-              "text": "PI_HY"
-            },
-            {
-              "level": 4,
-              "text": "_I___"
-            },
-            {
-              "level": 5,
-              "text": "PITH_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.781Z"
   }
 }

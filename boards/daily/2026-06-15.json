@@ -117,7 +117,7 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2091,
+    "maxPossibleScore": 4300,
     "minAchievableScore": 1320,
     "strategicPathCount": 3,
     "optimalSolutions": [
@@ -125,32 +125,46 @@
         "words": [
           "PHONOGRAMS",
           "VAPORISES",
-          "FLUORIDATED",
-          "CATAPAN",
-          "ESSENTIAL",
-          "TESTY",
-          "OLEIC"
+          "FLUORAPATITES",
+          "ACCLIMATISE"
         ],
-        "wordTotal": 2091,
-        "penalty": 25,
-        "finalScore": 2066,
-        "scoreTiers": {
-          "good": 826,
-          "great": 1343,
-          "superb": 1756
-        }
+        "wordTotal": 2094,
+        "penalty": 50,
+        "finalScore": 2044
+      },
+      {
+        "words": [
+          "FLUORAPATITES",
+          "ACCLIMATISE",
+          "PHONOGRAMS",
+          "VAPORISES"
+        ],
+        "wordTotal": 2094,
+        "penalty": 50,
+        "finalScore": 2044
+      },
+      {
+        "words": [
+          "PHONOGRAMS",
+          "VAPORISES",
+          "DISCARD",
+          "FLUORAPATITES"
+        ],
+        "wordTotal": 2042,
+        "penalty": 64,
+        "finalScore": 1978
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2066,
-      "wordCount": 7,
+      "targetScore": 2044,
+      "wordCount": 4,
       "clues": [
         {
           "wordIndex": 1,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 660,
+          "positional": "A 10-letter word routes through the purple prism",
           "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
@@ -174,13 +188,15 @@
               "text": "PHONOGRAM_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
         },
         {
           "wordIndex": 2,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 540,
+          "positional": "A 9-letter word passes through the emerald gem",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -204,14 +220,48 @@
               "text": "VAPORISE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses emerald gem"
+          ]
         },
         {
           "wordIndex": 3,
+          "length": 13,
+          "estimatedPoints": 520,
+          "positional": "A 13-letter word uses the NT digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 6 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F___________S"
+            },
+            {
+              "level": 3,
+              "text": "FL_________ES"
+            },
+            {
+              "level": 4,
+              "text": "__UO_A_A_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "FLUORAPATITE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
           "length": 11,
-          "estimatedPoints": 0,
-          "positional": "11-letter word near the center lanes",
-          "category": "A compound-style word — 11 letters",
+          "estimatedPoints": 374,
+          "positional": "A 11-letter word uses the ED digraph tile",
+          "category": "An action verb form — 11 letters",
           "hints": [
             {
               "level": 1,
@@ -219,148 +269,31 @@
             },
             {
               "level": 2,
-              "text": "F_________D"
+              "text": "A_________E"
             },
             {
               "level": 3,
-              "text": "FL_______ED"
+              "text": "AC_______SE"
             },
             {
               "level": 4,
-              "text": "__UO_I_A_E_"
+              "text": "A___I_A_I_E"
             },
             {
               "level": 5,
-              "text": "FLUORIDATE_"
+              "text": "ACCLIMATIS_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C_____N"
-            },
-            {
-              "level": 3,
-              "text": "CA___AN"
-            },
-            {
-              "level": 4,
-              "text": "_A_A_A_"
-            },
-            {
-              "level": 5,
-              "text": "CATAPA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A descriptive adjective — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E_______L"
-            },
-            {
-              "level": 3,
-              "text": "ES_____AL"
-            },
-            {
-              "level": 4,
-              "text": "E__E__IA_"
-            },
-            {
-              "level": 5,
-              "text": "ESSENTIA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "T___Y"
-            },
-            {
-              "level": 3,
-              "text": "TE_TY"
-            },
-            {
-              "level": 4,
-              "text": "_E___"
-            },
-            {
-              "level": 5,
-              "text": "TEST_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A descriptive adjective — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "O___C"
-            },
-            {
-              "level": 3,
-              "text": "OL_IC"
-            },
-            {
-              "level": 4,
-              "text": "O_EI_"
-            },
-            {
-              "level": 5,
-              "text": "OLEI_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 8,
+    "optimalMoves": 6,
+    "averageWordLength": 8.8,
     "gemDensity": 0.016,
     "tilesCleared": 53,
     "tilesRemaining": 8,
@@ -368,13 +301,12 @@
     "fullClear": false,
     "solutionPath": [
       "PHONOGRAMS",
-      "VAPORISES",
-      "FLUORIDATED",
-      "CATAPAN",
-      "ESSENTIAL",
-      "TESTY",
-      "OLEIC"
+      "CLIMATISES",
+      "EVAPORATES",
+      "FLUORIDES",
+      "PERISCIAN",
+      "DALTS"
     ],
-    "generatedAt": "2026-07-03T12:53:54.589Z"
+    "generatedAt": "2026-05-17T00:44:24.943Z"
   }
 }

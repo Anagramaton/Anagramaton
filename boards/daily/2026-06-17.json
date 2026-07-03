@@ -123,41 +123,63 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2514,
+    "maxPossibleScore": 5770,
     "minAchievableScore": 2236,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "ELECTROFORMED",
-          "GRECISES",
-          "ULLAGING",
-          "SPLINTED",
-          "ACROMIA",
-          "HEREIN",
-          "BEDAD",
-          "SNABS"
+          "BRECCIAS",
+          "SALPINGITIDES",
+          "GUESSING",
+          "DASHEENS",
+          "DEMANS",
+          "ABOMA"
         ],
-        "wordTotal": 2514,
-        "penalty": 16,
-        "finalScore": 2498,
-        "scoreTiers": {
-          "good": 999,
-          "great": 1624,
-          "superb": 2123
-        }
+        "wordTotal": 2888,
+        "penalty": 0,
+        "finalScore": 2888
+      },
+      {
+        "words": [
+          "BRECCIAS",
+          "ELECTROFORMED",
+          "SALPINGITIDES",
+          "GUESSING",
+          "DASHEENS",
+          "DEMANS",
+          "ABOMA"
+        ],
+        "wordTotal": 2888,
+        "penalty": 0,
+        "finalScore": 2888
+      },
+      {
+        "words": [
+          "ELECTROFORMED",
+          "SALPINGITIDES",
+          "BRECCIAS",
+          "GUESSING",
+          "DASHEENS",
+          "DEMANS",
+          "ABOMA"
+        ],
+        "wordTotal": 2888,
+        "penalty": 0,
+        "finalScore": 2888
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2498,
-      "wordCount": 8,
+      "targetScore": 2888,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 13,
-          "estimatedPoints": 0,
-          "positional": "13-letter word near the center lanes",
+          "estimatedPoints": 1118,
+          "positional": "A 13-letter word routes through the purple prism",
           "category": "A compound-style word — 13 letters",
           "hints": [
             {
@@ -181,13 +203,48 @@
               "text": "ELECTROFORME_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
+          "length": 13,
+          "estimatedPoints": 494,
+          "positional": "A 13-letter word uses the IO digraph tile",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S___________S"
+            },
+            {
+              "level": 3,
+              "text": "SA_________ES"
+            },
+            {
+              "level": 4,
+              "text": "_A__I__I_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "SALPINGITIDE_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 3,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 696,
+          "positional": "A 8-letter word uses the NT digraph tile",
           "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
@@ -196,28 +253,31 @@
             },
             {
               "level": 2,
-              "text": "G______S"
+              "text": "B______S"
             },
             {
               "level": 3,
-              "text": "GR____ES"
+              "text": "BR____AS"
             },
             {
               "level": 4,
-              "text": "__E_I_E_"
+              "text": "__E__IA_"
             },
             {
               "level": 5,
-              "text": "GRECISE_"
+              "text": "BRECCIA_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
         },
         {
-          "wordIndex": 3,
+          "wordIndex": 4,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word uses the LL digraph tile",
           "category": "A compound-style word — 8 letters",
           "hints": [
             {
@@ -226,79 +286,51 @@
             },
             {
               "level": 2,
-              "text": "U______G"
+              "text": "G______G"
             },
             {
               "level": 3,
-              "text": "UL____NG"
+              "text": "GU____NG"
             },
             {
               "level": 4,
-              "text": "U__A_I__"
+              "text": "_UE__I__"
             },
             {
               "level": 5,
-              "text": "ULLAGIN_"
+              "text": "GUESSIN_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A compound-style word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S______D"
-            },
-            {
-              "level": 3,
-              "text": "SP____ED"
-            },
-            {
-              "level": 4,
-              "text": "___I__E_"
-            },
-            {
-              "level": 5,
-              "text": "SPLINTE_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 8,
+          "estimatedPoints": 184,
+          "positional": "A 8-letter word runs from center toward lower-right",
+          "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 4 vowels"
+              "text": "Pattern hint: 8 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "A_____A"
+              "text": "D______S"
             },
             {
               "level": 3,
-              "text": "AC___IA"
+              "text": "DA____NS"
             },
             {
               "level": 4,
-              "text": "A__O_IA"
+              "text": "_A__EE__"
             },
             {
               "level": 5,
-              "text": "ACROMI_"
+              "text": "DASHEEN_"
             }
           ],
           "features": []
@@ -306,112 +338,85 @@
         {
           "wordIndex": 6,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
+          "estimatedPoints": 114,
+          "positional": "A 6-letter word uses the CR digraph tile",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
+              "text": "Pattern hint: 6 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "H____N"
+              "text": "D____S"
             },
             {
               "level": 3,
-              "text": "HE__IN"
+              "text": "DE__NS"
             },
             {
               "level": 4,
-              "text": "_E_EI_"
+              "text": "_E_A__"
             },
             {
               "level": 5,
-              "text": "HEREI_"
+              "text": "DEMAN_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 7,
           "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
+          "estimatedPoints": 90,
+          "positional": "A 5-letter word runs from lower-left toward bottom",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
+              "text": "Pattern hint: 5 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "B___D"
+              "text": "A___A"
             },
             {
               "level": 3,
-              "text": "BE_AD"
+              "text": "AB_MA"
             },
             {
               "level": 4,
-              "text": "_E_A_"
+              "text": "A_O_A"
             },
             {
               "level": 5,
-              "text": "BEDA_"
+              "text": "ABOM_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "S___S"
-            },
-            {
-              "level": 3,
-              "text": "SN_BS"
-            },
-            {
-              "level": 4,
-              "text": "__A__"
-            },
-            {
-              "level": 5,
-              "text": "SNAB_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7.5,
+    "optimalMoves": 7,
+    "averageWordLength": 8.3,
     "gemDensity": 0.016,
-    "tilesCleared": 56,
-    "tilesRemaining": 5,
-    "tileClearancePercent": 91.8,
+    "tilesCleared": 58,
+    "tilesRemaining": 3,
+    "tileClearancePercent": 95.1,
     "fullClear": false,
     "solutionPath": [
-      "ELECTROFORMED",
-      "GRECISES",
-      "ULLAGING",
-      "SPLINTED",
-      "ACROMIA",
-      "HEREIN",
-      "BEDAD",
-      "SNABS"
+      "ELECTROFORM",
+      "BRECCIAS",
+      "ASHAMEDNESS",
+      "BANTINGS",
+      "AMENAGES",
+      "LOIDED",
+      "SPIDES"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -424,6 +429,6 @@
       "DEMANS",
       "ABOMA"
     ],
-    "generatedAt": "2026-07-03T12:53:54.690Z"
+    "generatedAt": "2026-05-19T01:23:42.110Z"
   }
 }

@@ -123,71 +123,160 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2251,
+    "maxPossibleScore": 5263,
     "minAchievableScore": 1944,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "MONARCHISING",
-          "CROWSFEET",
-          "NOISIEST",
-          "ATTESTS",
-          "REALM",
-          "LULLERS",
-          "WETLY",
-          "DIZEN"
+          "COWFEEDER",
+          "STRINGENTLY",
+          "MONARCHISMS",
+          "BROWSIEST",
+          "STRELITZI",
+          "SULTANA",
+          "QUIDS"
         ],
-        "wordTotal": 2251,
-        "penalty": 21,
-        "finalScore": 2230,
-        "scoreTiers": {
-          "good": 892,
-          "great": 1450,
-          "superb": 1896
-        }
+        "wordTotal": 2933,
+        "penalty": 0,
+        "finalScore": 2933
+      },
+      {
+        "words": [
+          "COWFEEDER",
+          "STRINGENTLY",
+          "MONARCHISMS",
+          "BROWSIEST",
+          "STRELITZI",
+          "QUIDS",
+          "SULTANA"
+        ],
+        "wordTotal": 2933,
+        "penalty": 0,
+        "finalScore": 2933
+      },
+      {
+        "words": [
+          "STRINGENTLY",
+          "MONARCHISMS",
+          "COWFEEDER",
+          "BROWSIEST",
+          "STRELITZI",
+          "SULTANA",
+          "QUIDS"
+        ],
+        "wordTotal": 2933,
+        "penalty": 0,
+        "finalScore": 2933
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2230,
-      "wordCount": 8,
+      "targetScore": 2933,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 12,
-          "estimatedPoints": 0,
-          "positional": "12-letter word near the center lanes",
-          "category": "A compound-style word — 12 letters",
+          "length": 11,
+          "estimatedPoints": 407,
+          "positional": "A 11-letter word sits in the top quadrant",
+          "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "A present-participle action word ending in -ING"
+              "text": "Pattern hint: 11 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "M__________G"
+              "text": "M_________S"
             },
             {
               "level": 3,
-              "text": "MO________NG"
+              "text": "MO_______MS"
             },
             {
               "level": 4,
-              "text": "_O_A___I_I__"
+              "text": "_O_A___I___"
             },
             {
               "level": 5,
-              "text": "MONARCHISIN_"
+              "text": "MONARCHISM_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 726,
+          "positional": "A 11-letter word routes through the purple prism",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "S_________Y"
+            },
+            {
+              "level": 3,
+              "text": "ST_______LY"
+            },
+            {
+              "level": 4,
+              "text": "___I__E____"
+            },
+            {
+              "level": 5,
+              "text": "STRINGENTL_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
+        },
+        {
+          "wordIndex": 3,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 972,
+          "positional": "A 9-letter word uses the EN digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_______R"
+            },
+            {
+              "level": 3,
+              "text": "CO_____ER"
+            },
+            {
+              "level": 4,
+              "text": "_O__EE_E_"
+            },
+            {
+              "level": 5,
+              "text": "COWFEEDE_"
+            }
+          ],
+          "features": [
+            "Uses gold gem",
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 306,
+          "positional": "A 9-letter word uses the LL digraph tile",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -196,178 +285,94 @@
             },
             {
               "level": 2,
-              "text": "C_______T"
+              "text": "B_______T"
             },
             {
               "level": 3,
-              "text": "CR_____ET"
+              "text": "BR_____ST"
             },
             {
               "level": 4,
-              "text": "__O___EE_"
+              "text": "__O__IE__"
             },
             {
               "level": 5,
-              "text": "CROWSFEE_"
+              "text": "BROWSIES_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "N______T"
-            },
-            {
-              "level": 3,
-              "text": "NO____ST"
-            },
-            {
-              "level": 4,
-              "text": "_OI_IE__"
-            },
-            {
-              "level": 5,
-              "text": "NOISIES_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "A_____S"
-            },
-            {
-              "level": 3,
-              "text": "AT___TS"
-            },
-            {
-              "level": 4,
-              "text": "A__E___"
-            },
-            {
-              "level": 5,
-              "text": "ATTEST_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
         },
         {
           "wordIndex": 5,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
+          "length": 9,
+          "estimatedPoints": 279,
+          "positional": "A 9-letter word uses the IO digraph tile",
+          "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "A word related to doing something again (5 letters)"
+              "text": "Pattern hint: 9 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "R___M"
+              "text": "S_______I"
             },
             {
               "level": 3,
-              "text": "RE_LM"
+              "text": "ST_____ZI"
             },
             {
               "level": 4,
-              "text": "_EA__"
+              "text": "___E_I__I"
             },
             {
               "level": 5,
-              "text": "REAL_"
+              "text": "STRELITZ_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 6,
           "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
+          "estimatedPoints": 133,
+          "positional": "A 7-letter word runs from lower-right toward lower-left",
           "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 7 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "L_____S"
+              "text": "S_____A"
             },
             {
               "level": 3,
-              "text": "LU___RS"
+              "text": "SU___NA"
             },
             {
               "level": 4,
-              "text": "_U__E__"
+              "text": "_U__A_A"
             },
             {
               "level": 5,
-              "text": "LULLER_"
+              "text": "SULTAN_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 7,
           "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A modifier/adverb style word ending in -LY"
-            },
-            {
-              "level": 2,
-              "text": "W___Y"
-            },
-            {
-              "level": 3,
-              "text": "WE_LY"
-            },
-            {
-              "level": 4,
-              "text": "_E___"
-            },
-            {
-              "level": 5,
-              "text": "WETL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
+          "estimatedPoints": 110,
+          "positional": "A 5-letter word uses the UN digraph tile",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -376,42 +381,43 @@
             },
             {
               "level": 2,
-              "text": "D___N"
+              "text": "Q___S"
             },
             {
               "level": 3,
-              "text": "DI_EN"
+              "text": "QU_DS"
             },
             {
               "level": 4,
-              "text": "_I_E_"
+              "text": "_UI__"
             },
             {
               "level": 5,
-              "text": "DIZE_"
+              "text": "QUID_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7.3,
+    "optimalMoves": 7,
+    "averageWordLength": 7.9,
     "gemDensity": 0.016,
     "tilesCleared": 55,
     "tilesRemaining": 6,
     "tileClearancePercent": 90.2,
     "fullClear": false,
     "solutionPath": [
-      "MONARCHISING",
-      "CROWSFEET",
-      "NOISIEST",
-      "ATTESTS",
-      "REALM",
-      "LULLERS",
-      "WETLY",
-      "DIZEN"
+      "COWFEEDERS",
+      "STRINGENT",
+      "STRELITZI",
+      "SULTANAS",
+      "CALIBRED",
+      "MUSMON",
+      "SHIRS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -424,6 +430,6 @@
       "SULTANA",
       "QUIDS"
     ],
-    "generatedAt": "2026-07-03T12:53:56.473Z"
+    "generatedAt": "2026-06-23T01:21:29.304Z"
   }
 }

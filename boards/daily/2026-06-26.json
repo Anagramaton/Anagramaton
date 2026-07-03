@@ -123,39 +123,63 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 3084,
+    "maxPossibleScore": 6415,
     "minAchievableScore": 3354,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "REPLICABILITY",
-          "ANTIPATHIES",
-          "INTERLEAF",
-          "QUANNETS",
-          "BAFFS",
-          "OUCHED"
+          "ANTIPATHY",
+          "DEACIDIFIES",
+          "BAFFLES",
+          "OUTHEARD",
+          "NETFULS",
+          "KIDELS"
         ],
-        "wordTotal": 3084,
-        "penalty": 43,
-        "finalScore": 3041,
-        "scoreTiers": {
-          "good": 1216,
-          "great": 1977,
-          "superb": 2585
-        }
+        "wordTotal": 3255,
+        "penalty": 0,
+        "finalScore": 3255
+      },
+      {
+        "words": [
+          "REPLICABILITY",
+          "ANTIPATHY",
+          "DEACIDIFIES",
+          "BAFFLES",
+          "NETFULS",
+          "OUTHEARD",
+          "KIDELS"
+        ],
+        "wordTotal": 3255,
+        "penalty": 0,
+        "finalScore": 3255
+      },
+      {
+        "words": [
+          "REPLICABILITY",
+          "DEACIDIFIES",
+          "ANTIPATHY",
+          "OUTHEARD",
+          "BAFFLES",
+          "NETFULS",
+          "KIDELS"
+        ],
+        "wordTotal": 3255,
+        "penalty": 0,
+        "finalScore": 3255
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 3041,
-      "wordCount": 6,
+      "targetScore": 3255,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 13,
-          "estimatedPoints": 0,
-          "positional": "13-letter word near the center lanes",
+          "estimatedPoints": 1677,
+          "positional": "A 13-letter word passes through the gold gem",
           "category": "An abstract noun — 13 letters",
           "hints": [
             {
@@ -179,175 +203,220 @@
               "text": "REPLICABILIT_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses gold gem"
+          ]
         },
         {
           "wordIndex": 2,
           "length": 11,
-          "estimatedPoints": 0,
-          "positional": "11-letter word near the center lanes",
+          "estimatedPoints": 385,
+          "positional": "A 11-letter word uses the QU digraph tile",
           "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 11 letters with 5 vowels"
+              "text": "Pattern hint: 11 letters with 6 vowels"
             },
             {
               "level": 2,
-              "text": "A_________S"
+              "text": "D_________S"
             },
             {
               "level": 3,
-              "text": "AN_______ES"
+              "text": "DE_______ES"
             },
             {
               "level": 4,
-              "text": "A__I_A__IE_"
+              "text": "_EA_I_I_IE_"
             },
             {
               "level": 5,
-              "text": "ANTIPATHIE_"
+              "text": "DEACIDIFIE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 3,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 504,
+          "positional": "A 9-letter word uses the AN digraph tile",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
+              "text": "Pattern hint: 9 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "I_______F"
+              "text": "A_______Y"
             },
             {
               "level": 3,
-              "text": "IN_____AF"
+              "text": "AN_____HY"
             },
             {
               "level": 4,
-              "text": "I__E__EA_"
+              "text": "A__I_A___"
             },
             {
               "level": 5,
-              "text": "INTERLEA_"
+              "text": "ANTIPATH_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 4,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
+          "estimatedPoints": 184,
+          "positional": "A 8-letter word uses the GH digraph tile",
+          "category": "A compound-style word — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
+              "text": "Pattern hint: 8 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "Q______S"
+              "text": "O______D"
             },
             {
               "level": 3,
-              "text": "QU____TS"
+              "text": "OU____RD"
             },
             {
               "level": 4,
-              "text": "_UA__E__"
+              "text": "OU__EA__"
             },
             {
               "level": 5,
-              "text": "QUANNET_"
+              "text": "OUTHEAR_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 5,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
+          "length": 7,
+          "estimatedPoints": 217,
+          "positional": "A 7-letter word runs from center toward bottom",
+          "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
+              "text": "Pattern hint: 7 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "B___S"
+              "text": "B_____S"
             },
             {
               "level": 3,
-              "text": "BA_FS"
+              "text": "BA___ES"
             },
             {
               "level": 4,
-              "text": "_A___"
+              "text": "_A___E_"
             },
             {
               "level": 5,
-              "text": "BAFF_"
+              "text": "BAFFLE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 168,
+          "positional": "A 7-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "N_____S"
+            },
+            {
+              "level": 3,
+              "text": "NE___LS"
+            },
+            {
+              "level": 4,
+              "text": "_E__U__"
+            },
+            {
+              "level": 5,
+              "text": "NETFUL_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 6,
+          "wordIndex": 7,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "An action verb form — 6 letters",
+          "estimatedPoints": 120,
+          "positional": "A 6-letter word uses the NT digraph tile",
+          "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
+              "text": "Pattern hint: 6 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "O____D"
+              "text": "K____S"
             },
             {
               "level": 3,
-              "text": "OU__ED"
+              "text": "KI__LS"
             },
             {
               "level": 4,
-              "text": "OU__E_"
+              "text": "_I_E__"
             },
             {
               "level": 5,
-              "text": "OUCHE_"
+              "text": "KIDEL_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 6,
-    "averageWordLength": 8.7,
+    "optimalMoves": 7,
+    "averageWordLength": 7.9,
     "gemDensity": 0.016,
-    "tilesCleared": 48,
-    "tilesRemaining": 13,
-    "tileClearancePercent": 78.7,
+    "tilesCleared": 55,
+    "tilesRemaining": 6,
+    "tileClearancePercent": 90.2,
     "fullClear": false,
     "solutionPath": [
-      "REPLICABILITY",
+      "PLACABILITY",
       "ANTIPATHIES",
-      "INTERLEAF",
-      "QUANNETS",
-      "BAFFS",
-      "OUCHED"
+      "RESENTFUL",
+      "DISLEAFED",
+      "DECRY",
+      "FILII",
+      "SHOED"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -360,6 +429,6 @@
       "NETFULS",
       "KIDELS"
     ],
-    "generatedAt": "2026-07-03T12:53:55.156Z"
+    "generatedAt": "2026-05-28T01:18:19.138Z"
   }
 }

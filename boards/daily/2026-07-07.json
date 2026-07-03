@@ -123,40 +123,63 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2047,
+    "maxPossibleScore": 4165,
     "minAchievableScore": 1584,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "OVERPOISING",
+          "PILLWORTS",
           "DETASSELED",
+          "SIDEDNESS",
           "TALLIATES",
-          "LOGROLLS",
-          "GONIFFS",
-          "COSIED",
-          "INLETS"
+          "LOGOFF",
+          "DOUSING"
         ],
-        "wordTotal": 2047,
-        "penalty": 22,
-        "finalScore": 2025,
-        "scoreTiers": {
-          "good": 810,
-          "great": 1316,
-          "superb": 1721
-        }
+        "wordTotal": 2404,
+        "penalty": 0,
+        "finalScore": 2404
+      },
+      {
+        "words": [
+          "OVERPOISING",
+          "PILLWORTS",
+          "DETASSELED",
+          "SIDEDNESS",
+          "LOGOFF",
+          "TALLIATES",
+          "DOUSING"
+        ],
+        "wordTotal": 2404,
+        "penalty": 0,
+        "finalScore": 2404
+      },
+      {
+        "words": [
+          "OVERPOISING",
+          "DETASSELED",
+          "PILLWORTS",
+          "SIDEDNESS",
+          "TALLIATES",
+          "DOUSING",
+          "LOGOFF"
+        ],
+        "wordTotal": 2404,
+        "penalty": 0,
+        "finalScore": 2404
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2025,
+      "targetScore": 2404,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 11,
-          "estimatedPoints": 0,
-          "positional": "11-letter word near the center lanes",
+          "estimatedPoints": 792,
+          "positional": "A 11-letter word routes through the purple prism",
           "category": "A compound-style word — 11 letters",
           "hints": [
             {
@@ -180,13 +203,15 @@
               "text": "OVERPOISIN_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier"
+          ]
         },
         {
           "wordIndex": 2,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 280,
+          "positional": "A 10-letter word runs from upper-right toward center",
           "category": "A compound-style word — 10 letters",
           "hints": [
             {
@@ -215,8 +240,75 @@
         {
           "wordIndex": 3,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 594,
+          "positional": "A 9-letter word uses the IN digraph tile",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P_______S"
+            },
+            {
+              "level": 3,
+              "text": "PI_____TS"
+            },
+            {
+              "level": 4,
+              "text": "_I___O___"
+            },
+            {
+              "level": 5,
+              "text": "PILLWORT_"
+            }
+          ],
+          "features": [
+            "Uses emerald gem",
+            "Uses 2 digraph tiles",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 9,
+          "estimatedPoints": 234,
+          "positional": "A 9-letter word uses the TH digraph tile",
+          "category": "A compound-style word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A quality/state noun ending in -NESS"
+            },
+            {
+              "level": 2,
+              "text": "S_______S"
+            },
+            {
+              "level": 3,
+              "text": "SI_____SS"
+            },
+            {
+              "level": 4,
+              "text": "_I_E__E__"
+            },
+            {
+              "level": 5,
+              "text": "SIDEDNES_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 207,
+          "positional": "A 9-letter word runs from center toward lower-left",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -243,100 +335,42 @@
           "features": []
         },
         {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "L______S"
-            },
-            {
-              "level": 3,
-              "text": "LO____LS"
-            },
-            {
-              "level": 4,
-              "text": "_O__O___"
-            },
-            {
-              "level": 5,
-              "text": "LOGROLL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "G_____S"
-            },
-            {
-              "level": 3,
-              "text": "GO___FS"
-            },
-            {
-              "level": 4,
-              "text": "_O_I___"
-            },
-            {
-              "level": 5,
-              "text": "GONIFF_"
-            }
-          ],
-          "features": []
-        },
-        {
           "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "An action verb form — 6 letters",
+          "length": 7,
+          "estimatedPoints": 147,
+          "positional": "A 7-letter word uses the CO digraph tile",
+          "category": "An action verb form — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
+              "text": "A present-participle action word ending in -ING"
             },
             {
               "level": 2,
-              "text": "C____D"
+              "text": "D_____G"
             },
             {
               "level": 3,
-              "text": "CO__ED"
+              "text": "DO___NG"
             },
             {
               "level": 4,
-              "text": "_O_IE_"
+              "text": "_OU_I__"
             },
             {
               "level": 5,
-              "text": "COSIE_"
+              "text": "DOUSIN_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         },
         {
           "wordIndex": 7,
           "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
+          "estimatedPoints": 150,
+          "positional": "A 6-letter word runs from bottom toward lower-left",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
@@ -345,19 +379,19 @@
             },
             {
               "level": 2,
-              "text": "I____S"
+              "text": "L____F"
             },
             {
               "level": 3,
-              "text": "IN__TS"
+              "text": "LO__FF"
             },
             {
               "level": 4,
-              "text": "I__E__"
+              "text": "_O_O__"
             },
             {
               "level": 5,
-              "text": "INLET_"
+              "text": "LOGOF_"
             }
           ],
           "features": []
@@ -368,18 +402,18 @@
     "optimalMoves": 7,
     "averageWordLength": 8.1,
     "gemDensity": 0.016,
-    "tilesCleared": 54,
-    "tilesRemaining": 7,
-    "tileClearancePercent": 88.5,
+    "tilesCleared": 57,
+    "tilesRemaining": 4,
+    "tileClearancePercent": 93.4,
     "fullClear": false,
     "solutionPath": [
       "OVERPOISING",
-      "DETASSELED",
-      "TALLIATES",
-      "LOGROLLS",
-      "GONIFFS",
-      "COSIED",
-      "INLETS"
+      "PILLWORTS",
+      "SIDEDNESSES",
+      "DUFFING",
+      "STALLED",
+      "LATOSOL",
+      "GOADS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -392,6 +426,6 @@
       "DOUSING",
       "LOGOFF"
     ],
-    "generatedAt": "2026-07-03T12:53:55.685Z"
+    "generatedAt": "2026-06-08T01:31:25.393Z"
   }
 }

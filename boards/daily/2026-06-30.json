@@ -123,71 +123,220 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1756,
+    "maxPossibleScore": 6050,
     "minAchievableScore": 2444,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "INVENTING",
-          "JEWELERS",
-          "SCROOP",
-          "VOCALS",
-          "WHINCHAT",
-          "POMADE",
-          "BEANIE",
-          "HEBEN"
+          "PHILOSOPHIZER",
+          "BEADSWOMEN",
+          "CONTRIVANCE",
+          "BUNCHINESS",
+          "VACUITIES",
+          "JEWELERS"
         ],
-        "wordTotal": 1756,
-        "penalty": 36,
-        "finalScore": 1720,
-        "scoreTiers": {
-          "good": 688,
-          "great": 1118,
-          "superb": 1462
-        }
+        "wordTotal": 3304,
+        "penalty": 0,
+        "finalScore": 3304
+      },
+      {
+        "words": [
+          "PHILOSOPHIZER",
+          "BEADSWOMEN",
+          "CONTRIVANCE",
+          "BUNCHINESS",
+          "JEWELERS",
+          "VACUITIES"
+        ],
+        "wordTotal": 3304,
+        "penalty": 0,
+        "finalScore": 3304
+      },
+      {
+        "words": [
+          "PHILOSOPHIZER",
+          "CONTRIVANCE",
+          "BEADSWOMEN",
+          "BUNCHINESS",
+          "VACUITIES",
+          "JEWELERS"
+        ],
+        "wordTotal": 3304,
+        "penalty": 0,
+        "finalScore": 3304
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 1720,
-      "wordCount": 8,
+      "targetScore": 3304,
+      "wordCount": 6,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A compound-style word — 9 letters",
+          "length": 13,
+          "estimatedPoints": 1222,
+          "positional": "A 13-letter word uses the EA digraph tile",
+          "category": "A compound-style word — 13 letters",
           "hints": [
             {
               "level": 1,
-              "text": "A present-participle action word ending in -ING"
+              "text": "Pattern hint: 13 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "I_______G"
+              "text": "P___________R"
             },
             {
               "level": 3,
-              "text": "IN_____NG"
+              "text": "PH_________ER"
             },
             {
               "level": 4,
-              "text": "I__E__I__"
+              "text": "__I_O_O__I_E_"
             },
             {
               "level": 5,
-              "text": "INVENTIN_"
+              "text": "PHILOSOPHIZE_"
+            }
+          ],
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 418,
+          "positional": "A 11-letter word runs from upper-right toward center",
+          "category": "A familiar everyday word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_________E"
+            },
+            {
+              "level": 3,
+              "text": "CO_______CE"
+            },
+            {
+              "level": 4,
+              "text": "_O___I_A__E"
+            },
+            {
+              "level": 5,
+              "text": "CONTRIVANC_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 2,
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 780,
+          "positional": "A 10-letter word passes through the emerald gem",
+          "category": "A familiar everyday word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 10 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B________N"
+            },
+            {
+              "level": 3,
+              "text": "BE______EN"
+            },
+            {
+              "level": 4,
+              "text": "_EA___O_E_"
+            },
+            {
+              "level": 5,
+              "text": "BEADSWOME_"
+            }
+          ],
+          "features": [
+            "Uses emerald gem"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 10,
+          "estimatedPoints": 350,
+          "positional": "A 10-letter word uses the IO digraph tile",
+          "category": "An abstract noun — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A quality/state noun ending in -NESS"
+            },
+            {
+              "level": 2,
+              "text": "B________S"
+            },
+            {
+              "level": 3,
+              "text": "BU______SS"
+            },
+            {
+              "level": 4,
+              "text": "_U___I_E__"
+            },
+            {
+              "level": 5,
+              "text": "BUNCHINES_"
+            }
+          ],
+          "features": [
+            "Uses 3 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 270,
+          "positional": "A 9-letter word runs from bottom toward lower-left",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "V_______S"
+            },
+            {
+              "level": 3,
+              "text": "VA_____ES"
+            },
+            {
+              "level": 4,
+              "text": "_A_UI_IE_"
+            },
+            {
+              "level": 5,
+              "text": "VACUITIE_"
+            }
+          ],
+          "features": [
+            "Uses a portal tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 264,
+          "positional": "A 8-letter word uses the NG digraph tile",
           "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
@@ -211,207 +360,27 @@
               "text": "JEWELER_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S____P"
-            },
-            {
-              "level": 3,
-              "text": "SC__OP"
-            },
-            {
-              "level": 4,
-              "text": "___OO_"
-            },
-            {
-              "level": 5,
-              "text": "SCROO_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "V____S"
-            },
-            {
-              "level": 3,
-              "text": "VO__LS"
-            },
-            {
-              "level": 4,
-              "text": "_O_A__"
-            },
-            {
-              "level": 5,
-              "text": "VOCAL_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "W______T"
-            },
-            {
-              "level": 3,
-              "text": "WH____AT"
-            },
-            {
-              "level": 4,
-              "text": "__I___A_"
-            },
-            {
-              "level": 5,
-              "text": "WHINCHA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P____E"
-            },
-            {
-              "level": 3,
-              "text": "PO__DE"
-            },
-            {
-              "level": 4,
-              "text": "_O_A_E"
-            },
-            {
-              "level": 5,
-              "text": "POMAD_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B____E"
-            },
-            {
-              "level": 3,
-              "text": "BE__IE"
-            },
-            {
-              "level": 4,
-              "text": "_EA_IE"
-            },
-            {
-              "level": 5,
-              "text": "BEANI_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "H___N"
-            },
-            {
-              "level": 3,
-              "text": "HE_EN"
-            },
-            {
-              "level": 4,
-              "text": "_E_E_"
-            },
-            {
-              "level": 5,
-              "text": "HEBE_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 6.8,
+    "optimalMoves": 6,
+    "averageWordLength": 9.2,
     "gemDensity": 0.016,
-    "tilesCleared": 51,
-    "tilesRemaining": 10,
-    "tileClearancePercent": 83.6,
+    "tilesCleared": 55,
+    "tilesRemaining": 6,
+    "tileClearancePercent": 90.2,
     "fullClear": false,
     "solutionPath": [
-      "INVENTING",
+      "PHILOSOPHIC",
+      "BEADSWOMEN",
+      "UNCANNINESS",
+      "VACUITIES",
       "JEWELERS",
-      "SCROOP",
-      "VOCALS",
-      "WHINCHAT",
-      "POMADE",
-      "BEANIE",
-      "HEBEN"
+      "ZEROTH"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -423,6 +392,6 @@
       "VACUITIES",
       "JEWELERS"
     ],
-    "generatedAt": "2026-07-03T12:53:55.356Z"
+    "generatedAt": "2026-06-01T01:33:09.557Z"
   }
 }

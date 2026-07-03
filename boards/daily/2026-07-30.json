@@ -123,41 +123,63 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1857,
+    "maxPossibleScore": 3710,
     "minAchievableScore": 1320,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "LATHERIEST",
-          "EASTERNER",
-          "ROOMILY",
-          "STEPPER",
-          "TANNIES",
-          "BOLLIX",
-          "ROQUES",
-          "CLAVI"
+          "EUCALYPTUS",
+          "NOTABLY",
+          "CUTCHERIES",
+          "OVERSEEING",
+          "EXTERIOR",
+          "PORTASES",
+          "LIMATION"
         ],
-        "wordTotal": 1857,
-        "penalty": 22,
-        "finalScore": 1835,
-        "scoreTiers": {
-          "good": 734,
-          "great": 1193,
-          "superb": 1560
-        }
+        "wordTotal": 2370,
+        "penalty": 0,
+        "finalScore": 2370
+      },
+      {
+        "words": [
+          "NOTABLY",
+          "EUCALYPTUS",
+          "CUTCHERIES",
+          "OVERSEEING",
+          "EXTERIOR",
+          "PORTASES",
+          "LIMATION"
+        ],
+        "wordTotal": 2370,
+        "penalty": 0,
+        "finalScore": 2370
+      },
+      {
+        "words": [
+          "EUCALYPTUS",
+          "CUTCHERIES",
+          "OVERSEEING",
+          "EXTERIOR",
+          "PORTASES",
+          "LIMATION",
+          "NOTABLY"
+        ],
+        "wordTotal": 2370,
+        "penalty": 0,
+        "finalScore": 2370
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 1835,
-      "wordCount": 8,
+      "targetScore": 2370,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 10,
-          "estimatedPoints": 0,
-          "positional": "10-letter word near the center lanes",
+          "estimatedPoints": 660,
+          "positional": "A 10-letter word uses the CK digraph tile",
           "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
@@ -166,58 +188,188 @@
             },
             {
               "level": 2,
-              "text": "L________T"
+              "text": "E________S"
             },
             {
               "level": 3,
-              "text": "LA______ST"
+              "text": "EU______US"
             },
             {
               "level": 4,
-              "text": "_A__E_IE__"
+              "text": "EU_A____U_"
             },
             {
               "level": 5,
-              "text": "LATHERIES_"
+              "text": "EUCALYPTU_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
-          "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
-          "category": "A compound-style word — 9 letters",
+          "length": 10,
+          "estimatedPoints": 320,
+          "positional": "A 10-letter word runs from top toward center",
+          "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
+              "text": "Pattern hint: 10 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "E_______R"
+              "text": "C________S"
             },
             {
               "level": 3,
-              "text": "EA_____ER"
+              "text": "CU______ES"
             },
             {
               "level": 4,
-              "text": "EA__E__E_"
+              "text": "_U___E_IE_"
             },
             {
               "level": 5,
-              "text": "EASTERNE_"
+              "text": "CUTCHERIE_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 310,
+          "positional": "A 10-letter word uses the QU digraph tile",
+          "category": "A compound-style word — 10 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "O________G"
+            },
+            {
+              "level": 3,
+              "text": "OV______NG"
+            },
+            {
+              "level": 4,
+              "text": "O_E__EEI__"
+            },
+            {
+              "level": 5,
+              "text": "OVERSEEIN_"
+            }
+          ],
+          "features": [
+            "Uses 2 digraph tiles"
+          ]
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 216,
+          "positional": "A 8-letter word sits in the center quadrant",
+          "category": "A role/profession-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E______R"
+            },
+            {
+              "level": 3,
+              "text": "EX____OR"
+            },
+            {
+              "level": 4,
+              "text": "E__E_IO_"
+            },
+            {
+              "level": 5,
+              "text": "EXTERIO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 184,
+          "positional": "A 8-letter word uses the GH digraph tile",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P______S"
+            },
+            {
+              "level": 3,
+              "text": "PO____ES"
+            },
+            {
+              "level": 4,
+              "text": "_O__A_E_"
+            },
+            {
+              "level": 5,
+              "text": "PORTASE_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 176,
+          "positional": "A 8-letter word uses the LL digraph tile",
+          "category": "An abstract noun — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A concept noun ending in -TION/-SION"
+            },
+            {
+              "level": 2,
+              "text": "L______N"
+            },
+            {
+              "level": 3,
+              "text": "LI____ON"
+            },
+            {
+              "level": 4,
+              "text": "_I_A_IO_"
+            },
+            {
+              "level": 5,
+              "text": "LIMATIO_"
+            }
+          ],
+          "features": [
+            "Uses 1 digraph tile"
+          ]
+        },
+        {
+          "wordIndex": 7,
           "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
+          "estimatedPoints": 504,
+          "positional": "A 7-letter word passes through the gold gem",
           "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
@@ -226,192 +378,43 @@
             },
             {
               "level": 2,
-              "text": "R_____Y"
+              "text": "N_____Y"
             },
             {
               "level": 3,
-              "text": "RO___LY"
+              "text": "NO___LY"
             },
             {
               "level": 4,
-              "text": "_OO_I__"
+              "text": "_O_A___"
             },
             {
               "level": 5,
-              "text": "ROOMIL_"
+              "text": "NOTABL_"
             }
           ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A role/profession-style word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S_____R"
-            },
-            {
-              "level": 3,
-              "text": "ST___ER"
-            },
-            {
-              "level": 4,
-              "text": "__E__E_"
-            },
-            {
-              "level": 5,
-              "text": "STEPPE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "T_____S"
-            },
-            {
-              "level": 3,
-              "text": "TA___ES"
-            },
-            {
-              "level": 4,
-              "text": "_A__IE_"
-            },
-            {
-              "level": 5,
-              "text": "TANNIE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B____X"
-            },
-            {
-              "level": 3,
-              "text": "BO__IX"
-            },
-            {
-              "level": 4,
-              "text": "_O__I_"
-            },
-            {
-              "level": 5,
-              "text": "BOLLI_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "R____S"
-            },
-            {
-              "level": 3,
-              "text": "RO__ES"
-            },
-            {
-              "level": 4,
-              "text": "_O_UE_"
-            },
-            {
-              "level": 5,
-              "text": "ROQUE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C___I"
-            },
-            {
-              "level": 3,
-              "text": "CL_VI"
-            },
-            {
-              "level": 4,
-              "text": "__A_I"
-            },
-            {
-              "level": 5,
-              "text": "CLAV_"
-            }
-          ],
-          "features": []
+          "features": [
+            "Uses gold gem",
+            "Uses a portal tile"
+          ]
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7.1,
+    "optimalMoves": 6,
+    "averageWordLength": 9.3,
     "gemDensity": 0.016,
-    "tilesCleared": 54,
-    "tilesRemaining": 7,
-    "tileClearancePercent": 88.5,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
     "fullClear": false,
     "solutionPath": [
-      "LATHERIEST",
-      "EASTERNER",
-      "ROOMILY",
-      "STEPPER",
-      "TANNIES",
-      "BOLLIX",
-      "ROQUES",
-      "CLAVI"
+      "EUCALYPTUS",
+      "REEXPORTING",
+      "SEASONABLY",
+      "CHROMATES",
+      "VOLITIONS",
+      "REERECT"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -424,6 +427,6 @@
       "LIMATION",
       "NOTABLY"
     ],
-    "generatedAt": "2026-07-03T12:53:56.854Z"
+    "generatedAt": "2026-07-01T01:29:49.365Z"
   }
 }

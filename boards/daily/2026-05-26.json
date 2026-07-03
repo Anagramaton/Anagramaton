@@ -138,199 +138,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1129810,
+    "maxPossibleScore": 2773770,
     "minAchievableScore": 2217600,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "OBJECTIVIZED",
-          "SLUBBY",
-          "NUMNAHS",
-          "BOOBY",
-          "THRIP"
+          "OBJECTIVIZES",
+          "BLABBY",
+          "COWBOY",
+          "QUIBBLED"
         ],
-        "wordTotal": 1129810,
-        "penalty": 115,
-        "finalScore": 1129695,
-        "scoreTiers": {
-          "good": 451878,
-          "great": 734302,
-          "superb": 960241
-        }
+        "wordTotal": 1109812,
+        "penalty": 139,
+        "finalScore": 1109673
+      },
+      {
+        "words": [
+          "OBJECTIVIZES",
+          "BLABBY",
+          "COWBOY",
+          "QUIBBLED"
+        ],
+        "wordTotal": 1109812,
+        "penalty": 139,
+        "finalScore": 1109673
+      },
+      {
+        "words": [
+          "OBJECTIVIZES",
+          "QUIBBLED",
+          "BLABBY",
+          "COWBOY"
+        ],
+        "wordTotal": 1109812,
+        "penalty": 139,
+        "finalScore": 1109673
       }
     ],
-    "generatedAt": "2026-07-03T12:53:53.868Z",
-    "optimalMoves": 5,
-    "averageWordLength": 7,
-    "gemDensity": 0.082,
-    "tilesCleared": 35,
-    "tilesRemaining": 26,
-    "tileClearancePercent": 57.4,
-    "fullClear": false,
-    "solutionPath": [
-      "OBJECTIVIZED",
-      "SLUBBY",
-      "NUMNAHS",
-      "BOOBY",
-      "THRIP"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 1129695,
-      "wordCount": 5,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 12,
-          "estimatedPoints": 0,
-          "positional": "12-letter word near the center lanes",
-          "category": "A compound-style word — 12 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 12 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "O__________D"
-            },
-            {
-              "level": 3,
-              "text": "OB________ED"
-            },
-            {
-              "level": 4,
-              "text": "O__E__I_I_E_"
-            },
-            {
-              "level": 5,
-              "text": "OBJECTIVIZE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "S____Y"
-            },
-            {
-              "level": 3,
-              "text": "SL__BY"
-            },
-            {
-              "level": 4,
-              "text": "__U___"
-            },
-            {
-              "level": 5,
-              "text": "SLUBB_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "N_____S"
-            },
-            {
-              "level": 3,
-              "text": "NU___HS"
-            },
-            {
-              "level": 4,
-              "text": "_U__A__"
-            },
-            {
-              "level": 5,
-              "text": "NUMNAH_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B___Y"
-            },
-            {
-              "level": 3,
-              "text": "BO_BY"
-            },
-            {
-              "level": 4,
-              "text": "_OO__"
-            },
-            {
-              "level": 5,
-              "text": "BOOB_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "T___P"
-            },
-            {
-              "level": 3,
-              "text": "TH_IP"
-            },
-            {
-              "level": 4,
-              "text": "___I_"
-            },
-            {
-              "level": 5,
-              "text": "THRI_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.727Z"
   }
 }

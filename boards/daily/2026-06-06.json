@@ -155,231 +155,44 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 126995,
+    "maxPossibleScore": 323600,
     "minAchievableScore": 241920,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "CARNIVAL",
           "CHUTZPAH",
-          "CACIQUE",
-          "REPARTEE",
-          "FORZA",
-          "UNGAG"
+          "BLACKJACKING",
+          "QUIZZING",
+          "FAZING"
         ],
-        "wordTotal": 126995,
-        "penalty": 88,
-        "finalScore": 126907,
-        "scoreTiers": {
-          "good": 50763,
-          "great": 82490,
-          "superb": 107871
-        }
+        "wordTotal": 129776,
+        "penalty": 121,
+        "finalScore": 129655
+      },
+      {
+        "words": [
+          "CHUTZPAH",
+          "BLACKJACKING",
+          "QUIZZING",
+          "FAZING"
+        ],
+        "wordTotal": 129776,
+        "penalty": 121,
+        "finalScore": 129655
+      },
+      {
+        "words": [
+          "BLACKJACKING",
+          "CHUTZPAH",
+          "QUIZZING",
+          "FAZING"
+        ],
+        "wordTotal": 129776,
+        "penalty": 121,
+        "finalScore": 129655
       }
     ],
-    "generatedAt": "2026-07-03T12:53:54.266Z",
-    "optimalMoves": 6,
-    "averageWordLength": 6.8,
-    "gemDensity": 0.082,
-    "tilesCleared": 40,
-    "tilesRemaining": 21,
-    "tileClearancePercent": 65.6,
-    "fullClear": false,
-    "solutionPath": [
-      "CARNIVAL",
-      "CHUTZPAH",
-      "CACIQUE",
-      "REPARTEE",
-      "FORZA",
-      "UNGAG"
-    ],
-    "optimalPathClues": {
-      "strategy": "optimal",
-      "targetScore": 126907,
-      "wordCount": 6,
-      "clues": [
-        {
-          "wordIndex": 1,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A descriptive adjective — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C______L"
-            },
-            {
-              "level": 3,
-              "text": "CA____AL"
-            },
-            {
-              "level": 4,
-              "text": "_A__I_A_"
-            },
-            {
-              "level": 5,
-              "text": "CARNIVA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 2,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C______H"
-            },
-            {
-              "level": 3,
-              "text": "CH____AH"
-            },
-            {
-              "level": 4,
-              "text": "__U___A_"
-            },
-            {
-              "level": 5,
-              "text": "CHUTZPA_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 3,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C_____E"
-            },
-            {
-              "level": 3,
-              "text": "CA___UE"
-            },
-            {
-              "level": 4,
-              "text": "_A_I_UE"
-            },
-            {
-              "level": 5,
-              "text": "CACIQU_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A word related to doing something again (8 letters)"
-            },
-            {
-              "level": 2,
-              "text": "R______E"
-            },
-            {
-              "level": 3,
-              "text": "RE____EE"
-            },
-            {
-              "level": 4,
-              "text": "_E_A__EE"
-            },
-            {
-              "level": 5,
-              "text": "REPARTE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "F___A"
-            },
-            {
-              "level": 3,
-              "text": "FO_ZA"
-            },
-            {
-              "level": 4,
-              "text": "_O__A"
-            },
-            {
-              "level": 5,
-              "text": "FORZ_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 0,
-          "positional": "5-letter word near the center lanes",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Something described as \"not\" or reversed (5 letters)"
-            },
-            {
-              "level": 2,
-              "text": "U___G"
-            },
-            {
-              "level": 3,
-              "text": "UN_AG"
-            },
-            {
-              "level": 4,
-              "text": "U__A_"
-            },
-            {
-              "level": 5,
-              "text": "UNGA_"
-            }
-          ],
-          "features": []
-        }
-      ]
-    }
+    "generatedAt": "2026-05-12T20:01:53.872Z"
   }
 }

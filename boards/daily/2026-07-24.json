@@ -111,70 +111,98 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 2472,
+    "maxPossibleScore": 6553,
     "minAchievableScore": 3784,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "PLEXUSES",
+          "COMPLEXUSES",
           "POLITICKERS",
           "OVERWARMS",
           "KETOGENIC",
           "PLOUGHED",
-          "POSHEST",
-          "LABOUR"
+          "POSTURAL",
+          "EBOOK"
         ],
-        "wordTotal": 2472,
-        "penalty": 18,
-        "finalScore": 2454,
-        "scoreTiers": {
-          "good": 982,
-          "great": 1595,
-          "superb": 2086
-        }
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
+      },
+      {
+        "words": [
+          "COMPLEXUSES",
+          "OVERWARMS",
+          "POLITICKERS",
+          "KETOGENIC",
+          "PLOUGHED",
+          "POSTURAL",
+          "EBOOK"
+        ],
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
+      },
+      {
+        "words": [
+          "COMPLEXUSES",
+          "POLITICKERS",
+          "OVERWARMS",
+          "KETOGENIC",
+          "PLOUGHED",
+          "POSTURAL",
+          "EBOOK"
+        ],
+        "wordTotal": 3385,
+        "penalty": 0,
+        "finalScore": 3385
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2454,
+      "targetScore": 3385,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
-          "category": "A familiar everyday word — 8 letters",
+          "length": 11,
+          "estimatedPoints": 1892,
+          "positional": "A 11-letter word uses the ST digraph tile",
+          "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
+              "text": "Pattern hint: 11 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "P______S"
+              "text": "C_________S"
             },
             {
               "level": 3,
-              "text": "PL____ES"
+              "text": "CO_______ES"
             },
             {
               "level": 4,
-              "text": "__E_U_E_"
+              "text": "_O___E_U_E_"
             },
             {
               "level": 5,
-              "text": "PLEXUSE_"
+              "text": "COMPLEXUSE_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses prism for 2× multiplier",
+            "Uses emerald gem",
+            "Uses 2 digraph tiles",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 2,
           "length": 11,
-          "estimatedPoints": 0,
-          "positional": "11-letter word near the center lanes",
+          "estimatedPoints": 396,
+          "positional": "A 11-letter word runs from upper-left toward center",
           "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
@@ -203,8 +231,8 @@
         {
           "wordIndex": 3,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 333,
+          "positional": "A 9-letter word sits in the center quadrant",
           "category": "A compound-style word — 9 letters",
           "hints": [
             {
@@ -233,8 +261,8 @@
         {
           "wordIndex": 4,
           "length": 9,
-          "estimatedPoints": 0,
-          "positional": "9-letter word near the center lanes",
+          "estimatedPoints": 261,
+          "positional": "A 9-letter word sits in the center quadrant",
           "category": "A descriptive adjective — 9 letters",
           "hints": [
             {
@@ -263,8 +291,8 @@
         {
           "wordIndex": 5,
           "length": 8,
-          "estimatedPoints": 0,
-          "positional": "8-letter word near the center lanes",
+          "estimatedPoints": 216,
+          "positional": "A 8-letter word runs from center toward bottom",
           "category": "A compound-style word — 8 letters",
           "hints": [
             {
@@ -292,60 +320,63 @@
         },
         {
           "wordIndex": 6,
-          "length": 7,
-          "estimatedPoints": 0,
-          "positional": "7-letter word near the center lanes",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 8,
+          "estimatedPoints": 192,
+          "positional": "A 8-letter word uses the HE digraph tile",
+          "category": "A descriptive adjective — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 8 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "P_____T"
+              "text": "P______L"
             },
             {
               "level": 3,
-              "text": "PO___ST"
+              "text": "PO____AL"
             },
             {
               "level": 4,
-              "text": "_O__E__"
+              "text": "_O__U_A_"
             },
             {
               "level": 5,
-              "text": "POSHES_"
+              "text": "POSTURA_"
             }
           ],
-          "features": []
+          "features": [
+            "Uses 1 digraph tile",
+            "Uses a portal tile"
+          ]
         },
         {
           "wordIndex": 7,
-          "length": 6,
-          "estimatedPoints": 0,
-          "positional": "6-letter word near the center lanes",
-          "category": "A familiar everyday word — 6 letters",
+          "length": 5,
+          "estimatedPoints": 95,
+          "positional": "A 5-letter word runs from lower-left toward bottom",
+          "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
+              "text": "Pattern hint: 5 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "L____R"
+              "text": "E___K"
             },
             {
               "level": 3,
-              "text": "LA__UR"
+              "text": "EB_OK"
             },
             {
               "level": 4,
-              "text": "_A_OU_"
+              "text": "E_OO_"
             },
             {
               "level": 5,
-              "text": "LABOU_"
+              "text": "EBOO_"
             }
           ],
           "features": []
@@ -354,20 +385,20 @@
     },
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 8.3,
+    "averageWordLength": 8.7,
     "gemDensity": 0.016,
-    "tilesCleared": 56,
-    "tilesRemaining": 5,
-    "tileClearancePercent": 91.8,
-    "fullClear": false,
+    "tilesCleared": 61,
+    "tilesRemaining": 0,
+    "tileClearancePercent": 100,
+    "fullClear": true,
     "solutionPath": [
-      "PLEXUSES",
+      "COMPLEXUSES",
       "POLITICKERS",
       "OVERWARMS",
       "KETOGENIC",
       "PLOUGHED",
-      "POSHEST",
-      "LABOUR"
+      "POSTURAL",
+      "EBOOK"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -380,6 +411,6 @@
       "POSTURAL",
       "EBOOK"
     ],
-    "generatedAt": "2026-07-03T12:53:56.578Z"
+    "generatedAt": "2026-06-25T01:24:20.026Z"
   }
 }
