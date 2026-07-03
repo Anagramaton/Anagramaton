@@ -111,100 +111,40 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 4883,
+    "maxPossibleScore": 2240,
     "minAchievableScore": 1782,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "RINGBARKS",
-          "ENLEVEMENTS",
           "INFRACTOR",
           "LAPWORK",
-          "URANIDES",
-          "ANTICKS",
-          "HANCH",
-          "CETES"
+          "ENRACED",
+          "ETATISMES",
+          "DIVELLENT",
+          "SHUNS"
         ],
-        "wordTotal": 2672,
-        "penalty": 0,
-        "finalScore": 2672
-      },
-      {
-        "words": [
-          "RINGBARKS",
-          "ENLEVEMENTS",
-          "INFRACTOR",
-          "LAPWORK",
-          "ANTICKS",
-          "URANIDES",
-          "HANCH",
-          "CETES"
-        ],
-        "wordTotal": 2672,
-        "penalty": 0,
-        "finalScore": 2672
-      },
-      {
-        "words": [
-          "ENLEVEMENTS",
-          "RINGBARKS",
-          "INFRACTOR",
-          "URANIDES",
-          "LAPWORK",
-          "ANTICKS",
-          "HANCH",
-          "CETES"
-        ],
-        "wordTotal": 2672,
-        "penalty": 0,
-        "finalScore": 2672
+        "wordTotal": 2240,
+        "penalty": 27,
+        "finalScore": 2213,
+        "scoreTiers": {
+          "good": 885,
+          "great": 1438,
+          "superb": 1881
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2672,
-      "wordCount": 8,
+      "targetScore": 2213,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 11,
-          "estimatedPoints": 792,
-          "positional": "A 11-letter word uses the LE digraph tile",
-          "category": "A familiar everyday word — 11 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 11 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E_________S"
-            },
-            {
-              "level": 3,
-              "text": "EN_______TS"
-            },
-            {
-              "level": 4,
-              "text": "E__E_E_E___"
-            },
-            {
-              "level": 5,
-              "text": "ENLEVEMENT_"
-            }
-          ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 2,
           "length": 9,
-          "estimatedPoints": 891,
-          "positional": "A 9-letter word passes through the gold gem",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -228,15 +168,13 @@
               "text": "RINGBARK_"
             }
           ],
-          "features": [
-            "Uses gold gem"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 3,
+          "wordIndex": 2,
           "length": 9,
-          "estimatedPoints": 270,
-          "positional": "A 9-letter word sits in the center quadrant",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
           "category": "A role/profession-style word — 9 letters",
           "hints": [
             {
@@ -263,40 +201,10 @@
           "features": []
         },
         {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 176,
-          "positional": "A 8-letter word sits in the center quadrant",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "U______S"
-            },
-            {
-              "level": 3,
-              "text": "UR____ES"
-            },
-            {
-              "level": 4,
-              "text": "U_A_I_E_"
-            },
-            {
-              "level": 5,
-              "text": "URANIDE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
+          "wordIndex": 3,
           "length": 7,
-          "estimatedPoints": 210,
-          "positional": "A 7-letter word runs from center toward lower-left",
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
           "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
@@ -320,47 +228,103 @@
               "text": "LAPWOR_"
             }
           ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 6,
+          "wordIndex": 4,
           "length": 7,
-          "estimatedPoints": 168,
-          "positional": "A 7-letter word uses the GH digraph tile",
-          "category": "A familiar everyday word — 7 letters",
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "An action verb form — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 7 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "A_____S"
+              "text": "E_____D"
             },
             {
               "level": 3,
-              "text": "AN___KS"
+              "text": "EN___ED"
             },
             {
               "level": 4,
-              "text": "A__I___"
+              "text": "E__A_E_"
             },
             {
               "level": 5,
-              "text": "ANTICK_"
+              "text": "ENRACE_"
             }
           ],
-          "features": [
-            "Uses 2 digraph tiles"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 9,
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E_______S"
+            },
+            {
+              "level": 3,
+              "text": "ET_____ES"
+            },
+            {
+              "level": 4,
+              "text": "E_A_I__E_"
+            },
+            {
+              "level": 5,
+              "text": "ETATISME_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 9,
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D_______T"
+            },
+            {
+              "level": 3,
+              "text": "DI_____NT"
+            },
+            {
+              "level": 4,
+              "text": "_I_E__E__"
+            },
+            {
+              "level": 5,
+              "text": "DIVELLEN_"
+            }
+          ],
+          "features": []
         },
         {
           "wordIndex": 7,
           "length": 5,
-          "estimatedPoints": 90,
-          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -369,49 +333,19 @@
             },
             {
               "level": 2,
-              "text": "H___H"
+              "text": "S___S"
             },
             {
               "level": 3,
-              "text": "HA_CH"
+              "text": "SH_NS"
             },
             {
               "level": 4,
-              "text": "_A___"
+              "text": "__U__"
             },
             {
               "level": 5,
-              "text": "HANC_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
-          "length": 5,
-          "estimatedPoints": 75,
-          "positional": "A 5-letter word runs from lower-left toward bottom",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C___S"
-            },
-            {
-              "level": 3,
-              "text": "CE_ES"
-            },
-            {
-              "level": 4,
-              "text": "_E_E_"
-            },
-            {
-              "level": 5,
-              "text": "CETE_"
+              "text": "SHUN_"
             }
           ],
           "features": []
@@ -419,22 +353,21 @@
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7.1,
+    "optimalMoves": 7,
+    "averageWordLength": 7.9,
     "gemDensity": 0.016,
-    "tilesCleared": 57,
-    "tilesRemaining": 4,
-    "tileClearancePercent": 93.4,
+    "tilesCleared": 53,
+    "tilesRemaining": 8,
+    "tileClearancePercent": 86.9,
     "fullClear": false,
     "solutionPath": [
       "RINGBARKS",
-      "EMINENT",
-      "ANTICKED",
-      "CARROCH",
-      "ALEVINS",
-      "UNWORK",
-      "SHARPEST",
-      "TESLA"
+      "INFRACTOR",
+      "LAPWORK",
+      "ENRACED",
+      "ETATISMES",
+      "DIVELLENT",
+      "SHUNS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -448,6 +381,6 @@
       "HANCH",
       "CETES"
     ],
-    "generatedAt": "2026-05-22T01:23:57.242Z"
+    "generatedAt": "2026-07-03T12:53:54.862Z"
   }
 }

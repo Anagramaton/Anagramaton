@@ -123,191 +123,71 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 4780,
+    "maxPossibleScore": 2217,
     "minAchievableScore": 2112,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "DEMONSTRATE",
-          "ENORMOUSLY",
-          "OFFTAKES",
+          "FARMOST",
           "ZAPTIEHS",
-          "SPREAZES",
-          "ASSIGNING",
-          "STROYER"
+          "GHESSING",
+          "FORNENST",
+          "AZLON",
+          "MYSOSTS",
+          "KERERUS",
+          "ALTHEA"
         ],
-        "wordTotal": 2774,
-        "penalty": 0,
-        "finalScore": 2774
-      },
-      {
-        "words": [
-          "DEMONSTRATE",
-          "ENORMOUSLY",
-          "OFFTAKES",
-          "ZAPTIEHS",
-          "SPREAZES",
-          "ASSIGNING",
-          "STROYER"
-        ],
-        "wordTotal": 2774,
-        "penalty": 0,
-        "finalScore": 2774
-      },
-      {
-        "words": [
-          "DEMONSTRATE",
-          "ENORMOUSLY",
-          "ASSIGNING",
-          "OFFTAKES",
-          "ZAPTIEHS",
-          "SPREAZES",
-          "STROYER"
-        ],
-        "wordTotal": 2774,
-        "penalty": 0,
-        "finalScore": 2774
+        "wordTotal": 2217,
+        "penalty": 33,
+        "finalScore": 2184,
+        "scoreTiers": {
+          "good": 874,
+          "great": 1420,
+          "superb": 1856
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2774,
-      "wordCount": 7,
+      "targetScore": 2184,
+      "wordCount": 8,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 11,
-          "estimatedPoints": 1056,
-          "positional": "A 11-letter word uses the EA digraph tile",
-          "category": "A familiar everyday word — 11 letters",
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 11 letters with 4 vowels"
+              "text": "Pattern hint: 7 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "D_________E"
+              "text": "F_____T"
             },
             {
               "level": 3,
-              "text": "DE_______TE"
+              "text": "FA___ST"
             },
             {
               "level": 4,
-              "text": "_E_O____A_E"
+              "text": "_A__O__"
             },
             {
               "level": 5,
-              "text": "DEMONSTRAT_"
-            }
-          ],
-          "features": [
-            "Uses gold gem",
-            "Uses 3 digraph tiles",
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 2,
-          "length": 10,
-          "estimatedPoints": 600,
-          "positional": "A 10-letter word routes through the purple prism",
-          "category": "A compound-style word — 10 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A modifier/adverb style word ending in -LY"
-            },
-            {
-              "level": 2,
-              "text": "E________Y"
-            },
-            {
-              "level": 3,
-              "text": "EN______LY"
-            },
-            {
-              "level": 4,
-              "text": "E_O__OU___"
-            },
-            {
-              "level": 5,
-              "text": "ENORMOUSL_"
-            }
-          ],
-          "features": [
-            "Uses prism for 2× multiplier"
-          ]
-        },
-        {
-          "wordIndex": 3,
-          "length": 9,
-          "estimatedPoints": 234,
-          "positional": "A 9-letter word uses the TH digraph tile",
-          "category": "A compound-style word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A present-participle action word ending in -ING"
-            },
-            {
-              "level": 2,
-              "text": "A_______G"
-            },
-            {
-              "level": 3,
-              "text": "AS_____NG"
-            },
-            {
-              "level": 4,
-              "text": "A__I__I__"
-            },
-            {
-              "level": 5,
-              "text": "ASSIGNIN_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 256,
-          "positional": "A 8-letter word sits in the center quadrant",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "O______S"
-            },
-            {
-              "level": 3,
-              "text": "OF____ES"
-            },
-            {
-              "level": 4,
-              "text": "O___A_E_"
-            },
-            {
-              "level": 5,
-              "text": "OFFTAKE_"
+              "text": "FARMOS_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 5,
+          "wordIndex": 2,
           "length": 8,
-          "estimatedPoints": 248,
-          "positional": "A 8-letter word runs from center toward bottom",
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
           "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
@@ -331,68 +211,184 @@
               "text": "ZAPTIEH_"
             }
           ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 6,
+          "wordIndex": 3,
           "length": 8,
-          "estimatedPoints": 240,
-          "positional": "A 8-letter word uses the GH digraph tile",
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "G______G"
+            },
+            {
+              "level": 3,
+              "text": "GH____NG"
+            },
+            {
+              "level": 4,
+              "text": "__E__I__"
+            },
+            {
+              "level": 5,
+              "text": "GHESSIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
           "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
+              "text": "Pattern hint: 8 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "S______S"
+              "text": "F______T"
             },
             {
               "level": 3,
-              "text": "SP____ES"
+              "text": "FO____ST"
             },
             {
               "level": 4,
-              "text": "___EA_E_"
+              "text": "_O__E___"
             },
             {
               "level": 5,
-              "text": "SPREAZE_"
+              "text": "FORNENS_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A___N"
+            },
+            {
+              "level": 3,
+              "text": "AZ_ON"
+            },
+            {
+              "level": 4,
+              "text": "A__O_"
+            },
+            {
+              "level": 5,
+              "text": "AZLO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "M_____S"
+            },
+            {
+              "level": 3,
+              "text": "MY___TS"
+            },
+            {
+              "level": 4,
+              "text": "___O___"
+            },
+            {
+              "level": 5,
+              "text": "MYSOST_"
+            }
+          ],
+          "features": []
         },
         {
           "wordIndex": 7,
           "length": 7,
-          "estimatedPoints": 140,
-          "positional": "A 7-letter word runs from bottom toward lower-left",
-          "category": "A role/profession-style word — 7 letters",
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 7 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "S_____R"
+              "text": "K_____S"
             },
             {
               "level": 3,
-              "text": "ST___ER"
+              "text": "KE___US"
             },
             {
               "level": 4,
-              "text": "___O_E_"
+              "text": "_E_E_U_"
             },
             {
               "level": 5,
-              "text": "STROYE_"
+              "text": "KERERU_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A____A"
+            },
+            {
+              "level": 3,
+              "text": "AL__EA"
+            },
+            {
+              "level": 4,
+              "text": "A___EA"
+            },
+            {
+              "level": 5,
+              "text": "ALTHE_"
             }
           ],
           "features": []
@@ -400,21 +396,22 @@
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 7,
-    "averageWordLength": 8.3,
+    "optimalMoves": 8,
+    "averageWordLength": 7,
     "gemDensity": 0.016,
-    "tilesCleared": 58,
-    "tilesRemaining": 3,
-    "tileClearancePercent": 95.1,
+    "tilesCleared": 51,
+    "tilesRemaining": 10,
+    "tileClearancePercent": 83.6,
     "fullClear": false,
     "solutionPath": [
-      "DEMONSTRATE",
-      "ENORMOUSLY",
-      "OFFTAKES",
+      "FARMOST",
       "ZAPTIEHS",
-      "SPREAZES",
-      "STRONGER",
-      "AYINS"
+      "GHESSING",
+      "FORNENST",
+      "AZLON",
+      "MYSOSTS",
+      "KERERUS",
+      "ALTHEA"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -427,6 +424,6 @@
       "SPREAZES",
       "STROYER"
     ],
-    "generatedAt": "2026-05-23T01:18:48.236Z"
+    "generatedAt": "2026-07-03T12:53:54.907Z"
   }
 }

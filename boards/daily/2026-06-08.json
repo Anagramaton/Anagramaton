@@ -155,47 +155,295 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 3369600,
+    "maxPossibleScore": 398122,
     "minAchievableScore": 2673216,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "BACKTRACKINGS",
-          "PICKAX",
-          "QUETZALS",
-          "QUEZAL",
-          "BOYAUX"
+          "PICKABACKING",
+          "TAXITES",
+          "AZURES",
+          "FLUORIN",
+          "SQUARES",
+          "AEMULE",
+          "BOOAY",
+          "BOREE"
         ],
-        "wordTotal": 1348368,
-        "penalty": 102,
-        "finalScore": 1348266
-      },
-      {
-        "words": [
-          "BACKTRACKINGS",
-          "PICKAX",
-          "QUETZALS",
-          "QUEZAL",
-          "BOYAUX"
-        ],
-        "wordTotal": 1348368,
-        "penalty": 102,
-        "finalScore": 1348266
-      },
-      {
-        "words": [
-          "BACKTRACKINGS",
-          "QUETZALS",
-          "PICKAX",
-          "QUEZAL",
-          "BOYAUX"
-        ],
-        "wordTotal": 1348368,
-        "penalty": 102,
-        "finalScore": 1348266
+        "wordTotal": 398122,
+        "penalty": 34,
+        "finalScore": 398088,
+        "scoreTiers": {
+          "good": 159235,
+          "great": 258757,
+          "superb": 338375
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.895Z"
+    "generatedAt": "2026-07-03T12:53:54.329Z",
+    "optimalMoves": 8,
+    "averageWordLength": 6.9,
+    "gemDensity": 0.082,
+    "tilesCleared": 52,
+    "tilesRemaining": 9,
+    "tileClearancePercent": 85.2,
+    "fullClear": false,
+    "solutionPath": [
+      "PICKABACKING",
+      "TAXITES",
+      "AZURES",
+      "FLUORIN",
+      "SQUARES",
+      "AEMULE",
+      "BOOAY",
+      "BOREE"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 398088,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 12,
+          "estimatedPoints": 0,
+          "positional": "12-letter word near the center lanes",
+          "category": "A compound-style word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "P__________G"
+            },
+            {
+              "level": 3,
+              "text": "PI________NG"
+            },
+            {
+              "level": 4,
+              "text": "_I__A_A__I__"
+            },
+            {
+              "level": 5,
+              "text": "PICKABACKIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T_____S"
+            },
+            {
+              "level": 3,
+              "text": "TA___ES"
+            },
+            {
+              "level": 4,
+              "text": "_A_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "TAXITE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A____S"
+            },
+            {
+              "level": 3,
+              "text": "AZ__ES"
+            },
+            {
+              "level": 4,
+              "text": "A_U_E_"
+            },
+            {
+              "level": 5,
+              "text": "AZURE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F_____N"
+            },
+            {
+              "level": 3,
+              "text": "FL___IN"
+            },
+            {
+              "level": 4,
+              "text": "__UO_I_"
+            },
+            {
+              "level": 5,
+              "text": "FLUORI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_____S"
+            },
+            {
+              "level": 3,
+              "text": "SQ___ES"
+            },
+            {
+              "level": 4,
+              "text": "__UA_E_"
+            },
+            {
+              "level": 5,
+              "text": "SQUARE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A____E"
+            },
+            {
+              "level": 3,
+              "text": "AE__LE"
+            },
+            {
+              "level": 4,
+              "text": "AE_U_E"
+            },
+            {
+              "level": 5,
+              "text": "AEMUL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___Y"
+            },
+            {
+              "level": 3,
+              "text": "BO_AY"
+            },
+            {
+              "level": 4,
+              "text": "_OOA_"
+            },
+            {
+              "level": 5,
+              "text": "BOOA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___E"
+            },
+            {
+              "level": 3,
+              "text": "BO_EE"
+            },
+            {
+              "level": 4,
+              "text": "_O_EE"
+            },
+            {
+              "level": 5,
+              "text": "BORE_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

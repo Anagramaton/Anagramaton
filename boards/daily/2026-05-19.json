@@ -143,44 +143,263 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 276760,
+    "maxPossibleScore": 79460,
     "minAchievableScore": 134784,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "EXTRAVAGANZAS",
-          "JACUZZIS",
-          "BRAWNS",
-          "BUFFED"
+          "CUIFS",
+          "BRITT",
+          "FUZZLED",
+          "WIGGA",
+          "UPBYE",
+          "FLACK"
         ],
-        "wordTotal": 111064,
-        "penalty": 109,
-        "finalScore": 110955
-      },
-      {
-        "words": [
-          "EXTRAVAGANZAS",
-          "JACUZZIS",
-          "BRAWNS",
-          "BUFFED"
-        ],
-        "wordTotal": 111064,
-        "penalty": 109,
-        "finalScore": 110955
-      },
-      {
-        "words": [
-          "EXTRAVAGANZAS",
-          "JACUZZIS",
-          "BRAWNS",
-          "BUFFED"
-        ],
-        "wordTotal": 111064,
-        "penalty": 109,
-        "finalScore": 110955
+        "wordTotal": 79460,
+        "penalty": 70,
+        "finalScore": 79390,
+        "scoreTiers": {
+          "good": 31756,
+          "great": 51604,
+          "superb": 67482
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.614Z"
+    "generatedAt": "2026-07-03T12:53:53.632Z",
+    "optimalMoves": 7,
+    "averageWordLength": 6.4,
+    "gemDensity": 0.082,
+    "tilesCleared": 44,
+    "tilesRemaining": 17,
+    "tileClearancePercent": 72.1,
+    "fullClear": false,
+    "solutionPath": [
+      "EXTRAVAGANZAS",
+      "CUIFS",
+      "BRITT",
+      "FUZZLED",
+      "WIGGA",
+      "UPBYE",
+      "FLACK"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 79390,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E___________S"
+            },
+            {
+              "level": 3,
+              "text": "EX_________AS"
+            },
+            {
+              "level": 4,
+              "text": "E___A_A_A__A_"
+            },
+            {
+              "level": 5,
+              "text": "EXTRAVAGANZA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C___S"
+            },
+            {
+              "level": 3,
+              "text": "CU_FS"
+            },
+            {
+              "level": 4,
+              "text": "_UI__"
+            },
+            {
+              "level": 5,
+              "text": "CUIF_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "B___T"
+            },
+            {
+              "level": 3,
+              "text": "BR_TT"
+            },
+            {
+              "level": 4,
+              "text": "__I__"
+            },
+            {
+              "level": 5,
+              "text": "BRIT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "An action verb form — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F_____D"
+            },
+            {
+              "level": 3,
+              "text": "FU___ED"
+            },
+            {
+              "level": 4,
+              "text": "_U___E_"
+            },
+            {
+              "level": 5,
+              "text": "FUZZLE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W___A"
+            },
+            {
+              "level": 3,
+              "text": "WI_GA"
+            },
+            {
+              "level": 4,
+              "text": "_I__A"
+            },
+            {
+              "level": 5,
+              "text": "WIGG_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "U___E"
+            },
+            {
+              "level": 3,
+              "text": "UP_YE"
+            },
+            {
+              "level": 4,
+              "text": "U___E"
+            },
+            {
+              "level": 5,
+              "text": "UPBY_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "F___K"
+            },
+            {
+              "level": 3,
+              "text": "FL_CK"
+            },
+            {
+              "level": 4,
+              "text": "__A__"
+            },
+            {
+              "level": 5,
+              "text": "FLAC_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

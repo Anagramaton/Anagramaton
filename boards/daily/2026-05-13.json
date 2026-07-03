@@ -143,44 +143,263 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 382800,
+    "maxPossibleScore": 132459,
     "minAchievableScore": 249600,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "EXCLUDABILITY",
-          "ZIGZAGGY",
-          "EXAHERTZ",
-          "ZIGZAG"
-        ],
-        "wordTotal": 154464,
-        "penalty": 126,
-        "finalScore": 154338
-      },
-      {
-        "words": [
-          "EXCLUDABILITY",
-          "ZIGZAGGY",
+          "GAROTE",
           "ZIGZAG",
-          "EXAHERTZ"
+          "GUILED",
+          "WHIRS",
+          "HAYER",
+          "DINTS"
         ],
-        "wordTotal": 154464,
-        "penalty": 126,
-        "finalScore": 154338
-      },
-      {
-        "words": [
-          "EXCLUDABILITY",
-          "ZIGZAGGY",
-          "EXAHERTZ",
-          "ZIGZAG"
-        ],
-        "wordTotal": 154464,
-        "penalty": 126,
-        "finalScore": 154338
+        "wordTotal": 132459,
+        "penalty": 62,
+        "finalScore": 132397,
+        "scoreTiers": {
+          "good": 52959,
+          "great": 86058,
+          "superb": 112537
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.526Z"
+    "generatedAt": "2026-07-03T12:53:53.401Z",
+    "optimalMoves": 7,
+    "averageWordLength": 6.6,
+    "gemDensity": 0.082,
+    "tilesCleared": 45,
+    "tilesRemaining": 16,
+    "tileClearancePercent": 73.8,
+    "fullClear": false,
+    "solutionPath": [
+      "EXCLUDABILITY",
+      "GAROTE",
+      "ZIGZAG",
+      "GUILED",
+      "WHIRS",
+      "HAYER",
+      "DINTS"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 132397,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "An abstract noun — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E___________Y"
+            },
+            {
+              "level": 3,
+              "text": "EX_________TY"
+            },
+            {
+              "level": 4,
+              "text": "E___U_A_I_I__"
+            },
+            {
+              "level": 5,
+              "text": "EXCLUDABILIT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G____E"
+            },
+            {
+              "level": 3,
+              "text": "GA__TE"
+            },
+            {
+              "level": 4,
+              "text": "_A_O_E"
+            },
+            {
+              "level": 5,
+              "text": "GAROT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Z____G"
+            },
+            {
+              "level": 3,
+              "text": "ZI__AG"
+            },
+            {
+              "level": 4,
+              "text": "_I__A_"
+            },
+            {
+              "level": 5,
+              "text": "ZIGZA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "An action verb form — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G____D"
+            },
+            {
+              "level": 3,
+              "text": "GU__ED"
+            },
+            {
+              "level": 4,
+              "text": "_UI_E_"
+            },
+            {
+              "level": 5,
+              "text": "GUILE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "W___S"
+            },
+            {
+              "level": 3,
+              "text": "WH_RS"
+            },
+            {
+              "level": 4,
+              "text": "__I__"
+            },
+            {
+              "level": 5,
+              "text": "WHIR_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A role/profession-style word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H___R"
+            },
+            {
+              "level": 3,
+              "text": "HA_ER"
+            },
+            {
+              "level": 4,
+              "text": "_A_E_"
+            },
+            {
+              "level": 5,
+              "text": "HAYE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "D___S"
+            },
+            {
+              "level": 3,
+              "text": "DI_TS"
+            },
+            {
+              "level": 4,
+              "text": "_I___"
+            },
+            {
+              "level": 5,
+              "text": "DINT_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

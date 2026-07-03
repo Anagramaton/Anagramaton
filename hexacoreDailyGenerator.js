@@ -350,12 +350,25 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
       if (!ncell) continue;
 
       const letter = ncell.letter.toUpperCase();
-      const next = trieNode[letter];
-      if (!next) continue; // Trie pruning — no words down this branch
+
+      // Digraph tiles contribute two characters but occupy a single tile.
+      // Traverse two trie steps for one tile so the simulation finds words that
+      // are actually playable on the board.
+      let nextNode;
+      if (letter.length === 2) {
+        if (word.length + 2 > SIM_MAX_LEN) continue;
+        const mid = trieNode[letter[0]];
+        if (!mid) continue;
+        nextNode = mid[letter[1]];
+        if (!nextNode) continue;
+      } else {
+        nextNode = trieNode[letter];
+        if (!nextNode) continue; // Trie pruning — no words down this branch
+      }
 
       visited.add(nkey);
       path.push({ key: nkey, q: nq, r: nr });
-      dfs(nq, nr, next, word + letter, path, visited);
+      dfs(nq, nr, nextNode, word + letter, path, visited);
       path.pop();
       visited.delete(nkey);
     }
@@ -365,8 +378,18 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
     if (results.length >= maxResults) break;
     if (!cell) continue;
     const letter = cell.letter.toUpperCase();
-    const trieRoot = trie[letter];
-    if (!trieRoot) continue;
+
+    let trieRoot;
+    if (letter.length === 2) {
+      // Digraph starting tile: advance through both characters to find the trie entry point
+      const mid = trie[letter[0]];
+      if (!mid) continue;
+      trieRoot = mid[letter[1]];
+      if (!trieRoot) continue;
+    } else {
+      trieRoot = trie[letter];
+      if (!trieRoot) continue;
+    }
 
     const [q, r] = key.split(',').map(Number);
     const visited = new Set([key]);
@@ -400,7 +423,15 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
   }
   for (const s of specialTiles) {
     const key = hexKey(s.q, s.r);
-    if (baseSimGrid[key]) baseSimGrid[key].special = s.type;
+    if (baseSimGrid[key]) {
+      baseSimGrid[key].special = s.type;
+      // Use the actual digraph string so the simulation finds words that are
+      // genuinely playable on the board (digraph tiles replace the single letter
+      // that the raw grid stores at that position).
+      if (s.type === 'digraph' && s.digraph) {
+        baseSimGrid[key].letter = String(s.digraph).toUpperCase();
+      }
+    }
   }
 
   const gemCount = specialTiles.filter(s => GEM_MULTIPLIERS[s.type]).length;
@@ -640,7 +671,7 @@ function generateFeatureHints(path, specialTiles) {
   return out;
 }
 
-function generateOptimalPathClues(optimalSolutions, grid, specialTiles) {
+export function generateOptimalPathClues(optimalSolutions, grid, specialTiles) {
   const bestStrategy = Array.isArray(optimalSolutions) ? optimalSolutions[0] : null;
   if (!bestStrategy || !Array.isArray(bestStrategy.words)) return null;
 

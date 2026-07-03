@@ -150,44 +150,295 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 1150455,
+    "maxPossibleScore": 460076,
     "minAchievableScore": 917280,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "EFFECTIVENESS",
-          "JOBBIE",
-          "TWIZZLES",
-          "SAZZES"
+          "ERBIAS",
+          "BAELS",
+          "ZEXES",
+          "ZOEAL",
+          "KREESES",
+          "THRAW",
+          "JURAT"
         ],
-        "wordTotal": 460722,
-        "penalty": 121,
-        "finalScore": 460601
-      },
-      {
-        "words": [
-          "EFFECTIVENESS",
-          "JOBBIE",
-          "SAZZES",
-          "TWIZZLES"
-        ],
-        "wordTotal": 460722,
-        "penalty": 121,
-        "finalScore": 460601
-      },
-      {
-        "words": [
-          "EFFECTIVENESS",
-          "TWIZZLES",
-          "JOBBIE",
-          "SAZZES"
-        ],
-        "wordTotal": 460722,
-        "penalty": 121,
-        "finalScore": 460601
+        "wordTotal": 460076,
+        "penalty": 48,
+        "finalScore": 460028,
+        "scoreTiers": {
+          "good": 184011,
+          "great": 299018,
+          "superb": 391024
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.488Z"
+    "generatedAt": "2026-07-03T12:53:53.362Z",
+    "optimalMoves": 8,
+    "averageWordLength": 6.4,
+    "gemDensity": 0.082,
+    "tilesCleared": 49,
+    "tilesRemaining": 12,
+    "tileClearancePercent": 80.3,
+    "fullClear": false,
+    "solutionPath": [
+      "EFFECTIVENESS",
+      "ERBIAS",
+      "BAELS",
+      "ZEXES",
+      "ZOEAL",
+      "KREESES",
+      "THRAW",
+      "JURAT"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 460028,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "An abstract noun — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A quality/state noun ending in -NESS"
+            },
+            {
+              "level": 2,
+              "text": "E___________S"
+            },
+            {
+              "level": 3,
+              "text": "EF_________SS"
+            },
+            {
+              "level": 4,
+              "text": "E__E__I_E_E__"
+            },
+            {
+              "level": 5,
+              "text": "EFFECTIVENES_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E____S"
+            },
+            {
+              "level": 3,
+              "text": "ER__AS"
+            },
+            {
+              "level": 4,
+              "text": "E__IA_"
+            },
+            {
+              "level": 5,
+              "text": "ERBIA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___S"
+            },
+            {
+              "level": 3,
+              "text": "BA_LS"
+            },
+            {
+              "level": 4,
+              "text": "_AE__"
+            },
+            {
+              "level": 5,
+              "text": "BAEL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Z___S"
+            },
+            {
+              "level": 3,
+              "text": "ZE_ES"
+            },
+            {
+              "level": 4,
+              "text": "_E_E_"
+            },
+            {
+              "level": 5,
+              "text": "ZEXE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A descriptive adjective — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Z___L"
+            },
+            {
+              "level": 3,
+              "text": "ZO_AL"
+            },
+            {
+              "level": 4,
+              "text": "_OEA_"
+            },
+            {
+              "level": 5,
+              "text": "ZOEA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "K_____S"
+            },
+            {
+              "level": 3,
+              "text": "KR___ES"
+            },
+            {
+              "level": 4,
+              "text": "__EE_E_"
+            },
+            {
+              "level": 5,
+              "text": "KREESE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "T___W"
+            },
+            {
+              "level": 3,
+              "text": "TH_AW"
+            },
+            {
+              "level": 4,
+              "text": "___A_"
+            },
+            {
+              "level": 5,
+              "text": "THRA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "J___T"
+            },
+            {
+              "level": 3,
+              "text": "JU_AT"
+            },
+            {
+              "level": 4,
+              "text": "_U_A_"
+            },
+            {
+              "level": 5,
+              "text": "JURA_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

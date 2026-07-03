@@ -111,63 +111,40 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 3935,
+    "maxPossibleScore": 2191,
     "minAchievableScore": 1540,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "LOGOMACHIST",
-          "EMBLEMATISTS",
-          "UNCOBBLED",
-          "LOLIGOS",
-          "ACCIDENT",
-          "FOOTPAD",
-          "MIRKILY"
-        ],
-        "wordTotal": 2398,
-        "penalty": 0,
-        "finalScore": 2398
-      },
-      {
-        "words": [
-          "LOGOMACHIST",
-          "EMBLEMATISTS",
-          "LOLIGOS",
-          "UNCOBBLED",
-          "ACCIDENT",
-          "FOOTPAD",
-          "MIRKILY"
-        ],
-        "wordTotal": 2398,
-        "penalty": 0,
-        "finalScore": 2398
-      },
-      {
-        "words": [
           "EMBLEMATISTS",
           "LOGOMACHIST",
-          "UNCOBBLED",
-          "ACCIDENT",
-          "LOLIGOS",
-          "FOOTPAD",
-          "MIRKILY"
+          "FOOTPLATE",
+          "MIRKILY",
+          "SODAIC",
+          "BOLIDES",
+          "GLUON"
         ],
-        "wordTotal": 2398,
-        "penalty": 0,
-        "finalScore": 2398
+        "wordTotal": 2191,
+        "penalty": 17,
+        "finalScore": 2174,
+        "scoreTiers": {
+          "good": 870,
+          "great": 1413,
+          "superb": 1848
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2398,
+      "targetScore": 2174,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 12,
-          "estimatedPoints": 480,
-          "positional": "A 12-letter word sits in the upper-right quadrant",
+          "estimatedPoints": 0,
+          "positional": "12-letter word near the center lanes",
           "category": "A familiar everyday word — 12 letters",
           "hints": [
             {
@@ -191,15 +168,13 @@
               "text": "EMBLEMATIST_"
             }
           ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
           "length": 11,
-          "estimatedPoints": 770,
-          "positional": "A 11-letter word routes through the purple prism",
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
           "category": "A role/profession-style word — 11 letters",
           "hints": [
             {
@@ -223,109 +198,43 @@
               "text": "LOGOMACHIS_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier"
-          ]
+          "features": []
         },
         {
           "wordIndex": 3,
           "length": 9,
-          "estimatedPoints": 324,
-          "positional": "A 9-letter word uses the ES digraph tile",
-          "category": "A compound-style word — 9 letters",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Something described as \"not\" or reversed (9 letters)"
+              "text": "Pattern hint: 9 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "U_______D"
+              "text": "F_______E"
             },
             {
               "level": 3,
-              "text": "UN_____ED"
+              "text": "FO_____TE"
             },
             {
               "level": 4,
-              "text": "U__O___E_"
+              "text": "_OO___A_E"
             },
             {
               "level": 5,
-              "text": "UNCOBBLE_"
-            }
-          ],
-          "features": [
-            "Uses 2 digraph tiles"
-          ]
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 208,
-          "positional": "A 8-letter word uses the EA digraph tile",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "A______T"
-            },
-            {
-              "level": 3,
-              "text": "AC____NT"
-            },
-            {
-              "level": 4,
-              "text": "A__I_E__"
-            },
-            {
-              "level": 5,
-              "text": "ACCIDEN_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 175,
-          "positional": "A 7-letter word runs from center toward bottom",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "F_____D"
-            },
-            {
-              "level": 3,
-              "text": "FO___AD"
-            },
-            {
-              "level": 4,
-              "text": "_OO__A_"
-            },
-            {
-              "level": 5,
-              "text": "FOOTPA_"
+              "text": "FOOTPLAT_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 6,
+          "wordIndex": 4,
           "length": 7,
-          "estimatedPoints": 175,
-          "positional": "A 7-letter word runs from lower-left toward bottom",
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
           "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
@@ -349,15 +258,43 @@
               "text": "MIRKIL_"
             }
           ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 7,
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A descriptive adjective — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S____C"
+            },
+            {
+              "level": 3,
+              "text": "SO__IC"
+            },
+            {
+              "level": 4,
+              "text": "_O_AI_"
+            },
+            {
+              "level": 5,
+              "text": "SODAI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
           "length": 7,
-          "estimatedPoints": 266,
-          "positional": "A 7-letter word passes through the emerald gem",
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
           "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
@@ -366,24 +303,52 @@
             },
             {
               "level": 2,
-              "text": "L_____S"
+              "text": "B_____S"
             },
             {
               "level": 3,
-              "text": "LO___OS"
+              "text": "BO___ES"
             },
             {
               "level": 4,
-              "text": "_O_I_O_"
+              "text": "_O_I_E_"
             },
             {
               "level": 5,
-              "text": "LOLIGO_"
+              "text": "BOLIDE_"
             }
           ],
-          "features": [
-            "Uses emerald gem"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G___N"
+            },
+            {
+              "level": 3,
+              "text": "GL_ON"
+            },
+            {
+              "level": 4,
+              "text": "__UO_"
+            },
+            {
+              "level": 5,
+              "text": "GLUO_"
+            }
+          ],
+          "features": []
         }
       ]
     },
@@ -391,18 +356,18 @@
     "optimalMoves": 7,
     "averageWordLength": 8.1,
     "gemDensity": 0.016,
-    "tilesCleared": 57,
-    "tilesRemaining": 4,
-    "tileClearancePercent": 93.4,
+    "tilesCleared": 56,
+    "tilesRemaining": 5,
+    "tileClearancePercent": 91.8,
     "fullClear": false,
     "solutionPath": [
+      "EMBLEMATISTS",
       "LOGOMACHIST",
-      "UNCOBBLED",
-      "ACCIDENTAL",
-      "FOOTIEST",
+      "FOOTPLATE",
       "MIRKILY",
-      "AMBLES",
-      "PILOTS"
+      "SODAIC",
+      "BOLIDES",
+      "GLUON"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -415,6 +380,6 @@
       "MIRKILY",
       "LOLIGOS"
     ],
-    "generatedAt": "2026-06-24T01:19:13.798Z"
+    "generatedAt": "2026-07-03T12:53:56.521Z"
   }
 }

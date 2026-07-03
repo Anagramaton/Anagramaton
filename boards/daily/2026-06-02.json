@@ -149,46 +149,295 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 162180,
+    "maxPossibleScore": 16832,
     "minAchievableScore": 124800,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "DECARBURIZING",
-          "MUZZED",
-          "WIZZES",
-          "GIZZES",
-          "BUMBAZED"
+          "RADDOCKES",
+          "GIZZEN",
+          "MIMIC",
+          "BRAWLER",
+          "BINDING",
+          "BURGEE",
+          "QUETHE",
+          "BORAL"
         ],
-        "wordTotal": 65564,
-        "penalty": 100,
-        "finalScore": 65464
-      },
-      {
-        "words": [
-          "DECARBURIZING",
-          "MUZZED",
-          "WIZZES",
-          "GIZZES",
-          "BUMBAZED"
-        ],
-        "wordTotal": 65564,
-        "penalty": 100,
-        "finalScore": 65464
-      },
-      {
-        "words": [
-          "DECARBURIZING",
-          "BUMBAZED",
-          "MUZZED",
-          "WIZZES"
-        ],
-        "wordTotal": 65192,
-        "penalty": 104,
-        "finalScore": 65088
+        "wordTotal": 16832,
+        "penalty": 51,
+        "finalScore": 16781,
+        "scoreTiers": {
+          "good": 6712,
+          "great": 10908,
+          "superb": 14264
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.819Z"
+    "generatedAt": "2026-07-03T12:53:54.126Z",
+    "optimalMoves": 8,
+    "averageWordLength": 6.4,
+    "gemDensity": 0.082,
+    "tilesCleared": 48,
+    "tilesRemaining": 13,
+    "tileClearancePercent": 78.7,
+    "fullClear": false,
+    "solutionPath": [
+      "RADDOCKES",
+      "GIZZEN",
+      "MIMIC",
+      "BRAWLER",
+      "BINDING",
+      "BURGEE",
+      "QUETHE",
+      "BORAL"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 16781,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 9,
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "R_______S"
+            },
+            {
+              "level": 3,
+              "text": "RA_____ES"
+            },
+            {
+              "level": 4,
+              "text": "_A__O__E_"
+            },
+            {
+              "level": 5,
+              "text": "RADDOCKE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G____N"
+            },
+            {
+              "level": 3,
+              "text": "GI__EN"
+            },
+            {
+              "level": 4,
+              "text": "_I__E_"
+            },
+            {
+              "level": 5,
+              "text": "GIZZE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A descriptive adjective — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M___C"
+            },
+            {
+              "level": 3,
+              "text": "MI_IC"
+            },
+            {
+              "level": 4,
+              "text": "_I_I_"
+            },
+            {
+              "level": 5,
+              "text": "MIMI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A role/profession-style word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B_____R"
+            },
+            {
+              "level": 3,
+              "text": "BR___ER"
+            },
+            {
+              "level": 4,
+              "text": "__A__E_"
+            },
+            {
+              "level": 5,
+              "text": "BRAWLE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "An action verb form — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A present-participle action word ending in -ING"
+            },
+            {
+              "level": 2,
+              "text": "B_____G"
+            },
+            {
+              "level": 3,
+              "text": "BI___NG"
+            },
+            {
+              "level": 4,
+              "text": "_I__I__"
+            },
+            {
+              "level": 5,
+              "text": "BINDIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B____E"
+            },
+            {
+              "level": 3,
+              "text": "BU__EE"
+            },
+            {
+              "level": 4,
+              "text": "_U__EE"
+            },
+            {
+              "level": 5,
+              "text": "BURGE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Q____E"
+            },
+            {
+              "level": 3,
+              "text": "QU__HE"
+            },
+            {
+              "level": 4,
+              "text": "_UE__E"
+            },
+            {
+              "level": 5,
+              "text": "QUETH_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A descriptive adjective — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___L"
+            },
+            {
+              "level": 3,
+              "text": "BO_AL"
+            },
+            {
+              "level": 4,
+              "text": "_O_A_"
+            },
+            {
+              "level": 5,
+              "text": "BORA_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

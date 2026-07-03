@@ -111,7 +111,7 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 5325,
+    "maxPossibleScore": 2483,
     "minAchievableScore": 1976,
     "strategicPathCount": 3,
     "optimalSolutions": [
@@ -119,55 +119,32 @@
         "words": [
           "VELARISATIONS",
           "CONCHOID",
-          "ISOCHRONISING",
-          "PRYTANEA",
-          "KECKED",
-          "STUTTER",
-          "ASWING"
+          "TETANISING",
+          "CONTENTS",
+          "WEINER",
+          "KERKY",
+          "GAUDILY"
         ],
-        "wordTotal": 2750,
-        "penalty": 0,
-        "finalScore": 2750
-      },
-      {
-        "words": [
-          "CONCHOID",
-          "VELARISATIONS",
-          "ISOCHRONISING",
-          "KECKED",
-          "PRYTANEA",
-          "ASWING",
-          "STUTTER"
-        ],
-        "wordTotal": 2750,
-        "penalty": 0,
-        "finalScore": 2750
-      },
-      {
-        "words": [
-          "VELARISATIONS",
-          "ISOCHRONISING",
-          "CONCHOID",
-          "PRYTANEA",
-          "STUTTER",
-          "KECKED",
-          "ASWING"
-        ],
-        "wordTotal": 2750,
-        "penalty": 0,
-        "finalScore": 2750
+        "wordTotal": 2483,
+        "penalty": 22,
+        "finalScore": 2461,
+        "scoreTiers": {
+          "good": 984,
+          "great": 1600,
+          "superb": 2092
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2750,
+      "targetScore": 2461,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 13,
-          "estimatedPoints": 988,
-          "positional": "A 13-letter word routes through the purple prism",
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
           "category": "A familiar everyday word — 13 letters",
           "hints": [
             {
@@ -191,48 +168,13 @@
               "text": "VELARISATION_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
-          "length": 13,
-          "estimatedPoints": 494,
-          "positional": "A 13-letter word uses the LY digraph tile",
-          "category": "A compound-style word — 13 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A present-participle action word ending in -ING"
-            },
-            {
-              "level": 2,
-              "text": "I___________G"
-            },
-            {
-              "level": 3,
-              "text": "IS_________NG"
-            },
-            {
-              "level": 4,
-              "text": "I_O___O_I_I__"
-            },
-            {
-              "level": 5,
-              "text": "ISOCHRONISIN_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 3,
           "length": 8,
-          "estimatedPoints": 648,
-          "positional": "A 8-letter word passes through the gold gem",
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
           "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
@@ -256,109 +198,14 @@
               "text": "CONCHOI_"
             }
           ],
-          "features": [
-            "Uses gold gem"
-          ]
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 192,
-          "positional": "A 8-letter word uses the NG digraph tile",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P______A"
-            },
-            {
-              "level": 3,
-              "text": "PR____EA"
-            },
-            {
-              "level": 4,
-              "text": "____A_EA"
-            },
-            {
-              "level": 5,
-              "text": "PRYTANE_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 140,
-          "positional": "A 7-letter word runs from center toward bottom",
-          "category": "A role/profession-style word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S_____R"
-            },
-            {
-              "level": 3,
-              "text": "ST___ER"
-            },
-            {
-              "level": 4,
-              "text": "__U__E_"
-            },
-            {
-              "level": 5,
-              "text": "STUTTE_"
-            }
-          ],
           "features": []
         },
         {
-          "wordIndex": 6,
-          "length": 6,
-          "estimatedPoints": 150,
-          "positional": "A 6-letter word runs from lower-right toward lower-left",
-          "category": "An action verb form — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "K____D"
-            },
-            {
-              "level": 3,
-              "text": "KE__ED"
-            },
-            {
-              "level": 4,
-              "text": "_E__E_"
-            },
-            {
-              "level": 5,
-              "text": "KECKE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 6,
-          "estimatedPoints": 138,
-          "positional": "A 6-letter word uses the ER digraph tile",
-          "category": "An action verb form — 6 letters",
+          "wordIndex": 3,
+          "length": 10,
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
+          "category": "A compound-style word — 10 letters",
           "hints": [
             {
               "level": 1,
@@ -366,44 +213,161 @@
             },
             {
               "level": 2,
-              "text": "A____G"
+              "text": "T________G"
             },
             {
               "level": 3,
-              "text": "AS__NG"
+              "text": "TE______NG"
             },
             {
               "level": 4,
-              "text": "A__I__"
+              "text": "_E_A_I_I__"
             },
             {
               "level": 5,
-              "text": "ASWIN_"
+              "text": "TETANISIN_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C______S"
+            },
+            {
+              "level": 3,
+              "text": "CO____TS"
+            },
+            {
+              "level": 4,
+              "text": "_O__E___"
+            },
+            {
+              "level": 5,
+              "text": "CONTENT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A role/profession-style word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W____R"
+            },
+            {
+              "level": 3,
+              "text": "WE__ER"
+            },
+            {
+              "level": 4,
+              "text": "_EI_E_"
+            },
+            {
+              "level": 5,
+              "text": "WEINE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "K___Y"
+            },
+            {
+              "level": 3,
+              "text": "KE_KY"
+            },
+            {
+              "level": 4,
+              "text": "_E___"
+            },
+            {
+              "level": 5,
+              "text": "KERK_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "G_____Y"
+            },
+            {
+              "level": 3,
+              "text": "GA___LY"
+            },
+            {
+              "level": 4,
+              "text": "_AU_I__"
+            },
+            {
+              "level": 5,
+              "text": "GAUDIL_"
+            }
+          ],
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7.4,
+    "optimalMoves": 7,
+    "averageWordLength": 8.1,
     "gemDensity": 0.016,
-    "tilesCleared": 59,
-    "tilesRemaining": 2,
-    "tileClearancePercent": 96.7,
+    "tilesCleared": 54,
+    "tilesRemaining": 7,
+    "tileClearancePercent": 88.5,
     "fullClear": false,
     "solutionPath": [
-      "SOVIETISING",
+      "VELARISATIONS",
       "CONCHOID",
-      "ISOCHRONISE",
-      "TRECKING",
-      "SWEATY",
-      "KRAAL",
-      "PRENT",
-      "DAUTS"
+      "TETANISING",
+      "CONTENTS",
+      "WEINER",
+      "KERKY",
+      "GAUDILY"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -416,6 +380,6 @@
       "KECKED",
       "ASWING"
     ],
-    "generatedAt": "2026-06-18T01:32:26.817Z"
+    "generatedAt": "2026-07-03T12:53:56.213Z"
   }
 }

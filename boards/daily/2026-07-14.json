@@ -123,128 +123,71 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 7163,
+    "maxPossibleScore": 1675,
     "minAchievableScore": 4056,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "PRECOGNITIONS",
-          "CONGLOMERATOR",
-          "REVEALMENT",
-          "LIBERTINE",
-          "ENTREPOTS",
-          "SHRIMPY"
+          "LIBERTINES",
+          "REVERTANTS",
+          "IMPORTANCIES",
+          "NEOTYPE",
+          "MOPIER",
+          "ELOGES",
+          "GREEN"
         ],
-        "wordTotal": 3524,
-        "penalty": 0,
-        "finalScore": 3524
-      },
-      {
-        "words": [
-          "PRECOGNITIONS",
-          "CONGLOMERATOR",
-          "REVEALMENT",
-          "LIBERTINE",
-          "ENTREPOTS",
-          "SHRIMPY"
-        ],
-        "wordTotal": 3524,
-        "penalty": 0,
-        "finalScore": 3524
-      },
-      {
-        "words": [
-          "PRECOGNITIONS",
-          "CONGLOMERATOR",
-          "REVEALMENT",
-          "LIBERTINE",
-          "ENTREPOTS",
-          "SHRIMPY"
-        ],
-        "wordTotal": 3524,
-        "penalty": 0,
-        "finalScore": 3524
+        "wordTotal": 1675,
+        "penalty": 25,
+        "finalScore": 1650,
+        "scoreTiers": {
+          "good": 660,
+          "great": 1073,
+          "superb": 1403
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 3524,
-      "wordCount": 6,
+      "targetScore": 1650,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 13,
-          "estimatedPoints": 2028,
-          "positional": "A 13-letter word uses the RE digraph tile",
-          "category": "A familiar everyday word — 13 letters",
+          "length": 10,
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
+          "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 13 letters with 5 vowels"
+              "text": "Pattern hint: 10 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "P___________S"
+              "text": "L________S"
             },
             {
               "level": 3,
-              "text": "PR_________NS"
+              "text": "LI______ES"
             },
             {
               "level": 4,
-              "text": "__E_O__I_IO__"
+              "text": "_I_E__I_E_"
             },
             {
               "level": 5,
-              "text": "PRECOGNITION_"
+              "text": "LIBERTINE_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses emerald gem",
-            "Uses 2 digraph tiles",
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
-          "length": 13,
-          "estimatedPoints": 507,
-          "positional": "A 13-letter word uses the WH digraph tile",
-          "category": "A role/profession-style word — 13 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 13 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C___________R"
-            },
-            {
-              "level": 3,
-              "text": "CO_________OR"
-            },
-            {
-              "level": 4,
-              "text": "_O___O_E_A_O_"
-            },
-            {
-              "level": 5,
-              "text": "CONGLOMERATO_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 3,
           "length": 10,
-          "estimatedPoints": 330,
-          "positional": "A 10-letter word uses the UN digraph tile",
-          "category": "An abstract noun — 10 letters",
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
+          "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
               "level": 1,
@@ -252,136 +195,191 @@
             },
             {
               "level": 2,
-              "text": "R________T"
+              "text": "R________S"
             },
             {
               "level": 3,
-              "text": "RE______NT"
+              "text": "RE______TS"
             },
             {
               "level": 4,
-              "text": "_E_EA__E__"
+              "text": "_E_E__A___"
             },
             {
               "level": 5,
-              "text": "REVEALMEN_"
+              "text": "REVERTANT_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 4,
-          "length": 9,
-          "estimatedPoints": 243,
-          "positional": "A 9-letter word runs from center toward lower-left",
-          "category": "A familiar everyday word — 9 letters",
+          "wordIndex": 3,
+          "length": 12,
+          "estimatedPoints": 0,
+          "positional": "12-letter word near the center lanes",
+          "category": "A familiar everyday word — 12 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
+              "text": "Pattern hint: 12 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "L_______E"
+              "text": "I__________S"
             },
             {
               "level": 3,
-              "text": "LI_____NE"
+              "text": "IM________ES"
             },
             {
               "level": 4,
-              "text": "_I_E__I_E"
+              "text": "I__O__A__IE_"
             },
             {
               "level": 5,
-              "text": "LIBERTIN_"
+              "text": "IMPORTANCIE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "N_____E"
+            },
+            {
+              "level": 3,
+              "text": "NE___PE"
+            },
+            {
+              "level": 4,
+              "text": "_EO___E"
+            },
+            {
+              "level": 5,
+              "text": "NEOTYP_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 5,
-          "length": 9,
-          "estimatedPoints": 234,
-          "positional": "A 9-letter word sits in the lower-left quadrant",
-          "category": "A familiar everyday word — 9 letters",
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A role/profession-style word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 3 vowels"
+              "text": "Pattern hint: 6 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "E_______S"
+              "text": "M____R"
             },
             {
               "level": 3,
-              "text": "EN_____TS"
+              "text": "MO__ER"
             },
             {
               "level": 4,
-              "text": "E___E_O__"
+              "text": "_O_IE_"
             },
             {
               "level": 5,
-              "text": "ENTREPOT_"
+              "text": "MOPIE_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 6,
-          "length": 7,
-          "estimatedPoints": 182,
-          "positional": "A 7-letter word uses the EN digraph tile",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 1 vowel"
+              "text": "Pattern hint: 6 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "S_____Y"
+              "text": "E____S"
             },
             {
               "level": 3,
-              "text": "SH___PY"
+              "text": "EL__ES"
             },
             {
               "level": 4,
-              "text": "___I___"
+              "text": "E_O_E_"
             },
             {
               "level": 5,
-              "text": "SHRIMP_"
+              "text": "ELOGE_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G___N"
+            },
+            {
+              "level": 3,
+              "text": "GR_EN"
+            },
+            {
+              "level": 4,
+              "text": "__EE_"
+            },
+            {
+              "level": 5,
+              "text": "GREE_"
+            }
+          ],
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 8.1,
+    "averageWordLength": 8,
     "gemDensity": 0.016,
-    "tilesCleared": 57,
-    "tilesRemaining": 4,
-    "tileClearancePercent": 93.4,
+    "tilesCleared": 53,
+    "tilesRemaining": 8,
+    "tileClearancePercent": 86.9,
     "fullClear": false,
     "solutionPath": [
-      "RECOGNITION",
-      "REVEALMENT",
-      "MISENTREATS",
-      "TROPEOLIN",
-      "RIPEST",
-      "PREMY",
-      "CROON"
+      "LIBERTINES",
+      "REVERTANTS",
+      "IMPORTANCIES",
+      "NEOTYPE",
+      "MOPIER",
+      "ELOGES",
+      "GREEN"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -393,6 +391,6 @@
       "ENTREPOTS",
       "SHRIMPY"
     ],
-    "generatedAt": "2026-06-15T01:36:40.077Z"
+    "generatedAt": "2026-07-03T12:53:56.046Z"
   }
 }

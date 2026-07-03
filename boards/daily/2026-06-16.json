@@ -111,97 +111,39 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 4640,
+    "maxPossibleScore": 1984,
     "minAchievableScore": 1632,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "COLLEGIANERS",
           "HABITUDINAL",
-          "UPLIGHTED",
-          "DANCIEST",
-          "INJOINT",
-          "RETOUCH",
-          "LOOSELY"
+          "SLIGHTEST",
+          "GAITERED",
+          "SECUNDINE",
+          "RECOUNTAL",
+          "LIPIN"
         ],
-        "wordTotal": 2503,
-        "penalty": 0,
-        "finalScore": 2503
-      },
-      {
-        "words": [
-          "HABITUDINAL",
-          "COLLEGIANERS",
-          "UPLIGHTED",
-          "DANCIEST",
-          "INJOINT",
-          "RETOUCH",
-          "LOOSELY"
-        ],
-        "wordTotal": 2503,
-        "penalty": 0,
-        "finalScore": 2503
-      },
-      {
-        "words": [
-          "COLLEGIANERS",
-          "HABITUDINAL",
-          "UPLIGHTED",
-          "DANCIEST",
-          "INJOINT",
-          "RETOUCH",
-          "LOOSELY"
-        ],
-        "wordTotal": 2503,
-        "penalty": 0,
-        "finalScore": 2503
+        "wordTotal": 1984,
+        "penalty": 31,
+        "finalScore": 1953,
+        "scoreTiers": {
+          "good": 781,
+          "great": 1269,
+          "superb": 1660
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2503,
-      "wordCount": 7,
+      "targetScore": 1953,
+      "wordCount": 6,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 12,
-          "estimatedPoints": 816,
-          "positional": "A 12-letter word uses the LL digraph tile",
-          "category": "A familiar everyday word — 12 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 12 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C__________S"
-            },
-            {
-              "level": 3,
-              "text": "CO________RS"
-            },
-            {
-              "level": 4,
-              "text": "_O__E_IA_E__"
-            },
-            {
-              "level": 5,
-              "text": "COLLEGIANER_"
-            }
-          ],
-          "features": [
-            "Uses emerald gem",
-            "Uses 2 digraph tiles",
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 2,
           "length": 11,
-          "estimatedPoints": 770,
-          "positional": "A 11-letter word routes through the purple prism",
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
           "category": "A descriptive adjective — 11 letters",
           "hints": [
             {
@@ -225,160 +167,154 @@
               "text": "HABITUDINA_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 3,
+          "wordIndex": 2,
           "length": 9,
-          "estimatedPoints": 270,
-          "positional": "A 9-letter word sits in the center quadrant",
-          "category": "A compound-style word — 9 letters",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 3 vowels"
+              "text": "Pattern hint: 9 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "U_______D"
+              "text": "S_______T"
             },
             {
               "level": 3,
-              "text": "UP_____ED"
+              "text": "SL_____ST"
             },
             {
               "level": 4,
-              "text": "U__I___E_"
+              "text": "__I___E__"
             },
             {
               "level": 5,
-              "text": "UPLIGHTE_"
+              "text": "SLIGHTES_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G______D"
+            },
+            {
+              "level": 3,
+              "text": "GA____ED"
+            },
+            {
+              "level": 4,
+              "text": "_AI_E_E_"
+            },
+            {
+              "level": 5,
+              "text": "GAITERE_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 192,
-          "positional": "A 8-letter word sits in the center quadrant",
-          "category": "A familiar everyday word — 8 letters",
+          "length": 9,
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
+              "text": "Pattern hint: 9 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "D______T"
+              "text": "S_______E"
             },
             {
               "level": 3,
-              "text": "DA____ST"
+              "text": "SE_____NE"
             },
             {
               "level": 4,
-              "text": "_A__IE__"
+              "text": "_E_U__I_E"
             },
             {
               "level": 5,
-              "text": "DANCIES_"
+              "text": "SECUNDIN_"
             }
           ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 168,
-          "positional": "A 7-letter word runs from center toward bottom",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 9,
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A descriptive adjective — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
+              "text": "A word related to doing something again (9 letters)"
             },
             {
               "level": 2,
-              "text": "I_____T"
+              "text": "R_______L"
             },
             {
               "level": 3,
-              "text": "IN___NT"
+              "text": "RE_____AL"
             },
             {
               "level": 4,
-              "text": "I__OI__"
+              "text": "_E_OU__A_"
             },
             {
               "level": 5,
-              "text": "INJOIN_"
+              "text": "RECOUNTA_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 6,
-          "length": 7,
-          "estimatedPoints": 154,
-          "positional": "A 7-letter word uses the TH digraph tile",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
               "level": 1,
-              "text": "A word related to doing something again (7 letters)"
+              "text": "Pattern hint: 5 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "R_____H"
+              "text": "L___N"
             },
             {
               "level": 3,
-              "text": "RE___CH"
+              "text": "LI_IN"
             },
             {
               "level": 4,
-              "text": "_E_OU__"
+              "text": "_I_I_"
             },
             {
               "level": 5,
-              "text": "RETOUC_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 7,
-          "length": 7,
-          "estimatedPoints": 133,
-          "positional": "A 7-letter word runs from lower-left toward bottom",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A modifier/adverb style word ending in -LY"
-            },
-            {
-              "level": 2,
-              "text": "L_____Y"
-            },
-            {
-              "level": 3,
-              "text": "LO___LY"
-            },
-            {
-              "level": 4,
-              "text": "_OO_E__"
-            },
-            {
-              "level": 5,
-              "text": "LOOSEL_"
+              "text": "LIPI_"
             }
           ],
           "features": []
@@ -387,19 +323,19 @@
     },
     "difficulty": "easy",
     "optimalMoves": 6,
-    "averageWordLength": 8.8,
+    "averageWordLength": 8.5,
     "gemDensity": 0.016,
-    "tilesCleared": 53,
-    "tilesRemaining": 8,
-    "tileClearancePercent": 86.9,
+    "tilesCleared": 51,
+    "tilesRemaining": 10,
+    "tileClearancePercent": 83.6,
     "fullClear": false,
     "solutionPath": [
       "HABITUDINAL",
-      "GELIDEST",
-      "INJOINTED",
-      "UPLIGHTERS",
-      "RETOUCHES",
-      "LACILY"
+      "SLIGHTEST",
+      "GAITERED",
+      "SECUNDINE",
+      "RECOUNTAL",
+      "LIPIN"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -412,6 +348,6 @@
       "RETOUCH",
       "LOOSELY"
     ],
-    "generatedAt": "2026-05-18T01:23:48.221Z"
+    "generatedAt": "2026-07-03T12:53:54.644Z"
   }
 }

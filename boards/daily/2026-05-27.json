@@ -143,44 +143,295 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 777700,
+    "maxPossibleScore": 286813,
     "minAchievableScore": 568320,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "JOBBINGS",
-          "BREATHALYZING",
-          "BLOBBY",
-          "JAMBED"
+          "DUMBER",
+          "JAMADAR",
+          "GOBBY",
+          "FARMERY",
+          "DIAZINS",
+          "QUOTHA",
+          "POLLEN"
         ],
-        "wordTotal": 311254,
-        "penalty": 123,
-        "finalScore": 311131
-      },
-      {
-        "words": [
-          "JOBBINGS",
-          "BREATHALYZING",
-          "BLOBBY",
-          "JAMBED"
-        ],
-        "wordTotal": 311254,
-        "penalty": 123,
-        "finalScore": 311131
-      },
-      {
-        "words": [
-          "BREATHALYZING",
-          "JOBBINGS",
-          "BLOBBY",
-          "JAMBED"
-        ],
-        "wordTotal": 311254,
-        "penalty": 123,
-        "finalScore": 311131
+        "wordTotal": 286813,
+        "penalty": 34,
+        "finalScore": 286779,
+        "scoreTiers": {
+          "good": 114712,
+          "great": 186406,
+          "superb": 243762
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.737Z"
+    "generatedAt": "2026-07-03T12:53:53.911Z",
+    "optimalMoves": 8,
+    "averageWordLength": 6.5,
+    "gemDensity": 0.082,
+    "tilesCleared": 52,
+    "tilesRemaining": 9,
+    "tileClearancePercent": 85.2,
+    "fullClear": false,
+    "solutionPath": [
+      "JOBBINGS",
+      "DUMBER",
+      "JAMADAR",
+      "GOBBY",
+      "FARMERY",
+      "DIAZINS",
+      "QUOTHA",
+      "POLLEN"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 286779,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "J______S"
+            },
+            {
+              "level": 3,
+              "text": "JO____GS"
+            },
+            {
+              "level": 4,
+              "text": "_O__I___"
+            },
+            {
+              "level": 5,
+              "text": "JOBBING_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A role/profession-style word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D____R"
+            },
+            {
+              "level": 3,
+              "text": "DU__ER"
+            },
+            {
+              "level": 4,
+              "text": "_U__E_"
+            },
+            {
+              "level": 5,
+              "text": "DUMBE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "J_____R"
+            },
+            {
+              "level": 3,
+              "text": "JA___AR"
+            },
+            {
+              "level": 4,
+              "text": "_A_A_A_"
+            },
+            {
+              "level": 5,
+              "text": "JAMADA_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "G___Y"
+            },
+            {
+              "level": 3,
+              "text": "GO_BY"
+            },
+            {
+              "level": 4,
+              "text": "_O___"
+            },
+            {
+              "level": 5,
+              "text": "GOBB_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F_____Y"
+            },
+            {
+              "level": 3,
+              "text": "FA___RY"
+            },
+            {
+              "level": 4,
+              "text": "_A__E__"
+            },
+            {
+              "level": 5,
+              "text": "FARMER_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D_____S"
+            },
+            {
+              "level": 3,
+              "text": "DI___NS"
+            },
+            {
+              "level": 4,
+              "text": "_IA_I__"
+            },
+            {
+              "level": 5,
+              "text": "DIAZIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Q____A"
+            },
+            {
+              "level": 3,
+              "text": "QU__HA"
+            },
+            {
+              "level": 4,
+              "text": "_UO__A"
+            },
+            {
+              "level": 5,
+              "text": "QUOTH_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P____N"
+            },
+            {
+              "level": 3,
+              "text": "PO__EN"
+            },
+            {
+              "level": 4,
+              "text": "_O__E_"
+            },
+            {
+              "level": 5,
+              "text": "POLLE_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

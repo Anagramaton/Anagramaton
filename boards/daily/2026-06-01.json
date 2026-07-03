@@ -133,44 +133,295 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 229910,
+    "maxPossibleScore": 91060,
     "minAchievableScore": 178360,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "THENCEFORWARD",
-          "BREAKOFF",
-          "SWABBY",
-          "WAFFED"
+          "FAWNERS",
+          "SNIFFS",
+          "SIFAKA",
+          "BABIED",
+          "COOEY",
+          "AIERY",
+          "ODOUR"
         ],
-        "wordTotal": 92336,
-        "penalty": 92,
-        "finalScore": 92244
-      },
-      {
-        "words": [
-          "THENCEFORWARD",
-          "BREAKOFF",
-          "SWABBY",
-          "WAFFED"
-        ],
-        "wordTotal": 92336,
-        "penalty": 92,
-        "finalScore": 92244
-      },
-      {
-        "words": [
-          "THENCEFORWARD",
-          "BREAKOFF",
-          "SWABBY",
-          "WAFFED"
-        ],
-        "wordTotal": 92336,
-        "penalty": 92,
-        "finalScore": 92244
+        "wordTotal": 91060,
+        "penalty": 33,
+        "finalScore": 91027,
+        "scoreTiers": {
+          "good": 36411,
+          "great": 59168,
+          "superb": 77373
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.812Z"
+    "generatedAt": "2026-07-03T12:53:54.086Z",
+    "optimalMoves": 8,
+    "averageWordLength": 6.6,
+    "gemDensity": 0.082,
+    "tilesCleared": 52,
+    "tilesRemaining": 9,
+    "tileClearancePercent": 85.2,
+    "fullClear": false,
+    "solutionPath": [
+      "THENCEFORWARD",
+      "FAWNERS",
+      "SNIFFS",
+      "SIFAKA",
+      "BABIED",
+      "COOEY",
+      "AIERY",
+      "ODOUR"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 91027,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "A compound-style word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T___________D"
+            },
+            {
+              "level": 3,
+              "text": "TH_________RD"
+            },
+            {
+              "level": 4,
+              "text": "__E__E_O__A__"
+            },
+            {
+              "level": 5,
+              "text": "THENCEFORWAR_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F_____S"
+            },
+            {
+              "level": 3,
+              "text": "FA___RS"
+            },
+            {
+              "level": 4,
+              "text": "_A__E__"
+            },
+            {
+              "level": 5,
+              "text": "FAWNER_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "S____S"
+            },
+            {
+              "level": 3,
+              "text": "SN__FS"
+            },
+            {
+              "level": 4,
+              "text": "__I___"
+            },
+            {
+              "level": 5,
+              "text": "SNIFF_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S____A"
+            },
+            {
+              "level": 3,
+              "text": "SI__KA"
+            },
+            {
+              "level": 4,
+              "text": "_I_A_A"
+            },
+            {
+              "level": 5,
+              "text": "SIFAK_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "An action verb form — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B____D"
+            },
+            {
+              "level": 3,
+              "text": "BA__ED"
+            },
+            {
+              "level": 4,
+              "text": "_A_IE_"
+            },
+            {
+              "level": 5,
+              "text": "BABIE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C___Y"
+            },
+            {
+              "level": 3,
+              "text": "CO_EY"
+            },
+            {
+              "level": 4,
+              "text": "_OOE_"
+            },
+            {
+              "level": 5,
+              "text": "COOE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A___Y"
+            },
+            {
+              "level": 3,
+              "text": "AI_RY"
+            },
+            {
+              "level": 4,
+              "text": "AIE__"
+            },
+            {
+              "level": 5,
+              "text": "AIER_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O___R"
+            },
+            {
+              "level": 3,
+              "text": "OD_UR"
+            },
+            {
+              "level": 4,
+              "text": "O_OU_"
+            },
+            {
+              "level": 5,
+              "text": "ODOU_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

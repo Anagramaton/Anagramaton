@@ -117,126 +117,69 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 5123,
+    "maxPossibleScore": 2489,
     "minAchievableScore": 1848,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "LOBOTOMIZED",
-          "JABORANDIS",
-          "INVALIDNESS",
-          "HYDRAULICS",
-          "UNBESEEMED",
-          "ALKALISES"
-        ],
-        "wordTotal": 2943,
-        "penalty": 0,
-        "finalScore": 2943
-      },
-      {
-        "words": [
-          "LOBOTOMIZED",
-          "JABORANDIS",
-          "INVALIDNESS",
-          "HYDRAULICS",
-          "UNBESEEMED",
-          "ALKALISES"
-        ],
-        "wordTotal": 2943,
-        "penalty": 0,
-        "finalScore": 2943
-      },
-      {
-        "words": [
-          "LOBOTOMIZED",
-          "INVALIDNESS",
+          "DIMERIZED",
           "JABORANDIS",
           "HYDRAULICS",
           "UNBESEEMED",
-          "ALKALISES"
+          "KISANS",
+          "NOTABLENESS"
         ],
-        "wordTotal": 2943,
-        "penalty": 0,
-        "finalScore": 2943
+        "wordTotal": 2489,
+        "penalty": 24,
+        "finalScore": 2465,
+        "scoreTiers": {
+          "good": 986,
+          "great": 1602,
+          "superb": 2095
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2943,
+      "targetScore": 2465,
       "wordCount": 6,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 11,
-          "estimatedPoints": 924,
-          "positional": "A 11-letter word uses the ER digraph tile",
-          "category": "A compound-style word — 11 letters",
+          "length": 9,
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A compound-style word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 11 letters with 5 vowels"
+              "text": "Pattern hint: 9 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "L_________D"
+              "text": "D_______D"
             },
             {
               "level": 3,
-              "text": "LO_______ED"
+              "text": "DI_____ED"
             },
             {
               "level": 4,
-              "text": "_O_O_O_I_E_"
+              "text": "_I_E_I_E_"
             },
             {
               "level": 5,
-              "text": "LOBOTOMIZE_"
+              "text": "DIMERIZE_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses 1 digraph tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
-          "length": 11,
-          "estimatedPoints": 385,
-          "positional": "A 11-letter word uses the LL digraph tile",
-          "category": "An abstract noun — 11 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A quality/state noun ending in -NESS"
-            },
-            {
-              "level": 2,
-              "text": "I_________S"
-            },
-            {
-              "level": 3,
-              "text": "IN_______SS"
-            },
-            {
-              "level": 4,
-              "text": "I__A_I__E__"
-            },
-            {
-              "level": 5,
-              "text": "INVALIDNES_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 3,
           "length": 10,
-          "estimatedPoints": 740,
-          "positional": "A 10-letter word passes through the emerald gem",
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
           "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
@@ -260,15 +203,13 @@
               "text": "JABORANDI_"
             }
           ],
-          "features": [
-            "Uses emerald gem"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 4,
+          "wordIndex": 3,
           "length": 10,
-          "estimatedPoints": 330,
-          "positional": "A 10-letter word sits in the center quadrant",
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
           "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
@@ -295,10 +236,10 @@
           "features": []
         },
         {
-          "wordIndex": 5,
+          "wordIndex": 4,
           "length": 10,
-          "estimatedPoints": 330,
-          "positional": "A 10-letter word runs from center toward bottom",
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
           "category": "A compound-style word — 10 letters",
           "hints": [
             {
@@ -325,55 +266,82 @@
           "features": []
         },
         {
-          "wordIndex": 6,
-          "length": 9,
-          "estimatedPoints": 234,
-          "positional": "A 9-letter word uses the AN digraph tile",
-          "category": "A familiar everyday word — 9 letters",
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
+              "text": "Pattern hint: 6 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "A_______S"
+              "text": "K____S"
             },
             {
               "level": 3,
-              "text": "AL_____ES"
+              "text": "KI__NS"
             },
             {
               "level": 4,
-              "text": "A__A_I_E_"
+              "text": "_I_A__"
             },
             {
               "level": 5,
-              "text": "ALKALISE_"
+              "text": "KISAN_"
             }
           ],
-          "features": [
-            "Uses 2 digraph tiles",
-            "Uses a portal tile"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 11,
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
+          "category": "An abstract noun — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A quality/state noun ending in -NESS"
+            },
+            {
+              "level": 2,
+              "text": "N_________S"
+            },
+            {
+              "level": 3,
+              "text": "NO_______SS"
+            },
+            {
+              "level": 4,
+              "text": "_O_A__E_E__"
+            },
+            {
+              "level": 5,
+              "text": "NOTABLENES_"
+            }
+          ],
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 6,
-    "averageWordLength": 10.2,
+    "averageWordLength": 9.3,
     "gemDensity": 0.016,
-    "tilesCleared": 61,
-    "tilesRemaining": 0,
-    "tileClearancePercent": 100,
-    "fullClear": true,
+    "tilesCleared": 54,
+    "tilesRemaining": 7,
+    "tileClearancePercent": 88.5,
+    "fullClear": false,
     "solutionPath": [
-      "LOBOTOMIZED",
+      "DIMERIZED",
       "JABORANDIS",
       "HYDRAULICS",
-      "INVALIDNESS",
       "UNBESEEMED",
-      "ALKALISES"
+      "KISANS",
+      "NOTABLENESS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -385,6 +353,6 @@
       "UNBESEEMED",
       "ALKALISES"
     ],
-    "generatedAt": "2026-06-26T01:26:40.855Z"
+    "generatedAt": "2026-07-03T12:53:56.630Z"
   }
 }

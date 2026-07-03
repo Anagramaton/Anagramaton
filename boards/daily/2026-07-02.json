@@ -117,99 +117,132 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 3868,
+    "maxPossibleScore": 2751,
     "minAchievableScore": 1296,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "DOGBANES",
-          "DESCANTING",
-          "HAYMAKERS",
-          "AGRONOMY",
-          "WREATHS",
-          "ENGULPH",
-          "UPKNIT",
-          "FLEMES"
+          "DESCANTED",
+          "SCRAMB",
+          "THACK",
+          "PLUTONOMY",
+          "METHINKS",
+          "YARCO",
+          "UPHROE",
+          "LEGGERS",
+          "FAINNES"
         ],
-        "wordTotal": 2361,
-        "penalty": 0,
-        "finalScore": 2361
-      },
-      {
-        "words": [
-          "DOGBANES",
-          "DESCANTING",
-          "HAYMAKERS",
-          "WREATHS",
-          "AGRONOMY",
-          "ENGULPH",
-          "UPKNIT",
-          "FLEMES"
-        ],
-        "wordTotal": 2361,
-        "penalty": 0,
-        "finalScore": 2361
-      },
-      {
-        "words": [
-          "DESCANTING",
-          "HAYMAKERS",
-          "DOGBANES",
-          "AGRONOMY",
-          "WREATHS",
-          "ENGULPH",
-          "UPKNIT",
-          "FLEMES"
-        ],
-        "wordTotal": 2361,
-        "penalty": 0,
-        "finalScore": 2361
+        "wordTotal": 2751,
+        "penalty": 10,
+        "finalScore": 2741,
+        "scoreTiers": {
+          "good": 1096,
+          "great": 1782,
+          "superb": 2330
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2361,
-      "wordCount": 8,
+      "targetScore": 2741,
+      "wordCount": 9,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 10,
-          "estimatedPoints": 620,
-          "positional": "A 10-letter word uses the CK digraph tile",
-          "category": "A compound-style word — 10 letters",
+          "length": 9,
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A compound-style word — 9 letters",
           "hints": [
             {
               "level": 1,
-              "text": "A present-participle action word ending in -ING"
+              "text": "Pattern hint: 9 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "D________G"
+              "text": "D_______D"
             },
             {
               "level": 3,
-              "text": "DE______NG"
+              "text": "DE_____ED"
             },
             {
               "level": 4,
-              "text": "_E__A__I__"
+              "text": "_E__A__E_"
             },
             {
               "level": 5,
-              "text": "DESCANTIN_"
+              "text": "DESCANTE_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses 1 digraph tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "S____B"
+            },
+            {
+              "level": 3,
+              "text": "SC__MB"
+            },
+            {
+              "level": 4,
+              "text": "___A__"
+            },
+            {
+              "level": 5,
+              "text": "SCRAM_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "T___K"
+            },
+            {
+              "level": 3,
+              "text": "TH_CK"
+            },
+            {
+              "level": 4,
+              "text": "__A__"
+            },
+            {
+              "level": 5,
+              "text": "THAC_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
           "length": 9,
-          "estimatedPoints": 279,
-          "positional": "A 9-letter word runs from upper-right toward center",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -218,147 +251,79 @@
             },
             {
               "level": 2,
-              "text": "H_______S"
+              "text": "P_______Y"
             },
             {
               "level": 3,
-              "text": "HA_____RS"
+              "text": "PL_____MY"
             },
             {
               "level": 4,
-              "text": "_A__A_E__"
+              "text": "__U_O_O__"
             },
             {
               "level": 5,
-              "text": "HAYMAKER_"
+              "text": "PLUTONOM_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 3,
-          "length": 8,
-          "estimatedPoints": 648,
-          "positional": "A 8-letter word uses the TH digraph tile",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "D______S"
-            },
-            {
-              "level": 3,
-              "text": "DO____ES"
-            },
-            {
-              "level": 4,
-              "text": "_O__A_E_"
-            },
-            {
-              "level": 5,
-              "text": "DOGBANE_"
-            }
-          ],
-          "features": [
-            "Uses gold gem",
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 200,
-          "positional": "A 8-letter word uses the CR digraph tile",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "A______Y"
-            },
-            {
-              "level": 3,
-              "text": "AG____MY"
-            },
-            {
-              "level": 4,
-              "text": "A__O_O__"
-            },
-            {
-              "level": 5,
-              "text": "AGRONOM_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
           "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 182,
-          "positional": "A 7-letter word uses the CO digraph tile",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 8 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "W_____S"
+              "text": "M______S"
             },
             {
               "level": 3,
-              "text": "WR___HS"
+              "text": "ME____KS"
             },
             {
               "level": 4,
-              "text": "__EA___"
+              "text": "_E__I___"
             },
             {
               "level": 5,
-              "text": "WREATH_"
+              "text": "METHINK_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 6,
-          "length": 7,
-          "estimatedPoints": 168,
-          "positional": "A 7-letter word runs from center toward lower-left",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 5 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "E_____H"
+              "text": "Y___O"
             },
             {
               "level": 3,
-              "text": "EN___PH"
+              "text": "YA_CO"
             },
             {
               "level": 4,
-              "text": "E__U___"
+              "text": "_A__O"
             },
             {
               "level": 5,
-              "text": "ENGULP_"
+              "text": "YARC_"
             }
           ],
           "features": []
@@ -366,84 +331,113 @@
         {
           "wordIndex": 7,
           "length": 6,
-          "estimatedPoints": 132,
-          "positional": "A 6-letter word runs from lower-left toward bottom",
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
           "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
+              "text": "Pattern hint: 6 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "U____T"
+              "text": "U____E"
             },
             {
               "level": 3,
-              "text": "UP__IT"
+              "text": "UP__OE"
             },
             {
               "level": 4,
-              "text": "U___I_"
+              "text": "U___OE"
             },
             {
               "level": 5,
-              "text": "UPKNI_"
+              "text": "UPHRO_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 8,
-          "length": 6,
-          "estimatedPoints": 132,
-          "positional": "A 6-letter word runs from bottom toward lower-left",
-          "category": "A familiar everyday word — 6 letters",
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
+              "text": "Pattern hint: 7 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "F____S"
+              "text": "L_____S"
             },
             {
               "level": 3,
-              "text": "FL__ES"
+              "text": "LE___RS"
             },
             {
               "level": 4,
-              "text": "__E_E_"
+              "text": "_E__E__"
             },
             {
               "level": 5,
-              "text": "FLEME_"
+              "text": "LEGGER_"
             }
           ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 9,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F_____S"
+            },
+            {
+              "level": 3,
+              "text": "FA___ES"
+            },
+            {
+              "level": 4,
+              "text": "_AI__E_"
+            },
+            {
+              "level": 5,
+              "text": "FAINNE_"
+            }
+          ],
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7,
+    "optimalMoves": 9,
+    "averageWordLength": 6.9,
     "gemDensity": 0.016,
-    "tilesCleared": 56,
-    "tilesRemaining": 5,
-    "tileClearancePercent": 91.8,
+    "tilesCleared": 58,
+    "tilesRemaining": 3,
+    "tileClearancePercent": 95.1,
     "fullClear": false,
     "solutionPath": [
       "DESCANTED",
-      "HAYMAKING",
+      "SCRAMB",
+      "THACK",
       "PLUTONOMY",
       "METHINKS",
-      "FRAGOR",
-      "BANES",
-      "RUPEE",
-      "SLANE"
+      "YARCO",
+      "UPHROE",
+      "LEGGERS",
+      "FAINNES"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -457,6 +451,6 @@
       "UPKNIT",
       "FLEMES"
     ],
-    "generatedAt": "2026-06-03T01:36:34.694Z"
+    "generatedAt": "2026-07-03T12:53:55.446Z"
   }
 }

@@ -111,63 +111,40 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 6023,
+    "maxPossibleScore": 2827,
     "minAchievableScore": 3256,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "LUCUBRATORS",
-          "OPERATIVELY",
-          "CAMELEOPARD",
-          "SIDESHOOTS",
-          "BOLEROS",
-          "LETTED",
-          "SPORK"
+          "CAMELEOPARDS",
+          "VISITEES",
+          "DEPORTER",
+          "LOLLOPS",
+          "LEALLY",
+          "THETES"
         ],
-        "wordTotal": 3040,
-        "penalty": 0,
-        "finalScore": 3040
-      },
-      {
-        "words": [
-          "LUCUBRATORS",
-          "OPERATIVELY",
-          "CAMELEOPARD",
-          "SIDESHOOTS",
-          "BOLEROS",
-          "SPORK",
-          "LETTED"
-        ],
-        "wordTotal": 3040,
-        "penalty": 0,
-        "finalScore": 3040
-      },
-      {
-        "words": [
-          "LUCUBRATORS",
-          "OPERATIVELY",
-          "CAMELEOPARD",
-          "SIDESHOOTS",
-          "BOLEROS",
-          "LETTED",
-          "SPORK"
-        ],
-        "wordTotal": 3040,
-        "penalty": 0,
-        "finalScore": 3040
+        "wordTotal": 2827,
+        "penalty": 19,
+        "finalScore": 2808,
+        "scoreTiers": {
+          "good": 1123,
+          "great": 1825,
+          "superb": 2387
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 3040,
+      "targetScore": 2808,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 11,
-          "estimatedPoints": 1628,
-          "positional": "A 11-letter word routes through the purple prism",
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
           "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
@@ -191,17 +168,134 @@
               "text": "LUCUBRATOR_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses emerald gem"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
-          "length": 11,
-          "estimatedPoints": 396,
-          "positional": "A 11-letter word runs from upper-right toward center",
-          "category": "A compound-style word — 11 letters",
+          "length": 12,
+          "estimatedPoints": 0,
+          "positional": "12-letter word near the center lanes",
+          "category": "A familiar everyday word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C__________S"
+            },
+            {
+              "level": 3,
+              "text": "CA________DS"
+            },
+            {
+              "level": 4,
+              "text": "_A_E_EO_A___"
+            },
+            {
+              "level": 5,
+              "text": "CAMELEOPARD_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "V______S"
+            },
+            {
+              "level": 3,
+              "text": "VI____ES"
+            },
+            {
+              "level": 4,
+              "text": "_I_I_EE_"
+            },
+            {
+              "level": 5,
+              "text": "VISITEE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D______R"
+            },
+            {
+              "level": 3,
+              "text": "DE____ER"
+            },
+            {
+              "level": 4,
+              "text": "_E_O__E_"
+            },
+            {
+              "level": 5,
+              "text": "DEPORTE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L_____S"
+            },
+            {
+              "level": 3,
+              "text": "LO___PS"
+            },
+            {
+              "level": 4,
+              "text": "_O__O__"
+            },
+            {
+              "level": 5,
+              "text": "LOLLOP_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
@@ -209,125 +303,29 @@
             },
             {
               "level": 2,
-              "text": "O_________Y"
+              "text": "L____Y"
             },
             {
               "level": 3,
-              "text": "OP_______LY"
+              "text": "LE__LY"
             },
             {
               "level": 4,
-              "text": "O_E_A_I_E__"
+              "text": "_EA___"
             },
             {
               "level": 5,
-              "text": "OPERATIVEL_"
+              "text": "LEALL_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 3,
-          "length": 11,
-          "estimatedPoints": 385,
-          "positional": "A 11-letter word sits in the center quadrant",
-          "category": "A familiar everyday word — 11 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 11 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C_________D"
-            },
-            {
-              "level": 3,
-              "text": "CA_______RD"
-            },
-            {
-              "level": 4,
-              "text": "_A_E_EO_A__"
-            },
-            {
-              "level": 5,
-              "text": "CAMELEOPAR_"
-            }
-          ],
-          "features": [
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 4,
-          "length": 10,
-          "estimatedPoints": 280,
-          "positional": "A 10-letter word uses the LE digraph tile",
-          "category": "A compound-style word — 10 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 10 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S________S"
-            },
-            {
-              "level": 3,
-              "text": "SI______TS"
-            },
-            {
-              "level": 4,
-              "text": "_I_E__OO__"
-            },
-            {
-              "level": 5,
-              "text": "SIDESHOOT_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 154,
-          "positional": "A 7-letter word uses the LL digraph tile",
-          "category": "A familiar everyday word — 7 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B_____S"
-            },
-            {
-              "level": 3,
-              "text": "BO___OS"
-            },
-            {
-              "level": 4,
-              "text": "_O_E_O_"
-            },
-            {
-              "level": 5,
-              "text": "BOLERO_"
-            }
-          ],
-          "features": [
-            "Uses 2 digraph tiles"
-          ]
-        },
-        {
-          "wordIndex": 6,
+          "wordIndex": 7,
           "length": 6,
-          "estimatedPoints": 102,
-          "positional": "A 6-letter word runs from lower-left toward bottom",
-          "category": "An action verb form — 6 letters",
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
@@ -335,60 +333,28 @@
             },
             {
               "level": 2,
-              "text": "L____D"
+              "text": "T____S"
             },
             {
               "level": 3,
-              "text": "LE__ED"
+              "text": "TH__ES"
             },
             {
               "level": 4,
-              "text": "_E__E_"
+              "text": "__E_E_"
             },
             {
               "level": 5,
-              "text": "LETTE_"
+              "text": "THETE_"
             }
           ],
           "features": []
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 95,
-          "positional": "A 5-letter word runs from bottom toward lower-left",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "S___K"
-            },
-            {
-              "level": 3,
-              "text": "SP_RK"
-            },
-            {
-              "level": 4,
-              "text": "__O__"
-            },
-            {
-              "level": 5,
-              "text": "SPOR_"
-            }
-          ],
-          "features": [
-            "Uses a portal tile"
-          ]
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 7.9,
+    "averageWordLength": 8.3,
     "gemDensity": 0.016,
     "tilesCleared": 55,
     "tilesRemaining": 6,
@@ -396,12 +362,12 @@
     "fullClear": false,
     "solutionPath": [
       "LUCUBRATORS",
-      "TEMPERATIVE",
-      "DEPORTERS",
-      "DROPLETS",
-      "CLOKES",
-      "BOYOS",
-      "HAOLE"
+      "CAMELEOPARDS",
+      "VISITEES",
+      "DEPORTER",
+      "LOLLOPS",
+      "LEALLY",
+      "THETES"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -414,6 +380,6 @@
       "LETTED",
       "SPORK"
     ],
-    "generatedAt": "2026-05-24T01:24:27.954Z"
+    "generatedAt": "2026-07-03T12:53:54.959Z"
   }
 }

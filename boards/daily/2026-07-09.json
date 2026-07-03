@@ -117,195 +117,40 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 3848,
+    "maxPossibleScore": 2490,
     "minAchievableScore": 1296,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "EMBOSSES",
-          "SPREAZING",
-          "UNFOUNDED",
-          "OEDEMATOSE",
-          "PATZERS",
-          "MESSIER",
-          "POBOYS",
-          "PARCH"
+          "DOZINGS",
+          "SPATZLES",
+          "REMINDED",
+          "PHOBISM",
+          "COUNTERSUED",
+          "FORBEARS",
+          "SYENS"
         ],
-        "wordTotal": 2378,
-        "penalty": 0,
-        "finalScore": 2378
-      },
-      {
-        "words": [
-          "EMBOSSES",
-          "SPREAZING",
-          "UNFOUNDED",
-          "PATZERS",
-          "OEDEMATOSE",
-          "POBOYS",
-          "MESSIER",
-          "PARCH"
-        ],
-        "wordTotal": 2378,
-        "penalty": 0,
-        "finalScore": 2378
-      },
-      {
-        "words": [
-          "OEDEMATOSE",
-          "SPREAZING",
-          "UNFOUNDED",
-          "EMBOSSES",
-          "PATZERS",
-          "MESSIER",
-          "POBOYS",
-          "PARCH"
-        ],
-        "wordTotal": 2378,
-        "penalty": 0,
-        "finalScore": 2378
+        "wordTotal": 2490,
+        "penalty": 34,
+        "finalScore": 2456,
+        "scoreTiers": {
+          "good": 982,
+          "great": 1596,
+          "superb": 2088
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2378,
-      "wordCount": 8,
+      "targetScore": 2456,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 10,
-          "estimatedPoints": 270,
-          "positional": "A 10-letter word sits in the upper-right quadrant",
-          "category": "A familiar everyday word — 10 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 10 letters with 6 vowels"
-            },
-            {
-              "level": 2,
-              "text": "O________E"
-            },
-            {
-              "level": 3,
-              "text": "OE______SE"
-            },
-            {
-              "level": 4,
-              "text": "OE_E_A_O_E"
-            },
-            {
-              "level": 5,
-              "text": "OEDEMATOS_"
-            }
-          ],
-          "features": [
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 2,
-          "length": 9,
-          "estimatedPoints": 612,
-          "positional": "A 9-letter word uses the IO digraph tile",
-          "category": "A compound-style word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A present-participle action word ending in -ING"
-            },
-            {
-              "level": 2,
-              "text": "S_______G"
-            },
-            {
-              "level": 3,
-              "text": "SP_____NG"
-            },
-            {
-              "level": 4,
-              "text": "___EA_I__"
-            },
-            {
-              "level": 5,
-              "text": "SPREAZIN_"
-            }
-          ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 3,
-          "length": 9,
-          "estimatedPoints": 279,
-          "positional": "A 9-letter word uses the ED digraph tile",
-          "category": "A compound-style word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Something described as \"not\" or reversed (9 letters)"
-            },
-            {
-              "level": 2,
-              "text": "U_______D"
-            },
-            {
-              "level": 3,
-              "text": "UN_____ED"
-            },
-            {
-              "level": 4,
-              "text": "U__OU__E_"
-            },
-            {
-              "level": 5,
-              "text": "UNFOUNDE_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 4,
-          "length": 8,
-          "estimatedPoints": 648,
-          "positional": "A 8-letter word passes through the gold gem",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E______S"
-            },
-            {
-              "level": 3,
-              "text": "EM____ES"
-            },
-            {
-              "level": 4,
-              "text": "E__O__E_"
-            },
-            {
-              "level": 5,
-              "text": "EMBOSSE_"
-            }
-          ],
-          "features": [
-            "Uses gold gem"
-          ]
-        },
-        {
-          "wordIndex": 5,
           "length": 7,
-          "estimatedPoints": 196,
-          "positional": "A 7-letter word uses the LE digraph tile",
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
           "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
@@ -314,90 +159,178 @@
             },
             {
               "level": 2,
-              "text": "P_____S"
+              "text": "D_____S"
             },
             {
               "level": 3,
-              "text": "PA___RS"
+              "text": "DO___GS"
             },
             {
               "level": 4,
-              "text": "_A__E__"
+              "text": "_O_I___"
             },
             {
               "level": 5,
-              "text": "PATZER_"
+              "text": "DOZING_"
             }
           ],
-          "features": [
-            "Uses 2 digraph tiles"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 6,
-          "length": 7,
-          "estimatedPoints": 140,
-          "positional": "A 7-letter word runs from lower-right toward lower-left",
-          "category": "A role/profession-style word — 7 letters",
+          "wordIndex": 2,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 3 vowels"
+              "text": "Pattern hint: 8 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "M_____R"
+              "text": "S______S"
             },
             {
               "level": 3,
-              "text": "ME___ER"
+              "text": "SP____ES"
             },
             {
               "level": 4,
-              "text": "_E__IE_"
+              "text": "__A___E_"
             },
             {
               "level": 5,
-              "text": "MESSIE_"
+              "text": "SPATZLE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A compound-style word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A word related to doing something again (8 letters)"
+            },
+            {
+              "level": 2,
+              "text": "R______D"
+            },
+            {
+              "level": 3,
+              "text": "RE____ED"
+            },
+            {
+              "level": 4,
+              "text": "_E_I__E_"
+            },
+            {
+              "level": 5,
+              "text": "REMINDE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "An abstract noun — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P_____M"
+            },
+            {
+              "level": 3,
+              "text": "PH___SM"
+            },
+            {
+              "level": 4,
+              "text": "__O_I__"
+            },
+            {
+              "level": 5,
+              "text": "PHOBIS_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 11,
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
+          "category": "A compound-style word — 11 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 11 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_________D"
+            },
+            {
+              "level": 3,
+              "text": "CO_______ED"
+            },
+            {
+              "level": 4,
+              "text": "_OU__E__UE_"
+            },
+            {
+              "level": 5,
+              "text": "COUNTERSUE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F______S"
+            },
+            {
+              "level": 3,
+              "text": "FO____RS"
+            },
+            {
+              "level": 4,
+              "text": "_O__EA__"
+            },
+            {
+              "level": 5,
+              "text": "FORBEAR_"
             }
           ],
           "features": []
         },
         {
           "wordIndex": 7,
-          "length": 6,
-          "estimatedPoints": 138,
-          "positional": "A 6-letter word runs from lower-left toward bottom",
-          "category": "A familiar everyday word — 6 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 6 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "P____S"
-            },
-            {
-              "level": 3,
-              "text": "PO__YS"
-            },
-            {
-              "level": 4,
-              "text": "_O_O__"
-            },
-            {
-              "level": 5,
-              "text": "POBOY_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 8,
           "length": 5,
-          "estimatedPoints": 95,
-          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -406,44 +339,41 @@
             },
             {
               "level": 2,
-              "text": "P___H"
+              "text": "S___S"
             },
             {
               "level": 3,
-              "text": "PA_CH"
+              "text": "SY_NS"
             },
             {
               "level": 4,
-              "text": "_A___"
+              "text": "__E__"
             },
             {
               "level": 5,
-              "text": "PARC_"
+              "text": "SYEN_"
             }
           ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 8,
-    "averageWordLength": 7,
+    "optimalMoves": 7,
+    "averageWordLength": 7.7,
     "gemDensity": 0.016,
-    "tilesCleared": 56,
-    "tilesRemaining": 5,
-    "tileClearancePercent": 91.8,
+    "tilesCleared": 51,
+    "tilesRemaining": 10,
+    "tileClearancePercent": 83.6,
     "fullClear": false,
     "solutionPath": [
       "DOZINGS",
-      "EMBOUNDED",
-      "SPREAZES",
-      "FORAYERS",
-      "PSOATIC",
-      "EUPHON",
-      "STEEPS",
-      "MARSE"
+      "SPATZLES",
+      "REMINDED",
+      "PHOBISM",
+      "COUNTERSUED",
+      "FORBEARS",
+      "SYENS"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -457,6 +387,6 @@
       "POBOYS",
       "PARCH"
     ],
-    "generatedAt": "2026-06-10T01:27:45.181Z"
+    "generatedAt": "2026-07-03T12:53:55.788Z"
   }
 }

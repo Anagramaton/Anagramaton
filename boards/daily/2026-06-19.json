@@ -117,64 +117,40 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 4635,
+    "maxPossibleScore": 1865,
     "minAchievableScore": 1872,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "INTERNALIZED",
-          "DEHUMANIZING",
-          "APPROVABLE",
-          "DIAPERING",
-          "ABSIT",
-          "ATHETISE",
-          "BUBAS"
+          "EBIONIZING",
+          "OVERHATING",
+          "PITUITE",
+          "BASEBALL",
+          "ENDBRAIN",
+          "HEATH"
         ],
-        "wordTotal": 2545,
-        "penalty": 0,
-        "finalScore": 2545
-      },
-      {
-        "words": [
-          "INTERNALIZED",
-          "DEHUMANIZING",
-          "APPROVABLE",
-          "ABSIT",
-          "DIAPERING",
-          "BUBAS",
-          "ATHETISE"
-        ],
-        "wordTotal": 2545,
-        "penalty": 0,
-        "finalScore": 2545
-      },
-      {
-        "words": [
-          "INTERNALIZED",
-          "DEHUMANIZING",
-          "APPROVABLE",
-          "DIAPERING",
-          "ATHETISE",
-          "ABSIT",
-          "BUBAS"
-        ],
-        "wordTotal": 2545,
-        "penalty": 0,
-        "finalScore": 2545
+        "wordTotal": 1865,
+        "penalty": 55,
+        "finalScore": 1810,
+        "scoreTiers": {
+          "good": 724,
+          "great": 1177,
+          "superb": 1539
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2545,
-      "wordCount": 7,
+      "targetScore": 1810,
+      "wordCount": 6,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 12,
-          "estimatedPoints": 528,
-          "positional": "A 12-letter word uses the EA digraph tile",
-          "category": "A compound-style word — 12 letters",
+          "length": 10,
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
+          "category": "A compound-style word — 10 letters",
           "hints": [
             {
               "level": 1,
@@ -182,97 +158,29 @@
             },
             {
               "level": 2,
-              "text": "D__________G"
+              "text": "E________G"
             },
             {
               "level": 3,
-              "text": "DE________NG"
+              "text": "EB______NG"
             },
             {
               "level": 4,
-              "text": "_E_U_A_I_I__"
+              "text": "E_IO_I_I__"
             },
             {
               "level": 5,
-              "text": "DEHUMANIZIN_"
+              "text": "EBIONIZIN_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
-          "length": 12,
-          "estimatedPoints": 936,
-          "positional": "A 12-letter word uses the ON digraph tile",
-          "category": "A compound-style word — 12 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 12 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "I__________D"
-            },
-            {
-              "level": 3,
-              "text": "IN________ED"
-            },
-            {
-              "level": 4,
-              "text": "I__E__A_I_E_"
-            },
-            {
-              "level": 5,
-              "text": "INTERNALIZE_"
-            }
-          ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 3,
           "length": 10,
-          "estimatedPoints": 390,
-          "positional": "A 10-letter word uses the TH digraph tile",
-          "category": "A descriptive adjective — 10 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 10 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "A________E"
-            },
-            {
-              "level": 3,
-              "text": "AP______LE"
-            },
-            {
-              "level": 4,
-              "text": "A___O_A__E"
-            },
-            {
-              "level": 5,
-              "text": "APPROVABL_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 4,
-          "length": 9,
-          "estimatedPoints": 243,
-          "positional": "A 9-letter word sits in the center quadrant",
-          "category": "A compound-style word — 9 letters",
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
+          "category": "A compound-style word — 10 letters",
           "hints": [
             {
               "level": 1,
@@ -280,19 +188,79 @@
             },
             {
               "level": 2,
-              "text": "D_______G"
+              "text": "O________G"
             },
             {
               "level": 3,
-              "text": "DI_____NG"
+              "text": "OV______NG"
             },
             {
               "level": 4,
-              "text": "_IA_E_I__"
+              "text": "O_E__A_I__"
             },
             {
               "level": 5,
-              "text": "DIAPERIN_"
+              "text": "OVERHATIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P_____E"
+            },
+            {
+              "level": 3,
+              "text": "PI___TE"
+            },
+            {
+              "level": 4,
+              "text": "_I_UI_E"
+            },
+            {
+              "level": 5,
+              "text": "PITUIT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B______L"
+            },
+            {
+              "level": 3,
+              "text": "BA____LL"
+            },
+            {
+              "level": 4,
+              "text": "_A_E_A__"
+            },
+            {
+              "level": 5,
+              "text": "BASEBAL_"
             }
           ],
           "features": []
@@ -300,70 +268,38 @@
         {
           "wordIndex": 5,
           "length": 8,
-          "estimatedPoints": 168,
-          "positional": "A 8-letter word uses the ES digraph tile",
-          "category": "An action verb form — 8 letters",
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 8 letters with 4 vowels"
+              "text": "Pattern hint: 8 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "A______E"
+              "text": "E______N"
             },
             {
               "level": 3,
-              "text": "AT____SE"
+              "text": "EN____IN"
             },
             {
               "level": 4,
-              "text": "A__E_I_E"
+              "text": "E____AI_"
             },
             {
               "level": 5,
-              "text": "ATHETIS_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 6,
-          "length": 5,
-          "estimatedPoints": 110,
-          "positional": "A 5-letter word runs from bottom toward lower-left",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "B___S"
-            },
-            {
-              "level": 3,
-              "text": "BU_AS"
-            },
-            {
-              "level": 4,
-              "text": "_U_A_"
-            },
-            {
-              "level": 5,
-              "text": "BUBA_"
+              "text": "ENDBRAI_"
             }
           ],
           "features": []
         },
         {
-          "wordIndex": 7,
+          "wordIndex": 6,
           "length": 5,
-          "estimatedPoints": 170,
-          "positional": "A 5-letter word passes through the emerald gem",
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -372,43 +308,40 @@
             },
             {
               "level": 2,
-              "text": "A___T"
+              "text": "H___H"
             },
             {
               "level": 3,
-              "text": "AB_IT"
+              "text": "HE_TH"
             },
             {
               "level": 4,
-              "text": "A__I_"
+              "text": "_EA__"
             },
             {
               "level": 5,
-              "text": "ABSI_"
+              "text": "HEAT_"
             }
           ],
-          "features": [
-            "Uses emerald gem",
-            "Uses a portal tile"
-          ]
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 6,
-    "averageWordLength": 9.2,
+    "averageWordLength": 8,
     "gemDensity": 0.016,
-    "tilesCleared": 55,
-    "tilesRemaining": 6,
-    "tileClearancePercent": 90.2,
+    "tilesCleared": 45,
+    "tilesRemaining": 16,
+    "tileClearancePercent": 73.8,
     "fullClear": false,
     "solutionPath": [
-      "INTERNALIZE",
-      "APPROVABLE",
-      "DEHUMANIZE",
-      "PITUITES",
-      "SABBATH",
-      "RESIGNING"
+      "EBIONIZING",
+      "OVERHATING",
+      "PITUITE",
+      "BASEBALL",
+      "ENDBRAIN",
+      "HEATH"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -421,6 +354,6 @@
       "BUBAS",
       "ABSIT"
     ],
-    "generatedAt": "2026-05-21T01:25:38.769Z"
+    "generatedAt": "2026-07-03T12:53:54.804Z"
   }
 }

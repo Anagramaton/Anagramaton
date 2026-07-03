@@ -117,92 +117,39 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 4565,
+    "maxPossibleScore": 1945,
     "minAchievableScore": 1452,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "CAGEYNESSES",
-          "COPYEDITED",
-          "POSTURIZING",
-          "INTREATFULL",
-          "SANDFLIES",
-          "SNORTINGS"
-        ],
-        "wordTotal": 2695,
-        "penalty": 0,
-        "finalScore": 2695
-      },
-      {
-        "words": [
-          "CAGEYNESSES",
-          "COPYEDITED",
-          "POSTURIZING",
-          "INTREATFULL",
-          "SANDFLIES",
-          "SNORTINGS"
-        ],
-        "wordTotal": 2695,
-        "penalty": 0,
-        "finalScore": 2695
-      },
-      {
-        "words": [
-          "CAGEYNESSES",
-          "POSTURIZING",
           "INTREATFULL",
           "COPYEDITED",
           "SANDFLIES",
-          "SNORTINGS"
+          "SNORTINGS",
+          "PONCIEST",
+          "GYNAES"
         ],
-        "wordTotal": 2695,
-        "penalty": 0,
-        "finalScore": 2695
+        "wordTotal": 1945,
+        "penalty": 26,
+        "finalScore": 1919,
+        "scoreTiers": {
+          "good": 768,
+          "great": 1247,
+          "superb": 1631
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2695,
+      "targetScore": 1919,
       "wordCount": 6,
       "clues": [
         {
           "wordIndex": 1,
           "length": 11,
-          "estimatedPoints": 440,
-          "positional": "A 11-letter word uses the NG digraph tile",
-          "category": "A compound-style word — 11 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "A present-participle action word ending in -ING"
-            },
-            {
-              "level": 2,
-              "text": "P_________G"
-            },
-            {
-              "level": 3,
-              "text": "PO_______NG"
-            },
-            {
-              "level": 4,
-              "text": "_O__U_I_I__"
-            },
-            {
-              "level": 5,
-              "text": "POSTURIZIN_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 2,
-          "length": 11,
-          "estimatedPoints": 374,
-          "positional": "A 11-letter word uses the AL digraph tile",
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
           "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
@@ -226,49 +173,13 @@
               "text": "INTREATFUL_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 3,
-          "length": 11,
-          "estimatedPoints": 726,
-          "positional": "A 11-letter word uses the IO digraph tile",
-          "category": "A familiar everyday word — 11 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 11 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "C_________S"
-            },
-            {
-              "level": 3,
-              "text": "CA_______ES"
-            },
-            {
-              "level": 4,
-              "text": "_A_E__E__E_"
-            },
-            {
-              "level": 5,
-              "text": "CAGEYNESSE_"
-            }
-          ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses 2 digraph tiles"
-          ]
-        },
-        {
-          "wordIndex": 4,
+          "wordIndex": 2,
           "length": 10,
-          "estimatedPoints": 660,
-          "positional": "A 10-letter word passes through the emerald gem",
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
           "category": "A compound-style word — 10 letters",
           "hints": [
             {
@@ -292,16 +203,13 @@
               "text": "COPYEDITE_"
             }
           ],
-          "features": [
-            "Uses emerald gem",
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 5,
+          "wordIndex": 3,
           "length": 9,
-          "estimatedPoints": 261,
-          "positional": "A 9-letter word runs from lower-left toward bottom",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -328,10 +236,10 @@
           "features": []
         },
         {
-          "wordIndex": 6,
+          "wordIndex": 4,
           "length": 9,
-          "estimatedPoints": 234,
-          "positional": "A 9-letter word sits in the bottom quadrant",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -356,24 +264,84 @@
             }
           ],
           "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P______T"
+            },
+            {
+              "level": 3,
+              "text": "PO____ST"
+            },
+            {
+              "level": 4,
+              "text": "_O__IE__"
+            },
+            {
+              "level": 5,
+              "text": "PONCIES_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G____S"
+            },
+            {
+              "level": 3,
+              "text": "GY__ES"
+            },
+            {
+              "level": 4,
+              "text": "___AE_"
+            },
+            {
+              "level": 5,
+              "text": "GYNAE_"
+            }
+          ],
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 6,
-    "averageWordLength": 9.2,
+    "averageWordLength": 8.8,
     "gemDensity": 0.016,
-    "tilesCleared": 55,
-    "tilesRemaining": 6,
-    "tileClearancePercent": 90.2,
+    "tilesCleared": 53,
+    "tilesRemaining": 8,
+    "tileClearancePercent": 86.9,
     "fullClear": false,
     "solutionPath": [
-      "CAGEYNESSES",
-      "COPYEDITING",
       "INTREATFULL",
+      "COPYEDITED",
+      "SANDFLIES",
       "SNORTINGS",
-      "STRIFES",
-      "DESAND"
+      "PONCIEST",
+      "GYNAES"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -385,6 +353,6 @@
       "SANDFLIES",
       "SNORTINGS"
     ],
-    "generatedAt": "2026-06-30T01:23:24.088Z"
+    "generatedAt": "2026-07-03T12:53:56.803Z"
   }
 }

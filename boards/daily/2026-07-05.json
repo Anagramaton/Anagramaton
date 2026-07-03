@@ -117,129 +117,39 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 4610,
+    "maxPossibleScore": 1785,
     "minAchievableScore": 1672,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "EXSANGUINED",
-          "TELOTAXIS",
-          "JOYOUSNESSES",
           "REINSTATORS",
-          "HEEZED",
-          "SOTTISH",
-          "NOBBY"
+          "HEBETATIONS",
+          "BLUSHETS",
+          "DOSSES",
+          "NOTED",
+          "CHOOSY"
         ],
-        "wordTotal": 2562,
-        "penalty": 0,
-        "finalScore": 2562
-      },
-      {
-        "words": [
-          "EXSANGUINED",
-          "TELOTAXIS",
-          "JOYOUSNESSES",
-          "REINSTATORS",
-          "HEEZED",
-          "NOBBY",
-          "SOTTISH"
-        ],
-        "wordTotal": 2562,
-        "penalty": 0,
-        "finalScore": 2562
-      },
-      {
-        "words": [
-          "JOYOUSNESSES",
-          "EXSANGUINED",
-          "REINSTATORS",
-          "TELOTAXIS",
-          "SOTTISH",
-          "HEEZED",
-          "NOBBY"
-        ],
-        "wordTotal": 2562,
-        "penalty": 0,
-        "finalScore": 2562
+        "wordTotal": 1785,
+        "penalty": 50,
+        "finalScore": 1735,
+        "scoreTiers": {
+          "good": 694,
+          "great": 1128,
+          "superb": 1475
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2562,
-      "wordCount": 7,
+      "targetScore": 1735,
+      "wordCount": 6,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 12,
-          "estimatedPoints": 468,
-          "positional": "A 12-letter word uses the CR digraph tile",
-          "category": "A familiar everyday word — 12 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 12 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "J__________S"
-            },
-            {
-              "level": 3,
-              "text": "JO________ES"
-            },
-            {
-              "level": 4,
-              "text": "_O_OU__E__E_"
-            },
-            {
-              "level": 5,
-              "text": "JOYOUSNESSE_"
-            }
-          ],
-          "features": [
-            "Uses 2 digraph tiles",
-            "Uses a portal tile"
-          ]
-        },
-        {
-          "wordIndex": 2,
           "length": 11,
-          "estimatedPoints": 836,
-          "positional": "A 11-letter word uses the WH digraph tile",
-          "category": "A compound-style word — 11 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 11 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E_________D"
-            },
-            {
-              "level": 3,
-              "text": "EX_______ED"
-            },
-            {
-              "level": 4,
-              "text": "E__A__UI_E_"
-            },
-            {
-              "level": 5,
-              "text": "EXSANGUINE_"
-            }
-          ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 3,
-          "length": 11,
-          "estimatedPoints": 319,
-          "positional": "A 11-letter word sits in the center quadrant",
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
           "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
@@ -266,63 +176,121 @@
           "features": []
         },
         {
-          "wordIndex": 4,
-          "length": 9,
-          "estimatedPoints": 540,
-          "positional": "A 9-letter word passes through the emerald gem",
-          "category": "A familiar everyday word — 9 letters",
+          "wordIndex": 2,
+          "length": 11,
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
+          "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
+              "text": "Pattern hint: 11 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "T_______S"
+              "text": "H_________S"
             },
             {
               "level": 3,
-              "text": "TE_____IS"
+              "text": "HE_______NS"
             },
             {
               "level": 4,
-              "text": "_E_O_A_I_"
+              "text": "_E_E_A_IO__"
             },
             {
               "level": 5,
-              "text": "TELOTAXI_"
+              "text": "HEBETATION_"
             }
           ],
-          "features": [
-            "Uses emerald gem"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B______S"
+            },
+            {
+              "level": 3,
+              "text": "BL____TS"
+            },
+            {
+              "level": 4,
+              "text": "__U__E__"
+            },
+            {
+              "level": 5,
+              "text": "BLUSHET_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "D____S"
+            },
+            {
+              "level": 3,
+              "text": "DO__ES"
+            },
+            {
+              "level": 4,
+              "text": "_O__E_"
+            },
+            {
+              "level": 5,
+              "text": "DOSSE_"
+            }
+          ],
+          "features": []
         },
         {
           "wordIndex": 5,
-          "length": 7,
-          "estimatedPoints": 140,
-          "positional": "A 7-letter word runs from lower-left toward lower-right",
-          "category": "A familiar everyday word — 7 letters",
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "An action verb form — 5 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 5 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "S_____H"
+              "text": "N___D"
             },
             {
               "level": 3,
-              "text": "SO___SH"
+              "text": "NO_ED"
             },
             {
               "level": 4,
-              "text": "_O__I__"
+              "text": "_O_E_"
             },
             {
               "level": 5,
-              "text": "SOTTIS_"
+              "text": "NOTE_"
             }
           ],
           "features": []
@@ -330,84 +298,50 @@
         {
           "wordIndex": 6,
           "length": 6,
-          "estimatedPoints": 144,
-          "positional": "A 6-letter word uses the HE digraph tile",
-          "category": "An action verb form — 6 letters",
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 6 letters with 3 vowels"
+              "text": "Pattern hint: 6 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "H____D"
+              "text": "C____Y"
             },
             {
               "level": 3,
-              "text": "HE__ED"
+              "text": "CH__SY"
             },
             {
               "level": 4,
-              "text": "_EE_E_"
+              "text": "__OO__"
             },
             {
               "level": 5,
-              "text": "HEEZE_"
+              "text": "CHOOS_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 7,
-          "length": 5,
-          "estimatedPoints": 115,
-          "positional": "A 5-letter word runs from lower-left toward bottom",
-          "category": "A familiar everyday word — 5 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 5 letters with 1 vowel"
-            },
-            {
-              "level": 2,
-              "text": "N___Y"
-            },
-            {
-              "level": 3,
-              "text": "NO_BY"
-            },
-            {
-              "level": 4,
-              "text": "_O___"
-            },
-            {
-              "level": 5,
-              "text": "NOBB_"
-            }
-          ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 6,
-    "averageWordLength": 9.2,
+    "averageWordLength": 7.8,
     "gemDensity": 0.016,
-    "tilesCleared": 55,
-    "tilesRemaining": 6,
-    "tileClearancePercent": 90.2,
+    "tilesCleared": 46,
+    "tilesRemaining": 15,
+    "tileClearancePercent": 75.4,
     "fullClear": false,
     "solutionPath": [
-      "EXSANGUINED",
-      "TELOTAXIS",
-      "JOYOUSNESS",
       "REINSTATORS",
-      "HEEZED",
-      "SNOBBISH"
+      "HEBETATIONS",
+      "BLUSHETS",
+      "DOSSES",
+      "NOTED",
+      "CHOOSY"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -420,6 +354,6 @@
       "HEEZED",
       "NOBBY"
     ],
-    "generatedAt": "2026-06-06T01:22:15.833Z"
+    "generatedAt": "2026-07-03T12:53:55.590Z"
   }
 }

@@ -149,44 +149,231 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 298290,
+    "maxPossibleScore": 116338,
     "minAchievableScore": 229320,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "PROVOCATIVELY",
-          "WINGBACK",
-          "BOXING",
-          "ENWOMB"
+          "HOTBOX",
+          "FOXIE",
+          "GWINE",
+          "PIKEY",
+          "MILKY"
         ],
-        "wordTotal": 119652,
-        "penalty": 129,
-        "finalScore": 119523
-      },
-      {
-        "words": [
-          "PROVOCATIVELY",
-          "WINGBACK",
-          "BOXING",
-          "ENWOMB"
-        ],
-        "wordTotal": 119652,
-        "penalty": 129,
-        "finalScore": 119523
-      },
-      {
-        "words": [
-          "PROVOCATIVELY",
-          "WINGBACK",
-          "BOXING",
-          "ENWOMB"
-        ],
-        "wordTotal": 119652,
-        "penalty": 129,
-        "finalScore": 119523
+        "wordTotal": 116338,
+        "penalty": 89,
+        "finalScore": 116249,
+        "scoreTiers": {
+          "good": 46500,
+          "great": 75562,
+          "superb": 98812
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.697Z"
+    "generatedAt": "2026-07-03T12:53:53.766Z",
+    "optimalMoves": 6,
+    "averageWordLength": 6.5,
+    "gemDensity": 0.082,
+    "tilesCleared": 39,
+    "tilesRemaining": 22,
+    "tileClearancePercent": 63.9,
+    "fullClear": false,
+    "solutionPath": [
+      "PROVOCATIVELY",
+      "HOTBOX",
+      "FOXIE",
+      "GWINE",
+      "PIKEY",
+      "MILKY"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 116249,
+      "wordCount": 6,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "A compound-style word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "P___________Y"
+            },
+            {
+              "level": 3,
+              "text": "PR_________LY"
+            },
+            {
+              "level": 4,
+              "text": "__O_O_A_I_E__"
+            },
+            {
+              "level": 5,
+              "text": "PROVOCATIVEL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "H____X"
+            },
+            {
+              "level": 3,
+              "text": "HO__OX"
+            },
+            {
+              "level": 4,
+              "text": "_O__O_"
+            },
+            {
+              "level": 5,
+              "text": "HOTBO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "F___E"
+            },
+            {
+              "level": 3,
+              "text": "FO_IE"
+            },
+            {
+              "level": 4,
+              "text": "_O_IE"
+            },
+            {
+              "level": 5,
+              "text": "FOXI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G___E"
+            },
+            {
+              "level": 3,
+              "text": "GW_NE"
+            },
+            {
+              "level": 4,
+              "text": "__I_E"
+            },
+            {
+              "level": 5,
+              "text": "GWIN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P___Y"
+            },
+            {
+              "level": 3,
+              "text": "PI_EY"
+            },
+            {
+              "level": 4,
+              "text": "_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "PIKE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "M___Y"
+            },
+            {
+              "level": 3,
+              "text": "MI_KY"
+            },
+            {
+              "level": 4,
+              "text": "_I___"
+            },
+            {
+              "level": 5,
+              "text": "MILK_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

@@ -129,56 +129,296 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 6420,
+    "maxPossibleScore": 2183,
     "minAchievableScore": 2296,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "WAXWORK",
-          "BYWORK",
-          "BUFFALOFISHES",
-          "NUZZLE"
+          "OBECHES",
+          "STOUSHIE",
+          "MAFFLIN",
+          "PIAZZE",
+          "LIBEL",
+          "UNBOX",
+          "BOAST"
         ],
-        "wordTotal": 2754,
-        "penalty": 131,
-        "finalScore": 2623
-      },
-      {
-        "words": [
-          "WAXWORK",
-          "BYWORK",
-          "BUFFALOFISHES",
-          "NUZZLE"
-        ],
-        "wordTotal": 2754,
-        "penalty": 131,
-        "finalScore": 2623
-      },
-      {
-        "words": [
-          "BUFFALOFISHES",
-          "WAXWORK",
-          "BYWORK",
-          "NUZZLE"
-        ],
-        "wordTotal": 2754,
-        "penalty": 131,
-        "finalScore": 2623
+        "wordTotal": 2183,
+        "penalty": 65,
+        "finalScore": 2118,
+        "scoreTiers": {
+          "good": 847,
+          "great": 1377,
+          "superb": 1800
+        }
       }
     ],
     "difficulty": "easy",
-    "optimalMoves": 6,
-    "averageWordLength": 6.5,
+    "optimalMoves": 8,
+    "averageWordLength": 6.3,
     "gemDensity": 0.016,
     "solutionPath": [
       "WAXWORK",
-      "AMBUSHES",
-      "NUZZLE",
-      "BLOBBY",
-      "AFLAME",
-      "INFUSE"
+      "OBECHES",
+      "STOUSHIE",
+      "MAFFLIN",
+      "PIAZZE",
+      "LIBEL",
+      "UNBOX",
+      "BOAST"
     ],
-    "generatedAt": "2026-05-14T01:20:24.626Z"
+    "generatedAt": "2026-07-03T12:53:54.475Z",
+    "tilesCleared": 46,
+    "tilesRemaining": 15,
+    "tileClearancePercent": 75.4,
+    "fullClear": false,
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 2118,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W_____K"
+            },
+            {
+              "level": 3,
+              "text": "WA___RK"
+            },
+            {
+              "level": 4,
+              "text": "_A__O__"
+            },
+            {
+              "level": 5,
+              "text": "WAXWOR_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O_____S"
+            },
+            {
+              "level": 3,
+              "text": "OB___ES"
+            },
+            {
+              "level": 4,
+              "text": "O_E__E_"
+            },
+            {
+              "level": 5,
+              "text": "OBECHE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 8,
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A familiar everyday word — 8 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 8 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S______E"
+            },
+            {
+              "level": 3,
+              "text": "ST____IE"
+            },
+            {
+              "level": 4,
+              "text": "__OU__IE"
+            },
+            {
+              "level": 5,
+              "text": "STOUSHI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "M_____N"
+            },
+            {
+              "level": 3,
+              "text": "MA___IN"
+            },
+            {
+              "level": 4,
+              "text": "_A___I_"
+            },
+            {
+              "level": 5,
+              "text": "MAFFLI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P____E"
+            },
+            {
+              "level": 3,
+              "text": "PI__ZE"
+            },
+            {
+              "level": 4,
+              "text": "_IA__E"
+            },
+            {
+              "level": 5,
+              "text": "PIAZZ_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "L___L"
+            },
+            {
+              "level": 3,
+              "text": "LI_EL"
+            },
+            {
+              "level": 4,
+              "text": "_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "LIBE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Something described as \"not\" or reversed (5 letters)"
+            },
+            {
+              "level": 2,
+              "text": "U___X"
+            },
+            {
+              "level": 3,
+              "text": "UN_OX"
+            },
+            {
+              "level": 4,
+              "text": "U__O_"
+            },
+            {
+              "level": 5,
+              "text": "UNBO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___T"
+            },
+            {
+              "level": 3,
+              "text": "BO_ST"
+            },
+            {
+              "level": 4,
+              "text": "_OA__"
+            },
+            {
+              "level": 5,
+              "text": "BOAS_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

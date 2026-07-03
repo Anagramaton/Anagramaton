@@ -144,44 +144,231 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 18528320,
+    "maxPossibleScore": 7408943,
     "minAchievableScore": 14816256,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "ZIGZAGGEDNESS",
-          "AFFRAP",
-          "BOWWOWED",
-          "BOFFED"
+          "STRAFF",
+          "WAUFF",
+          "WOIWODE",
+          "PREOP",
+          "BRAAI"
         ],
-        "wordTotal": 7411502,
-        "penalty": 114,
-        "finalScore": 7411388
-      },
-      {
-        "words": [
-          "ZIGZAGGEDNESS",
-          "AFFRAP",
-          "BOWWOWED",
-          "BOFFED"
-        ],
-        "wordTotal": 7411502,
-        "penalty": 114,
-        "finalScore": 7411388
-      },
-      {
-        "words": [
-          "ZIGZAGGEDNESS",
-          "BOWWOWED",
-          "AFFRAP",
-          "BOFFED"
-        ],
-        "wordTotal": 7411502,
-        "penalty": 114,
-        "finalScore": 7411388
+        "wordTotal": 7408943,
+        "penalty": 88,
+        "finalScore": 7408855,
+        "scoreTiers": {
+          "good": 2963542,
+          "great": 4815756,
+          "superb": 6297527
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.829Z"
+    "generatedAt": "2026-07-03T12:53:54.156Z",
+    "optimalMoves": 6,
+    "averageWordLength": 6.8,
+    "gemDensity": 0.082,
+    "tilesCleared": 40,
+    "tilesRemaining": 21,
+    "tileClearancePercent": 65.6,
+    "fullClear": false,
+    "solutionPath": [
+      "ZIGZAGGEDNESS",
+      "STRAFF",
+      "WAUFF",
+      "WOIWODE",
+      "PREOP",
+      "BRAAI"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 7408855,
+      "wordCount": 6,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "An abstract noun — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A quality/state noun ending in -NESS"
+            },
+            {
+              "level": 2,
+              "text": "Z___________S"
+            },
+            {
+              "level": 3,
+              "text": "ZI_________SS"
+            },
+            {
+              "level": 4,
+              "text": "_I__A__E__E__"
+            },
+            {
+              "level": 5,
+              "text": "ZIGZAGGEDNES_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "S____F"
+            },
+            {
+              "level": 3,
+              "text": "ST__FF"
+            },
+            {
+              "level": 4,
+              "text": "___A__"
+            },
+            {
+              "level": 5,
+              "text": "STRAF_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W___F"
+            },
+            {
+              "level": 3,
+              "text": "WA_FF"
+            },
+            {
+              "level": 4,
+              "text": "_AU__"
+            },
+            {
+              "level": 5,
+              "text": "WAUF_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W_____E"
+            },
+            {
+              "level": 3,
+              "text": "WO___DE"
+            },
+            {
+              "level": 4,
+              "text": "_OI_O_E"
+            },
+            {
+              "level": 5,
+              "text": "WOIWOD_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "P___P"
+            },
+            {
+              "level": 3,
+              "text": "PR_OP"
+            },
+            {
+              "level": 4,
+              "text": "__EO_"
+            },
+            {
+              "level": 5,
+              "text": "PREO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___I"
+            },
+            {
+              "level": 3,
+              "text": "BR_AI"
+            },
+            {
+              "level": 4,
+              "text": "__AAI"
+            },
+            {
+              "level": 5,
+              "text": "BRAA_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

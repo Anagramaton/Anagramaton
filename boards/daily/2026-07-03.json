@@ -117,60 +117,40 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 7885,
+    "maxPossibleScore": 3485,
     "minAchievableScore": 4680,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "AFFECTIONALLY",
-          "SCHISMATICS",
           "EXPONENTIAL",
-          "POPULATIONS",
-          "BORESCOPES",
-          "LOTOS"
+          "COPULATIONS",
+          "OBSESS",
+          "PEGHS",
+          "UNAPT",
+          "CLOTH"
         ],
-        "wordTotal": 3922,
-        "penalty": 0,
-        "finalScore": 3922
-      },
-      {
-        "words": [
-          "AFFECTIONALLY",
-          "SCHISMATICS",
-          "EXPONENTIAL",
-          "BORESCOPES",
-          "POPULATIONS",
-          "LOTOS"
-        ],
-        "wordTotal": 3922,
-        "penalty": 0,
-        "finalScore": 3922
-      },
-      {
-        "words": [
-          "AFFECTIONALLY",
-          "SCHISMATICS",
-          "EXPONENTIAL",
-          "POPULATIONS",
-          "BORESCOPES",
-          "LOTOS"
-        ],
-        "wordTotal": 3922,
-        "penalty": 0,
-        "finalScore": 3922
+        "wordTotal": 3485,
+        "penalty": 23,
+        "finalScore": 3462,
+        "scoreTiers": {
+          "good": 1385,
+          "great": 2250,
+          "superb": 2943
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 3922,
-      "wordCount": 6,
+      "targetScore": 3462,
+      "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 13,
-          "estimatedPoints": 2340,
-          "positional": "A 13-letter word routes through the purple prism",
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
           "category": "A compound-style word — 13 letters",
           "hints": [
             {
@@ -194,49 +174,13 @@
               "text": "AFFECTIONALL_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses emerald gem",
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
           "length": 11,
-          "estimatedPoints": 407,
-          "positional": "A 11-letter word uses the WH digraph tile",
-          "category": "A familiar everyday word — 11 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 11 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S_________S"
-            },
-            {
-              "level": 3,
-              "text": "SC_______CS"
-            },
-            {
-              "level": 4,
-              "text": "___I__A_I__"
-            },
-            {
-              "level": 5,
-              "text": "SCHISMATIC_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 3,
-          "length": 11,
-          "estimatedPoints": 407,
-          "positional": "A 11-letter word sits in the center quadrant",
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
           "category": "A descriptive adjective — 11 letters",
           "hints": [
             {
@@ -263,10 +207,10 @@
           "features": []
         },
         {
-          "wordIndex": 4,
+          "wordIndex": 3,
           "length": 11,
-          "estimatedPoints": 363,
-          "positional": "A 11-letter word uses the GH digraph tile",
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
           "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
@@ -275,11 +219,11 @@
             },
             {
               "level": 2,
-              "text": "P_________S"
+              "text": "C_________S"
             },
             {
               "level": 3,
-              "text": "PO_______NS"
+              "text": "CO_______NS"
             },
             {
               "level": 4,
@@ -287,95 +231,149 @@
             },
             {
               "level": 5,
-              "text": "POPULATION_"
+              "text": "COPULATION_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 5,
-          "length": 10,
-          "estimatedPoints": 340,
-          "positional": "A 10-letter word uses the UN digraph tile",
-          "category": "A familiar everyday word — 10 letters",
+          "wordIndex": 4,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 10 letters with 4 vowels"
+              "text": "Pattern hint: 6 letters with 2 vowels"
             },
             {
               "level": 2,
-              "text": "B________S"
+              "text": "O____S"
             },
             {
               "level": 3,
-              "text": "BO______ES"
+              "text": "OB__SS"
             },
             {
               "level": 4,
-              "text": "_O_E__O_E_"
+              "text": "O__E__"
             },
             {
               "level": 5,
-              "text": "BORESCOPE_"
+              "text": "OBSES_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 6,
+          "wordIndex": 5,
           "length": 5,
-          "estimatedPoints": 65,
-          "positional": "A 5-letter word uses the HE digraph tile",
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 5 letters with 2 vowels"
+              "text": "Pattern hint: 5 letters with 1 vowel"
             },
             {
               "level": 2,
-              "text": "L___S"
+              "text": "P___S"
             },
             {
               "level": 3,
-              "text": "LO_OS"
+              "text": "PE_HS"
             },
             {
               "level": 4,
-              "text": "_O_O_"
+              "text": "_E___"
             },
             {
               "level": 5,
-              "text": "LOTO_"
+              "text": "PEGH_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Something described as \"not\" or reversed (5 letters)"
+            },
+            {
+              "level": 2,
+              "text": "U___T"
+            },
+            {
+              "level": 3,
+              "text": "UN_PT"
+            },
+            {
+              "level": 4,
+              "text": "U_A__"
+            },
+            {
+              "level": 5,
+              "text": "UNAP_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "C___H"
+            },
+            {
+              "level": 3,
+              "text": "CL_TH"
+            },
+            {
+              "level": 4,
+              "text": "__O__"
+            },
+            {
+              "level": 5,
+              "text": "CLOT_"
+            }
+          ],
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
-    "optimalMoves": 6,
-    "averageWordLength": 9.8,
+    "optimalMoves": 7,
+    "averageWordLength": 8,
     "gemDensity": 0.016,
-    "tilesCleared": 59,
-    "tilesRemaining": 2,
-    "tileClearancePercent": 96.7,
+    "tilesCleared": 54,
+    "tilesRemaining": 7,
+    "tileClearancePercent": 88.5,
     "fullClear": false,
     "solutionPath": [
-      "AFFECTIONAL",
-      "SCHISMATICS",
+      "AFFECTIONALLY",
       "EXPONENTIAL",
-      "POPULATIONS",
-      "BORESCOPES",
-      "TOLYL"
+      "COPULATIONS",
+      "OBSESS",
+      "PEGHS",
+      "UNAPT",
+      "CLOTH"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -387,6 +385,6 @@
       "BORESCOPES",
       "LOTOS"
     ],
-    "generatedAt": "2026-06-04T01:38:03.638Z"
+    "generatedAt": "2026-07-03T12:53:55.494Z"
   }
 }

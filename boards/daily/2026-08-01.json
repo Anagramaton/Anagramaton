@@ -123,7 +123,7 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 4223,
+    "maxPossibleScore": 2229,
     "minAchievableScore": 1740,
     "strategicPathCount": 3,
     "optimalSolutions": [
@@ -131,55 +131,32 @@
         "words": [
           "HAEMOSTATS",
           "PRECLUDED",
-          "EUCALYPTI",
           "PRETTYISH",
-          "TENUITIES",
-          "GLADDIES",
-          "TRUNCAL"
+          "DATELESS",
+          "ALICANT",
+          "COLLUDE",
+          "INRUN"
         ],
-        "wordTotal": 2503,
-        "penalty": 0,
-        "finalScore": 2503
-      },
-      {
-        "words": [
-          "HAEMOSTATS",
-          "PRECLUDED",
-          "EUCALYPTI",
-          "PRETTYISH",
-          "GLADDIES",
-          "TENUITIES",
-          "TRUNCAL"
-        ],
-        "wordTotal": 2503,
-        "penalty": 0,
-        "finalScore": 2503
-      },
-      {
-        "words": [
-          "HAEMOSTATS",
-          "PRECLUDED",
-          "EUCALYPTI",
-          "PRETTYISH",
-          "TENUITIES",
-          "GLADDIES",
-          "TRUNCAL"
-        ],
-        "wordTotal": 2503,
-        "penalty": 0,
-        "finalScore": 2503
+        "wordTotal": 2229,
+        "penalty": 28,
+        "finalScore": 2201,
+        "scoreTiers": {
+          "good": 880,
+          "great": 1431,
+          "superb": 1871
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 2503,
+      "targetScore": 2201,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
           "length": 10,
-          "estimatedPoints": 870,
-          "positional": "A 10-letter word passes through the gold gem",
+          "estimatedPoints": 0,
+          "positional": "10-letter word near the center lanes",
           "category": "A familiar everyday word — 10 letters",
           "hints": [
             {
@@ -203,15 +180,13 @@
               "text": "HAEMOSTAT_"
             }
           ],
-          "features": [
-            "Uses gold gem"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
           "length": 9,
-          "estimatedPoints": 558,
-          "positional": "A 9-letter word routes through the purple prism",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
           "category": "A compound-style word — 9 letters",
           "hints": [
             {
@@ -235,48 +210,13 @@
               "text": "PRECLUDE_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 3,
           "length": 9,
-          "estimatedPoints": 261,
-          "positional": "A 9-letter word uses the NG digraph tile",
-          "category": "A familiar everyday word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 9 letters with 4 vowels"
-            },
-            {
-              "level": 2,
-              "text": "E_______I"
-            },
-            {
-              "level": 3,
-              "text": "EU_____TI"
-            },
-            {
-              "level": 4,
-              "text": "EU_A____I"
-            },
-            {
-              "level": 5,
-              "text": "EUCALYPT_"
-            }
-          ],
-          "features": [
-            "Uses 2 digraph tiles"
-          ]
-        },
-        {
-          "wordIndex": 4,
-          "length": 9,
-          "estimatedPoints": 261,
-          "positional": "A 9-letter word sits in the center quadrant",
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
           "category": "A familiar everyday word — 9 letters",
           "hints": [
             {
@@ -303,43 +243,11 @@
           "features": []
         },
         {
-          "wordIndex": 5,
-          "length": 9,
-          "estimatedPoints": 207,
-          "positional": "A 9-letter word uses the IN digraph tile",
-          "category": "A familiar everyday word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 9 letters with 5 vowels"
-            },
-            {
-              "level": 2,
-              "text": "T_______S"
-            },
-            {
-              "level": 3,
-              "text": "TE_____ES"
-            },
-            {
-              "level": 4,
-              "text": "_E_UI_IE_"
-            },
-            {
-              "level": 5,
-              "text": "TENUITIE_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 6,
+          "wordIndex": 4,
           "length": 8,
-          "estimatedPoints": 192,
-          "positional": "A 8-letter word uses the LL digraph tile",
-          "category": "A familiar everyday word — 8 letters",
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
+          "category": "A descriptive adjective — 8 letters",
           "hints": [
             {
               "level": 1,
@@ -347,76 +255,131 @@
             },
             {
               "level": 2,
-              "text": "G______S"
+              "text": "D______S"
             },
             {
               "level": 3,
-              "text": "GL____ES"
+              "text": "DA____SS"
             },
             {
               "level": 4,
-              "text": "__A__IE_"
+              "text": "_A_E_E__"
             },
             {
               "level": 5,
-              "text": "GLADDIE_"
+              "text": "DATELES_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
+          "features": []
         },
         {
-          "wordIndex": 7,
+          "wordIndex": 5,
           "length": 7,
-          "estimatedPoints": 154,
-          "positional": "A 7-letter word uses the CO digraph tile",
-          "category": "A descriptive adjective — 7 letters",
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 7 letters with 2 vowels"
+              "text": "Pattern hint: 7 letters with 3 vowels"
             },
             {
               "level": 2,
-              "text": "T_____L"
+              "text": "A_____T"
             },
             {
               "level": 3,
-              "text": "TR___AL"
+              "text": "AL___NT"
             },
             {
               "level": 4,
-              "text": "__U__A_"
+              "text": "A_I_A__"
             },
             {
               "level": 5,
-              "text": "TRUNCA_"
+              "text": "ALICAN_"
             }
           ],
-          "features": [
-            "Uses 1 digraph tile",
-            "Uses a portal tile"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_____E"
+            },
+            {
+              "level": 3,
+              "text": "CO___DE"
+            },
+            {
+              "level": 4,
+              "text": "_O__U_E"
+            },
+            {
+              "level": 5,
+              "text": "COLLUD_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "I___N"
+            },
+            {
+              "level": 3,
+              "text": "IN_UN"
+            },
+            {
+              "level": 4,
+              "text": "I__U_"
+            },
+            {
+              "level": 5,
+              "text": "INRU_"
+            }
+          ],
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 8.1,
+    "averageWordLength": 7.9,
     "gemDensity": 0.016,
-    "tilesCleared": 57,
-    "tilesRemaining": 4,
-    "tileClearancePercent": 93.4,
+    "tilesCleared": 52,
+    "tilesRemaining": 9,
+    "tileClearancePercent": 85.2,
     "fullClear": false,
     "solutionPath": [
       "HAEMOSTATS",
       "PRECLUDED",
-      "EUCALYPTI",
       "PRETTYISH",
-      "GLADLIEST",
-      "UNCATE",
-      "TIRES"
+      "DATELESS",
+      "ALICANT",
+      "COLLUDE",
+      "INRUN"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -429,6 +392,6 @@
       "GLADDIES",
       "TRUNCAL"
     ],
-    "generatedAt": "2026-07-03T01:06:09.081Z"
+    "generatedAt": "2026-07-03T12:53:56.953Z"
   }
 }

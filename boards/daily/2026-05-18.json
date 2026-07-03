@@ -138,44 +138,231 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 165180,
+    "maxPossibleScore": 70552,
     "minAchievableScore": 127296,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "UNEXCLUSIVELY",
-          "RAZZED",
-          "FLAPJACK",
-          "CUZZES"
+          "RAZZES",
+          "CACAFUEGO",
+          "FILCH",
+          "ALEWS",
+          "CEDIS"
         ],
-        "wordTotal": 66864,
-        "penalty": 127,
-        "finalScore": 66737
-      },
-      {
-        "words": [
-          "UNEXCLUSIVELY",
-          "RAZZED",
-          "CUZZES",
-          "FLAPJACK"
-        ],
-        "wordTotal": 66864,
-        "penalty": 127,
-        "finalScore": 66737
-      },
-      {
-        "words": [
-          "UNEXCLUSIVELY",
-          "FLAPJACK",
-          "RAZZED",
-          "CUZZES"
-        ],
-        "wordTotal": 66864,
-        "penalty": 127,
-        "finalScore": 66737
+        "wordTotal": 70552,
+        "penalty": 77,
+        "finalScore": 70475,
+        "scoreTiers": {
+          "good": 28190,
+          "great": 45809,
+          "superb": 59904
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.607Z"
+    "generatedAt": "2026-07-03T12:53:53.599Z",
+    "optimalMoves": 6,
+    "averageWordLength": 7.2,
+    "gemDensity": 0.082,
+    "tilesCleared": 42,
+    "tilesRemaining": 19,
+    "tileClearancePercent": 68.9,
+    "fullClear": false,
+    "solutionPath": [
+      "UNEXCLUSIVELY",
+      "RAZZES",
+      "CACAFUEGO",
+      "FILCH",
+      "ALEWS",
+      "CEDIS"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 70475,
+      "wordCount": 6,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "A compound-style word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Something described as \"not\" or reversed (13 letters)"
+            },
+            {
+              "level": 2,
+              "text": "U___________Y"
+            },
+            {
+              "level": 3,
+              "text": "UN_________LY"
+            },
+            {
+              "level": 4,
+              "text": "U_E___U_I_E__"
+            },
+            {
+              "level": 5,
+              "text": "UNEXCLUSIVEL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "R____S"
+            },
+            {
+              "level": 3,
+              "text": "RA__ES"
+            },
+            {
+              "level": 4,
+              "text": "_A__E_"
+            },
+            {
+              "level": 5,
+              "text": "RAZZE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 9,
+          "estimatedPoints": 0,
+          "positional": "9-letter word near the center lanes",
+          "category": "A familiar everyday word — 9 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 9 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C_______O"
+            },
+            {
+              "level": 3,
+              "text": "CA_____GO"
+            },
+            {
+              "level": 4,
+              "text": "_A_A_UE_O"
+            },
+            {
+              "level": 5,
+              "text": "CACAFUEG_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "F___H"
+            },
+            {
+              "level": 3,
+              "text": "FI_CH"
+            },
+            {
+              "level": 4,
+              "text": "_I___"
+            },
+            {
+              "level": 5,
+              "text": "FILC_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A___S"
+            },
+            {
+              "level": 3,
+              "text": "AL_WS"
+            },
+            {
+              "level": 4,
+              "text": "A_E__"
+            },
+            {
+              "level": 5,
+              "text": "ALEW_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "C___S"
+            },
+            {
+              "level": 3,
+              "text": "CE_IS"
+            },
+            {
+              "level": 4,
+              "text": "_E_I_"
+            },
+            {
+              "level": 5,
+              "text": "CEDI_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

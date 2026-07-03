@@ -149,44 +149,295 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 782880,
+    "maxPossibleScore": 306080,
     "minAchievableScore": 599040,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "AFFRIGHTMENTS",
-          "ZAFFER",
-          "SWABBERS",
-          "BAKEOFFS"
+          "BABKA",
+          "JACKER",
+          "BIGFEET",
+          "ZOETIC",
+          "QUYTES",
+          "FRIGS",
+          "OASES"
         ],
-        "wordTotal": 314304,
-        "penalty": 120,
-        "finalScore": 314184
-      },
-      {
-        "words": [
-          "AFFRIGHTMENTS",
-          "ZAFFER",
-          "SWABBERS",
-          "BAKEOFFS"
-        ],
-        "wordTotal": 314304,
-        "penalty": 120,
-        "finalScore": 314184
-      },
-      {
-        "words": [
-          "AFFRIGHTMENTS",
-          "SWABBERS",
-          "BAKEOFFS",
-          "ZAFFER"
-        ],
-        "wordTotal": 314304,
-        "penalty": 120,
-        "finalScore": 314184
+        "wordTotal": 306080,
+        "penalty": 38,
+        "finalScore": 306042,
+        "scoreTiers": {
+          "good": 122417,
+          "great": 198927,
+          "superb": 260136
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.756Z"
+    "generatedAt": "2026-07-03T12:53:53.983Z",
+    "optimalMoves": 8,
+    "averageWordLength": 6.6,
+    "gemDensity": 0.082,
+    "tilesCleared": 51,
+    "tilesRemaining": 10,
+    "tileClearancePercent": 83.6,
+    "fullClear": false,
+    "solutionPath": [
+      "AFFRIGHTMENTS",
+      "BABKA",
+      "JACKER",
+      "BIGFEET",
+      "ZOETIC",
+      "QUYTES",
+      "FRIGS",
+      "OASES"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 306042,
+      "wordCount": 8,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "A familiar everyday word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 13 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "A___________S"
+            },
+            {
+              "level": 3,
+              "text": "AF_________TS"
+            },
+            {
+              "level": 4,
+              "text": "A___I____E___"
+            },
+            {
+              "level": 5,
+              "text": "AFFRIGHTMENT_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B___A"
+            },
+            {
+              "level": 3,
+              "text": "BA_KA"
+            },
+            {
+              "level": 4,
+              "text": "_A__A"
+            },
+            {
+              "level": 5,
+              "text": "BABK_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A role/profession-style word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "J____R"
+            },
+            {
+              "level": 3,
+              "text": "JA__ER"
+            },
+            {
+              "level": 4,
+              "text": "_A__E_"
+            },
+            {
+              "level": 5,
+              "text": "JACKE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B_____T"
+            },
+            {
+              "level": 3,
+              "text": "BI___ET"
+            },
+            {
+              "level": 4,
+              "text": "_I__EE_"
+            },
+            {
+              "level": 5,
+              "text": "BIGFEE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A descriptive adjective — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Z____C"
+            },
+            {
+              "level": 3,
+              "text": "ZO__IC"
+            },
+            {
+              "level": 4,
+              "text": "_OE_I_"
+            },
+            {
+              "level": 5,
+              "text": "ZOETI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "Q____S"
+            },
+            {
+              "level": 3,
+              "text": "QU__ES"
+            },
+            {
+              "level": 4,
+              "text": "_U__E_"
+            },
+            {
+              "level": 5,
+              "text": "QUYTE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "F___S"
+            },
+            {
+              "level": 3,
+              "text": "FR_GS"
+            },
+            {
+              "level": 4,
+              "text": "__I__"
+            },
+            {
+              "level": 5,
+              "text": "FRIG_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 8,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O___S"
+            },
+            {
+              "level": 3,
+              "text": "OA_ES"
+            },
+            {
+              "level": 4,
+              "text": "OA_E_"
+            },
+            {
+              "level": 5,
+              "text": "OASE_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

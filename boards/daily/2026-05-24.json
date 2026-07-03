@@ -150,44 +150,263 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 134240,
+    "maxPossibleScore": 52993,
     "minAchievableScore": 101920,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
           "UNSYMMETRIZED",
-          "JAWFALLS",
-          "GRIZZLED",
-          "MIZZLE"
+          "SWALY",
+          "WORMIL",
+          "ULZIES",
+          "SPLURGE",
+          "GREBOS",
+          "EXURB"
         ],
-        "wordTotal": 54080,
-        "penalty": 123,
-        "finalScore": 53957
-      },
-      {
-        "words": [
-          "UNSYMMETRIZED",
-          "JAWFALLS",
-          "GRIZZLED",
-          "MIZZLE"
-        ],
-        "wordTotal": 54080,
-        "penalty": 123,
-        "finalScore": 53957
-      },
-      {
-        "words": [
-          "UNSYMMETRIZED",
-          "JAWFALLS",
-          "GRIZZLED",
-          "MIZZLE"
-        ],
-        "wordTotal": 54080,
-        "penalty": 123,
-        "finalScore": 53957
+        "wordTotal": 52993,
+        "penalty": 54,
+        "finalScore": 52939,
+        "scoreTiers": {
+          "good": 21176,
+          "great": 34410,
+          "superb": 44998
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.705Z"
+    "generatedAt": "2026-07-03T12:53:53.805Z",
+    "optimalMoves": 7,
+    "averageWordLength": 6.9,
+    "gemDensity": 0.082,
+    "tilesCleared": 47,
+    "tilesRemaining": 14,
+    "tileClearancePercent": 77,
+    "fullClear": false,
+    "solutionPath": [
+      "UNSYMMETRIZED",
+      "SWALY",
+      "WORMIL",
+      "ULZIES",
+      "SPLURGE",
+      "GREBOS",
+      "EXURB"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 52939,
+      "wordCount": 7,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 13,
+          "estimatedPoints": 0,
+          "positional": "13-letter word near the center lanes",
+          "category": "A compound-style word — 13 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Something described as \"not\" or reversed (13 letters)"
+            },
+            {
+              "level": 2,
+              "text": "U___________D"
+            },
+            {
+              "level": 3,
+              "text": "UN_________ED"
+            },
+            {
+              "level": 4,
+              "text": "U_____E__I_E_"
+            },
+            {
+              "level": 5,
+              "text": "UNSYMMETRIZE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "A modifier/adverb style word ending in -LY"
+            },
+            {
+              "level": 2,
+              "text": "S___Y"
+            },
+            {
+              "level": 3,
+              "text": "SW_LY"
+            },
+            {
+              "level": 4,
+              "text": "__A__"
+            },
+            {
+              "level": 5,
+              "text": "SWAL_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W____L"
+            },
+            {
+              "level": 3,
+              "text": "WO__IL"
+            },
+            {
+              "level": 4,
+              "text": "_O__I_"
+            },
+            {
+              "level": 5,
+              "text": "WORMI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "U____S"
+            },
+            {
+              "level": 3,
+              "text": "UL__ES"
+            },
+            {
+              "level": 4,
+              "text": "U__IE_"
+            },
+            {
+              "level": 5,
+              "text": "ULZIE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "S_____E"
+            },
+            {
+              "level": 3,
+              "text": "SP___GE"
+            },
+            {
+              "level": 4,
+              "text": "___U__E"
+            },
+            {
+              "level": 5,
+              "text": "SPLURG_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "G____S"
+            },
+            {
+              "level": 3,
+              "text": "GR__OS"
+            },
+            {
+              "level": 4,
+              "text": "__E_O_"
+            },
+            {
+              "level": 5,
+              "text": "GREBO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E___B"
+            },
+            {
+              "level": 3,
+              "text": "EX_RB"
+            },
+            {
+              "level": 4,
+              "text": "E_U__"
+            },
+            {
+              "level": 5,
+              "text": "EXUR_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }

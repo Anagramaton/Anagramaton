@@ -117,221 +117,100 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 6435,
+    "maxPossibleScore": 3106,
     "minAchievableScore": 3360,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "NATATORIUM",
-          "FEBRIFACIENTS",
-          "SUPERPLUS",
-          "MISTHREW",
-          "HATCHELS",
+          "NATATORIUMS",
+          "SUPERPLUSES",
           "SCORNING",
-          "ABEAM"
+          "WHATTEN",
+          "BEFLEA",
+          "COMAE",
+          "TYLER"
         ],
-        "wordTotal": 3320,
-        "penalty": 0,
-        "finalScore": 3320
-      },
-      {
-        "words": [
-          "NATATORIUM",
-          "FEBRIFACIENTS",
-          "MISTHREW",
-          "SUPERPLUS",
-          "HATCHELS",
-          "SCORNING",
-          "ABEAM"
-        ],
-        "wordTotal": 3320,
-        "penalty": 0,
-        "finalScore": 3320
-      },
-      {
-        "words": [
-          "FEBRIFACIENTS",
-          "NATATORIUM",
-          "SUPERPLUS",
-          "MISTHREW",
-          "HATCHELS",
-          "SCORNING",
-          "ABEAM"
-        ],
-        "wordTotal": 3320,
-        "penalty": 0,
-        "finalScore": 3320
+        "wordTotal": 3106,
+        "penalty": 37,
+        "finalScore": 3069,
+        "scoreTiers": {
+          "good": 1228,
+          "great": 1995,
+          "superb": 2609
+        }
       }
     ],
     "optimalPathClues": {
       "strategy": "optimal",
-      "targetScore": 3320,
+      "targetScore": 3069,
       "wordCount": 7,
       "clues": [
         {
           "wordIndex": 1,
-          "length": 13,
-          "estimatedPoints": 624,
-          "positional": "A 13-letter word uses the TY digraph tile",
-          "category": "A familiar everyday word — 13 letters",
+          "length": 11,
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
+          "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 13 letters with 5 vowels"
+              "text": "Pattern hint: 11 letters with 5 vowels"
             },
             {
               "level": 2,
-              "text": "F___________S"
+              "text": "N_________S"
             },
             {
               "level": 3,
-              "text": "FE_________TS"
+              "text": "NA_______MS"
             },
             {
               "level": 4,
-              "text": "_E__I_A_IE___"
+              "text": "_A_A_O_IU__"
             },
             {
               "level": 5,
-              "text": "FEBRIFACIENT_"
+              "text": "NATATORIUM_"
             }
           ],
-          "features": [
-            "Uses 3 digraph tiles",
-            "Uses a portal tile"
-          ]
+          "features": []
         },
         {
           "wordIndex": 2,
-          "length": 10,
-          "estimatedPoints": 1680,
-          "positional": "A 10-letter word routes through the purple prism",
-          "category": "A familiar everyday word — 10 letters",
+          "length": 11,
+          "estimatedPoints": 0,
+          "positional": "11-letter word near the center lanes",
+          "category": "A familiar everyday word — 11 letters",
           "hints": [
             {
               "level": 1,
-              "text": "Pattern hint: 10 letters with 5 vowels"
+              "text": "Pattern hint: 11 letters with 4 vowels"
             },
             {
               "level": 2,
-              "text": "N________M"
+              "text": "S_________S"
             },
             {
               "level": 3,
-              "text": "NA______UM"
+              "text": "SU_______ES"
             },
             {
               "level": 4,
-              "text": "_A_A_O_IU_"
+              "text": "_U_E___U_E_"
             },
             {
               "level": 5,
-              "text": "NATATORIU_"
+              "text": "SUPERPLUSE_"
             }
           ],
-          "features": [
-            "Uses prism for 2× multiplier",
-            "Uses gold gem"
-          ]
+          "features": []
         },
         {
           "wordIndex": 3,
-          "length": 9,
-          "estimatedPoints": 270,
-          "positional": "A 9-letter word sits in the center quadrant",
-          "category": "A familiar everyday word — 9 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 9 letters with 3 vowels"
-            },
-            {
-              "level": 2,
-              "text": "S_______S"
-            },
-            {
-              "level": 3,
-              "text": "SU_____US"
-            },
-            {
-              "level": 4,
-              "text": "_U_E___U_"
-            },
-            {
-              "level": 5,
-              "text": "SUPERPLU_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 4,
           "length": 8,
-          "estimatedPoints": 248,
-          "positional": "A 8-letter word sits in the center quadrant",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "M______W"
-            },
-            {
-              "level": 3,
-              "text": "MI____EW"
-            },
-            {
-              "level": 4,
-              "text": "_I____E_"
-            },
-            {
-              "level": 5,
-              "text": "MISTHRE_"
-            }
-          ],
-          "features": []
-        },
-        {
-          "wordIndex": 5,
-          "length": 8,
-          "estimatedPoints": 208,
-          "positional": "A 8-letter word uses the CO digraph tile",
-          "category": "A familiar everyday word — 8 letters",
-          "hints": [
-            {
-              "level": 1,
-              "text": "Pattern hint: 8 letters with 2 vowels"
-            },
-            {
-              "level": 2,
-              "text": "H______S"
-            },
-            {
-              "level": 3,
-              "text": "HA____LS"
-            },
-            {
-              "level": 4,
-              "text": "_A___E__"
-            },
-            {
-              "level": 5,
-              "text": "HATCHEL_"
-            }
-          ],
-          "features": [
-            "Uses 1 digraph tile"
-          ]
-        },
-        {
-          "wordIndex": 6,
-          "length": 8,
-          "estimatedPoints": 200,
-          "positional": "A 8-letter word runs from lower-left toward bottom",
+          "estimatedPoints": 0,
+          "positional": "8-letter word near the center lanes",
           "category": "A compound-style word — 8 letters",
           "hints": [
             {
@@ -358,10 +237,70 @@
           "features": []
         },
         {
-          "wordIndex": 7,
+          "wordIndex": 4,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W_____N"
+            },
+            {
+              "level": 3,
+              "text": "WH___EN"
+            },
+            {
+              "level": 4,
+              "text": "__A__E_"
+            },
+            {
+              "level": 5,
+              "text": "WHATTE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "B____A"
+            },
+            {
+              "level": 3,
+              "text": "BE__EA"
+            },
+            {
+              "level": 4,
+              "text": "_E__EA"
+            },
+            {
+              "level": 5,
+              "text": "BEFLE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
           "length": 5,
-          "estimatedPoints": 90,
-          "positional": "A 5-letter word runs from bottom toward lower-left",
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
           "category": "A familiar everyday word — 5 letters",
           "hints": [
             {
@@ -370,43 +309,71 @@
             },
             {
               "level": 2,
-              "text": "A___M"
+              "text": "C___E"
             },
             {
               "level": 3,
-              "text": "AB_AM"
+              "text": "CO_AE"
             },
             {
               "level": 4,
-              "text": "A_EA_"
+              "text": "_O_AE"
             },
             {
               "level": 5,
-              "text": "ABEA_"
+              "text": "COMA_"
             }
           ],
-          "features": [
-            "Uses a portal tile"
-          ]
+          "features": []
+        },
+        {
+          "wordIndex": 7,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A role/profession-style word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "T___R"
+            },
+            {
+              "level": 3,
+              "text": "TY_ER"
+            },
+            {
+              "level": 4,
+              "text": "___E_"
+            },
+            {
+              "level": 5,
+              "text": "TYLE_"
+            }
+          ],
+          "features": []
         }
       ]
     },
     "difficulty": "easy",
     "optimalMoves": 7,
-    "averageWordLength": 7.9,
+    "averageWordLength": 7.6,
     "gemDensity": 0.016,
-    "tilesCleared": 55,
-    "tilesRemaining": 6,
-    "tileClearancePercent": 90.2,
+    "tilesCleared": 50,
+    "tilesRemaining": 11,
+    "tileClearancePercent": 82,
     "fullClear": false,
     "solutionPath": [
       "NATATORIUMS",
       "SUPERPLUSES",
-      "HATCHELING",
-      "ENAMORS",
-      "CHIMB",
-      "AFRITS",
-      "CABRE"
+      "SCORNING",
+      "WHATTEN",
+      "BEFLEA",
+      "COMAE",
+      "TYLER"
     ],
     "wordPathCoverage": 61,
     "fullyCoveredByWords": true,
@@ -419,6 +386,6 @@
       "SCORNING",
       "ABEAM"
     ],
-    "generatedAt": "2026-06-02T01:32:07.078Z"
+    "generatedAt": "2026-07-03T12:53:55.399Z"
   }
 }

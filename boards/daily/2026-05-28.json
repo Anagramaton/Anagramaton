@@ -144,44 +144,231 @@
     }
   ],
   "metadata": {
-    "maxPossibleScore": 93505,
+    "maxPossibleScore": 41857,
     "minAchievableScore": 59904,
     "strategicPathCount": 3,
     "optimalSolutions": [
       {
         "words": [
-          "WILLIWAW",
-          "EXTERNALIZING",
-          "WIZZEN",
-          "JOWARS"
+          "EXTERNALIZED",
+          "WILLOW",
+          "TAUIWIS",
+          "OWRIE",
+          "WANNA",
+          "SANGH"
         ],
-        "wordTotal": 37738,
-        "penalty": 132,
-        "finalScore": 37606
-      },
-      {
-        "words": [
-          "WILLIWAW",
-          "EXTERNALIZING",
-          "WIZZEN",
-          "JOWARS"
-        ],
-        "wordTotal": 37738,
-        "penalty": 132,
-        "finalScore": 37606
-      },
-      {
-        "words": [
-          "EXTERNALIZING",
-          "WILLIWAW",
-          "WIZZEN",
-          "JOWARS"
-        ],
-        "wordTotal": 37738,
-        "penalty": 132,
-        "finalScore": 37606
+        "wordTotal": 41857,
+        "penalty": 97,
+        "finalScore": 41760,
+        "scoreTiers": {
+          "good": 16704,
+          "great": 27144,
+          "superb": 35496
+        }
       }
     ],
-    "generatedAt": "2026-05-12T20:01:53.744Z"
+    "generatedAt": "2026-07-03T12:53:53.945Z",
+    "optimalMoves": 6,
+    "averageWordLength": 6.7,
+    "gemDensity": 0.082,
+    "tilesCleared": 38,
+    "tilesRemaining": 23,
+    "tileClearancePercent": 62.3,
+    "fullClear": false,
+    "solutionPath": [
+      "EXTERNALIZED",
+      "WILLOW",
+      "TAUIWIS",
+      "OWRIE",
+      "WANNA",
+      "SANGH"
+    ],
+    "optimalPathClues": {
+      "strategy": "optimal",
+      "targetScore": 41760,
+      "wordCount": 6,
+      "clues": [
+        {
+          "wordIndex": 1,
+          "length": 12,
+          "estimatedPoints": 0,
+          "positional": "12-letter word near the center lanes",
+          "category": "A compound-style word — 12 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 12 letters with 5 vowels"
+            },
+            {
+              "level": 2,
+              "text": "E__________D"
+            },
+            {
+              "level": 3,
+              "text": "EX________ED"
+            },
+            {
+              "level": 4,
+              "text": "E__E__A_I_E_"
+            },
+            {
+              "level": 5,
+              "text": "EXTERNALIZE_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 2,
+          "length": 6,
+          "estimatedPoints": 0,
+          "positional": "6-letter word near the center lanes",
+          "category": "A familiar everyday word — 6 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 6 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W____W"
+            },
+            {
+              "level": 3,
+              "text": "WI__OW"
+            },
+            {
+              "level": 4,
+              "text": "_I__O_"
+            },
+            {
+              "level": 5,
+              "text": "WILLO_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 3,
+          "length": 7,
+          "estimatedPoints": 0,
+          "positional": "7-letter word near the center lanes",
+          "category": "A familiar everyday word — 7 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 7 letters with 4 vowels"
+            },
+            {
+              "level": 2,
+              "text": "T_____S"
+            },
+            {
+              "level": 3,
+              "text": "TA___IS"
+            },
+            {
+              "level": 4,
+              "text": "_AUI_I_"
+            },
+            {
+              "level": 5,
+              "text": "TAUIWI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 4,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 3 vowels"
+            },
+            {
+              "level": 2,
+              "text": "O___E"
+            },
+            {
+              "level": 3,
+              "text": "OW_IE"
+            },
+            {
+              "level": 4,
+              "text": "O__IE"
+            },
+            {
+              "level": 5,
+              "text": "OWRI_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 5,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 2 vowels"
+            },
+            {
+              "level": 2,
+              "text": "W___A"
+            },
+            {
+              "level": 3,
+              "text": "WA_NA"
+            },
+            {
+              "level": 4,
+              "text": "_A__A"
+            },
+            {
+              "level": 5,
+              "text": "WANN_"
+            }
+          ],
+          "features": []
+        },
+        {
+          "wordIndex": 6,
+          "length": 5,
+          "estimatedPoints": 0,
+          "positional": "5-letter word near the center lanes",
+          "category": "A familiar everyday word — 5 letters",
+          "hints": [
+            {
+              "level": 1,
+              "text": "Pattern hint: 5 letters with 1 vowel"
+            },
+            {
+              "level": 2,
+              "text": "S___H"
+            },
+            {
+              "level": 3,
+              "text": "SA_GH"
+            },
+            {
+              "level": 4,
+              "text": "_A___"
+            },
+            {
+              "level": 5,
+              "text": "SANG_"
+            }
+          ],
+          "features": []
+        }
+      ]
+    }
   }
 }
