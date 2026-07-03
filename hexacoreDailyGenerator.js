@@ -193,7 +193,7 @@ function placeSpecialTiles(grid, rng, radius = GRID_RADIUS) {
  */
 let _simTrie = null;
 const SIM_MIN_LEN = 5;
-const SIM_MAX_LEN = 11;
+const SIM_MAX_LEN = 13;
 
 /** Cap on how many valid word paths findAllValidPaths may return per round. */
 const MAX_SIMULATION_PATHS = 300;
@@ -386,49 +386,106 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
  * @param {number} maxRounds   - Safety cap on simulation iterations
  * @returns {{ maxScore, optimalMoves, averageWordLength, gemDensity, solutionPath, solutionDetail, tilesCleared, tilesRemaining, clearancePercent, fullyCleared }}
  */
+function cloneSimGrid(simGrid) {
+  const copy = {};
+  for (const [k, v] of Object.entries(simGrid)) copy[k] = { ...v };
+  return copy;
+}
+
 export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRounds = MAX_SIMULATION_ROUNDS) {
   // Build a combined simulation grid: { [key]: { letter, special } }
-  const simGrid = {};
+  const baseSimGrid = {};
   for (const [key, letter] of Object.entries(grid)) {
-    simGrid[key] = { letter, special: null };
+    baseSimGrid[key] = { letter, special: null };
   }
   for (const s of specialTiles) {
     const key = hexKey(s.q, s.r);
-    if (simGrid[key]) simGrid[key].special = s.type;
+    if (baseSimGrid[key]) baseSimGrid[key].special = s.type;
   }
 
   const gemCount = specialTiles.filter(s => GEM_MULTIPLIERS[s.type]).length;
   const totalTiles = getAllCoords(radius).length;
 
-  let totalScore = 0;
-  const solutionPath = [];
-  const solutionDetail = []; // per-word { word, score, tilesUsed }
-  let round = 0;
+  /**
+   * Runs one greedy pass with the given sort function applied to paths each round.
+   * @param {Function} sortFn - Comparator for paths array before picking paths[0]
+   */
+  function runPass(sortFn) {
+    const simGrid = cloneSimGrid(baseSimGrid);
+    let totalScore = 0;
+    const solutionPath = [];
+    const solutionDetail = [];
+    let round = 0;
 
-  while (round < maxRounds) {
-    round++;
-    const paths = findAllValidPaths(simGrid, radius);
-    if (paths.length === 0) break;
+    while (round < maxRounds) {
+      round++;
+      const paths = findAllValidPaths(simGrid, radius);
+      if (paths.length === 0) break;
 
-    // Pick the highest-scoring path
-    paths.sort((a, b) => b.score - a.score);
-    const best = paths[0];
+      paths.sort(sortFn);
+      const best = paths[0];
 
-    totalScore += best.score;
-    solutionPath.push(best.word);
-    solutionDetail.push({ word: best.word, score: best.score, tilesUsed: best.path.length });
+      totalScore += best.score;
+      solutionPath.push(best.word);
+      solutionDetail.push({ word: best.word, score: best.score, tilesUsed: best.path.length });
 
-    // Remove the used tiles from simGrid
-    for (const cell of best.path) {
-      delete simGrid[cell.key];
+      for (const cell of best.path) {
+        delete simGrid[cell.key];
+      }
+
+      applyGravity(simGrid, radius);
     }
 
-    // Apply gravity so remaining tiles fall down
-    applyGravity(simGrid, radius);
+    return { simGrid, totalScore, solutionPath, solutionDetail };
   }
 
+  // Pass 1: highest raw score first (original behaviour)
+  const pass1 = runPass((a, b) => b.score - a.score);
+
+  // Pass 2: efficiency-first — highest score-per-tile
+  const pass2 = runPass((a, b) => (b.score / b.path.length) - (a.score / a.path.length));
+
+  // Pass 3: longest word first — maximises gravity disruption
+  const pass3 = runPass((a, b) => b.path.length - a.path.length);
+
+  // Pass 4: prioritise words that touch a special tile, then by score
+  const pass4 = runPass((a, b) => {
+    const aHasSpecial = a.path.some(c => baseSimGrid[c.key]?.special);
+    const bHasSpecial = b.path.some(c => baseSimGrid[c.key]?.special);
+    if (aHasSpecial !== bHasSpecial) return aHasSpecial ? -1 : 1;
+    return b.score - a.score;
+  });
+
+  // Compute finalScore (word total minus estimated penalty) for each pass and pick the best
+  const allLetterPointsBase = Object.values(grid).filter(l => /^[A-Z]$/.test(l)).map(l => LETTER_POINTS[l] || 1);
+  const avgPointBase = allLetterPointsBase.length > 0
+    ? allLetterPointsBase.reduce((s, v) => s + v, 0) / allLetterPointsBase.length
+    : 2;
+
+  function computeFinalScore(pass) {
+    const tilesUncovered = Object.keys(pass.simGrid).length;
+    const allLetterPoints = Object.values(pass.simGrid).map(c => LETTER_POINTS[c.letter] || 1);
+    const avgPoint = allLetterPoints.length > 0
+      ? allLetterPoints.reduce((s, v) => s + v, 0) / allLetterPoints.length
+      : avgPointBase;
+    const penalty = Math.round(tilesUncovered * avgPoint);
+    return Math.max(0, pass.totalScore - penalty);
+  }
+
+  const passes = [pass1, pass2, pass3, pass4];
+  let bestPass = passes[0];
+  let bestFinalScore = computeFinalScore(passes[0]);
+  for (let i = 1; i < passes.length; i++) {
+    const fs = computeFinalScore(passes[i]);
+    if (fs > bestFinalScore) {
+      bestFinalScore = fs;
+      bestPass = passes[i];
+    }
+  }
+
+  const { simGrid: finalSimGrid, totalScore, solutionPath, solutionDetail } = bestPass;
   const totalWordLen = solutionPath.reduce((s, w) => s + w.length, 0);
-  const tilesRemaining = Object.keys(simGrid).length;
+  const tilesRemaining = Object.keys(finalSimGrid).length;
   const tilesCleared = Math.max(0, totalTiles - tilesRemaining);
   const clearancePercent = totalTiles > 0 ? Math.round((tilesCleared / totalTiles) * 1000) / 10 : 0;
   return {
@@ -635,11 +692,18 @@ function buildSimulationStrategies(simData, grid, totalTiles) {
   const wordTotal = simData.solutionDetail.reduce((s, d) => s + d.score, 0);
   const finalScore = Math.max(0, wordTotal - penalty);
 
+  const scoreTiers = {
+    good:   Math.round(finalScore * 0.40),
+    great:  Math.round(finalScore * 0.65),
+    superb: Math.round(finalScore * 0.85),
+  };
+
   return [{
     words: simData.solutionDetail.map(d => d.word),
     wordTotal,
     penalty,
     finalScore,
+    scoreTiers,
   }];
 }
 
@@ -702,6 +766,7 @@ export function generateDailyHexacoreBoard({
         optimalSolutions,
         optimalPathClues,
         difficulty,
+        scoreTiers: optimalSolutions?.[0]?.scoreTiers ?? null,
         optimalMoves: simData?.optimalMoves ?? null,
         averageWordLength: simData?.averageWordLength ?? null,
         gemDensity: simData?.gemDensity ?? null,
