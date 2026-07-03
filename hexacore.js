@@ -5122,6 +5122,7 @@ async function completeDailyChallenge() {
   const tilesUsed = 61 - hxState.tiles.length;
   const solveTimeSeconds = Math.max(0, Math.round((Date.now() - (hxState.dailyStartMs || Date.now())) / 1000));
   const words = hxState.words.map(w => w.word);
+  const wordsWithScores = hxState.words.map(w => ({ word: w.word, score: w.score ?? 0 }));
 
   hxState.dailyFinalScore = finalScore;
   hxState.dailyPenalty = penalty;
@@ -5152,10 +5153,11 @@ async function completeDailyChallenge() {
     tilesUsed,
     tilesTotal: 61,
     words,
+    wordsWithScores,
   });
 }
 
-function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words }) {
+function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, tilesTotal, words, wordsWithScores = [] }) {
   document.getElementById('hx-daily-result-overlay')?.remove();
   const allStrategies = hxState.dailyMetadata?.optimalSolutions || [];
   const bestStrategy  = allStrategies[0] || null;
@@ -5171,12 +5173,25 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
   // the "HIGH SCORE" card always shows a meaningful, non-zero value.
   const displayHighScore = highScore > 0 ? highScore : finalScore;
 
+  // Determine score tier
+  const scoreTiers = hxState.dailyMetadata?.scoreTiers ?? hxState.dailyMetadata?.optimalSolutions?.[0]?.scoreTiers ?? null;
+  let tierLabel = '';
+  let tierEmoji = '';
+  if (scoreTiers) {
+    if (finalScore >= scoreTiers.superb) { tierLabel = 'SUPERB'; tierEmoji = '🌟'; }
+    else if (finalScore >= scoreTiers.great) { tierLabel = 'GREAT'; tierEmoji = '⭐'; }
+    else if (finalScore >= scoreTiers.good) { tierLabel = 'GOOD'; tierEmoji = '✨'; }
+  }
+
   // Build the best-solution block (always visible, no button click required)
+  const simData = hxState.dailyMetadata;
   let optimalHtml = '';
   if (bestStrategy) {
-    const wordsMarkup = (bestStrategy.words || [])
-      .map((word) => `<span class="hx-daily-opt-word">${escapeHtml(word)}</span>`)
-      .join('');
+    const wordsMarkup = (bestStrategy.words || []).map((word, i) => {
+      const detail = (simData?.solutionDetail || [])[i];
+      const pts = detail?.score ? `<span class="hx-daily-opt-word-score">+${detail.score.toLocaleString()}</span>` : '';
+      return `<span class="hx-daily-opt-word">${escapeHtml(word)}${pts}</span>`;
+    }).join('');
     const bWordTotal = Number(bestStrategy.wordTotal || 0);
     const bPenalty   = Number(bestStrategy.penalty   || 0);
     const bFinal     = Number(bestStrategy.finalScore || 0);
@@ -5193,11 +5208,65 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
     `;
   }
 
+  // Build the YOUR WORDS block
+  const yourWordsHtml = wordsWithScores.length > 0 ? `
+    <div class="hx-daily-opt-section">
+      <div class="hx-daily-opt-heading">📝 YOUR WORDS</div>
+      <div class="hx-daily-your-words-list">
+        ${wordsWithScores.map((w, i) => `
+          <div class="hx-daily-your-word-row">
+            <span class="hx-daily-your-word-num">${i + 1}.</span>
+            <span class="hx-daily-your-word-text">${escapeHtml(w.word)}</span>
+            <span class="hx-daily-your-word-score">+${Number(w.score).toLocaleString()}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  ` : '';
+
   const overlay = document.createElement('div');
   overlay.id = 'hx-daily-result-overlay';
   overlay.innerHTML = `
+    <style>
+      .hx-daily-tier-badge {
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-align: center;
+        margin: 0.5rem 0 1rem;
+        color: #fbbf24;
+        text-shadow: 0 0 12px rgba(251,191,36,0.6);
+      }
+      .hx-daily-your-words-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        margin-top: 0.5rem;
+        max-height: 220px;
+        overflow-y: auto;
+      }
+      .hx-daily-your-word-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.3rem 0.25rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+      }
+      .hx-daily-your-word-num { opacity: 0.4; min-width: 1.4rem; }
+      .hx-daily-your-word-text { flex: 1; color: #f1f5f9; text-transform: uppercase; }
+      .hx-daily-your-word-score { color: #4cc9f0; font-weight: 600; }
+      .hx-daily-opt-word-score {
+        font-size: 0.7em;
+        opacity: 0.65;
+        margin-left: 0.25em;
+        color: #4cc9f0;
+      }
+    </style>
     <div id="hx-daily-result-box">
       <h2>DAILY CHALLENGE COMPLETE</h2>
+      ${tierLabel ? `<div class="hx-daily-tier-badge">${tierEmoji} ${tierLabel}</div>` : ''}
       <div class="hx-daily-score-strip">
         <div class="hx-daily-score-card">
           <span class="hx-daily-score-label">YOUR SCORE</span>
@@ -5214,6 +5283,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
         <div class="hx-stat-row"><span>Tiles Used</span><strong>${tilesUsed} / ${tilesTotal}</strong></div>
         <div class="hx-stat-row"><span>Penalty</span><strong>-${penalty.toLocaleString()}</strong></div>
       </div>
+      ${yourWordsHtml}
       ${optimalHtml}
       <button id="hx-daily-leaderboard-btn" type="button">LEADERBOARD</button>
       <button id="hx-daily-again-btn" type="button">PLAY AGAIN</button>
