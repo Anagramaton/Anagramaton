@@ -150,7 +150,7 @@ function placeSpecialTiles(grid, rng, radius = GRID_RADIUS) {
     taken.add(hexKey(chosenExit.q, chosenExit.r));
   }
 
-  // Helper: pick count random unoccupied tiles and push specials of a given type.
+  
   const pickRandom = (type, count, extra = {}) => {
     const pool = shuffled(allCoords.filter(c => !taken.has(c.key) && !!grid[c.key]), rng);
     for (let i = 0; i < count && i < pool.length; i++) {
