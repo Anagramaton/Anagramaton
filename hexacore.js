@@ -1441,14 +1441,13 @@ function renderOptimalPathClues() {
           const discovered = isWordDiscovered(idx);
           const wordHintState = getHintState(idx);
           const nextLevel = Number(wordHintState.nextLevel || 1);
-          const hintLabel = wordHintState.revealedLevels.length > 0 ? '💡 Show Next Hint' : '💡 Show Hint';
           const revealedHtml = (wordHintState.revealedLevels || [])
             .map(level => clue.hints.find(h => h.level === level))
             .filter(Boolean)
             .map(h => `<div class="hx-hint-text">${escapeHtml(h.text)}</div>`)
             .join('');
 
-          const showHintButton = wordsSubmitted > 0 && hintsRemaining > 0 && !discovered && nextLevel <= 5;
+          const showHintButton = wordsSubmitted > 0 && hintsRemaining > 0 && !discovered && nextLevel <= 1;
           return `
             <div class="hx-clue-item ${discovered ? 'hx-clue-discovered' : ''}">
               <div class="hx-clue-word-header">
@@ -1461,13 +1460,9 @@ function renderOptimalPathClues() {
                 ${escapeHtml(clue.positional || '')}
               </div>
 
-              <div class="hx-clue-tier hx-clue-tier-2 ${wordsSubmitted === 0 ? 'hx-clue-locked' : ''}">
-                ${wordsSubmitted === 0 ? '🔒 Submit a word to unlock' : escapeHtml(clue.category || '')}
-              </div>
-
               ${showHintButton ? `
                 <button class="hx-clue-hint-btn" data-word-idx="${idx}" data-hint-level="${nextLevel}">
-                  ${hintLabel} (${hintsRemaining} remaining)
+                  💡 Show Hint
                 </button>
               ` : ''}
               <div id="hx-hint-${idx}" class="hx-hint-reveal">${revealedHtml}</div>
