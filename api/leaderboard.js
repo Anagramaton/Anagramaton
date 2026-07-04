@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const validModes = ['daily', 'unlimited', 'hexacore', 'hexacore_daily'];
+  const validModes = ['daily', 'unlimited', 'hexacore', 'hexacore_daily', 'hexacore_daily_unlimited'];
   const mode = validModes.includes(req.query?.mode) ? req.query.mode : 'daily';
   const requestedDailyId = req.query?.dailyId || getTodayId();
 
@@ -32,6 +32,8 @@ export default async function handler(req, res) {
         ? 'hexacore'
         : mode === 'hexacore_daily'
           ? 'hexacore_daily:' + requestedDailyId
+          : mode === 'hexacore_daily_unlimited'
+            ? 'hexacore_daily_unlimited:' + requestedDailyId
           : requestedDailyId;
 
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
@@ -43,14 +45,18 @@ export default async function handler(req, res) {
     process.env.SUPABASE_SERVICE_KEY
   );
 
-  const limit = mode === 'hexacore_daily' ? 50 : 20;
+  const limit = (mode === 'hexacore_daily' || mode === 'hexacore_daily_unlimited') ? 50 : 20;
 
   let data, error;
 
-  if (mode === 'hexacore' || mode === 'hexacore_daily') {
+  if (mode === 'hexacore' || mode === 'hexacore_daily' || mode === 'hexacore_daily_unlimited') {
     // Query hexacore_scores joined with players
-    const partitionId = mode === 'hexacore' ? 'hexacore' : 'hexacore_daily:' + requestedDailyId;
-    const modeValue   = mode === 'hexacore' ? 'endless' : 'hexacore_daily';
+    const partitionId = mode === 'hexacore'
+      ? 'hexacore'
+      : mode === 'hexacore_daily_unlimited'
+        ? 'hexacore_daily_unlimited:' + requestedDailyId
+        : 'hexacore_daily:' + requestedDailyId;
+    const modeValue   = mode === 'hexacore' ? 'endless' : mode;
 
     ({ data, error } = await supabase
       .from('hexacore_scores')

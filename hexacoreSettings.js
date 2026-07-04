@@ -83,10 +83,12 @@ import { getXPData }             from './hexacoreXP.js';
     const completed = isDailyCompleted();
     const countdown = completed ? formatCountdown(msUntilMidnightEastern()) : null;
 
-    // Order: DAILY → ENDLESS → CAMPAIGN → QUESTS
+    // Order: DAILY → DAILY UNLIMITED → ENDLESS → CAMPAIGN → QUESTS
     const MODES = [
       { id: 'hexacoreDaily', icon: '📅', title: 'DAILY',      color: '#4cc9f0',
         desc: 'Fixed daily board with no refills. Submit for the best final score.' },
+      { id: 'hexacoreDailyUnlimited', icon: '♾️', title: 'DAILY UNLIMITED', color: '#22c55e',
+        desc: 'Play today\'s daily board freely. No submission limit — practice as much as you like.' },
       { id: 'endless',  icon: '🔥', title: 'ENDLESS',         color: '#f97316',
         desc: 'Survive the ember. Score as high as you can with no limits.' },
       { id: 'campaign', icon: '⚔️', title: 'CAMPAIGN',        color: '#a855f7',
@@ -103,7 +105,9 @@ import { getXPData }             from './hexacoreXP.js';
 
       const card = document.createElement('button');
       card.type = 'button';
-      card.className = 'hx-cfg-mode-card' + (isDisabledDaily ? ' hx-cfg-mode-card--disabled' : '');
+      card.className = 'hx-cfg-mode-card'
+        + (m.id === 'hexacoreDailyUnlimited' ? ' hx-cfg-mode-card--daily-unlimited' : '')
+        + (isDisabledDaily ? ' hx-cfg-mode-card--disabled' : '');
       card.style.setProperty('--hx-mode-color', m.color);
       if (isDisabledDaily) card.disabled = true;
 

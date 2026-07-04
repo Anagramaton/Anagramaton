@@ -84,13 +84,18 @@ const HX_DAILY_HUD_OPEN_KEY = 'hexacore_daily_hud_open';
 const HX_CAMPAIGN_HUD_OPEN_KEY = 'hexacore_campaign_hud_open';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
-let hxGameMode = null; // 'endless' | 'daily' | 'hexacoreDaily' | 'campaign'
-const HX_VALID_MODES = ['endless', 'daily', 'hexacoreDaily', 'campaign'];
+let hxGameMode = null; // 'endless' | 'daily' | 'hexacoreDaily' | 'hexacoreDailyUnlimited' | 'campaign'
+const HX_VALID_MODES = ['endless', 'daily', 'hexacoreDaily', 'hexacoreDailyUnlimited', 'campaign'];
 const HX_DAILY_MODE_ID = 'hexacore_daily';
+const HX_DAILY_UNLIMITED_MODE_ID = 'hexacore_daily_unlimited';
 let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
 function hxIsDailyMode() {
-  return hxGameMode === 'daily' || hxGameMode === 'hexacoreDaily';
+  return hxGameMode === 'daily' || hxGameMode === 'hexacoreDaily' || hxGameMode === 'hexacoreDailyUnlimited';
+}
+
+function hxIsDailyUnlimitedMode() {
+  return hxGameMode === 'hexacoreDailyUnlimited';
 }
 
 /* ── Gem tile type set (module-level for shared use) ───────────── */
@@ -2368,7 +2373,7 @@ function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
   // Mode colors matching the mode-select screen
-  const HX_MODE_COLORS = { endless: '#f97316', daily: '#4cc9f0', hexacoreDaily: '#4cc9f0', campaign: '#a855f7' };
+  const HX_MODE_COLORS = { endless: '#f97316', daily: '#4cc9f0', hexacoreDaily: '#4cc9f0', hexacoreDailyUnlimited: '#22c55e', campaign: '#a855f7' };
 
   // Score HUD — split into number + label spans, with a small mode color dot
   const hud = document.createElement('div');
@@ -5272,6 +5277,7 @@ async function completeDailyChallenge() {
   hxState.dailyTilesUsed = tilesUsed;
   const submissionDate = hxState.dailyBoardDate || null;
 
+  const submissionModeId = hxIsDailyUnlimitedMode() ? HX_DAILY_UNLIMITED_MODE_ID : HX_DAILY_MODE_ID;
   const name = await getPlayerName();
   if (name && submissionDate) {
     await submitScore(
@@ -5279,15 +5285,17 @@ async function completeDailyChallenge() {
       finalScore,
       words,
       0,
-      HX_DAILY_MODE_ID,
+      submissionModeId,
       { tilesUsed, penalty, solveTimeSeconds },
     );
   } else if (!submissionDate) {
     console.warn('[hexacore] daily score submission skipped: missing daily board date');
   }
 
-  // Persist completion so the Daily card is disabled until midnight ET.
-  hxMarkDailyCompleted();
+  if (!hxIsDailyUnlimitedMode()) {
+    // Persist completion so the Daily card is disabled until midnight ET.
+    hxMarkDailyCompleted();
+  }
 
   showDailyChallengeResults({
     finalScore,
@@ -5921,7 +5929,7 @@ export function startHexacore(mode) {
         console.warn('[hexacore] daily board load failed, falling back to procedural board:', err);
       }
       hxState.dailyStartMs = Date.now();
-    } else if (hxGameMode === 'hexacoreDaily') {
+    } else if (hxGameMode === 'hexacoreDaily' || hxGameMode === 'hexacoreDailyUnlimited') {
       try {
         boardData = await loadHexacoreDailyChallengeBoard(hxEasternDateStr());
         hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();

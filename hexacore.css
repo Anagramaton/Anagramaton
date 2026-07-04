@@ -37,6 +37,7 @@
   --hx-ui-font-size:    clamp(0.75rem, 1.4vw, 1rem);
   --hx-ui-font-weight:  400;
   --hx-ui-letter-spacing: 0.15em;
+  --hx-mode-daily-unlimited: #22c55e;
 }
 
 /* ── Ember tile — INFERNO (unmistakably unique fire) ── */
@@ -4833,6 +4834,10 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   background: rgba(255, 255, 255, 0.07);
   border-color: var(--hx-mode-color);
   transform: translateX(3px);
+}
+
+.hx-cfg-mode-card--daily-unlimited {
+  --hx-mode-color: var(--hx-mode-daily-unlimited);
 }
 
 /* Disabled state – daily already completed today */
