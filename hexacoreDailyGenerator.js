@@ -965,7 +965,7 @@ export function generateDailyHexacoreBoard({
     const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
     const rng = mkSeededRng((seed + effectiveAttempt * 9973) >>> 0);
 
-    // ── Fill all tiles with randomly drawn letters from LETTER_POOL ─────────────
+   
     const letters = shuffled(LETTER_POOL, rng).slice(0, totalTiles);
     const grid = {};
     allCoords.forEach((c, i) => { grid[c.key] = letters[i]; });
