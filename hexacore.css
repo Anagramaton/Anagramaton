@@ -5925,6 +5925,10 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   background: rgba(168, 85, 247, 0.2);
   box-shadow: 0 0 10px rgba(168, 85, 247, 0.28);
 }
+#hx-campaign-hud-shell.hx-campaign-hud-collapsed #hx-campaign-hud-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
 
 /* Daily Challenge HUD + Results */
 #hx-daily-hud-shell {

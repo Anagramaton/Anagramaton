@@ -2003,7 +2003,9 @@ function showLevelUpBanner(level) {
 
   banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => {
     banner.remove();
-    applyLevelUpRewards();
+    if (hxGameMode !== 'campaign') {
+      applyLevelUpRewards();
+    }
   });
 }
 
