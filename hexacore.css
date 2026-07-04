@@ -6091,6 +6091,7 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   font-family: 'Orbitron', 'Share Tech Mono', monospace;
   max-height: min(48vh, 380px);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .hx-clue-header {
   display: flex;
@@ -6143,6 +6144,7 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   padding: 0.25rem 0;
   font-size: clamp(0.72rem, 1.05vw, 0.88rem);
   color: #e5e7eb;
+  overflow-wrap: break-word;
 }
 .hx-clue-tier.hx-clue-locked {
   color: #6b7280;
@@ -6171,6 +6173,7 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   border-left: 2px solid #4cc9f0;
   margin-top: 0.2rem;
   font-size: clamp(0.7rem, 1.05vw, 0.86rem);
+  overflow-wrap: break-word;
 }
 .hx-clue-features {
   display: flex;

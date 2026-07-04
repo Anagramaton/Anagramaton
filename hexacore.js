@@ -1603,9 +1603,10 @@ function renderOptimalPathClues() {
                 <span class="hx-clue-points">~${Number(clue.estimatedPoints || 0).toLocaleString()} pts</span>
               </div>
 
+              ${clue.positional ? `
               <div class="hx-clue-tier hx-clue-tier-1">
-                ${escapeHtml(clue.positional || '')}
-              </div>
+                ${escapeHtml(clue.positional)}
+              </div>` : ''}
 
               ${showHintButton ? `
                 <button class="hx-clue-hint-btn" data-word-idx="${idx}" data-hint-level="${nextLevel}">
