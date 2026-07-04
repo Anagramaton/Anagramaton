@@ -638,60 +638,288 @@ function generatePositionalClue(word, path, grid, specialTiles) {
   return `A ${word.length}-letter word runs from ${startQuadrant} toward ${endQuadrant}`;
 }
 
-function detectCompound(word) {
-  const starts = ['BACK', 'OVER', 'UNDER', 'OUT', 'UP', 'DOWN', 'AFTER', 'FORE', 'SIDE', 'HAND', 'HOME', 'WORK'];
-  const ends = ['ING', 'ED', 'ER', 'LY', 'SHIP', 'TIME', 'WORK', 'BOARD', 'LINE', 'WARD', 'HOUSE', 'LIKE'];
-  const upper = String(word || '').toUpperCase();
-  if (upper.length < 8) return false;
-  return starts.some(start => upper.startsWith(start)) || ends.some(end => upper.endsWith(end));
+const VOWELS = new Set(['A', 'E', 'I', 'O', 'U']);
+
+function clamp01(value) {
+  return Math.max(0, Math.min(1, value));
 }
 
-function generateCategoryClue(word) {
-  const upper = String(word || '').toUpperCase();
-  if (detectCompound(upper)) return `A compound-style word — ${upper.length} letters`;
-  if (/(ING|ED|IFY|IZE|ISE)$/.test(upper)) return `An action verb form — ${upper.length} letters`;
-  if (/(OUS|FUL|LESS|ABLE|IBLE|AL|IVE|IC|ARY)$/.test(upper)) return `A descriptive adjective — ${upper.length} letters`;
-  if (/(TION|SION|MENT|NESS|ITY|ISM|SHIP)$/.test(upper)) return `An abstract noun — ${upper.length} letters`;
-  if (/(ER|OR|IST|IAN)$/.test(upper)) return `A role/profession-style word — ${upper.length} letters`;
-  return `A familiar everyday word — ${upper.length} letters`;
+function computeForensicInteresting(style, value, len, context = {}) {
+  if (!Number.isFinite(len) || len <= 0) return 0;
+  switch (style) {
+    case 'isPalindrome':
+    case 'startsEndsMatch':
+      return value ? 1 : 0;
+    case 'vowelCount':
+    case 'consonantCount':
+      return clamp01(Math.abs((value / len) - 0.5) * 2);
+    case 'uniqueLetterCount':
+      return clamp01(1 - (value / len));
+    case 'uniqueRepeatedLetters':
+      return value === 0 ? 0.7 : clamp01(value / Math.max(1, len / 2));
+    case 'mostFrequentLetterCount':
+      return clamp01((value - 1) / Math.max(1, len - 1));
+    case 'repeatedBigrams':
+    case 'vvBigrams':
+    case 'ccBigrams':
+      return clamp01(value / Math.max(1, len - 1));
+    case 'longestVowelRun':
+    case 'longestConsonantRun':
+      return clamp01((value - 1) / Math.max(1, len - 1));
+    case 'vowelRunCount':
+      return clamp01(Math.abs((value / len) - 0.35) * 2);
+    case 'highValueLetterCount':
+    case 'lowValueLetterCount':
+      return clamp01(value / len);
+    case 'pointRange':
+      return clamp01(value / 10);
+    case 'maxPointValue':
+      return clamp01((value - 2) / 8);
+    case 'totalPoints':
+      return clamp01(value / Math.max(1, len * 10));
+    case 'startsWithVowel':
+    case 'endsWithVowel':
+      return 0.25;
+    case 'vowelSpread':
+      return context.hasVowels ? clamp01(value / Math.max(1, len - 1)) : 0;
+    case 'firstHalfCount':
+      return clamp01(Math.abs((value / len) - 0.5) * 2);
+    case 'repeatedTrigrams':
+      return value > 0 ? 1 : 0.45;
+    case 'uniqueBigramRatio':
+      return clamp01(value / Math.max(1, context.bigramCount || (len - 1)));
+    default:
+      return 0.3;
+  }
 }
 
-function generateDefinitionClue(word) {
+function computeCandidates(word) {
   const upper = String(word || '').toUpperCase();
-  if (upper.startsWith('UN')) return `Something described as "not" or reversed (${upper.length} letters)`;
-  if (upper.startsWith('RE')) return `A word related to doing something again (${upper.length} letters)`;
-  if (upper.endsWith('ING')) return `A present-participle action word ending in -ING`;
-  if (upper.endsWith('NESS')) return `A quality/state noun ending in -NESS`;
-  if (upper.endsWith('TION') || upper.endsWith('SION')) return `A concept noun ending in -TION/-SION`;
-  if (upper.endsWith('LY')) return `A modifier/adverb style word ending in -LY`;
-  if (upper.endsWith('MENT')) return `A result/state noun ending in -MENT`;
-  const vowels = [...upper].filter(ch => 'AEIOU'.includes(ch)).length;
-  return `Pattern hint: ${upper.length} letters with ${vowels} vowel${vowels === 1 ? '' : 's'}`;
+  const chars = [...upper];
+  const len = chars.length;
+  if (!len) return [];
+
+  const charCounts = new Map();
+  for (const ch of chars) {
+    charCounts.set(ch, (charCounts.get(ch) || 0) + 1);
+  }
+
+  const vowelCount = chars.filter(c => VOWELS.has(c)).length;
+  const consonantCount = len - vowelCount;
+  const uniqueLetterCount = charCounts.size;
+  const repeatedLetterCount = chars.filter(c => (charCounts.get(c) || 0) > 1).length;
+  const uniqueRepeatedLetters = [...charCounts.values()].filter(count => count > 1).length;
+  const mostFrequentLetterCount = Math.max(...charCounts.values());
+
+  const bigrams = chars.slice(0, -1).map((c, i) => c + chars[i + 1]);
+  const uniqueBigrams = new Set(bigrams).size;
+  const repeatedBigrams = bigrams.length - uniqueBigrams;
+  const vvBigrams = bigrams.filter(b => VOWELS.has(b[0]) && VOWELS.has(b[1])).length;
+  const ccBigrams = bigrams.filter(b => !VOWELS.has(b[0]) && !VOWELS.has(b[1])).length;
+
+  const runs = [];
+  let cur = VOWELS.has(chars[0]) ? 'V' : 'C';
+  let runLen = 1;
+  for (let i = 1; i < len; i++) {
+    const t = VOWELS.has(chars[i]) ? 'V' : 'C';
+    if (t === cur) runLen++;
+    else {
+      runs.push({ type: cur, len: runLen });
+      cur = t;
+      runLen = 1;
+    }
+  }
+  runs.push({ type: cur, len: runLen });
+  const longestVowelRun = Math.max(...runs.filter(r => r.type === 'V').map(r => r.len), 0);
+  const longestConsonantRun = Math.max(...runs.filter(r => r.type === 'C').map(r => r.len), 0);
+  const vowelRunCount = runs.filter(r => r.type === 'V').length;
+  const consonantRunCount = runs.filter(r => r.type === 'C').length;
+
+  const pointValues = chars.map(c => LETTER_POINTS[c] || 1);
+  const totalPoints = pointValues.reduce((sum, value) => sum + value, 0);
+  const maxPointValue = Math.max(...pointValues);
+  const minPointValue = Math.min(...pointValues);
+  const pointRange = maxPointValue - minPointValue;
+  const highValueLetterCount = pointValues.filter(value => value >= 6).length;
+  const lowValueLetterCount = pointValues.filter(value => value <= 2).length;
+
+  const startsWithVowel = VOWELS.has(chars[0]);
+  const endsWithVowel = VOWELS.has(chars[len - 1]);
+  const firstVowelIndex = chars.findIndex(c => VOWELS.has(c));
+  const reversedVowelIndex = [...chars].reverse().findIndex(c => VOWELS.has(c));
+  const lastVowelIndex = reversedVowelIndex === -1 ? -1 : len - 1 - reversedVowelIndex;
+  const vowelSpread = (firstVowelIndex === -1 || lastVowelIndex === -1) ? -1 : lastVowelIndex - firstVowelIndex;
+
+  const isPalindrome = upper === [...upper].reverse().join('');
+  const startsEndsMatch = chars[0] === chars[len - 1];
+
+  const firstHalfCount = chars.filter(c => c <= 'M').length;
+  const secondHalfCount = chars.filter(c => c > 'M').length;
+
+  const trigrams = chars.slice(0, -2).map((c, i) => c + chars[i + 1] + chars[i + 2]);
+  const uniqueTrigrams = new Set(trigrams).size;
+  const repeatedTrigrams = trigrams.length - uniqueTrigrams;
+
+  const context = {
+    hasVowels: firstVowelIndex !== -1,
+    repeatedLetterCount,
+    consonantRunCount,
+    minPointValue,
+    secondHalfCount,
+    uniqueTrigrams,
+    bigramCount: bigrams.length,
+  };
+
+  const candidates = [
+    { style: 'vowelCount', value: vowelCount, text: vowelCount === 1 ? 'Contains just one vowel' : `Contains exactly ${vowelCount} vowels` },
+    { style: 'consonantCount', value: consonantCount, text: `Built from ${consonantCount} consonants` },
+    {
+      style: 'uniqueLetterCount',
+      value: uniqueLetterCount,
+      text: uniqueLetterCount === len ? 'Every letter in this word is different'
+        : uniqueLetterCount <= 3 ? `Uses only ${uniqueLetterCount} distinct letters across all its tiles`
+          : `Draws from ${uniqueLetterCount} different letters`,
+    },
+    {
+      style: 'uniqueRepeatedLetters',
+      value: uniqueRepeatedLetters,
+      text: uniqueRepeatedLetters === 0 ? 'No letter appears more than once'
+        : uniqueRepeatedLetters === 1 ? 'Exactly one letter appears more than once'
+          : `${uniqueRepeatedLetters} different letters each appear more than once`,
+    },
+    { style: 'mostFrequentLetterCount', value: mostFrequentLetterCount, text: `One letter appears ${mostFrequentLetterCount} times` },
+    {
+      style: 'repeatedBigrams',
+      value: repeatedBigrams,
+      text: repeatedBigrams === 0 ? 'Every pair of adjacent letters is unique' : 'The same two-letter pair appears more than once',
+    },
+    {
+      style: 'vvBigrams',
+      value: vvBigrams,
+      text: vvBigrams === 0 ? 'No two vowels appear side by side'
+        : vvBigrams === 1 ? 'Two vowels sit directly next to each other once'
+          : `Vowels cluster together ${vvBigrams} times`,
+    },
+    {
+      style: 'ccBigrams',
+      value: ccBigrams,
+      text: ccBigrams === 0 ? 'No two consonants appear side by side' : `Consonants pair up ${ccBigrams} times`,
+    },
+    {
+      style: 'longestVowelRun',
+      value: longestVowelRun,
+      text: longestVowelRun >= 3 ? 'Three or more vowels run together with no consonant between them'
+        : longestVowelRun === 2 ? 'Two vowels appear consecutively somewhere inside'
+          : 'Vowels never appear together — always separated by consonants',
+    },
+    {
+      style: 'longestConsonantRun',
+      value: longestConsonantRun,
+      text: longestConsonantRun >= 4 ? 'Four or more consonants stack up with no vowel between them'
+        : longestConsonantRun === 3 ? 'Three consonants appear in a row somewhere'
+          : longestConsonantRun === 2 ? 'Some consonants cluster in pairs'
+            : 'Every consonant is separated by at least one vowel',
+    },
+    {
+      style: 'vowelRunCount',
+      value: vowelRunCount,
+      text: `Vowels form ${vowelRunCount} separate group${vowelRunCount === 1 ? '' : 's'} within the word`,
+    },
+    {
+      style: 'highValueLetterCount',
+      value: highValueLetterCount,
+      text: highValueLetterCount === 0 ? 'Every letter scores 5 points or fewer'
+        : highValueLetterCount === 1 ? 'Contains exactly one high-value letter worth 6 or more'
+          : `Contains ${highValueLetterCount} high-value letters worth 6 or more each`,
+    },
+    {
+      style: 'lowValueLetterCount',
+      value: lowValueLetterCount,
+      text: lowValueLetterCount === len ? 'Every letter is a low-value tile' : `${lowValueLetterCount} of its letters are worth just 2 points`,
+    },
+    {
+      style: 'pointRange',
+      value: pointRange,
+      text: pointRange === 0 ? 'All its letters are worth exactly the same'
+        : pointRange <= 2 ? 'Letter values are tightly clustered — little variation'
+          : pointRange >= 7 ? 'A wide spread between its cheapest and most expensive letter'
+            : 'Moderate spread between its lowest and highest letter values',
+    },
+    { style: 'maxPointValue', value: maxPointValue, text: `Its most valuable letter is worth ${maxPointValue} points` },
+    { style: 'totalPoints', value: totalPoints, text: `All letter values sum to ${totalPoints}` },
+    { style: 'startsWithVowel', value: startsWithVowel ? 1 : 0, text: startsWithVowel ? 'Begins with a vowel' : 'Begins with a consonant' },
+    { style: 'endsWithVowel', value: endsWithVowel ? 1 : 0, text: endsWithVowel ? 'Ends with a vowel' : 'Ends with a consonant' },
+    { style: 'startsEndsMatch', value: startsEndsMatch ? 1 : 0, text: 'Starts and ends with the same letter' },
+    { style: 'isPalindrome', value: isPalindrome ? 1 : 0, text: 'Reads the same forwards and backwards' },
+    {
+      style: 'vowelSpread',
+      value: vowelSpread,
+      text: vowelSpread === 0 ? 'Its only vowel sits at the very start'
+        : vowelSpread >= len - 2 ? 'Vowels are spread across almost the entire length'
+          : 'Vowels are concentrated in the middle section',
+    },
+    {
+      style: 'firstHalfCount',
+      value: firstHalfCount,
+      text: firstHalfCount === len ? 'Every letter comes from the first half of the alphabet'
+        : firstHalfCount === 0 ? 'Every letter comes from the second half of the alphabet'
+          : firstHalfCount > len / 2 ? 'More letters from the first half of the alphabet than the second'
+            : 'More letters from the second half of the alphabet',
+    },
+    {
+      style: 'repeatedTrigrams',
+      value: repeatedTrigrams,
+      text: repeatedTrigrams > 0 ? 'The same three-letter sequence appears more than once' : 'No three-letter sequence repeats',
+    },
+    {
+      style: 'uniqueBigramRatio',
+      value: uniqueBigrams,
+      text: uniqueBigrams === bigrams.length ? 'Every adjacent letter pair is unique' : 'Some adjacent letter pairs repeat',
+    },
+  ];
+
+  const filtered = candidates.filter(candidate => {
+    if (candidate.style === 'isPalindrome' && !isPalindrome) return false;
+    if (candidate.style === 'startsEndsMatch' && !startsEndsMatch) return false;
+    if (candidate.style === 'vowelSpread' && firstVowelIndex === -1) return false;
+    if ((candidate.style === 'repeatedTrigrams') && trigrams.length === 0) return false;
+    if (candidate.style === 'uniqueBigramRatio' && bigrams.length === 0) return false;
+    return true;
+  });
+
+  return filtered.map(candidate => ({
+    ...candidate,
+    interesting: computeForensicInteresting(candidate.style, candidate.value, len, context),
+  }));
 }
 
-function generateProgressiveReveal(word, revealLevel) {
+function generateForensicClue(word, allWords, usedStyles = new Set()) {
   const upper = String(word || '').toUpperCase();
-  const len = upper.length;
-  if (!len) return '';
-  if (len <= 2) return upper;
+  const chars = [...upper];
+  const len = chars.length;
+  const vowelCount = chars.filter(c => VOWELS.has(c)).length;
+  const boardWords = Array.isArray(allWords) ? allWords : [word];
+  const myCandidates = computeCandidates(word);
+  const otherWordCandidates = boardWords
+    .filter(w => w !== word)
+    .map(w => computeCandidates(w));
 
-  if (revealLevel === 0) {
-    return `${upper[0]}${'_'.repeat(Math.max(0, len - 2))}${upper[len - 1]}`;
+  const available = myCandidates.filter(candidate => !usedStyles.has(candidate.style));
+  const scored = available.map(candidate => {
+    const sharedCount = otherWordCandidates.filter(otherCandidates =>
+      otherCandidates.some(other => other.style === candidate.style && other.value === candidate.value),
+    ).length;
+    return { ...candidate, sharedCount };
+  });
+
+  scored.sort((a, b) => a.sharedCount - b.sharedCount || b.interesting - a.interesting);
+  const chosen = scored[0];
+  if (chosen) {
+    usedStyles.add(chosen.style);
+    return chosen.text;
   }
-  if (revealLevel === 1) {
-    if (len <= 4) return upper;
-    return `${upper.slice(0, 2)}${'_'.repeat(Math.max(0, len - 4))}${upper.slice(-2)}`;
-  }
-  if (revealLevel === 2) {
-    return [...upper].map(ch => ('AEIOU'.includes(ch) ? ch : '_')).join('');
-  }
-  if (revealLevel === 3) {
-    return [...upper].map((ch, i) => (i % 2 === 0 ? ch : '_')).join('');
-  }
-  if (revealLevel === 4) {
-    return `${upper.slice(0, -1)}_`;
-  }
-  return upper;
+
+  return `${len} letters, ${vowelCount} vowel${vowelCount === 1 ? '' : 's'}`;
 }
 
 function generateFeatureHints(path, specialTiles) {
@@ -718,19 +946,17 @@ function generateFeatureHints(path, specialTiles) {
 export function generateOptimalPathClues(optimalSolutions, grid, specialTiles) {
   const bestStrategy = Array.isArray(optimalSolutions) ? optimalSolutions[0] : null;
   if (!bestStrategy || !Array.isArray(bestStrategy.words)) return null;
+  const usedStyles = new Set();
+  const allWords = bestStrategy.words;
 
   const clues = bestStrategy.words.map((word, idx) => ({
     wordIndex: idx + 1,
     length: word.length,
     estimatedPoints: 0,
     positional: generatePositionalClue(word, [], grid, specialTiles),
-    category: generateCategoryClue(word),
+    category: '',
     hints: [
-      { level: 1, text: generateDefinitionClue(word) },
-      { level: 2, text: generateProgressiveReveal(word, 0) },
-      { level: 3, text: generateProgressiveReveal(word, 1) },
-      { level: 4, text: generateProgressiveReveal(word, 2) },
-      { level: 5, text: generateProgressiveReveal(word, 4) },
+      { level: 1, text: generateForensicClue(word, allWords, usedStyles) },
     ],
     features: [],
   }));
