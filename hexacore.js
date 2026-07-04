@@ -1030,8 +1030,26 @@ function injectSvgDefs(svg) {
   }
   // Prism: deep violet → electric rose
   ensureLinearGradient('hx-prism-gradient',    '#1a0040', '#db2777');
-  // Portal: midnight → vivid violet → magenta
-  ensureLinearGradient('hx-portal-gradient',   '#1a003f', '#7c3aed');
+  // Portal: shiny matte black — near-black base with a subtle dark-steel sheen
+  if (!document.getElementById('hx-portal-gradient')) {
+    const portalGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    portalGrad.setAttribute('id', 'hx-portal-gradient');
+    portalGrad.setAttribute('x1', '20%'); portalGrad.setAttribute('y1', '0%');
+    portalGrad.setAttribute('x2', '80%'); portalGrad.setAttribute('y2', '100%');
+    [
+      ['0%',   '#050505'],
+      ['35%',  '#1c1c1e'],
+      ['55%',  '#2a2a2d'],
+      ['75%',  '#111113'],
+      ['100%', '#050505'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      portalGrad.appendChild(s);
+    });
+    defs.appendChild(portalGrad);
+  }
   // Rune: imperial violet base with gilded highlights
   if (!document.getElementById('hx-rune-gradient')) {
     const runeGrad = document.createElementNS(SVG_NS, 'linearGradient');
