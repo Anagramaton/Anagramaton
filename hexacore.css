@@ -5814,6 +5814,118 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   }
 }
 
+/* Campaign HUD */
+#hx-campaign-hud-shell {
+  position: fixed;
+  top: clamp(80px, 12vh, 110px);
+  left: clamp(10px, 2vw, 18px);
+  z-index: 952;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  pointer-events: none;
+}
+#hx-campaign-hud-shell > * { pointer-events: auto; }
+#hx-campaign-hud {
+  width: min(260px, 74vw);
+  background: rgba(14, 10, 24, 0.88);
+  border: 1px solid rgba(168, 85, 247, 0.72);
+  border-radius: 12px;
+  padding: 0.55rem 0.58rem;
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.2), inset 0 0 0 1px rgba(196, 132, 252, 0.12);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+#hx-campaign-hud-shell.hx-campaign-hud-collapsed #hx-campaign-hud {
+  transform: translateX(calc(-100% - 0.55rem));
+  opacity: 0;
+  pointer-events: none;
+}
+#hx-campaign-hud-title {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(0.58rem, 0.9vw, 0.74rem);
+  letter-spacing: 0.08em;
+  color: #e9d5ff;
+  margin-bottom: 0.42rem;
+}
+#hx-campaign-hud-objectives {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+.hx-chud-obj-label {
+  display: block;
+  font-size: clamp(0.52rem, 0.82vw, 0.66rem);
+  color: #ddd6fe;
+  margin-bottom: 0.12rem;
+}
+.hx-chud-obj--done .hx-chud-obj-label {
+  color: #c4b5fd;
+}
+.hx-chud-obj-bar,
+.hx-chud-star-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.24);
+  overflow: hidden;
+}
+.hx-chud-obj-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a855f7, #c084fc);
+  box-shadow: 0 0 8px rgba(192, 132, 252, 0.55);
+}
+#hx-campaign-hud-stars {
+  margin-top: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.hx-chud-star-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.34rem;
+}
+.hx-chud-star {
+  color: rgba(148, 163, 184, 0.7);
+  font-size: 0.64rem;
+  line-height: 1;
+}
+.hx-chud-star--earned {
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.55);
+}
+.hx-chud-star-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f59e0b, #fcd34d);
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.45);
+}
+.hx-chud-star-label {
+  font-size: clamp(0.48rem, 0.78vw, 0.6rem);
+  color: #f5d0fe;
+}
+#hx-campaign-hud-toggle {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 1px solid rgba(168, 85, 247, 0.72);
+  background: rgba(14, 10, 24, 0.94);
+  color: #e9d5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+#hx-campaign-hud-toggle[aria-expanded="true"] {
+  background: rgba(168, 85, 247, 0.2);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.28);
+}
+
 /* Daily Challenge HUD + Results */
 #hx-daily-hud-shell {
   position: fixed;
@@ -6197,12 +6309,32 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
 }
 
 @media (max-width: 900px) {
+  #hx-campaign-hud {
+    width: min(240px, 72vw);
+    padding: 0.5rem 0.52rem;
+  }
+  #hx-campaign-hud-title {
+    font-size: clamp(0.56rem, 0.88vw, 0.7rem);
+  }
   #hx-optimal-clues {
     max-height: min(44vh, 340px);
   }
 }
 
 @media (max-width: 640px) {
+  #hx-campaign-hud-shell {
+    top: clamp(74px, 11vh, 98px);
+    left: 0.42rem;
+  }
+  #hx-campaign-hud {
+    width: min(218px, 70vw);
+    padding: 0.45rem 0.48rem;
+  }
+  #hx-campaign-hud-toggle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.88rem;
+  }
   #hx-optimal-clues {
     padding: 0.55rem;
     margin-top: 0.45rem;
@@ -6279,6 +6411,24 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
 
 /* ≤430 px — standard mobile portrait */
 @media (max-width: 430px) {
+  #hx-campaign-hud-shell {
+    top: 4.8rem;
+    left: 0.25rem;
+    gap: 0.25rem;
+  }
+  #hx-campaign-hud {
+    width: min(198px, 66vw);
+    padding: 0.4rem 0.42rem;
+  }
+  #hx-campaign-hud-shell.hx-campaign-hud-collapsed #hx-campaign-hud {
+    transform: translateX(calc(-100% - 0.28rem));
+  }
+  #hx-campaign-hud-toggle {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
   #hx-daily-hud-shell {
     top: 4.8rem;
     right: 0.25rem;
@@ -6327,6 +6477,23 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
 
 /* ≤375 px — small phone (iPhone SE etc.) */
 @media (max-width: 375px) {
+  #hx-campaign-hud-shell {
+    top: 4.5rem;
+    left: 0.2rem;
+  }
+  #hx-campaign-hud {
+    width: min(184px, 64vw);
+    padding: 0.34rem 0.38rem;
+  }
+  #hx-campaign-hud-title {
+    margin-bottom: 0.32rem;
+  }
+  .hx-chud-obj-label {
+    font-size: clamp(0.48rem, 0.72vw, 0.58rem);
+  }
+  .hx-chud-star-label {
+    font-size: clamp(0.46rem, 0.7vw, 0.56rem);
+  }
   #hx-daily-hud-shell {
     top: 4.5rem;
   }
