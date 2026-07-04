@@ -39,7 +39,7 @@ const GEM_MULTIPLIERS = {
 const DAILY_ROTATING_GEM_TYPES = ['gemEmerald', 'gemGold'];
 const DAILY_ROTATING_RUNE_TYPES = ['rune', 'amethyst'];
 
-// Edge-perimeter tiles on the upper/right side of the radius-4 hex grid used as portal entry fallbacks.
+
 const DAILY_PORTAL_ENTRY_CORNERS = [
   { q:  0, r: -4 },
   { q:  1, r: -4 },
@@ -54,7 +54,7 @@ const DAILY_PORTAL_ENTRY_CORNERS = [
   { q:  4, r: -1 },
 ];
 
-// Edge-perimeter tiles on the lower/left side of the radius-4 hex grid used as portal exit fallbacks.
+
 const DAILY_PORTAL_EXIT_CORNERS = [
   { q: -4, r:  1 },
   { q:  3, r:  1 },
@@ -69,7 +69,7 @@ const DAILY_PORTAL_EXIT_CORNERS = [
   { q:  0, r:  4 },
 ];
 
-// Digraph combos eligible for daily board placement
+
 const DAILY_DIGRAPH_OPTIONS = [
   'TH', 'HE', 'IN', 'ER', 'RE', 'ST', 'AN', 'ON', 'EA',
   'IO', 'LL', 'QU', 'CK', 'CH', 'EN', 'CO', 'LY', 'AL',
@@ -136,8 +136,7 @@ function placeSpecialTiles(grid, rng, radius = GRID_RADIUS) {
   const taken = new Set();
   const allCoords = getAllCoordsWithKeys(radius);
 
-  // ── PORTALS: placed FIRST so no other tile type can occupy these positions ──
-  // Pick one entry and one exit at random from the fixed perimeter pools.
+
   const entryPool = shuffled(DAILY_PORTAL_ENTRY_CORNERS.filter(c => !!grid[hexKey(c.q, c.r)]), rng);
   const exitPool  = shuffled(DAILY_PORTAL_EXIT_CORNERS.filter(c => !!grid[hexKey(c.q, c.r)]), rng);
   const chosenEntry = entryPool[0];
@@ -160,16 +159,16 @@ function placeSpecialTiles(grid, rng, radius = GRID_RADIUS) {
     }
   };
 
-  // ── PRISM ─────────────────────────────────────────────────────────
+  
   pickRandom('prism', 1);
 
-  // ── ROTATE 1 EMERALD OR 1 GOLD ────────────────────────────────────
+ 
   pickRandom(shuffled(DAILY_ROTATING_GEM_TYPES, rng)[0], 1);
 
-  // ── ROTATE 1 RUNE OR 1 AMETHYST ───────────────────────────────────
+ 
   pickRandom(shuffled(DAILY_ROTATING_RUNE_TYPES, rng)[0], 1);
 
-  // ── DIGRAPHS: 3–5 random unoccupied tiles, unique digraph strings ─
+ 
   const DAILY_MIN_DIGRAPHS = 3;
   const DAILY_MAX_DIGRAPHS = 5;
   const digraphCount = DAILY_MIN_DIGRAPHS + Math.floor(rng() * (DAILY_MAX_DIGRAPHS - DAILY_MIN_DIGRAPHS + 1));
@@ -184,24 +183,18 @@ function placeSpecialTiles(grid, rng, radius = GRID_RADIUS) {
   return specials;
 }
 
-// ─── Maximum Score Simulation ────────────────────────────────────────────────
 
-/**
- * Lazily-built trie for fast DFS word search during simulation.
- * Only populated on first call to simulateMaxScore (not at module load time).
- * Words of length 5-11 from the combined word lists.
- */
 let _simTrie = null;
 const SIM_MIN_LEN = 5;
 const SIM_MAX_LEN = 13;
 
-/** Cap on how many valid word paths findAllValidPaths may return per round. */
+
 const MAX_SIMULATION_PATHS = 300;
 
-/** Maximum greedy-play rounds in simulateMaxScore (safety cap). */
+
 const MAX_SIMULATION_ROUNDS = 25;
 
-/** Score thresholds for difficulty classification. */
+
 const DIFFICULTY_EASY_THRESHOLD   = 15_000;
 const DIFFICULTY_MEDIUM_THRESHOLD = 30_000;
 const DIFFICULTY_HARD_THRESHOLD   = 50_000;
@@ -224,17 +217,7 @@ function getSimTrie() {
   return trie;
 }
 
-/**
- * Applies gravity to the simulation grid using the same SE/SW diagonal cascade
- * as the actual game in hexacore.js:
- *   - Each pass sorts all occupied tiles by descending r (bottom-first)
- *   - Each tile tries SE (q, r+1) first, then SW (q-1, r+1)
- *   - All moves per pass are collected atomically then applied
- *   - Repeats until no tile can move
- *
- * @param {Object} simGrid - { [hexKey]: any } — modified in place
- * @param {number} radius  - board radius (default GRID_RADIUS)
- */
+
 function applyGravity(simGrid, radius = GRID_RADIUS) {
   let anyMoved = true;
   while (anyMoved) {
@@ -269,26 +252,14 @@ function applyGravity(simGrid, radius = GRID_RADIUS) {
   }
 }
 
-/**
- * Calculates the score for a word path using the actual Hexacore scoring formula:
- *   score = base × lenMult × (prism ? 2 : 1) × gemMult × uniqueGemTypes
- *
- * Length multipliers mirror HX_LENGTH_MULTIPLIERS in hexacore.js.
- *
- * @param {string} word    - The word (uppercase)
- * @param {Array}  path    - Array of { key } objects
- * @param {Object} simGrid - { [hexKey]: { letter, special } }
- * @returns {number} Integer score
- */
 
-// Mirrors HX_LENGTH_MULTIPLIERS in hexacore.js — single source of truth for simulation scoring.
 const LENGTH_MULT_TABLE = { 4: 2, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12, 13: 13 };
 
 function calculatePathScore(word, path, simGrid, portalEntryKey = null, portalExitKey = null) {
   let base = 0;
   for (const ch of word) base += LETTER_POINTS[ch] || 1;
 
-  // Use the length-multiplier table; fall back to word.length for lengths > 13
+ 
   const actualLenMult = LENGTH_MULT_TABLE[word.length] ?? word.length;
 
   let hasPrism = false;
@@ -318,16 +289,7 @@ function calculatePathScore(word, path, simGrid, portalEntryKey = null, portalEx
   return Math.round(base * actualLenMult * (hasPrism ? 2 : 1) * gemMult * countBonus * portalMult);
 }
 
-/**
- * Finds valid word paths in the current simGrid state by:
- * 1. Scanning words with a fast frequency pre-filter
- * 2. Step-sampling through frequency-matching candidates for pathfinding
- *
- * Focuses on 5-10 letter words for a good speed/coverage tradeoff.
- *
- * @param {Object} simGrid       - { [hexKey]: { letter, special } }
- * @param {number} radius        - Grid radius
- * @param {number} maxPathfinds  - Maximum pathfinding attempts (performance cap)
+
  */
 function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMULATION_PATHS, portalEntryKey = null, portalExitKey = null) {
   const trie = getSimTrie();
@@ -335,11 +297,11 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
   const foundWords = new Set();
   const results = [];
 
-  /** DFS through the board following trie branches for O(board × trie) time. */
+ 
   function dfs(q, r, trieNode, word, path, visited) {
     if (results.length >= maxResults) return;
 
-    // Mark complete words
+    
     if (trieNode.$ && word.length >= SIM_MIN_LEN && !foundWords.has(trieNode.$)) {
       const completedWord = trieNode.$;
       foundWords.add(completedWord);
@@ -348,7 +310,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
 
     if (word.length >= SIM_MAX_LEN) return;
 
-    // Explore hex neighbours
+   
     for (const [dq, dr] of ADJ_DIRS) {
       const nq = q + dq;
       const nr = r + dr;
@@ -362,7 +324,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
       const isRune = ncell.special === 'rune';
 
       if (isRune) {
-        // Rune is a wildcard — try all 26 letters at the current trie node
+        
         visited.add(nkey);
         path.push({ key: nkey, q: nq, r: nr });
         for (const ch of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
@@ -375,9 +337,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
         visited.delete(nkey);
         if (results.length >= maxResults) return;
       } else {
-        // Digraph tiles contribute two characters but occupy a single tile.
-        // Traverse two trie steps for one tile so the simulation finds words that
-        // are actually playable on the board.
+   
         let nextNode;
         if (letter.length === 2) {
           if (word.length + 2 > SIM_MAX_LEN) continue;
@@ -387,7 +347,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
           if (!nextNode) continue;
         } else {
           nextNode = trieNode[letter];
-          if (!nextNode) continue; // Trie pruning — no words down this branch
+          if (!nextNode) continue; 
         }
 
         visited.add(nkey);
@@ -407,7 +367,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
     const [q, r] = key.split(',').map(Number);
 
     if (cell.special === 'rune') {
-      // Rune starting tile: try all 26 trie roots as the first letter
+     
       for (const ch of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
         if (results.length >= maxResults) break;
         const trieRoot = trie[ch];
@@ -418,7 +378,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
     } else {
       let trieRoot;
       if (letter.length === 2) {
-        // Digraph starting tile: advance through both characters to find the trie entry point
+        
         const mid = trie[letter[0]];
         if (!mid) continue;
         trieRoot = mid[letter[1]];
@@ -436,16 +396,7 @@ function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMUL
   return results;
 }
 
-/**
- * Simulates a full greedy play-through: on each turn, plays the highest-scoring
- * available word, removes its tiles, applies gravity, then repeats.
- *
- * @param {Object} grid        - Plain letter grid { [hexKey]: letter }
- * @param {Array}  specialTiles - Array of { type, q, r } from the board
- * @param {number} radius      - Board radius
- * @param {number} maxRounds   - Safety cap on simulation iterations
- * @returns {{ maxScore, optimalMoves, averageWordLength, gemDensity, solutionPath, solutionDetail, tilesCleared, tilesRemaining, clearancePercent, fullyCleared }}
- */
+
 function cloneSimGrid(simGrid) {
   const copy = {};
   for (const [k, v] of Object.entries(simGrid)) copy[k] = { ...v };
@@ -453,7 +404,7 @@ function cloneSimGrid(simGrid) {
 }
 
 export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRounds = MAX_SIMULATION_ROUNDS) {
-  // Build a combined simulation grid: { [key]: { letter, special } }
+  
   const baseSimGrid = {};
   for (const [key, letter] of Object.entries(grid)) {
     baseSimGrid[key] = { letter, special: null };
@@ -462,16 +413,14 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
     const key = hexKey(s.q, s.r);
     if (baseSimGrid[key]) {
       baseSimGrid[key].special = s.type;
-      // Use the actual digraph string so the simulation finds words that are
-      // genuinely playable on the board (digraph tiles replace the single letter
-      // that the raw grid stores at that position).
+     
       if (s.type === 'digraph' && s.digraph) {
         baseSimGrid[key].letter = String(s.digraph).toUpperCase();
       }
     }
   }
 
-  // Extract portal entry/exit keys so the scoring formula can apply the portal multiplier
+
   const portalEntry = specialTiles.find(s => s.type === 'portal' && s.role === 'entry');
   const portalExit  = specialTiles.find(s => s.type === 'portal' && s.role === 'exit');
   const portalEntryKey = portalEntry ? hexKey(portalEntry.q, portalEntry.r) : null;
@@ -480,7 +429,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
   const gemCount = specialTiles.filter(s => GEM_MULTIPLIERS[s.type]).length;
   const totalTiles = getAllCoords(radius).length;
 
-  /** Computes exact penalty (sum of letter point values) for remaining tiles in a simGrid. */
+  
   function computeExactPenalty(simGrid) {
     return Object.values(simGrid).reduce((sum, cell) => {
       const letter = (cell.letter || '').toUpperCase();
@@ -489,10 +438,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
     }, 0);
   }
 
-  /**
-   * Runs one greedy pass with the given sort function applied to paths each round.
-   * @param {Function} sortFn - Comparator for paths array before picking paths[0]
-   */
+
   function runPass(sortFn) {
     const simGrid = cloneSimGrid(baseSimGrid);
     let totalScore = 0;
@@ -522,16 +468,16 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
     return { simGrid, totalScore, solutionPath, solutionDetail };
   }
 
-  // Pass 1: highest raw score first (original behaviour)
+  
   const pass1 = runPass((a, b) => b.score - a.score);
 
-  // Pass 2: efficiency-first — highest score-per-tile
+ 
   const pass2 = runPass((a, b) => (b.score / b.path.length) - (a.score / a.path.length));
 
-  // Pass 3: longest word first — maximises gravity disruption
+ 
   const pass3 = runPass((a, b) => b.path.length - a.path.length);
 
-  // Pass 4: prioritise words that touch a special tile, then by score
+  
   const pass4 = runPass((a, b) => {
     const aHasSpecial = a.path.some(c => baseSimGrid[c.key]?.special);
     const bHasSpecial = b.path.some(c => baseSimGrid[c.key]?.special);
@@ -539,7 +485,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
     return b.score - a.score;
   });
 
-  // Compute finalScore (word total minus exact penalty) for each pass and pick the best
+ 
   function computeFinalScore(pass) {
     const penalty = computeExactPenalty(pass.simGrid);
     return Math.max(0, pass.totalScore - penalty);
@@ -577,9 +523,7 @@ export function simulateMaxScore(grid, specialTiles, radius = GRID_RADIUS, maxRo
   };
 }
 
-/**
- * Classifies difficulty based on maximum achievable score.
- */
+
 function classifyDifficulty(maxScore) {
   if (maxScore < DIFFICULTY_EASY_THRESHOLD)   return 'easy';
   if (maxScore < DIFFICULTY_MEDIUM_THRESHOLD) return 'medium';
@@ -969,19 +913,12 @@ export function generateOptimalPathClues(optimalSolutions, grid, specialTiles) {
   };
 }
 
-/**
- * Builds an `optimalSolutions`-shaped array from the gravity simulation result.
- *
- * @param {Object} simData    - Result of simulateMaxScore (must have solutionDetail)
- * @param {Object} grid       - Plain { [hexKey]: letter } board grid
- * @param {number} totalTiles - Total tiles on the board (e.g. 61)
- * @returns {Array|null}
- */
+
+
 function buildSimulationStrategies(simData, grid, totalTiles) {
   if (!simData?.solutionDetail?.length) return null;
 
-  // Use the exact penalty computed from remaining tile letter values in simulateMaxScore,
-  // falling back to a rough estimate if unavailable.
+ 
   const penalty = Number.isFinite(simData.exactPenalty) ? simData.exactPenalty : Math.round((totalTiles - simData.solutionDetail.reduce((s, d) => s + d.tilesUsed, 0)) * 2);
 
   const wordTotal = simData.solutionDetail.reduce((s, d) => s + d.score, 0);
@@ -1013,14 +950,14 @@ export function generateDailyHexacoreBoard({
   const allCoords = getAllCoordsWithKeys(radius);
   const totalTiles = allCoords.length;
   let bestBoard = null;
-  let bestBoardMeta = null; // { clearance, score }
+  let bestBoardMeta = null; 
 
-  /** Returns true if candidate metrics are strictly better than current best. */
+ 
   const isBetterBoard = (candidateMeta) => {
     if (!bestBoardMeta) return true;
-    // Priority 1: simulation clearance %
+    
     if (candidateMeta.clearance !== bestBoardMeta.clearance) return candidateMeta.clearance > bestBoardMeta.clearance;
-    // Priority 2: estimated max score
+  
     return candidateMeta.score > bestBoardMeta.score;
   };
 
@@ -1035,7 +972,7 @@ export function generateDailyHexacoreBoard({
 
     const specialTiles = placeSpecialTiles(grid, rng, radius);
 
-    // Run gravity simulation to find the optimal play sequence and max score
+   
     let simData = null;
     if (runSimulation) {
       try {
