@@ -5442,7 +5442,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
       ${yourWordsHtml}
       ${optimalHtml}
       <button id="hx-daily-leaderboard-btn" type="button">LEADERBOARD</button>
-      <button id="hx-daily-again-btn" type="button">PLAY AGAIN</button>
+      <button id="hx-daily-again-btn" type="button">${hxIsDailyUnlimitedMode() ? 'NEW GAME' : 'PLAY AGAIN'}</button>
       <button id="hx-daily-menu-btn" type="button">MAIN MENU</button>
     </div>
   `;
@@ -5451,7 +5451,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
   document.getElementById('hx-daily-leaderboard-btn')?.addEventListener('click', () => openLeaderboardsModal('daily'));
   document.getElementById('hx-daily-again-btn')?.addEventListener('click', () => {
     overlay.remove();
-    startHexacore(hxGameMode);
+    startHexacore(hxIsDailyUnlimitedMode() ? 'endless' : hxGameMode);
   });
   document.getElementById('hx-daily-menu-btn')?.addEventListener('click', () => window.location.reload());
 }
