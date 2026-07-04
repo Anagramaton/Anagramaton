@@ -290,7 +290,7 @@ function calculatePathScore(word, path, simGrid, portalEntryKey = null, portalEx
 }
 
 
- */
+
 function findAllValidPaths(simGrid, radius = GRID_RADIUS, maxResults = MAX_SIMULATION_PATHS, portalEntryKey = null, portalExitKey = null) {
   const trie = getSimTrie();
 
