@@ -29,11 +29,23 @@ import { unlockAudioContext, preloadBuffers, playSound, stopSound } from './audi
 import { getXPData, addXP, calcWordXP, getXPForLevel, updateXPBar as updateXPBarFn } from './hexacoreXP.js';
 import { getDailyQuests, getWeeklyQuest, updateQuestProgress, openQuestsModal, initQuests, showQuestCompleteToast } from './hexacoreQuests.js';
 import { openLeaderboardsModal } from './hexacoreLeaderboards.js';
-import { getCampaignProgress, openCampaignModal, startCampaignLevel, updateCampaignProgress } from './hexacoreCampaign.js';
+import {
+  CAMPAIGN_LEVELS,
+  getCampaignLevelProgress,
+  getCampaignLevelSeed,
+  getCampaignProgress,
+  getActiveCampaignLevelId,
+  loadCampaignSession,
+  openCampaignModal,
+  restoreCampaignSession,
+  startCampaignLevel,
+  updateCampaignProgress,
+} from './hexacoreCampaign.js';
 import { getProfile, updateProfile, openProfileModal } from './hexacoreProfile.js';
 import { updateAchievementProgress } from './hexacoreAchievements.js';
 import { updateStatTracking, saveSessionHistory, updateStats } from './hexacoreStats.js';
 import { openModeSelectModal } from './hexacoreModeSelect.js';
+import { mkSeededRng } from './hexacoreDailyGenerator.js';
 
 const HX_LEADERBOARD_ID = 'hexacore';
 
@@ -69,6 +81,7 @@ const HX_SAVE_KEY = 'hexacore_save';
 const HX_REQ_SAVE_KEY = 'hexacore_requirements';
 const HX_TUTORIAL_SAVE_KEY = 'hexacore_tutorial_v1';
 const HX_DAILY_HUD_OPEN_KEY = 'hexacore_daily_hud_open';
+const HX_CAMPAIGN_HUD_OPEN_KEY = 'hexacore_campaign_hud_open';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
 let hxGameMode = null; // 'endless' | 'daily' | 'hexacoreDaily' | 'campaign'
@@ -233,8 +246,8 @@ const DIGRAPH_COMPLEMENT = {
   RY: ['S','T','E','I','A','L'],
 };
 
-function randomDigraph() {
-  const dg  = DIGRAPH_POOL[Math.floor(Math.random() * DIGRAPH_POOL.length)];
+function randomDigraph(rng = Math.random) {
+  const dg  = DIGRAPH_POOL[Math.floor(rng() * DIGRAPH_POOL.length)];
   const pts = (HX_LETTER_POINTS[dg[0]] || 1) + (HX_LETTER_POINTS[dg[1]] || 1);
   return { digraph: dg, points: pts };
 }
@@ -455,7 +468,7 @@ const HX_UTILITY_CONSONANTS = [
  *  4. Has a pending digraph complement hint → 60% chance draw from hint pool
  *  5. Otherwise draw from HX_LETTER_POOL normally (digraphs fully eligible)
  */
-function randomLetterOrDigraphForPos(q, r) {
+function randomLetterOrDigraphForPos(q, r, rng = Math.random) {
   const neighborKeys = [
     hxKey(q + 1, r),   hxKey(q - 1, r),
     hxKey(q,     r + 1), hxKey(q,     r - 1),
@@ -469,37 +482,37 @@ function randomLetterOrDigraphForPos(q, r) {
   const neighborVowelScore = neighbors.reduce((sum, t) => sum + vowelWeightOf(t.letter), 0);
 
   // ── 1. Vowel-heavy → force consonant ───────────────────────────
-  if (neighborCount >= 2 && neighborVowelScore >= 1.5 && Math.random() < 0.70) {
-    const letter = HX_UTILITY_CONSONANTS[Math.floor(Math.random() * HX_UTILITY_CONSONANTS.length)];
+  if (neighborCount >= 2 && neighborVowelScore >= 1.5 && rng() < 0.70) {
+    const letter = HX_UTILITY_CONSONANTS[Math.floor(rng() * HX_UTILITY_CONSONANTS.length)];
     return { isDigraph: false, letter };
   }
 
   // ── 2. All-consonant → force vowel ─────────────────────────────
-  if (neighborCount >= 2 && neighborVowelScore === 0 && Math.random() < 0.75) {
-    return { isDigraph: false, letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)] };
+  if (neighborCount >= 2 && neighborVowelScore === 0 && rng() < 0.75) {
+    return { isDigraph: false, letter: HX_VOWEL_POOL[Math.floor(rng() * HX_VOWEL_POOL.length)] };
   }
 
   // ── 3. Digraph neighbor complement ─────────────────────────────
   const digraphNeighbors = neighbors.filter(t => t.tileType === 'digraph');
-  if (digraphNeighbors.length > 0 && Math.random() < 0.60) {
+  if (digraphNeighbors.length > 0 && rng() < 0.60) {
     const merged = digraphNeighbors.flatMap(t => DIGRAPH_COMPLEMENT[t.letter] || []);
     if (merged.length > 0) {
-      const letter = merged[Math.floor(Math.random() * merged.length)];
+      const letter = merged[Math.floor(rng() * merged.length)];
       return { isDigraph: false, letter };
     }
   }
 
   // ── 4. Pending digraph complement hint (set during buildGrid) ───
   const hint = pendingDigraphComplements.get(hxKey(q, r));
-  if (hint && hint.length > 0 && Math.random() < 0.60) {
-    const letter = hint[Math.floor(Math.random() * hint.length)];
+  if (hint && hint.length > 0 && rng() < 0.60) {
+    const letter = hint[Math.floor(rng() * hint.length)];
     return { isDigraph: false, letter };
   }
 
   // ── 5. Normal pool draw ─────────────────────────────────────────
-  const drawn = HX_LETTER_POOL[Math.floor(Math.random() * HX_LETTER_POOL.length)];
+  const drawn = HX_LETTER_POOL[Math.floor(rng() * HX_LETTER_POOL.length)];
   if (drawn === '__DIGRAPH__') {
-    const { digraph, points } = randomDigraph();
+    const { digraph, points } = randomDigraph(rng);
     return { isDigraph: true, digraph, points };
   }
   return { isDigraph: false, letter: drawn };
@@ -1017,8 +1030,26 @@ function injectSvgDefs(svg) {
   }
   // Prism: deep violet → electric rose
   ensureLinearGradient('hx-prism-gradient',    '#1a0040', '#db2777');
-  // Portal: midnight → vivid violet → magenta
-  ensureLinearGradient('hx-portal-gradient',   '#1a003f', '#7c3aed');
+  // Portal: shiny matte black — near-black base with a subtle dark-steel sheen
+  if (!document.getElementById('hx-portal-gradient')) {
+    const portalGrad = document.createElementNS(SVG_NS, 'linearGradient');
+    portalGrad.setAttribute('id', 'hx-portal-gradient');
+    portalGrad.setAttribute('x1', '20%'); portalGrad.setAttribute('y1', '0%');
+    portalGrad.setAttribute('x2', '80%'); portalGrad.setAttribute('y2', '100%');
+    [
+      ['0%',   '#050505'],
+      ['35%',  '#1c1c1e'],
+      ['55%',  '#2a2a2d'],
+      ['75%',  '#111113'],
+      ['100%', '#050505'],
+    ].forEach(([offset, color]) => {
+      const s = document.createElementNS(SVG_NS, 'stop');
+      s.setAttribute('offset', offset);
+      s.setAttribute('stop-color', color);
+      portalGrad.appendChild(s);
+    });
+    defs.appendChild(portalGrad);
+  }
   // Rune: imperial violet base with gilded highlights
   if (!document.getElementById('hx-rune-gradient')) {
     const runeGrad = document.createElementNS(SVG_NS, 'linearGradient');
@@ -1391,6 +1422,108 @@ function updateDailyHud() {
   if (clueRoot) clueRoot.innerHTML = renderOptimalPathClues();
 }
 
+function formatCampaignHudValue(value, objType) {
+  const n = Number.isFinite(Number(value)) ? Number(value) : 0;
+  if (objType === 'score' || objType === 'wordScore') return `${Math.round(n).toLocaleString()} pts`;
+  return Number.isInteger(n) ? String(n) : n.toFixed(1);
+}
+
+function removeCampaignHud() {
+  document.getElementById('hx-campaign-hud-shell')?.remove();
+}
+
+function showCampaignHud(level) {
+  if (hxGameMode !== 'campaign' || !level) return;
+  removeCampaignHud();
+
+  const shell = document.createElement('div');
+  shell.id = 'hx-campaign-hud-shell';
+
+  const hud = document.createElement('div');
+  hud.id = 'hx-campaign-hud';
+  hud.innerHTML = `
+    <div id="hx-campaign-hud-title"></div>
+    <ul id="hx-campaign-hud-objectives"></ul>
+    <div id="hx-campaign-hud-stars"></div>
+  `;
+
+  const toggle = document.createElement('button');
+  toggle.id = 'hx-campaign-hud-toggle';
+  toggle.type = 'button';
+  toggle.innerHTML = '<span aria-hidden="true">⚔</span>';
+  toggle.setAttribute('aria-controls', 'hx-campaign-hud');
+
+  const setOpen = (open) => {
+    shell.classList.toggle('hx-campaign-hud-collapsed', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Hide campaign objectives' : 'Show campaign objectives');
+    try { localStorage.setItem(HX_CAMPAIGN_HUD_OPEN_KEY, open ? 'open' : 'closed'); } catch (_) {}
+  };
+
+  let hudOpen = true;
+  try {
+    const saved = localStorage.getItem(HX_CAMPAIGN_HUD_OPEN_KEY);
+    if (saved === 'open') hudOpen = true;
+    else if (saved === 'closed') hudOpen = false;
+    else if (window.innerWidth <= 430) hudOpen = false;
+  } catch (_) {}
+  setOpen(hudOpen);
+
+  toggle.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    setOpen(!isOpen);
+  });
+
+  shell.append(hud, toggle);
+  document.body.appendChild(shell);
+  updateCampaignHud();
+}
+
+function updateCampaignHud() {
+  if (hxGameMode !== 'campaign') return;
+  const root = document.getElementById('hx-campaign-hud');
+  if (!root) return;
+
+  const { levelId, progress } = getCampaignLevelProgress();
+  const level = CAMPAIGN_LEVELS.find(l => l.id === levelId);
+  if (!level) return;
+
+  const title = document.getElementById('hx-campaign-hud-title');
+  const objList = document.getElementById('hx-campaign-hud-objectives');
+  const starWrap = document.getElementById('hx-campaign-hud-stars');
+  if (!title || !objList || !starWrap) return;
+
+  title.textContent = `LEVEL ${level.id} — ${level.title}`;
+  objList.innerHTML = level.objectives.map(obj => {
+    const currentRaw = progress?.[obj.type] ?? 0;
+    const current = Number.isFinite(Number(currentRaw)) ? Number(currentRaw) : 0;
+    const target = Number(obj.target) || 1;
+    const pct = Math.max(0, Math.min(100, Math.round((current / target) * 100)));
+    const done = obj.type === 'timeLimit' ? current <= target : current >= target;
+    return `
+      <li class="hx-chud-obj${done ? ' hx-chud-obj--done' : ''}">
+        <span class="hx-chud-obj-label">${obj.desc} (${formatCampaignHudValue(current, obj.type)}/${formatCampaignHudValue(target, obj.type)})</span>
+        <div class="hx-chud-obj-bar"><div class="hx-chud-obj-fill" style="width:${pct}%"></div></div>
+      </li>
+    `;
+  }).join('');
+
+  const mainObj = level.objectives[0];
+  const mainCurrent = Number(progress?.[mainObj.type] ?? 0) || 0;
+  starWrap.innerHTML = level.stars.map(threshold => {
+    const thresholdVal = Number(threshold) || 1;
+    const pct = Math.max(0, Math.min(100, Math.round((mainCurrent / thresholdVal) * 100)));
+    const earned = mainObj.type === 'timeLimit' ? mainCurrent <= thresholdVal : mainCurrent >= thresholdVal;
+    return `
+      <div class="hx-chud-star-row">
+        <span class="hx-chud-star${earned ? ' hx-chud-star--earned' : ''}">★</span>
+        <div class="hx-chud-star-bar"><div class="hx-chud-star-fill" style="width:${pct}%"></div></div>
+        <span class="hx-chud-star-label">${formatCampaignHudValue(thresholdVal, mainObj.type)}</span>
+      </div>
+    `;
+  }).join('');
+}
+
 function isWordDiscovered(wordIdx) {
   return (hxState.discoveredOptimalWordIndices || []).includes(wordIdx);
 }
@@ -1491,7 +1624,7 @@ function hasAnyDailyWordLeft() {
 }
 
 /* ── Grid construction ─────────────────────────────────────────── */
-function buildGrid(onReady, boardData = null) {
+function buildGrid(onReady, boardData = null, campaignSeed = null) {
   const board = document.createElementNS(SVG_NS, 'g');
   board.setAttribute('id', 'board');
 
@@ -1527,18 +1660,29 @@ function buildGrid(onReady, boardData = null) {
   // Endless/Campaign keep procedural generation. Daily uses prebuilt fixed letters.
   const isDaily = hxIsDailyMode();
   const dailyGrid = (isDaily && boardData?.grid) ? boardData.grid : null;
+  const campaignRng = (hxGameMode === 'campaign' && !isDaily && Number.isFinite(campaignSeed))
+    ? mkSeededRng(campaignSeed)
+    : null;
+  const boardRng = campaignRng || Math.random;
+
+  const shuffledWithRng = (arr, rng) => {
+    const next = arr.slice();
+    for (let i = next.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      [next[i], next[j]] = [next[j], next[i]];
+    }
+    return next;
+  };
 
   // Pre-designate vowel slots for endless/campaign generation
   const vowelTargets = new Set();
   if (!dailyGrid) {
     const VOWEL_DENSITY = 0.28;
     byRing[0].forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
-    byRing[1]
-      .slice().sort(() => Math.random() - 0.5)
+    shuffledWithRng(byRing[1], boardRng)
       .slice(0, 2)
       .forEach(c => vowelTargets.add(hxKey(c.q, c.r)));
-    const outerCoords = [...byRing[2], ...byRing[3], ...byRing[4]]
-      .slice().sort(() => Math.random() - 0.5);
+    const outerCoords = shuffledWithRng([...byRing[2], ...byRing[3], ...byRing[4]], boardRng);
     const totalVowels = Math.round(allCoords.length * VOWEL_DENSITY);
     outerCoords
       .slice(0, Math.max(0, totalVowels - vowelTargets.size))
@@ -1556,10 +1700,10 @@ function buildGrid(onReady, boardData = null) {
     } else if (vowelTargets.has(key)) {
       result = {
         isDigraph: false,
-        letter: HX_VOWEL_POOL[Math.floor(Math.random() * HX_VOWEL_POOL.length)],
+        letter: HX_VOWEL_POOL[Math.floor(boardRng() * HX_VOWEL_POOL.length)],
       };
     } else {
-      result = randomLetterOrDigraphForPos(q, r);
+      result = randomLetterOrDigraphForPos(q, r, boardRng);
     }
 
     const tile = createTile({
@@ -1877,7 +2021,9 @@ function showLevelUpBanner(level) {
 
   banner.querySelector('.hx-levelup-ok-btn').addEventListener('click', () => {
     banner.remove();
-    applyLevelUpRewards();
+    if (hxGameMode !== 'campaign') {
+      applyLevelUpRewards();
+    }
   });
 }
 
@@ -2361,6 +2507,7 @@ function removeHud() {
   document.getElementById('hx-powerup-indicator')?.remove();
   document.getElementById('hx-daily-no-words-overlay')?.remove();
   document.getElementById('hx-tile-guide')?.remove();
+  removeCampaignHud();
 }
 
 /* ── Requirements persistence ──────────────────────────────────── */
@@ -4470,6 +4617,7 @@ async function submitHexacoreWord() {
   // Campaign progress tracking
   if (hxGameMode === 'campaign') {
     updateCampaignProgress(word, [...hxSelected], wordScore, hxState);
+    updateCampaignHud();
   }
 
   const consumed = [...hxSelected];
@@ -5762,6 +5910,7 @@ export function startHexacore(mode) {
 
   const initBoard = async () => {
     let boardData = null;
+    let campaignSeed = null;
     if (hxGameMode === 'daily') {
       try {
         boardData = await loadDailyChallengeBoard(hxEasternDateStr());
@@ -5782,6 +5931,15 @@ export function startHexacore(mode) {
         console.warn('[hexacore] hexacore daily board load failed, falling back to procedural board:', err);
       }
       hxState.dailyStartMs = Date.now();
+    } else if (hxGameMode === 'campaign') {
+      const session = loadCampaignSession();
+      if (session) restoreCampaignSession(session);
+      const activeLevelId = getActiveCampaignLevelId();
+      if (Number.isInteger(activeLevelId)) {
+        campaignSeed = getCampaignLevelSeed(activeLevelId);
+        const activeLevel = CAMPAIGN_LEVELS.find(level => level.id === activeLevelId);
+        if (activeLevel) showCampaignHud(activeLevel);
+      }
     }
 
     buildGrid(() => {
@@ -5876,11 +6034,16 @@ export function startHexacore(mode) {
 
       showRestoredBanner(getCurrentPlayerLevel(), hxState.score);
     }
+    if (hxGameMode === 'campaign') {
+      const campaignSession = loadCampaignSession();
+      if (campaignSession) restoreCampaignSession(campaignSession);
+      updateCampaignHud();
+    }
     updateDailyHud();
     // Rebuild the tile guide after board is ready so daily mode shows only
     // the special tiles that actually appear on today's board.
     if (hxIsDailyMode()) buildTileGuide();
-  }, boardData);
+  }, boardData, campaignSeed);
   };
   void initBoard();
   // Ember tiles do NOT spawn at game start — only after milestone words
