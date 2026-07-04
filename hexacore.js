@@ -1397,6 +1397,15 @@ async function loadHexacoreDailyChallengeBoard(dateStr) {
   return data;
 }
 
+/** Generates a fresh random board for Daily Unlimited each time it is called.
+ *  Uses a unique seed so every game starts on a different board, but still
+ *  includes special tiles (portals, digraphs, runes) and optimal-path clues. */
+async function loadHexacoreUnlimitedBoard() {
+  const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
+  const uniqueSeed = `unlimited-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+  return generateDailyHexacoreBoard({ date: uniqueSeed, maxAttempts: 1, runSimulation: true });
+}
+
 function getDailyWordTotal() {
   return hxState.words.reduce((sum, w) => sum + (Number(w.score) || 0), 0);
 }
@@ -5451,7 +5460,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
   document.getElementById('hx-daily-leaderboard-btn')?.addEventListener('click', () => openLeaderboardsModal('daily'));
   document.getElementById('hx-daily-again-btn')?.addEventListener('click', () => {
     overlay.remove();
-    startHexacore(hxIsDailyUnlimitedMode() ? 'endless' : hxGameMode);
+    startHexacore(hxIsDailyUnlimitedMode() ? 'hexacoreDailyUnlimited' : hxGameMode);
   });
   document.getElementById('hx-daily-menu-btn')?.addEventListener('click', () => window.location.reload());
 }
@@ -5929,7 +5938,7 @@ export function startHexacore(mode) {
         console.warn('[hexacore] daily board load failed, falling back to procedural board:', err);
       }
       hxState.dailyStartMs = Date.now();
-    } else if (hxGameMode === 'hexacoreDaily' || hxGameMode === 'hexacoreDailyUnlimited') {
+    } else if (hxGameMode === 'hexacoreDaily') {
       try {
         boardData = await loadHexacoreDailyChallengeBoard(hxEasternDateStr());
         hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();
@@ -5937,6 +5946,16 @@ export function startHexacore(mode) {
         hxState.dailySpecialTiles = boardData?.specialTiles || null;
       } catch (err) {
         console.warn('[hexacore] hexacore daily board load failed, falling back to procedural board:', err);
+      }
+      hxState.dailyStartMs = Date.now();
+    } else if (hxGameMode === 'hexacoreDailyUnlimited') {
+      try {
+        boardData = await loadHexacoreUnlimitedBoard();
+        hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();
+        hxState.dailyMetadata = boardData?.metadata || null;
+        hxState.dailySpecialTiles = boardData?.specialTiles || null;
+      } catch (err) {
+        console.warn('[hexacore] hexacore unlimited board load failed, falling back to procedural board:', err);
       }
       hxState.dailyStartMs = Date.now();
     } else if (hxGameMode === 'campaign') {
