@@ -8,70 +8,77 @@ const HX_CAMPAIGN_SESSION_KEY = 'hexacore_campaign_session';
 /* ── Campaign level definitions ─────────────────────────────────── */
 
 export const CAMPAIGN_LEVELS = [
-  { id:  1, title: 'First Words',      objectives: [{ type: 'formWords',   target:   5, desc: 'Form 5 valid words' }],                                                   stars: [1, 3, 5] },
-  { id:  2, title: 'Fire Starter',     objectives: [{ type: 'useEmber',    target:   2, desc: 'Use 2 Ember tiles in words' }],                                           stars: [1, 2, 3] },
-  { id:  3, title: 'Gem Hunter',       objectives: [{ type: 'useGem',      target:   5, desc: 'Use 5 gem tiles in words' }],                                             stars: [2, 4, 5] },
-  { id:  4, title: 'Prism Break',      objectives: [{ type: 'usePrism',    target:   3, desc: 'Use 3 Prism tiles in words' }],                                           stars: [1, 2, 3] },
-  { id:  5, title: 'Rune Draft',       objectives: [{ type: 'useRune',     target:   2, desc: 'Use 2 Rune tiles in words' }],                                            stars: [1, 2, 3] },
-  { id:  6, title: 'Digraph Drive',    objectives: [{ type: 'useDigraph',  target:   4, desc: 'Use 4 Digraph tiles in words' }],                                         stars: [2, 3, 4] },
-  { id:  7, title: 'Portal Steps',     objectives: [{ type: 'portalChain', target:   2, desc: 'Use portal tiles in 2 consecutive words' }],                              stars: [1, 2, 3] },
-  { id:  8, title: 'Score Rush',       objectives: [{ type: 'score',       target: 500, desc: 'Score 500 points' }],                                                      stars: [500, 1000, 2000] },
-  { id:  9, title: 'Long Form',        objectives: [{ type: 'wordLength',  target:   7, desc: 'Form a 7-letter word' }],                                                  stars: [1, 2, 3] },
-  { id: 10, title: 'Dual Challenge',   objectives: [{ type: 'formWords',   target:   8, desc: 'Form 8 words' }, { type: 'useEmber', target: 2, desc: 'Use 2 Ember tiles' }], stars: [5, 8, 10] },
+  // ── Tier 1: Fundamentals (1–10) ──────────────────────────────────
+  { id:  1, title: 'First Words',      objectives: [{ type: 'formWords',            target:  5, desc: 'Form 5 valid words' }],                                                                                                                       stars: [1, 3, 5] },
+  { id:  2, title: 'Ember Touch',      objectives: [{ type: 'useEmber',             target:  3, desc: 'Use 3 Ember tiles in words' }, { type: 'wordLength', target: 5, desc: 'Form a 5-letter word' }],                                             stars: [1, 2, 3] },
+  { id:  3, title: 'Prism & Gem',      objectives: [{ type: 'gemPrismWord',         target:  2, desc: 'Use a Prism + gem tile in the same word, 2 times' }],                                                                                         stars: [1, 2, 3] },
+  { id:  4, title: 'Rune Rider',       objectives: [{ type: 'runeGemWord',          target:  2, desc: 'Use a Rune + gem tile in the same word, 2 times' }],                                                                                          stars: [1, 2, 3] },
+  { id:  5, title: 'Fire & Stone',     objectives: [{ type: 'emberGem',             target:  3, desc: 'Use Ember + a gem tile in the same word, 3 times' }, { type: 'score', target: 500, desc: 'Score 500 points' }],                               stars: [2, 3, 4] },
+  { id:  6, title: 'Digraph Gem',      objectives: [{ type: 'digraphGemWord',       target:  2, desc: 'Use a Digraph + gem tile in the same word, 2 times' }, { type: 'formWords', target: 8, desc: 'Form 8 words' }],                               stars: [1, 2, 3] },
+  { id:  7, title: 'Portal Entry',     objectives: [{ type: 'portalGemWord',        target:  2, desc: 'Use portal + a gem tile in the same word, 2 times' }, { type: 'formWords', target: 5, desc: 'Form 5 words' }],                               stars: [1, 2, 3] },
+  { id:  8, title: 'Ember & Prism',    objectives: [{ type: 'emberPrismWord',       target:  2, desc: 'Use an Ember + Prism tile in the same word, 2 times' }, { type: 'formWords', target: 8, desc: 'Form 8 words' }],                              stars: [1, 2, 3] },
+  { id:  9, title: 'Long Combo',       objectives: [{ type: 'wordLength',           target:  7, desc: 'Form a 7-letter word' }, { type: 'gemPrismWord', target: 1, desc: 'Use Prism + gem in one word' }],                                           stars: [1, 2, 3] },
+  { id: 10, title: 'Triple Special',   objectives: [{ type: 'tripleSpecialWord',    target:  2, desc: 'Use 3 different special tile types in one word, 2 times' }, { type: 'formWords', target: 10, desc: 'Form 10 words' }],                         stars: [1, 2, 3] },
 
-  { id: 11, title: 'Prism Count',      objectives: [{ type: 'formWords',   target:  10, desc: 'Form 10 words' }, { type: 'usePrism', target: 3, desc: 'Use 3 Prism tiles' }], stars: [8, 10, 12] },
-  { id: 12, title: 'Rune Reach',       objectives: [{ type: 'wordLength',  target:   8, desc: 'Form an 8-letter word' }, { type: 'useRune', target: 3, desc: 'Use 3 Rune tiles' }], stars: [1, 2, 3] },
-  { id: 13, title: 'Digraph Tempo',    objectives: [{ type: 'formWords',   target:  12, desc: 'Form 12 words' }, { type: 'useDigraph', target: 6, desc: 'Use 6 Digraph tiles' }], stars: [10, 12, 15] },
-  { id: 14, title: 'Gem Tempo',        objectives: [{ type: 'score',       target: 2000, desc: 'Score 2,000 points' }, { type: 'useGem', target: 6, desc: 'Use 6 gem tiles' }], stars: [2000, 3500, 5000] },
-  { id: 15, title: 'Fireline',         objectives: [{ type: 'formWords',   target:  12, desc: 'Form 12 words' }, { type: 'useEmber', target: 4, desc: 'Use 4 Ember tiles' }], stars: [10, 12, 15] },
-  { id: 16, title: 'Portal Chain',     objectives: [{ type: 'formWords',   target:  10, desc: 'Form 10 words' }, { type: 'portalChain', target: 3, desc: 'Portal chain 3 words' }], stars: [8, 10, 12] },
-  { id: 17, title: 'Word Punch',       objectives: [{ type: 'wordScore',   target: 1500, desc: 'Score 1,500+ on one word' }, { type: 'usePrism', target: 4, desc: 'Use 4 Prism tiles' }], stars: [1000, 1500, 2500] },
-  { id: 18, title: 'Cold Fire',        objectives: [{ type: 'emberGem',    target:   2, desc: 'Use Ember and a Gem in a word, 2 times' }, { type: 'score', target: 3000, desc: 'Score 3,000 points' }], stars: [2, 3, 4] },
-  { id: 19, title: 'Gem & Fire',       objectives: [{ type: 'emberGem',    target:   3, desc: 'Use Ember and a Gem in a word, 3 times' }, { type: 'score', target: 3000, desc: 'Score 3,000 points' }], stars: [3, 4, 5] },
-  { id: 20, title: 'Streak Setup',     objectives: [{ type: 'wordStreak',  target:   3, desc: 'Submit 3 words in a row (6+ letters)' }, { type: 'formWords', target: 10, desc: 'Form 10 words' }], stars: [2, 3, 4] },
+  // ── Tier 2: Combos & Streaks (11–20) ─────────────────────────────
+  { id: 11, title: 'Gem Streak',       objectives: [{ type: 'gemStreakWords',        target:  4, desc: 'Use a gem tile in 4 consecutive words' }, { type: 'useGem', target: 8, desc: 'Use 8 gem tiles total' }],                                      stars: [3, 4, 5] },
+  { id: 12, title: 'Portal Gem',       objectives: [{ type: 'portalGemWord',        target:  3, desc: 'Use portal + a gem tile in the same word, 3 times' }, { type: 'score', target: 1000, desc: 'Score 1,000 points' }],                           stars: [1, 2, 3] },
+  { id: 13, title: 'Digraph Ember',    objectives: [{ type: 'digraphEmberWord',     target:  2, desc: 'Use 2+ Digraphs + Ember in a 7+ letter word, 2 times' }, { type: 'useDigraph', target: 6, desc: 'Use 6 Digraph tiles' }],                      stars: [1, 2, 3] },
+  { id: 14, title: 'Rune Portal',      objectives: [{ type: 'runePortalWord',       target:  2, desc: 'Use a Rune + portal in the same word, 2 times' }, { type: 'formWords', target: 10, desc: 'Form 10 words' }],                                   stars: [1, 2, 3] },
+  { id: 15, title: 'Prism Fire Score', objectives: [{ type: 'emberPrismWord',       target:  3, desc: 'Use Ember + Prism in the same word, 3 times' }, { type: 'score', target: 2000, desc: 'Score 2,000 points' }],                                  stars: [2000, 3000, 5000] },
+  { id: 16, title: 'Score Streak',     objectives: [{ type: 'consecutiveScore',     target:  5, desc: 'Score 500+ on 5 consecutive words' }, { type: 'formWords', target: 12, desc: 'Form 12 words' }],                                               stars: [3, 4, 5] },
+  { id: 17, title: 'Portal Chain',     objectives: [{ type: 'portalChain',          target:  3, desc: 'Use portal in 3 consecutive words' }, { type: 'score', target: 3000, desc: 'Score 3,000 points' }],                                            stars: [3000, 5000, 8000] },
+  { id: 18, title: 'All Three Fire',   objectives: [{ type: 'emberGemPrismWord',    target:  2, desc: 'Use Ember + gem + Prism in the same word, 2 times' }, { type: 'score', target: 2500, desc: 'Score 2,500 points' }],                             stars: [1, 2, 3] },
+  { id: 19, title: 'Digraph Prism',    objectives: [{ type: 'digraphPrismWord',     target:  3, desc: 'Use 2+ Digraphs + Prism in the same word, 3 times' }, { type: 'wordLength', target: 7, desc: 'Form a 7-letter word' }],                        stars: [2, 3, 4] },
+  { id: 20, title: 'Special Streak',   objectives: [{ type: 'specialStreakWords',   target:  5, desc: 'Use a special tile in 5 consecutive words' }, { type: 'score', target: 3000, desc: 'Score 3,000 points' }],                                    stars: [3, 4, 5] },
 
-  { id: 21, title: 'Prism Score',      objectives: [{ type: 'score',       target: 5000, desc: 'Score 5,000 points' }, { type: 'usePrism', target: 4, desc: 'Use 4 Prism tiles' }], stars: [5000, 8000, 10000] },
-  { id: 22, title: 'Rune Score',       objectives: [{ type: 'score',       target: 5000, desc: 'Score 5,000 points' }, { type: 'useRune', target: 4, desc: 'Use 4 Rune tiles' }], stars: [5000, 9000, 12000] },
-  { id: 23, title: 'Digraph Score',    objectives: [{ type: 'score',       target: 5000, desc: 'Score 5,000 points' }, { type: 'useDigraph', target: 8, desc: 'Use 8 Digraph tiles' }], stars: [5000, 9000, 12000] },
-  { id: 24, title: 'Ember Score',      objectives: [{ type: 'score',       target: 5000, desc: 'Score 5,000 points' }, { type: 'useEmber', target: 6, desc: 'Use 6 Ember tiles' }], stars: [5000, 9000, 12000] },
-  { id: 25, title: 'Gem Score',        objectives: [{ type: 'score',       target: 10000, desc: 'Score 10,000 points' }, { type: 'useGem', target: 10, desc: 'Use 10 gem tiles' }], stars: [10000, 15000, 20000] },
-  { id: 26, title: 'Portal Score',     objectives: [{ type: 'score',       target: 10000, desc: 'Score 10,000 points' }, { type: 'portalChain', target: 3, desc: 'Portal chain 3 words' }], stars: [10000, 16000, 22000] },
-  { id: 27, title: 'Gem Wordscore',    objectives: [{ type: 'score',       target: 10000, desc: 'Score 10,000 points' }, { type: 'wordScore', target: 3000, desc: 'Score 3,000+ on one word' }], stars: [10000, 18000, 25000] },
-  { id: 28, title: 'Prism Ember Mix',  objectives: [{ type: 'score',       target: 25000, desc: 'Score 25,000 points' }, { type: 'emberGem', target: 4, desc: 'Use Ember and Gem in a word, 4 times' }], stars: [25000, 35000, 50000] },
-  { id: 29, title: 'Long Score',       objectives: [{ type: 'score',       target: 25000, desc: 'Score 25,000 points' }, { type: 'wordLength', target: 9, desc: 'Form a 9-letter word' }], stars: [25000, 40000, 55000] },
-  { id: 30, title: 'Portal Crown',     objectives: [{ type: 'score',       target: 25000, desc: 'Score 25,000 points' }, { type: 'portalChain', target: 4, desc: 'Portal chain 4 words' }], stars: [25000, 45000, 60000] },
+  // ── Tier 3: Advanced Combos (21–30) ──────────────────────────────
+  { id: 21, title: 'Portal Gem Prism', objectives: [{ type: 'portalGemPrismScoreWord', target: 2, desc: 'Use portal + gem + Prism in one word scoring 5,000+, 2 times' }, { type: 'score', target: 5000, desc: 'Score 5,000 points' }],                stars: [5000, 8000, 12000] },
+  { id: 22, title: 'Rune Portal Score',objectives: [{ type: 'runePortalWord',        target:  3, desc: 'Use Rune + portal in the same word, 3 times' }, { type: 'score', target: 8000, desc: 'Score 8,000 points' }],                                 stars: [8000, 12000, 18000] },
+  { id: 23, title: 'Gem Prism Chain',  objectives: [{ type: 'gemPrismWord',          target:  5, desc: 'Use gem + Prism in the same word, 5 times' }, { type: 'portalChain', target: 3, desc: 'Use portal in 3 consecutive words' }],                  stars: [4, 5, 6] },
+  { id: 24, title: 'Prism Score Rush', objectives: [{ type: 'score',                target: 10000, desc: 'Score 10,000 points' }, { type: 'gemPrismWord', target: 4, desc: 'Use gem + Prism in the same word, 4 times' }],                             stars: [10000, 15000, 22000] },
+  { id: 25, title: 'Ember Streak',     objectives: [{ type: 'specialStreakWords',   target:  6, desc: 'Use a special tile in 6 consecutive words' }, { type: 'useEmber', target: 6, desc: 'Use 6 Ember tiles' }],                                      stars: [4, 5, 6] },
+  { id: 26, title: 'Long Portal Gem',  objectives: [{ type: 'wordLength',           target:  9, desc: 'Form a 9-letter word' }, { type: 'portalGemWord', target: 2, desc: 'Use portal + gem in the same word, 2 times' }],                             stars: [1, 2, 3] },
+  { id: 27, title: 'Grand Portal',     objectives: [{ type: 'portalChain',          target:  4, desc: 'Use portal in 4 consecutive words' }, { type: 'score', target: 15000, desc: 'Score 15,000 points' }],                                           stars: [15000, 22000, 30000] },
+  { id: 28, title: 'All Three Blaze',  objectives: [{ type: 'emberGemPrismWord',    target:  3, desc: 'Use Ember + gem + Prism in the same word, 3 times' }, { type: 'score', target: 15000, desc: 'Score 15,000 points' }],                            stars: [15000, 22000, 30000] },
+  { id: 29, title: 'Rune Master',      objectives: [{ type: 'runeGemWord',          target:  5, desc: 'Use Rune + gem in the same word, 5 times' }, { type: 'score', target: 20000, desc: 'Score 20,000 points' }],                                    stars: [20000, 30000, 42000] },
+  { id: 30, title: 'Gem Prism Blitz',  objectives: [{ type: 'gemPrismWord',         target:  8, desc: 'Use gem + Prism in the same word, 8 times' }, { type: 'portalChain', target: 3, desc: 'Portal chain 3 words' }, { type: 'score', target: 25000, desc: 'Score 25,000 points' }], stars: [25000, 35000, 50000] },
 
-  { id: 31, title: 'Oracle Initiate',  objectives: [{ type: 'useOracle',   target:   1, desc: 'Use 1 Oracle tile in a word' }, { type: 'formWords', target: 15, desc: 'Form 15 words' }], stars: [1, 2, 3] },
-  { id: 32, title: 'Beacon Pulse',     objectives: [{ type: 'useBeacon',   target:   1, desc: 'Use 1 Beacon tile in a word' }, { type: 'score', target: 10000, desc: 'Score 10,000 points' }], stars: [1, 2, 3] },
-  { id: 33, title: 'Oracle Vision',    objectives: [{ type: 'useOracle',   target:   1, desc: 'Collect and use an Oracle tile' }, { type: 'formWords', target: 15, desc: 'Form 15 words' }], stars: [10, 15, 20] },
-  { id: 34, title: 'Shadow Arc',       objectives: [{ type: 'useEclipse',  target:   1, desc: 'Use 1 Eclipse tile in a word' }, { type: 'wordScore', target: 4000, desc: 'Score 4,000+ on one word' }], stars: [1, 2, 3] },
-  { id: 35, title: 'Magnet Words',     objectives: [{ type: 'useLodestone', target:  1, desc: 'Use 1 Lodestone tile in a word' }, { type: 'useGem', target: 12, desc: 'Use 12 gem tiles' }], stars: [1, 2, 3] },
-  { id: 36, title: 'Lexicon Draft',    objectives: [{ type: 'useLexicon',  target:   1, desc: 'Use 1 Lexicon tile in a word' }, { type: 'formWords', target: 20, desc: 'Form 20 words' }], stars: [1, 2, 3] },
-  { id: 37, title: 'Amethyst Forge',   objectives: [{ type: 'useAmethyst', target:   2, desc: 'Use 2 Amethyst tiles in words' }, { type: 'wordLength', target: 10, desc: 'Form a 10-letter word' }], stars: [1, 2, 3] },
-  { id: 38, title: 'Selenite Shift',   objectives: [{ type: 'useSelenite', target:   2, desc: 'Use 2 Selenite tiles in words' }, { type: 'portalChain', target: 3, desc: 'Portal chain 3 words' }], stars: [1, 2, 3] },
-  { id: 39, title: 'Triune Circuit',   objectives: [{ type: 'useBeacon',   target:   2, desc: 'Use 2 Beacon tiles in words' }, { type: 'usePrism', target: 6, desc: 'Use 6 Prism tiles' }, { type: 'score', target: 25000, desc: 'Score 25,000 points' }], stars: [1, 2, 3] },
-  { id: 40, title: 'Archive Gate',     objectives: [{ type: 'useLexicon',  target:   2, desc: 'Use 2 Lexicon tiles in words' }, { type: 'formWords', target: 25, desc: 'Form 25 words' }, { type: 'wordStreak', target: 4, desc: 'Submit 4 words in a row (6+ letters)' }], stars: [1, 2, 3] },
+  // ── Tier 4: Expert — Rare Tiles (31–40) ──────────────────────────
+  { id: 31, title: 'Oracle Gem',       objectives: [{ type: 'oracleGemWord',        target:  2, desc: 'Use Oracle + a gem tile in the same word, 2 times' }, { type: 'formWords', target: 15, desc: 'Form 15 words' }],                                stars: [1, 2, 3] },
+  { id: 32, title: 'Beacon Forge',     objectives: [{ type: 'beaconPrismGemWord',   target:  2, desc: 'Use Beacon + Prism + gem in the same word, 2 times' }, { type: 'score', target: 15000, desc: 'Score 15,000 points' }],                          stars: [1, 2, 3] },
+  { id: 33, title: 'Eclipse Fire',     objectives: [{ type: 'eclipseEmberWord',     target:  2, desc: 'Use Eclipse + Ember in a word scoring 8,000+, 2 times' }, { type: 'wordScore', target: 6000, desc: 'Score 6,000+ on one word' }],                stars: [1, 2, 3] },
+  { id: 34, title: 'Lodestone Gem',    objectives: [{ type: 'lodestoneGemWord',     target:  3, desc: 'Use Lodestone + a gem tile in the same word, 3 times' }, { type: 'portalChain', target: 3, desc: 'Portal chain 3 words' }],                       stars: [2, 3, 4] },
+  { id: 35, title: 'Lexicon Long',     objectives: [{ type: 'lexiconDigraphWord',   target:  2, desc: 'Use Lexicon + a Digraph in a 9+ letter word, 2 times' }, { type: 'formWords', target: 20, desc: 'Form 20 words' }],                              stars: [1, 2, 3] },
+  { id: 36, title: 'Amethyst Prism',   objectives: [{ type: 'amethystPrismWord',    target:  2, desc: 'Use Amethyst + Prism in a word scoring 10,000+, 2 times' }, { type: 'score', target: 30000, desc: 'Score 30,000 points' }],                       stars: [1, 2, 3] },
+  { id: 37, title: 'Selenite Portal',  objectives: [{ type: 'selenitePortalWord',   target:  2, desc: 'Use Selenite + portal in the same word, 2 times' }, { type: 'portalChain', target: 4, desc: 'Portal chain 4 words' }],                           stars: [1, 2, 3] },
+  { id: 38, title: 'Oracle Forge',     objectives: [{ type: 'oracleGemWord',        target:  3, desc: 'Use Oracle + a gem tile in the same word, 3 times' }, { type: 'emberGemPrismWord', target: 2, desc: 'Use Ember + gem + Prism in the same word, 2 times' }, { type: 'score', target: 30000, desc: 'Score 30,000 points' }], stars: [1, 2, 3] },
+  { id: 39, title: 'Beacon Circuit',   objectives: [{ type: 'beaconPrismGemWord',   target:  3, desc: 'Use Beacon + Prism + gem in the same word, 3 times' }, { type: 'score', target: 35000, desc: 'Score 35,000 points' }, { type: 'portalChain', target: 3, desc: 'Portal chain 3 words' }],   stars: [1, 2, 3] },
+  { id: 40, title: 'Crystal Archive',  objectives: [{ type: 'useSelenite',          target:  2, desc: 'Use 2 Selenite tiles in words' }, { type: 'useLodestone', target: 2, desc: 'Use 2 Lodestone tiles in words' }, { type: 'score', target: 25000, desc: 'Score 25,000 points' }],           stars: [1, 2, 3] },
 
-  { id: 41, title: 'Oracle Marathon',  objectives: [{ type: 'useOracle',   target:   3, desc: 'Use 3 Oracle tiles in words' }, { type: 'formWords', target: 30, desc: 'Form 30 words' }], stars: [1, 2, 3] },
-  { id: 42, title: 'Beacon Barrage',   objectives: [{ type: 'useBeacon',   target:   3, desc: 'Use 3 Beacon tiles in words' }, { type: 'score', target: 50000, desc: 'Score 50,000 points' }], stars: [1, 2, 3] },
-  { id: 43, title: 'Eclipse Edge',     objectives: [{ type: 'useEclipse',  target:   3, desc: 'Use 3 Eclipse tiles in words' }, { type: 'wordScore', target: 8000, desc: 'Score 8,000+ on one word' }], stars: [1, 2, 3] },
-  { id: 44, title: 'Lodestone Vault',  objectives: [{ type: 'useLodestone', target:  3, desc: 'Use 3 Lodestone tiles in words' }, { type: 'useGem', target: 18, desc: 'Use 18 gem tiles' }], stars: [1, 2, 3] },
-  { id: 45, title: 'Lexicon Relay',    objectives: [{ type: 'useLexicon',  target:   3, desc: 'Use 3 Lexicon tiles in words' }, { type: 'formWords', target: 40, desc: 'Form 40 words' }], stars: [1, 2, 3] },
-  { id: 46, title: 'Amethyst Trials',  objectives: [{ type: 'useAmethyst', target:   4, desc: 'Use 4 Amethyst tiles in words' }, { type: 'score', target: 100000, desc: 'Score 100,000 points' }], stars: [1, 2, 3] },
-  { id: 47, title: 'Selenite Trials',  objectives: [{ type: 'useSelenite', target:   4, desc: 'Use 4 Selenite tiles in words' }, { type: 'portalChain', target: 5, desc: 'Portal chain 5 words' }], stars: [1, 2, 3] },
-  { id: 48, title: 'Astral Mix',       objectives: [{ type: 'useOracle',   target:   2, desc: 'Use 2 Oracle tiles in words' }, { type: 'useBeacon', target: 2, desc: 'Use 2 Beacon tiles in words' }, { type: 'score', target: 100000, desc: 'Score 100,000 points' }], stars: [1, 2, 3] },
-  { id: 49, title: 'Shadow Library',   objectives: [{ type: 'useEclipse',  target:   2, desc: 'Use 2 Eclipse tiles in words' }, { type: 'useLexicon', target: 2, desc: 'Use 2 Lexicon tiles in words' }, { type: 'wordLength', target: 11, desc: 'Form an 11-letter word' }], stars: [1, 2, 3] },
-  { id: 50, title: 'Crystal Dominion', objectives: [{ type: 'useLodestone', target:  3, desc: 'Use 3 Lodestone tiles in words' }, { type: 'useAmethyst', target: 3, desc: 'Use 3 Amethyst tiles in words' }, { type: 'useSelenite', target: 3, desc: 'Use 3 Selenite tiles in words' }], stars: [1, 2, 3] },
+  // ── Tier 5: Master (41–50) ────────────────────────────────────────
+  { id: 41, title: 'Oracle Marathon',  objectives: [{ type: 'oracleGemWord',        target:  4, desc: 'Use Oracle + gem in the same word, 4 times' }, { type: 'portalChain', target: 4, desc: 'Portal chain 4 words' }],                               stars: [1, 2, 3] },
+  { id: 42, title: 'Beacon Barrage',   objectives: [{ type: 'beaconPrismGemWord',   target:  4, desc: 'Use Beacon + Prism + gem in the same word, 4 times' }, { type: 'score', target: 50000, desc: 'Score 50,000 points' }],                           stars: [1, 2, 3] },
+  { id: 43, title: 'Eclipse Edge',     objectives: [{ type: 'eclipseEmberWord',     target:  3, desc: 'Use Eclipse + Ember scoring 8,000+ in a word, 3 times' }, { type: 'wordScore', target: 10000, desc: 'Score 10,000+ on one word' }],               stars: [1, 2, 3] },
+  { id: 44, title: 'Lodestone Vault',  objectives: [{ type: 'lodestoneGemWord',     target:  4, desc: 'Use Lodestone + gem in the same word, 4 times' }, { type: 'score', target: 75000, desc: 'Score 75,000 points' }],                                stars: [1, 2, 3] },
+  { id: 45, title: 'Lexicon Relay',    objectives: [{ type: 'lexiconDigraphWord',   target:  3, desc: 'Use Lexicon + Digraph in a 9+ letter word, 3 times' }, { type: 'formWords', target: 40, desc: 'Form 40 words' }],                                stars: [1, 2, 3] },
+  { id: 46, title: 'Amethyst Trials',  objectives: [{ type: 'amethystPrismWord',    target:  3, desc: 'Use Amethyst + Prism scoring 10,000+, 3 times' }, { type: 'score', target: 100000, desc: 'Score 100,000 points' }],                              stars: [1, 2, 3] },
+  { id: 47, title: 'Selenite Storm',   objectives: [{ type: 'selenitePortalWord',   target:  3, desc: 'Use Selenite + portal in the same word, 3 times' }, { type: 'portalChain', target: 5, desc: 'Portal chain 5 words' }],                           stars: [1, 2, 3] },
+  { id: 48, title: 'Astral Mix',       objectives: [{ type: 'oracleGemWord',        target:  3, desc: 'Use Oracle + gem, 3 times' }, { type: 'beaconPrismGemWord', target: 2, desc: 'Use Beacon + Prism + gem, 2 times' }, { type: 'score', target: 100000, desc: 'Score 100,000 points' }],    stars: [1, 2, 3] },
+  { id: 49, title: 'Shadow Library',   objectives: [{ type: 'eclipsePortalWord',    target:  3, desc: 'Use Eclipse + portal in the same word, 3 times' }, { type: 'useLexicon', target: 2, desc: 'Use 2 Lexicon tiles' }, { type: 'wordLength', target: 11, desc: 'Form an 11-letter word' }],   stars: [1, 2, 3] },
+  { id: 50, title: 'Crystal Dominion', objectives: [{ type: 'useLodestone',         target:  3, desc: 'Use 3 Lodestone tiles' }, { type: 'useAmethyst', target: 3, desc: 'Use 3 Amethyst tiles' }, { type: 'useSelenite', target: 3, desc: 'Use 3 Selenite tiles' }],                          stars: [1, 2, 3] },
 
-  { id: 51, title: 'Apex I',           objectives: [{ type: 'score',       target: 50000, desc: 'Score 50,000 points' }, { type: 'portalChain', target: 3, desc: 'Portal chain 3 words' }, { type: 'useOracle', target: 2, desc: 'Use 2 Oracle tiles in words' }], stars: [50000, 75000, 100000] },
-  { id: 52, title: 'Apex II',          objectives: [{ type: 'score',       target: 100000, desc: 'Score 100,000 points' }, { type: 'useGem', target: 20, desc: 'Use 20 gem tiles' }, { type: 'useBeacon', target: 3, desc: 'Use 3 Beacon tiles in words' }], stars: [100000, 150000, 200000] },
-  { id: 53, title: 'Apex III',         objectives: [{ type: 'score',       target: 100000, desc: 'Score 100,000 points' }, { type: 'useOracle', target: 3, desc: 'Use 3 Oracle tiles in words' }, { type: 'portalChain', target: 4, desc: 'Portal chain 4 words' }], stars: [100000, 175000, 250000] },
-  { id: 54, title: 'Apex IV',          objectives: [{ type: 'score',       target: 250000, desc: 'Score 250,000 points' }, { type: 'useGem', target: 30, desc: 'Use 30 gem tiles' }, { type: 'useEclipse', target: 4, desc: 'Use 4 Eclipse tiles in words' }], stars: [250000, 325000, 400000] },
-  { id: 55, title: 'Apex V',           objectives: [{ type: 'score',       target: 250000, desc: 'Score 250,000 points' }, { type: 'portalChain', target: 5, desc: 'Portal chain 5 words' }, { type: 'useLexicon', target: 4, desc: 'Use 4 Lexicon tiles in words' }], stars: [250000, 400000, 500000] },
+  // ── Tier 6: Apex (51–55) ─────────────────────────────────────────
+  { id: 51, title: 'Apex I',           objectives: [{ type: 'portalGemPrismScoreWord', target: 2, desc: 'Use portal + gem + Prism scoring 5,000+, 2 times' }, { type: 'score', target: 50000, desc: 'Score 50,000 points' }, { type: 'oracleGemWord', target: 2, desc: 'Use Oracle + gem, 2 times' }],         stars: [50000, 75000, 100000] },
+  { id: 52, title: 'Apex II',          objectives: [{ type: 'score',                target: 100000, desc: 'Score 100,000 points' }, { type: 'beaconPrismGemWord', target: 3, desc: 'Use Beacon + Prism + gem, 3 times' }, { type: 'uniqueGems', target: 5, desc: 'Use 5 different gem types' }],        stars: [100000, 150000, 200000] },
+  { id: 53, title: 'Apex III',         objectives: [{ type: 'score',                target: 100000, desc: 'Score 100,000 points' }, { type: 'portalGemPrismScoreWord', target: 3, desc: 'Use portal + gem + Prism scoring 5,000+, 3 times' }, { type: 'oracleGemWord', target: 3, desc: 'Use Oracle + gem, 3 times' }], stars: [100000, 175000, 250000] },
+  { id: 54, title: 'Apex IV',          objectives: [{ type: 'score',                target: 250000, desc: 'Score 250,000 points' }, { type: 'uniqueGems', target: 8, desc: 'Use 8 different gem types' }, { type: 'eclipseEmberWord', target: 4, desc: 'Use Eclipse + Ember scoring 8,000+, 4 times' }],   stars: [250000, 325000, 400000] },
+  { id: 55, title: 'Apex V',           objectives: [{ type: 'score',                target: 250000, desc: 'Score 250,000 points' }, { type: 'portalChain', target: 5, desc: 'Portal chain 5 words' }, { type: 'amethystPrismWord', target: 3, desc: 'Use Amethyst + Prism scoring 10,000+, 3 times' }],    stars: [250000, 400000, 500000] },
 
-  { id: 56, title: 'Prism Ember Gold', objectives: [{ type: 'prismGoldEmberWord', target: 1, desc: 'Use 1 Prism, 1 Gold gem & 2 Ember tiles in one word' }],                               stars: [1, 2, 3] },
-  { id: 57, title: 'Portal Score',     objectives: [{ type: 'portalSevenKWord',   target: 1, desc: 'Use the portal in a 7-letter word scoring 7,000+ pts' }],                              stars: [1, 2, 3] },
-  { id: 58, title: 'Rune Digraph Trio',objectives: [{ type: 'runeDigraphsWord',   target: 1, desc: 'Use a Rune tile with 2 Digraph tiles in one word' }],                                  stars: [1, 2, 3] },
+  // ── Tier 7: Legendary Combos (56–58) ─────────────────────────────
+  { id: 56, title: 'Prism Ember Gold', objectives: [{ type: 'prismGoldEmberWord',   target:  1, desc: 'Use 1 Prism, 1 Gold gem & 2 Ember tiles in one word' }],                                                                                       stars: [1, 2, 3] },
+  { id: 57, title: 'Portal Score',     objectives: [{ type: 'portalSevenKWord',     target:  1, desc: 'Use the portal in a 7-letter word scoring 7,000+ pts' }],                                                                                       stars: [1, 2, 3] },
+  { id: 58, title: 'Rune Digraph Trio',objectives: [{ type: 'runeDigraphsWord',     target:  1, desc: 'Use a Rune tile with 2 Digraph tiles in one word' }],                                                                                           stars: [1, 2, 3] },
 ];
 
 /* ── Persistence ─────────────────────────────────────────────────── */
@@ -141,6 +148,17 @@ function formatStarValue(value, objType) {
   if (objType === 'emberGem' || objType === 'gemInWord')                   return value + (value === 1 ? ' word' : ' words');
   if (objType === 'prismGoldEmberWord' || objType === 'portalSevenKWord' ||
       objType === 'runeDigraphsWord')                                       return value + (value === 1 ? ' word' : ' words');
+  if (objType === 'gemPrismWord'     || objType === 'runeGemWord'        ||
+      objType === 'runePortalWord'   || objType === 'digraphGemWord'     ||
+      objType === 'digraphEmberWord' || objType === 'digraphPrismWord'   ||
+      objType === 'emberPrismWord'   || objType === 'emberGemPrismWord'  ||
+      objType === 'tripleSpecialWord'|| objType === 'portalGemWord'      ||
+      objType === 'oracleGemWord'    || objType === 'beaconPrismGemWord' ||
+      objType === 'eclipseEmberWord' || objType === 'lodestoneGemWord'   ||
+      objType === 'lexiconDigraphWord'|| objType === 'amethystPrismWord' ||
+      objType === 'selenitePortalWord'|| objType === 'eclipsePortalWord' ||
+      objType === 'portalGemPrismScoreWord')                               return value + (value === 1 ? ' word' : ' words');
+  if (objType === 'gemStreakWords' || objType === 'specialStreakWords')    return value + ' in a row';
   if (objType === 'formWords' || objType === 'wordLength')                 return value + (value === 1 ? ' word' : ' words');
   if (objType === 'useEmber' || objType === 'usePrism' || objType === 'useRune' ||
       objType === 'useDigraph' || objType === 'useGem' || objType === 'useOracle' ||
@@ -598,6 +616,122 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
       }
       case 'runeDigraphsWord': {
         if (runeCount >= 1 && digraphCount >= 2)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'gemPrismWord': {
+        if (gemCount >= 1 && prismCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'runeGemWord': {
+        if (runeCount >= 1 && gemCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'runePortalWord': {
+        if (runeCount >= 1 && portalUsed)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'digraphGemWord': {
+        if (digraphCount >= 1 && gemCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'digraphEmberWord': {
+        if (digraphCount >= 2 && emberCount >= 1 && word.length >= 7)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'digraphPrismWord': {
+        if (digraphCount >= 2 && prismCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'emberPrismWord': {
+        if (emberCount >= 1 && prismCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'emberGemPrismWord': {
+        if (emberCount >= 1 && gemCount >= 1 && prismCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'portalGemWord': {
+        if (portalUsed && gemCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'portalGemPrismScoreWord': {
+        if (portalUsed && gemCount >= 1 && prismCount >= 1 && wordScore >= 5000)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'tripleSpecialWord': {
+        const specialCats = new Set(tiles.filter(isSpecialTile).map(t =>
+          t.tileType.startsWith('gem') ? 'gem' : t.tileType
+        ));
+        if (portalUsed) specialCats.add('portal');
+        if (specialCats.size >= 3)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'gemStreakWords': {
+        const streak = gemCount >= 1
+          ? ((_levelSession.currentStreaks[obj.type] ?? 0) + 1)
+          : 0;
+        _levelSession.currentStreaks[obj.type] = streak;
+        _levelProgress[obj.type] = Math.max(_levelProgress[obj.type] ?? 0, streak);
+        break;
+      }
+      case 'specialStreakWords': {
+        const hasAnySpecial = tiles.some(isSpecialTile) || portalUsed;
+        const streak = hasAnySpecial
+          ? ((_levelSession.currentStreaks[obj.type] ?? 0) + 1)
+          : 0;
+        _levelSession.currentStreaks[obj.type] = streak;
+        _levelProgress[obj.type] = Math.max(_levelProgress[obj.type] ?? 0, streak);
+        break;
+      }
+      case 'oracleGemWord': {
+        if (oracleCount >= 1 && gemCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'beaconPrismGemWord': {
+        if (beaconCount >= 1 && prismCount >= 1 && gemCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'eclipseEmberWord': {
+        if (eclipseCount >= 1 && emberCount >= 1 && wordScore >= 8000)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'lodestoneGemWord': {
+        if (lodestoneCount >= 1 && gemCount >= 1)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'lexiconDigraphWord': {
+        if (lexiconCount >= 1 && digraphCount >= 1 && word.length >= 9)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'amethystPrismWord': {
+        if (amethystCount >= 1 && prismCount >= 1 && wordScore >= 10000)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'selenitePortalWord': {
+        if (seleniteCount >= 1 && portalUsed)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'eclipsePortalWord': {
+        if (eclipseCount >= 1 && portalUsed)
           _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
         break;
       }
