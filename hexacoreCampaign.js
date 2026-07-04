@@ -68,6 +68,10 @@ export const CAMPAIGN_LEVELS = [
   { id: 53, title: 'Apex III',         objectives: [{ type: 'score',       target: 100000, desc: 'Score 100,000 points' }, { type: 'useOracle', target: 3, desc: 'Use 3 Oracle tiles in words' }, { type: 'portalChain', target: 4, desc: 'Portal chain 4 words' }], stars: [100000, 175000, 250000] },
   { id: 54, title: 'Apex IV',          objectives: [{ type: 'score',       target: 250000, desc: 'Score 250,000 points' }, { type: 'useGem', target: 30, desc: 'Use 30 gem tiles' }, { type: 'useEclipse', target: 4, desc: 'Use 4 Eclipse tiles in words' }], stars: [250000, 325000, 400000] },
   { id: 55, title: 'Apex V',           objectives: [{ type: 'score',       target: 250000, desc: 'Score 250,000 points' }, { type: 'portalChain', target: 5, desc: 'Portal chain 5 words' }, { type: 'useLexicon', target: 4, desc: 'Use 4 Lexicon tiles in words' }], stars: [250000, 400000, 500000] },
+
+  { id: 56, title: 'Prism Ember Gold', objectives: [{ type: 'prismGoldEmberWord', target: 1, desc: 'Use 1 Prism, 1 Gold gem & 2 Ember tiles in one word' }],                               stars: [1, 2, 3] },
+  { id: 57, title: 'Portal Score',     objectives: [{ type: 'portalSevenKWord',   target: 1, desc: 'Use the portal in a 7-letter word scoring 7,000+ pts' }],                              stars: [1, 2, 3] },
+  { id: 58, title: 'Rune Digraph Trio',objectives: [{ type: 'runeDigraphsWord',   target: 1, desc: 'Use a Rune tile with 2 Digraph tiles in one word' }],                                  stars: [1, 2, 3] },
 ];
 
 /* ── Persistence ─────────────────────────────────────────────────── */
@@ -135,6 +139,8 @@ function formatStarValue(value, objType) {
   if (objType === 'noEmberUse' || objType === 'noWildcards')               return value + ' clean words';
   if (objType === 'multiGemWord' || objType === 'allSpecialWord')          return value + (value === 1 ? ' word' : ' words');
   if (objType === 'emberGem' || objType === 'gemInWord')                   return value + (value === 1 ? ' word' : ' words');
+  if (objType === 'prismGoldEmberWord' || objType === 'portalSevenKWord' ||
+      objType === 'runeDigraphsWord')                                       return value + (value === 1 ? ' word' : ' words');
   if (objType === 'formWords' || objType === 'wordLength')                 return value + (value === 1 ? ' word' : ' words');
   if (objType === 'useEmber' || objType === 'usePrism' || objType === 'useRune' ||
       objType === 'useDigraph' || objType === 'useGem' || objType === 'useOracle' ||
@@ -579,6 +585,22 @@ export function updateCampaignProgress(word, tiles, wordScore, state) {
       case 'allSpecialWord':
         if (allSpecialWord) _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
         break;
+      case 'prismGoldEmberWord': {
+        const goldCount = tiles.filter(t => t.tileType === 'gemGold').length;
+        if (prismCount >= 1 && goldCount >= 1 && emberCount >= 2)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'portalSevenKWord': {
+        if (portalUsed && word.length === 7 && wordScore >= 7000)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
+      case 'runeDigraphsWord': {
+        if (runeCount >= 1 && digraphCount >= 2)
+          _levelProgress[obj.type] = (_levelProgress[obj.type] ?? 0) + 1;
+        break;
+      }
     }
   });
   saveCampaignSession();
