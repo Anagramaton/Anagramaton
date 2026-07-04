@@ -1654,7 +1654,7 @@ body.hx-active #hex-grid {
   fill: url(#hx-portal-gradient);
   transform-box: fill-box;
   transform-origin: center;
-  animation: hx-portal-sparkle 2.8s ease-in-out infinite;
+  animation: hx-portal-sparkle 3.8s ease-in-out infinite;
 }
 
 @keyframes hx-portal-sparkle {
@@ -1687,7 +1687,7 @@ body.hx-active #hex-grid {
 
 /* Brighter sparkle burst when both portal tiles are in the current selection */
 .hx-portal-active {
-  animation: hx-portal-active-pulse 0.45s ease-in-out infinite;
+  animation: hx-portal-active-pulse 1.95s ease-in-out infinite;
 }
 
 @keyframes hx-portal-active-pulse {
