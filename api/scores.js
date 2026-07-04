@@ -75,15 +75,15 @@ export default async function handler(req, res) {
 
   if (mode === 'unlimited' || mode === 'hexacore') {
     // No date validation for unlimited/hexacore modes
-  } else if (mode === 'hexacore_daily') {
+  } else if (mode === 'hexacore_daily' || mode === 'hexacore_daily_unlimited') {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(String(dailyId || ''))) {
-      return res.status(400).json({ error: 'Invalid hexacore_daily date format' });
+      return res.status(400).json({ error: `Invalid ${mode} date format` });
     }
     const submittedDay = new Date(dailyId + 'T00:00:00Z');
     const todayDay = new Date();
     todayDay.setUTCHours(0, 0, 0, 0);
     if (!Number.isFinite(submittedDay.getTime()) || submittedDay.getTime() > todayDay.getTime()) {
-      return res.status(400).json({ error: 'hexacore_daily date cannot be in the future' });
+      return res.status(400).json({ error: `${mode} date cannot be in the future` });
     }
   } else {
     // daily mode
@@ -101,18 +101,20 @@ export default async function handler(req, res) {
 
   // ── Validate words ─────────────────────────────────────────────
 
-  const maxWords = mode === 'hexacore' ? 500 : mode === 'hexacore_daily' ? 200 : 10;
+  const maxWords = mode === 'hexacore' ? 500 : (mode === 'hexacore_daily' || mode === 'hexacore_daily_unlimited') ? 200 : 10;
   if (!Array.isArray(words) || words.length > maxWords) {
     return res.status(400).json({ error: 'words must be an array of up to ' + maxWords + ' strings' });
   }
 
   // ── Write to appropriate table ─────────────────────────────────
 
-  if (mode === 'hexacore' || mode === 'hexacore_daily') {
+  if (mode === 'hexacore' || mode === 'hexacore_daily' || mode === 'hexacore_daily_unlimited') {
     const partitionId = mode === 'hexacore'
       ? 'hexacore'
-      : 'hexacore_daily:' + dailyId;
-    const modeValue = mode === 'hexacore' ? 'endless' : 'hexacore_daily';
+      : mode === 'hexacore_daily_unlimited'
+        ? 'hexacore_daily_unlimited:' + dailyId
+        : 'hexacore_daily:' + dailyId;
+    const modeValue = mode === 'hexacore' ? 'endless' : mode;
 
     // Only update if new score beats the existing personal best
     const { data: existing } = await supabase

@@ -37,6 +37,7 @@
   --hx-ui-font-size:    clamp(0.75rem, 1.4vw, 1rem);
   --hx-ui-font-weight:  400;
   --hx-ui-letter-spacing: 0.15em;
+  --hx-mode-daily-unlimited: #22c55e;
 }
 
 /* ── Ember tile — INFERNO (unmistakably unique fire) ── */
@@ -4835,6 +4836,10 @@ body[data-theme="dark"].hx-active :is(#game-title, #game-title-mirror) .hx-title
   transform: translateX(3px);
 }
 
+.hx-cfg-mode-card--daily-unlimited {
+  --hx-mode-color: var(--hx-mode-daily-unlimited);
+}
+
 /* Disabled state – daily already completed today */
 .hx-cfg-mode-card--disabled,
 .hx-cfg-mode-card--disabled:hover {
@@ -6086,6 +6091,7 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   font-family: 'Orbitron', 'Share Tech Mono', monospace;
   max-height: min(48vh, 380px);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .hx-clue-header {
   display: flex;
@@ -6138,6 +6144,7 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   padding: 0.25rem 0;
   font-size: clamp(0.72rem, 1.05vw, 0.88rem);
   color: #e5e7eb;
+  overflow-wrap: break-word;
 }
 .hx-clue-tier.hx-clue-locked {
   color: #6b7280;
@@ -6166,6 +6173,7 @@ body[data-theme="light"].hx-active .hx-powerup-indicator {
   border-left: 2px solid #4cc9f0;
   margin-top: 0.2rem;
   font-size: clamp(0.7rem, 1.05vw, 0.86rem);
+  overflow-wrap: break-word;
 }
 .hx-clue-features {
   display: flex;

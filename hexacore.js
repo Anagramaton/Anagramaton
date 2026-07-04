@@ -84,13 +84,18 @@ const HX_DAILY_HUD_OPEN_KEY = 'hexacore_daily_hud_open';
 const HX_CAMPAIGN_HUD_OPEN_KEY = 'hexacore_campaign_hud_open';
 
 /* ── Game mode flag (set by startHexacore) ─────────────────────── */
-let hxGameMode = null; // 'endless' | 'daily' | 'hexacoreDaily' | 'campaign'
-const HX_VALID_MODES = ['endless', 'daily', 'hexacoreDaily', 'campaign'];
+let hxGameMode = null; // 'endless' | 'daily' | 'hexacoreDaily' | 'hexacoreDailyUnlimited' | 'campaign'
+const HX_VALID_MODES = ['endless', 'daily', 'hexacoreDaily', 'hexacoreDailyUnlimited', 'campaign'];
 const HX_DAILY_MODE_ID = 'hexacore_daily';
+const HX_DAILY_UNLIMITED_MODE_ID = 'hexacore_daily_unlimited';
 let _hxSavedTheme = null;  // stores the user's theme before Hexacore forces dark
 
 function hxIsDailyMode() {
-  return hxGameMode === 'daily' || hxGameMode === 'hexacoreDaily';
+  return hxGameMode === 'daily' || hxGameMode === 'hexacoreDaily' || hxGameMode === 'hexacoreDailyUnlimited';
+}
+
+function hxIsDailyUnlimitedMode() {
+  return hxGameMode === 'hexacoreDailyUnlimited';
 }
 
 /* ── Gem tile type set (module-level for shared use) ───────────── */
@@ -1392,6 +1397,15 @@ async function loadHexacoreDailyChallengeBoard(dateStr) {
   return data;
 }
 
+/** Generates a fresh random board for Daily Unlimited each time it is called.
+ *  Uses a unique seed so every game starts on a different board, but still
+ *  includes special tiles (portals, digraphs, runes) and optimal-path clues. */
+async function loadHexacoreUnlimitedBoard() {
+  const { generateDailyHexacoreBoard } = await import('./hexacoreDailyGenerator.js');
+  const uniqueSeed = `unlimited-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+  return generateDailyHexacoreBoard({ date: uniqueSeed, maxAttempts: 1, runSimulation: true });
+}
+
 function getDailyWordTotal() {
   return hxState.words.reduce((sum, w) => sum + (Number(w.score) || 0), 0);
 }
@@ -1589,9 +1603,10 @@ function renderOptimalPathClues() {
                 <span class="hx-clue-points">~${Number(clue.estimatedPoints || 0).toLocaleString()} pts</span>
               </div>
 
+              ${clue.positional ? `
               <div class="hx-clue-tier hx-clue-tier-1">
-                ${escapeHtml(clue.positional || '')}
-              </div>
+                ${escapeHtml(clue.positional)}
+              </div>` : ''}
 
               ${showHintButton ? `
                 <button class="hx-clue-hint-btn" data-word-idx="${idx}" data-hint-level="${nextLevel}">
@@ -2368,7 +2383,7 @@ function ensureHud() {
   if (document.getElementById('hx-score-hud')) return;
 
   // Mode colors matching the mode-select screen
-  const HX_MODE_COLORS = { endless: '#f97316', daily: '#4cc9f0', hexacoreDaily: '#4cc9f0', campaign: '#a855f7' };
+  const HX_MODE_COLORS = { endless: '#f97316', daily: '#4cc9f0', hexacoreDaily: '#4cc9f0', hexacoreDailyUnlimited: '#22c55e', campaign: '#a855f7' };
 
   // Score HUD — split into number + label spans, with a small mode color dot
   const hud = document.createElement('div');
@@ -5272,6 +5287,7 @@ async function completeDailyChallenge() {
   hxState.dailyTilesUsed = tilesUsed;
   const submissionDate = hxState.dailyBoardDate || null;
 
+  const submissionModeId = hxIsDailyUnlimitedMode() ? HX_DAILY_UNLIMITED_MODE_ID : HX_DAILY_MODE_ID;
   const name = await getPlayerName();
   if (name && submissionDate) {
     await submitScore(
@@ -5279,15 +5295,17 @@ async function completeDailyChallenge() {
       finalScore,
       words,
       0,
-      HX_DAILY_MODE_ID,
+      submissionModeId,
       { tilesUsed, penalty, solveTimeSeconds },
     );
   } else if (!submissionDate) {
     console.warn('[hexacore] daily score submission skipped: missing daily board date');
   }
 
-  // Persist completion so the Daily card is disabled until midnight ET.
-  hxMarkDailyCompleted();
+  if (!hxIsDailyUnlimitedMode()) {
+    // Persist completion so the Daily card is disabled until midnight ET.
+    hxMarkDailyCompleted();
+  }
 
   showDailyChallengeResults({
     finalScore,
@@ -5434,7 +5452,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
       ${yourWordsHtml}
       ${optimalHtml}
       <button id="hx-daily-leaderboard-btn" type="button">LEADERBOARD</button>
-      <button id="hx-daily-again-btn" type="button">PLAY AGAIN</button>
+      <button id="hx-daily-again-btn" type="button">${hxIsDailyUnlimitedMode() ? 'NEW GAME' : 'PLAY AGAIN'}</button>
       <button id="hx-daily-menu-btn" type="button">MAIN MENU</button>
     </div>
   `;
@@ -5443,7 +5461,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
   document.getElementById('hx-daily-leaderboard-btn')?.addEventListener('click', () => openLeaderboardsModal('daily'));
   document.getElementById('hx-daily-again-btn')?.addEventListener('click', () => {
     overlay.remove();
-    startHexacore(hxGameMode);
+    startHexacore(hxIsDailyUnlimitedMode() ? 'hexacoreDailyUnlimited' : hxGameMode);
   });
   document.getElementById('hx-daily-menu-btn')?.addEventListener('click', () => window.location.reload());
 }
@@ -5929,6 +5947,16 @@ export function startHexacore(mode) {
         hxState.dailySpecialTiles = boardData?.specialTiles || null;
       } catch (err) {
         console.warn('[hexacore] hexacore daily board load failed, falling back to procedural board:', err);
+      }
+      hxState.dailyStartMs = Date.now();
+    } else if (hxGameMode === 'hexacoreDailyUnlimited') {
+      try {
+        boardData = await loadHexacoreUnlimitedBoard();
+        hxState.dailyBoardDate = boardData?.date || hxEasternDateStr();
+        hxState.dailyMetadata = boardData?.metadata || null;
+        hxState.dailySpecialTiles = boardData?.specialTiles || null;
+      } catch (err) {
+        console.warn('[hexacore] hexacore unlimited board load failed, falling back to procedural board:', err);
       }
       hxState.dailyStartMs = Date.now();
     } else if (hxGameMode === 'campaign') {

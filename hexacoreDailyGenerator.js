@@ -610,7 +610,7 @@ function formatSpecialName(type) {
 }
 
 function generatePositionalClue(word, path, grid, specialTiles) {
-  if (!Array.isArray(path) || path.length === 0) return `${word.length}-letter word near the center lanes`;
+  if (!Array.isArray(path) || path.length === 0) return '';
   const specialsByKey = new Map((specialTiles || []).map(s => [hexKey(s.q, s.r), s]));
   const hitSpecials = path.map(c => specialsByKey.get(c.key)).filter(Boolean);
 
