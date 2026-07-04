@@ -4005,6 +4005,15 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
   const seen = new Set();
   const deadline = performance.now() + timeLimitMs;
 
+  // Priority score for a tile: special-tile bonus + sum of letter point values.
+  // Higher-priority tiles are explored first during DFS.
+  function tilePriority(t) {
+    const special = (t.tileType === 'prism' ? 1000 : 0) + (HX_GEM_TYPES.has(t.tileType) ? 500 : 0);
+    const letters = t.tileType === 'rune' ? [t.chosenRuneLetter || 'E'] : [...t.letter];
+    const letterPts = letters.reduce((sum, ch) => sum + (HX_LETTER_POINTS[ch] || 1), 0);
+    return special + letterPts;
+  }
+
   function scoreWord(path) {
     let base = 0;
     path.forEach(t => {
@@ -4031,34 +4040,43 @@ function analyzeBoard(maxResults = ORACLE_MAX_RESULTS, timeLimitMs = ORACLE_TIME
     if (wordStr.length >= 4 && isValidWord(wordStr) && !seen.has(wordStr)) {
       seen.add(wordStr);
       results.push({ word: wordStr, score: scoreWord(path), path: [...path] });
-      if (results.length >= maxResults) return; // early exit once we have enough
+      // Keep results sorted by score descending and trim to prevent memory bloat
+      results.sort((a, b) => b.score - a.score);
+      if (results.length > maxResults) results.length = maxResults;
     }
 
     if (path.length >= MAX_WORD_PATH_DEPTH) return; // limit depth
-    if (results.length >= maxResults) return; // propagate early exit up through the DFS
     if (performance.now() >= deadline) return;
 
     const last = path[path.length - 1];
+    // Explore high-value neighbors first: prism > gem > high-point letters
     const neighbors = hxState.tiles.filter(t => {
       if (visitedKeys.has(hxKey(t.q, t.r))) return false;
       return areNeighbors(last, t);
-    });
+    }).sort((a, b) => tilePriority(b) - tilePriority(a));
 
     for (const neighbor of neighbors) {
-      if (results.length >= maxResults) return; // propagate early exit
+      if (performance.now() >= deadline) return;
+      // Branch pruning: skip low-potential paths when we already have enough results
+      if (results.length >= maxResults) {
+        const lowestScore = results[results.length - 1].score;
+        const potentialScore = scoreWord([...path, neighbor]);
+        if (potentialScore < lowestScore) continue;
+      }
       const key = hxKey(neighbor.q, neighbor.r);
       visitedKeys.add(key);
       path.push(neighbor);
       dfs(path, visitedKeys);
       path.pop();
       visitedKeys.delete(key);
-      if (performance.now() >= deadline) return;
     }
   }
 
-  for (const startTile of hxState.tiles) {
+  // Start DFS from highest-value tiles first: prism > gem > high-point letters
+  const startTiles = [...hxState.tiles].sort((a, b) => tilePriority(b) - tilePriority(a));
+
+  for (const startTile of startTiles) {
     if (performance.now() >= deadline) break;
-    if (results.length >= maxResults) break; // stop once we have enough results
     const visitedKeys = new Set([hxKey(startTile.q, startTile.r)]);
     dfs([startTile], visitedKeys);
   }
