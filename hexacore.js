@@ -68,6 +68,29 @@ const HX_LENGTH_MULTIPLIERS = {
   10: 10, 11: 11, 12: 12, 13: 13, 14: 14, 15: 15,
 };
 
+/* ── Daily board console logging ───────────────────────────────── */
+function logDailyBoardWords(boardData) {
+  const solutionPath = boardData?.metadata?.solutionPath;
+  if (!solutionPath || !solutionPath.length) return;
+
+  const date = boardData?.date || 'unknown';
+  console.group(`[Daily Board] ${date} — Solution Words`);
+
+  let totalScore = 0;
+  solutionPath.forEach((word, i) => {
+    const w = String(word).toUpperCase();
+    let base = 0;
+    for (const ch of w) base += HX_LETTER_POINTS[ch] || 2;
+    const mult = HX_LENGTH_MULTIPLIERS[Math.min(w.length, 15)] || 1;
+    const score = base * mult;
+    totalScore += score;
+    console.log(`  ${i + 1}. ${w}  →  ${score} pts  (base ${base} × ${mult})`);
+  });
+
+  console.log(`Overall score: ${totalScore} pts`);
+  console.groupEnd();
+}
+
 /* ── Audio state ───────────────────────────────────────────────── */
 let _hxAudioReady = false;
 
@@ -6066,6 +6089,10 @@ export function startHexacore(mode) {
         const activeLevel = CAMPAIGN_LEVELS.find(level => level.id === activeLevelId);
         if (activeLevel) showCampaignHud(activeLevel);
       }
+    }
+
+    if (boardData?.metadata?.solutionPath) {
+      logDailyBoardWords(boardData);
     }
 
     buildGrid(() => {
