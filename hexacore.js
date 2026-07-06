@@ -5374,6 +5374,54 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
     `;
   }
 
+  // Build the comparison table (player vs optimal)
+  const playerAvgLen = words.length > 0
+    ? (words.reduce((s, w) => s + w.length, 0) / words.length).toFixed(1)
+    : '—';
+  const meta = hxState.dailyMetadata || {};
+  const optAvgLen = meta.averageWordLength != null
+    ? Number(meta.averageWordLength).toFixed(1)
+    : '—';
+  const optMoves    = meta.optimalMoves    != null ? meta.optimalMoves    : '—';
+  const optTiles    = meta.tilesCleared    != null ? meta.tilesCleared    : '—';
+  const optMaxScore = meta.maxPossibleScore != null ? Number(meta.maxPossibleScore).toLocaleString() : '—';
+  const bWordTotal  = bestStrategy ? Number(bestStrategy.wordTotal  || 0) : null;
+  const bPenalty    = bestStrategy ? Number(bestStrategy.penalty    || 0) : null;
+  const bFinal      = bestStrategy ? Number(bestStrategy.finalScore || 0) : null;
+
+  // Determine overall performance indicator colour
+  const optFinal = bFinal ?? (Number(meta.maxPossibleScore) || 0);
+  const perfRatio = optFinal > 0 ? finalScore / optFinal : 1;
+  const perfColour = perfRatio >= 0.9 ? '#4ade80' : perfRatio >= 0.7 ? '#fbbf24' : '#f87171';
+  const perfIcon   = perfRatio >= 0.9 ? '🟢' : perfRatio >= 0.7 ? '🟡' : '🔴';
+
+  const compRow = (label, playerVal, optVal, highlight = false) => {
+    const cls = highlight ? ' hx-cmp-row--highlight' : '';
+    return `
+      <div class="hx-cmp-row${cls}">
+        <span class="hx-cmp-label">${label}</span>
+        <span class="hx-cmp-player">${playerVal}</span>
+        <span class="hx-cmp-opt">${optVal}</span>
+      </div>`;
+  };
+
+  const compTableHtml = `
+    <div class="hx-cmp-table">
+      <div class="hx-cmp-header">
+        <span class="hx-cmp-label"></span>
+        <span class="hx-cmp-player hx-cmp-col-head">YOUR PERFORMANCE</span>
+        <span class="hx-cmp-opt hx-cmp-col-head">BOARD OPTIMAL</span>
+      </div>
+      ${compRow('Words', words.length, optMoves)}
+      ${compRow('Avg Word Length', playerAvgLen, optAvgLen)}
+      ${compRow('Word Score', wordTotal.toLocaleString(), bWordTotal != null ? bWordTotal.toLocaleString() : '—')}
+      ${compRow('Tiles Used', `${tilesUsed} / ${tilesTotal}`, `${optTiles} / ${tilesTotal}`)}
+      ${compRow('Penalty', `-${penalty.toLocaleString()}`, bPenalty != null ? `-${bPenalty.toLocaleString()}` : '—')}
+      ${compRow('Final Score', `<strong style="color:${perfColour}">${finalScore.toLocaleString()} pts</strong>`, bFinal != null ? `<strong>${bFinal.toLocaleString()} pts</strong>` : `<strong>${optMaxScore} pts</strong>`, true)}
+    </div>
+    <div class="hx-cmp-perf-line">${perfIcon} You scored <strong>${Math.round(perfRatio * 100)}%</strong> of the optimal score</div>
+  `;
+
   // Build the YOUR WORDS block
   const yourWordsHtml = wordsWithScores.length > 0 ? `
     <div class="hx-daily-opt-section">
@@ -5429,6 +5477,61 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
         margin-left: 0.25em;
         color: #4cc9f0;
       }
+      /* Comparison table */
+      .hx-cmp-table {
+        width: 100%;
+        margin: 1rem 0 0.4rem;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(76,201,240,0.18);
+        font-size: 0.83rem;
+      }
+      .hx-cmp-header, .hx-cmp-row {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 1fr;
+        align-items: center;
+        padding: 0.45rem 0.6rem;
+        gap: 0.25rem;
+      }
+      .hx-cmp-header {
+        background: rgba(76,201,240,0.12);
+        border-bottom: 1px solid rgba(76,201,240,0.2);
+      }
+      .hx-cmp-col-head {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-align: center;
+        color: #94a3b8;
+        text-transform: uppercase;
+      }
+      .hx-cmp-row {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        background: rgba(255,255,255,0.02);
+      }
+      .hx-cmp-row:last-child { border-bottom: none; }
+      .hx-cmp-row:nth-child(even) { background: rgba(255,255,255,0.04); }
+      .hx-cmp-row--highlight {
+        background: rgba(76,201,240,0.07) !important;
+        font-weight: 600;
+      }
+      .hx-cmp-label {
+        color: #94a3b8;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+      }
+      .hx-cmp-player, .hx-cmp-opt {
+        text-align: center;
+        color: #f1f5f9;
+      }
+      .hx-cmp-player { color: #4cc9f0; }
+      .hx-cmp-opt    { color: #a78bfa; }
+      .hx-cmp-perf-line {
+        text-align: center;
+        font-size: 0.82rem;
+        color: #94a3b8;
+        margin-bottom: 0.75rem;
+      }
     </style>
     <div id="hx-daily-result-box">
       <h2>DAILY CHALLENGE COMPLETE</h2>
@@ -5443,12 +5546,7 @@ function showDailyChallengeResults({ finalScore, wordTotal, penalty, tilesUsed, 
           <span class="hx-daily-score-value">${displayHighScore.toLocaleString()} pts</span>
         </div>
       </div>
-      <div class="hx-stats hx-stats--daily">
-        <div class="hx-stat-row"><span>Words Submitted</span><strong>${words.length}</strong></div>
-        <div class="hx-stat-row"><span>Total Word Score</span><strong>${wordTotal.toLocaleString()}</strong></div>
-        <div class="hx-stat-row"><span>Tiles Used</span><strong>${tilesUsed} / ${tilesTotal}</strong></div>
-        <div class="hx-stat-row"><span>Penalty</span><strong>-${penalty.toLocaleString()}</strong></div>
-      </div>
+      ${compTableHtml}
       ${yourWordsHtml}
       ${optimalHtml}
       <button id="hx-daily-leaderboard-btn" type="button">LEADERBOARD</button>
