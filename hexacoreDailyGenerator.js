@@ -382,7 +382,11 @@ function generateBackwardBoard(wordRecipe, radius, rng) {
     }
     
     if (!placement) {
-      // Failed to place this word - this attempt failed
+      const stablePositions = reverseGravity(simGrid, radius);
+      console.error(
+        `  ✗ backward placement failed for word[${i}]="${wordRecipe[i]}" (len=${wordRecipe[i].length}) after ${maxAttempts} attempts` +
+        ` — stable positions available: ${stablePositions.length}, tiles already placed: ${Object.keys(simGrid).length}`,
+      );
       return null;
     }
     
@@ -391,7 +395,7 @@ function generateBackwardBoard(wordRecipe, radius, rng) {
       simGrid[tile.key] = { letter: tile.letter };
     }
     
-    placedWords.unshift({ word, path: placement });
+    placedWords.unshift({ word: wordRecipe[i], path: placement });
   }
   
   return { grid: simGrid, placedWords };
@@ -425,35 +429,53 @@ export function generateDailyHexacoreBoard({
   radius = GRID_RADIUS,
   attemptSeedOffset = 0,
   runSimulation = false, // Not needed - solvability guaranteed by construction
+  includePlacements = false,
 } = {}) {
   const seed = fnv1a32(String(date));
   const allCoords = getAllCoordsWithKeys(radius);
   const totalTiles = allCoords.length;
+
+  console.log(`  generateDailyHexacoreBoard: date=${date} seed=${seed} totalTiles=${totalTiles} maxAttempts=${maxAttempts} seedOffset=${attemptSeedOffset}`);
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const effectiveAttempt = attempt + (Number(attemptSeedOffset) || 0);
     const rng = mkSeededRng((seed + effectiveAttempt * 9973) >>> 0);
 
     // Generate word recipe: partition 61 into word lengths [5, 13]
-    const partition = generateRandomPartition(totalTiles, 5, 13, rng);
+    let partition;
+    try {
+      partition = generateRandomPartition(totalTiles, 5, 13, rng);
+    } catch (partErr) {
+      console.error(`  attempt ${attempt}/${maxAttempts}: partition failed — ${partErr.message}`);
+      continue;
+    }
     const shuffledPartition = shuffled(partition, rng);
     
     // Map each length to a random dictionary word
-    const wordRecipe = shuffledPartition.map(len => {
-      const candidates = ANAGRAMATON_DICTIONARY.filter(w => 
-        w.length === len && /^[A-Z]+$/.test(w)
-      );
-      if (candidates.length === 0) {
-        throw new Error(`No dictionary words of length ${len}`);
-      }
-      return candidates[Math.floor(rng() * candidates.length)];
-    });
+    let wordRecipe;
+    try {
+      wordRecipe = shuffledPartition.map(len => {
+        const candidates = ANAGRAMATON_DICTIONARY.filter(w => 
+          w.length === len && /^[A-Z]+$/.test(w)
+        );
+        if (candidates.length === 0) {
+          throw new Error(`No dictionary words of length ${len}`);
+        }
+        return candidates[Math.floor(rng() * candidates.length)];
+      });
+    } catch (recipeErr) {
+      console.error(`  attempt ${attempt}/${maxAttempts}: word recipe failed — ${recipeErr.message}`);
+      continue;
+    }
+
+    console.log(`  attempt ${attempt}/${maxAttempts}: wordCount=${wordRecipe.length} lengths=[${shuffledPartition.join(',')}] words=[${wordRecipe.join(',')}]`);
 
     // Generate board using backward reconstruction
     const result = generateBackwardBoard(wordRecipe, radius, rng);
     
     if (!result) {
-      continue; // Try next attempt
+      console.error(`  attempt ${attempt}/${maxAttempts}: backward reconstruction failed`);
+      continue;
     }
 
     const { grid, placedWords } = result;
@@ -462,6 +484,12 @@ export function generateDailyHexacoreBoard({
     const finalGrid = {};
     for (const [key, value] of Object.entries(grid)) {
       finalGrid[key] = value.letter;
+    }
+
+    const gridSize = Object.keys(finalGrid).length;
+    if (gridSize !== totalTiles) {
+      console.error(`  attempt ${attempt}/${maxAttempts}: grid size mismatch — expected ${totalTiles} tiles, got ${gridSize}`);
+      continue;
     }
 
     // Place special tiles
@@ -473,6 +501,8 @@ export function generateDailyHexacoreBoard({
       : estimatedScore < 30000 ? 'medium'
       : estimatedScore < 50000 ? 'hard' 
       : 'expert';
+
+    console.log(`  attempt ${attempt}/${maxAttempts}: ✓ success — ${placedWords.length} words, estimatedScore=${estimatedScore}, difficulty=${difficulty}`);
 
     const board = {
       date,
@@ -494,6 +524,10 @@ export function generateDailyHexacoreBoard({
       },
     };
 
+    if (includePlacements) {
+      board.placements = placedWords;
+    }
+
     return board;
   }
 
@@ -509,4 +543,130 @@ export function generateDailyHexacoreBatch({ startDate = toIsoDate(), count = 1 
     d.setDate(d.getDate() + 1);
   }
   return out;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BOARD VALIDATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Validate a generated daily board and compute score bounds.
+ * @param {{ grid: object, placements: Array, specialTiles: Array }} options
+ * @returns {{ valid: boolean, reason?: string, maxScore: number, minScore: number, strategicPaths: number, strategies: string[] }}
+ */
+export function validateDailyBoard({ grid, placements, specialTiles = [] }) {
+  if (!grid || typeof grid !== 'object') {
+    const reason = 'grid is missing or not an object';
+    console.error(`validateDailyBoard: INVALID — ${reason}`);
+    return { valid: false, reason };
+  }
+
+  const gridKeys = Object.keys(grid);
+  if (gridKeys.length === 0) {
+    const reason = 'grid is empty (0 tiles)';
+    console.error(`validateDailyBoard: INVALID — ${reason}`);
+    return { valid: false, reason };
+  }
+
+  if (!Array.isArray(placements) || placements.length === 0) {
+    const reason = `placements is ${placements == null ? 'null/undefined' : 'an empty array'} — pass includePlacements: true to generateDailyHexacoreBoard`;
+    console.error(`validateDailyBoard: INVALID — ${reason}`);
+    return { valid: false, reason };
+  }
+
+  // Validate each placement entry
+  for (let i = 0; i < placements.length; i++) {
+    const p = placements[i];
+    if (!p || typeof p.word !== 'string' || p.word.length === 0) {
+      const reason = `placements[${i}] is missing a valid word (got ${JSON.stringify(p?.word)})`;
+      console.error(`validateDailyBoard: INVALID — ${reason}`);
+      return { valid: false, reason };
+    }
+    if (!Array.isArray(p.path)) {
+      const reason = `placements[${i}] word="${p.word}" has no path array`;
+      console.error(`validateDailyBoard: INVALID — ${reason}`);
+      return { valid: false, reason };
+    }
+    if (p.path.length !== p.word.length) {
+      const reason = `placements[${i}] word="${p.word}" path length ${p.path.length} ≠ word length ${p.word.length}`;
+      console.error(`validateDailyBoard: INVALID — ${reason}`);
+      return { valid: false, reason };
+    }
+  }
+
+  // Verify every grid tile is covered by exactly the placements
+  const coveredKeys = new Set();
+  const duplicateKeys = [];
+  for (const { word, path } of placements) {
+    for (const tile of path) {
+      const key = tile.key || hexKey(tile.q, tile.r);
+      if (coveredKeys.has(key)) duplicateKeys.push(key);
+      coveredKeys.add(key);
+    }
+  }
+
+  const uncoveredKeys = gridKeys.filter(k => !coveredKeys.has(k));
+  const extraKeys = [...coveredKeys].filter(k => !grid[k]);
+
+  if (uncoveredKeys.length > 0) {
+    const reason = `${uncoveredKeys.length} grid tile(s) not covered by any placement: ${uncoveredKeys.slice(0, 5).join(', ')}${uncoveredKeys.length > 5 ? '...' : ''}`;
+    console.error(`validateDailyBoard: INVALID — ${reason}`);
+    return { valid: false, reason };
+  }
+  if (extraKeys.length > 0) {
+    const reason = `${extraKeys.length} placement tile(s) not found in grid: ${extraKeys.slice(0, 5).join(', ')}${extraKeys.length > 5 ? '...' : ''}`;
+    console.error(`validateDailyBoard: INVALID — ${reason}`);
+    return { valid: false, reason };
+  }
+  if (duplicateKeys.length > 0) {
+    const reason = `${duplicateKeys.length} grid tile(s) used by more than one placement: ${[...new Set(duplicateKeys)].slice(0, 5).join(', ')}`;
+    console.error(`validateDailyBoard: INVALID — ${reason}`);
+    return { valid: false, reason };
+  }
+
+  // Build special-tile map for scoring
+  const specialMap = {};
+  for (const s of specialTiles) {
+    specialMap[hexKey(s.q, s.r)] = s;
+  }
+
+  // Calculate score bounds:
+  //   maxScore assumes the best available gem multiplier applies to each word
+  //   minScore assumes no gem multipliers (base letter × length only)
+  let maxScore = 0;
+  let minScore = 0;
+
+  for (const { word, path } of placements) {
+    const lengthMult = Math.max(word.length, 5);
+    let wordBaseScore = 0;
+    let bestGemMult = 1;
+
+    for (let i = 0; i < path.length; i++) {
+      const tile = path[i];
+      const key = tile.key || hexKey(tile.q, tile.r);
+      const letter = word[i];
+      wordBaseScore += LETTER_POINTS[letter] || 2;
+      const special = specialMap[key];
+      if (special && GEM_MULTIPLIERS[special.type]) {
+        bestGemMult = Math.max(bestGemMult, GEM_MULTIPLIERS[special.type]);
+      }
+    }
+
+    maxScore += wordBaseScore * lengthMult * bestGemMult;
+    minScore += wordBaseScore * lengthMult;
+  }
+
+  const strategies = placements.map(({ word }) => word);
+
+  console.log(
+    `validateDailyBoard: valid — ${placements.length} placements, ${gridKeys.length} tiles, maxScore=${maxScore}, minScore=${minScore}, strategicPaths=${placements.length}`,
+  );
+
+  return {
+    valid: true,
+    maxScore,
+    minScore,
+    strategicPaths: placements.length,
+    strategies,
+  };
 }
